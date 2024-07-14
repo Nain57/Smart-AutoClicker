@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ImageConditionDetails
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
@@ -76,6 +77,10 @@ class ImageConditionsBriefMenu(
         return viewBinding.root
     }
 
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ImageConditionBriefViewHolder =
+        ImageConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+
+
     override fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding) {
         hideMoveButtons()
     }
@@ -92,7 +97,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog(item.data as ImageCondition, isNewCondition = false)
+        showImageConditionConfigDialog((item.data as ImageConditionDetails).condition, isNewCondition = false)
     }
 
     override fun onDeleteItem(index: Int) {
@@ -118,7 +123,10 @@ class ImageConditionsBriefMenu(
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = TryElementOverlayMenu(scenario, getFocusedItemBrief().data as ImageCondition),
+                newOverlay = TryElementOverlayMenu(
+                    scenario,
+                    (getFocusedItemBrief().data as ImageConditionDetails).condition,
+                ),
                 hideCurrent = true,
             )
         }

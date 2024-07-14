@@ -92,7 +92,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             android:scrollbars="none"
-            tools:listitem="@layout/item_dumb_action_brief"
+            tools:listitem="@layout/item_dumb_action_brief_port"
             tools:itemCount="12"/>
 
         <com.google.android.material.button.MaterialButton

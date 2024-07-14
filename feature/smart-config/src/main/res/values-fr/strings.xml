@@ -119,6 +119,9 @@
     <string name="field_change_all_title">Changer tous</string>
     <string name="item_copy_title">Copie</string>
     <string name="item_copy_desc">Copier une Action existante depuis n\'importe quel Scenario</string>
+    <string name="item_image_condition_visible">Visible</string>
+    <string name="item_image_condition_not_visible">Non visible</string>
+    <string name="field_condition_selector_desc">%1$d conditions</string>
 
     <!--
       - Fields.
@@ -159,6 +162,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Différence: %1$d%%</string>
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
     <string name="warning_dialog_message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">Cette condition est référencée par une ou plusieures actions. La supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
@@ -277,5 +281,5 @@
 
     <string name="brief_empty_actions">Aucune Action. Vous avez besoin d\'au moins une Action valide pour créer un évènement</string>
     <string name="brief_empty_image_conditions">Aucune condition d\'écran. Vous avez besoin d\'au moins une Condition valide pour créer un évènement</string>
-    <string name="field_condition_selector_desc">%1$d conditions</string>
+
 </resources>

@@ -44,7 +44,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.bro
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionsViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.ConditionsViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config.EventConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel
@@ -62,7 +61,6 @@ import dagger.hilt.InstallIn
 interface ScenarioConfigViewModelsEntryPoint {
 
     fun actionCopyViewModel(): ActionCopyModel
-    fun actionsViewModel(): ActionsViewModel
     fun actionTypeSelectionViewModel(): ActionTypeSelectionViewModel
     fun activitySelectionViewModel(): ActivitySelectionModel
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel

@@ -17,36 +17,32 @@
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ItemBriefLandBinding
-import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ItemBriefPortBinding
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
 
 
 internal class ItemBriefAdapter(
     private val displayMetrics: DisplayMetrics,
-    private val actionClickedListener: (Int, ItemBrief) -> Unit,
-) : ListAdapter<ItemBrief, ItemBriefViewHolder>(ItemBriefDiffUtilCallback) {
+    private val viewHolderCreator: (parent: ViewGroup, orientation: Int) -> ItemBriefViewHolder<*>,
+    private val onItemClickedListener: (Int, ItemBrief) -> Unit,
+) : ListAdapter<ItemBrief, ItemBriefViewHolder<*>>(ItemBriefDiffUtilCallback) {
 
     private var orientation: Int = displayMetrics.orientation
 
     override fun getItemViewType(position: Int): Int = orientation
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBriefViewHolder =
-        ItemBriefViewHolder(ItemBriefBinding.inflate(LayoutInflater.from(parent.context), orientation, parent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBriefViewHolder<*> =
+        viewHolderCreator(parent, viewType)
 
-    override fun onBindViewHolder(holder: ItemBriefViewHolder, position: Int) {
-        holder.onBind(getItem(position), actionClickedListener)
+    override fun onBindViewHolder(holder: ItemBriefViewHolder<*>, position: Int) {
+        holder.onBind(getItem(position), onItemClickedListener)
     }
 
     public override fun getItem(position: Int): ItemBrief = super.getItem(position)
@@ -63,60 +59,27 @@ internal class ItemBriefAdapter(
     }
 }
 
-object ItemBriefDiffUtilCallback: DiffUtil.ItemCallback<ItemBrief>() {
+internal object ItemBriefDiffUtilCallback: DiffUtil.ItemCallback<ItemBrief>() {
     override fun areItemsTheSame(
         oldItem: ItemBrief,
         newItem: ItemBrief,
     ): Boolean = oldItem.id == newItem.id
 
+    @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(
         oldItem: ItemBrief,
         newItem: ItemBrief,
-    ): Boolean = oldItem == newItem
+    ): Boolean = oldItem.data == newItem.data
 }
 
-internal class ItemBriefViewHolder(
-    private val viewBinding: ItemBriefBinding,
+abstract class ItemBriefViewHolder<T: ViewBinding>(
+    protected val viewBinding: T,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(item: ItemBrief, actionClickedListener: (Int, ItemBrief) -> Unit) {
-        viewBinding.apply {
-            root.setOnClickListener { actionClickedListener(bindingAdapterPosition, item) }
-
-            actionName.visibility = View.VISIBLE
-            actionTypeIcon.setImageResource(item.icon)
-            actionName.text = item.name
-            actionDescription.text = item.description
-        }
-    }
+    abstract fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit)
 }
 
-internal class ItemBriefBinding private constructor(
-    val root: View,
-    val actionTypeIcon: ImageView,
-    val actionName: TextView,
-    val actionDescription: TextView,
-) {
-
-    companion object {
-        fun inflate(layoutInflater: LayoutInflater, orientation: Int, parent: ViewGroup) =
-            if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                ItemBriefBinding(ItemBriefPortBinding.inflate(layoutInflater, parent, false))
-            else
-                ItemBriefBinding(ItemBriefLandBinding.inflate(layoutInflater, parent, false))
-    }
-
-    constructor(binding: ItemBriefPortBinding) : this(
-        root = binding.root,
-        actionTypeIcon = binding.itemIcon,
-        actionName = binding.itemName,
-        actionDescription = binding.itemDescription,
-    )
-
-    constructor(binding: ItemBriefLandBinding) : this(
-        root = binding.root,
-        actionTypeIcon = binding.itemIcon,
-        actionName = binding.itemName,
-        actionDescription = binding.itemDescription,
-    )
-}
+data class ItemBrief(
+    val id: Identifier,
+    val data: Any,
+)

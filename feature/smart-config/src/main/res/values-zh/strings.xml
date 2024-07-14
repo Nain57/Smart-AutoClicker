@@ -119,6 +119,9 @@
     <string name="field_change_all_title">全部更改</string>
     <string name="item_copy_title">复制</string>
     <string name="item_copy_desc">从任何场景复制现有操作</string>
+    <string name="item_image_condition_visible">可见</string>
+    <string name="item_image_condition_not_visible">不可见</string>
+    <string name="field_condition_selector_desc">%1$d 个条件</string>
 
     <!--
       - Fields.
@@ -159,6 +162,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">差异: %1$d%%</string>
     <string name="warning_dialog_message_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
     <string name="warning_dialog_message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
     <string name="warning_dialog_message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
@@ -272,6 +276,5 @@
 
     <string name="brief_empty_actions">无操作。要创建有效的事件，至少需要一个 "操作"。</string>
     <string name="brief_empty_image_conditions">无屏幕条件。创建有效事件至少需要一个条件</string>
-    <string name="field_condition_selector_desc">%1$d conditions</string>
 
 </resources>

@@ -14,31 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model
 
 import android.content.Context
 
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
+import androidx.annotation.DrawableRes
+
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
+/**
+ * Action item.
+ * @param icon the icon for the action.
+ * @param name the name of the action.
+ * @param description the details for the action.
+ * @param action the action represented by this item.
+ */
+data class ActionDetails (
+    @DrawableRes val icon: Int,
+    val name: String,
+    val description: String,
+    val action: Action,
+    val haveError: Boolean,
+)
 
-fun Action.toActionBrief(context: Context, inError: Boolean = !isComplete()): ItemBrief = when (this) {
-    is Action.Click -> toClickBrief(context, inError)
-    is Action.Swipe -> toSwipeBrief(context, inError)
-    is Action.Pause -> toPauseBrief(context, inError)
-    is Action.Intent -> toIntentBrief(context, inError)
-    is Action.ToggleEvent -> toToggleEventBrief(context, inError)
-    is Action.ChangeCounter -> toChangeCounterBrief(context, inError)
+/** @return the [ActionDetails] corresponding to this action. */
+fun Action.toActionDetails(context: Context, inError: Boolean = !isComplete()): ActionDetails = when (this) {
+    is Action.Click -> toClickDetails(context, inError)
+    is Action.Swipe -> toSwipeDetails(context, inError)
+    is Action.Pause -> toPauseDetails(context, inError)
+    is Action.Intent -> toIntentDetails(context, inError)
+    is Action.ToggleEvent -> toToggleEventDetails(context, inError)
+    is Action.ChangeCounter -> toChangeCounterDetails(context, inError)
+    else -> throw IllegalArgumentException("Not yet supported")
 }
 
-private fun Action.Click.toClickBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.Click.toClickDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_click,
-        name = name ?: "Click",
+        name = name!!,
         description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             positionType == Action.Click.PositionType.ON_DETECTED_CONDITION ->
@@ -48,15 +63,14 @@ private fun Action.Click.toClickBrief(context: Context, inError: Boolean): ItemB
                 formatDuration(pressDuration!!), x, y,
             )
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
-private fun Action.Swipe.toSwipeBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.Swipe.toSwipeDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_swipe,
-        name = name ?: "Swipe",
+        name = name!!,
         description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
@@ -64,15 +78,14 @@ private fun Action.Swipe.toSwipeBrief(context: Context, inError: Boolean): ItemB
                 formatDuration(swipeDuration!!), fromX, fromY, toX, toY
             )
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
-private fun Action.Pause.toPauseBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.Pause.toPauseDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_wait,
-        name = name ?: "Wait",
+        name = name!!,
         description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> context.getString(
@@ -80,50 +93,52 @@ private fun Action.Pause.toPauseBrief(context: Context, inError: Boolean): ItemB
                 formatDuration(pauseDuration!!)
             )
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
-private fun Action.Intent.toIntentBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.Intent.toIntentDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_intent,
-        name = name ?: "Intent",
+        name = name!!,
         description = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)
             else -> formatIntentDetails(this, context)
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
 
-private fun Action.ToggleEvent.toToggleEventBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.ToggleEvent.toToggleEventDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_toggle_event,
         name = name!!,
         description = when {
             inError -> context.getString(R.string.item_toggle_event_details_error)
             else -> formatToggleEventState(this, context)
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
-private fun Action.ChangeCounter.toChangeCounterBrief(context: Context, inError: Boolean): ItemBrief =
-    ItemBrief(
-        id = id,
-        data = this,
+private fun Action.ChangeCounter.toChangeCounterDetails(context: Context, inError: Boolean): ActionDetails =
+    ActionDetails(
         icon = R.drawable.ic_change_counter,
         name = name!!,
         description = when {
             inError -> context.getString(R.string.item_change_counter_details_error)
             else -> formatChangeCounter(this, context)
         },
-        inError = inError,
+        action = this,
+        haveError = inError,
     )
 
-
+/**
+ * Format a action intent into a human readable string.
+ * @param intent the action intent to be formatted.
+ * @return the formatted intent.
+ */
 private fun formatIntentDetails(intent: Action.Intent, context: Context): String {
     var action = intent.intentAction ?: return ""
 
@@ -131,7 +146,9 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
     if (dotIndex != -1 && dotIndex < action.lastIndex) {
         action = action.substring(dotIndex + 1)
 
-        if (!intent.isBroadcast && intent.componentName != null && action.length < INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT) {
+        if (!intent.isBroadcast && intent.componentName != null
+            && action.length < INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT) {
+
             var componentName = intent.componentName!!.flattenToString()
             val dotIndex2 = componentName.lastIndexOf('.')
             if (dotIndex2 != -1 && dotIndex2 < componentName.lastIndex) {
@@ -151,6 +168,12 @@ private fun formatIntentDetails(intent: Action.Intent, context: Context): String
     return context.getString(R.string.item_intent_details, action)
 }
 
+/**
+ * Format a action toggle event into a human readable string.
+ * @param toggleEvent the action intent to be formatted.
+ * @param context the Android context.
+ * @return the formatted toggle event action.
+ */
 private fun formatToggleEventState(toggleEvent: Action.ToggleEvent, context: Context): String =
     if (toggleEvent.toggleAll) {
         when (toggleEvent.toggleAllType) {
@@ -177,6 +200,7 @@ private fun formatChangeCounter(changeCounter: Action.ChangeCounter, context: Co
         },
         changeCounter.operationValue,
     )
+
 
 /** The maximal length of the displayed intent action string. */
 private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15

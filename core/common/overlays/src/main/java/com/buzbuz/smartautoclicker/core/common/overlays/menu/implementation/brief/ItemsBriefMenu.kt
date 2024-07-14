@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 
@@ -60,11 +61,12 @@ abstract class ItemBriefMenu(
 
     protected open fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding): Unit = Unit
     protected open fun onMoveItem(from: Int, to: Int) = Unit
-    protected abstract fun onDeleteItem(index: Int)
-    protected abstract fun onPlayItem(index: Int)
-
     protected open fun onItemBriefClicked(index: Int, item: ItemBrief): Unit = Unit
     protected open fun onItemPositionCardClicked(index: Int, itemCount: Int): Unit = Unit
+
+    protected abstract fun onDeleteItem(index: Int)
+    protected abstract fun onPlayItem(index: Int)
+    protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ItemBriefViewHolder<*>
 
     override fun onCreateOverlayView(): View {
         briefPanelAnimationController = AutoHideAnimationController()
@@ -74,7 +76,7 @@ abstract class ItemBriefMenu(
             orientation = displayMetrics.orientation,
         )
 
-        briefAdapter = ItemBriefAdapter(displayMetrics) { index, brief ->
+        briefAdapter = ItemBriefAdapter(displayMetrics, ::onCreateBriefItemViewHolder) { index, brief ->
             debounceUserInteraction { onItemBriefClicked(index, brief) }
         }
 

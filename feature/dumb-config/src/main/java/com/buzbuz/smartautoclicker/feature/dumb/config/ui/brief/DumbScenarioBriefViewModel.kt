@@ -50,16 +50,19 @@ class DumbScenarioBriefViewModel @Inject constructor(
     val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
         .map { it.isNotEmpty() }
 
-   /* val visualizedActions: Flow<List<ItemBrief>> = dumbEditionRepository.editedDumbScenario
+   val visualizedActions: Flow<List<ItemBrief>> = dumbEditionRepository.editedDumbScenario
         .map { scenario ->
             scenario?.dumbActions?.map { dumbAction ->
-                dumbAction.toDumbActionDetails(
-                    context = context,
-                    withPositions = false,
+                ItemBrief(
+                    dumbAction.id ,
+                    dumbAction.toDumbActionDetails(
+                        context = context,
+                        withPositions = false,
+                    ),
                 )
             }
         }
-        .filterNotNull()*/
+        .filterNotNull()
 
     private val _actionListSnapIndex: MutableStateFlow<Int> = MutableStateFlow(0)
 

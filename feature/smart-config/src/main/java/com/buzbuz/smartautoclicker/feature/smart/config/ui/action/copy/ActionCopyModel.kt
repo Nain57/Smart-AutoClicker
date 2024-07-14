@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.toActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toActionDetails
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow

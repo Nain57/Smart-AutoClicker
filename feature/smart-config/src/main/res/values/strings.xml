@@ -32,6 +32,10 @@
     <string name="item_event_desc_disabled_children">Disabled</string>
 
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Difference: %1$d%%</string>
+
+    <string name="item_image_condition_visible">Visible</string>
+    <string name="item_image_condition_not_visible">Not visible</string>
 
     <string name="item_counter_reached_title">On counter reached</string>
     <string name="item_counter_reached_desc">Verify the value of a counter modified by an Action</string>
@@ -131,6 +135,7 @@
     <string name="dialog_title_action_type">Action type</string>
     <string name="dialog_title_trigger_condition_type">Trigger type</string>
 
+    <string name="field_condition_selector_desc">%1$d conditions</string>
     <string name="message_empty_screen_condition_list_title">No screen conditions !</string>
     <string name="message_empty_screen_condition_list_desc">A screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.\nYou need at least one condition in your event.</string>
     <string name="message_empty_trigger_condition_list_title">No conditions !</string>
@@ -341,6 +346,5 @@
     <string name="content_desc_image_condition">The image to be detected</string>
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
-    <string name="field_condition_selector_desc">%1$d conditions</string>
 
 </resources>

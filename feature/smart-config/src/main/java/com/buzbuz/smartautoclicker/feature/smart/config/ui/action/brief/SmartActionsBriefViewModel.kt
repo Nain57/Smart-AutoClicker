@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toActionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 import java.util.Collections
 import javax.inject.Inject
 
+
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
@@ -68,7 +70,9 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     val actionBriefList: Flow<List<ItemBrief>> = editedActions.map { actions ->
         val actionList = actions.value ?: emptyList()
-        actionList.mapIndexed { index, action -> action.toActionBrief(context, !actions.itemValidity[index]) }
+        actionList.mapIndexed { index, action ->
+            ItemBrief(action.id, action.toActionDetails(context, !actions.itemValidity[index]) )
+        }
     }
 
     private val currentFocusActionIndex: MutableStateFlow<Int> = MutableStateFlow(0)
