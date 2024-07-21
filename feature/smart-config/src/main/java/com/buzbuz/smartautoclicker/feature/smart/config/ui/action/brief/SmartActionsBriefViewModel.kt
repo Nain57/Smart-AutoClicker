@@ -65,8 +65,12 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
 
-    private val _isGestureCaptureStarted: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isGestureCaptureStarted: StateFlow<Boolean> = _isGestureCaptureStarted
+    private val briefVisualizationState: MutableStateFlow<BriefVisualizationState> =
+        MutableStateFlow(BriefVisualizationState(0, false))
+
+    val isGestureCaptureStarted: StateFlow<Boolean> = briefVisualizationState
+        .map { it.gestureCaptureStarted }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     val actionBriefList: Flow<List<ItemBrief>> = editedActions.map { actions ->
         val actionList = actions.value ?: emptyList()
@@ -75,18 +79,17 @@ class SmartActionsBriefViewModel @Inject constructor(
         }
     }
 
-    private val currentFocusActionIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val focusedAction: Flow<Action?> =
-        combine(currentFocusActionIndex, editedActions) { focusedIndex, actions ->
-            val actionList = actions.value ?: return@combine null
-            if (focusedIndex !in actionList.indices) return@combine null
-            actionList[focusedIndex]
+    private val focusedAction: Flow<Pair<Action?, Boolean>> =
+        combine(briefVisualizationState, editedActions) { visualizationState, actions ->
+            val filterUpdates = visualizationState.gestureCaptureStarted
+            val actionList = actions.value ?: return@combine null to filterUpdates
+            if (visualizationState.focusedIndex !in actionList.indices) return@combine null to filterUpdates
+            actionList[visualizationState.focusedIndex] to filterUpdates
         }
 
     val actionVisualization: Flow<ItemBriefDescription?> =
-        combine(focusedAction, _isGestureCaptureStarted) { action, isCapturing ->
-            action?.toActionDescription(context) to isCapturing
-        }.filter { (_, isCapturing) -> !isCapturing }.map { it.first }
+        focusedAction.filter { !it.second }
+            .map { (action, _) -> action?.toActionDescription(context) }
 
     val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
         editionRepository.editionState.canCopyActions.map { canCopy ->
@@ -102,7 +105,8 @@ class SmartActionsBriefViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun startGestureCaptureState() {
-        _isGestureCaptureStarted.value = true
+        briefVisualizationState.value = briefVisualizationState.value
+            .copy(gestureCaptureStarted = true)
     }
 
     fun endGestureCaptureState(context: Context, gesture: ItemBriefDescription) {
@@ -111,16 +115,18 @@ class SmartActionsBriefViewModel @Inject constructor(
             startActionEdition(action)
             upsertEditedAction()
         }
-
-        _isGestureCaptureStarted.value = false
     }
 
     fun cancelGestureCaptureState() {
-        _isGestureCaptureStarted.value = false
+        briefVisualizationState.value = briefVisualizationState.value
+            .copy(gestureCaptureStarted = false)
     }
 
     fun setFocusedActionIndex(index: Int) {
-        currentFocusActionIndex.value = index
+        briefVisualizationState.value = BriefVisualizationState(
+            focusedIndex = index,
+            gestureCaptureStarted = false,
+        )
     }
 
     fun createAction(context: Context, actionType: ActionTypeChoice): Action = when (actionType) {
@@ -233,3 +239,8 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
     }
 }
+
+private data class BriefVisualizationState(
+    val focusedIndex: Int,
+    val gestureCaptureStarted: Boolean,
+)

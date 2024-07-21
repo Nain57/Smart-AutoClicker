@@ -313,7 +313,7 @@ class EventDialog(
             .showAsOverlay()
     }
 
-    private fun showImageConditionsBriefMenu(initialFocusedIndex: Int? = null) {
+    private fun showImageConditionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
             newOverlay = ImageConditionsBriefMenu(
@@ -337,10 +337,10 @@ class EventDialog(
         )
     }
 
-    private fun showActionsBriefMenu(initialFocusedIndex: Int? = null) {
+    private fun showActionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = SmartActionsBriefMenu {
+            newOverlay = SmartActionsBriefMenu(initialFocusedIndex) {
 
             },
             hideCurrent = true,

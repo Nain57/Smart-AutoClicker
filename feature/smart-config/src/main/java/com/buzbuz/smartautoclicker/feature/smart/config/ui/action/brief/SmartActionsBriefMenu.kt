@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.Mo
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
@@ -48,9 +47,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ActionDe
 import kotlinx.coroutines.launch
 
 
-class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBriefMenu(
+class SmartActionsBriefMenu(
+    initialItemIndex: Int,
+    private val onConfigComplete: () -> Unit,
+) : ItemBriefMenu(
     theme = R.style.ScenarioConfigTheme,
     noItemText = R.string.brief_empty_actions,
+    initialItemIndex = initialItemIndex,
 ) {
 
     /** The view model for this dialog. */
@@ -135,8 +138,6 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
         viewModel.startGestureCaptureState()
         startGestureCapture { gesture, isFinished ->
             if (gesture == null || !isFinished) return@startGestureCapture
-
-            prepareItemInsertion()
             viewModel.endGestureCaptureState(context, gesture)
         }
     }
@@ -201,7 +202,7 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
                         return@ActionTypeSelectionDialog
                     }
 
-                    showActionConfigDialog(viewModel.createAction(context, choiceClicked), isNewAction = true)
+                    showActionConfigDialog(viewModel.createAction(context, choiceClicked))
                 },
             ),
         )
@@ -212,18 +213,17 @@ class SmartActionsBriefMenu(private val onConfigComplete: () -> Unit) : ItemBrie
             context = context,
             newOverlay = ActionCopyDialog(
                 onActionSelected = { newCopyAction ->
-                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction), isNewAction = true)
+                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
                 }
             ),
         )
     }
 
-    private fun showActionConfigDialog(action: Action, isNewAction: Boolean = false) {
+    private fun showActionConfigDialog(action: Action) {
         viewModel.startActionEdition(action)
         val actionConfigDialogListener: OnActionConfigCompleteListener by lazy {
             object : OnActionConfigCompleteListener {
                 override fun onConfirmClicked() {
-                    if (isNewAction) prepareItemInsertion()
                     viewModel.upsertEditedAction()
                 }
                 override fun onDeleteClicked() { viewModel.removeEditedAction() }

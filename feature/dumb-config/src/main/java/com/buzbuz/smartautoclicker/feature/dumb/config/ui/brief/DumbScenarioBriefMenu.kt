@@ -147,7 +147,6 @@ class DumbScenarioBriefMenu(
     }
 
     private fun onNewDumbActionCreated(action: DumbAction) {
-        prepareItemInsertion()
         viewModel.addNewDumbAction(action, getFocusedItemIndex() + 1)
     }
 

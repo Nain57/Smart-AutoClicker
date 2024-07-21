@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
@@ -27,29 +26,26 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
-import com.buzbuz.smartautoclicker.core.ui.utils.PositionPagerSnapHelper
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
 
 abstract class ItemBriefMenu(
     @StyleRes theme: Int? = null,
-    @StringRes private val noItemText : Int,
+    @StringRes private val noItemText: Int,
+    private val initialItemIndex: Int = 0,
 ) : OverlayMenu(theme = theme, recreateOverlayViewOnRotation = true) {
 
 
     /** Layout manager for the recycler view. */
-    private val itemListSnapHelper: PositionPagerSnapHelper = PositionPagerSnapHelper()
+    private val itemListSnapHelper: ItemsBriefSnapHelper = ItemsBriefSnapHelper()
 
     /** Controls the action brief panel in and out animations. */
     private lateinit var briefPanelAnimationController: AutoHideAnimationController
     /** Controls the instructions in and out animations. */
     private lateinit var instructionsAnimationController: AutoHideAnimationController
-    /** Layout manager for the actions recycler view. */
-    private lateinit var recyclerViewLayoutManager: LinearLayoutManagerExt
     /** The view binding for the position selector. */
     protected lateinit var briefViewBinding: ItemsBriefOverlayViewBinding
     /** Adapter displaying the items in the list. */
@@ -92,22 +88,20 @@ abstract class ItemBriefMenu(
             )
 
             listActions.adapter = briefAdapter
-            recyclerViewLayoutManager = LinearLayoutManagerExt(
-                context,
-                displayMetrics.orientation
-            )
-            recyclerViewLayoutManager.doOnNextLayoutCompleted {
-                itemListSnapHelper.snapTo(0)
-            }
-            listActions.layoutManager = recyclerViewLayoutManager
-
             itemListSnapHelper.apply {
                 onSnapPositionChangeListener = { snapIndex ->
                     onFocusedItemChanged(snapIndex)
                     briefPanelAnimationController.showOrResetTimer()
                 }
                 attachToRecyclerView(listActions)
+                initialItemIndex = this@ItemBriefMenu.initialItemIndex
             }
+            listActions.layoutManager = LinearLayoutManager(
+                context,
+                if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT)
+                    LinearLayoutManager.HORIZONTAL else LinearLayoutManager.VERTICAL,
+                false,
+            )
 
             emptyScenarioText.setText(noItemText)
 
@@ -175,12 +169,6 @@ abstract class ItemBriefMenu(
     protected fun hidePanel(): Unit =
         briefPanelAnimationController.hide()
 
-    protected fun prepareItemInsertion() {
-        recyclerViewLayoutManager.doOnNextAddedItem {
-            itemListSnapHelper.snapToLast()
-        }
-    }
-
     protected fun updateItemList(actions: List<ItemBrief>) {
         briefViewBinding.apply {
 
@@ -192,12 +180,16 @@ abstract class ItemBriefMenu(
                 emptyScenarioCard.visibility = View.GONE
             }
 
-            recyclerViewLayoutManager.doOnNextLayoutCompleted {
-                onFocusedItemChanged(itemListSnapHelper.snapPosition)
-            }
             updateBriefButtons()
             briefAdapter.submitList(actions)
         }
+    }
+
+    protected fun updateBriefVisualization(description: ItemBriefDescription) {
+        briefViewBinding.viewBrief.setDescription(
+            newDescription = description,
+            animate = true,
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -216,7 +208,10 @@ abstract class ItemBriefMenu(
                     isCaptureStarted = true
                     instructionsAnimationController.hide()
                 }
-                briefViewBinding.viewBrief.setDescription(gesture?.toActionDescription(), isFinished)
+                briefViewBinding.viewBrief.setDescription(
+                    newDescription = gesture?.toActionDescription(),
+                    animate = isFinished,
+                )
 
                 if (isFinished) {
                     stopGestureCapture()
@@ -259,38 +254,4 @@ abstract class ItemBriefMenu(
     }
 }
 
-
-private class LinearLayoutManagerExt(context: Context, screenOrientation: Int) : LinearLayoutManager(
-    /* context */ context,
-    /* orientation */ if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) HORIZONTAL else VERTICAL,
-    /* reverseLayout */false,
-) {
-
-    private var nextLayoutCompletionListener: (() -> Unit)? = null
-    private var nextAddedItemListener: (() -> Unit)? = null
-    private var itemCountAtAddedItemRegistration: Int? = null
-
-    fun doOnNextAddedItem(listener: () -> Unit) {
-        itemCountAtAddedItemRegistration = itemCount
-        nextAddedItemListener = listener
-    }
-
-    fun doOnNextLayoutCompleted(listener: () -> Unit) {
-        nextLayoutCompletionListener = listener
-    }
-
-    override fun onLayoutCompleted(state: RecyclerView.State?) {
-        super.onLayoutCompleted(state)
-
-        val previousCount = itemCountAtAddedItemRegistration
-        if (previousCount != null && previousCount < itemCount) {
-            nextAddedItemListener?.invoke()
-            nextAddedItemListener = null
-            itemCountAtAddedItemRegistration = null
-        }
-
-        nextLayoutCompletionListener?.invoke()
-        nextLayoutCompletionListener = null
-    }
-}
-
+private const val TAG = "ItemsBriefMenu"
