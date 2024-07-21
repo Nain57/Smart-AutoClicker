@@ -46,11 +46,12 @@ import kotlinx.coroutines.launch
 
 
 class ImageConditionsBriefMenu(
-    private val initialFocusedIndex: Int? = null,
+    initialFocusedIndex: Int,
     private val onConfigComplete: () -> Unit,
 ) : ItemBriefMenu(
     theme = R.style.AppTheme,
     noItemText = R.string.brief_empty_image_conditions,
+    initialItemIndex = initialFocusedIndex,
 ) {
 
     /** The view model for this dialog. */
@@ -97,7 +98,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog((item.data as ImageConditionDetails).condition, isNewCondition = false)
+        showImageConditionConfigDialog((item.data as ImageConditionDetails).condition)
     }
 
     override fun onDeleteItem(index: Int) {
@@ -140,7 +141,6 @@ class ImageConditionsBriefMenu(
                     if (conditionSelected !is ImageCondition) return@ConditionCopyDialog
                     showImageConditionConfigDialog(
                         viewModel.createNewImageConditionFromCopy(conditionSelected),
-                        isNewCondition = true,
                     )
                 },
             ),
@@ -151,19 +151,18 @@ class ImageConditionsBriefMenu(
         overlayManager.navigateTo(
             context = context,
             newOverlay = CaptureMenu { capturedCondition ->
-                showImageConditionConfigDialog(capturedCondition, isNewCondition = true)
+                showImageConditionConfigDialog(capturedCondition)
             },
             hideCurrent = true,
         )
     }
 
-    private fun showImageConditionConfigDialog(condition: ImageCondition, isNewCondition: Boolean) {
+    private fun showImageConditionConfigDialog(condition: ImageCondition) {
         viewModel.startConditionEdition(condition)
 
         val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {
             object : OnConditionConfigCompleteListener {
                 override fun onConfirmClicked() {
-                    if (isNewCondition) prepareItemInsertion()
                     viewModel.upsertEditedCondition()
                 }
                 override fun onDeleteClicked() { viewModel.removeEditedCondition() }
