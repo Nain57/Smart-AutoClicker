@@ -31,6 +31,10 @@ data class DisplayConfig(
     val roundedCorners: Map<Corner, DisplayRoundedCorner?>,
 )
 
+fun DisplayConfig.haveRoundedCorner(): Boolean =
+    if (roundedCorners.isEmpty()) false
+    else roundedCorners.values.find { corner -> corner != null } != null
+
 data class DisplayRoundedCorner(
     val centerPx: Point,
     val radiusPx: Int,
