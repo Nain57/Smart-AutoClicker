@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.display.di
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -27,6 +27,6 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface DisplayEntryPoint {
 
-    fun displayMetrics(): DisplayMetrics
+    fun displayMetrics(): DisplayConfigManager
     fun displayRecorder(): DisplayRecorder
 }

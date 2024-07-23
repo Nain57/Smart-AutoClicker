@@ -24,7 +24,7 @@ import android.view.KeyEvent
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -51,7 +51,7 @@ import kotlinx.coroutines.launch
 class LocalService(
     private val context: Context,
     private val overlayManager: OverlayManager,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val detectionRepository: DetectionRepository,
     private val bitmapManager: IBitmapManager,
     private val dumbEngine: DumbEngine,
@@ -95,7 +95,7 @@ class LocalService(
         state = LocalServiceState(isStarted = true, isSmartLoaded = false)
         onStart(false, dumbScenario.name)
 
-        displayMetrics.startMonitoring(context)
+        displayConfigManager.startMonitoring(context)
         tileRepository.setTileScenario(scenarioId = dumbScenario.id.databaseId, isSmart = false)
         startJob = serviceScope.launch {
             delay(500)
@@ -128,7 +128,7 @@ class LocalService(
         state = LocalServiceState(isStarted = true, isSmartLoaded = true)
         onStart(true, scenario.name)
 
-        displayMetrics.startMonitoring(context)
+        displayConfigManager.startMonitoring(context)
         tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
         startJob = serviceScope.launch {
             delay(500)
@@ -217,7 +217,7 @@ class LocalService(
             dumbEngine.release()
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
-            displayMetrics.stopMonitoring(context)
+            displayConfigManager.stopMonitoring(context)
             bitmapManager.releaseCache()
 
             onStop()

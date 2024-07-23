@@ -32,7 +32,7 @@ import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
 import com.buzbuz.smartautoclicker.core.base.extensions.translate
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeBottom
@@ -341,7 +341,7 @@ internal class SelectorComponent(
 /**
  * Style for [SelectorComponent].
  *
- * @param displayMetrics metrics for the device display.
+ * @param displayConfigManager metrics for the device display.
  * @param selectorDefaultSize default size of the selector area in pixels.
  * @param handleSize the size of the selector handle in pixels.
  * @param selectorAreaOffset difference between the center of the selector and its inner content in pixels.
@@ -351,7 +351,7 @@ internal class SelectorComponent(
  * @param selectorBackgroundColor the color of the selector background.
  */
 internal class SelectorComponentStyle(
-    displayMetrics: DisplayMetrics,
+    displayConfigManager: DisplayConfigManager,
     val selectorDefaultSize: PointF,
     val handleSize: Float,
     val selectorAreaOffset: Int,
@@ -359,7 +359,7 @@ internal class SelectorComponentStyle(
     val selectorThickness: Float,
     @ColorInt val selectorColor: Int,
     @ColorInt val selectorBackgroundColor: Int,
-) : ViewStyle(displayMetrics)
+) : ViewStyle(displayConfigManager)
 
 /** The ratio of the maximum width to be considered as the minimum width. */
 private const val SELECTOR_MINIMUM_WIDTH_RATIO = 0.10f

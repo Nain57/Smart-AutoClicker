@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponentBuild
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.di.createHiltViewModelFactory
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 
 import com.google.android.material.color.DynamicColors
@@ -72,7 +72,7 @@ abstract class BaseOverlay internal constructor(
     override lateinit var context: Context
 
     /** The metrics of the device screen. */
-    protected val displayMetrics: DisplayMetrics by lazy {
+    protected val displayConfigManager: DisplayConfigManager by lazy {
         EntryPoints.get(context.applicationContext, DisplayEntryPoint::class.java)
             .displayMetrics()
     }
@@ -309,7 +309,7 @@ abstract class BaseOverlay internal constructor(
             ContextThemeWrapper(appContext, theme).apply {
                 applyOverrideConfiguration(
                     Configuration(applicationContext.resources.configuration).apply {
-                        orientation = displayMetrics.orientation
+                        orientation = displayConfigManager.displayConfig.orientation
                     }
                 )
             }

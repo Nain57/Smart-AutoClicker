@@ -36,7 +36,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -128,7 +128,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     }
 
     @Inject lateinit var overlayManager: OverlayManager
-    @Inject lateinit var displayMetrics: DisplayMetrics
+    @Inject lateinit var displayConfigManager: DisplayConfigManager
     @Inject lateinit var detectionRepository: DetectionRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: IBitmapManager
@@ -162,7 +162,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             overlayManager = overlayManager,
-            displayMetrics = displayMetrics,
+            displayConfigManager = displayConfigManager,
             detectionRepository = detectionRepository,
             dumbEngine = dumbEngine,
             tileRepository = tileRepository,
@@ -258,7 +258,7 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             .append("scenarioName=").append("$currentScenarioName; ")
             .println()
 
-        displayMetrics.dump(writer)
+        displayConfigManager.dump(writer)
         bitmapManager.dump(writer)
         overlayManager.dump(writer)
         detectionRepository.dump(writer)

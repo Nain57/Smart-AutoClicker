@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.anyNotNull
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 
 import org.junit.Assert
 import org.junit.Before
@@ -76,7 +76,7 @@ class OverlayManagerTests {
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
 
         overlayManager = OverlayManager(
-            displayMetrics = DisplayMetrics(mockContext),
+            displayConfigManager = DisplayConfigManager(mockContext),
             menuPositionDataSource = OverlayMenuPositionDataSource(
                 mockContext
             )
