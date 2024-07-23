@@ -27,12 +27,11 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.feature.backup.R
 import com.buzbuz.smartautoclicker.feature.backup.domain.Backup
 import com.buzbuz.smartautoclicker.feature.backup.domain.BackupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BackupViewModel @Inject constructor(
     private val repository: BackupRepository,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
 
     /** The state of the backup. Null if not started yet. */
@@ -95,11 +94,11 @@ class BackupViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isImport) {
-                repository.restoreScenarioBackup(uri, displayMetrics.screenSize).collect { backup ->
+                repository.restoreScenarioBackup(uri, displayConfigManager.displayConfig.sizePx).collect { backup ->
                     updateBackupState(context, backup, true)
                 }
             } else {
-                repository.createScenarioBackup(uri, dumbScenarios, smartScenarios, displayMetrics.screenSize).collect { backup ->
+                repository.createScenarioBackup(uri, dumbScenarios, smartScenarios, displayConfigManager.displayConfig.sizePx).collect { backup ->
                     updateBackupState(context, backup, false)
                 }
             }

@@ -25,7 +25,7 @@ import androidx.lifecycle.Lifecycle
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequestStack
@@ -48,7 +48,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class OverlayManager @Inject internal constructor(
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val menuPositionDataSource: OverlayMenuPositionDataSource,
 ): Dumpable {
     /** The listener upon screen rotation. */
@@ -256,7 +256,7 @@ class OverlayManager @Inject internal constructor(
         val currentOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? =
             if (overlayBackStack.isEmpty()) {
                 // First item ? Start listening for orientation.
-                displayMetrics.addOrientationListener(orientationListener)
+                displayConfigManager.addOrientationListener(orientationListener)
                 null
             } else {
                 overlayBackStack.peek()
@@ -300,7 +300,7 @@ class OverlayManager @Inject internal constructor(
 
         // If there is no more overlays, no need to keep track of the orientation
         if (overlayBackStack.isEmpty()) {
-            displayMetrics.removeOrientationListener(orientationListener)
+            displayConfigManager.removeOrientationListener(orientationListener)
         }
 
         executeNextNavigationRequest(context)

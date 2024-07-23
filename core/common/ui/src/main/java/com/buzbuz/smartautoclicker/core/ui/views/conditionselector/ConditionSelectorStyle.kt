@@ -20,7 +20,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PointF
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.CaptureComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DEFAULT_ZOOM_MAXIMUM
@@ -55,9 +55,9 @@ internal fun TypedArray.getAnimationsStyle() =
         ).toLong(),
     )
 
-internal fun TypedArray.getCaptureComponentStyle(displayMetrics: DisplayMetrics) =
+internal fun TypedArray.getCaptureComponentStyle(displayConfigManager: DisplayConfigManager) =
     CaptureComponentStyle(
-        displayMetrics = displayMetrics,
+        displayConfigManager = displayConfigManager,
         zoomMin = getFloat(
             R.styleable.ConditionSelectorView_minimumZoomValue,
             DEFAULT_ZOOM_MINIMUM
@@ -68,9 +68,9 @@ internal fun TypedArray.getCaptureComponentStyle(displayMetrics: DisplayMetrics)
         )
     )
 
-internal fun TypedArray.getSelectorComponentStyle(displayMetrics: DisplayMetrics) =
+internal fun TypedArray.getSelectorComponentStyle(displayConfigManager: DisplayConfigManager) =
     SelectorComponentStyle(
-        displayMetrics = displayMetrics,
+        displayConfigManager = displayConfigManager,
         selectorDefaultSize = PointF(
             getDimensionPixelSize(
                 R.styleable.ConditionSelectorView_defaultWidth,
@@ -109,9 +109,9 @@ internal fun TypedArray.getSelectorComponentStyle(displayMetrics: DisplayMetrics
         ),
     )
 
-internal fun TypedArray.getHintsStyle(displayMetrics: DisplayMetrics) =
+internal fun TypedArray.getHintsStyle(displayConfigManager: DisplayConfigManager) =
     HintsComponentStyle(
-        displayMetrics = displayMetrics,
+        displayConfigManager = displayConfigManager,
         iconsMargin = getDimensionPixelSize(
             R.styleable.ConditionSelectorView_hintsIconsMargin,
             DEFAULT_HINTS_ICON_MARGIN,

@@ -74,7 +74,7 @@ class PositionSelectorMenu(
     override fun onCreateOverlayView(): View {
         selectorViewBinding.textInstructions.layoutParams =
             (selectorViewBinding.textInstructions.layoutParams as ConstraintLayout.LayoutParams).apply {
-                setMargins(leftMargin, topMargin + displayMetrics.safeInsetTop, rightMargin, bottomMargin)
+                setMargins(leftMargin, topMargin + displayConfigManager.displayConfig.safeInsetTopPx, rightMargin, bottomMargin)
             }
 
         return selectorViewBinding.root

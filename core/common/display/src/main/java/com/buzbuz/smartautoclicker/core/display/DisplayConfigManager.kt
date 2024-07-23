@@ -29,9 +29,12 @@ import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+
 import dagger.hilt.android.qualifiers.ApplicationContext
+
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,7 +45,7 @@ import javax.inject.Singleton
  * are no longer needed, call [stopMonitoring] to release all resources.
  */
 @Singleton
-class DisplayMetrics @Inject constructor(
+class DisplayConfigManager @Inject constructor(
     @ApplicationContext context: Context,
 ): Dumpable {
 
@@ -59,23 +62,15 @@ class DisplayMetrics @Inject constructor(
     /** Listen to the configuration changes and calls [orientationListeners] when needed. */
     private var configChangedReceiver: BroadcastReceiver? = null
 
-    val safeInsetTop: Int
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) display.cutout?.safeInsetTop ?: 0 else 0
-
-    /** The orientation of the display. */
-    var orientation: Int = Configuration.ORIENTATION_UNDEFINED
+    var displayConfig: DisplayConfig = getCurrentDisplayConfig()
         private set
-    /** The screen size. */
-    var screenSize: Point = Point(0, 0)
-        private set
-
-    init {
-        updateScreenConfig()
-    }
 
     /** Start the monitoring of the screen metrics. */
     fun startMonitoring(context: Context) {
-        updateScreenConfig()
+        displayConfig = applyInfoPatches(
+            current = displayConfig,
+            configToPatch = getCurrentDisplayConfig(),
+        )
 
         configChangedReceiver = newConfigChangedReceiver()
         ContextCompat.registerReceiver(
@@ -94,16 +89,6 @@ class DisplayMetrics @Inject constructor(
         orientationListeners.clear()
     }
 
-    private fun newConfigChangedReceiver(): BroadcastReceiver =
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                Log.i(TAG, "onConfigurationChanged")
-                if (updateScreenConfig()) {
-                    orientationListeners.forEach { it.invoke(context) }
-                }
-            }
-        }
-
     /**
      * Register a new orientation listener.
      *
@@ -118,22 +103,45 @@ class DisplayMetrics @Inject constructor(
         orientationListeners.remove(listener)
     }
 
-    /** @return true if the screen config have changed, false if not. */
-    private fun updateScreenConfig(): Boolean {
-        val newOrientation = getCurrentOrientation()
-        if (newOrientation == orientation) return false
+    private fun onAndroidConfigurationChanged(context: Context) {
+        Log.i(TAG, "onAndroidConfigurationChanged")
 
-        val newSize = getCurrentDisplaySize()
-        orientation = newOrientation
-        screenSize = if (newSize == screenSize) {
-            Point(newSize.y, newSize.x)
-        } else {
-            newSize
+        val newConfigPatched = applyInfoPatches(
+            current = displayConfig,
+            configToPatch = getCurrentDisplayConfig(),
+        )
+
+        if (newConfigPatched == displayConfig) {
+            Log.i(TAG, "Same DisplayConfig, skip update")
+            return
         }
 
-        Log.i(TAG, "Screen config updated: ScreenSize=$screenSize Orientation=$orientation")
+        Log.i(TAG, "New DisplayConfig: $newConfigPatched")
+        val orientationChanged = displayConfig.orientation != newConfigPatched.orientation
+        displayConfig = newConfigPatched
 
-        return true
+        // Notify for orientation changes if needed
+        if (orientationChanged) orientationListeners.forEach { it.invoke(context) }
+    }
+
+    private fun getCurrentDisplayConfig(): DisplayConfig =
+        DisplayConfig(
+            sizePx = getCurrentDisplaySize(),
+            orientation = getCurrentDisplayOrientation(),
+            safeInsetTopPx = getCurrentDisplaySafeInsetTop(),
+            roundedCorners = buildMap {
+                put(Corner.TOP_LEFT, getCurrentDisplayRoundedCorner(Corner.TOP_LEFT))
+                put(Corner.TOP_RIGHT, getCurrentDisplayRoundedCorner(Corner.TOP_RIGHT))
+                put(Corner.BOTTOM_LEFT, getCurrentDisplayRoundedCorner(Corner.BOTTOM_LEFT))
+                put(Corner.BOTTOM_RIGHT, getCurrentDisplayRoundedCorner(Corner.BOTTOM_RIGHT))
+            }
+        )
+
+    /**  @return the orientation of the screen. */
+    private fun getCurrentDisplayOrientation(): Int = when (display.rotation) {
+        Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
+        Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
+        else -> Configuration.ORIENTATION_UNDEFINED
     }
 
     private fun getCurrentDisplaySize(): Point =
@@ -147,34 +155,57 @@ class DisplayMetrics @Inject constructor(
             realSize
         }
 
-    /**  @return the orientation of the screen. */
-    private fun getCurrentOrientation(): Int = when (display.rotation) {
-        Surface.ROTATION_0, Surface.ROTATION_180 -> Configuration.ORIENTATION_PORTRAIT
-        Surface.ROTATION_90, Surface.ROTATION_270 -> Configuration.ORIENTATION_LANDSCAPE
-        else -> Configuration.ORIENTATION_UNDEFINED
+    private fun getCurrentDisplaySafeInsetTop(): Int =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) display.cutout?.safeInsetTop ?: 0 else 0
+
+    /** @return the rounded corner of the given position. Returns null if there is none. */
+    private fun getCurrentDisplayRoundedCorner(corner: Corner): DisplayRoundedCorner? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            windowManager.currentWindowMetrics.windowInsets
+                .getRoundedCorner(corner.toAndroidApiValue())?.let { cornerInfo ->
+                    DisplayRoundedCorner(centerPx = cornerInfo.center, radiusPx = cornerInfo.radius)
+                }
+        } else null
+
+    /**
+     * Some devices doesn't interpret the Android API documentation the same way, leading to different implementations
+     * across devices.
+     * This method tries to unify the different behaviours encountered to get the same information for all devices.
+     *
+     * @param current the display configuration currently in application.
+     * @param configToPatch the new display configuration to be patched.
+     *
+     * @return the display configuration patched
+     */
+    private fun applyInfoPatches(current: DisplayConfig, configToPatch: DisplayConfig): DisplayConfig {
+        // Some devices changes the display value with rotation, some does not.
+        // If the orientation have changed since the last configuration update, the display size should have changed
+        val patchedSize =
+            if (current.orientation != configToPatch.orientation && current.sizePx == configToPatch.sizePx) {
+                Point(configToPatch.sizePx.y, configToPatch.sizePx.x)
+            } else configToPatch.sizePx
+
+        return configToPatch.copy(
+            sizePx = patchedSize,
+        )
     }
+
+    private fun newConfigChangedReceiver(): BroadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                onAndroidConfigurationChanged(context)
+            }
+        }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()
 
         writer.apply {
             append(prefix).println("* DisplayMetrics:")
-            append(contentPrefix)
-                .append("- topInset=$safeInsetTop; ")
-                .append("orientation=${orientation.toOrientationString()}; ")
-                .append("screenSize=$screenSize; ")
-                .println()
-            append(contentPrefix)
-                .append("- displayRotation=${display.rotation.toDisplayRotationString()}; ")
-                .append("displaySize=${getCurrentDisplaySize()}; ")
-                .println()
+            append(contentPrefix, displayConfig)
+            append(contentPrefix).append("DisplayRotation: ${display.rotation.toDisplayRotationString()}").println()
+            append(contentPrefix).append("DisplaySize: ${getCurrentDisplaySize()}").println()
         }
-    }
-
-    private fun Int?.toOrientationString(): String = when (this) {
-        Configuration.ORIENTATION_PORTRAIT -> "PORTRAIT"
-        Configuration.ORIENTATION_LANDSCAPE -> "LANDSCAPE"
-        else -> "UNDEFINED"
     }
 
     private fun Int?.toDisplayRotationString(): String = when (this) {

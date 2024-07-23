@@ -28,7 +28,7 @@ import android.view.ScaleGestureDetector
 import com.buzbuz.smartautoclicker.core.base.extensions.scale
 import com.buzbuz.smartautoclicker.core.base.extensions.translate
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
@@ -201,15 +201,15 @@ internal class CaptureComponent(
 /**
  * Style for [CaptureComponent].
  *
- * @param displayMetrics metrics for the device display.
+ * @param displayConfigManager metrics for the device display.
  * @param zoomMin the minimum zoom value.
  * @param zoomMax the maximum zoom value.
  */
 internal class CaptureComponentStyle(
-    displayMetrics: DisplayMetrics,
+    displayConfigManager: DisplayConfigManager,
     val zoomMin: Float,
     val zoomMax: Float,
-) : ViewStyle(displayMetrics)
+) : ViewStyle(displayConfigManager)
 
 /** The default minimum zoom value. */
 internal const val DEFAULT_ZOOM_MINIMUM = 0.8f

@@ -25,7 +25,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -59,7 +59,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class DetectorEngine @Inject constructor(
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val displayRecorder: DisplayRecorder,
 ) {
 
@@ -124,14 +124,14 @@ class DetectorEngine @Inject constructor(
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(Dispatchers.IO)
-        displayMetrics.addOrientationListener(orientationListener)
+        displayConfigManager.addOrientationListener(orientationListener)
 
         processingScope?.launch {
             displayRecorder.apply {
                 startProjection(context, resultCode, data) {
                     this@DetectorEngine.stopScreenRecord()
                 }
-                startScreenRecord(context, displayMetrics.screenSize)
+                startScreenRecord(context, displayConfigManager.displayConfig.sizePx)
             }
 
             _state.emit(DetectorState.RECORDING)
@@ -215,7 +215,7 @@ class DetectorEngine @Inject constructor(
             }
 
             detectionProgressListener?.onImageEventProcessingCancelled()
-            displayRecorder.resizeDisplay(context, displayMetrics.screenSize)
+            displayRecorder.resizeDisplay(context, displayConfigManager.displayConfig.sizePx)
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -275,7 +275,7 @@ class DetectorEngine @Inject constructor(
         Log.i(TAG, "stopScreenRecord")
         _state.value = DetectorState.TRANSITIONING
 
-        displayMetrics.removeOrientationListener(orientationListener)
+        displayConfigManager.removeOrientationListener(orientationListener)
         processingScope?.launch {
             processingShutdownJob?.join()
 

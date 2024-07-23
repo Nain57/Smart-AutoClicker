@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ImageConditionDetails
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toImageConditionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -54,7 +53,7 @@ import javax.inject.Inject
 class ImageConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
@@ -73,7 +72,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
         }.flowOn(ioDispatcher)
 
     val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->
-        focusedCondition?.first?.toItemDescription(displayMetrics.screenSize, focusedCondition.second)
+        focusedCondition?.first?.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
     }
 
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->

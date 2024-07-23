@@ -104,7 +104,7 @@ class CaptureMenu(
     override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        selectorView = ConditionSelectorView(context, displayMetrics, ::onSelectorValidityChanged)
+        selectorView = ConditionSelectorView(context, displayConfigManager, ::onSelectorValidityChanged)
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }

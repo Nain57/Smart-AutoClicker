@@ -22,7 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
@@ -40,7 +40,7 @@ import javax.inject.Inject
 class TutorialOverlayViewModel @Inject constructor(
     private val monitoredViewsManager: MonitoredViewsManager,
     private val tutorialRepository: TutorialRepository,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
 
     val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.activeStep
@@ -63,7 +63,7 @@ class TutorialOverlayViewModel @Inject constructor(
                             instructionsResId = tutorialOverlay.tutorialInstructionsResId,
                             image = tutorialOverlay.getImage(),
                             exitButton = TutorialExitButton.MonitoredView(tutorialOverlay.closeType.type, position),
-                            isDisplayedInTopHalf = position.centerY() > displayMetrics.screenSize.y / 2,
+                            isDisplayedInTopHalf = position.centerY() > displayConfigManager.displayConfig.sizePx.y / 2,
                         )
                     } ?: flowOf(UiTutorialOverlayState(tutorialOverlay.tutorialInstructionsResId))
                 }

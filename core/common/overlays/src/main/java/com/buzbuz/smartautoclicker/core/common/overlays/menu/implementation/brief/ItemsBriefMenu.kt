@@ -66,17 +66,17 @@ abstract class ItemBriefMenu(
 
         briefViewBinding = ItemsBriefOverlayViewBinding.inflate(
             inflater = context.getSystemService(LayoutInflater::class.java),
-            orientation = displayMetrics.orientation,
+            orientation = displayConfigManager.displayConfig.orientation,
         )
 
-        briefAdapter = ItemBriefAdapter(displayMetrics, ::onCreateBriefItemViewHolder) { index, brief ->
+        briefAdapter = ItemBriefAdapter(displayConfigManager, ::onCreateBriefItemViewHolder) { index, brief ->
             debounceUserInteraction { onItemBriefClicked(index, brief) }
         }
 
         briefViewBinding.apply {
             briefPanelAnimationController.attachToView(
                 layoutActionList,
-                if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
                     AutoHideAnimationController.ScreenSide.BOTTOM
                 else
                     AutoHideAnimationController.ScreenSide.LEFT
@@ -98,7 +98,7 @@ abstract class ItemBriefMenu(
             }
             listActions.layoutManager = LinearLayoutManager(
                 context,
-                if (displayMetrics.orientation == Configuration.ORIENTATION_PORTRAIT)
+                if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
                     LinearLayoutManager.HORIZONTAL else LinearLayoutManager.VERTICAL,
                 false,
             )

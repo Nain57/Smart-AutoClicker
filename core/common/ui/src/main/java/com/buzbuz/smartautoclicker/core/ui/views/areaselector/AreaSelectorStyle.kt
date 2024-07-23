@@ -20,7 +20,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PointF
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.DEFAULT_HINTS_ICON_MARGIN
@@ -49,9 +49,9 @@ internal fun TypedArray.getAnimationsStyle() =
         ).toLong(),
     )
 
-internal fun TypedArray.getSelectorComponentStyle(displayMetrics: DisplayMetrics) =
+internal fun TypedArray.getSelectorComponentStyle(displayConfigManager: DisplayConfigManager) =
     SelectorComponentStyle(
-        displayMetrics = displayMetrics,
+        displayConfigManager = displayConfigManager,
         selectorDefaultSize = PointF(
             getDimensionPixelSize(
                 R.styleable.AreaSelectorView_defaultWidth,
@@ -90,9 +90,9 @@ internal fun TypedArray.getSelectorComponentStyle(displayMetrics: DisplayMetrics
         ),
     )
 
-internal fun TypedArray.getHintsStyle(displayMetrics: DisplayMetrics) =
+internal fun TypedArray.getHintsStyle(displayConfigManager: DisplayConfigManager) =
     HintsComponentStyle(
-        displayMetrics = displayMetrics,
+        displayConfigManager = displayConfigManager,
         iconsMargin = getDimensionPixelSize(
             R.styleable.AreaSelectorView_hintsIconsMargin,
             DEFAULT_HINTS_ICON_MARGIN,

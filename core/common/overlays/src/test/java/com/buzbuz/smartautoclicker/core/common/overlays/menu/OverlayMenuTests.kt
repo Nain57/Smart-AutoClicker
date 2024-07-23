@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedViews
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import dagger.hilt.EntryPoints
@@ -105,7 +105,7 @@ class OverlayMenuTests {
     @Mock private lateinit var mockLayoutInflater: LayoutInflater
 
     @Mock private lateinit var mockDisplayEntryPoint: DisplayEntryPoint
-    @Mock private lateinit var mockDisplayMetrics: DisplayMetrics
+    @Mock private lateinit var mockDisplayConfigManager: DisplayConfigManager
 
     @Mock private lateinit var mockUiEntryPoint: OverlaysEntryPoint
     @Mock private lateinit var mockOverlayMenuPositionDataSource: OverlayMenuPositionDataSource
@@ -176,8 +176,8 @@ class OverlayMenuTests {
             .thenReturn(mockSharedPrefs)
 
         // Mock display metrics
-        mockWhen(mockDisplayEntryPoint.displayMetrics()).thenReturn(mockDisplayMetrics)
-        mockWhen(mockDisplayMetrics.screenSize).thenReturn(Point(TEST_DATA_DISPLAY_WIDTH, TEST_DATA_DISPLAY_HEIGHT))
+        mockWhen(mockDisplayEntryPoint.displayMetrics()).thenReturn(mockDisplayConfigManager)
+        mockWhen(mockDisplayConfigManager.screenSize).thenReturn(Point(TEST_DATA_DISPLAY_WIDTH, TEST_DATA_DISPLAY_HEIGHT))
 
         // Mock position data source
         mockWhen(mockUiEntryPoint.overlayMenuPositionDataSource()).thenReturn(mockOverlayMenuPositionDataSource)

@@ -27,7 +27,7 @@ import android.view.View
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponent
@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsCompo
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class AreaSelectorView(
     context: Context,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
 ) : View(context) {
 
     /** Controls the display of the selector. */
@@ -52,8 +52,8 @@ class AreaSelectorView(
     init {
         context.obtainStyledAttributes(null, R.styleable.AreaSelectorView, R.attr.areaSelectorStyle, 0).use { ta ->
             animations = AreaSelectorAnimations(ta.getAnimationsStyle())
-            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayMetrics), ::invalidate)
-            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayMetrics), ::invalidate)
+            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayConfigManager), ::invalidate)
+            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayConfigManager), ::invalidate)
         }
     }
 

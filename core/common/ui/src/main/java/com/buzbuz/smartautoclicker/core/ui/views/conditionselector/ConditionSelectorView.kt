@@ -29,7 +29,7 @@ import android.view.View
 
 import androidx.core.content.res.use
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.CaptureComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
@@ -41,13 +41,13 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsCompo
  * easily select a section of the screen for a event condition.
  *
  * @param context the Android context
- * @param displayMetrics the current screen metrics.
+ * @param displayConfigManager the current screen metrics.
  * @param onSelectorValidityChanged listener upon the selector validity.
  */
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class ConditionSelectorView(
     context: Context,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val onSelectorValidityChanged: (Boolean) -> Unit,
 ) : View(context) {
 
@@ -71,9 +71,9 @@ class ConditionSelectorView(
     init {
         context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
             animations = ConditionSelectorAnimations(ta.getAnimationsStyle())
-            capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayMetrics), ::invalidate)
-            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayMetrics), ::invalidate)
-            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayMetrics), ::invalidate)
+            capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayConfigManager), ::invalidate)
+            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayConfigManager), ::invalidate)
+            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayConfigManager), ::invalidate)
         }
     }
 

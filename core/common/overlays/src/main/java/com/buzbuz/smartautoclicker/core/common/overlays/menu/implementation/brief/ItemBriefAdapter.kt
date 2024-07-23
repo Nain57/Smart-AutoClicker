@@ -25,16 +25,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 
 
 internal class ItemBriefAdapter(
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val viewHolderCreator: (parent: ViewGroup, orientation: Int) -> ItemBriefViewHolder<*>,
     private val onItemClickedListener: (Int, ItemBrief) -> Unit,
 ) : ListAdapter<ItemBrief, ItemBriefViewHolder<*>>(ItemBriefDiffUtilCallback) {
 
-    private var orientation: Int = displayMetrics.orientation
+    private var orientation: Int = displayConfigManager.displayConfig.orientation
 
     override fun getItemViewType(position: Int): Int = orientation
 
@@ -49,8 +49,8 @@ internal class ItemBriefAdapter(
 
     @SuppressLint("NotifyDataSetChanged") // Reload the whole list when the orientation is different
     override fun submitList(list: List<ItemBrief>?) {
-        if (orientation != displayMetrics.orientation) {
-            orientation = displayMetrics.orientation
+        if (orientation != displayConfigManager.displayConfig.orientation) {
+            orientation = displayConfigManager.displayConfig.orientation
             notifyDataSetChanged()
             return
         }
