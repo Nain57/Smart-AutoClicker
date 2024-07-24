@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -114,6 +115,11 @@ class ImageConditionsBriefViewModel @Inject constructor(
 private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(
         conditionBitmap = bitmap,
+        conditionDetectionType = when (detectionType) {
+            EXACT -> ImageConditionBriefRenderingType.EXACT
+            IN_AREA -> ImageConditionBriefRenderingType.AREA
+            else -> ImageConditionBriefRenderingType.WHOLE_SCREEN
+        },
         conditionPosition = area,
         conditionDetectionArea =
             when (detectionType) {

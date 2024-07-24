@@ -23,10 +23,16 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.View
-import androidx.annotation.ColorInt
 
+import androidx.annotation.ColorInt
+import androidx.core.graphics.toRectF
+
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponentStyle
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 
 import kotlin.math.max
 import kotlin.math.min
@@ -34,7 +40,8 @@ import kotlin.math.min
 internal class ImageConditionBriefRenderer(
     briefView: View,
     viewStyle: ImageConditionBriefRendererStyle,
-) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle) {
+    displayConfigManager: DisplayConfigManager,
+) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle), ViewInvalidator {
 
     private val selectorPaint = Paint().apply {
         isAntiAlias = true
@@ -47,6 +54,15 @@ internal class ImageConditionBriefRenderer(
         style = Paint.Style.FILL
         color = viewStyle.backgroundColor
     }
+
+    private val displayBorderComponent = DisplayBorderComponent(
+        viewStyle = DisplayBorderComponentStyle(
+            displayConfigManager = displayConfigManager,
+            color = viewStyle.selectorColor,
+            thicknessPx = viewStyle.thicknessPx,
+        ),
+        viewInvalidator = this,
+    )
 
     private var imagePosition: Rect? = null
     private var detectionBorderRect: RectF? = null
@@ -65,6 +81,7 @@ internal class ImageConditionBriefRenderer(
 
     override fun onSizeChanged(w: Int, h: Int) {
         super.onSizeChanged(w, h)
+        displayBorderComponent.onViewSizeChanged(w, h)
         invalidate()
     }
 
@@ -72,75 +89,116 @@ internal class ImageConditionBriefRenderer(
         imagePosition = null
         detectionBorderRect = null
         backgroundPath.reset()
+        displayBorderComponent.onReset()
 
+        // Nothing to display ? Exit early
         val position = briefDescription?.conditionPosition
         val detectionArea = briefDescription?.conditionDetectionArea
-        if (detectionArea == null || position == null) {
+        val detectionType = briefDescription?.conditionDetectionType
+        if (detectionArea == null || position == null || detectionType == null) {
             super.invalidate()
             return
         }
 
-        imagePosition =
-            if (detectionArea == position) position
-            else {
-                val offsetX = (detectionArea.width() - position.width()) / 2
-                val offsetY = (detectionArea.height() - position.height()) / 2
-                Rect(
-                    detectionArea.left + offsetX,
-                    detectionArea.top + offsetY,
-                    detectionArea.right - offsetX,
-                    detectionArea.bottom - offsetY,
+        when (detectionType) {
+            ImageConditionBriefRenderingType.AREA -> {
+                imagePosition = position.centerIn(detectionArea)
+                backgroundPath.addRectangleWithHole(
+                    RectF(0f, 0f, briefView.width.toFloat(), briefView.height.toFloat()),
+                    detectionArea.toRectF(),
+                )
+                detectionBorderRect = detectionArea.toDrawableRect(
+                    viewStyle.thicknessPx, briefView.width, briefView.height,
                 )
             }
 
-        backgroundPath.apply {
-            moveTo(0f, 0f)
-            lineTo(briefView.width.toFloat(), 0f)
-            lineTo(briefView.width.toFloat(), briefView.height.toFloat())
-            lineTo(0f, briefView.height.toFloat())
-            close()
+            ImageConditionBriefRenderingType.EXACT -> {
+                imagePosition = position
+                backgroundPath.addRectangleWithHole(
+                    RectF(0f, 0f, briefView.width.toFloat(), briefView.height.toFloat()),
+                    detectionArea.toRectF(),
+                )
+                detectionBorderRect = detectionArea.toDrawableRect(
+                    viewStyle.thicknessPx, briefView.width, briefView.height,
+                )
+            }
 
-            moveTo(detectionArea.left.toFloat(), detectionArea.top.toFloat())
-            lineTo(detectionArea.right.toFloat(), detectionArea.top.toFloat())
-            lineTo(detectionArea.right.toFloat(), detectionArea.bottom.toFloat())
-            lineTo(detectionArea.left.toFloat(), detectionArea.bottom.toFloat())
-            close()
+            ImageConditionBriefRenderingType.WHOLE_SCREEN -> {
+                imagePosition = position.centerIn(detectionArea)
+                displayBorderComponent.onInvalidate()
+            }
         }
-
-        detectionBorderRect = RectF(
-            max(0, detectionArea.left - viewStyle.thicknessPx).toFloat(),
-            max(0, detectionArea.top - viewStyle.thicknessPx).toFloat(),
-            min(briefView.width, detectionArea.right + viewStyle.thicknessPx).toFloat(),
-            min(briefView.height, detectionArea.bottom + viewStyle.thicknessPx).toFloat(),
-        )
 
         super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
-        briefDescription?.let { description ->
-            canvas.drawPath(backgroundPath, backgroundPaint)
-
-            description.conditionBitmap?.let { bitmap ->
-                imagePosition?.let { position ->
-                    canvas.drawBitmap(bitmap, null, position, null)
-                }
+        imagePosition?.let { position ->
+            briefDescription?.conditionBitmap?.let { bitmap ->
+                canvas.drawBitmap(bitmap, null, position, null)
             }
+        }
 
+        if (detectionBorderRect != null) {
+            canvas.drawPath(backgroundPath, backgroundPaint)
             detectionBorderRect?.let { borderRect ->
                 canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, selectorPaint)
             }
+        } else {
+            displayBorderComponent.onDraw(canvas)
         }
     }
 
     override fun onStop() = Unit
+
+    /** Get the position of this rectangle if it was centered in the provided container. */
+    private fun Rect.centerIn(container: Rect): Rect {
+        val offsetX = (container.width() - width()) / 2
+        val offsetY = (container.height() - height()) / 2
+
+        return Rect(
+            container.left + offsetX,
+            container.top + offsetY,
+            container.right - offsetX,
+            container.bottom - offsetY,
+        )
+    }
+
+    /** Get the path to draw a rectangle containing a rectangle hole inside it.  */
+    private fun Path.addRectangleWithHole(area: RectF, hole: RectF) {
+        moveTo(area.left, area.top)
+        lineTo(area.right,  area.top)
+        lineTo(area.right, area.bottom)
+        lineTo(area.left, area.bottom)
+        close()
+
+        moveTo(hole.left, hole.top)
+        lineTo(hole.right, hole.top)
+        lineTo(hole.right, hole.bottom)
+        lineTo(hole.left, hole.bottom)
+        close()
+    }
+
+    private fun Rect.toDrawableRect(thicknessPx: Int, maxWidth: Int, maxHeight: Int) = RectF(
+        max(0, left - thicknessPx).toFloat(),
+        max(0, top - thicknessPx).toFloat(),
+        min(maxWidth, right + thicknessPx).toFloat(),
+        min(maxHeight, bottom + thicknessPx).toFloat(),
+    )
 }
 
 data class ImageConditionDescription(
     val conditionBitmap: Bitmap?,
+    val conditionDetectionType: ImageConditionBriefRenderingType,
     val conditionPosition: Rect,
     val conditionDetectionArea: Rect?,
 ) : ItemBriefDescription
+
+enum class ImageConditionBriefRenderingType {
+    AREA,
+    EXACT,
+    WHOLE_SCREEN
+}
 
 internal data class ImageConditionBriefRendererStyle(
     @ColorInt val backgroundColor: Int,
