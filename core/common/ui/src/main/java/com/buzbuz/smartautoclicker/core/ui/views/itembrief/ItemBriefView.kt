@@ -25,6 +25,8 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRenderer
@@ -35,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefR
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+import dagger.hilt.EntryPoints
 
 
 class ItemBriefView @JvmOverloads constructor(
@@ -45,6 +48,11 @@ class ItemBriefView @JvmOverloads constructor(
 
     /** Paint drawing the outer circle of the position 1. */
     private val style: ItemBriefViewStyle
+
+    private val displayConfigManager: DisplayConfigManager by lazy {
+        EntryPoints.get(context.applicationContext, DisplayEntryPoint::class.java)
+            .displayMetrics()
+    }
 
     init {
         if (attrs == null) throw IllegalArgumentException("AttributeSet is null")
@@ -71,7 +79,9 @@ class ItemBriefView @JvmOverloads constructor(
                 is ClickDescription -> ClickBriefRenderer(this, style.clickStyle)
                 is SwipeDescription -> SwipeBriefRenderer(this, style.swipeStyle)
                 is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
-                is ImageConditionDescription -> ImageConditionBriefRenderer(this, style.imageConditionStyle)
+                is ImageConditionDescription -> ImageConditionBriefRenderer(
+                    this, style.imageConditionStyle, displayConfigManager,
+                )
                 is DefaultDescription -> DefaultBriefRenderer(this, style.defaultStyle)
                 else -> null
             }
