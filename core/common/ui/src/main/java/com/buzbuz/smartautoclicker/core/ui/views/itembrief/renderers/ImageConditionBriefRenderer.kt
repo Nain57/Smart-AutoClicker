@@ -27,6 +27,7 @@ import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
+
 import kotlin.math.max
 import kotlin.math.min
 

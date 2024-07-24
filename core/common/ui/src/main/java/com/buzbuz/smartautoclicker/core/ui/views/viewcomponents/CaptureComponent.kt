@@ -25,11 +25,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+
 import com.buzbuz.smartautoclicker.core.base.extensions.scale
 import com.buzbuz.smartautoclicker.core.base.extensions.translate
-
 import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
 import kotlin.math.max
@@ -40,12 +41,12 @@ import kotlin.math.min
  *
  * @param context the Android context.
  * @param captureStyle the style for this component.
- * @param viewInvalidator calls invalidate on the view hosting this component.
+ * @param viewInvalidator invalidate the parent view
  */
 internal class CaptureComponent(
     context: Context,
     captureStyle: CaptureComponentStyle,
-    viewInvalidator: () -> Unit,
+    viewInvalidator: ViewInvalidator,
 ): ViewComponent(captureStyle, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move gesture. */
@@ -159,8 +160,7 @@ internal class CaptureComponent(
         invalidate()
     }
 
-    override fun onViewSizeChanged(w: Int, h: Int) {
-        super.onViewSizeChanged(w, h)
+    override fun onInvalidate() {
         if (screenCapture == null) {
             captureArea.apply {
                 left = 0f
