@@ -57,15 +57,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_large"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_extra_large"
             android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon_recording"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:drawableStartCompat="@drawable/ic_recording"
-            android:drawablePadding="@dimen/margin_horizontal_small"
             android:text="@string/overlay_instructions_gesture_record" />
+
+        <ImageView
+            android:id="@+id/icon_recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_extra_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/text_instructions"
+            app:layout_constraintTop_toTopOf="@id/text_instructions"
+            app:layout_constraintBottom_toBottomOf="@id/text_instructions"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:src="@drawable/ic_recording"
+            tools:ignore="ContentDescription" />
 
         <Space
             android:id="@+id/space_instructions_background_bottom"

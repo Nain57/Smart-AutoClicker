@@ -20,6 +20,7 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefLandBinding
@@ -32,6 +33,7 @@ class ItemsBriefOverlayViewBinding private constructor(
     val viewBrief: ItemBriefView,
     val viewRecorder: GestureRecordView,
     val layoutInstructions: View,
+    val recordingIcon: ImageView,
     val layoutActionList: View,
     val listActions: RecyclerView,
     val textActionIndex: TextView,
@@ -57,6 +59,7 @@ class ItemsBriefOverlayViewBinding private constructor(
         viewBrief = binding.viewBrief,
         viewRecorder = binding.viewRecord,
         layoutInstructions = binding.layoutInstructions,
+        recordingIcon = binding.iconRecording,
         layoutActionList = binding.layoutActionList,
         listActions = binding.listActions,
         textActionIndex = binding.textActionIndex,
@@ -73,6 +76,7 @@ class ItemsBriefOverlayViewBinding private constructor(
         viewBrief = binding.viewBrief,
         viewRecorder = binding.viewRecord,
         layoutInstructions = binding.layoutInstructions,
+        recordingIcon = binding.iconRecording,
         layoutActionList = binding.layoutActionList,
         listActions = binding.listActions,
         textActionIndex = binding.textActionIndex,
