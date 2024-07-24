@@ -30,8 +30,8 @@ import android.view.MotionEvent
 import androidx.annotation.ColorInt
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
-import com.buzbuz.smartautoclicker.core.base.extensions.translate
 
+import com.buzbuz.smartautoclicker.core.base.extensions.translate
 import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeLeft
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeRight
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeTop
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ZoomCapture
 
@@ -51,12 +52,12 @@ import kotlin.math.min
  *
  * @param context the Android Context.
  * @param selectorStyle the style for this component.
- * @param viewInvalidator calls invalidate on the view hosting this component.
+ * @param viewInvalidator invalidate the parent view
  */
 internal class SelectorComponent(
     context: Context,
     selectorStyle: SelectorComponentStyle,
-    viewInvalidator: () -> Unit,
+    viewInvalidator: ViewInvalidator,
 ): ViewComponent(selectorStyle, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move/resize gesture. */
@@ -306,7 +307,7 @@ internal class SelectorComponent(
         }
     }
 
-    override fun invalidate() {
+    override fun onInvalidate() {
         selectorDrawingPath.apply {
             reset()
 
@@ -322,8 +323,6 @@ internal class SelectorComponent(
             lineTo(selectedArea.left, selectedArea.bottom)
             close()
         }
-
-        super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {

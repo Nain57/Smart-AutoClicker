@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeBotto
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeLeft
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeRight
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeTop
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ZoomCapture
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
@@ -40,12 +41,12 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
  *
  * @param context the Android Context.
  * @param hintsStyle the style for the hints.
- * @param viewInvalidator calls invalidate on the view hosting this component.
+ * @param viewInvalidator invalidate the parent view.
  */
 internal class HintsComponent(
     context: Context,
     hintsStyle: HintsComponentStyle,
-    viewInvalidator: () -> Unit,
+    viewInvalidator: ViewInvalidator,
 ): ViewComponent(hintsStyle, viewInvalidator) {
 
     /** The distance between the hint and the selector border. */
@@ -180,12 +181,11 @@ internal class HintsComponent(
         invalidate()
     }
 
-    override fun onViewSizeChanged(w: Int, h: Int) {
-        super.onViewSizeChanged(w, h)
+    override fun onTouchEvent(event: MotionEvent): Boolean = false
+
+    override fun onInvalidate() {
         maxRect.set(maxArea.toRect())
     }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean = false
 
     override fun onDraw(canvas: Canvas) {
         iconsShown.forEach { hintType ->
