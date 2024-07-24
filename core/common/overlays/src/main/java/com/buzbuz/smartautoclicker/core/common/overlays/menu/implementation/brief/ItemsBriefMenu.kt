@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.view.LayoutInflater
@@ -27,6 +29,7 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.LinearLayoutManager
 
+import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
@@ -50,6 +53,8 @@ abstract class ItemBriefMenu(
     protected lateinit var briefViewBinding: ItemsBriefOverlayViewBinding
     /** Adapter displaying the items in the list. */
     private lateinit var briefAdapter: ItemBriefAdapter
+
+    private lateinit var blinkingAnimator: Animator
 
     protected open fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding): Unit = Unit
     protected open fun onMoveItem(from: Int, to: Int) = Unit
@@ -86,6 +91,7 @@ abstract class ItemBriefMenu(
                 layoutInstructions,
                 AutoHideAnimationController.ScreenSide.TOP,
             )
+            blinkingAnimator = AnimatorInflater.loadAnimator(context, R.animator.blinking)
 
             listActions.adapter = briefAdapter
             itemListSnapHelper.apply {
@@ -185,16 +191,12 @@ abstract class ItemBriefMenu(
         }
     }
 
-    protected fun updateBriefVisualization(description: ItemBriefDescription) {
-        briefViewBinding.viewBrief.setDescription(
-            newDescription = description,
-            animate = true,
-        )
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     protected fun startGestureCapture(onNewAction: (gesture: ItemBriefDescription?, isFinished: Boolean) -> Unit) {
         briefPanelAnimationController.hide()
+
+        blinkingAnimator.setTarget(briefViewBinding.recordingIcon)
+        blinkingAnimator.start()
         instructionsAnimationController.showOrResetTimer()
 
         briefViewBinding.viewBrief.setDescription(null)
@@ -222,6 +224,8 @@ abstract class ItemBriefMenu(
     }
 
     protected fun stopGestureCapture() {
+        blinkingAnimator.end()
+
         briefViewBinding.viewRecorder.clearAndHide()
         briefPanelAnimationController.showOrResetTimer()
         instructionsAnimationController.hide()
