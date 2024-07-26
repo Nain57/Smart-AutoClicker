@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
@@ -28,7 +29,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemEventChi
 
 internal class EventChildrenCardsAdapter(
     private val itemClickedListener: (index: Int) -> Unit,
-) : ListAdapter<Int, EventChildCardViewHolder>(CardIconResDiffUtilCallback) {
+) : ListAdapter<EventChildrenItem, EventChildCardViewHolder>(CardIconResDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventChildCardViewHolder =
         EventChildCardViewHolder(
@@ -46,13 +47,23 @@ internal class EventChildCardViewHolder (
     private val itemClickedListener: (index: Int) -> Unit,
 ): ViewHolder(viewBinding.root) {
 
-    fun onBind(@DrawableRes actionIconRes: Int) {
-        viewBinding.conditionImage.setImageResource(actionIconRes)
-        viewBinding.root.setOnClickListener { itemClickedListener(bindingAdapterPosition) }
+    fun onBind(item: EventChildrenItem) {
+        viewBinding.apply {
+            conditionImage.setImageResource(item.iconRes)
+            errorBadge.visibility = if (item.isInError) View.VISIBLE else View.GONE
+            root.setOnClickListener { itemClickedListener(bindingAdapterPosition) }
+        }
     }
 }
 
-internal object CardIconResDiffUtilCallback: DiffUtil.ItemCallback<Int>() {
-    override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean = oldItem == newItem
-    override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean = oldItem == newItem
+internal object CardIconResDiffUtilCallback: DiffUtil.ItemCallback<EventChildrenItem>() {
+    override fun areItemsTheSame(oldItem: EventChildrenItem, newItem: EventChildrenItem): Boolean =
+        oldItem.iconRes == newItem.iconRes
+    override fun areContentsTheSame(oldItem: EventChildrenItem, newItem: EventChildrenItem): Boolean =
+        oldItem == newItem
 }
+
+data class EventChildrenItem(
+    @DrawableRes val iconRes: Int,
+    val isInError: Boolean,
+)
