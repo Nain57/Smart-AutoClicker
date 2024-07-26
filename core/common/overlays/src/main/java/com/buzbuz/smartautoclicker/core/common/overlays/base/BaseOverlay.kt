@@ -235,7 +235,7 @@ abstract class BaseOverlay internal constructor(
         if (debounceUserInteractionJob == null && lifecycleRegistry.currentState == State.RESUMED) {
             debounceUserInteractionJob = lifecycleScope.launch {
                 userInteraction()
-                delay(800)
+                delay(500)
                 debounceUserInteractionJob = null
             }
         }

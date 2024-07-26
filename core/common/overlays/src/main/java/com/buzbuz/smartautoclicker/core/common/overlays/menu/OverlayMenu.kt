@@ -246,7 +246,7 @@ abstract class OverlayMenu(
                 R.id.btn_hide_overlay -> {
                     hideOverlayButton = (view as ImageButton)
                     setOverlayViewVisibility(true)
-                    view.setDebouncedOnClickListener { onHideOverlayClicked() }
+                    view.setOnClickListener { onToggleOverlayVisibilityClicked() }
                 }
                 else -> view.setDebouncedOnClickListener { v ->
                     if (resizeController.isAnimating) return@setDebouncedOnClickListener
@@ -502,7 +502,7 @@ abstract class OverlayMenu(
      * Handle the click on the hide overlay button.
      * Toggle the visible state of the overlay view.
      */
-    private fun onHideOverlayClicked() {
+    private fun onToggleOverlayVisibilityClicked() {
         if (resizeController.isAnimating) return
 
         screenOverlayView?.let { view ->
