@@ -94,16 +94,16 @@ class EventDialogViewModel @Inject constructor(
     val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
         .mapNotNull { it.value }
 
-    val triggerConditionsDescription:  Flow<List<Int>> =
+    val triggerConditionsDescription:  Flow<List<EventChildrenItem>> =
         editionRepository.editionState.editedEventTriggerConditionsState.mapNotNull { conditionsListState ->
-            conditionsListState.value?.toTriggerConditionsIcons()
+            conditionsListState.value?.toTriggerConditionsChildrenItem()
         }
 
     val conditionOperator: Flow<Int> = configuredEvent
         .map { event -> event.conditionOperator }
 
-    val actionsDescriptions: Flow<List<Int>> = editionRepository.editionState.editedEventActionsState.mapNotNull { actionsState ->
-        actionsState.value?.toActionIcons()
+    val actionsDescriptions: Flow<List<EventChildrenItem>> = editionRepository.editionState.editedEventActionsState.mapNotNull { actionsState ->
+        actionsState.value?.toActionsChildrenItem()
     }
 
     val eventEnabledOnStart: Flow<Boolean> = configuredEvent
@@ -177,22 +177,28 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
-    private fun List<TriggerCondition>.toTriggerConditionsIcons(): List<Int> = map { condition ->
-        when (condition) {
-            is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
-            is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
-            is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
-        }
+    private fun List<TriggerCondition>.toTriggerConditionsChildrenItem(): List<EventChildrenItem> = map { condition ->
+        EventChildrenItem(
+            iconRes = when (condition) {
+                is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
+                is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
+                is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
+            },
+            isInError = !condition.isComplete(),
+        )
     }
 
-    private fun List<Action>.toActionIcons(): List<Int> = map { action ->
-        when (action) {
-            is Action.ChangeCounter -> R.drawable.ic_change_counter
-            is Action.Click -> R.drawable.ic_click
-            is Action.Intent -> R.drawable.ic_intent
-            is Action.Pause -> R.drawable.ic_wait
-            is Action.Swipe -> R.drawable.ic_swipe
-            is Action.ToggleEvent -> R.drawable.ic_toggle_event
-        }
+    private fun List<Action>.toActionsChildrenItem(): List<EventChildrenItem> = map { action ->
+        EventChildrenItem(
+            iconRes = when (action) {
+                is Action.ChangeCounter -> R.drawable.ic_change_counter
+                is Action.Click -> R.drawable.ic_click
+                is Action.Intent -> R.drawable.ic_intent
+                is Action.Pause -> R.drawable.ic_wait
+                is Action.Swipe -> R.drawable.ic_swipe
+                is Action.ToggleEvent -> R.drawable.ic_toggle_event
+            },
+            isInError = !action.isComplete(),
+        )
     }
 }
