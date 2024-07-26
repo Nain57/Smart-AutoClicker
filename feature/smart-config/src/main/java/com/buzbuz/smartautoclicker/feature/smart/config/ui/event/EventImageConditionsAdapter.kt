@@ -62,7 +62,7 @@ internal class EventImageConditionViewHolder (
 
     fun onBind(condition: ImageCondition) {
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.bind(condition, bitmapProvider) {
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(condition, bitmapProvider) {
             itemClickedListener(bindingAdapterPosition)
         }
     }

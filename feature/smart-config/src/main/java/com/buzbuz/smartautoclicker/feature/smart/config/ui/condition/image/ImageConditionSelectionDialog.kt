@@ -160,7 +160,7 @@ private class ImageConditionViewHolder(
 
     fun onBind(condition: ImageCondition) {
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.bind(
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(
             condition,
             bitmapProvider,
             onConditionSelected,
