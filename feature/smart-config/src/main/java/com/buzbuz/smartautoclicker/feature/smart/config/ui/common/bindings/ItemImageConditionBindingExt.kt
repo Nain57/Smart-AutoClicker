@@ -26,15 +26,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTint
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeImageConditionCardBinding
 
 import kotlinx.coroutines.Job
 
 /**
- * Bind the [ItemImageConditionDescriptionBinding] to a condition.
+ * Bind the [IncludeImageConditionCardBinding] to a condition.
  */
-fun ItemImageConditionDescriptionBinding.bind(
+fun IncludeImageConditionCardBinding.bind(
     condition: ImageCondition,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     conditionClickedListener: (ImageCondition) -> Unit
@@ -43,15 +42,10 @@ fun ItemImageConditionDescriptionBinding.bind(
 
     conditionName.text = condition.name
 
-    conditionShouldBeDetected.apply {
-        if (condition.shouldBeDetected) {
-            setImageResource(R.drawable.ic_confirm)
-            setIconTint(R.color.overlayMenuButtons)
-        } else {
-            setImageResource(R.drawable.ic_cancel)
-            setIconTint(R.color.overlayMenuButtons)
-        }
-    }
+    conditionShouldBeDetected.setImageResource(
+        if (condition.shouldBeDetected) R.drawable.ic_confirm
+        else R.drawable.ic_cancel
+    )
 
     conditionDetectionType.apply {
         setImageResource(
@@ -62,7 +56,6 @@ fun ItemImageConditionDescriptionBinding.bind(
                 else -> return@apply
             }
         )
-        setIconTint(R.color.overlayMenuButtons)
     }
 
     conditionThreshold.text = root.context.getString(

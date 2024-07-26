@@ -17,13 +17,11 @@
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/AppTheme.Widget.CardOutlined"
-    android:layout_width="@dimen/card_view_width_horizontal_list"
-    android:layout_height="@dimen/card_view_height_horizontal_list"
-    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-    android:layout_marginTop="@dimen/margin_vertical_small"
-    android:layout_marginBottom="@dimen/margin_vertical_small"
-    android:elevation="@dimen/elevation_level_2">
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dialog_item_condition_copy_condition_size"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+    android:layout_marginVertical="@dimen/margin_vertical_default">
 
     <include layout="@layout/include_image_condition_card"
         android:id="@+id/card_image_condition"/>

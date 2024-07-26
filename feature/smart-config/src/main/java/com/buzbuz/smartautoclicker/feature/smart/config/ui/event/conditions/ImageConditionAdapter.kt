@@ -90,7 +90,7 @@ class ImageConditionViewHolder(
      */
     fun onBindCondition(condition: ImageCondition, conditionClickedListener: (ImageCondition) -> Unit) {
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.bind(condition, bitmapProvider, conditionClickedListener)
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(condition, bitmapProvider, conditionClickedListener)
     }
 
     /** Unbind this view holder for a previously bound data model. */

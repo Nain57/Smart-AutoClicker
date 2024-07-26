@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionCopyBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.TriggerConditionAdapter
 
@@ -68,7 +68,7 @@ class ConditionCopyAdapter(
             R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             R.layout.item_image_condition_description -> ImageConditionViewHolder(
-                ItemImageConditionDescriptionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                ItemImageConditionCopyBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 bitmapProvider
             )
             R.layout.item_trigger_condition -> TriggerConditionViewHolder(
@@ -135,7 +135,7 @@ class HeaderViewHolder(
  * @param bitmapProvider provides the conditions bitmap.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemImageConditionDescriptionBinding,
+    private val viewBinding: ItemImageConditionCopyBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
@@ -153,7 +153,7 @@ private class ImageConditionViewHolder(
         conditionClickedListener: (ImageCondition) -> Unit,
     ) {
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.bind(
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(
             item.condition,
             bitmapProvider,
             conditionClickedListener,
