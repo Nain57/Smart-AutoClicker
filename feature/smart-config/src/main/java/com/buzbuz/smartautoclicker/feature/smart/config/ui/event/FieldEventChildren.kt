@@ -21,7 +21,6 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
@@ -66,12 +65,6 @@ private fun IncludeFieldEventChildrenBinding.toEmptyState() {
     }
     emptyDescription.visibility = View.VISIBLE
     list.visibility = View.GONE
-
-    ConstraintSet().apply {
-        clone(root)
-        connect(chevron.id, ConstraintSet.BOTTOM, emptyDescription.id, ConstraintSet.BOTTOM)
-        applyTo(root)
-    }
 }
 
 private fun <Item> IncludeFieldEventChildrenBinding.toListState(items: List<Item>) {
@@ -82,12 +75,6 @@ private fun <Item> IncludeFieldEventChildrenBinding.toListState(items: List<Item
     list.apply {
         visibility = View.VISIBLE
         getListAdapter<Item>()?.submitList(items)
-    }
-
-    ConstraintSet().apply {
-        clone(root)
-        clear(chevron.id, ConstraintSet.BOTTOM)
-        applyTo(root)
     }
 }
 
