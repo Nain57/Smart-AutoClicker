@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.counter.CounterNameSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

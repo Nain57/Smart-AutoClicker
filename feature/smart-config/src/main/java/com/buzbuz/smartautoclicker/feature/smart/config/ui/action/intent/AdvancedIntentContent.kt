@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentIntentConfigAdvancedBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.intent.IntentActionsSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.extras.ExtraConfigDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.flags.FlagsSelectionDialog

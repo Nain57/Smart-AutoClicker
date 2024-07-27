@@ -45,7 +45,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionChangeCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.counter.CounterNameSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
