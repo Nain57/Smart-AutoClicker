@@ -53,12 +53,12 @@
 
     <string name="item_click_title">Clique</string>
     <string name="item_click_desc">Clique em algum lugar da tela</string>
-    <string name="item_click_details_on_condition">Condição</string>
-    <string name="item_click_details_at_position">Durante %1$s na posição [%2$d, %3$d]</string>
+    <string name="item_click_details_on_condition">Durante %1$s no %2$s</string>
+    <string name="item_click_details_at_position">Durante %1$s</string>
 
     <string name="item_swipe_title">Swipe</string>
     <string name="item_swipe_desc">Swipe de uma posição na tela para outra</string>
-    <string name="item_swipe_details">Durante %1$s de [%2$d, %3$d] para [%4$d, %5$d]</string>
+    <string name="item_swipe_details">Durante %1$s</string>
 
     <string name="item_pause_title">Aguardar</string>
     <string name="item_pause_desc">Pausar a execução da detecção</string>
@@ -81,6 +81,8 @@
     <string name="item_intent_desc">Interagir com outra aplicação</string>
     <string name="item_intent_details">Enviar %1$s</string>
     <string name="item_intent_details_component_name">Enviar %1$s para %2$s</string>
+    <string name="item_intent_details_start_activity">Iniciar %1$s</string>
+
 
     <!-- Dialog Copy =============================================================================================== -->
 

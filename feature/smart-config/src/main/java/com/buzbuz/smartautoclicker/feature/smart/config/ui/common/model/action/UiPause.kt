@@ -32,6 +32,6 @@ internal fun Action.Pause.getDescription(context: Context, inError: Boolean): St
 
     else -> context.getString(
         R.string.item_pause_details,
-        formatDuration(pauseDuration!!)
+        formatDuration(pauseDuration ?: 1)
     )
 }

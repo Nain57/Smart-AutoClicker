@@ -17,10 +17,14 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 
 import android.content.Context
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+
+import com.buzbuz.smartautoclicker.core.android.application.getApplicationLabel
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+
 import kotlin.reflect.KClass
 
 
@@ -29,35 +33,24 @@ internal fun getIntentIconRes(): Int =
     R.drawable.ic_intent
 
 internal fun Action.Intent.getDescription(context: Context, inError: Boolean): String {
-    if (inError) return context.getString(R.string.item_error_action_invalid_generic)
+    if (inError) {
+        return context.getString(R.string.item_error_action_invalid_generic)
+    }
 
-    var action = intentAction ?: return ""
-
-    val dotIndex = action.lastIndexOf('.')
-    if (dotIndex != -1 && dotIndex < action.lastIndex) {
-        action = action.substring(dotIndex + 1)
-
-        if (!isBroadcast && componentName != null
-            && action.length < INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT
-        ) {
-
-            var componentName = componentName!!.flattenToString()
-            val dotIndex2 = componentName.lastIndexOf('.')
-            if (dotIndex2 != -1 && dotIndex2 < componentName.lastIndex) {
-
-                componentName = componentName.substring(dotIndex2 + 1)
-                if (componentName.length < INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT) {
-                    return context.getString(
-                        R.string.item_intent_details_component_name,
-                        action,
-                        componentName,
-                    )
-                }
-            }
+    if (!isBroadcast) {
+        val appName = context.packageManager.getApplicationLabel(Intent(intentAction).setComponent(componentName!!))
+        if (appName != null) {
+            return context.getString(R.string.item_intent_details_start_activity, appName)
         }
     }
 
-    return context.getString(R.string.item_intent_details, action)
+    val displayAction = intentAction?.getLastPart('.')
+    val displayComponentName = componentName?.flattenToString()?.getLastPart('.')
+    if (displayAction != null && displayComponentName != null) {
+        return context.getString(R.string.item_intent_details_component_name, displayAction, displayComponentName)
+    }
+
+    return context.getString(R.string.item_intent_details, displayAction ?: intentAction)
 }
 
 @StringRes
@@ -73,7 +66,10 @@ internal fun KClass<out Any>.getIntentExtraTypeDisplayName(): Int = when (this) 
     else -> 0
 }
 
-/** The maximal length of the displayed intent action string. */
-private const val INTENT_COMPONENT_DISPLAYED_ACTION_LENGTH_LIMIT = 15
-/** The maximal length of the displayed intent component name string. */
-private const val INTENT_COMPONENT_DISPLAYED_COMPONENT_LENGTH_LIMIT = 20
+private fun String.getLastPart(separator: Char): String? {
+    val separatorIndex = lastIndexOf(separator)
+
+    return if (separatorIndex != -1 && separatorIndex < lastIndex) {
+        substring(separatorIndex + 1)
+    } else null
+}

@@ -32,6 +32,6 @@ internal fun Action.Swipe.getDescription(context: Context, inError: Boolean): St
 
     else -> context.getString(
         R.string.item_swipe_details,
-        formatDuration(swipeDuration!!), fromX, fromY, toX, toY
+        formatDuration(swipeDuration ?: 1),
     )
 }
