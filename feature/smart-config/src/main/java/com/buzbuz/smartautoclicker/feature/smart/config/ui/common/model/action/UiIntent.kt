@@ -24,9 +24,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import kotlin.reflect.KClass
 
 
-@Suppress("UnusedReceiverParameter")
-internal val Action.Intent.iconRes: Int
-    @DrawableRes get() = R.drawable.ic_intent
+@DrawableRes
+internal fun getIntentIconRes(): Int =
+    R.drawable.ic_intent
 
 internal fun Action.Intent.getDescription(context: Context, inError: Boolean): String {
     if (inError) return context.getString(R.string.item_error_action_invalid_generic)

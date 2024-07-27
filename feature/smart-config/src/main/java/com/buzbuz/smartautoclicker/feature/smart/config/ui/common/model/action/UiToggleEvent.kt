@@ -22,9 +22,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-@Suppress("UnusedReceiverParameter")
-internal val Action.ToggleEvent.iconRes: Int
-    @DrawableRes get() = R.drawable.ic_toggle_event
+@DrawableRes
+internal fun getToggleEventIconRes(): Int = R.drawable.ic_toggle_event
 
 internal fun Action.ToggleEvent.getDescription(context: Context, inError: Boolean): String = when {
     inError -> context.getString(R.string.item_toggle_event_details_error)

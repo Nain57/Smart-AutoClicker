@@ -40,12 +40,12 @@ internal fun Action.toUiAction(context: Context, inError: Boolean = !isComplete(
 
 @DrawableRes
 internal fun Action.getIconRes(): Int = when (this) {
-    is Action.Click -> iconRes
-    is Action.Swipe -> iconRes
-    is Action.Pause -> iconRes
-    is Action.Intent -> iconRes
-    is Action.ToggleEvent -> iconRes
-    is Action.ChangeCounter -> iconRes
+    is Action.Click -> getClickIconRes()
+    is Action.Swipe -> getSwipeIconRes()
+    is Action.Pause -> getPauseIconRes()
+    is Action.Intent -> getIntentIconRes()
+    is Action.ToggleEvent -> getToggleEventIconRes()
+    is Action.ChangeCounter -> getChangeCounterIconRes()
     else -> throw IllegalArgumentException("Not yet supported")
 }
 

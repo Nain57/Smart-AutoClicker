@@ -23,9 +23,9 @@ import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-@Suppress("UnusedReceiverParameter")
-internal val Action.Pause.iconRes: Int
-    @DrawableRes get() = R.drawable.ic_pause
+@DrawableRes
+internal fun getPauseIconRes(): Int =
+    R.drawable.ic_wait
 
 internal fun Action.Pause.getDescription(context: Context, inError: Boolean): String = when {
     inError -> context.getString(R.string.item_error_action_invalid_generic)
