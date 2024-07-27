@@ -22,9 +22,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-@Suppress("UnusedReceiverParameter")
-internal val Action.ChangeCounter.iconRes: Int
-    @DrawableRes get() = R.drawable.ic_change_counter
+@DrawableRes
+internal fun getChangeCounterIconRes(): Int =
+    R.drawable.ic_change_counter
 
 internal fun Action.ChangeCounter.getDescription(context: Context, inError: Boolean): String =
     if (inError) context.getString(R.string.item_change_counter_details_error)

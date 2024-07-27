@@ -36,6 +36,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -227,15 +230,15 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
 
         is Action.ChangeCounter -> DefaultDescription(
-            ContextCompat.getDrawable(context, R.drawable.ic_change_counter)
+            ContextCompat.getDrawable(context, getChangeCounterIconRes())
         )
 
         is Action.Intent -> DefaultDescription(
-            ContextCompat.getDrawable(context, R.drawable.ic_intent)
+            ContextCompat.getDrawable(context, getIntentIconRes())
         )
 
         is Action.ToggleEvent -> DefaultDescription(
-            ContextCompat.getDrawable(context, R.drawable.ic_toggle_event)
+            ContextCompat.getDrawable(context, getToggleEventIconRes())
         )
     }
 }

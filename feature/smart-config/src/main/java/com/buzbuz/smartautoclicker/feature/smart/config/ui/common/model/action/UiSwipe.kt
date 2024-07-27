@@ -23,9 +23,9 @@ import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-@Suppress("UnusedReceiverParameter")
-internal val Action.Swipe.iconRes: Int
-    @DrawableRes get() = R.drawable.ic_swipe
+@DrawableRes
+internal fun getSwipeIconRes(): Int =
+    R.drawable.ic_swipe
 
 internal fun Action.Swipe.getDescription(context: Context, inError: Boolean): String = when {
     inError -> context.getString(R.string.item_error_action_invalid_generic)
