@@ -25,7 +25,9 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
@@ -63,6 +65,7 @@ import javax.inject.Inject
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
+    private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
 ) : ViewModel() {
@@ -93,9 +96,11 @@ class SmartActionsBriefViewModel @Inject constructor(
             actionList[visualizationState.focusedIndex] to filterUpdates
         }
 
-    val actionVisualization: Flow<ItemBriefDescription?> =
-        focusedAction.filter { !it.second }
-            .map { (action, _) -> action?.toActionDescription(context) }
+    val actionVisualization: Flow<ItemBriefDescription?> = focusedAction
+        .filter { !it.second }
+        .combine(editedEvent) { (action, _), event ->
+            action?.toActionDescription(context, event)
+        }
 
     val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
         editionRepository.editionState.canCopyActions.map { canCopy ->
@@ -216,10 +221,18 @@ class SmartActionsBriefViewModel @Inject constructor(
             else -> null
         }
 
-    private fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
+    private suspend fun  Action.toActionDescription(context: Context, parent: Event): ItemBriefDescription = when (this) {
         is Action.Click -> ClickDescription(
             position = PointF((x ?: 0).toFloat(), (y ?: 0).toFloat()),
             pressDurationMs = pressDuration ?: 1,
+            imageConditionBitmap =
+                if (positionType != Action.Click.PositionType.ON_DETECTED_CONDITION) null
+                else {
+                    parent.conditions.find { it.id == clickOnConditionId }?.let { condition ->
+                        if (condition is ImageCondition) repository.getConditionBitmap(condition)
+                        else null
+                    }
+                }
         )
 
         is Action.Swipe -> SwipeDescription(
