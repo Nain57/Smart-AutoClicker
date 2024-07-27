@@ -26,7 +26,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -104,13 +109,13 @@ class EventCopyModel @Inject constructor(
         when (event) {
             is ImageEvent -> EventCopyItem.EventItem.Image(
                 name = event.name,
-                event = event,
+                uiEvent = event.toUiImageEvent(inError = !event.isComplete()),
                 actionsIcons = event.actions.map { it.getIconRes() },
             )
 
             is TriggerEvent -> EventCopyItem.EventItem.Trigger(
                 name = event.name,
-                event = event,
+                uiEvent = event.toUiTriggerEvent(inError = !event.isComplete()),
             )
         }
     }
@@ -129,17 +134,17 @@ class EventCopyModel @Inject constructor(
         sealed class EventItem : EventCopyItem() {
 
             abstract val name: String
-            abstract val event: Event
+            abstract val uiEvent: UiEvent
 
             data class Image (
                 override val name: String,
-                override val event: ImageEvent,
+                override val uiEvent: UiImageEvent,
                 val actionsIcons: List<Int>,
             ) : EventItem()
 
             data class Trigger (
                 override val name: String,
-                override val event: TriggerEvent,
+                override val uiEvent: UiTriggerEvent,
             ) : EventItem()
         }
 

@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefPortBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ImageConditionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 
 
 class ImageConditionBriefViewHolder(
@@ -44,7 +44,7 @@ class ImageConditionBriefViewHolder(
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
             rootView.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
-            val details = item.data as ImageConditionDetails
+            val details = item.data as UiImageCondition
 
             name.visibility = View.VISIBLE
             name.text = details.name

@@ -33,8 +33,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.DualStateButtonTextConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
@@ -53,6 +51,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
@@ -227,7 +226,7 @@ class EventDialog(
                 launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
 
                 if (viewModel.isConfiguringScreenEvent()) {
-                    launch { viewModel.configuredEventConditions.collect(::updateImageConditionsField) }
+                    launch { viewModel.imageConditions.collect(::updateImageConditionsField) }
                 } else {
                     launch { viewModel.triggerConditionsDescription.collect(viewBinding.fieldTriggerConditionsSelector::setItems) }
                 }
@@ -260,9 +259,8 @@ class EventDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun updateImageConditionsField(conditions: List<Condition>) {
-        viewBinding.fieldImageConditionsSelector.setItems(conditions as List<ImageCondition>)
+    private fun updateImageConditionsField(conditions: List<UiImageCondition>) {
+        viewBinding.fieldImageConditionsSelector.setItems(conditions)
     }
 
     private fun updateConditionOperator(@ConditionOperator operator: Int) {

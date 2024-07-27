@@ -58,7 +58,7 @@ class ActionCopyDialog(
         actionCopyAdapter = ActionCopyAdapter { selectedAction ->
             debounceUserInteraction {
                 back()
-                onActionSelected(selectedAction.actionDetails.action)
+                onActionSelected(selectedAction.uiAction.action)
             }
         }
 

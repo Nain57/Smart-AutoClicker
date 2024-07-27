@@ -74,7 +74,7 @@ private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>() {
         when {
             oldItem is EventCopyItem.Header && newItem is EventCopyItem.Header -> true
             oldItem is EventCopyItem.EventItem && newItem is EventCopyItem.EventItem ->
-                oldItem.event.id == newItem.event.id
+                oldItem.uiEvent.event.id == newItem.uiEvent.event.id
             else -> false
         }
 
@@ -98,13 +98,13 @@ class HeaderViewHolder(
 class ImageEventViewHolder(private val viewBinding: ItemImageEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ImageEvent) -> Unit) {
-        viewBinding.bind(item.event, false, eventClickedListener)
+        viewBinding.bind(item.uiEvent, false, eventClickedListener)
     }
 }
 
 class TriggerEventViewHolder(private val viewBinding: ItemTriggerEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     fun onBind(item: EventCopyItem.EventItem.Trigger, eventClickedListener: (TriggerEvent) -> Unit) {
-        viewBinding.bind(item.event, eventClickedListener)
+        viewBinding.bind(item.uiEvent, eventClickedListener)
     }
 }

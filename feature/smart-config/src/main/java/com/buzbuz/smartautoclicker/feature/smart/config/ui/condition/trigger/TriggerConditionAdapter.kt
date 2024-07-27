@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 
 /**
  * Adapter displaying the conditions for the event displayed by the dialog.
@@ -35,7 +36,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
  */
 class TriggerConditionAdapter(
     private val conditionClickedListener: (TriggerCondition) -> Unit,
-) : ListAdapter<TriggerCondition, TriggerConditionViewHolder>(TriggerConditionDiffUtilCallback) {
+) : ListAdapter<UiTriggerCondition, TriggerConditionViewHolder>(TriggerConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         TriggerConditionViewHolder(
@@ -48,9 +49,11 @@ class TriggerConditionAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [TriggerConditionAdapter] list. */
-object TriggerConditionDiffUtilCallback: DiffUtil.ItemCallback<TriggerCondition>() {
-    override fun areItemsTheSame(oldItem: TriggerCondition, newItem: TriggerCondition): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: TriggerCondition, newItem: TriggerCondition): Boolean = oldItem == newItem
+object TriggerConditionDiffUtilCallback: DiffUtil.ItemCallback<UiTriggerCondition>() {
+    override fun areItemsTheSame(oldItem: UiTriggerCondition, newItem: UiTriggerCondition): Boolean =
+        oldItem.condition.id == newItem.condition.id
+    override fun areContentsTheSame(oldItem: UiTriggerCondition, newItem: UiTriggerCondition): Boolean =
+        oldItem == newItem
 }
 
 /**
@@ -67,7 +70,7 @@ class TriggerConditionViewHolder(
      * @param condition the condition to be represented by this item.
      * @param conditionClickedListener listener notified upon user click on this item.
      */
-    fun onBindCondition(condition: TriggerCondition, conditionClickedListener: (TriggerCondition) -> Unit) {
+    fun onBindCondition(condition: UiTriggerCondition, conditionClickedListener: (TriggerCondition) -> Unit) {
         viewBinding.bind(condition, conditionClickedListener)
     }
 }

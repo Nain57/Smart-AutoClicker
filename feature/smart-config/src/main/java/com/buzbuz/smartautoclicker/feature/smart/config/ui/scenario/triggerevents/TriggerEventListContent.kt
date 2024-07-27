@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
 
 import kotlinx.coroutines.launch
 
@@ -50,9 +51,6 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
     private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: TriggerEventListAdapter
-
-    /** Tells if the billing flow has been triggered by the event count limit. */
-    private var eventLimitReachedClick: Boolean = false
 
     override fun createCopyButtonsAreAvailable(): Boolean = true
 
@@ -102,7 +100,7 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
         }
     }
 
-    private fun updateTriggerEventList(newItems: List<TriggerEvent>?) {
+    private fun updateTriggerEventList(newItems: List<UiTriggerEvent>?) {
         viewBinding.updateState(newItems)
         eventAdapter.submitList(newItems)
     }

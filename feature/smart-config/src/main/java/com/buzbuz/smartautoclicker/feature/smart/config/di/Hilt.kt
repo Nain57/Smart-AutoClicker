@@ -44,8 +44,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.bro
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.ConditionsViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config.EventConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
@@ -69,10 +67,8 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun clickViewModel(): ClickViewModel
     fun componentSelectionViewModel(): ComponentSelectionModel
     fun conditionCopyViewModel(): ConditionCopyModel
-    fun conditionsViewModel(): ConditionsViewModel
     fun counterNameSelectionViewModel(): CounterNameSelectionViewModel
     fun counterReachedConditionViewModel(): CounterReachedConditionViewModel
-    fun eventConfigViewModel(): EventConfigViewModel
     fun eventCopyModel(): EventCopyModel
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel

@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentExtraTypeDisplayName
 import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.Flow
@@ -240,14 +240,14 @@ private fun KClass<out Any>.getTypeItem() : DropdownItem = when (this) {
 }
 
 // Items for the extra type dropdown menu
-private val BOOLEAN_ITEM = DropdownItem(title = Boolean::class.getDisplayNameRes())
-private val BYTE_ITEM = DropdownItem(title = Byte::class.getDisplayNameRes())
-private val CHAR_ITEM = DropdownItem(title = Char::class.getDisplayNameRes())
-private val DOUBLE_ITEM = DropdownItem(title = Double::class.getDisplayNameRes())
-private val FLOAT_ITEM = DropdownItem(title = Float::class.getDisplayNameRes())
-private val INT_ITEM = DropdownItem(title = Int::class.getDisplayNameRes())
-private val SHORT_ITEM = DropdownItem(title = Short::class.getDisplayNameRes())
-private val STRING_ITEM = DropdownItem(title = String::class.getDisplayNameRes())
+private val BOOLEAN_ITEM = DropdownItem(title = Boolean::class.getIntentExtraTypeDisplayName())
+private val BYTE_ITEM = DropdownItem(title = Byte::class.getIntentExtraTypeDisplayName())
+private val CHAR_ITEM = DropdownItem(title = Char::class.getIntentExtraTypeDisplayName())
+private val DOUBLE_ITEM = DropdownItem(title = Double::class.getIntentExtraTypeDisplayName())
+private val FLOAT_ITEM = DropdownItem(title = Float::class.getIntentExtraTypeDisplayName())
+private val INT_ITEM = DropdownItem(title = Int::class.getIntentExtraTypeDisplayName())
+private val SHORT_ITEM = DropdownItem(title = Short::class.getIntentExtraTypeDisplayName())
+private val STRING_ITEM = DropdownItem(title = String::class.getIntentExtraTypeDisplayName())
 
 private val BOOLEAN_ITEM_TRUE = DropdownItem(title = R.string.dropdown_extra_boolean_item_true)
 private val BOOLEAN_ITEM_FALSE = DropdownItem(title = R.string.dropdown_extra_boolean_item_false)

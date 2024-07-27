@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.imageevents
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
 
 import java.util.Collections
 
@@ -40,9 +41,9 @@ import java.util.Collections
  */
 class ImageEventListAdapter(
     private val itemClickedListener: (ImageEvent) -> Unit,
-    private val itemReorderListener: (List<ImageEvent>) -> Unit,
+    private val itemReorderListener: (List<UiImageEvent>) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<ImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
+) : ListAdapter<UiImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageEventViewHolder =
         ImageEventViewHolder(ItemImageEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -76,11 +77,11 @@ class ImageEventListAdapter(
 }
 
 /** DiffUtil Callback comparing two ActionItem when updating the [ImageEventListAdapter] list. */
-object ImageEventDiffUtilCallback: DiffUtil.ItemCallback<ImageEvent>() {
-    override fun areItemsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean =
-        oldItem.id == newItem.id
+object ImageEventDiffUtilCallback: DiffUtil.ItemCallback<UiImageEvent>() {
+    override fun areItemsTheSame(oldItem: UiImageEvent, newItem: UiImageEvent): Boolean =
+        oldItem.event.id == newItem.event.id
 
-    override fun areContentsTheSame(oldItem: ImageEvent, newItem: ImageEvent): Boolean =
+    override fun areContentsTheSame(oldItem: UiImageEvent, newItem: UiImageEvent): Boolean =
         oldItem == newItem
 }
 
@@ -97,8 +98,8 @@ class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: ImageEvent, itemClickedListener: (ImageEvent) -> Unit) {
-        holderViewBinding.bind(item, true) { itemClickedListener(item) }
+    fun bindEvent(item: UiImageEvent, itemClickedListener: (ImageEvent) -> Unit) {
+        holderViewBinding.bind(item, true, itemClickedListener)
     }
 }
 

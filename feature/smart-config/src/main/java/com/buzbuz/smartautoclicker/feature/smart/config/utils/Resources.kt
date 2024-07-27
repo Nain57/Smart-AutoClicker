@@ -17,41 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.utils
 
 import android.widget.ImageView
-
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-
 import com.google.android.material.textfield.TextInputLayout
 
-import kotlin.reflect.KClass
-
-/**
- * Get the icon for a given action.
- * @return the icon resource identifier.
- */
-@DrawableRes
-fun Action.getIconRes() : Int =
-    when (this) {
-        is Action.Click -> R.drawable.ic_click
-        is Action.Swipe -> R.drawable.ic_swipe
-        is Action.Pause -> R.drawable.ic_wait_aligned
-        is Action.Intent -> R.drawable.ic_intent
-        is Action.ToggleEvent -> R.drawable.ic_toggle_event
-        is Action.ChangeCounter -> R.drawable.ic_change_counter
-        else -> throw IllegalArgumentException("Not yet supported")
-
-    }
-
-/** @param color the tint color to apply to the ImageView. */
-fun ImageView.setIconTint(@ColorRes color: Int) {
-    setIconTintColor(ContextCompat.getColor(context, color))
-}
 
 /** @param color the tint color to apply to the ImageView. */
 fun ImageView.setIconTintColor(@ColorInt color: Int) {
@@ -59,19 +28,6 @@ fun ImageView.setIconTintColor(@ColorInt color: Int) {
         color,
         android.graphics.PorterDuff.Mode.SRC_IN
     )
-}
-
-@StringRes
-fun KClass<out Any>.getDisplayNameRes() : Int = when (this) {
-    Byte::class -> R.string.dropdown_intent_extra_type_item_byte
-    Boolean::class -> R.string.dropdown_intent_extra_type_item_boolean
-    Char::class -> R.string.dropdown_intent_extra_type_item_char
-    Double::class -> R.string.dropdown_intent_extra_type_item_double
-    Int::class -> R.string.dropdown_intent_extra_type_item_int
-    Float::class -> R.string.dropdown_intent_extra_type_item_float
-    Short::class -> R.string.dropdown_intent_extra_type_item_short
-    String::class -> R.string.dropdown_intent_extra_type_item_string
-    else -> 0
 }
 
 fun TextInputLayout.setError(isError: Boolean) {

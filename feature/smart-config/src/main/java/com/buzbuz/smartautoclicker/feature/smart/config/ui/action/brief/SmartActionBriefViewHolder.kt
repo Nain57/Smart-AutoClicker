@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefViewHolder
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefPortBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 
 
 class SmartActionBriefViewHolder(
@@ -41,7 +41,7 @@ class SmartActionBriefViewHolder(
         viewBinding.apply {
             rootView.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
 
-            val details = item.data as ActionDetails
+            val details = item.data as UiAction
             name.visibility = View.VISIBLE
             icon.setImageResource(details.icon)
             name.text = details.name

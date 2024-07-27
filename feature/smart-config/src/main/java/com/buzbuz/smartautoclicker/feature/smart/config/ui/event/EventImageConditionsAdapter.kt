@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 
 import kotlinx.coroutines.Job
 
@@ -33,7 +34,7 @@ import kotlinx.coroutines.Job
 internal class EventImageConditionsAdapter(
     private val itemClickedListener: (index: Int) -> Unit,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-) : ListAdapter<ImageCondition, EventImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
+) : ListAdapter<UiImageCondition, EventImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventImageConditionViewHolder =
         EventImageConditionViewHolder(
@@ -60,7 +61,7 @@ internal class EventImageConditionViewHolder (
     /** Job for the loading of the condition bitmap. Null until bound. */
     private var bitmapLoadingJob: Job? = null
 
-    fun onBind(condition: ImageCondition) {
+    fun onBind(condition: UiImageCondition) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(condition, bitmapProvider) {
             itemClickedListener(bindingAdapterPosition)
@@ -73,7 +74,9 @@ internal class EventImageConditionViewHolder (
     }
 }
 
-internal object ImageConditionDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
-    override fun areItemsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem == newItem
+internal object ImageConditionDiffUtilCallback: DiffUtil.ItemCallback<UiImageCondition>() {
+    override fun areItemsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
+        oldItem.condition.id == newItem.condition.id
+    override fun areContentsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
+        oldItem == newItem
 }

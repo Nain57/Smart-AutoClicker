@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.EntryPoints
@@ -44,7 +45,7 @@ import dagger.hilt.EntryPoints
 import kotlinx.coroutines.Job
 
 class ImageConditionSelectionDialog(
-    private val conditionList: List<ImageCondition>,
+    private val conditionList: List<UiImageCondition>,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
@@ -115,7 +116,7 @@ private class ImageConditionsAdapter(
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<ImageCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
+) : ListAdapter<UiImageCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
         ImageConditionViewHolder(
@@ -137,9 +138,11 @@ private class ImageConditionsAdapter(
 }
 
 /** DiffUtil Callback comparing two items when updating the [ImageConditionsAdapter] list. */
-private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<ImageCondition>() {
-    override fun areItemsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: ImageCondition, newItem: ImageCondition): Boolean = oldItem == newItem
+private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiImageCondition>() {
+    override fun areItemsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
+        oldItem.condition.id == newItem.condition.id
+    override fun areContentsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
+        oldItem == newItem
 }
 
 /**
@@ -158,7 +161,7 @@ private class ImageConditionViewHolder(
     /** Job for the loading of the condition bitmap. Null until bound. */
     private var bitmapLoadingJob: Job? = null
 
-    fun onBind(condition: ImageCondition) {
+    fun onBind(condition: UiImageCondition) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(
             condition,

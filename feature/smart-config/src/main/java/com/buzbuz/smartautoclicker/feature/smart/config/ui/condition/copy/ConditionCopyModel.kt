@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy
 
+import android.content.Context
 import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
@@ -27,7 +28,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -37,6 +44,7 @@ import javax.inject.Inject
 
 /** View model for the [ConditionCopyDialog]. */
 class ConditionCopyModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val repository: IRepository,
     editionRepository: EditionRepository,
 ) : ViewModel() {
@@ -61,11 +69,13 @@ class ConditionCopyModel @Inject constructor(
             buildList {
                 if (editedConditions.isNotEmpty()) {
                     add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_this))
-                    addAll(editedConditions.toCopyItems().distinctByUiDisplay().sortedBy { it.condition.name })
+                    addAll(editedConditions.toCopyItems(context)
+                        .distinctByUiDisplay().sortedBy { it.uiCondition.name })
                 }
                 if (otherConditions.isNotEmpty()) {
                     add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_all))
-                    addAll(otherConditions.toCopyItems().distinctByUiDisplay().sortedBy { it.condition.name })
+                    addAll(otherConditions.toCopyItems(context)
+                        .distinctByUiDisplay().sortedBy { it.uiCondition.name })
                 }
             }
         }
@@ -75,7 +85,7 @@ class ConditionCopyModel @Inject constructor(
         if (query.isNullOrEmpty()) allItems
         else allItems
             .filterIsInstance<ConditionCopyItem.ConditionItem>()
-            .filter { item -> item.condition.name.contains(query, true) }
+            .filter { item -> item.uiCondition.name.contains(query, true) }
     }
 
     fun updateSearchQuery(query: String?) {
@@ -93,10 +103,14 @@ class ConditionCopyModel @Inject constructor(
         getImageConditionBitmap(repository, condition, onBitmapLoaded)
 
     /** */
-    private fun List<Condition>.toCopyItems() = map { condition ->
+    private fun List<Condition>.toCopyItems(context: Context) = map { condition ->
         when (condition) {
-            is ImageCondition -> ConditionCopyItem.ConditionItem.Image(condition)
-            is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(condition)
+            is ImageCondition -> ConditionCopyItem.ConditionItem.Image(
+                condition.toUiImageCondition(context, shortThreshold = true, inError = !condition.isComplete())
+            )
+            is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(
+                condition.toUiTriggerCondition(context, inError = !condition.isComplete())
+            )
         }
     }
 
@@ -104,20 +118,20 @@ class ConditionCopyModel @Inject constructor(
         distinctBy { item ->
             when (item) {
                 is ConditionCopyItem.ConditionItem.Image ->
-                    item.condition.hashCodeNoIds()
+                    item.uiCondition.condition.hashCodeNoIds()
 
                 is ConditionCopyItem.ConditionItem.Trigger ->
-                    when (item.condition) {
-                        is TriggerCondition.OnBroadcastReceived -> item.condition.name.hashCode() +
-                                item.condition.intentAction.hashCode()
+                    when (item.uiCondition.condition) {
+                        is TriggerCondition.OnBroadcastReceived -> item.uiCondition.condition.name.hashCode() +
+                                item.uiCondition.condition.intentAction.hashCode()
 
-                        is TriggerCondition.OnCounterCountReached -> item.condition.name.hashCode() +
-                                item.condition.counterName.hashCode() +
-                                item.condition.counterValue +
-                                item.condition.comparisonOperation.hashCode()
+                        is TriggerCondition.OnCounterCountReached -> item.uiCondition.condition.name.hashCode() +
+                                item.uiCondition.condition.counterName.hashCode() +
+                                item.uiCondition.condition.counterValue +
+                                item.uiCondition.condition.comparisonOperation.hashCode()
 
-                        is TriggerCondition.OnTimerReached -> item.condition.name.hashCode() +
-                                item.condition.durationMs
+                        is TriggerCondition.OnTimerReached -> item.uiCondition.condition.name.hashCode() +
+                                item.uiCondition.condition.durationMs
 
                         else -> 0
                     }
@@ -135,19 +149,19 @@ class ConditionCopyModel @Inject constructor(
 
         sealed class ConditionItem : ConditionCopyItem() {
 
-            abstract val condition: Condition
+            abstract val uiCondition: UiCondition
 
             /**
              * Image Condition item.
-             * @param condition the details for the condition.
+             * @param uiCondition the details for the condition.
              */
-            data class Image(override val condition: ImageCondition) : ConditionItem()
+            data class Image(override val uiCondition: UiImageCondition) : ConditionItem()
 
             /**
              * Trigger Condition item.
-             * @param condition the details for the condition.
+             * @param uiCondition the details for the condition.
              */
-            data class Trigger(override val condition: TriggerCondition) : ConditionItem()
+            data class Trigger(override val uiCondition: UiTriggerCondition) : ConditionItem()
 
         }
     }

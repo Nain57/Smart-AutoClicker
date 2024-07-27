@@ -21,10 +21,12 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
+
 
 class TriggerEventListViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
@@ -32,7 +34,11 @@ class TriggerEventListViewModel @Inject constructor(
 
     /** Currently configured events. */
     val triggerEvents = editionRepository.editionState.editedTriggerEventsState
-        .mapNotNull { it.value }
+        .mapNotNull { triggerEventsState ->
+            triggerEventsState.value?.map { triggerEvent ->
+                triggerEvent.toUiTriggerEvent(inError = !triggerEvent.isComplete())
+            }
+        }
 
     /** Tells if the copy button should be visible or not. */
     val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyTriggerEvents

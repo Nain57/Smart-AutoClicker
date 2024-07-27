@@ -33,7 +33,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerC
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionCopyBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.TriggerConditionAdapter
 
 import kotlinx.coroutines.Job
 
@@ -106,7 +105,7 @@ object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionCopyModel.Condi
     ): Boolean =  when {
         oldItem is ConditionCopyModel.ConditionCopyItem.HeaderItem && newItem is ConditionCopyModel.ConditionCopyItem.HeaderItem -> true
         oldItem is ConditionCopyModel.ConditionCopyItem.ConditionItem && newItem is ConditionCopyModel.ConditionCopyItem.ConditionItem ->
-            oldItem.condition.id == newItem.condition.id
+            oldItem.uiCondition.condition.id == newItem.uiCondition.condition.id
         else -> false
     }
 
@@ -154,7 +153,7 @@ private class ImageConditionViewHolder(
     ) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(
-            item.condition,
+            item.uiCondition,
             bitmapProvider,
             conditionClickedListener,
         )
@@ -168,7 +167,7 @@ private class ImageConditionViewHolder(
 }
 
 /**
- * View holder displaying a condition in the [TriggerConditionAdapter].
+ * View holder displaying a condition in the [ConditionCopyAdapter].
  * @param viewBinding the view binding for this item.
  */
 private class TriggerConditionViewHolder(
@@ -185,6 +184,6 @@ private class TriggerConditionViewHolder(
         item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger,
         conditionClickedListener: (TriggerCondition) -> Unit
     ) {
-        viewBinding.bind(item.condition, conditionClickedListener)
+        viewBinding.bind(item.uiCondition, conditionClickedListener)
     }
 }
