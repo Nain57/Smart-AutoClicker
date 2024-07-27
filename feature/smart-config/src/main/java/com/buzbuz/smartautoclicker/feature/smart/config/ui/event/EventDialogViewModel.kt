@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
 import androidx.lifecycle.ViewModel
@@ -24,7 +25,6 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -34,7 +34,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -51,6 +56,7 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 class EventDialogViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
@@ -91,8 +97,17 @@ class EventDialogViewModel @Inject constructor(
     val eventNameError: Flow<Boolean> = configuredEvent
         .map { it.name.isEmpty() }
 
-    val configuredEventConditions: Flow<List<Condition>> = editionRepository.editionState.editedEventConditionsState
-        .mapNotNull { it.value }
+    val imageConditions: Flow<List<UiImageCondition>> =
+        editionRepository.editionState.editedEventImageConditionsState
+            .mapNotNull { imageConditionsState ->
+                imageConditionsState.value?.map { imageCondition ->
+                    imageCondition.toUiImageCondition(
+                        context = context,
+                        shortThreshold = true,
+                        inError = !imageCondition.isComplete(),
+                    )
+                }
+            }
 
     val triggerConditionsDescription:  Flow<List<EventChildrenItem>> =
         editionRepository.editionState.editedEventTriggerConditionsState.mapNotNull { conditionsListState ->
@@ -179,25 +194,14 @@ class EventDialogViewModel @Inject constructor(
 
     private fun List<TriggerCondition>.toTriggerConditionsChildrenItem(): List<EventChildrenItem> = map { condition ->
         EventChildrenItem(
-            iconRes = when (condition) {
-                is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
-                is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
-                is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
-            },
+            iconRes = condition.getIconRes(),
             isInError = !condition.isComplete(),
         )
     }
 
     private fun List<Action>.toActionsChildrenItem(): List<EventChildrenItem> = map { action ->
         EventChildrenItem(
-            iconRes = when (action) {
-                is Action.ChangeCounter -> R.drawable.ic_change_counter
-                is Action.Click -> R.drawable.ic_click
-                is Action.Intent -> R.drawable.ic_intent
-                is Action.Pause -> R.drawable.ic_wait
-                is Action.Swipe -> R.drawable.ic_swipe
-                is Action.ToggleEvent -> R.drawable.ic_toggle_event
-            },
+            iconRes = action.getIconRes(),
             isInError = !action.isComplete(),
         )
     }

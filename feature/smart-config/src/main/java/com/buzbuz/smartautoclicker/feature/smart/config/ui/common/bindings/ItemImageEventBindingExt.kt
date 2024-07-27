@@ -16,45 +16,38 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
-import android.util.TypedValue
 import android.view.View
-
+import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 
 /**
  * Bind the [ItemImageEventBinding] to an event.
  *
- * @param event the event represented by this view binding.
+ * @param item the event represented by this view binding.
  * @param canDrag true to show the drag handle, false to hide it.
  * @param itemClickedListener called when the user clicks on the item.
  */
 fun ItemImageEventBinding.bind(
-    event: ImageEvent,
+    item: UiImageEvent,
     canDrag: Boolean,
     itemClickedListener: (ImageEvent) -> Unit,
 ) {
-    textName.text = event.name
-    textConditionsCount.text = event.conditions.size.toString()
-    textActionsCount.text = event.actions.size.toString()
+    textName.text = item.name
+    textConditionsCount.text = item.conditionsCountText
 
-    val typedValue = TypedValue()
-    val actionColorAttr = if (!event.isComplete()) R.attr.colorError else R.attr.colorOnSurface
-    root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
-    textActionsCount.setTextColor(typedValue.data)
-    imageAction.setIconTintColor(typedValue.data)
+    val actionColor = root.context.getThemeColor(if (item.haveError) R.attr.colorError else R.attr.colorOnSurface)
+    textActionsCount.text = item.actionsCountText
+    textActionsCount.setTextColor(actionColor)
+    imageAction.setIconTintColor(actionColor)
 
-    if (event.enabledOnStart) {
-        textEnabled.setText(R.string.item_event_desc_enabled_children)
-        iconEnabled.setImageResource(R.drawable.ic_confirm)
-    } else {
-        textEnabled.setText(R.string.item_event_desc_disabled_children)
-        iconEnabled.setImageResource(R.drawable.ic_cancel)
-    }
-
-    root.setOnClickListener { itemClickedListener(event) }
+    textEnabled.setText(item.enabledOnStartTextRes)
+    iconEnabled.setImageResource(item.enabledOnStartIconRes)
 
     btnReorder.visibility = if (canDrag) View.VISIBLE else View.GONE
+
+    root.setOnClickListener { itemClickedListener(item.event) }
 }

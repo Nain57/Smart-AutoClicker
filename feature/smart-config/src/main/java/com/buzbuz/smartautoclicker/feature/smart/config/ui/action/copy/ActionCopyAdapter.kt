@@ -67,7 +67,7 @@ object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
         when {
             oldItem is ActionCopyItem.HeaderItem && newItem is ActionCopyItem.HeaderItem -> true
             oldItem is ActionCopyItem.ActionItem && newItem is ActionCopyItem.ActionItem ->
-                oldItem.actionDetails.action.id == newItem.actionDetails.action.id
+                oldItem.uiAction.action.id == newItem.uiAction.action.id
             else -> false
         }
 
@@ -104,13 +104,13 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
             root.setOnClickListener { actionClickedListener.invoke(item) }
 
             actionName.visibility = View.VISIBLE
-            actionTypeIcon.setImageResource(item.actionDetails.icon)
-            actionName.text = item.actionDetails.name
+            actionTypeIcon.setImageResource(item.uiAction.icon)
+            actionName.text = item.uiAction.name
             actionDetails.apply {
-                text = item.actionDetails.description
+                text = item.uiAction.description
 
                 val typedValue = TypedValue()
-                val actionColorAttr = if (item.actionDetails.haveError) R.attr.colorError else R.attr.colorOnSurfaceVariant
+                val actionColorAttr = if (item.uiAction.haveError) R.attr.colorError else R.attr.colorOnSurfaceVariant
                 root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
                 setTextColor(typedValue.data)
             }

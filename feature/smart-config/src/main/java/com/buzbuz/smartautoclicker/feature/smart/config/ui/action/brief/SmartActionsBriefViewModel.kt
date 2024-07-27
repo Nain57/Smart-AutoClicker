@@ -36,7 +36,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -75,7 +75,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     val actionBriefList: Flow<List<ItemBrief>> = editedActions.map { actions ->
         val actionList = actions.value ?: emptyList()
         actionList.mapIndexed { index, action ->
-            ItemBrief(action.id, action.toActionDetails(context, !actions.itemValidity[index]) )
+            ItemBrief(action.id, action.toUiAction(context, !actions.itemValidity[index]) )
         }
     }
 

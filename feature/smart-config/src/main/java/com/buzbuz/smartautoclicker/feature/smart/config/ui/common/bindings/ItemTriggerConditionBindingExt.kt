@@ -16,70 +16,22 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
-import android.content.Context
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
-import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 
 /**
  * Bind this view holder as a condition item.
  *
- * @param condition the condition to be represented by this item.
+ * @param uiCondition the condition to be represented by this item.
  * @param conditionClickedListener listener notified upon user click on this item.
  */
 fun ItemTriggerConditionBinding.bind(
-    condition: TriggerCondition,
+    uiCondition: UiTriggerCondition,
     conditionClickedListener: (TriggerCondition) -> Unit,
 ) {
-    conditionName.text = condition.name
-    conditionDetails.text = conditionDetails.context.getTriggerConditionDescription(condition)
-
-    conditionTypeIcon.setImageResource(
-        when (condition) {
-            is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
-            is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
-            is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
-            else -> throw UnsupportedOperationException("Unsupported condition type")
-        }
-    )
-    root.setOnClickListener { conditionClickedListener(condition) }
-}
-
-private fun Context.getTriggerConditionDescription(condition: TriggerCondition): String =
-    when (condition) {
-        is TriggerCondition.OnBroadcastReceived -> getString(
-            R.string.item_broadcast_received_details,
-            condition.toBroadcastActionDisplayName(),
-        )
-        is TriggerCondition.OnCounterCountReached -> getString(
-            R.string.item_counter_reached_details,
-            condition.counterName,
-            getComparisonOperationDisplayName(condition.comparisonOperation),
-            condition.counterValue,
-        )
-        is TriggerCondition.OnTimerReached -> getString(
-            R.string.item_timer_reached_details,
-            formatDuration(condition.durationMs),
-        )
-        else -> throw UnsupportedOperationException("Scenario Start and End Conditions are not supported here")
-    }
-
-private fun Context.getComparisonOperationDisplayName(operation: ComparisonOperation): String =
-    when (operation) {
-        GREATER -> getString(R.string.dropdown_comparison_operator_item_greater)
-        GREATER_OR_EQUALS -> getString(R.string.dropdown_comparison_operator_item_greater_or_equals)
-        EQUALS -> getString(R.string.dropdown_comparison_operator_item_equals)
-        LOWER_OR_EQUALS -> getString(R.string.dropdown_comparison_operator_item_lower_or_equals)
-        LOWER -> getString(R.string.dropdown_comparison_operator_item_lower)
-    }
-
-private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String {
-    val lastDotIndex = intentAction.lastIndexOf('.')
-
-    return if (lastDotIndex != -1 && lastDotIndex != intentAction.lastIndex)
-        intentAction.substring(lastDotIndex + 1)
-    else intentAction
+    conditionName.text = uiCondition.name
+    conditionDetails.text = uiCondition.description
+    conditionTypeIcon.setImageResource(uiCondition.iconRes)
+    root.setOnClickListener { conditionClickedListener(uiCondition.condition) }
 }

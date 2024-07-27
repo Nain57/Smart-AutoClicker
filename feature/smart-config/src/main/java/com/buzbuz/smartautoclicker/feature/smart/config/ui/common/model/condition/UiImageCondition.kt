@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition
 
 import android.content.Context
 import androidx.annotation.DrawableRes
@@ -27,23 +27,23 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class ImageConditionDetails (
-    val condition: ImageCondition,
-    val name: String,
+data class UiImageCondition internal constructor(
+    override val condition: ImageCondition,
+    override val name: String,
+    override val haveError: Boolean,
     @DrawableRes val shouldBeVisibleIconRes: Int,
     @StringRes val shouldBeVisibleTextRes: Int,
     @DrawableRes val detectionTypeIconRes: Int,
     val thresholdText: String,
-    val haveError: Boolean,
-)
+) : UiCondition()
 
-fun ImageCondition.toImageConditionDetails(context: Context, inError: Boolean) = ImageConditionDetails(
+fun ImageCondition.toUiImageCondition(context: Context, shortThreshold: Boolean, inError: Boolean) = UiImageCondition(
     condition = this,
     name = name,
     shouldBeVisibleIconRes = getShouldBeDetectedIconRes(),
     shouldBeVisibleTextRes = getShouldBeDetectedTextRes(),
     detectionTypeIconRes = getDetectionTypeIconRes(),
-    thresholdText = getThresholdText(context),
+    thresholdText = if (shortThreshold) getShortThresholdText(context) else getThresholdText(context),
     haveError = inError,
 )
 
@@ -63,6 +63,12 @@ private fun ImageCondition.getDetectionTypeIconRes(): Int =
         IN_AREA -> R.drawable.ic_detect_in_area
         else -> throw IllegalStateException("Can't get detection type icon, unknown type $detectionType")
     }
+
+private fun ImageCondition.getShortThresholdText(context: Context): String =
+    context.getString(
+        R.string.item_image_condition_desc_threshold,
+        threshold,
+    )
 
 private fun ImageCondition.getThresholdText(context: Context): String =
     context.getString(

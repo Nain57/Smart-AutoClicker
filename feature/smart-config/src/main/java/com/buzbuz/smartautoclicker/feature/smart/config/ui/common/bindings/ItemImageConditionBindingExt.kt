@@ -22,11 +22,9 @@ import android.graphics.Color
 import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeImageConditionCardBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 
 import kotlinx.coroutines.Job
 
@@ -34,36 +32,18 @@ import kotlinx.coroutines.Job
  * Bind the [IncludeImageConditionCardBinding] to a condition.
  */
 fun IncludeImageConditionCardBinding.bind(
-    condition: ImageCondition,
+    uiCondition: UiImageCondition,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     conditionClickedListener: (ImageCondition) -> Unit
 ): Job? {
-    root.setOnClickListener { conditionClickedListener.invoke(condition) }
+    root.setOnClickListener { conditionClickedListener.invoke(uiCondition.condition) }
 
-    conditionName.text = condition.name
+    conditionName.text = uiCondition.name
+    conditionShouldBeDetected.setImageResource(uiCondition.shouldBeVisibleIconRes)
+    conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
+    conditionThreshold.text = uiCondition.thresholdText
 
-    conditionShouldBeDetected.setImageResource(
-        if (condition.shouldBeDetected) R.drawable.ic_confirm
-        else R.drawable.ic_cancel
-    )
-
-    conditionDetectionType.apply {
-        setImageResource(
-            when (condition.detectionType) {
-                EXACT -> R.drawable.ic_detect_exact
-                WHOLE_SCREEN -> R.drawable.ic_detect_whole_screen
-                IN_AREA -> R.drawable.ic_detect_in_area
-                else -> return@apply
-            }
-        )
-    }
-
-    conditionThreshold.text = root.context.getString(
-        R.string.item_image_condition_desc_threshold,
-        condition.threshold
-    )
-
-    return bitmapProvider.invoke(condition) { bitmap ->
+    return bitmapProvider.invoke(uiCondition.condition) { bitmap ->
         if (bitmap != null) {
             conditionImage.setImageBitmap(bitmap)
         } else {

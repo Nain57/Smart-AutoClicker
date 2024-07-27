@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ImageConditionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
@@ -98,7 +98,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog((item.data as ImageConditionDetails).condition)
+        showImageConditionConfigDialog((item.data as UiImageCondition).condition)
     }
 
     override fun onDeleteItem(index: Int) {
@@ -126,7 +126,7 @@ class ImageConditionsBriefMenu(
                 context = context,
                 newOverlay = TryElementOverlayMenu(
                     scenario,
-                    (getFocusedItemBrief().data as ImageConditionDetails).condition,
+                    (getFocusedItemBrief().data as UiImageCondition).condition,
                 ),
                 hideCurrent = true,
             )

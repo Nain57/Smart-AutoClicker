@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
@@ -40,12 +39,12 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogTriggerConditionsBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.TriggerConditionAdapter
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
@@ -114,10 +113,10 @@ class TriggerConditionListDialog(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun updateConditionList(newItems: List<Condition>?) {
+    private fun updateConditionList(newItems: List<UiTriggerCondition>?) {
         viewBinding.layoutLoadableList.apply {
             updateState(newItems)
-            (list.adapter as ListAdapter<Condition, RecyclerView.ViewHolder>).submitList(newItems)
+            (list.adapter as ListAdapter<UiTriggerCondition, RecyclerView.ViewHolder>).submitList(newItems)
         }
     }
 

@@ -42,7 +42,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDia
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.ActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 
 import kotlinx.coroutines.launch
 
@@ -86,7 +86,7 @@ class SmartActionsBriefMenu(
         SmartActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showActionConfigDialog((item.data as ActionDetails).action)
+        showActionConfigDialog((item.data as UiAction).action)
     }
 
     override fun onMenuItemClicked(viewId: Int) {

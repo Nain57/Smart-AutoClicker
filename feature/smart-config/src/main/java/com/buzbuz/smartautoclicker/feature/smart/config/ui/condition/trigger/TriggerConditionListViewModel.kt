@@ -22,6 +22,9 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -30,12 +33,17 @@ import javax.inject.Inject
 
 
 class TriggerConditionListViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    val configuredTriggerConditions: Flow<List<TriggerCondition>> =
+    val configuredTriggerConditions: Flow<List<UiTriggerCondition>> =
         editionRepository.editionState.editedEventTriggerConditionsState
-            .mapNotNull { it.value }
+            .mapNotNull { triggerConditionsState ->
+                triggerConditionsState.value?.map { triggerCondition ->
+                    triggerCondition.toUiTriggerCondition(context, inError = !triggerCondition.isComplete())
+                }
+            }
 
     val canBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventTriggerConditionsState
         .map { it.canBeSaved }

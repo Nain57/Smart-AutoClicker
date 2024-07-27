@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.toImageConditionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -79,7 +79,10 @@ class ImageConditionsBriefViewModel @Inject constructor(
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->
         val conditionList = conditions.value ?: emptyList()
         conditionList.mapIndexed { index, condition ->
-            ItemBrief(condition.id, condition.toImageConditionDetails(context, !conditions.itemValidity[index]))
+            ItemBrief(
+                condition.id,
+                condition.toUiImageCondition(context, shortThreshold = false, inError = !conditions.itemValidity[index]),
+            )
         }
     }
 
