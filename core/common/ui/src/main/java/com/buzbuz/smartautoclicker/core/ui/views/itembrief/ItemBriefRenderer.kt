@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.views.itembrief
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RadialGradient
 import android.graphics.Shader
@@ -34,6 +35,9 @@ internal abstract class ItemBriefRenderer<Style>(
     open fun onSizeChanged(w: Int, h: Int) = Unit
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()
+
+    protected fun getViewSize(): Point =
+        Point(briefView.width, briefView.height)
 
     @CallSuper
     protected open fun invalidate() { briefView.invalidate() }
