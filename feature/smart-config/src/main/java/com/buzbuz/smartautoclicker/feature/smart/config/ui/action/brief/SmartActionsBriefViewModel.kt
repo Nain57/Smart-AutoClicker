@@ -26,13 +26,13 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -67,6 +68,7 @@ class SmartActionsBriefViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
+    private val editedEvent: Flow<Event> = editionRepository.editionState.editedEventState.mapNotNull { it.value }
 
     private val briefVisualizationState: MutableStateFlow<BriefVisualizationState> =
         MutableStateFlow(BriefVisualizationState(0, false))
@@ -75,12 +77,13 @@ class SmartActionsBriefViewModel @Inject constructor(
         .map { it.gestureCaptureStarted }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    val actionBriefList: Flow<List<ItemBrief>> = editedActions.map { actions ->
-        val actionList = actions.value ?: emptyList()
-        actionList.mapIndexed { index, action ->
-            ItemBrief(action.id, action.toUiAction(context, !actions.itemValidity[index]) )
+    val actionBriefList: Flow<List<ItemBrief>> =
+        combine(editedEvent, editedActions) { event, actions ->
+            val actionList = actions.value ?: emptyList()
+            actionList.mapIndexed { index, action ->
+                ItemBrief(action.id, action.toUiAction(context, event, inError = !actions.itemValidity[index]) )
+            }
         }
-    }
 
     private val focusedAction: Flow<Pair<Action?, Boolean>> =
         combine(briefVisualizationState, editedActions) { visualizationState, actions ->

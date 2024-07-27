@@ -129,7 +129,9 @@ class IntentViewModel @Inject constructor(
         .map { intent ->
             if (intent.componentName == null) return@map null
 
-            getAndroidApplicationInfo(packageManager, Intent(intent.intentAction).setComponent(intent.componentName!!))
+            packageManager.getAndroidApplicationInfo(
+                Intent(intent.intentAction).setComponent(intent.componentName!!)
+            )
         }
 
     /** Tells if the configured intent is valid and can be saved. */

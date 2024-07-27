@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 
 data class UiAction internal constructor(
@@ -29,12 +30,12 @@ data class UiAction internal constructor(
     val haveError: Boolean,
 )
 
-internal fun Action.toUiAction(context: Context, inError: Boolean = !isComplete()): UiAction =
+internal fun Action.toUiAction(context: Context, parent: Event, inError: Boolean = !isComplete()): UiAction =
     UiAction(
         action = this,
         name = name!!,
         icon = getIconRes(),
-        description = getActionDescription(context, inError),
+        description = getActionDescription(context, parent, inError),
         haveError = inError,
     )
 
@@ -49,8 +50,8 @@ internal fun Action.getIconRes(): Int = when (this) {
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
-internal fun Action.getActionDescription(context: Context, inError: Boolean): String = when (this) {
-    is Action.Click -> getDescription(context, inError)
+internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
+    is Action.Click -> getDescription(context, parent, inError)
     is Action.Swipe -> getDescription(context, inError)
     is Action.Pause -> getDescription(context, inError)
     is Action.Intent -> getDescription(context, inError)

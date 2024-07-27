@@ -60,8 +60,8 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_click_desc">单击屏幕某处</string>
-    <string name="item_click_details_at_position">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
-    <string name="item_click_details_on_condition">识别并点击已保存的图片</string>
+    <string name="item_click_details_at_position">在 %1$s 期間</string>
+    <string name="item_click_details_on_condition">在 %2$s 的 %1$s 期間</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">未选择条件</string>
     <string name="field_condition_selection_desc_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
@@ -74,7 +74,7 @@
     <string name="item_pause_details">延迟 %1$s</string>
     <string name="generic_select_the_position">选择一个坐标</string>
     <string name="item_swipe_desc">从A点滑动到B点</string>
-    <string name="item_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
+    <string name="item_swipe_details">延迟 %1$s</string>
     <string name="field_swipe_positions_desc">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
     <string name="item_toggle_event_desc">启用或禁用某场景</string>
     <string name="field_change_all_desc_manual">定义要手动更改的事件</string>
@@ -122,6 +122,8 @@
     <string name="item_image_condition_visible">可见</string>
     <string name="item_image_condition_not_visible">不可见</string>
     <string name="field_condition_selector_desc">%1$d 个条件</string>
+    <string name="item_intent_details_start_activity">開始 %1$s</string>
+
 
     <!--
       - Fields.

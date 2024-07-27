@@ -60,8 +60,8 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_click_desc">Cliquer sur l\'écran</string>
-    <string name="item_click_details_at_position">Pendant %1$s à [%2$d, %3$d]</string>
-    <string name="item_click_details_on_condition">Sur la condition</string>
+    <string name="item_click_details_at_position">Pendant %1$s</string>
+    <string name="item_click_details_on_condition">Pendant %1$s sur %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Pas de condition sélectionnée</string>
     <string name="field_condition_selection_desc_or_operator">L\'évènement est défini sur "Une condition", vous ne pouvez pas en spécifier une</string>
@@ -74,7 +74,7 @@
     <string name="item_pause_details">Pendant %1$s</string>
     <string name="generic_select_the_position">Choisir une position</string>
     <string name="item_swipe_desc">Swiper d\'une position à une autre</string>
-    <string name="item_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
+    <string name="item_swipe_details">Pendant %1$s</string>
     <string name="field_swipe_positions_desc">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_toggle_event_desc">Changer l\'état d\'activation d\'un évènement</string>
     <string name="field_change_all_desc_manual">Choisissez manuellement les évènements à changer</string>
@@ -122,6 +122,8 @@
     <string name="item_image_condition_visible">Visible</string>
     <string name="item_image_condition_not_visible">Non visible</string>
     <string name="field_condition_selector_desc">%1$d conditions</string>
+    <string name="item_intent_details_start_activity">Lancer %1$s</string>
+
 
     <!--
       - Fields.

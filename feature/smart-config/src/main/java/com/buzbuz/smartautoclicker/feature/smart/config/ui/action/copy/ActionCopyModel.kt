@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
@@ -62,11 +63,11 @@ class ActionCopyModel @Inject constructor(
             buildList {
                 if (editedActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                    addAll(editedActions.toCopyItems(context).sortedBy { it.uiAction.name })
+                    addAll(editedActions.toCopyItems(context, editedEvent).sortedBy { it.uiAction.name })
                 }
                 if (otherActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                    addAll(otherActions.toCopyItems(context).sortedBy { it.uiAction.name })
+                    addAll(otherActions.toCopyItems(context, editedEvent).sortedBy { it.uiAction.name })
                 }
             }
         }
@@ -91,9 +92,9 @@ class ActionCopyModel @Inject constructor(
     }
 
     /** Creates copy items from a list of edited actions from this scenario. */
-    private fun List<Action>.toCopyItems(context: Context) = map { action ->
+    private fun List<Action>.toCopyItems(context: Context, event: Event) = map { action ->
         ActionCopyItem.ActionItem(
-            uiAction = action.toUiAction(context),
+            uiAction = action.toUiAction(context, event),
         )
     }
 
