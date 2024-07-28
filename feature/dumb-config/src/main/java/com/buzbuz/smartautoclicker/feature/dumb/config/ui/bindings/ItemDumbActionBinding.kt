@@ -21,7 +21,7 @@ import android.view.View
 
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBinding
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionDetails
 
 fun ItemDumbActionBinding.onBind(
     details: DumbActionDetails,

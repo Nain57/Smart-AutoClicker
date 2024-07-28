@@ -14,13 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.config
+package com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario
 
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +34,10 @@ class DumbScenarioConfigViewModel @Inject constructor(
 
     private val userModifications: StateFlow<DumbScenario?> =
         dumbEditionRepository.editedDumbScenario
+
+    val canBeSaved: Flow<Boolean> = userModifications.map { dumbScenario ->
+        dumbScenario?.isValid() == true
+    }
 
     /** The event name value currently edited by the user. */
     val scenarioName: Flow<String> =  userModifications

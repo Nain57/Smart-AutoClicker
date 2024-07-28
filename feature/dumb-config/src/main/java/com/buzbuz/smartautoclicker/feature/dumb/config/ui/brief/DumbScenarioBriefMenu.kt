@@ -36,7 +36,7 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionCrea
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionUiFlowListener
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionEditionUiFlow
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionDetails
 
 import kotlinx.coroutines.launch
 
