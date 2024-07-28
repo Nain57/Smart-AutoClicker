@@ -154,8 +154,8 @@
     <string name="message_empty_screen_event_desc">Un evento schermo contiene un insieme di azioni eseguite quando viene rilevata una condizione specifica sullo schermo.\nÈ necessario almeno un evento schermo o trigger nel vostro scenario per eseguirlo.</string>
     <string name="message_empty_trigger_event_list_desc">Un evento trigger contiene una serie di azioni eseguite quando si verificano una serie di condizioni personalizzate.\nPer eseguire lo scenario, è necessario disporre di almeno una schermata o di un evento di attivazione.</string>
     <string name="message_empty_trigger_condition_list_desc">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
-    <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.\nÈ necessaria almeno una condizione nell\'evento.</string>
-    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.\nHai bisogno di almeno un\'azione nel tuo evento.</string>
+    <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.</string>
+    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.</string>
     <string name="message_empty_counter_name_list_desc">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
 
     <!--

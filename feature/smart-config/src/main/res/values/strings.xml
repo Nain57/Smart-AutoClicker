@@ -139,11 +139,11 @@
 
     <string name="field_condition_selector_desc">%1$d conditions</string>
     <string name="message_empty_screen_condition_list_title">No screen conditions !</string>
-    <string name="message_empty_screen_condition_list_desc">A screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.\nYou need at least one condition in your event.</string>
+    <string name="message_empty_screen_condition_list_desc">A screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.</string>
     <string name="message_empty_trigger_condition_list_title">No conditions !</string>
-    <string name="message_empty_trigger_condition_list_desc">A condition is a custom criteria for starting an action.\nYou need at least one condition in your event.</string>
+    <string name="message_empty_trigger_condition_list_desc">A condition is a custom criteria for starting an action.</string>
     <string name="message_empty_action_list_title">No actions !</string>
-    <string name="message_empty_action_list_desc">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.\nYou need at least one action in your event.</string>
+    <string name="message_empty_action_list_desc">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.</string>
 
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>

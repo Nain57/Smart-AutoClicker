@@ -135,11 +135,11 @@
 
     <string name="field_condition_selector_desc">%1$d condições</string>
     <string name="message_empty_screen_condition_list_title">Sem condições de tela !</string>
-    <string name="message_empty_screen_condition_list_desc">Uma condição de tela é uma parte da captura de tela que será procurada em cada frame exibido pela tela do seu telefone.\nVocê precisa ter pelo menos uma condição em seu evento.</string>
+    <string name="message_empty_screen_condition_list_desc">Uma condição de tela é uma parte da captura de tela que será procurada em cada frame exibido pela tela do seu telefone.</string>
     <string name="message_empty_trigger_condition_list_title">Sem condições !</string>
-    <string name="message_empty_trigger_condition_list_desc">Uma condição é um critério personalizado para iniciar uma ação.\nVocê precisa ter pelo menos uma condição em seu evento.</string>
+    <string name="message_empty_trigger_condition_list_desc">Uma condição é um critério personalizado para iniciar uma ação.</string>
     <string name="message_empty_action_list_title">Sem ações !</string>
-    <string name="message_empty_action_list_desc">Uma ação é uma interação (clicar, swipe…) com seu telefone ativada quando as condições criadas são atendidas.\nVocê precisa ter pelo menos uma ação em seu evento.</string>
+    <string name="message_empty_action_list_desc">Uma ação é uma interação (clicar, swipe…) com seu telefone ativada quando as condições criadas são atendidas.</string>
 
     <string name="menu_item_title_conditions">Condições</string>
     <string name="menu_item_title_actions">Ações</string>
