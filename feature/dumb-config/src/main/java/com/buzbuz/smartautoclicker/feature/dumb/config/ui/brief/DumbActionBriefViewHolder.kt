@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefViewHolder
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefPortBinding
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionDetails
 
 
 class DumbActionBriefViewHolder(

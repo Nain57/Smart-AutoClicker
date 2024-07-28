@@ -14,20 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.config
+package com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario
 
 import android.content.Context
 import android.text.InputFilter
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_DURATION_MINUTES
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.REPEAT_COUNT_MIN_VALUE
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
@@ -36,20 +41,23 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedL
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
-import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ContentDumbScenarioConfigBinding
+import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.DialogDumbScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
-class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContext) {
+
+class DumbScenarioConfigDialog(
+    private val onConfigSaved: () -> Unit,
+    private val onConfigDiscarded: () -> Unit,
+) : OverlayDialog(R.style.AppTheme) {
 
     /** View model for the container dialog. */
     private val dialogViewModel: DumbScenarioConfigViewModel by viewModels(
@@ -57,9 +65,24 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
         creator = { dumbScenarioConfigViewModel() },
     )
 
-    private lateinit var viewBinding: ContentDumbScenarioConfigBinding
-    override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewBinding = ContentDumbScenarioConfigBinding.inflate(LayoutInflater.from(context), container, false).apply {
+    private lateinit var viewBinding: DialogDumbScenarioConfigBinding
+
+    override fun onCreateView(): ViewGroup {
+        viewBinding = DialogDumbScenarioConfigBinding.inflate(LayoutInflater.from(context)).apply {
+            layoutTopBar.apply {
+                dialogTitle.setText(R.string.dialog_overlay_title_dumb_scenario_config)
+
+                buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonSave.apply {
+                    visibility = View.VISIBLE
+                    setDebouncedOnClickListener {
+                        onConfigSaved()
+                        super.back()
+                    }
+                }
+                buttonDelete.visibility = View.GONE
+            }
+
             fieldName.apply {
                 setLabel(R.string.input_field_label_scenario_name)
                 setOnTextChangedListener { dialogViewModel.setDumbScenarioName(it.toString()) }
@@ -67,7 +90,7 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
+            hideSoftInputOnFocusLoss(fieldName.textField)
 
             fieldRepeatCount.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(
@@ -106,9 +129,10 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
         return viewBinding.root
     }
 
-    override fun onViewCreated() {
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { dialogViewModel.canBeSaved.collect(::updateSaveButtonState) }
                 launch { dialogViewModel.scenarioName.collect(viewBinding.fieldName::setText) }
                 launch { dialogViewModel.scenarioNameError.collect(viewBinding.fieldName::setError)}
                 launch { dialogViewModel.repeatCount.collect(viewBinding.fieldRepeatCount::setNumericValue) }
@@ -122,10 +146,19 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
         }
     }
 
+    override fun back() {
+        onConfigDiscarded()
+        super.back()
+    }
+
     private fun updateFieldRandomization(isEnabled: Boolean) {
         viewBinding.fieldAntiDetection.apply {
             setChecked(isEnabled)
             setDescription(if (isEnabled) 1 else 0)
         }
+    }
+
+    private fun updateSaveButtonState(isEnabled: Boolean) {
+        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
     }
 }

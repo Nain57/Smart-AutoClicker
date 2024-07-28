@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefMenu
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioDialog
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioConfigDialog
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -186,7 +186,7 @@ class DumbMainMenu(
         viewModel.startEdition(dumbScenarioId) {
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = DumbScenarioDialog(
+                newOverlay = DumbScenarioConfigDialog(
                     onConfigSaved = viewModel::saveEditions,
                     onConfigDiscarded = viewModel::stopEdition,
                 ),

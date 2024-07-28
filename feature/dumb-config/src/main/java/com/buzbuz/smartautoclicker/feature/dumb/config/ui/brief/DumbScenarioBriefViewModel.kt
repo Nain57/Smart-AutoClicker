@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.toDumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.toDumbActionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
