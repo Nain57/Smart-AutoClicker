@@ -52,6 +52,8 @@
     <string name="item_title_dumb_pause">Pause</string>
     <string name="item_title_dumb_swipe">Swipe</string>
     <string name="item_title_no_dumb_actions">Aucune action</string>
+    <string name="item_title_dumb_action_copy">Copie</string>
+    <string name="item_desc_dumb_action_copy">Copier une Action existante depuis n\'importe quel Scenario</string>
 
     <!--
       - Empty list messages.

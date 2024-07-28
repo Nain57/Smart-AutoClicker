@@ -52,6 +52,8 @@
     <string name="item_title_dumb_pause">Attendere</string>
     <string name="item_title_dumb_swipe">Scorrimento</string>
     <string name="item_title_no_dumb_actions">Nessuna azione</string>
+    <string name="item_title_dumb_action_copy">Copia</string>
+    <string name="item_desc_dumb_action_copy">Copiare un\'azione esistente da qualsiasi scenario</string>
 
     <!--
       - Empty list messages.

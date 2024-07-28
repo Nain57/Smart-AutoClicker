@@ -102,15 +102,15 @@ class SmartActionsBriefMenu(
         setMenuItemViewEnabled(viewBinding.btnRecord, isVisible)
     }
 
-    override fun onMoveItem(from: Int, to: Int) {
+    override fun onMoveItemClicked(from: Int, to: Int) {
         viewModel.swapActions(from, to)
     }
 
-    override fun onDeleteItem(index: Int) {
+    override fun onDeleteItemClicked(index: Int) {
         viewModel.deleteAction(index)
     }
 
-    override fun onPlayItem(index: Int) {
+    override fun onPlayItemClicked(index: Int) {
         updateReplayingState(true)
         viewModel.playAction(context, index) {
             updateReplayingState(false)
@@ -184,7 +184,7 @@ class SmartActionsBriefMenu(
                 defaultValue = index + 1,
                 itemCount = itemCount,
                 onValueSelected = { value ->
-                    if (value == index) return@MoveToDialog
+                    if (value - 1 == index) return@MoveToDialog
                     viewModel.moveAction(index, value - 1)
                 }
             ),

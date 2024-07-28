@@ -57,13 +57,13 @@ abstract class ItemBriefMenu(
     private lateinit var blinkingAnimator: Animator
 
     protected open fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding): Unit = Unit
-    protected open fun onMoveItem(from: Int, to: Int) = Unit
+    protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ItemBriefViewHolder<*>
+
     protected open fun onItemBriefClicked(index: Int, item: ItemBrief): Unit = Unit
     protected open fun onItemPositionCardClicked(index: Int, itemCount: Int): Unit = Unit
-
-    protected abstract fun onDeleteItem(index: Int)
-    protected abstract fun onPlayItem(index: Int)
-    protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ItemBriefViewHolder<*>
+    protected open fun onMoveItemClicked(from: Int, to: Int) = Unit
+    protected abstract fun onPlayItemClicked(index: Int)
+    protected abstract fun onDeleteItemClicked(index: Int)
 
     override fun onCreateOverlayView(): View {
         briefPanelAnimationController = AutoHideAnimationController()
@@ -115,20 +115,20 @@ abstract class ItemBriefMenu(
                 briefPanelAnimationController.showOrResetTimer()
             }
             buttonPlay.setDebouncedOnClickListener {
-                onPlayItem(itemListSnapHelper.snapPosition)
+                onPlayItemClicked(itemListSnapHelper.snapPosition)
             }
             buttonDelete.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
-                onDeleteItem(itemListSnapHelper.snapPosition)
+                onDeleteItemClicked(itemListSnapHelper.snapPosition)
             }
 
             buttonMovePrevious.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
-                onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition - 1)
+                onMoveItemClicked(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition - 1)
             }
             buttonMoveNext.setDebouncedOnClickListener {
                 briefPanelAnimationController.showOrResetTimer()
-                onMoveItem(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition + 1)
+                onMoveItemClicked(itemListSnapHelper.snapPosition, itemListSnapHelper.snapPosition + 1)
             }
 
             textActionIndex.setDebouncedOnClickListener {

@@ -25,14 +25,15 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbScenarioBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionUiFlowListener
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionCopyUiFlow
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionEditionUiFlow
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
@@ -64,9 +65,9 @@ class DumbScenarioBriefMenu(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canCopyAction.collect(::onCopyMenuButtonStateUpdated) }
-                launch { viewModel.visualizedActions.collect(::updateItemList) }
-                launch { viewModel.focusedActionDetails.collect(::onFocusedActionDetailsUpdated) }
+                launch { viewModel.isGestureCaptureStarted.collect(::updateRecordingState) }
+                launch { viewModel.dumbActionsBriefList.collect(::updateItemList) }
+                launch { viewModel.dumbActionVisualization.collect(::updateDumbActionVisualisation) }
             }
         }
     }
@@ -79,7 +80,7 @@ class DumbScenarioBriefMenu(
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(
-            onDumbActionSaved = ::onNewDumbActionCreated,
+            onDumbActionSaved = { action -> viewModel.addNewDumbAction(action, getFocusedItemIndex() + 1) },
             onDumbActionDeleted = {},
             onDumbActionCreationCancelled = {},
         )
@@ -96,85 +97,128 @@ class DumbScenarioBriefMenu(
     override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): DumbActionBriefViewHolder =
         DumbActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
-    override fun onMoveItem(from: Int, to: Int) {
-
+    override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
+        super.onScreenOverlayVisibilityChanged(isVisible)
+        setMenuItemViewEnabled(menuViewBinding.btnRecord, isVisible)
     }
 
-    override fun onDeleteItem(index: Int) {
-
+    override fun onFocusedItemChanged(index: Int) {
+        super.onFocusedItemChanged(index)
+        viewModel.setFocusedDumbActionIndex(index)
     }
 
-    override fun onPlayItem(index: Int) {
+    override fun onMoveItemClicked(from: Int, to: Int) {
+        viewModel.swapDumbActions(from, to)
+    }
 
+    override fun onDeleteItemClicked(index: Int) {
+        viewModel.deleteDumbAction(index)
+    }
+
+    override fun onPlayItemClicked(index: Int) {
+        updateReplayingState(true)
+        /*viewModel.playAction(context, index) {
+            updateReplayingState(false)
+        }*/
+    }
+
+    override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
+        showMoveToDialog(index, itemCount)
+    }
+
+    override fun onItemBriefClicked(index: Int, item: ItemBrief) {
+        showDumbActionEditionUiFlow((item.data as DumbActionDetails).action)
     }
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_back -> onBackClicked()
+            R.id.btn_record -> onRecordClicked()
             R.id.btn_add -> onCreateDumbActionClicked()
-            R.id.btn_copy -> onCopyDumbActionClicked()
         }
     }
 
     private fun onBackClicked() {
+        if (isGestureCaptureStarted()) {
+            viewModel.cancelGestureCaptureState()
+            stopGestureCapture()
+            return
+        }
+
         onConfigSaved()
         back()
     }
 
+    private fun onRecordClicked() {
+        if (isGestureCaptureStarted()) return
+
+        viewModel.startGestureCaptureState()
+        startGestureCapture { gesture, isFinished ->
+            if (gesture == null || !isFinished) return@startGestureCapture
+            viewModel.endGestureCaptureState(context, gesture)
+        }
+    }
+
     private fun onCreateDumbActionClicked() {
         hidePanel()
+        showDumbActionCreationUiFlow()
+    }
+
+    private fun updateDumbActionVisualisation(details: ItemBriefDescription?) {
+        briefViewBinding.viewBrief.setDescription(details, true)
+    }
+
+    private fun updateRecordingState(isRecording: Boolean) {
+        if (isRecording) {
+            setMenuItemViewEnabled(menuViewBinding.btnBack, true)
+            setMenuItemViewEnabled(menuViewBinding.btnAdd, false)
+            setMenuItemViewEnabled(menuViewBinding.btnHideOverlay, false)
+            setMenuItemViewEnabled(menuViewBinding.btnMove, true)
+            setMenuItemViewEnabled(menuViewBinding.btnRecord, false)
+        } else {
+            setMenuItemViewEnabled(menuViewBinding.btnBack, true)
+            setMenuItemViewEnabled(menuViewBinding.btnAdd, true)
+            setMenuItemViewEnabled(menuViewBinding.btnHideOverlay, true)
+            setMenuItemViewEnabled(menuViewBinding.btnMove, true)
+            setMenuItemViewEnabled(menuViewBinding.btnRecord, true)
+        }
+    }
+
+    private fun updateReplayingState(isReplaying: Boolean) {
+        setOverlayViewVisibility(!isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnBack, !isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnAdd, !isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnHideOverlay, !isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnMove, !isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnRecord, !isReplaying)
+    }
+
+    private fun showDumbActionCreationUiFlow(): Unit =
         overlayManager.startDumbActionCreationUiFlow(
             context = context,
             creator = dumbActionCreator,
-            listener = createCopyActionUiFlowListener,)
-    }
-
-    private fun onCopyDumbActionClicked() {
-        hidePanel()
-        overlayManager.startDumbActionCopyUiFlow(
-            context = context,
-            creator = dumbActionCreator,
-            listener = createCopyActionUiFlowListener
+            listener = createCopyActionUiFlowListener,
         )
-    }
 
-    override fun onItemBriefClicked(index: Int, item: ItemBrief) {
+    private fun showDumbActionEditionUiFlow(action: DumbAction): Unit =
         overlayManager.startDumbActionEditionUiFlow(
             context = context,
-            dumbAction = (item.data as DumbActionDetails).action,
+            dumbAction = action,
             listener = updateActionUiFlowListener,
         )
-    }
 
-    private fun onNewDumbActionCreated(action: DumbAction) {
-        viewModel.addNewDumbAction(action, getFocusedItemIndex() + 1)
-    }
-
-    private fun onCopyMenuButtonStateUpdated(isEnabled: Boolean) {
-        setMenuItemViewEnabled(
-            view = menuViewBinding.btnCopy,
-            enabled = isEnabled,
-            clickable = isEnabled,
+    private fun showMoveToDialog(index: Int, itemCount: Int) {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = MoveToDialog(
+                theme = R.style.AppTheme,
+                defaultValue = index + 1,
+                itemCount = itemCount,
+                onValueSelected = { value ->
+                    if (value - 1 == index) return@MoveToDialog
+                    viewModel.moveDumbAction(index, value - 1)
+                }
+            ),
         )
-    }
-
-    override fun onFocusedItemChanged(index: Int) {
-        super.onFocusedItemChanged(index)
-        viewModel.onNewActionListSnapIndex(index)
-    }
-
-    private fun onFocusedActionDetailsUpdated(details: FocusedActionDetails) {
-        briefViewBinding.apply {
-            if (details.isEmpty) {
-                textActionIndex.setText(R.string.item_title_no_dumb_actions)
-            } else {
-                textActionIndex.text = context.getString(
-                    R.string.title_action_count,
-                    details.actionIndex + 1,
-                    details.actionCount,
-                )
-            }
-            viewBrief.setDescription(details.itemBriefDescription)
-        }
     }
 }

@@ -39,7 +39,7 @@
             <ImageButton
                 android:id="@+id/btn_record"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_capture" />
+                android:src="@drawable/ic_gesture_record" />
 
             <ImageButton
                 android:id="@+id/btn_add_other"
