@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
-import android.content.Context
-
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR

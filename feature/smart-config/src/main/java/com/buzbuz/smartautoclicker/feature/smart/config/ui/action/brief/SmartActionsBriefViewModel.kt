@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.PointF
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -98,9 +99,7 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     val actionVisualization: Flow<ItemBriefDescription?> = focusedAction
         .filter { !it.second }
-        .combine(editedEvent) { (action, _), event ->
-            action?.toActionDescription(context, event)
-        }
+        .map { (action, _) -> action?.toActionDescription(context) }
 
     val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
         editionRepository.editionState.canCopyActions.map { canCopy ->
@@ -221,18 +220,11 @@ class SmartActionsBriefViewModel @Inject constructor(
             else -> null
         }
 
-    private suspend fun  Action.toActionDescription(context: Context, parent: Event): ItemBriefDescription = when (this) {
+    private suspend fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
         is Action.Click -> ClickDescription(
             position = PointF((x ?: 0).toFloat(), (y ?: 0).toFloat()),
             pressDurationMs = pressDuration ?: 1,
-            imageConditionBitmap =
-                if (positionType != Action.Click.PositionType.ON_DETECTED_CONDITION) null
-                else {
-                    parent.conditions.find { it.id == clickOnConditionId }?.let { condition ->
-                        if (condition is ImageCondition) repository.getConditionBitmap(condition)
-                        else null
-                    }
-                }
+            imageConditionBitmap = findClickOnConditionBitmap(),
         )
 
         is Action.Swipe -> SwipeDescription(
@@ -257,6 +249,11 @@ class SmartActionsBriefViewModel @Inject constructor(
             ContextCompat.getDrawable(context, getToggleEventIconRes())
         )
     }
+
+    private suspend fun Action.Click.findClickOnConditionBitmap(): Bitmap? =
+        editionRepository.editionState.getEditedEventConditions<ImageCondition>()
+            ?.find { it.id == clickOnConditionId }
+            ?.let { repository.getConditionBitmap(it) }
 }
 
 private data class BriefVisualizationState(
