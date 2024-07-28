@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 import kotlinx.coroutines.CoroutineScope
@@ -57,6 +58,8 @@ class DumbEngine @Inject constructor(
     private var timeoutJob: Job? = null
     /** Job for the scenario execution. */
     private var executionJob: Job? = null
+    /** Completion listener on dumb actions tries.*/
+    private var onTryCompletedListener: (() -> Unit)? = null
 
     private val dumbScenarioDbId: MutableStateFlow<Long?> = MutableStateFlow(null)
     val dumbScenario: Flow<DumbScenario?> =
@@ -81,17 +84,16 @@ class DumbEngine @Inject constructor(
         processingScope?.launch {
             dumbScenarioDbId.value?.let { dbId ->
                 dumbRepository.getDumbScenario(dbId)?.let { scenario ->
-                    if (scenario.dumbActions.isEmpty()) return@launch
-
-                    _isRunning.value = true
-
-                    Log.d(TAG, "startDumbScenario ${scenario.id} with ${scenario.dumbActions.size} actions")
-
-                    if (!scenario.isDurationInfinite) timeoutJob = startTimeoutJob(scenario.maxDurationMin)
-                    executionJob = startScenarioExecutionJob(scenario)
+                    startEngine(scenario)
                 }
             }
         }
+    }
+
+    fun tryDumbAction(dumbAction: DumbAction, completionListener: () -> Unit) {
+        Log.i(TAG, "Trying dumb action: $dumbAction")
+        onTryCompletedListener = completionListener
+        startEngine(dumbAction.toDumbScenarioTry())
     }
 
     fun stopDumbScenario() {
@@ -104,6 +106,9 @@ class DumbEngine @Inject constructor(
         timeoutJob = null
         executionJob?.cancel()
         executionJob = null
+
+        onTryCompletedListener?.invoke()
+        onTryCompletedListener = null
     }
 
     fun release() {
@@ -114,6 +119,16 @@ class DumbEngine @Inject constructor(
         processingScope = null
 
         dumbActionExecutor = null
+    }
+
+    private fun startEngine(scenario: DumbScenario) {
+        if (_isRunning.value || scenario.dumbActions.isEmpty()) return
+        _isRunning.value = true
+
+        Log.d(TAG, "startDumbScenario ${scenario.id} with ${scenario.dumbActions.size} actions")
+
+        if (!scenario.isDurationInfinite) timeoutJob = startTimeoutJob(scenario.maxDurationMin)
+        executionJob = startScenarioExecutionJob(scenario)
     }
 
     private fun startTimeoutJob(timeoutDurationMinutes: Int): Job? =

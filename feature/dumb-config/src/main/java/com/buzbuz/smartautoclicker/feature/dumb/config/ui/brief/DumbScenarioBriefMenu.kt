@@ -117,9 +117,9 @@ class DumbScenarioBriefMenu(
 
     override fun onPlayItemClicked(index: Int) {
         updateReplayingState(true)
-        /*viewModel.playAction(context, index) {
+        viewModel.playAction(index) {
             updateReplayingState(false)
-        }*/
+        }
     }
 
     override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
