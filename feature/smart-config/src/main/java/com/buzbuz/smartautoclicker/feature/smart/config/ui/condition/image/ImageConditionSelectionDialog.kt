@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionDescriptionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 
@@ -120,7 +120,7 @@ private class ImageConditionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
         ImageConditionViewHolder(
-            ItemImageConditionDescriptionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemImageConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
             onConditionSelected,
         )
@@ -153,7 +153,7 @@ private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiImageCon
  * @param onConditionSelected called when the user select a condition.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemImageConditionDescriptionBinding,
+    private val viewBinding: ItemImageConditionGridBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {

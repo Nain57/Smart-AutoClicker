@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionCopyBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 
 import kotlinx.coroutines.Job
@@ -58,7 +58,7 @@ class ConditionCopyAdapter(
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
             is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_list_header
-            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> R.layout.item_image_condition_description
+            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> R.layout.item_image_condition_list
             is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> R.layout.item_trigger_condition
         }
 
@@ -66,8 +66,8 @@ class ConditionCopyAdapter(
         when (viewType) {
             R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_image_condition_description -> ImageConditionViewHolder(
-                ItemImageConditionCopyBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            R.layout.item_image_condition_list -> ImageConditionViewHolder(
+                ItemImageConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 bitmapProvider
             )
             R.layout.item_trigger_condition -> TriggerConditionViewHolder(
@@ -134,7 +134,7 @@ class HeaderViewHolder(
  * @param bitmapProvider provides the conditions bitmap.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemImageConditionCopyBinding,
+    private val viewBinding: ItemImageConditionGridBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
