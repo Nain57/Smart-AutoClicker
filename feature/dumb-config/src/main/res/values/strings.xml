@@ -52,6 +52,8 @@
     <string name="item_title_dumb_pause">Wait</string>
     <string name="item_title_dumb_swipe">Swipe</string>
     <string name="item_title_no_dumb_actions">No Actions</string>
+    <string name="item_title_dumb_action_copy">Copy</string>
+    <string name="item_desc_dumb_action_copy">Copy an existing Action from any Scenarios</string>
 
     <!--
       - Empty list messages.

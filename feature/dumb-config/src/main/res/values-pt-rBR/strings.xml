@@ -52,6 +52,8 @@
     <string name="item_title_dumb_pause">Aguarde</string>
     <string name="item_title_dumb_swipe">Deslize</string>
     <string name="item_title_no_dumb_actions">Sem Ações</string>
+    <string name="item_title_dumb_action_copy">Cópia</string>
+    <string name="item_desc_dumb_action_copy">Copiar uma ação existente de qualquer cenário</string>
 
     <!--
       - Empty list messages.

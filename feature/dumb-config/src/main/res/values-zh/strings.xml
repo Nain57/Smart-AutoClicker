@@ -52,6 +52,8 @@
     <string name="item_title_dumb_pause">等待</string>
     <string name="item_title_dumb_swipe">刷卡</string>
     <string name="item_title_no_dumb_actions">无行动</string>
+    <string name="item_title_dumb_action_copy">复制</string>
+    <string name="item_desc_dumb_action_copy">从任何场景复制现有操作</string>
 
     <!--
       - Empty list messages.

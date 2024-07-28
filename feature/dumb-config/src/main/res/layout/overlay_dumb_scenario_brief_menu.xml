@@ -50,15 +50,14 @@
                     android:contentDescription="@string/content_desc_play_pause_scenario" />
 
                 <ImageButton
+                    android:id="@+id/btn_record"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                    android:src="@drawable/ic_gesture_record" />
+
+                <ImageButton
                     android:id="@+id/btn_add"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_add"
-                    android:contentDescription="@string/content_desc_add_action" />
-
-                <ImageButton
-                    android:id="@+id/btn_copy"
-                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                    android:src="@drawable/ic_copy_small"
                     android:contentDescription="@string/content_desc_add_action" />
 
                 <ImageButton

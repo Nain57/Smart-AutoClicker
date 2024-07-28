@@ -101,13 +101,13 @@ class ImageConditionsBriefMenu(
         showImageConditionConfigDialog((item.data as UiImageCondition).condition)
     }
 
-    override fun onDeleteItem(index: Int) {
+    override fun onDeleteItemClicked(index: Int) {
         if (!viewModel.deleteImageCondition(index)) {
             showAssociatedActionWarning(index)
         }
     }
 
-    override fun onPlayItem(index: Int) {
+    override fun onPlayItemClicked(index: Int) {
         showTryConditionOverlay()
     }
 

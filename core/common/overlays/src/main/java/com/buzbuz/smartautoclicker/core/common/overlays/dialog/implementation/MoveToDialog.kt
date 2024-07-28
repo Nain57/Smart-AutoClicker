@@ -43,7 +43,7 @@ class MoveToDialog(
 ) : OverlayDialog(theme) {
 
     /** ViewBinding containing the views for this dialog. */
-    protected lateinit var viewBinding: DialogBaseMoveToBinding
+    private lateinit var viewBinding: DialogBaseMoveToBinding
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseMoveToBinding.inflate(LayoutInflater.from(context)).apply {

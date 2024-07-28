@@ -30,6 +30,13 @@ sealed class DumbActionTypeChoice(
     description = description,
     iconId = iconId,
 ) {
+    /** Copy Action choice. */
+    data object Copy : DumbActionTypeChoice(
+        R.string.item_title_dumb_action_copy,
+        R.string.item_desc_dumb_action_copy,
+        R.drawable.ic_copy,
+    )
+
     /** Click Action choice. */
     data object Click : DumbActionTypeChoice(
         R.string.item_title_dumb_click,
@@ -51,6 +58,7 @@ sealed class DumbActionTypeChoice(
 }
 
 fun allDumbActionChoices() = listOf(
+    DumbActionTypeChoice.Copy,
     DumbActionTypeChoice.Click,
     DumbActionTypeChoice.Swipe,
     DumbActionTypeChoice.Pause,
