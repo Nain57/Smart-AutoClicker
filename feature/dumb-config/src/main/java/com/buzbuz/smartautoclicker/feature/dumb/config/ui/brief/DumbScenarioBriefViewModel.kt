@@ -23,9 +23,12 @@ import androidx.core.graphics.toPoint
 import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
@@ -34,6 +37,9 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionReposit
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.toDumbActionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,12 +49,17 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
 import java.util.Collections
 import javax.inject.Inject
 
+
 class DumbScenarioBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     private val dumbEditionRepository: DumbEditionRepository,
+    private val dumbEngine: DumbEngine,
 ) : ViewModel() {
 
 
@@ -109,6 +120,18 @@ class DumbScenarioBriefViewModel @Inject constructor(
             focusedIndex = index,
             gestureCaptureStarted = false,
         )
+    }
+
+    fun playAction(index: Int, onCompleted: () -> Unit) {
+        val actions = dumbEditionRepository.editedDumbScenario.value?.dumbActions
+        if (actions.isNullOrEmpty() || index !in actions.indices) return
+
+        viewModelScope.launch {
+            delay(500)
+            dumbEngine.tryDumbAction(actions[index]) {
+                viewModelScope.launch(mainDispatcher) { onCompleted() }
+            }
+        }
     }
 
     fun createNewDumbClick(context: Context, position: Point): DumbAction.DumbClick =
