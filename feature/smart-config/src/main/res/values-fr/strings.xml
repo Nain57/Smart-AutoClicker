@@ -154,9 +154,9 @@
       -->
     <string name="message_empty_screen_event_desc">Un événement d\'écran contient un ensemble d\'actions exécutées lorsqu\'une condition spécifique est détectée à l\'écran.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
     <string name="message_empty_trigger_event_list_desc">Un événement déclencheur contient un ensemble d\'actions exécutées lorsqu\'un ensemble de conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
-    <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
-    <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
-    <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
+    <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.</string>
+    <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.</string>
+    <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.</string>
     <string name="message_empty_counter_name_list_desc">Les compteur sont créés avec une Action Modifier Compteur ou une condition Compteur atteint</string>
 
     <!--

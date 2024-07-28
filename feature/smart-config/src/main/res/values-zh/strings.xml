@@ -154,9 +154,9 @@
       -->
     <string name="message_empty_screen_event_desc">屏幕事件包含一组在屏幕上检测到特定条件时执行的操作。\n场景中至少需要一个屏幕或触发器事件才能执行。</string>
     <string name="message_empty_trigger_event_list_desc">触发器事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个屏幕或触发事件才能执行。</string>
-    <string name="message_empty_trigger_condition_list_desc">条件是启动操作的自定义标准。</string>
+    <string name="message_empty_trigger_condition_list_desc">条件是启动一项操作的自定义标准。</string>
     <string name="message_empty_screen_condition_list_desc">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
-    <string name="message_empty_action_list_desc">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
+    <string name="message_empty_action_list_desc">操作是在满足创建的条件时触发的与手机的交互（点击、轻扫…）。</string>
     <string name="message_empty_counter_name_list_desc">使用更改计数器操作或计数器达到条件创建计数器</string>
 
     <!--
