@@ -162,7 +162,7 @@ class EventDialog(
                 )
                 setEmptyDescription(R.string.message_empty_trigger_condition_list_desc)
 
-                setAdapter(EventChildrenCardsAdapter { showTriggerConditionsDialog() },)
+                setAdapter(EventChildrenCardsAdapter { showTriggerConditionsDialog() })
                 setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
             }
         }
@@ -236,11 +236,11 @@ class EventDialog(
 
     override fun onStart() {
         super.onStart()
-        /*viewModel.apply {
-            monitorActionTabView(navBarView.findViewById(R.id.page_actions))
-            monitorConditionTabView(navBarView.findViewById(R.id.page_conditions))
-            monitorSaveButtonView(topBarBinding.buttonSave)
-        }*/
+        viewModel.monitorViews(
+            conditionsField = viewBinding.fieldImageConditionsSelector.root,
+            actionsField = viewBinding.fieldActionsSelector.root,
+            saveButton = viewBinding.layoutTopBar.buttonSave,
+        )
     }
 
     override fun onStop() {

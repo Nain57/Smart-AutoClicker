@@ -56,14 +56,14 @@ internal data class TutorialStepImage(
 )
 
 internal sealed class StepStartCondition {
-    object Immediate : StepStartCondition()
-    object NextOverlay : StepStartCondition()
-    object GameWon : StepStartCondition()
-    object GameLost : StepStartCondition()
+    data object Immediate : StepStartCondition()
+    data object NextOverlay : StepStartCondition()
+    data object GameWon : StepStartCondition()
+    data object GameLost : StepStartCondition()
     data class MonitoredViewClicked(val type: MonitoredViewType) : StepStartCondition()
 }
 
 internal sealed class StepEndCondition {
-    object NextButton : StepEndCondition()
+    data object NextButton : StepEndCondition()
     data class MonitoredViewClicked(val type: MonitoredViewType) : StepEndCondition()
 }

@@ -57,7 +57,9 @@ abstract class ItemBriefMenu(
     private lateinit var blinkingAnimator: Animator
 
     protected open fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding): Unit = Unit
+
     protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ItemBriefViewHolder<*>
+    protected open fun onBriefItemViewBound(index: Int, itemView: View?): Unit = Unit
 
     protected open fun onItemBriefClicked(index: Int, item: ItemBrief): Unit = Unit
     protected open fun onItemPositionCardClicked(index: Int, itemCount: Int): Unit = Unit

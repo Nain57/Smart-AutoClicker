@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_3_step_3,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG,
+                    MonitoredViewType.MAIN_MENU_BUTTON_CONFIG,
                 ),
             ),
             // Open first Event
@@ -76,12 +76,12 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                     MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND,
                 ),
             ),
-            // Select condition tab
+            // Select condition field
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_6,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS,
+                    MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS,
                 ),
             ),
             // Create a new condition
@@ -89,7 +89,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_3_step_7,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_BUTTON_CREATE_CONDITION,
+                    MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                 ),
             ),
             // Take a screenshot
@@ -122,17 +122,33 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                     MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
                 ),
             ),
-            // Select action tab
+            // Close condition list
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_11,
-                stepStartCondition = StepStartCondition.Immediate,
+                contentTextResId = R.string.message_tutorial_1_step_11,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS,
+                    MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
                 ),
             ),
-            // Save event
+            // Select action field
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_12,
+                stepStartCondition = StepStartCondition.Immediate,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
+                ),
+            ),
+            // Close Event List
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_3_step_13,
+                stepStartCondition = StepStartCondition.Immediate,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE,
+                ),
+            ),
+            // Save Event
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_3_step_14,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
@@ -140,7 +156,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Save scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_13,
+                contentTextResId = R.string.message_tutorial_3_step_15,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
@@ -148,15 +164,15 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             ),
             // Play scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_14,
+                contentTextResId = R.string.message_tutorial_3_step_16,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.FLOATING_MENU_BUTTON_PLAY,
+                    MonitoredViewType.MAIN_MENU_BUTTON_PLAY,
                 ),
             ),
             // Game won
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_3_step_15,
+                contentTextResId = R.string.message_tutorial_3_step_17,
                 stepStartCondition = StepStartCondition.GameWon,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

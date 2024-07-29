@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PointF
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,6 +32,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
@@ -69,6 +73,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
@@ -195,6 +200,33 @@ class SmartActionsBriefViewModel @Inject constructor(
         editionRepository.apply {
             startActionEdition(actions[index])
             deleteEditedAction()
+        }
+    }
+
+    fun monitorBriefFirstItemView(briefItemView: View) {
+        monitoredViewsManager.attach(
+            MonitoredViewType.ACTIONS_BRIEF_FIRST_ITEM,
+            briefItemView,
+            ViewPositioningType.SCREEN,
+        )
+    }
+
+    fun monitorViews(createMenuButton: View, saveMenuButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_CREATE_ACTION, createMenuButton, ViewPositioningType.SCREEN)
+            attach(MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE, saveMenuButton, ViewPositioningType.SCREEN)
+        }
+    }
+
+    fun stopBriefFirstItemMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.ACTIONS_BRIEF_FIRST_ITEM)
+    }
+
+    fun stopAllViewMonitoring() {
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.ACTIONS_BRIEF_FIRST_ITEM)
+            detach(MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_CREATE_ACTION)
+            detach(MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE)
         }
     }
 
