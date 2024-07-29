@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -84,6 +85,26 @@ class SmartActionsBriefMenu(
 
     override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): SmartActionBriefViewHolder =
         SmartActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+
+    override fun onBriefItemViewBound(index: Int, itemView: View?) {
+        if (index != 0) return
+
+        if (itemView != null) viewModel.monitorBriefFirstItemView(itemView)
+        else viewModel.stopBriefFirstItemMonitoring()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorViews(
+            createMenuButton = viewBinding.btnAddOther,
+            saveMenuButton = viewBinding.btnBack,
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopAllViewMonitoring()
+    }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
         showActionConfigDialog((item.data as UiAction).action)

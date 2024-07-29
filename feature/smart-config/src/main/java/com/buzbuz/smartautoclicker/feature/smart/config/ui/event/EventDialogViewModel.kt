@@ -163,22 +163,19 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
-    fun monitorActionTabView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS, view)
-    }
-    fun monitorConditionTabView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS, view)
-    }
-
-    fun monitorSaveButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE, view)
+    fun monitorViews(conditionsField: View, actionsField: View, saveButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS, conditionsField)
+            attach(MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS, actionsField)
+            attach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE, saveButton)
+        }
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
             detach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE)
-            detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS)
-            detach(MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS)
+            detach(MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS)
+            detach(MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS)
         }
     }
 

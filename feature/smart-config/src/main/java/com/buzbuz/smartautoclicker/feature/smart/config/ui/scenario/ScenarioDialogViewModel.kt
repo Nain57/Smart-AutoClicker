@@ -69,16 +69,17 @@ class ScenarioDialogViewModel @Inject constructor(
             state.canBeSaved && isEditing
         }
 
-    fun monitorSaveButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE, view)
-    }
-
-    fun monitorCreateEventView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, view)
+    fun monitorViews(createEventButton: View, saveButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, createEventButton)
+            attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE, saveButton)
+        }
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
-        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
+            detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE)
+        }
     }
 }

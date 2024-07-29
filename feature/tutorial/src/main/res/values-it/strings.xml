@@ -41,8 +41,8 @@
     Scenario.\n\nClicca sul pulsante crea evento per creare il tuo primo evento.</string>
 
     <string name="message_tutorial_1_step_5">Un Evento descrive quali Azioni (clic, swipe…) eseguire quando vengono soddisfatte determinate
-    Condizioni.\n\nDevi creare almeno una Condizione e un\'Azione per creare un Evento valido e usarlo nel tuo scenario.\n\nClicca sulla
-    scheda Condizioni per visualizzare l\'elenco delle Condizioni.</string>
+    Condizioni.\n\nDevi creare almeno una Condizione e un\'Azione per creare un Evento valido e usarlo nel tuo scenario.\n\nFare clic sul
+    campo Condizioni per visualizzare l\'elenco delle Condizioni.</string>
 
     <string name="message_tutorial_1_step_6">Una Condizione è una parte di uno screenshot che verrà confrontata con ogni fotogramma dello schermo
     del tuo dispositivo.\n\nPer battere il gioco, vogliamo cliccare sul personaggio blu quando è visibile, quindi abbiamo bisogno di una
@@ -66,47 +66,51 @@
 
     <string name="message_tutorial_1_step_10">La tua immagine di Condizione è ora registrata!\n\nCi sono diverse regolazioni che possono essere
     fatte ad essa, ma le impostazioni predefinite sono adatte al nostro caso d\'uso di base. Poiché il nostro bersaglio non si muove, verrà
-    rilevato solo nella posizione di acquisizione, il che è più veloce rispetto al rilevamento su tutto lo schermo.\n\nClicca sul
-    pulsante Salva per registrarla e tornare alla finestra di configurazione dell\'Evento.</string>
+    rilevato solo nella posizione di acquisizione, il che è più veloce rispetto al rilevamento su tutto lo schermo.\n\nFare clic sul
+    pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
 
-    <string name="message_tutorial_1_step_11">Con questa Condizione, lo scenario sa quando attivare le Azioni.\n\nOra devi definire quali Azioni
-    attivare, quindi per questo gioco, un clic sul personaggio blu.\n\nClicca sulla scheda Azioni per visualizzare l\'elenco delle Azioni.</string>
+    <string name="message_tutorial_1_step_11">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
 
-    <string name="message_tutorial_1_step_12">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento sono soddisfatte.\n\n
+    <string name="message_tutorial_1_step_12">Con questa Condizione, lo scenario sa quando attivare le Azioni.\n\nOra devi definire quali Azioni
+    attivare, quindi per questo gioco, un clic sul personaggio blu.\n\nClicca sulla campo Azioni per visualizzare l\'elenco delle Azioni.</string>
+
+    <string name="message_tutorial_1_step_13">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento sono soddisfatte.\n\n
     Può essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra applicazione) o una modifica nell\'esecuzione dello Scenario,
     e possono essere definite più Azioni per lo stesso Evento.\n\nClicca sul pulsante crea Azione per creare la tua prima Azione.</string>
 
-    <string name="message_tutorial_1_step_13">Innanzitutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer questo gioco, abbiamo solo bisogno
+    <string name="message_tutorial_1_step_14">Innanzitutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer questo gioco, abbiamo solo bisogno
     di cliccare sul personaggio blu, quindi scegli Clicca per creare una nuova Azione di Clicca.</string>
 
-    <string name="message_tutorial_1_step_14">Un\'Azione di Clicca è definita da una posizione e una durata della pressione.\n\nPoiché vogliamo
+    <string name="message_tutorial_1_step_15">Un\'Azione di Clicca è definita da una posizione e una durata della pressione.\n\nPoiché vogliamo
     cliccare il più rapidamente possibile, possiamo mantenere la durata di pressione predefinita di 1 ms, che è il valore più basso possibile.
     Quindi dobbiamo solo definire una posizione.\n\nClicca sul pulsante selezionatore di posizione per selezionare la posizione del Clicca.</string>
 
-    <string name="message_tutorial_1_step_15">Devi selezionare l\'esatta posizione su cui fare clic, quindi devi avviare nuovamente il gioco per
+    <string name="message_tutorial_1_step_16">Devi selezionare l\'esatta posizione su cui fare clic, quindi devi avviare nuovamente il gioco per
     visualizzare il personaggio blu e quindi selezionare la sua posizione.\n\nUna volta che la posizione è corretta, fai clic sul pulsante
     di convalida per salvarla.</string>
-    <string name="message_tutorial_1_step_secondary_15">Non puoi interagire con il gioco mentre il selettore di posizione è visibile, ma puoi
+    <string name="message_tutorial_1_step_secondary_16">Non puoi interagire con il gioco mentre il selettore di posizione è visibile, ma puoi
     utilizzare questo pulsante per mostrarlo e nasconderlo, consentendoti di rimuovere tale restrizione a tuo piacimento.</string>
 
-    <string name="message_tutorial_1_step_16">Il clic è ora configurato correttamente!\n\nClicca sul pulsante Salva per registrarla e tornare alla
-    finestra di configurazione dell\'Evento.</string>
+    <string name="message_tutorial_1_step_17">Il clic è ora configurato correttamente!\n\nFare clic sul pulsante Salva per
+    registrarlo e tornare all\'elenco delle azioni.</string>
 
-    <string name="message_tutorial_1_step_17">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nClicca sul pulsante Salva
+    <string name="message_tutorial_1_step_18">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_1_step_19">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nClicca sul pulsante Salva
     per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
 
-    <string name="message_tutorial_1_step_18">L\'unico requisito per uno scenario è avere almeno un evento.\nPoiché il nostro evento spiega già come
+    <string name="message_tutorial_1_step_20">L\'unico requisito per uno scenario è avere almeno un evento.\nPoiché il nostro evento spiega già come
         vincere la partita, non abbiamo bisogno di nient\'altro.\n\nFai clic sul pulsante Salva persalvare lo scenario nel database e chiudere
         le finestre di dialogo di configurazione.</string>
 
-    <string name="message_tutorial_1_step_19">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il tuo
+    <string name="message_tutorial_1_step_21">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il tuo
         Lo scenario è valido e può essere utilizzato per il rilevamento\n\nFare clic su di esso per avviare il rilevamento.</string>
 
-    <string name="message_tutorial_1_step_20">Sta giocando ma non succede nulla?\n\nÈ normale, si limita a fare clic
+    <string name="message_tutorial_1_step_22">Sta giocando ma non succede nulla?\n\nÈ normale, si limita a fare clic
         quando è visibile il carattere blu, ricordi? Mentre mantieni lo scenario in esecuzione, premi il pulsante di avvio del gioco
         e guarda come Klick\'r batterà per te!</string>
 
-    <string name="message_tutorial_1_step_21">Congratulazioni!\n\nOra conosci le basi di Klick\'r, ma non tutti i casi d\'uso saranno
+    <string name="message_tutorial_1_step_23">Congratulazioni!\n\nOra conosci le basi di Klick\'r, ma non tutti i casi d\'uso saranno
         semplici come questo gioco.\nGuarda il tutorial successivo per imparare come tracciare un bersaglio in movimento.</string>
 
     <!-- One moving target tutorial -->
@@ -125,7 +129,7 @@
     di un\'Azione, quindi solo un Evento.\n\nPoiché il caso d\'uso è piuttosto simile al gioco precedente, manterremo il nostro Evento e lo
     aggiorneremo semplicemente.\n\nClicca sul tuo evento creato in precedenza per modificarlo.</string>
 
-    <string name="message_tutorial_2_step_5">Inizialmente, aggiorneremo la Condizione che rileva il personaggio blu.\n\nClicca sulla scheda delle
+    <string name="message_tutorial_2_step_5">Inizialmente, aggiorneremo la Condizione che rileva il personaggio blu.\n\nClicca sulla campo delle
     Condizioni per visualizzare l\'elenco delle Condizioni.</string>
 
     <string name="message_tutorial_2_step_6">Come nel tutorial precedente, dobbiamo rilevare il personaggio blu, ma ora si muove.\n\nLa nostra
@@ -140,39 +144,43 @@
     tienilo presente quando la tempistica dell\'esecuzione dello Scenario è importante.</string>
 
     <string name="message_tutorial_2_step_8">È fatta!\n\nDovevamo solo cambiare il tipo di rilevamento per fare in modo che la tua Condizione soddisfacesse
-    le nostre esigenze.\n\nFai clic sul pulsante Salva per registrarla e tornare alla finestra di configurazione dell\'Evento.</string>
+    le nostre esigenze.\n\nFare clic sul pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
 
-    <string name="message_tutorial_2_step_9">La tua immagine di Condizione è ora aggiornata!\n\nIn questo stato, lo scenario eseguirà un clic ogni
+    <string name="message_tutorial_2_step_9">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_2_step_10">La tua immagine di Condizione è ora aggiornata!\n\nIn questo stato, lo scenario eseguirà un clic ogni
     volta che il personaggio blu sarà visibile ovunque sullo schermo, ma questo clic sarà nella stessa posizione, quella selezionata durante
-    il tutorial precedente. Quindi, dobbiamo aggiornare la nostra Azione.\n\nFai clic sulla scheda delle Azioni per visualizzare l\'elenco delle Azioni.</string>
+    il tutorial precedente. Quindi, dobbiamo aggiornare la nostra Azione.\n\nFai clic sulla campo delle Azioni per visualizzare l\'elenco delle Azioni.</string>
 
-    <string name="message_tutorial_2_step_10">Vogliamo ancora eseguire un singolo clic, ma questa volta vogliamo fare clic sulla Condizione e non su
+    <string name="message_tutorial_2_step_11">Vogliamo ancora eseguire un singolo clic, ma questa volta vogliamo fare clic sulla Condizione e non su
     una posizione fissa.\n\nPoiché si tratta comunque di un clic, abbiamo ancora bisogno di una sola Azione, quindi modifichiamo il tuo clic
     precedente.\n\nFai clic sulla tua Azione per iniziare a modificarla.</string>
 
-    <string name="message_tutorial_2_step_11">Attualmente, l\'Azione di Clicca "Clicca su" è impostata su "Posizione selezionata", il che significa che
+    <string name="message_tutorial_2_step_12">Attualmente, l\'Azione di Clicca "Clicca su" è impostata su "Posizione selezionata", il che significa che
     devi impostare manualmente la posizione su cui fare clic. L\'altro tipo è "Condizione", il che significa che l\'Azione farà clic sulle coordinate della Condizione
     rilevate.\n\nÈ esattamente ciò di cui abbiamo bisogno per vincere il gioco. Ogni volta che il personaggio blu verrà rilevato, questa Azione
     ci farà clic sopra.\n\nSelezionala per utilizzarla nella tua Azione.</string>
 
-    <string name="message_tutorial_2_step_12">Fai clic sull\'opzione selettore di Condizione per selezionare quale Condizione rilevata fare clic.\nDobbiamo
+    <string name="message_tutorial_2_step_13">Fai clic sull\'opzione selettore di Condizione per selezionare quale Condizione rilevata fare clic.\nDobbiamo
     specificarlo perché possiamo avere più Condizioni nel nostro Evento.</string>
 
-    <string name="message_tutorial_2_step_13">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, quella del personaggio blu.\n\n
+    <string name="message_tutorial_2_step_14">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, quella del personaggio blu.\n\n
     Selezionala per fare clic su questa Condizione quando viene rilevata sullo schermo.</string>
 
-    <string name="message_tutorial_2_step_14">È fatta!\n\nLa tua Azione di Clicca è ora configurata correttamente per battere il gioco.\n\nFai clic
-    sul pulsante Salva per registrarla e tornare alla finestra di configurazione dell\'Evento.</string>
+    <string name="message_tutorial_2_step_15">È fatta!\n\nLa tua Azione di Clicca è ora configurata correttamente per battere il gioco.\n\n
+    Fare clic sul pulsante Salva perregistrarlo e tornare all\'elenco delle azioni.</string>
 
-    <string name="message_tutorial_2_step_15">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nFai clic sul pulsante Salva
+    <string name="message_tutorial_2_step_16">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_2_step_17">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nFai clic sul pulsante Salva
     per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
 
-    <string name="message_tutorial_2_step_16">Un ultimo salvataggio per registrare le tue nuove modifiche nel database e chiudere le finestre di configurazione.</string>
+    <string name="message_tutorial_2_step_18">Un ultimo salvataggio per registrare le tue nuove modifiche nel database e chiudere le finestre di configurazione.</string>
 
-    <string name="message_tutorial_2_step_17">Il tuo Scenario è ora configurato per battere questo nuovo tutorial.\n\nAvvia la rilevazione con il pulsante
+    <string name="message_tutorial_2_step_19">Il tuo Scenario è ora configurato per battere questo nuovo tutorial.\n\nAvvia la rilevazione con il pulsante
     di riproduzione del menu fluttuante e quindi inizia il gioco.</string>
 
-    <string name="message_tutorial_2_step_18">Congratulazioni!\n\nOra sai come tracciare un bersaglio fermo o in movimento con Klick\'r.\n\n
+    <string name="message_tutorial_2_step_20">Congratulazioni!\n\nOra sai come tracciare un bersaglio fermo o in movimento con Klick\'r.\n\n
     Continua a sperimentare e scopri come personalizzare ulteriormente le tue automazioni per diverse applicazioni e giochi.</string>
 
 
@@ -200,7 +208,7 @@
     eseguire le azioni.\n\n"Tutte" significa che tutte le condizioni per questo evento devono essere soddisfatte per eseguire
     le azioni. \n\nPoiché vogliamo rilevare se due cose sono visualizzate insieme, useremo "Tutte".</string>
 
-    <string name="message_tutorial_3_step_6">Ora dobbiamo aggiornare le nostre condizioni.\n\nFai clic sulla scheda Condizioni per
+    <string name="message_tutorial_3_step_6">Ora dobbiamo aggiornare le nostre condizioni.\n\nFai clic sulla campo Condizioni per
     visualizzare l\'elenco delle condizioni.</string>
 
     <string name="message_tutorial_3_step_7">La condizione precedente che rileva il bersaglio blu è ancora corretta, ma ne abbiamo bisogno
@@ -215,23 +223,26 @@
     <string name="message_tutorial_3_step_secondary_9">Se il tuo screenshot non contiene il bersaglio rosso, puoi premere questo pulsante per scattarne uno nuovo.</string>
 
     <string name="message_tutorial_3_step_10">La tua immagine di condizione è ora registrata!\n\nPoiché il bersaglio rosso non si sta muovendo,
-    possiamo mantenere la configurazione predefinita.\nFai clic sul pulsante Salva per registrarla e tornare alla finestra di configurazione
-    dell\'evento.</string>
+    possiamo mantenere la configurazione predefinita.\nFare clic sul pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
 
-    <string name="message_tutorial_3_step_11">Ora abbiamo due condizioni, una per ciascun bersaglio, e le azioni verranno eseguite
-    solo se entrambe sono rilevate.\n\nFai clic sulla scheda Azioni per visualizzare l\'elenco delle azioni per il nostro evento.</string>
+    <string name="message_tutorial_3_step_11">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
 
-    <string name="message_tutorial_3_step_12">L\'azione è già impostata per fare clic sul personaggio blu e verrà eseguita solo quando
+    <string name="message_tutorial_3_step_12">Ora abbiamo due condizioni, una per ciascun bersaglio, e le azioni verranno eseguite
+    solo se entrambe sono rilevate.\n\nFai clic sulla campo Azioni per visualizzare l\'elenco delle azioni per il nostro evento.</string>
+
+    <string name="message_tutorial_3_step_13">L\'azione è già impostata per fare clic sul personaggio blu e verrà eseguita solo quando
     i personaggi blu e rosso saranno visibili insieme.\n\nQuesto è esattamente il comportamento di cui abbiamo bisogno per vincere
-    il gioco, quindi non c\'è bisogno di modificare l\'azione di clic.\n\nFai clic sul pulsante Salva per registrare le tue modifiche.</string>
+    il gioco, quindi non c\'è bisogno di modificare l\'azione di clic.\n\nChiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
 
-    <string name="message_tutorial_3_step_13">Tutte le modifiche devono essere salvate nel tuo scenario per essere registrate.\n\nFai
+    <string name="message_tutorial_3_step_14">Fare clic sul pulsante Salva per salvare l\'evento.</string>
+
+    <string name="message_tutorial_3_step_15">Tutte le modifiche devono essere salvate nel tuo scenario per essere registrate.\n\nFai
     clic sul pulsante Salva per salvare le tue modifiche.</string>
 
-    <string name="message_tutorial_3_step_14">Siamo pronti per vincere questo gioco!\n\nFai clic sul pulsante Avvia per avviare la
+    <string name="message_tutorial_3_step_16">Siamo pronti per vincere questo gioco!\n\nFai clic sul pulsante Avvia per avviare la
     rilevazione e quindi avvia il gioco.</string>
 
-    <string name="message_tutorial_3_step_15">Congratulazioni!\n\nOra sai come combinare condizioni multiple per un evento, ma c\'è ancora molto da imparare!</string>
+    <string name="message_tutorial_3_step_17">Congratulazioni!\n\nOra sai come combinare condizioni multiple per un evento, ma c\'è ancora molto da imparare!</string>
 
     <!-- Two still targets press when only one is visible tutorial -->
     <string name="item_title_tutorial_4">Condizioni negative</string>

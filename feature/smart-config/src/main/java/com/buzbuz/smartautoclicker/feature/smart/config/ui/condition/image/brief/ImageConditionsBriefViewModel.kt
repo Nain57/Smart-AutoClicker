@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -33,6 +34,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -57,6 +61,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     private val editedConditions: Flow<EditedListState<ImageCondition>> =
@@ -113,6 +118,33 @@ class ImageConditionsBriefViewModel @Inject constructor(
     fun upsertEditedCondition() = editionRepository.upsertEditedCondition()
     fun removeEditedCondition() = editionRepository.deleteEditedCondition()
     fun dismissEditedCondition() = editionRepository.stopConditionEdition()
+
+    fun monitorBriefFirstItemView(briefItemView: View) {
+        monitoredViewsManager.attach(
+            MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM,
+            briefItemView,
+            ViewPositioningType.SCREEN,
+        )
+    }
+
+    fun monitorViews(createMenuButton: View, saveMenuButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE, createMenuButton, ViewPositioningType.SCREEN)
+            attach(MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE, saveMenuButton, ViewPositioningType.SCREEN)
+        }
+    }
+
+    fun stopBriefFirstItemMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM)
+    }
+
+    fun stopAllViewMonitoring() {
+        monitoredViewsManager.apply {
+            detach(MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM)
+            detach(MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE)
+            detach(MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE)
+        }
+    }
 }
 
 private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =

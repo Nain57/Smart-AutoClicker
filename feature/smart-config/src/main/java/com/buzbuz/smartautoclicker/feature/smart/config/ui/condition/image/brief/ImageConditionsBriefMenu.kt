@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brie
 
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -84,6 +85,26 @@ class ImageConditionsBriefMenu(
 
     override fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding) {
         hideMoveButtons()
+    }
+
+    override fun onBriefItemViewBound(index: Int, itemView: View?) {
+        if (index != 0) return
+
+        if (itemView != null) viewModel.monitorBriefFirstItemView(itemView)
+        else viewModel.stopBriefFirstItemMonitoring()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorViews(
+            createMenuButton = viewBinding.btnAdd,
+            saveMenuButton = viewBinding.btnSave,
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopAllViewMonitoring()
     }
 
     override fun onMenuItemClicked(viewId: Int) {

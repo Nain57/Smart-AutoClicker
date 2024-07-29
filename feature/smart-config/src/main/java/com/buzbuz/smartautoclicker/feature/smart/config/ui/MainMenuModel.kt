@@ -170,18 +170,17 @@ class MainMenuModel @Inject constructor(
         }
     }
 
-    fun monitorPlayPauseButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY, view, ViewPositioningType.SCREEN)
-    }
-
-    fun monitorConfigButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG, view, ViewPositioningType.SCREEN)
+    fun monitorViews(playMenuButton: View, configMenuButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.MAIN_MENU_BUTTON_PLAY, playMenuButton, ViewPositioningType.SCREEN)
+            attach(MonitoredViewType.MAIN_MENU_BUTTON_CONFIG, configMenuButton, ViewPositioningType.SCREEN)
+        }
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
-            detach(MonitoredViewType.FLOATING_MENU_BUTTON_PLAY)
-            detach(MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG)
+            detach(MonitoredViewType.MAIN_MENU_BUTTON_PLAY)
+            detach(MonitoredViewType.MAIN_MENU_BUTTON_CONFIG)
         }
     }
 
