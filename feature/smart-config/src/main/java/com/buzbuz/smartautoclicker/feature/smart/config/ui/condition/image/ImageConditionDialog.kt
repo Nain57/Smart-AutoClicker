@@ -59,7 +59,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -155,16 +154,6 @@ class ImageConditionDialog(
                 setSliderRange(0f, MAX_THRESHOLD)
                 setOnValueChangedFromUserListener { value -> viewModel.setThreshold(value.roundToInt()) }
             }
-
-            fieldTestCondition.apply {
-                setTitle(
-                    context.getString(
-                        R.string.item_title_try_element,
-                        context.getString(R.string.dialog_title_condition_config),
-                    )
-                )
-                setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
-            }
         }
 
         return viewBinding.root
@@ -185,7 +174,6 @@ class ImageConditionDialog(
                 launch { viewModel.detectionType.collect(::updateDetectionType) }
                 launch { viewModel.threshold.collect(::updateThreshold) }
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
-                launch { viewModel.canTryCondition.collect(viewBinding.fieldTestCondition::setEnabled) }
             }
         }
     }
@@ -287,16 +275,6 @@ class ImageConditionDialog(
         if (!isEditingCondition) {
             Log.e(TAG, "Closing ConditionDialog because there is no condition edited")
             finish()
-        }
-    }
-
-    private fun showTryElementMenu() {
-        viewModel.getTryInfo()?.let { (scenario, imageCondition) ->
-            overlayManager.navigateTo(
-                context = context,
-                newOverlay = TryElementOverlayMenu(scenario, imageCondition),
-                hideCurrent = true,
-            )
         }
     }
 
