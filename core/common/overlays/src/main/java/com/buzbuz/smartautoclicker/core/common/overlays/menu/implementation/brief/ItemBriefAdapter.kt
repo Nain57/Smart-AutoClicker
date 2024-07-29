@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.recyclerview.widget.DiffUtil
@@ -31,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 internal class ItemBriefAdapter(
     private val displayConfigManager: DisplayConfigManager,
     private val viewHolderCreator: (parent: ViewGroup, orientation: Int) -> ItemBriefViewHolder<*>,
+    private val itemBoundListener: (index: Int, itemView: View?) -> Unit,
     private val onItemClickedListener: (Int, ItemBrief) -> Unit,
 ) : ListAdapter<ItemBrief, ItemBriefViewHolder<*>>(ItemBriefDiffUtilCallback) {
 
@@ -43,6 +45,12 @@ internal class ItemBriefAdapter(
 
     override fun onBindViewHolder(holder: ItemBriefViewHolder<*>, position: Int) {
         holder.onBind(getItem(position), onItemClickedListener)
+        itemBoundListener(position, holder.itemView)
+    }
+
+    override fun onViewRecycled(holder: ItemBriefViewHolder<*>) {
+        itemBoundListener(holder.bindingAdapterPosition, null)
+        super.onViewRecycled(holder)
     }
 
     public override fun getItem(position: Int): ItemBrief = super.getItem(position)

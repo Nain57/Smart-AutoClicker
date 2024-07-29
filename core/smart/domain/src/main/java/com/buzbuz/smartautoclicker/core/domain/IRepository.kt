@@ -165,4 +165,6 @@ interface IRepository {
     fun stopTutorialMode()
 
     fun isTutorialModeEnabled(): Boolean
+
+    fun isTutorialModeEnabledFlow(): Flow<Boolean>
 }

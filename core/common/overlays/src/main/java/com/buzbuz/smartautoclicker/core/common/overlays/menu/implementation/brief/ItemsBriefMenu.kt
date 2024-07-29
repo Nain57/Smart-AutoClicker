@@ -76,9 +76,14 @@ abstract class ItemBriefMenu(
             orientation = displayConfigManager.displayConfig.orientation,
         )
 
-        briefAdapter = ItemBriefAdapter(displayConfigManager, ::onCreateBriefItemViewHolder) { index, brief ->
-            debounceUserInteraction { onItemBriefClicked(index, brief) }
-        }
+        briefAdapter = ItemBriefAdapter(
+            displayConfigManager = displayConfigManager,
+            viewHolderCreator = ::onCreateBriefItemViewHolder,
+            itemBoundListener = ::onBriefItemViewBound,
+            onItemClickedListener = { index, brief ->
+                debounceUserInteraction { onItemBriefClicked(index, brief) }
+            },
+        )
 
         briefViewBinding.apply {
             briefPanelAnimationController.attachToView(
@@ -161,6 +166,10 @@ abstract class ItemBriefMenu(
     @CallSuper
     protected open fun onFocusedItemChanged(index: Int) {
         updateBriefButtons()
+    }
+
+    protected fun setBriefPanelAutoHide(isEnabled: Boolean) {
+        briefPanelAnimationController.setAutoHideEnabled(isEnabled)
     }
 
     protected fun hideMoveButtons() {
@@ -259,5 +268,3 @@ abstract class ItemBriefMenu(
         }
     }
 }
-
-private const val TAG = "ItemsBriefMenu"

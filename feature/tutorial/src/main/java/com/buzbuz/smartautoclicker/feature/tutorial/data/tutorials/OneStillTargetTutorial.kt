@@ -79,7 +79,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
             // Create a new condition
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_1_step_6,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                 ),
@@ -129,7 +129,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_1_step_11,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                    MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
                 ),
             ),
             // Select action tab
@@ -143,7 +143,7 @@ internal fun newOneStillTargetTutorial(): TutorialData =
             // Create a new action
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_1_step_13,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_CREATE_ACTION,
                 ),

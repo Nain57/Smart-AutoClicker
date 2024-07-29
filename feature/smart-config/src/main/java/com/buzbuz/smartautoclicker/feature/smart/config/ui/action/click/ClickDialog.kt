@@ -159,11 +159,11 @@ class ClickDialog(
 
     override fun onStart() {
         super.onStart()
-        viewModel.apply {
-            monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-            monitorFieldSelectPositionView(viewBinding.fieldClickSelection.root)
-            monitorFieldPositionTypeItemOnConditionView(viewBinding.fieldClickType.multiStateButton.buttonMiddle)
-        }
+        viewModel.monitorViews(
+            onConditionTypeView = viewBinding.fieldClickType.multiStateButton.buttonMiddle,
+            selectPositionFieldView = viewBinding.fieldClickSelection.root,
+            saveButton = viewBinding.layoutTopBar.buttonSave,
+        )
     }
 
     override fun onStop() {
