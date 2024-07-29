@@ -87,7 +87,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
             // Create a new condition
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_7,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                 ),
@@ -127,7 +127,7 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_1_step_11,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                    MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
                 ),
             ),
             // Select action field
@@ -138,10 +138,10 @@ internal fun newTwoStillTargetsPressWhenBothVisibleTutorial(): TutorialData =
                     MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                 ),
             ),
-            // Close Event List
+            // Close action List
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_3_step_13,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE,
                 ),

@@ -62,8 +62,9 @@ class MonitoredViewsManager @Inject constructor(
     fun getViewPosition(type: MonitoredViewType): StateFlow<Rect>? =
         monitoredViews[type]?.position
 
-    fun performClick(type: MonitoredViewType): Boolean =
-        monitoredViews[type]?.performClick() ?: false
+    fun performClick(type: MonitoredViewType): Boolean {
+        return monitoredViews[type]?.performClick() ?: false
+    }
 
     fun monitorNextClick(type: MonitoredViewType, listener: () -> Unit) {
         monitoredClicks[type] = {

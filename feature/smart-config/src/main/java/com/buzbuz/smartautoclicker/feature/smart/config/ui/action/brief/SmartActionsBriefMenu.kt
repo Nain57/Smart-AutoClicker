@@ -74,6 +74,7 @@ class SmartActionsBriefMenu(
                 launch { viewModel.isGestureCaptureStarted.collect(::updateRecordingState) }
                 launch { viewModel.actionBriefList.collect(::updateItemList) }
                 launch { viewModel.actionVisualization.collect(::updateActionVisualisation) }
+                launch { viewModel.isTutorialModeEnabled.collect(::updateTutorialModeState) }
             }
         }
     }
@@ -195,6 +196,10 @@ class SmartActionsBriefMenu(
 
     private fun updateActionVisualisation(visualization: ItemBriefDescription?) {
         briefViewBinding.viewBrief.setDescription(visualization, true)
+    }
+
+    private fun updateTutorialModeState(isTutorialEnabled: Boolean) {
+        setBriefPanelAutoHide(!isTutorialEnabled)
     }
 
     private fun showMoveToDialog(index: Int, itemCount: Int) {

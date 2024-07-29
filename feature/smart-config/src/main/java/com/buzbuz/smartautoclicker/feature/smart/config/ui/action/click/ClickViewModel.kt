@@ -200,16 +200,12 @@ class ClickViewModel @Inject constructor(
         }
     }
 
-    fun monitorSaveButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE, view)
-    }
-
-    fun monitorFieldSelectPositionView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION, view)
-    }
-
-    fun monitorFieldPositionTypeItemOnConditionView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION, view)
+    fun monitorViews(onConditionTypeView: View, selectPositionFieldView: View, saveButton: View) {
+        monitoredViewsManager.apply {
+            attach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION, onConditionTypeView)
+            attach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION, selectPositionFieldView)
+            attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE, saveButton)
+        }
     }
 
     fun stopViewMonitoring() {

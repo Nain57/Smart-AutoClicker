@@ -127,7 +127,7 @@ private class ImageConditionsAdapter(
 
     override fun onBindViewHolder(holder: ImageConditionViewHolder, position: Int) {
         holder.onBind(getItem(position))
-        itemViewBound(position, holder.itemView)
+        itemViewBound(position, holder.viewBinding.cardImageCondition.root)
     }
 
     override fun onViewRecycled(holder: ImageConditionViewHolder) {
@@ -153,7 +153,7 @@ private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiImageCon
  * @param onConditionSelected called when the user select a condition.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemImageConditionGridBinding,
+    val viewBinding: ItemImageConditionGridBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {

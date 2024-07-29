@@ -238,6 +238,7 @@ class EventDialog(
         super.onStart()
         viewModel.monitorViews(
             conditionsField = viewBinding.fieldImageConditionsSelector.root,
+            conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
             actionsField = viewBinding.fieldActionsSelector.root,
             saveButton = viewBinding.layoutTopBar.buttonSave,
         )

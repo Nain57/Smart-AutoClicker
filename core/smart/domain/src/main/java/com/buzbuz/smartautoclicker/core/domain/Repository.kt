@@ -144,6 +144,8 @@ internal class Repository @Inject internal constructor(
     override fun isTutorialModeEnabled(): Boolean =
         dataSource.currentDatabase.value == tutorialDatabase
 
+    override fun isTutorialModeEnabledFlow(): Flow<Boolean> =
+        dataSource.currentDatabase.map { it == tutorialDatabase }
 }
 
 /** Tag for logs. */

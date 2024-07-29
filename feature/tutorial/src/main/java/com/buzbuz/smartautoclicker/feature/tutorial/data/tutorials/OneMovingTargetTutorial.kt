@@ -79,7 +79,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             // Open first Condition
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_6,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM,
                 ),
@@ -109,10 +109,10 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_2_step_9,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                    MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
                 ),
             ),
-            // Select action tab
+            // Select action field
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_10,
                 stepStartCondition = StepStartCondition.NextOverlay,
@@ -123,7 +123,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             // Click on first action
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_11,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.ACTIONS_BRIEF_FIRST_ITEM,
                 ),

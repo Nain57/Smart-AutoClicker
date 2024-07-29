@@ -47,6 +47,7 @@ class AutoHideAnimationController {
     private lateinit var showAnimation: Animation
     private lateinit var hideAnimation: Animation
 
+    private var autoHideEnabled: Boolean = true
     private var animationScope: CoroutineScope? = null
     private var hideJob: Job? = null
     private var viewToAnimate: View? = null
@@ -99,7 +100,25 @@ class AutoHideAnimationController {
         viewToAnimate?.startAnimation(hideAnimation)
     }
 
+    fun setAutoHideEnabled(isEnabled: Boolean) {
+        if (isEnabled == autoHideEnabled) return
+        autoHideEnabled = isEnabled
+
+        if (!isEnabled) {
+            hideJob?.cancel()
+            hideJob = null
+
+            if (viewToAnimate?.visibility == View.GONE) {
+                viewToAnimate?.startAnimation(hideAnimation)
+            }
+        } else if (viewToAnimate?.visibility == View.VISIBLE) {
+            resetHideCountdown()
+        }
+    }
+
     private fun resetHideCountdown() {
+        if (!autoHideEnabled) return
+
         Log.d(TAG, "reset hide countdown for view $viewToAnimate")
 
         hideJob?.cancel()
