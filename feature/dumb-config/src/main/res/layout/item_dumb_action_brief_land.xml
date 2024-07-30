@@ -21,13 +21,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:maxWidth="150dp">
+    tools:layout_width="200dp"
+    tools:layout_height="500dp">
 
     <com.google.android.material.card.MaterialCardView
         style="@style/AppTheme.Widget.Card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
         app:layout_constraintBottom_toTopOf="@id/button_previous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
