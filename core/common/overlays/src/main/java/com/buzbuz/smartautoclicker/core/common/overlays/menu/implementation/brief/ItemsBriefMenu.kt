@@ -165,7 +165,7 @@ abstract class ItemBriefMenu(
 
     @CallSuper
     protected open fun onFocusedItemChanged(index: Int) {
-        updateBriefButtons()
+        updateBriefButtons(briefAdapter.itemCount)
     }
 
     protected fun setBriefPanelAutoHide(isEnabled: Boolean) {
@@ -197,8 +197,8 @@ abstract class ItemBriefMenu(
                 emptyScenarioCard.visibility = View.GONE
             }
 
-            updateBriefButtons()
             briefAdapter.submitList(actions)
+            updateBriefButtons(actions.size)
         }
     }
 
@@ -245,9 +245,8 @@ abstract class ItemBriefMenu(
     protected fun isGestureCaptureStarted(): Boolean =
         briefViewBinding.viewRecorder.visibility == View.VISIBLE
 
-    private fun updateBriefButtons() {
+    private fun updateBriefButtons(itemCount: Int) {
         briefViewBinding.apply {
-            val itemCount = briefAdapter.itemCount
             val index = itemListSnapHelper.snapPosition
 
             if (itemCount == 0) {
@@ -255,14 +254,22 @@ abstract class ItemBriefMenu(
                 buttonMoveNext.isEnabled = false
                 buttonPlay.isEnabled = false
                 buttonDelete.isEnabled = false
-                textActionIndex.text = "0/0"
+                textActionIndex.text = context.getString(
+                    R.string.item_brief_items_count,
+                    0,
+                    0,
+                )
                 textActionIndex.isEnabled = false
             } else {
                 buttonMovePrevious.isEnabled = itemListSnapHelper.snapPosition != 0
                 buttonMoveNext.isEnabled = itemListSnapHelper.snapPosition != (itemCount - 1)
                 buttonPlay.isEnabled = true
                 buttonDelete.isEnabled = true
-                textActionIndex.text = "${index + 1}/$itemCount"
+                textActionIndex.text = context.getString(
+                    R.string.item_brief_items_count,
+                    index + 1,
+                    itemCount,
+                )
                 textActionIndex.isEnabled = true
             }
         }
