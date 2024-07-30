@@ -28,6 +28,7 @@
         style="@style/AppTheme.Widget.Card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/margin_vertical_extra_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,6 +51,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/text_threshold"
                 app:layout_constraintVertical_chainStyle="packed"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="0.5"
                 android:gravity="center_vertical"
                 tools:text="Image condition"/>
 
@@ -65,8 +69,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/item_name"
                 app:layout_constraintBottom_toTopOf="@id/text_shouldBeDetected"
                 android:gravity="center_vertical"
-                android:textSize="@dimen/text_size_list_item_text_small"
                 android:textStyle="italic"
+                android:maxLines="2"
+                android:ellipsize="end"
                 tools:text="Threshold: 4%"/>
 
             <ImageView
