@@ -285,10 +285,13 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
     }
 
-    private suspend fun Action.Click.findClickOnConditionBitmap(): Bitmap? =
-        editionRepository.editionState.getEditedEventConditions<ImageCondition>()
+    private suspend fun Action.Click.findClickOnConditionBitmap(): Bitmap? {
+        if (positionType != Action.Click.PositionType.ON_DETECTED_CONDITION) return null
+
+        return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
             ?.find { it.id == clickOnConditionId }
             ?.let { repository.getConditionBitmap(it) }
+    }
 }
 
 private data class BriefVisualizationState(
