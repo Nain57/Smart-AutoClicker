@@ -46,6 +46,7 @@ class SmartActionBriefViewHolder(
             icon.setImageResource(details.icon)
             name.text = details.name
             description.text = details.description
+            errorBadge.visibility = if (details.haveError) View.VISIBLE else View.GONE
         }
     }
 }
@@ -55,6 +56,7 @@ class ItemSmartActionBriefBinding private constructor(
     val icon: ImageView,
     val name: TextView,
     val description: TextView,
+    val errorBadge: ImageView,
 ) : ViewBinding {
 
     companion object {
@@ -70,6 +72,7 @@ class ItemSmartActionBriefBinding private constructor(
         icon = binding.itemIcon,
         name = binding.itemName,
         description = binding.itemDescription,
+        errorBadge = binding.errorBadge,
     )
 
     constructor(binding: ItemSmartActionBriefLandBinding) : this(
@@ -77,6 +80,7 @@ class ItemSmartActionBriefBinding private constructor(
         icon = binding.itemIcon,
         name = binding.itemName,
         description = binding.itemDescription,
+        errorBadge = binding.errorBadge,
     )
 
     override fun getRoot(): View = rootView
