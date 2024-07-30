@@ -123,6 +123,7 @@ class DumbScenarioBriefMenu(
     }
 
     override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
+        if (itemCount < 2) return
         showMoveToDialog(index, itemCount)
     }
 

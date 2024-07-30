@@ -15,27 +15,18 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <include
+        layout="@layout/include_field_text_input"
+        android:id="@+id/field_move_to_index"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+        android:background="@color/listBackground" />
 
-        <include layout="@layout/include_dialog_navigation_top_bar"
-            android:id="@+id/layout_top_bar" />
-
-        <include layout="@layout/include_field_text_input"
-            android:id="@+id/field_move_to_index"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-            android:background="@color/listBackground"/>
-
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>

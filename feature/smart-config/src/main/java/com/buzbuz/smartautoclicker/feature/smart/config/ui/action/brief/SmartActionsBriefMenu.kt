@@ -137,6 +137,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     }
 
     override fun onItemPositionCardClicked(index: Int, itemCount: Int) {
+        if (itemCount < 2) return
         showMoveToDialog(index, itemCount)
     }
 
