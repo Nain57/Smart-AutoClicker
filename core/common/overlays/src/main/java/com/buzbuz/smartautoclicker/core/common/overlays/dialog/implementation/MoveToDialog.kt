@@ -18,67 +18,101 @@ package com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation
 
 import android.text.Editable
 import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.StyleRes
 
+import androidx.annotation.StyleRes
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
+
+import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.common.overlays.R
+import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseMoveToBinding
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.color.DynamicColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MoveToDialog(
     @StyleRes theme: Int,
     private val defaultValue: Int,
     private val itemCount: Int,
     private val onValueSelected: ((Int) -> Unit),
-) : OverlayDialog(theme) {
+) : BaseOverlay(theme, recreateOnRotation = true) {
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseMoveToBinding
 
-    override fun onCreateView(): ViewGroup {
+    /** Tells if the dialog is visible. */
+    private var isShown = false
+    private var dialog: AlertDialog? = null
+
+    override fun onCreate() {
         viewBinding = DialogBaseMoveToBinding.inflate(LayoutInflater.from(context)).apply {
-            layoutTopBar.apply {
-                dialogTitle.text = context.getString(R.string.dialog_move_to_title)
-                buttonDelete.visibility = View.GONE
-                buttonSave.visibility = View.VISIBLE
-
-                buttonDismiss.setDebouncedOnClickListener { back() }
-                buttonSave.setDebouncedOnClickListener {
-                    fieldMoveToIndex.textField.text?.getEditedValue()?.let { value ->
-                        onValueSelected(value)
-                        back()
-                    }
-                }
-            }
-
             fieldMoveToIndex.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(min = 1, max = itemCount))
+
                 setLabel(R.string.dialog_move_to_position_label)
                 setText(defaultValue.toString(), InputType.TYPE_CLASS_NUMBER)
-                setOnTextChangedListener { editable ->
-                    val value = editable.getEditedValue()
-                    viewBinding.layoutTopBar.setButtonEnabledState(
-                        DialogNavigationButton.SAVE,
-                        value != null && value >= 1 && value <= itemCount,
-                    )
-                }
+                textField.setHint("Max: $itemCount")
+                setOnTextChangedListener { updatePositiveButtonState() }
             }
         }
 
-        return viewBinding.root
+        dialog = MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+            .setTitle(R.string.dialog_move_to_title)
+            .setView(viewBinding.root)
+            .setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                    this@MoveToDialog.back()
+                    true
+                } else {
+                    false
+                }
+            }
+            .setPositiveButton(android.R.string.ok) { _, _ -> validateCurrentValueAndClose() }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> back() }
+            .create()
+
+        dialog?.window?.setType(WindowManagerCompat.TYPE_COMPAT_OVERLAY)
     }
 
-    override fun onDialogCreated(dialog: BottomSheetDialog) = Unit
+    override fun onStart() {
+        if (isShown) return
+
+        isShown = true
+        dialog?.show()
+
+        viewBinding.fieldMoveToIndex.textField.requestFocus()
+    }
+
+    override fun onStop() {
+        if (!isShown) return
+
+        dialog?.hide()
+        isShown = false
+    }
+
+    override fun onDestroy() {
+        dialog?.dismiss()
+        dialog = null
+    }
+
+    private fun updatePositiveButtonState() {
+        dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled =
+            viewBinding.fieldMoveToIndex.textField.text?.getEditedValue() != null
+    }
+
+    private fun validateCurrentValueAndClose() {
+        viewBinding.fieldMoveToIndex.textField.text?.getEditedValue()?.let { value ->
+            onValueSelected(value)
+            back()
+        }
+    }
 
     private fun Editable.getEditedValue(): Int? =
         try {
