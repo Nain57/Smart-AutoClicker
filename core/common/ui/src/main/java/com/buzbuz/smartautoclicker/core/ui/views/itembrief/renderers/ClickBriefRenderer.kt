@@ -45,14 +45,13 @@ internal class ClickBriefRenderer(
             repeatDelay = 500
             addUpdateListener {
                 animatedOuterRadius = (it.animatedValue as Float)
-                super.invalidate()
+                invalidateView()
             }
         }
 
     private val gradientBackgroundPaint: Paint = Paint()
 
     private var briefDescription: ClickDescription? = null
-    private var animateClick: Boolean = false
 
     private var animatedOuterRadius: Float = viewStyle.outerRadiusPx
     private var position: PointF? = null
@@ -60,16 +59,21 @@ internal class ClickBriefRenderer(
 
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is ClickDescription) return
-        briefDescription = description
-        animateClick = animate
-        invalidate()
-    }
-
-    override fun invalidate() {
-        conditionBitmap = null
-        val description = briefDescription ?: return
 
         if (outerRadiusAnimator.isStarted) outerRadiusAnimator.cancel()
+
+        briefDescription = description
+        animatedOuterRadius = viewStyle.outerRadiusPx
+
+        if (animate) {
+            outerRadiusAnimator.reverseDelay = description.pressDurationMs
+            outerRadiusAnimator.start()
+        }
+    }
+
+    override fun onInvalidate() {
+        conditionBitmap = null
+        val description = briefDescription ?: return
 
         val viewSize = getViewSize()
         val bitmap = description.imageConditionBitmap
@@ -86,7 +90,7 @@ internal class ClickBriefRenderer(
             position = description.position
         }
 
-        animatedOuterRadius = viewStyle.outerRadiusPx
+
         position?.let { clickPosition ->
             gradientBackgroundPaint.shader = createRadialGradientShader(
                 position = clickPosition,
@@ -94,13 +98,6 @@ internal class ClickBriefRenderer(
                 color = viewStyle.backgroundColor,
             )
         }
-
-        if (animateClick) {
-            outerRadiusAnimator.reverseDelay = description.pressDurationMs
-            outerRadiusAnimator.start()
-        }
-
-        super.invalidate()
     }
 
     override fun onStop() {

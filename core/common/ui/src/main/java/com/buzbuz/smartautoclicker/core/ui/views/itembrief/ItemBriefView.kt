@@ -108,8 +108,12 @@ class ItemBriefView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        if (w != oldw || h != oldh) renderer?.onSizeChanged(w, h)
-        invalidate()
+        if (w != oldw || h != oldh) invalidate()
+    }
+
+    override fun invalidate() {
+        renderer?.onInvalidate()
+        super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {

@@ -27,7 +27,6 @@ import androidx.annotation.ColorInt
 import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefViewStyle
 
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -43,7 +42,7 @@ internal class SwipeBriefRenderer(
         repeatCount = ValueAnimator.INFINITE
         repeatMode = ValueAnimator.RESTART
         interpolator = LinearInterpolator()
-        addUpdateListener { updateSwipePosition((it.animatedValue as Float)) }
+        addUpdateListener { onAnimationValueUpdated((it.animatedValue as Float)) }
     }
 
     private val progressBorderPaint: Paint = Paint().apply {
@@ -66,7 +65,15 @@ internal class SwipeBriefRenderer(
         animatedSwipeProgressPosition = PointF()
         positions = description.from to description.to
 
-        description.from?.let { from ->
+        val animDurationMs = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+        if (animate && positions.first != null && positions.second != null) {
+            swipeProgressAnimator.duration = animDurationMs
+            swipeProgressAnimator.start()
+        }
+    }
+
+    override fun onInvalidate() {
+        positions.first?.let { from ->
             gradientBackgroundPaintFrom.shader = createRadialGradientShader(
                 position = from,
                 radius = viewStyle.outerRadiusPx * 1.75f,
@@ -74,43 +81,13 @@ internal class SwipeBriefRenderer(
             )
         }
 
-        description.to?.let { to ->
+        positions.second?.let { to ->
             gradientBackgroundPaintTo.shader = createRadialGradientShader(
                 position = to,
                 radius = viewStyle.outerRadiusPx * 1.75f,
                 color = viewStyle.backgroundColor,
             )
         }
-
-        if (animate && description.from != null && description.to != null) {
-            swipeProgressAnimator.duration = max(description.swipeDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-            swipeProgressAnimator.start()
-        }
-        invalidate()
-    }
-
-    private fun updateSwipePosition(completionRatio: Float) {
-        val (from, to) = positions
-        from ?: return
-        to ?: return
-
-        var vx = to.x - from.x
-        var vy = to.y - from.y
-        val mag = sqrt(vx * vx + vy * vy)
-
-        vx /= mag
-        vy /= mag
-
-        animatedSwipeProgressPosition.x = from.x + vx * (mag * completionRatio)
-        animatedSwipeProgressPosition.y = from.y + vy * (mag * completionRatio)
-
-        invalidate()
-    }
-
-    override fun onStop() {
-        swipeProgressAnimator.cancel()
-        animatedSwipeProgressPosition = PointF()
-        positions = Pair(null, null)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -153,6 +130,30 @@ internal class SwipeBriefRenderer(
                 progressBorderPaint,
             )
         }
+    }
+
+    override fun onStop() {
+        swipeProgressAnimator.cancel()
+        animatedSwipeProgressPosition = PointF()
+        positions = Pair(null, null)
+    }
+
+    private fun onAnimationValueUpdated(completionRatio: Float) {
+        val (from, to) = positions
+        from ?: return
+        to ?: return
+
+        var vx = to.x - from.x
+        var vy = to.y - from.y
+        val mag = sqrt(vx * vx + vy * vy)
+
+        vx /= mag
+        vy /= mag
+
+        animatedSwipeProgressPosition.x = from.x + vx * (mag * completionRatio)
+        animatedSwipeProgressPosition.y = from.y + vy * (mag * completionRatio)
+
+        invalidateView()
     }
 
     private fun Canvas.drawSelectorCircle(

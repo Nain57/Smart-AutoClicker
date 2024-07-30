@@ -24,7 +24,6 @@ import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.view.View
 
-import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 
 internal abstract class ItemBriefRenderer<Style>(
@@ -32,15 +31,14 @@ internal abstract class ItemBriefRenderer<Style>(
     protected val viewStyle: Style,
 ) {
     abstract fun onNewDescription(description: ItemBriefDescription, animate: Boolean)
-    open fun onSizeChanged(w: Int, h: Int) = Unit
+    abstract fun onInvalidate()
     abstract fun onDraw(canvas: Canvas)
     abstract fun onStop()
 
     protected fun getViewSize(): Point =
         Point(briefView.width, briefView.height)
 
-    @CallSuper
-    protected open fun invalidate() { briefView.invalidate() }
+    protected fun invalidateView() { briefView.invalidate() }
 
     protected fun createRadialGradientShader(position: PointF, radius: Float, @ColorInt color: Int): Shader =
         RadialGradient(
