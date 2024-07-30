@@ -22,6 +22,5 @@
         Alguns fabricantes de dispositivos Android não respeitam o comportamento padrão sobre aplicativos em segundo plano, e dependendo da marca do seu dispositivo, você pode precisar realizar uma configuração adicional.\n\n
         Consulte o site a seguir para encontrar mais informações sobre esse problema e como você pode melhorar a estabilidade das permissões.</string>
     <string name="button_understood">Entendido</string>
-    <string name="button_open_dont_kill_my_app" translatable="false">Don\'t kill my app</string>
 
 </resources>
