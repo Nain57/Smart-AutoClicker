@@ -111,7 +111,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
             return false
         }
 
-        editionRepository.deleteEditedAction()
+        editionRepository.deleteEditedCondition()
         return true
     }
 
