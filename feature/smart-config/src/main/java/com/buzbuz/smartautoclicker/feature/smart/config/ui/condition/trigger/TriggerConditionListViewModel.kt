@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.conditio
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
@@ -44,9 +43,6 @@ class TriggerConditionListViewModel @Inject constructor(
                     triggerCondition.toUiTriggerCondition(context, inError = !triggerCondition.isComplete())
                 }
             }
-
-    val canBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventTriggerConditionsState
-        .map { it.canBeSaved }
 
     /** Tells if there is at least one condition to copy. */
     val canCopyCondition: Flow<Boolean> = editionRepository.editionState.canCopyConditions

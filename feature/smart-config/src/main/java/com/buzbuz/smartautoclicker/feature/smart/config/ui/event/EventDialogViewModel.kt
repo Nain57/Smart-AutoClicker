@@ -30,21 +30,20 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
+
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -61,22 +60,6 @@ class EventDialogViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
-
-    /**
-     * Tells if all content have their field correctly configured.
-     * Used to display the red badge if indicating if there is something missing.
-     */
-    val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
-        editionRepository.editionState.editedEventState,
-        editionRepository.editionState.editedEventConditionsState,
-        editionRepository.editionState.editedEventActionsState,
-    ) { editedEvent, conditions, actions, ->
-        buildMap {
-            put(R.id.page_event, editedEvent.value?.name?.isNotEmpty() ?: false)
-            put(R.id.page_conditions, conditions.canBeSaved)
-            put(R.id.page_actions, actions.canBeSaved)
-        }
-    }
 
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }

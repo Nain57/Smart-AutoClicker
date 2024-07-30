@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
@@ -50,9 +49,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 
-class TriggerConditionListDialog(
-    private val onSaveClicked: () -> Unit,
-) : OverlayDialog(R.style.ScenarioConfigTheme) {
+class TriggerConditionListDialog() : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private val viewModel: TriggerConditionListViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
@@ -64,15 +61,11 @@ class TriggerConditionListDialog(
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogTriggerConditionsBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+                setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 dialogTitle.setText(R.string.dialog_title_trigger_event)
 
                 buttonDismiss.setDebouncedOnClickListener { back() }
-                buttonSave.setDebouncedOnClickListener {
-                    onSaveClicked()
-                    back()
-                }
             }
 
             buttonNew.setDebouncedOnClickListener { showTriggerConditionTypeSelectionDialog() }
@@ -97,15 +90,10 @@ class TriggerConditionListDialog(
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canBeSaved.collect(::updateSaveButton) }
                 launch { viewModel.canCopyCondition.collect(::updateCopyButton) }
                 launch { viewModel.configuredTriggerConditions.collect(::updateConditionList) }
             }
         }
-    }
-
-    private fun updateSaveButton(enabled: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
     private fun updateCopyButton(visible: Boolean) {
