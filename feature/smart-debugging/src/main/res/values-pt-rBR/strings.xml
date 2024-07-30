@@ -48,10 +48,4 @@
     <string name="section_title_report_timing_title">Tempo de processamento</string>
     <string name="section_title_report_confidence_title">Taxa de confiança na detecção</string>
 
-    <!--
-      - The following strings should be kept the same in all languages.
-      - DO NOT TRANSLATE.
-      -->
-    <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
-
 </resources>
