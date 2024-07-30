@@ -45,7 +45,7 @@ internal class PauseBriefRenderer(
             repeatDelay = 500
             addUpdateListener {
                 animatedRotationAngleDegree = (it.animatedValue as Float)
-                invalidate()
+                invalidateView()
             }
         }
 
@@ -54,34 +54,24 @@ internal class PauseBriefRenderer(
     private var viewCenter: PointF = PointF()
     private var baseHandPosition: RectF? = null
     private var animatedRotationAngleDegree: Float? = null
+    private var animationDurationMs: Long? = null
 
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is PauseDescription) return
 
-        updateDisplayValues(briefView.width, briefView.height)
-        if (rotationAnimator.isStarted) rotationAnimator.cancel()
+        animationDurationMs = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+    }
 
+    override fun onInvalidate() {
+        val animDurationMs = animationDurationMs ?: return
+
+        if (rotationAnimator.isStarted) rotationAnimator.cancel()
         animatedRotationAngleDegree = 0f
 
-        rotationAnimator.duration = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-        rotationAnimator.start()
-    }
-
-    override fun onStop() {
-        rotationAnimator.cancel()
-        animatedRotationAngleDegree = null
-        baseHandPosition = null
-    }
-
-    override fun onSizeChanged(w: Int, h: Int) {
-        super.onSizeChanged(w, h)
-        updateDisplayValues(w, h)
-    }
-
-    private fun updateDisplayValues(viewWidth: Int, viewHeight: Int) {
+        val viewSize = getViewSize()
         viewCenter = PointF(
-            viewWidth / 2f,
-            viewHeight / 2f,
+            viewSize.x / 2f,
+            viewSize.y / 2f,
         )
 
         baseHandPosition = RectF(
@@ -96,6 +86,9 @@ internal class PauseBriefRenderer(
             radius = viewStyle.outerRadiusPx * 1.75f,
             color = viewStyle.backgroundColor,
         )
+
+        rotationAnimator.duration = max(animDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+        rotationAnimator.start()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -111,6 +104,13 @@ internal class PauseBriefRenderer(
             drawRoundRect(handPosition, 4f, 4f, viewStyle.linePaint)
             restore()
         }
+    }
+
+    override fun onStop() {
+        rotationAnimator.cancel()
+        animatedRotationAngleDegree = null
+        baseHandPosition = null
+        animationDurationMs = null
     }
 }
 

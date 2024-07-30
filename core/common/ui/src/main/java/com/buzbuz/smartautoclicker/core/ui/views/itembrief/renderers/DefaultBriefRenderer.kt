@@ -44,15 +44,9 @@ internal class DefaultBriefRenderer(
         iconDrawable = description.icon?.mutate()?.apply {
             setTint(viewStyle.iconColor)
         }
-        invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int) {
-        super.onSizeChanged(w, h)
-        invalidate()
-    }
-
-    override fun invalidate() {
+    override fun onInvalidate() {
         viewCenter = PointF(briefView.width / 2f, briefView.height / 2f)
 
         iconDrawable?.bounds = Rect(
@@ -67,8 +61,6 @@ internal class DefaultBriefRenderer(
             radius = viewStyle.iconSize * 1.75f,
             color = viewStyle.backgroundColor,
         )
-
-        super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {

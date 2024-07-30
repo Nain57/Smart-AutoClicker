@@ -41,7 +41,7 @@ internal class ImageConditionBriefRenderer(
     briefView: View,
     viewStyle: ImageConditionBriefRendererStyle,
     displayConfigManager: DisplayConfigManager,
-) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle), ViewInvalidator {
+) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle) {
 
     private val selectorPaint = Paint().apply {
         isAntiAlias = true
@@ -61,7 +61,9 @@ internal class ImageConditionBriefRenderer(
             color = viewStyle.selectorColor,
             thicknessPx = viewStyle.thicknessPx,
         ),
-        viewInvalidator = this,
+        viewInvalidator = object : ViewInvalidator {
+            override fun invalidate() { invalidateView() }
+        },
     )
 
     private var imagePosition: Rect? = null
@@ -76,16 +78,9 @@ internal class ImageConditionBriefRenderer(
         if (description !is ImageConditionDescription) return
 
         briefDescription = description
-        invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int) {
-        super.onSizeChanged(w, h)
-        displayBorderComponent.onViewSizeChanged(w, h)
-        invalidate()
-    }
-
-    override fun invalidate() {
+    override fun onInvalidate() {
         imagePosition = null
         detectionBorderRect = null
         backgroundPath.reset()
@@ -96,7 +91,6 @@ internal class ImageConditionBriefRenderer(
         val detectionArea = briefDescription?.conditionDetectionArea
         val detectionType = briefDescription?.conditionDetectionType
         if (detectionArea == null || position == null || detectionType == null) {
-            super.invalidate()
             return
         }
 
@@ -128,8 +122,6 @@ internal class ImageConditionBriefRenderer(
                 displayBorderComponent.onInvalidate()
             }
         }
-
-        super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
