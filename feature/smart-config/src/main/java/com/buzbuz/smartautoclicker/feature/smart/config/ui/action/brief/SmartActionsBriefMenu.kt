@@ -48,10 +48,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.U
 import kotlinx.coroutines.launch
 
 
-class SmartActionsBriefMenu(
-    initialItemIndex: Int,
-    private val onConfigComplete: () -> Unit,
-) : ItemBriefMenu(
+class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     theme = R.style.ScenarioConfigTheme,
     noItemText = R.string.brief_empty_actions,
     initialItemIndex = initialItemIndex,
@@ -150,7 +147,6 @@ class SmartActionsBriefMenu(
             return
         }
 
-        onConfigComplete()
         back()
     }
 

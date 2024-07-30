@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
 import android.content.DialogInterface
+import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -42,8 +43,10 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
@@ -110,6 +113,15 @@ class EventDialog(
     }
 
     private fun DialogEventConfigBinding.setupEventProperties() {
+        fieldEventName.apply {
+            setLabel(R.string.generic_name)
+            setOnTextChangedListener { viewModel.setEventName(it.toString()) }
+            textField.filters = arrayOf<InputFilter>(
+                InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+            )
+        }
+        hideSoftInputOnFocusLoss(fieldEventName.textField)
+
         fieldIsEnabled.apply {
             setTitle(context.resources.getString(R.string.field_event_state_title))
             setupDescriptions(
@@ -315,12 +327,7 @@ class EventDialog(
     private fun showImageConditionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionsBriefMenu(
-                initialFocusedIndex = initialFocusedIndex,
-                onConfigComplete = {
-
-                },
-            ),
+            newOverlay = ImageConditionsBriefMenu(initialFocusedIndex),
             hideCurrent = true,
         )
     }
@@ -328,20 +335,14 @@ class EventDialog(
     private fun showTriggerConditionsDialog() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = TriggerConditionListDialog(
-                onSaveClicked = {
-
-                },
-            )
+            newOverlay = TriggerConditionListDialog()
         )
     }
 
     private fun showActionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = SmartActionsBriefMenu(initialFocusedIndex) {
-
-            },
+            newOverlay = SmartActionsBriefMenu(initialFocusedIndex),
             hideCurrent = true,
         )
     }

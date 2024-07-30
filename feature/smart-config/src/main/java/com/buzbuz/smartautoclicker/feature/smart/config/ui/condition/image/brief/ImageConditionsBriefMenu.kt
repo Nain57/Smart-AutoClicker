@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 
 class ImageConditionsBriefMenu(
     initialFocusedIndex: Int,
-    private val onConfigComplete: () -> Unit,
 ) : ItemBriefMenu(
     theme = R.style.AppTheme,
     noItemText = R.string.brief_empty_image_conditions,
@@ -110,10 +109,7 @@ class ImageConditionsBriefMenu(
 
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
-            R.id.btn_save -> {
-                onConfigComplete()
-                back()
-            }
+            R.id.btn_save -> back()
             R.id.btn_add -> showNewCaptureOverlay()
             R.id.btn_copy -> showImageConditionCopyDialog()
         }
