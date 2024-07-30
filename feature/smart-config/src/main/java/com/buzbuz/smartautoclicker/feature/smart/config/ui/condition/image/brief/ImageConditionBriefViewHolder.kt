@@ -59,6 +59,8 @@ class ImageConditionBriefViewHolder(
 
             threshold.text = details.thresholdText
             icon.setImageResource(details.detectionTypeIconRes)
+
+            errorBadge.visibility = if (details.haveError) View.VISIBLE else View.GONE
         }
     }
 
@@ -71,6 +73,7 @@ class ImageConditionBriefBinding private constructor(
     val shouldBeDetectedText: TextView,
     val shouldBeDetectedIcon: ImageView,
     val threshold: TextView,
+    val errorBadge: ImageView,
 ) : ViewBinding {
 
     companion object {
@@ -88,6 +91,7 @@ class ImageConditionBriefBinding private constructor(
         shouldBeDetectedText = binding.textShouldBeDetected,
         shouldBeDetectedIcon = binding.iconShouldBeDetected,
         threshold = binding.textThreshold,
+        errorBadge = binding.errorBadge,
     )
 
     constructor(binding: ItemImageConditionBriefLandBinding) : this(
@@ -97,6 +101,7 @@ class ImageConditionBriefBinding private constructor(
         shouldBeDetectedText = binding.textShouldBeDetected,
         shouldBeDetectedIcon = binding.iconShouldBeDetected,
         threshold = binding.textThreshold,
+        errorBadge = binding.errorBadge,
     )
 
     override fun getRoot(): View = rootView
