@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
 
-        versionCode = 45
+        versionCode = 46
         versionName = "3.0.0-beta05"
     }
 
