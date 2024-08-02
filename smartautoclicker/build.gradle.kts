@@ -29,7 +29,7 @@ android {
         applicationId = "com.buzbuz.smartautoclicker"
 
         versionCode = 45
-        versionName = "3.0.0-beta04"
+        versionName = "3.0.0-beta05"
     }
 
     flavorDimensions += listOf("version")
