@@ -227,9 +227,9 @@
     <!-- Style for the click/swipe position(s) overlay selector view. -->
     <style name="AppTheme.Overlay.PositionSelector">
         <item name="colorBackground">@color/overlayActionsBriefBackground</item>
-        <item name="radius">@dimen/overlay_position_selector_radius</item>
-        <item name="innerRadius">@dimen/overlay_position_selector_inner_radius</item>
-        <item name="thickness">@dimen/overlay_position_selector_thickness</item>
+        <item name="radius">@dimen/overlay_click_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
+        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
         <item name="colorInner">@color/overlayViewPrimary</item>
         <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
         <item name="colorOutlineSecondary">@color/overlayViewPrimary</item>

@@ -65,6 +65,9 @@
     <dimen name="overlay_position_selector_thickness">6dp</dimen>
     <dimen name="overlay_position_selector_radius">28dp</dimen>
     <dimen name="overlay_position_selector_inner_radius">3dp</dimen>
+    <dimen name="overlay_click_selector_thickness">6dp</dimen>
+    <dimen name="overlay_click_selector_radius">28dp</dimen>
+    <dimen name="overlay_click_selector_inner_radius">3dp</dimen>
 
     <dimen name="overlay_gesture_recorder_thickness">10dp</dimen>
     <dimen name="overlay_gesture_recorder_length">60dp</dimen>
