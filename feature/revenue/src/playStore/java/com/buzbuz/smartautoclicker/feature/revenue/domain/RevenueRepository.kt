@@ -98,7 +98,7 @@ internal class RevenueRepository @Inject constructor(
         ) { purchaseState, isConsentInit, consent ->
             when {
                 purchaseState == InAppPurchaseState.PURCHASED -> UserConsentState.ADS_NOT_NEEDED
-                isConsentInit && consent -> UserConsentState.CAN_REQUEST_ADS
+                consent -> UserConsentState.CAN_REQUEST_ADS
                 isConsentInit && !consent -> UserConsentState.CANNOT_REQUEST_ADS
                 else -> UserConsentState.UNKNOWN
             }

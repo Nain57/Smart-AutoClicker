@@ -88,6 +88,7 @@ class ScenarioViewModel @Inject constructor(
     }
 
     fun requestUserConsentIfNeeded(activity: Activity) {
+        revenueRepository.refreshPurchases()
         revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
     }
 

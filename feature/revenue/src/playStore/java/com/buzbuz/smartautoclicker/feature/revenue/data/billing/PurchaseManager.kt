@@ -42,7 +42,10 @@ internal class NewPurchaseManager @Inject constructor() {
             return
         }
 
-        if (purchase == null) return
+        if (purchase == null) {
+            Log.i(TAG, "Product purchase not yet available")
+            return
+        }
 
         val purchaseState = purchase.purchaseState
         if (purchaseState != Purchase.PurchaseState.PURCHASED) {
@@ -60,8 +63,13 @@ internal class NewPurchaseManager @Inject constructor() {
 
         // If this is a new purchase, acknowledge it
         if (!purchase.isAcknowledged) {
+            Log.i(TAG, "Product purchase state: PURCHASED")
             _state.emit(InAppPurchaseState.PURCHASED)
-            if (ackQuery(purchase)) _state.emit(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED)
+
+            if (ackQuery(purchase)) {
+                Log.i(TAG, "Product purchase state: PURCHASED_AND_ACKNOWLEDGED")
+                _state.emit(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED)
+            }
             return
         }
 
