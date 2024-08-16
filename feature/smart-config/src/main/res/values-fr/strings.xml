@@ -60,8 +60,8 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_click_desc">Cliquer sur l\'écran</string>
-    <string name="item_click_details_at_position">Pendant %1$s à [%2$d, %3$d]</string>
-    <string name="item_click_details_on_condition">Sur la condition</string>
+    <string name="item_click_details_at_position">Pendant %1$s</string>
+    <string name="item_click_details_on_condition">Pendant %1$s sur %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Pas de condition sélectionnée</string>
     <string name="field_condition_selection_desc_or_operator">L\'évènement est défini sur "Une condition", vous ne pouvez pas en spécifier une</string>
@@ -74,7 +74,7 @@
     <string name="item_pause_details">Pendant %1$s</string>
     <string name="generic_select_the_position">Choisir une position</string>
     <string name="item_swipe_desc">Swiper d\'une position à une autre</string>
-    <string name="item_swipe_details">Pendant %1$s de [%2$d, %3$d] à [%4$d, %5$d]</string>
+    <string name="item_swipe_details">Pendant %1$s</string>
     <string name="field_swipe_positions_desc">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_toggle_event_desc">Changer l\'état d\'activation d\'un évènement</string>
     <string name="field_change_all_desc_manual">Choisissez manuellement les évènements à changer</string>
@@ -117,6 +117,13 @@
     <string name="item_change_counter_title">Modifier compteur</string>
     <string name="field_timer_restart_title">Relancer quand atteint</string>
     <string name="field_change_all_title">Changer tous</string>
+    <string name="item_copy_title">Copie</string>
+    <string name="item_copy_desc">Copier une Action existante depuis n\'importe quel Scenario</string>
+    <string name="item_image_condition_visible">Visible</string>
+    <string name="item_image_condition_not_visible">Non visible</string>
+    <string name="field_condition_selector_desc">%1$d conditions</string>
+    <string name="item_intent_details_start_activity">Lancer %1$s</string>
+
 
     <!--
       - Fields.
@@ -147,9 +154,9 @@
       -->
     <string name="message_empty_screen_event_desc">Un événement d\'écran contient un ensemble d\'actions exécutées lorsqu\'une condition spécifique est détectée à l\'écran.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
     <string name="message_empty_trigger_event_list_desc">Un événement déclencheur contient un ensemble d\'actions exécutées lorsqu\'un ensemble de conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
-    <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
-    <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.\nVous avez besoin d\'au moins une condition dans votre évènement.</string>
-    <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.\nVous avez besoin d\'au moins une action dans votre évènement.</string>
+    <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.</string>
+    <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.</string>
+    <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.</string>
     <string name="message_empty_counter_name_list_desc">Les compteur sont créés avec une Action Modifier Compteur ou une condition Compteur atteint</string>
 
     <!--
@@ -157,6 +164,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Différence: %1$d%%</string>
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Cet évènement possède une ou plusieures actions de changement d\'état référenceant un évènement d\'un autre scénario.\nVous devrez mettre à jour ces actions avant de pouvoir sauvegarder le scénario.</string>
     <string name="warning_dialog_message_event_delete_associated_action">Cet évènement est référencé par une ou plusieures actions. Le supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">Cette condition est référencée par une ou plusieures actions. La supprimer supprimera aussi les actions associées.\nÊtes vous sûr ?</string>
@@ -272,4 +280,8 @@
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
     <string name="field_application_selection_title">Choisir une application</string>
+
+    <string name="brief_empty_actions">Aucune Action. Vous avez besoin d\'au moins une Action valide pour créer un évènement</string>
+    <string name="brief_empty_image_conditions">Aucune condition d\'écran. Vous avez besoin d\'au moins une Condition valide pour créer un évènement</string>
+
 </resources>

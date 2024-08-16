@@ -39,7 +39,7 @@ class ActivitySelectionModel @Inject constructor(
     /** Retrieves the list of activities visible on the Android launcher. */
     val activities: Flow<List<AndroidApplicationInfo>> = flow {
         emit(
-            getAllAndroidApplicationsInfo(context.packageManager)
-            .sortedBy { it.name.lowercase() })
+            context.packageManager.getAllAndroidApplicationsInfo()
+                .sortedBy { it.name.lowercase() })
     }.flowOn(Dispatchers.IO)
 }

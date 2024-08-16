@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_debug_report">Relatório de depuração</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_report_total_duration">Duração total</string>
+    <string name="item_title_report_image_processed">Imagens processadas</string>
+    <string name="item_title_report_avg_image_processing_duration">Duração média de processamento</string>
+    <string name="item_title_report_total_event_trigger_count">Eventos acionados</string>
+    <string name="item_title_report_detection_count">Condições detectadas</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_report_timing_min">Min</string>
+    <string name="section_title_report_timing_max">Max</string>
+    <string name="section_title_report_timing_avg">Média</string>
+    <string name="section_title_report_event_trigger_count">Acionados</string>
+    <string name="section_title_report_event_processing_count">Processados</string>
+    <string name="section_title_report_condition_detected_count">Detectadas</string>
+    <string name="section_title_report_condition_processing_count">Processadas</string>
+    <string name="section_title_report_timing_title">Tempo de processamento</string>
+    <string name="section_title_report_confidence_title">Taxa de confiança na detecção</string>
+
+</resources>

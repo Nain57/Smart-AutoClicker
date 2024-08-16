@@ -20,16 +20,17 @@ import android.content.Context
 import android.graphics.Point
 import android.util.Log
 import android.view.KeyEvent
-
 import androidx.lifecycle.Lifecycle
+
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
-
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequest
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class OverlayManager @Inject internal constructor(
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val menuPositionDataSource: OverlayMenuPositionDataSource,
 ): Dumpable {
     /** The listener upon screen rotation. */
@@ -66,12 +67,14 @@ class OverlayManager @Inject internal constructor(
     /** Tells if we are currently executing navigation requests. */
     private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
-    private var topOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? = null
+    private var topOverlay: Overlay? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
     private var navigateUpToRootCompletionListener: (() -> Unit)? = null
 
+    var onVisibilityChangedListener: (() -> Unit)? = null
+
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
-    val backStackTop: Flow<com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay?> = isNavigating
+    val backStackTop: Flow<Overlay?> = isNavigating
         .filter { navigating -> !navigating }
         .combine(overlayBackStack.topFlow) { _, stackTop ->
             Log.d(TAG, "New back stack top: $stackTop")
@@ -80,11 +83,11 @@ class OverlayManager @Inject internal constructor(
         .distinctUntilChanged()
 
     /** @return the top of the overlay back stack. */
-    fun getBackStackTop(): com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? =
+    fun getBackStackTop(): Overlay? =
         overlayBackStack.top
 
     /** Display the provided overlay and pause the current one, if any. */
-    fun navigateTo(context: Context, newOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay, hideCurrent: Boolean = false) {
+    fun navigateTo(context: Context, newOverlay: Overlay, hideCurrent: Boolean = false) {
         Log.d(
             TAG, "Pushing NavigateTo request: HideCurrent=$hideCurrent, Overlay=${newOverlay.hashCode()}" +
                     ", currently navigating: ${isNavigating.value}")
@@ -127,6 +130,7 @@ class OverlayManager @Inject internal constructor(
         Log.d(TAG, "Close all overlays (${overlayBackStack.size}, currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.clear()
+        lifecyclesRegistry.clearStates()
         topOverlay?.destroy()
         repeat(overlayBackStack.size) {
             overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
@@ -156,6 +160,8 @@ class OverlayManager @Inject internal constructor(
         lifecyclesRegistry.saveStates(overlayBackStack.toList())
         // Hide from top to bottom of the stack
         overlayBackStack.forEachReversed { it.hide() }
+
+        onVisibilityChangedListener?.invoke()
     }
 
     /**
@@ -183,6 +189,8 @@ class OverlayManager @Inject internal constructor(
 
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
+
+        onVisibilityChangedListener?.invoke()
     }
 
     /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
@@ -196,7 +204,7 @@ class OverlayManager @Inject internal constructor(
      * Set an overlay as being shown above all overlays in the backstack.
      * It will not be added to the backstack, and can be seen as "an overlay for overlays".
      */
-    fun setTopOverlay(overlay: com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay) {
+    fun setTopOverlay(overlay: FullscreenOverlay) {
         if (topOverlay != null) return
         val stackTop = overlayBackStack.top ?: return
 
@@ -248,7 +256,7 @@ class OverlayManager @Inject internal constructor(
         val currentOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? =
             if (overlayBackStack.isEmpty()) {
                 // First item ? Start listening for orientation.
-                displayMetrics.addOrientationListener(orientationListener)
+                displayConfigManager.addOrientationListener(orientationListener)
                 null
             } else {
                 overlayBackStack.peek()
@@ -282,7 +290,7 @@ class OverlayManager @Inject internal constructor(
         }
     }
 
-    private fun onOverlayDismissed(context: Context, overlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay) {
+    private fun onOverlayDismissed(context: Context, overlay: Overlay) {
         Log.d(TAG, "Overlay dismissed ${overlay.hashCode()}")
 
         isNavigating.value = true
@@ -292,7 +300,7 @@ class OverlayManager @Inject internal constructor(
 
         // If there is no more overlays, no need to keep track of the orientation
         if (overlayBackStack.isEmpty()) {
-            displayMetrics.removeOrientationListener(orientationListener)
+            displayConfigManager.removeOrientationListener(orientationListener)
         }
 
         executeNextNavigationRequest(context)
@@ -330,7 +338,7 @@ class OverlayManager @Inject internal constructor(
             overlayNavigationRequestStack.dump(this, contentPrefix)
 
             append(contentPrefix).println("- BackStack:")
-            overlayBackStack.forEach { overlay -> (overlay as com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay).dump(this, itemPrefix) }
+            overlayBackStack.forEach { overlay -> (overlay as BaseOverlay).dump(this, itemPrefix) }
         }
     }
 }

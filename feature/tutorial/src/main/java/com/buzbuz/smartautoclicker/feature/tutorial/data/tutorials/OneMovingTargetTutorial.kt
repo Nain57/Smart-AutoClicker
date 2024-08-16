@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_2_step_3,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.FLOATING_MENU_BUTTON_CONFIG,
+                    MonitoredViewType.MAIN_MENU_BUTTON_CONFIG,
                 ),
             ),
             // Open first Event
@@ -73,15 +73,15 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                 contentTextResId = R.string.message_tutorial_2_step_5,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_CONDITIONS,
+                    MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS,
                 ),
             ),
             // Open first Condition
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_6,
-                stepStartCondition = StepStartCondition.Immediate,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_CONDITION,
+                    MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM,
                 ),
             ),
             // Click on Whole Screen Detection Type
@@ -104,33 +104,41 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
                     MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
                 ),
             ),
-            // Select action tab
+            // Close condition list
             TutorialStepData.TutorialOverlay(
                 contentTextResId = R.string.message_tutorial_2_step_9,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_TAB_BUTTON_ACTIONS,
+                    MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
+                ),
+            ),
+            // Select action field
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_2_step_10,
+                stepStartCondition = StepStartCondition.NextOverlay,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                 ),
             ),
             // Click on first action
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_10,
-                stepStartCondition = StepStartCondition.Immediate,
+                contentTextResId = R.string.message_tutorial_2_step_11,
+                stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
-                    MonitoredViewType.EVENT_DIALOG_ITEM_FIRST_ACTION,
+                    MonitoredViewType.ACTIONS_BRIEF_FIRST_ITEM,
                 ),
             ),
             // Select position type Condition
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_11,
+                contentTextResId = R.string.message_tutorial_2_step_12,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION,
                 ),
             ),
-            // Save Click
+            // Select a condition for the click
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_12,
+                contentTextResId = R.string.message_tutorial_2_step_13,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
@@ -138,7 +146,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Pick blue character
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_13,
+                contentTextResId = R.string.message_tutorial_2_step_14,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST,
@@ -146,15 +154,23 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Click
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_14,
+                contentTextResId = R.string.message_tutorial_2_step_15,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
                 ),
             ),
+            // Close action list
+            TutorialStepData.TutorialOverlay(
+                contentTextResId = R.string.message_tutorial_2_step_16,
+                stepStartCondition = StepStartCondition.NextOverlay,
+                stepEndCondition = StepEndCondition.MonitoredViewClicked(
+                    MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE,
+                ),
+            ),
             // Save Event
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_15,
+                contentTextResId = R.string.message_tutorial_2_step_17,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
@@ -162,7 +178,7 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Save Scenario
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_16,
+                contentTextResId = R.string.message_tutorial_2_step_18,
                 stepStartCondition = StepStartCondition.NextOverlay,
                 stepEndCondition = StepEndCondition.MonitoredViewClicked(
                     MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
@@ -170,13 +186,13 @@ internal fun newOneMovingTargetTutorial(): TutorialData =
             ),
             // Start detection and game
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_17,
+                contentTextResId = R.string.message_tutorial_2_step_19,
                 stepStartCondition = StepStartCondition.Immediate,
                 stepEndCondition = StepEndCondition.NextButton,
             ),
             // Game won
             TutorialStepData.TutorialOverlay(
-                contentTextResId = R.string.message_tutorial_2_step_18,
+                contentTextResId = R.string.message_tutorial_2_step_20,
                 stepStartCondition = StepStartCondition.GameWon,
                 stepEndCondition = StepEndCondition.NextButton,
             ),

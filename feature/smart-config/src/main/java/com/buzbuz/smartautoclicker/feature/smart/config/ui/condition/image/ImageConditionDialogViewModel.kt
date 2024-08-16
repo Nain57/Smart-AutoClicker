@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -90,17 +89,6 @@ class ImageConditionViewModel @Inject constructor(
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->
         condition.canBeSaved
     }
-
-    val canTryCondition: Flow<Boolean> = configuredCondition
-        .map { it.isComplete() }
-
-    fun getTryInfo(): Pair<Scenario, ImageCondition>? {
-        val scenario = editionRepository.editionState.getScenario() ?: return null
-        val condition = editionRepository.editionState.getEditedCondition<ImageCondition>() ?: return null
-
-        return scenario to condition
-    }
-
 
     /**
      * Set the configured condition name.

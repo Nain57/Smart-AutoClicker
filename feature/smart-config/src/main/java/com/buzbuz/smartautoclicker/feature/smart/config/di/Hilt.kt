@@ -18,7 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.di
 
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenuModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.ActionTypeSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyModel
@@ -31,19 +32,18 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseVie
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.counter.CounterNameSelectionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.intent.IntentActionsSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.actions.ActionsViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.ConditionsViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.config.EventConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
@@ -59,7 +59,6 @@ import dagger.hilt.InstallIn
 interface ScenarioConfigViewModelsEntryPoint {
 
     fun actionCopyViewModel(): ActionCopyModel
-    fun actionsViewModel(): ActionsViewModel
     fun actionTypeSelectionViewModel(): ActionTypeSelectionViewModel
     fun activitySelectionViewModel(): ActivitySelectionModel
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel
@@ -68,16 +67,15 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun clickViewModel(): ClickViewModel
     fun componentSelectionViewModel(): ComponentSelectionModel
     fun conditionCopyViewModel(): ConditionCopyModel
-    fun conditionsViewModel(): ConditionsViewModel
     fun counterNameSelectionViewModel(): CounterNameSelectionViewModel
     fun counterReachedConditionViewModel(): CounterReachedConditionViewModel
-    fun eventConfigViewModel(): EventConfigViewModel
     fun eventCopyModel(): EventCopyModel
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel
     fun extraConfigViewModel(): ExtraConfigModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel
     fun imageConditionAreaSelectorViewModel(): ImageConditionAreaSelectorViewModel
+    fun imageConditionsBriefViewModel(): ImageConditionsBriefViewModel
     fun imageConditionViewModel(): ImageConditionViewModel
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel
@@ -87,8 +85,10 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun pauseViewModel(): PauseViewModel
     fun scenarioConfigViewModel(): ScenarioConfigViewModel
     fun scenarioDialogViewModel(): ScenarioDialogViewModel
+    fun smartActionsBriefViewModel(): SmartActionsBriefViewModel
     fun swipeViewModel(): SwipeViewModel
     fun timerReachedConditionViewModel(): TimerReachedConditionViewModel
     fun toggleEventViewModel(): ToggleEventViewModel
+    fun triggerConditionsViewModel(): TriggerConditionListViewModel
     fun triggerEventListViewModel(): TriggerEventListViewModel
 }

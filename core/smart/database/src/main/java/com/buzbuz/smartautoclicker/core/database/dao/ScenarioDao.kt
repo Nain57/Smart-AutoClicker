@@ -52,6 +52,15 @@ interface ScenarioDao {
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents?
 
     /**
+     * Get a scenario
+     *
+     * @return the scenario.
+     */
+    @Transaction
+    @Query("SELECT * FROM scenario_table WHERE id=:scenarioId ORDER BY name ASC")
+    fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?>
+
+    /**
      * Get a complete scenario
      *
      * @return the scenario.

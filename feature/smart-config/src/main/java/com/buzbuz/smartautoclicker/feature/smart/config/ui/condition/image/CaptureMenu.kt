@@ -78,7 +78,7 @@ class CaptureMenu(
             field = value
             when (value) {
                 SELECTION -> {
-                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_screenshot)
+                    viewBinding.btnConfirm.setImageResource(R.drawable.ic_capture)
                     setMenuVisibility(View.VISIBLE)
                     setOverlayViewVisibility(false)
                     selectorView.hide = true
@@ -104,7 +104,7 @@ class CaptureMenu(
     override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        selectorView = ConditionSelectorView(context, displayMetrics, ::onSelectorValidityChanged)
+        selectorView = ConditionSelectorView(context, displayConfigManager, ::onSelectorValidityChanged)
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }

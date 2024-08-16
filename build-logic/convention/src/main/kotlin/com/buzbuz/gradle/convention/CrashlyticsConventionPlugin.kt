@@ -43,7 +43,6 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
                 getByName("release") {
                     configure<CrashlyticsExtension> {
                         nativeSymbolUploadEnabled = true
-                        unstrippedNativeLibsDir = "build/intermediates/merged_native_libs/playStoreRelease/mergePlayStoreReleaseNativeLibs/out/lib"
                     }
                 }
             }
@@ -53,14 +52,6 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
             playStoreImplementation(platform(libs.getLibrary("google.firebase.bom")))
             playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ktx"))
             playStoreImplementation(libs.getLibrary("google.firebase.crashlytics.ndk"))
-        }
-
-        afterEvaluate {
-            tasks.filter { task ->
-                task.name.startsWith("uploadCrashlyticsSymbolFilePlayStoreRelease")
-            }.forEach { task ->
-                task.shouldRunAfter("assemblePlayStoreRelease")
-            }
         }
     }
 }

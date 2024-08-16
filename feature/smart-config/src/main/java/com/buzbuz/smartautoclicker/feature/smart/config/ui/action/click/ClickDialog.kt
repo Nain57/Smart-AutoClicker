@@ -51,7 +51,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -80,19 +80,17 @@ class ClickDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_click)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -161,11 +159,11 @@ class ClickDialog(
 
     override fun onStart() {
         super.onStart()
-        viewModel.apply {
-            monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-            monitorFieldSelectPositionView(viewBinding.fieldClickSelection.root)
-            monitorFieldPositionTypeItemOnConditionView(viewBinding.fieldClickType.multiStateButton.buttonMiddle)
-        }
+        viewModel.monitorViews(
+            onConditionTypeView = viewBinding.fieldClickType.multiStateButton.buttonMiddle,
+            selectPositionFieldView = viewBinding.fieldClickSelection.root,
+            saveButton = viewBinding.layoutTopBar.buttonSave,
+        )
     }
 
     override fun onStop() {
@@ -174,18 +172,14 @@ class ClickDialog(
     }
 
     private fun onSaveButtonClicked() {
-        debounceUserInteraction {
-            viewModel.saveLastConfig()
-            listener.onConfirmClicked()
-            back()
-        }
+        viewModel.saveLastConfig()
+        listener.onConfirmClicked()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            listener.onDeleteClicked()
-            back()
-        }
+        listener.onDeleteClicked()
+        back()
     }
 
     private fun updateClickName(newName: String?) {
@@ -231,7 +225,7 @@ class ClickDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
-                    actionDescription = ClickDescription(
+                    itemBriefDescription = ClickDescription(
                         position = click.getEditionPosition(),
                         pressDurationMs = click.pressDuration ?: 1L,
                     ),

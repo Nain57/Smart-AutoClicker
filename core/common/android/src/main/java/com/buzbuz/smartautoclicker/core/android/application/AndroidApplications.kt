@@ -29,15 +29,17 @@ data class AndroidApplicationInfo internal constructor(
     val icon: Drawable,
 )
 
-fun getAndroidApplicationInfo(packageManager: PackageManager, intent: Intent): AndroidApplicationInfo? =
-    packageManager.resolveActivityCompat(intent, 0)
-        ?.toAndroidApplicationInfo(packageManager)
+fun PackageManager.getApplicationLabel(intent: Intent): String? =
+    resolveActivityCompat(intent, 0)?.loadLabel(this)?.toString()
 
-fun getAllAndroidApplicationsInfo(packageManager: PackageManager): List<AndroidApplicationInfo> =
-    packageManager.queryIntentActivitiesCompat(
+fun PackageManager.getAndroidApplicationInfo(intent: Intent): AndroidApplicationInfo? =
+    resolveActivityCompat(intent, 0)?.toAndroidApplicationInfo(this)
+
+fun PackageManager.getAllAndroidApplicationsInfo(): List<AndroidApplicationInfo> =
+    queryIntentActivitiesCompat(
         Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
         0,
-    ).mapNotNull { it.toAndroidApplicationInfo(packageManager) }
+    ).mapNotNull { it.toAndroidApplicationInfo(this) }
 
 private fun ResolveInfo.toAndroidApplicationInfo(packageManager: PackageManager): AndroidApplicationInfo? =
     activityInfo?.let { info ->

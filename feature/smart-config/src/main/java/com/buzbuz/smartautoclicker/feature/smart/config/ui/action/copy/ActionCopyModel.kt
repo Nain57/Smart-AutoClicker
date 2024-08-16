@@ -22,10 +22,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.ActionDetails
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.toActionDetails
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
@@ -62,11 +63,11 @@ class ActionCopyModel @Inject constructor(
             buildList {
                 if (editedActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_this))
-                    addAll(editedActions.toCopyItems(context).sortedBy { it.actionDetails.name })
+                    addAll(editedActions.toCopyItems(context, editedEvent).sortedBy { it.uiAction.name })
                 }
                 if (otherActions.isNotEmpty()) {
                     add(ActionCopyItem.HeaderItem(R.string.list_header_copy_action_all))
-                    addAll(otherActions.toCopyItems(context).sortedBy { it.actionDetails.name })
+                    addAll(otherActions.toCopyItems(context, editedEvent).sortedBy { it.uiAction.name })
                 }
             }
         }
@@ -79,7 +80,7 @@ class ActionCopyModel @Inject constructor(
         if (query.isNullOrEmpty()) allItems
         else allItems
             .filterIsInstance<ActionCopyItem.ActionItem>()
-            .filter { item -> item.actionDetails.name.contains(query, true) }
+            .filter { item -> item.uiAction.name.contains(query, true) }
     }
 
     /**
@@ -91,9 +92,9 @@ class ActionCopyModel @Inject constructor(
     }
 
     /** Creates copy items from a list of edited actions from this scenario. */
-    private fun List<Action>.toCopyItems(context: Context) = map { action ->
+    private fun List<Action>.toCopyItems(context: Context, event: Event) = map { action ->
         ActionCopyItem.ActionItem(
-            actionDetails = action.toActionDetails(context),
+            uiAction = action.toUiAction(context, event),
         )
     }
 
@@ -108,10 +109,10 @@ class ActionCopyModel @Inject constructor(
 
         /**
          * Action item.
-         * @param actionDetails the details for the action.
+         * @param uiAction the details for the action.
          */
         data class ActionItem(
-            val actionDetails: ActionDetails,
+            val uiAction: UiAction,
         ) : ActionCopyItem()
     }
 }

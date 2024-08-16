@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay
 
 import android.util.Size
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -85,6 +86,17 @@ class TryElementOverlayMenu(
                 back()
             }
         }
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
+        if (keyEvent.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) return false
+
+        if (keyEvent.action == KeyEvent.ACTION_DOWN) {
+            viewModel.stopTry()
+            back()
+        }
+
+        return true
     }
 
     private fun updateDetectionResults(results: ResultsDisplay?) {

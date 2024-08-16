@@ -90,6 +90,14 @@ interface IRepository {
     suspend fun getScenario(scenarioId: Long): Scenario?
 
     /**
+     * Get the flow on th requested scenario.
+     *
+     * @param scenarioId the identifier of the scenario.
+     * @return the scenario.
+     */
+    suspend fun getScenarioFlow(scenarioId: Long): Flow<Scenario?>
+
+    /**
      * Get the list of events for a given scenario.
      *
      * @param scenarioId the identifier of the scenario.
@@ -157,4 +165,6 @@ interface IRepository {
     fun stopTutorialMode()
 
     fun isTutorialModeEnabled(): Boolean
+
+    fun isTutorialModeEnabledFlow(): Flow<Boolean>
 }

@@ -25,16 +25,6 @@
         <item name="colorBackground">@color/overlayClickSelectorBackground</item>
     </style>
 
-    <!-- Style for the dumb action brief. -->
-    <style name="AppTheme.ScenarioConfig.Selector.Position">
-        <item name="colorBackground">@color/overlayActionsBriefBackground</item>
-        <item name="radius">@dimen/overlay_click_selector_radius</item>
-        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
-        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
-        <item name="colorInner">@color/overlayViewPrimary</item>
-        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
-        <item name="colorOutlineSecondary">@color/overlayViewPrimary</item>
-    </style>
     <!-- Style for the condition overlay selector view. -->
     <style name="AppTheme.ScenarioConfig.Selector.Condition">
         <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>

@@ -64,7 +64,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         setContentView(R.layout.activity_scenario)
 
         scenarioViewModel.stopScenario()
-        scenarioViewModel.requestUserConsent(this)
+        scenarioViewModel.requestUserConsentIfNeeded(this)
 
         projectionActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode != RESULT_OK) {

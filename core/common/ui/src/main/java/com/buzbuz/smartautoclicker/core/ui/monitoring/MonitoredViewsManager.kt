@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.monitoring
 
 import android.graphics.Rect
 import android.view.View
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MonitoredViewsManager @Inject constructor(
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
 ) {
 
     private val monitoredViews: MutableMap<MonitoredViewType, ViewMonitor> = mutableMapOf()
@@ -37,7 +37,7 @@ class MonitoredViewsManager @Inject constructor(
         monitoredView: View,
         positioningType: ViewPositioningType = ViewPositioningType.WINDOW,
     ) {
-        if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayMetrics)
+        if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayConfigManager)
         monitoredViews[type]?.attachView(monitoredView, positioningType)
     }
 
@@ -51,7 +51,7 @@ class MonitoredViewsManager @Inject constructor(
 
     fun setExpectedViews(types: Set<MonitoredViewType>) {
         types.forEach { type ->
-            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayMetrics)
+            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayConfigManager)
         }
     }
 
@@ -62,8 +62,9 @@ class MonitoredViewsManager @Inject constructor(
     fun getViewPosition(type: MonitoredViewType): StateFlow<Rect>? =
         monitoredViews[type]?.position
 
-    fun performClick(type: MonitoredViewType): Boolean =
-        monitoredViews[type]?.performClick() ?: false
+    fun performClick(type: MonitoredViewType): Boolean {
+        return monitoredViews[type]?.performClick() ?: false
+    }
 
     fun monitorNextClick(type: MonitoredViewType, listener: () -> Unit) {
         monitoredClicks[type] = {

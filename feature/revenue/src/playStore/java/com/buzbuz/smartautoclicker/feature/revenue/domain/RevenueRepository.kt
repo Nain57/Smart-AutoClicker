@@ -91,10 +91,15 @@ internal class RevenueRepository @Inject constructor(
         billingDataSource.product.map(::toProModeInfo)
 
     override val userConsentState: Flow<UserConsentState> =
-        combine(userConsentDataSource.isInitialized, userConsentDataSource.isUserConsentingForAds) { init, consent ->
+        combine(
+            billingDataSource.purchaseState,
+            userConsentDataSource.isInitialized,
+            userConsentDataSource.isUserConsentingForAds,
+        ) { purchaseState, isConsentInit, consent ->
             when {
-                init && consent -> UserConsentState.CAN_REQUEST_ADS
-                init && !consent -> UserConsentState.CANNOT_REQUEST_ADS
+                purchaseState == InAppPurchaseState.PURCHASED -> UserConsentState.ADS_NOT_NEEDED
+                consent -> UserConsentState.CAN_REQUEST_ADS
+                isConsentInit && !consent -> UserConsentState.CANNOT_REQUEST_ADS
                 else -> UserConsentState.UNKNOWN
             }
         }
@@ -275,4 +280,4 @@ internal class RevenueRepository @Inject constructor(
 internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
 @VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 1.hours
 
-private const val TAG = "BillingRepository"
+private const val TAG = "RevenueRepository"

@@ -47,7 +47,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButt
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -72,19 +72,17 @@ class SwipeDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_swipe)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -134,18 +132,14 @@ class SwipeDialog(
     }
 
     private fun onSaveButtonClicked() {
-        debounceUserInteraction {
-            viewModel.saveLastConfig()
-            listener.onConfirmClicked()
-            back()
-        }
+        viewModel.saveLastConfig()
+        listener.onConfirmClicked()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            listener.onDeleteClicked()
-            back()
-        }
+        listener.onDeleteClicked()
+        back()
     }
 
     private fun updateClickName(newName: String?) {
@@ -179,7 +173,7 @@ class SwipeDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
-                    actionDescription = SwipeDescription(
+                    itemBriefDescription = SwipeDescription(
                         from = swipe.getEditionFromPosition(),
                         to = swipe.getEditionToPosition(),
                         swipeDurationMs = swipe.swipeDuration ?: 250L,

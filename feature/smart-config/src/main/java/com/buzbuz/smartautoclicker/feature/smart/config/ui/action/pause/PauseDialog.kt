@@ -66,19 +66,17 @@ class PauseDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_pause)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -129,18 +127,14 @@ class PauseDialog(
     }
 
     private fun onSaveButtonClicked() {
-        debounceUserInteraction {
-            viewModel.saveLastConfig()
-            listener.onConfirmClicked()
-            back()
-        }
+        viewModel.saveLastConfig()
+        listener.onConfirmClicked()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            listener.onDeleteClicked()
-            back()
-        }
+        listener.onDeleteClicked()
+        back()
     }
 
     private fun updateClickName(newName: String?) {

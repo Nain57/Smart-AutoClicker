@@ -21,13 +21,13 @@ import android.graphics.Point
 import android.util.Log
 
 import androidx.core.graphics.toPoint
+
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
-
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.click.DumbClickDialog
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionCopyDialog
@@ -49,6 +49,7 @@ internal fun OverlayManager.startDumbActionCreationUiFlow(
             choices = allDumbActionChoices(),
             onChoiceSelected = { choice ->
                 when (choice) {
+                    DumbActionTypeChoice.Copy -> onCopyDumbActionSelected(context, creator, listener)
                     DumbActionTypeChoice.Click -> onDumbClickCreationSelected(context, creator, listener)
                     DumbActionTypeChoice.Swipe -> onDumbSwipeCreationSelected(context, creator, listener)
                     DumbActionTypeChoice.Pause -> startDumbPauseEditionFlow(
@@ -59,29 +60,6 @@ internal fun OverlayManager.startDumbActionCreationUiFlow(
                 }
             },
             onCanceled = listener.onDumbActionCreationCancelled,
-        )
-    )
-}
-
-internal fun OverlayManager.startDumbActionCopyUiFlow(
-    context: Context,
-    creator: DumbActionCreator,
-    listener: DumbActionUiFlowListener,
-) {
-    Log.d(TAG, "Starting dumb action copy ui flow")
-
-    navigateTo(
-        context = context,
-        newOverlay = DumbActionCopyDialog(
-            onActionSelected = { actionToCopy ->
-                creator.createDumbActionCopy?.invoke(actionToCopy)?.let { copiedAction ->
-                    startDumbActionEditionUiFlow(
-                        context = context,
-                        dumbAction = copiedAction,
-                        listener = listener
-                    )
-                }
-            }
         )
     )
 }
@@ -124,6 +102,29 @@ private fun OverlayManager.startDumbClickEditionUiFlow(
     )
 }
 
+private fun OverlayManager.onCopyDumbActionSelected(
+    context: Context,
+    creator: DumbActionCreator,
+    listener: DumbActionUiFlowListener,
+) {
+    Log.d(TAG, "Starting dumb action copy ui flow")
+
+    navigateTo(
+        context = context,
+        newOverlay = DumbActionCopyDialog(
+            onActionSelected = { actionToCopy ->
+                creator.createDumbActionCopy?.invoke(actionToCopy)?.let { copiedAction ->
+                    startDumbActionEditionUiFlow(
+                        context = context,
+                        dumbAction = copiedAction,
+                        listener = listener
+                    )
+                }
+            }
+        )
+    )
+}
+
 private fun OverlayManager.onDumbClickCreationSelected(
     context: Context,
     creator: DumbActionCreator,
@@ -134,7 +135,7 @@ private fun OverlayManager.onDumbClickCreationSelected(
     navigateTo(
         context = context,
         newOverlay = PositionSelectorMenu(
-            actionDescription = ClickDescription(),
+            itemBriefDescription = ClickDescription(),
             onConfirm = { description ->
                 (description as? ClickDescription)?.position?.let { position ->
                     startDumbClickEditionUiFlow(
@@ -184,7 +185,7 @@ private fun OverlayManager.onDumbSwipeCreationSelected(
     navigateTo(
         context = context,
         newOverlay = PositionSelectorMenu(
-            actionDescription = SwipeDescription(),
+            itemBriefDescription = SwipeDescription(),
             onConfirm = { description ->
                 (description as? SwipeDescription)?.let { swipeDesc ->
                     if (swipeDesc.from == null || swipeDesc.to == null) {

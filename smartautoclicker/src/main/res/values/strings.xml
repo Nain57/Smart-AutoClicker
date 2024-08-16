@@ -23,8 +23,12 @@
     <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Press to change the scenario</string>
+    <string name="notification_button_play_and_hide">Play and hide</string>
+    <string name="notification_button_pause_and_show">Pause and show</string>
     <string name="notification_button_toggle_menu">Show/Hide</string>
     <string name="notification_button_stop">Stop</string>
+
+
     <string name="activity_title">Scenarios</string>
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from

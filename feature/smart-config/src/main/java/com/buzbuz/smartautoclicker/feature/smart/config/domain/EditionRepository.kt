@@ -46,8 +46,7 @@ class EditionRepository @Inject constructor(
 ) {
 
     /** Keep tracks of all changes in the currently edited scenario. */
-    private val scenarioEditor: com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor =
-        com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor()
+    private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
     /** Provides creators for all elements in an edited scenario. */
     val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, scenarioEditor)

@@ -31,6 +31,13 @@ sealed class DumbAction : Identifiable {
 
     abstract fun isValid(): Boolean
 
+    fun copyWithNewScenarioId(scenarioId: Identifier): DumbAction =
+        when (this) {
+            is DumbClick -> copy(scenarioId = scenarioId)
+            is DumbPause -> copy(scenarioId = scenarioId)
+            is DumbSwipe -> copy(scenarioId = scenarioId)
+        }
+
     data class DumbClick(
         override val id: Identifier,
         override val scenarioId: Identifier,

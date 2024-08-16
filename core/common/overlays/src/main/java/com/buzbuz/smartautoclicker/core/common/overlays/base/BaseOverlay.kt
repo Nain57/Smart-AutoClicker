@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
@@ -40,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponentBuild
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.di.createHiltViewModelFactory
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 
 import com.google.android.material.color.DynamicColors
@@ -71,7 +72,7 @@ abstract class BaseOverlay internal constructor(
     override lateinit var context: Context
 
     /** The metrics of the device screen. */
-    protected val displayMetrics: DisplayMetrics by lazy {
+    protected val displayConfigManager: DisplayConfigManager by lazy {
         EntryPoints.get(context.applicationContext, DisplayEntryPoint::class.java)
             .displayMetrics()
     }
@@ -234,10 +235,14 @@ abstract class BaseOverlay internal constructor(
         if (debounceUserInteractionJob == null && lifecycleRegistry.currentState == State.RESUMED) {
             debounceUserInteractionJob = lifecycleScope.launch {
                 userInteraction()
-                delay(800)
+                delay(500)
                 debounceUserInteractionJob = null
             }
         }
+    }
+
+    protected fun View.setDebouncedOnClickListener(listener: (view: View) -> Unit) {
+        setOnClickListener { view -> debounceUserInteraction { listener(view) } }
     }
 
     /**
@@ -304,7 +309,7 @@ abstract class BaseOverlay internal constructor(
             ContextThemeWrapper(appContext, theme).apply {
                 applyOverrideConfiguration(
                     Configuration(applicationContext.resources.configuration).apply {
-                        orientation = displayMetrics.orientation
+                        orientation = displayConfigManager.displayConfig.orientation
                     }
                 )
             }

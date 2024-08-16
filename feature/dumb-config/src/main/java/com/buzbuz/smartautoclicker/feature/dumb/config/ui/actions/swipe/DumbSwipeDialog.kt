@@ -53,7 +53,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.DialogConfigDumbActionSwipeBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
@@ -67,7 +67,7 @@ class DumbSwipeDialog(
     private val onConfirmClicked: (DumbAction.DumbSwipe) -> Unit,
     private val onDeleteClicked: (DumbAction.DumbSwipe) -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
+) : OverlayDialog(R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: DumbSwipeViewModel by viewModels(
@@ -84,14 +84,14 @@ class DumbSwipeDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.item_title_dumb_swipe)
 
-                buttonDismiss.setOnClickListener { onDismissButtonClicked()}
+                buttonDismiss.setDebouncedOnClickListener { onDismissButtonClicked()}
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -166,28 +166,22 @@ class DumbSwipeDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbSwipe()?.let { editedDumbSwipe ->
-            debounceUserInteraction {
-                viewModel.saveLastConfig(context)
-                onConfirmClicked(editedDumbSwipe)
-                back()
-            }
+            viewModel.saveLastConfig(context)
+            onConfirmClicked(editedDumbSwipe)
+            back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         viewModel.getEditedDumbSwipe()?.let { editedAction ->
-            debounceUserInteraction {
-                onDeleteClicked(editedAction)
-                back()
-            }
+            onDeleteClicked(editedAction)
+            back()
         }
     }
 
     private fun onDismissButtonClicked() {
-        debounceUserInteraction {
-            onDismissClicked()
-            back()
-        }
+        onDismissClicked()
+        back()
     }
 
     private fun updateDumbSwipePressDuration(duration: String) {
@@ -211,7 +205,7 @@ class DumbSwipeDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
-                    actionDescription = SwipeDescription(
+                    itemBriefDescription = SwipeDescription(
                         from = swipe.fromPosition.toEditionPosition(),
                         to = swipe.toPosition.toEditionPosition(),
                         swipeDurationMs = swipe.swipeDurationMs,

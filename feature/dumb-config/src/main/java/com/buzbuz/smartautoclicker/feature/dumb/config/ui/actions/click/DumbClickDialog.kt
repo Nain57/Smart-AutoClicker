@@ -53,7 +53,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.views.actionbrief.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.DialogConfigDumbActionClickBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
@@ -67,7 +67,7 @@ class DumbClickDialog(
     private val onConfirmClicked: (DumbAction.DumbClick) -> Unit,
     private val onDeleteClicked: (DumbAction.DumbClick) -> Unit,
     private val onDismissClicked: () -> Unit,
-) : OverlayDialog(R.style.DumbScenarioConfigTheme) {
+) : OverlayDialog(R.style.AppTheme) {
 
     /** The view model for this dialog. */
     private val viewModel: DumbClickViewModel by viewModels(
@@ -84,14 +84,14 @@ class DumbClickDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.item_title_dumb_click)
 
-                buttonDismiss.setOnClickListener { onDismissButtonClicked()}
+                buttonDismiss.setDebouncedOnClickListener { onDismissButtonClicked()}
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -167,28 +167,22 @@ class DumbClickDialog(
 
     private fun onSaveButtonClicked() {
         viewModel.getEditedDumbClick()?.let { editedDumbClick ->
-            debounceUserInteraction {
-                viewModel.saveLastConfig(context)
-                onConfirmClicked(editedDumbClick)
-                back()
-            }
+            viewModel.saveLastConfig(context)
+            onConfirmClicked(editedDumbClick)
+            back()
         }
     }
 
     private fun onDeleteButtonClicked() {
         viewModel.getEditedDumbClick()?.let { editedAction ->
-            debounceUserInteraction {
-                onDeleteClicked(editedAction)
-                back()
-            }
+            onDeleteClicked(editedAction)
+            back()
         }
     }
 
     private fun onDismissButtonClicked() {
-        debounceUserInteraction {
-            onDismissClicked()
-            back()
-        }
+        onDismissClicked()
+        back()
     }
 
     private fun updateDumbClickPressDuration(duration: String) {
@@ -212,7 +206,7 @@ class DumbClickDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
-                    actionDescription = ClickDescription(
+                    itemBriefDescription = ClickDescription(
                         position = dumbClick.position.toEditionPosition(),
                         pressDurationMs = dumbClick.pressDurationMs,
                     ),

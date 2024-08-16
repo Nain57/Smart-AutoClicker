@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -70,5 +71,46 @@ internal class ImageConditionTry(
             name = "Test Pause",
             pauseDuration = 1000L,
             priority = 0,
+        )
+}
+
+internal class ActionTry(
+    override val scenario: Scenario,
+    val action: Action,
+) : ScenarioTry() {
+
+    override val imageEvents: List<ImageEvent> = emptyList()
+    override val triggerEvents: List<TriggerEvent> = listOf(getTestTriggerEvent())
+
+    private fun getTestTriggerEvent(): TriggerEvent {
+        val tryEventId = Identifier(databaseId = 1L)
+        return TriggerEvent(
+            id = tryEventId,
+            scenarioId = scenario.id,
+            name = "Test Event",
+            conditionOperator = AND,
+            enabledOnStart = true,
+            conditions = listOf(getTestTriggerCondition(tryEventId)),
+            actions = listOf(action, getStopScenarioAction(tryEventId)),
+        )
+    }
+
+    private fun getStopScenarioAction(eventId: Identifier): Action.ToggleEvent =
+        Action.ToggleEvent(
+            id = Identifier(databaseId = 1L),
+            eventId = eventId,
+            name = "Test Pause",
+            priority = 0,
+            toggleAll = true,
+            toggleAllType = Action.ToggleEvent.ToggleType.DISABLE,
+        )
+
+    private fun getTestTriggerCondition(eventId: Identifier): TriggerCondition.OnTimerReached =
+        TriggerCondition.OnTimerReached(
+            id = Identifier(databaseId = 1L),
+            eventId = eventId,
+            name = "Test timer reached",
+            durationMs = 1L,
+            restartWhenReached = false,
         )
 }

@@ -23,10 +23,6 @@
     <dimen name="dialog_item_condition_copy_icons_height">30dp</dimen>
     <dimen name="dialog_item_condition_copy_condition_size">100dp</dimen>
 
-    <dimen name="overlay_click_selector_thickness">6dp</dimen>
-    <dimen name="overlay_click_selector_radius">28dp</dimen>
-    <dimen name="overlay_click_selector_inner_radius">3dp</dimen>
-
     <dimen name="overlay_condition_selector_width">230dp</dimen>
     <dimen name="overlay_condition_selector_height">130dp</dimen>
     <dimen name="overlay_condition_selector_resize_handle_size">50dp</dimen>

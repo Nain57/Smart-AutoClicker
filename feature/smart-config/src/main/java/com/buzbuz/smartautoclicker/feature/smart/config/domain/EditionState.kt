@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
-import android.content.Context
-
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -31,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
@@ -226,6 +223,14 @@ internal class EditionState internal constructor(
 
     override fun <T : Event> getEditedEvent(): T? =
         editor.currentEventEditor.value?.editedItem?.value as? T
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Action> getEditedEventActions(): List<T>? =
+        editor.currentEventEditor.value?.actionsEditor?.editedList?.value as List<T>?
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Condition> getEditedEventConditions(): List<T>? =
+        editor.currentEventEditor.value?.conditionsEditor?.editedList?.value as List<T>?
 
     @Suppress("UNCHECKED_CAST")
 

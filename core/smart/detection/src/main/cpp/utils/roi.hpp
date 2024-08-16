@@ -18,14 +18,19 @@
 
 namespace smartautoclicker {
 
-    bool isRoiContainedInImage(const cv::Rect& roi, const cv::Mat& image) {
+    bool isRoiNotContainedInImage(const cv::Rect& roi, const cv::Mat& image) {
         return 0 > roi.x || 0 > roi.width || roi.x + roi.width > image.cols
                 || 0 > roi.y || 0 > roi.height || roi.y + roi.height > image.rows;
     }
 
-    bool isRoiContainsImage(const cv::Rect& roi, const cv::Mat& image) {
-        return roi.x >= 0 && roi.width > 0 && roi.x + roi.width <= image.cols
-                && roi.y >= 0 && roi.height > 0 && roi.y + roi.height <= image.rows;
+    bool isRoiNotContainingImage(const cv::Rect& roi, const cv::Mat& image) {
+        return roi.x < 0 || roi.width <= 0 || roi.width < image.cols
+                || roi.y < 0 || roi.height <= 0 || roi.y + roi.height < image.rows;
+    }
+
+    bool isImageNotContainingImage(const cv::Mat& container, const cv::Mat& contained) {
+        return container.size().height < contained.size().height ||
+                container.size().width < contained.size().width;
     }
 
     cv::Rect getScaledRoi(const cv::Rect& roi, const double scaleRatio) {

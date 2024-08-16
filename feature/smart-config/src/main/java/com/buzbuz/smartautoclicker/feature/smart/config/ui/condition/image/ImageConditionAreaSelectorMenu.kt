@@ -50,7 +50,7 @@ class ImageConditionAreaSelectorMenu(
     private lateinit var selectorView: AreaSelectorView
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        selectorView = AreaSelectorView(context, displayMetrics)
+        selectorView = AreaSelectorView(context, displayConfigManager)
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }

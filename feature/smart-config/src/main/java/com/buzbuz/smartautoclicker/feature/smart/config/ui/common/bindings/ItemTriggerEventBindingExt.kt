@@ -16,10 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
-import android.util.TypedValue
+import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerEventBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 
 /**
@@ -28,24 +29,17 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
  * @param item the item providing the binding data.
  * @param itemClickedListener listener called when an event is clicked.
  */
-fun ItemTriggerEventBinding.bind(item: TriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
+fun ItemTriggerEventBinding.bind(item: UiTriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
     textName.text = item.name
-    textConditionsCount.text = item.conditions.size.toString()
-    textActionsCount.text = item.actions.size.toString()
+    textConditionsCount.text = item.conditionsCountText
 
-    val typedValue = TypedValue()
-    val actionColorAttr = if (!item.isComplete()) R.attr.colorError else R.attr.colorOnSurface
-    root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
-    textActionsCount.setTextColor(typedValue.data)
-    imageAction.setIconTintColor(typedValue.data)
+    val actionColor = root.context.getThemeColor(if (item.haveError) R.attr.colorError else R.attr.colorOnSurface)
+    textActionsCount.text = item.actionsCountText
+    textActionsCount.setTextColor(actionColor)
+    imageAction.setIconTintColor(actionColor)
 
-    if (item.enabledOnStart) {
-        textEnabled.setText(R.string.item_event_desc_enabled_children)
-        iconEnabled.setImageResource(R.drawable.ic_confirm)
-    } else {
-        textEnabled.setText(R.string.item_event_desc_disabled_children)
-        iconEnabled.setImageResource(R.drawable.ic_cancel)
-    }
+    textEnabled.setText(item.enabledOnStartTextRes)
+    iconEnabled.setImageResource(item.enabledOnStartIconRes)
 
-    root.setOnClickListener { itemClickedListener(item) }
+    root.setOnClickListener { itemClickedListener(item.event) }
 }

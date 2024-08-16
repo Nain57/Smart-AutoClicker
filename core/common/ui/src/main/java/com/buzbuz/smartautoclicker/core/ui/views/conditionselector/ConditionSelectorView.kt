@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,15 @@ import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 
 import androidx.core.content.res.use
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.CaptureComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ComponentsView
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponent
 
 /**
@@ -41,15 +42,15 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsCompo
  * easily select a section of the screen for a event condition.
  *
  * @param context the Android context
- * @param displayMetrics the current screen metrics.
+ * @param displayConfigManager the current screen metrics.
  * @param onSelectorValidityChanged listener upon the selector validity.
  */
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class ConditionSelectorView(
     context: Context,
-    private val displayMetrics: DisplayMetrics,
+    private val displayConfigManager: DisplayConfigManager,
     private val onSelectorValidityChanged: (Boolean) -> Unit,
-) : View(context) {
+) : ComponentsView(context) {
 
     /** Controls the display of the bitmap captured. */
     private lateinit var capture: CaptureComponent
@@ -71,9 +72,9 @@ class ConditionSelectorView(
     init {
         context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
             animations = ConditionSelectorAnimations(ta.getAnimationsStyle())
-            capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayMetrics), ::invalidate)
-            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayMetrics), ::invalidate)
-            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayMetrics), ::invalidate)
+            capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayConfigManager), this)
+            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayConfigManager), this)
+            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayConfigManager), this)
         }
     }
 
@@ -122,6 +123,8 @@ class ConditionSelectorView(
             invalidate()
         }
 
+    override val viewComponents: List<ViewComponent> = listOf(capture, selector, hintsIcons)
+
     /**
      * Verifies if the [selector] is at a valid position with the [capture].
      * If the validation position value changes, notifies [onSelectorValidityChanged].
@@ -167,14 +170,6 @@ class ConditionSelectorView(
             ?: throw IllegalStateException("Can't get a selection, there is no screen capture.")
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        selector.onViewSizeChanged(w, h)
-        capture.onViewSizeChanged(w, h)
-        hintsIcons.onViewSizeChanged(w, h)
-        invalidate()
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null || hide) {
@@ -211,10 +206,7 @@ class ConditionSelectorView(
 
     override fun onDraw(canvas: Canvas) {
         if (hide) return
-
-        capture.onDraw(canvas)
-        selector.onDraw(canvas)
-        hintsIcons.onDraw(canvas)
+        super.onDraw(canvas)
     }
 
     private fun BitmapDrawable.getSelection(area: Rect): Pair<Rect, Bitmap>? {

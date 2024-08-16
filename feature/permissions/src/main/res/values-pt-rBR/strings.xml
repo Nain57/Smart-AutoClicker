@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">Serviço de acessibilidade</string>
+    <string name="dialog_title_permission_notification">Notificação</string>
+    <string name="dialog_title_permission_mandatory_denied">Permissão negada</string>
+    <string name="dialog_title_permission_overlay">Sobreposição</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">A permissão de sobreposição é necessária para mostrar a interface do Klick\'r
+        sobre os aplicativos que você deseja automatizar, permitindo que você configure seu cenário sem interromper
+        o outro aplicativo.</string>
+    <string name="message_permission_desc_accessibility">A permissão do serviço de acessibilidade permite que o Klick\'r
+        execute gestos na tela do seu dispositivo. Essa permissão é necessária para executar os cliques e deslizes
+        que você criará em seus cenários de automação.\n\nNenhum dado é coletado pelo Klick\'r\n\nPara conceder a permissão do serviço de acessibilidade,
+        clique no botão abaixo.</string>
+    <string name="message_permission_desc_notification">Opcional: Mostra a notificação enquanto o aplicativo está em execução para
+        retornar facilmente à tela de seleção de cenário.</string>
+    <string name="message_permission_mandatory_denied">Esta permissão é obrigatória para o Klick\'r.
+        Ele não poderá funcionar corretamente sem ela.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">Solicitar permissão</string>
+    <string name="button_deny">Negar</string>
+
+</resources>

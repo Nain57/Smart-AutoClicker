@@ -24,7 +24,7 @@ import android.view.MotionEvent
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeBotto
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeLeft
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeRight
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeTop
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ZoomCapture
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 
@@ -40,12 +41,12 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
  *
  * @param context the Android Context.
  * @param hintsStyle the style for the hints.
- * @param viewInvalidator calls invalidate on the view hosting this component.
+ * @param viewInvalidator invalidate the parent view.
  */
 internal class HintsComponent(
     context: Context,
     hintsStyle: HintsComponentStyle,
-    viewInvalidator: () -> Unit,
+    viewInvalidator: ViewInvalidator,
 ): ViewComponent(hintsStyle, viewInvalidator) {
 
     /** The distance between the hint and the selector border. */
@@ -180,12 +181,11 @@ internal class HintsComponent(
         invalidate()
     }
 
-    override fun onViewSizeChanged(w: Int, h: Int) {
-        super.onViewSizeChanged(w, h)
+    override fun onTouchEvent(event: MotionEvent): Boolean = false
+
+    override fun onInvalidate() {
         maxRect.set(maxArea.toRect())
     }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean = false
 
     override fun onDraw(canvas: Canvas) {
         iconsShown.forEach { hintType ->
@@ -202,7 +202,7 @@ internal class HintsComponent(
 /**
  * Style for [HintsComponent].
  *
- * @param displayMetrics metrics for the device display.
+ * @param displayConfigManager metrics for the device display.
  * @param iconsMargin the distance between the hint and the selector border.
  * @param iconsSize the size of the icons for the hints.
  * @param moveIcon icon res for the moving hint.
@@ -215,7 +215,7 @@ internal class HintsComponent(
  *
  */
 internal class HintsComponentStyle(
-    displayMetrics: DisplayMetrics,
+    displayConfigManager: DisplayConfigManager,
     val iconsMargin: Int,
     val iconsSize: Int,
     @DrawableRes val moveIcon: Int,
@@ -225,7 +225,7 @@ internal class HintsComponentStyle(
     @DrawableRes val rightIcon: Int,
     @DrawableRes val pinchIcon: Int? = null,
     val pinchIconMargin: Int? = null,
-) : ViewStyle(displayMetrics)
+) : ViewStyle(displayConfigManager)
 
 /** The default distance between the hint and the selector border. */
 internal const val DEFAULT_HINTS_ICON_MARGIN = 5

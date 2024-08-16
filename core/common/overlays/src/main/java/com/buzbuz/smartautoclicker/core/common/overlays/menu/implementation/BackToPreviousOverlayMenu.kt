@@ -28,6 +28,6 @@ class BackToPreviousOverlayMenu : OverlayMenu() {
         OverlayMenuBackToPreviousBinding.inflate(layoutInflater).root
 
     override fun onMenuItemClicked(viewId: Int) {
-        if (viewId == R.id.btn_back) debounceUserInteraction { back() }
+        if (viewId == R.id.btn_back) back()
     }
 }

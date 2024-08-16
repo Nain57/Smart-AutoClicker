@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.conditions.TriggerConditionAdapter
 
 import kotlinx.coroutines.Job
 
@@ -59,7 +58,7 @@ class ConditionCopyAdapter(
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
             is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_list_header
-            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> R.layout.item_image_condition
+            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> R.layout.item_image_condition_list
             is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> R.layout.item_trigger_condition
         }
 
@@ -67,8 +66,8 @@ class ConditionCopyAdapter(
         when (viewType) {
             R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_image_condition -> ImageConditionViewHolder(
-                ItemImageConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            R.layout.item_image_condition_list -> ImageConditionViewHolder(
+                ItemImageConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 bitmapProvider
             )
             R.layout.item_trigger_condition -> TriggerConditionViewHolder(
@@ -106,7 +105,7 @@ object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionCopyModel.Condi
     ): Boolean =  when {
         oldItem is ConditionCopyModel.ConditionCopyItem.HeaderItem && newItem is ConditionCopyModel.ConditionCopyItem.HeaderItem -> true
         oldItem is ConditionCopyModel.ConditionCopyItem.ConditionItem && newItem is ConditionCopyModel.ConditionCopyItem.ConditionItem ->
-            oldItem.condition.id == newItem.condition.id
+            oldItem.uiCondition.condition.id == newItem.uiCondition.condition.id
         else -> false
     }
 
@@ -135,7 +134,7 @@ class HeaderViewHolder(
  * @param bitmapProvider provides the conditions bitmap.
  */
 private class ImageConditionViewHolder(
-    private val viewBinding: ItemImageConditionBinding,
+    private val viewBinding: ItemImageConditionGridBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
@@ -153,8 +152,8 @@ private class ImageConditionViewHolder(
         conditionClickedListener: (ImageCondition) -> Unit,
     ) {
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.bind(
-            item.condition,
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(
+            item.uiCondition,
             bitmapProvider,
             conditionClickedListener,
         )
@@ -168,7 +167,7 @@ private class ImageConditionViewHolder(
 }
 
 /**
- * View holder displaying a condition in the [TriggerConditionAdapter].
+ * View holder displaying a condition in the [ConditionCopyAdapter].
  * @param viewBinding the view binding for this item.
  */
 private class TriggerConditionViewHolder(
@@ -185,6 +184,6 @@ private class TriggerConditionViewHolder(
         item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger,
         conditionClickedListener: (TriggerCondition) -> Unit
     ) {
-        viewBinding.bind(item.condition, conditionClickedListener)
+        viewBinding.bind(item.uiCondition, conditionClickedListener)
     }
 }

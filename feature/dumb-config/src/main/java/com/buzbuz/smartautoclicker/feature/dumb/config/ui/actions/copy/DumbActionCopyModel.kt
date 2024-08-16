@@ -24,8 +24,6 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionDetails
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.toDumbActionDetails
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 

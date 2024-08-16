@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,9 +32,10 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedViews
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.R
+import com.buzbuz.smartautoclicker.core.display.DisplayConfig
 import dagger.hilt.EntryPoints
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -46,7 +47,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito.*
@@ -65,6 +65,13 @@ class OverlayMenuTests {
         private const val TEST_DATA_DISABLED_ALPHA = 0.4f
         private const val TEST_DATA_DISPLAY_WIDTH = 800
         private const val TEST_DATA_DISPLAY_HEIGHT = 600
+
+        private val DEFAULT_DISPLAY_CONFIG = DisplayConfig(
+            sizePx = Point(TEST_DATA_DISPLAY_WIDTH, TEST_DATA_DISPLAY_HEIGHT),
+            orientation = 0,
+            safeInsetTopPx = 0,
+            roundedCorners = emptyMap(),
+        )
     }
 
     /**
@@ -105,7 +112,7 @@ class OverlayMenuTests {
     @Mock private lateinit var mockLayoutInflater: LayoutInflater
 
     @Mock private lateinit var mockDisplayEntryPoint: DisplayEntryPoint
-    @Mock private lateinit var mockDisplayMetrics: DisplayMetrics
+    @Mock private lateinit var mockDisplayConfigManager: DisplayConfigManager
 
     @Mock private lateinit var mockUiEntryPoint: OverlaysEntryPoint
     @Mock private lateinit var mockOverlayMenuPositionDataSource: OverlayMenuPositionDataSource
@@ -176,8 +183,8 @@ class OverlayMenuTests {
             .thenReturn(mockSharedPrefs)
 
         // Mock display metrics
-        mockWhen(mockDisplayEntryPoint.displayMetrics()).thenReturn(mockDisplayMetrics)
-        mockWhen(mockDisplayMetrics.screenSize).thenReturn(Point(TEST_DATA_DISPLAY_WIDTH, TEST_DATA_DISPLAY_HEIGHT))
+        mockWhen(mockDisplayEntryPoint.displayMetrics()).thenReturn(mockDisplayConfigManager)
+        mockWhen(mockDisplayConfigManager.displayConfig).thenReturn(DEFAULT_DISPLAY_CONFIG)
 
         // Mock position data source
         mockWhen(mockUiEntryPoint.overlayMenuPositionDataSource()).thenReturn(mockOverlayMenuPositionDataSource)
@@ -364,24 +371,5 @@ class OverlayMenuTests {
 
         verify(item).isEnabled = true
         verify(item).alpha = 1f
-    }
-
-    @Test
-    fun onMenuItemClicked() {
-        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
-        val itemId = 42
-        val item = createMockMenuItemView(itemId)
-        mockViewsFromImpl(createMockMenuView(sequenceOf(
-            createMockMenuItemView(),
-            item,
-        )))
-        overlayMenuController.create(mockContext)
-
-        // Get the button click listener and calls it
-        val clickListenerCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
-        verify(item).setOnClickListener(clickListenerCaptor.capture())
-        clickListenerCaptor.value.onClick(item)
-
-        verify(overlayMenuControllerImpl).onMenuItemClicked(itemId)
     }
 }

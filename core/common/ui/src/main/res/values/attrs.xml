@@ -17,11 +17,13 @@
 -->
 <resources>
 
-    <attr format="reference" name="actionBriefStyle"/>
+    <attr format="reference" name="itemBriefStyle"/>
 
     <attr format="reference" name="conditionSelectorStyle"/>
 
     <attr format="reference" name="areaSelectorStyle"/>
+
+    <attr format="reference" name="gestureRecordStyle"/>
 
     <!-- Color for the inner part of an overlay selector. -->
     <attr name="colorInner" format="color" />
@@ -29,10 +31,13 @@
     <attr name="colorOutlinePrimary" format="color" />
     <!-- Secondary color for the outline part of an overlay selector. -->
     <attr name="colorOutlineSecondary" format="color" />
-    <!-- The total thickness in dp of an overlay selector. -->
-    <attr name="thickness" format="dimension" />
     <!-- The color of the background of the selector -->
     <attr name="colorBackground" format="color" />
+
+    <!-- The total thickness in dp of an overlay selector. -->
+    <attr name="thickness" format="dimension" />
+    <!-- The length of the recording bars -->
+    <attr name="length" format="dimension"/>
 
     <!-- The radius of the selector corners. -->
     <attr name="cornerRadius" format="dimension" />
@@ -63,13 +68,15 @@
     <!-- The duration of the show selector animation, in milliseconds . -->
     <attr name="showSelectorAnimationDuration" format="integer" />
 
-    <!-- Styleable attributes for the ActionBriefView. -->
-    <declare-styleable name="ActionBriefView" >
+    <!-- Styleable attributes for the ItemBriefView. -->
+    <declare-styleable name="ItemBriefView" >
         <attr name="colorInner"/>
         <attr name="colorOutlinePrimary"/>
         <attr name="colorOutlineSecondary"/>
         <attr name="colorBackground"/>
         <attr name="thickness"/>
+        <attr name="cornerRadius"/>
+
         <!-- The radius of the selector circle, in dp. -->
         <attr name="radius" format="dimension" />
         <!-- The radius of the small circle at the center of the selector, in dp. -->
@@ -131,5 +138,13 @@
         <attr name="hintResizeLeftIcon"/>
         <attr name="hintResizeRightIcon"/>
         <attr name="showSelectorAnimationDuration"/>
+    </declare-styleable>
+
+    <!-- Styleable attributes for the GestureRecorderView. -->
+    <declare-styleable name="GestureRecordView">
+        <!-- The color of all things drawn by this view -->
+        <attr name="recorderColor" format="color"/>
+        <attr name="length"/>
+        <attr name="thickness"/>
     </declare-styleable>
 </resources>

@@ -32,6 +32,10 @@
     <string name="item_event_desc_disabled_children">Disabled</string>
 
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Difference: %1$d%%</string>
+
+    <string name="item_image_condition_visible">Visible</string>
+    <string name="item_image_condition_not_visible">Not visible</string>
 
     <string name="item_counter_reached_title">On counter reached</string>
     <string name="item_counter_reached_desc">Verify the value of a counter modified by an Action</string>
@@ -45,14 +49,17 @@
     <string name="item_broadcast_received_desc">Fulfilled when a Broadcast is received</string>
     <string name="item_broadcast_received_details">%1$s received</string>
 
+    <string name="item_copy_title">Copy</string>
+    <string name="item_copy_desc">Copy an existing Action from any Scenarios</string>
+
     <string name="item_click_title">Click</string>
     <string name="item_click_desc">Click somewhere on the screen</string>
-    <string name="item_click_details_on_condition">On condition</string>
-    <string name="item_click_details_at_position">During %1$s at [%2$d, %3$d]</string>
+    <string name="item_click_details_on_condition">During %1$s on %2$s</string>
+    <string name="item_click_details_at_position">During %1$s</string>
 
     <string name="item_swipe_title">Swipe</string>
     <string name="item_swipe_desc">Swipe from a position on the screen to another</string>
-    <string name="item_swipe_details">During %1$s from [%2$d, %3$d] to [%4$d, %5$d]</string>
+    <string name="item_swipe_details">During %1$s</string>
 
     <string name="item_pause_title">Wait</string>
     <string name="item_pause_desc">Pause the detection execution</string>
@@ -75,6 +82,8 @@
     <string name="item_intent_desc">Interact with another application</string>
     <string name="item_intent_details">Send %1$s</string>
     <string name="item_intent_details_component_name">Send %1$s to %2$s</string>
+    <string name="item_intent_details_start_activity">Start %1$s</string>
+
 
 
     <!-- Dialog Copy =============================================================================================== -->
@@ -128,12 +137,13 @@
     <string name="dialog_title_action_type">Action type</string>
     <string name="dialog_title_trigger_condition_type">Trigger type</string>
 
+    <string name="field_condition_selector_desc">%1$d conditions</string>
     <string name="message_empty_screen_condition_list_title">No screen conditions !</string>
-    <string name="message_empty_screen_condition_list_desc">A screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.\nYou need at least one condition in your event.</string>
+    <string name="message_empty_screen_condition_list_desc">A screen condition is a part of a screenshot that will be searched on each frames displayed by your phone screen.</string>
     <string name="message_empty_trigger_condition_list_title">No conditions !</string>
-    <string name="message_empty_trigger_condition_list_desc">A condition is a custom criteria for starting an action.\nYou need at least one condition in your event.</string>
+    <string name="message_empty_trigger_condition_list_desc">A condition is a custom criteria for starting an action.</string>
     <string name="message_empty_action_list_title">No actions !</string>
-    <string name="message_empty_action_list_desc">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.\nYou need at least one action in your event.</string>
+    <string name="message_empty_action_list_desc">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.</string>
 
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
@@ -147,6 +157,12 @@
     <string name="field_operator_button_or" translatable="false">"OR  "</string>
     <string name="field_operator_desc_or">Only one condition must be fulfilled to trigger the actions</string>
     <string name="field_operator_desc_and">All conditions must be fulfilled to trigger the actions</string>
+
+
+    <!-- Brief overlays ============================================================================================ -->
+
+    <string name="brief_empty_actions">No Actions. You need at least one Action to create a valid Event</string>
+    <string name="brief_empty_image_conditions">No Screen Condition. You need at least one Condition to create a valid Event</string>
 
 
     <!-- Dialog Condition Image ==================================================================================== -->
@@ -332,6 +348,5 @@
     <string name="content_desc_image_condition">The image to be detected</string>
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
-
 
 </resources>

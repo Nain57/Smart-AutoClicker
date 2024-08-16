@@ -45,7 +45,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionChangeCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.counter.CounterNameSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -68,19 +68,17 @@ class ChangeCounterDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_change_counter)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        listener.onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    listener.onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onSaveButtonClicked() }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { onDeleteButtonClicked() }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 
@@ -142,17 +140,13 @@ class ChangeCounterDialog(
     }
 
     private fun onSaveButtonClicked() {
-        debounceUserInteraction {
-            listener.onConfirmClicked()
-            back()
-        }
+        listener.onConfirmClicked()
+        back()
     }
 
     private fun onDeleteButtonClicked() {
-        debounceUserInteraction {
-            listener.onDeleteClicked()
-            back()
-        }
+        listener.onDeleteClicked()
+        back()
     }
 
     private fun updateCounterValue(newValue: String?) {

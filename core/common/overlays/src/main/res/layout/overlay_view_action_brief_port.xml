@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom">
+
+    <com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
+        android:id="@+id/view_record"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_instructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/background_instructions"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/space_instructions_background_bottom"
+            android:background="@drawable/background_fade_top"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_instructions"
+            style="@style/AppTheme.TextAppearance.EmptyText"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_extra_large"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/icon_recording"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/overlay_instructions_gesture_record" />
+
+        <ImageView
+            android:id="@+id/icon_recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_extra_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/text_instructions"
+            app:layout_constraintTop_toTopOf="@id/text_instructions"
+            app:layout_constraintBottom_toBottomOf="@id/text_instructions"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:src="@drawable/ic_recording"
+            tools:ignore="ContentDescription" />
+
+        <Space
+            android:id="@+id/space_instructions_background_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/overlay_brief_instructions_bottom_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_instructions"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefView
+        android:id="@+id/view_brief"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_action_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <View
+            android:id="@+id/background_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/space_background_top"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/background_fade_bottom"/>
+
+        <Space
+            android:id="@+id/space_background_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/overlay_brief_background_top_padding"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/list_actions"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/empty_scenario_card"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_brief_height"
+            android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
+            app:layout_constraintBottom_toTopOf="@id/card_action_index"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_empty_scenario"
+                style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="Empty"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_actions"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_brief_height"
+            android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+            app:layout_constraintBottom_toTopOf="@id/card_action_index"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            tools:itemCount="12"/>
+
+        <Space
+            android:id="@+id/space_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_move_left"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_previous"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/space_start"
+            app:icon="@drawable/ic_move_left"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button_move_previous"
+            app:icon="@drawable/ic_delete"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_action_index"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@+id/button_delete"
+            app:layout_constraintTop_toTopOf="@+id/button_delete"
+            app:layout_constraintEnd_toStartOf="@+id/button_play_action"
+            app:layout_constraintBottom_toBottomOf="@+id/button_delete">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_action_index"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_list_item_text_big"
+                android:textStyle="bold"
+                android:singleLine="true"
+                tools:text="1/12"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_play_action"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_move_next"
+            app:icon="@drawable/ic_play_arrow"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_next"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_large"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/space_end"
+            app:icon="@drawable/ic_move_right"/>
+
+        <Space
+            android:id="@+id/space_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:icon="@drawable/ic_move_left"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

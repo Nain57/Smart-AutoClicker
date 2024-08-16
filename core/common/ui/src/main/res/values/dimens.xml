@@ -62,7 +62,19 @@
 
     <dimen name="overlay_menu_btn_size">48dp</dimen>
 
+    <dimen name="overlay_position_selector_thickness">6dp</dimen>
+    <dimen name="overlay_position_selector_radius">28dp</dimen>
+    <dimen name="overlay_position_selector_inner_radius">3dp</dimen>
+    <dimen name="overlay_click_selector_thickness">6dp</dimen>
+    <dimen name="overlay_click_selector_radius">28dp</dimen>
+    <dimen name="overlay_click_selector_inner_radius">3dp</dimen>
+
+    <dimen name="overlay_gesture_recorder_thickness">10dp</dimen>
+    <dimen name="overlay_gesture_recorder_length">60dp</dimen>
+
     <!-- This must be equals to android_bottom_navigation_height + 16dp-->
     <dimen name="dialog_create_copy_buttons_bottom_margin">96dp</dimen>
     <dimen name="empty_list_height">435dp</dimen>
+
+    <dimen name="field_min_height">48dp</dimen>
 </resources>

@@ -30,11 +30,13 @@ fun View.doWhenMeasured(closure: () -> Unit) {
     doOnLayout { doWhenMeasured(closure) }
 }
 
-fun View.delayDrawUntil(closure: () -> Boolean) {
+fun View.delayDrawUntil(timeOutMs: Long = DEFAULT_DRAW_DELAY_TIMEOUT_MS, closure: () -> Boolean) {
+    val timeOutTs = System.currentTimeMillis() + timeOutMs
+
     viewTreeObserver.addOnPreDrawListener(
         object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
-                return if (closure()) {
+                return if (closure() || timeOutTs < System.currentTimeMillis()) {
                     viewTreeObserver.removeOnPreDrawListener(this)
                     true
                 } else {
@@ -44,3 +46,5 @@ fun View.delayDrawUntil(closure: () -> Boolean) {
         }
     )
 }
+
+private const val DEFAULT_DRAW_DELAY_TIMEOUT_MS = 3_000L

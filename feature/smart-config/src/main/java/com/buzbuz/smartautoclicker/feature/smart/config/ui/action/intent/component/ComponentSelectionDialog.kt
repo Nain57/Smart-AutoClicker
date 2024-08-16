@@ -61,7 +61,7 @@ class ComponentSelectionDialog(
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_intent_component_name)
-                buttonDismiss.setOnClickListener { debounceUserInteraction { back() } }
+                buttonDismiss.setDebouncedOnClickListener { back() }
             }
 
             activitiesAdapter = ComponentSelectionAdapter { selectedComponentName ->

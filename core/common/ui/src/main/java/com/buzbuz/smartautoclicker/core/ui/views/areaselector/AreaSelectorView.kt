@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,25 @@ package com.buzbuz.smartautoclicker.core.ui.views.areaselector
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ComponentsView
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponent
 
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
 class AreaSelectorView(
     context: Context,
-    private val displayMetrics: DisplayMetrics,
-) : View(context) {
+    private val displayConfigManager: DisplayConfigManager,
+) : ComponentsView(context) {
 
     /** Controls the display of the selector. */
     private lateinit var selector: SelectorComponent
@@ -52,8 +52,8 @@ class AreaSelectorView(
     init {
         context.obtainStyledAttributes(null, R.styleable.AreaSelectorView, R.attr.areaSelectorStyle, 0).use { ta ->
             animations = AreaSelectorAnimations(ta.getAnimationsStyle())
-            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayMetrics), ::invalidate)
-            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayMetrics), ::invalidate)
+            selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayConfigManager), this)
+            hintsIcons = HintsComponent(context, ta.getHintsStyle(displayConfigManager), this)
         }
     }
 
@@ -79,6 +79,8 @@ class AreaSelectorView(
         }
     }
 
+    override val viewComponents: List<ViewComponent> = listOf(selector, hintsIcons)
+
     fun setSelection(area: Rect, minimalArea: Rect) {
         if (selector.setDefaultSelectionArea(area, minimalArea)) {
             hintsIcons.showAll()
@@ -90,13 +92,6 @@ class AreaSelectorView(
 
     fun getSelection(): Rect =
         selector.selectedArea.toRect()
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        selector.onViewSizeChanged(w, h)
-        hintsIcons.onViewSizeChanged(w, h)
-        invalidate()
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -128,10 +123,5 @@ class AreaSelectorView(
         }
 
         return false
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        selector.onDraw(canvas)
-        hintsIcons.onDraw(canvas)
     }
 }

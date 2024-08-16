@@ -74,19 +74,17 @@ class ExtraConfigDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_intent_extra_title)
 
-                buttonDismiss.setOnClickListener {
-                    debounceUserInteraction {
-                        onDismissClicked()
-                        back()
-                    }
+                buttonDismiss.setDebouncedOnClickListener {
+                    onDismissClicked()
+                    back()
                 }
                 buttonSave.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { debounceUserInteraction { onSaveButtonClicked() } }
+                    setDebouncedOnClickListener { onSaveButtonClicked() }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
-                    setOnClickListener { debounceUserInteraction { onDeleteButtonClicked() } }
+                    setDebouncedOnClickListener { onDeleteButtonClicked() }
                 }
             }
 

@@ -92,7 +92,7 @@ internal class UserConsentDataSource @Inject constructor() {
         _isPrivacyOptionsRequired.value =
             consentInfo.privacyOptionsRequirementStatus == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
 
-        Log.d(
+        Log.i(
             TAG, "Updated user consent information, can request ads: ${consentInfo.canRequestAds()}, " +
                 "settings required: ${consentInfo.privacyOptionsRequirementStatus}")
     }

@@ -28,10 +28,14 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
+import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
@@ -103,6 +107,9 @@ class DetectionRepository @Inject constructor(
 
     fun getScenarioId(): Identifier? = _scenarioId.value
 
+    fun isRunning(): Boolean =
+        detectorEngine.state.value == DetectorState.DETECTING
+
     fun startScreenRecord(
         context: Context,
         resultCode: Int,
@@ -171,6 +178,14 @@ class DetectionRepository @Inject constructor(
             context = context,
             elementTry = triedElement,
             listener = ImageConditionProcessingTryListener(triedElement, listener)
+        )
+    }
+
+    fun tryAction(context: Context,  scenario: Scenario, action: Action, listener: () -> Unit) {
+        tryElement(
+            context = context,
+            elementTry = ActionTry(scenario, action),
+            listener = ActionTryListener(listener),
         )
     }
 

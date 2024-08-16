@@ -30,9 +30,9 @@ import android.view.MotionEvent
 import androidx.annotation.ColorInt
 import androidx.core.graphics.toRect
 import androidx.core.graphics.toRectF
-import com.buzbuz.smartautoclicker.core.base.extensions.translate
 
-import com.buzbuz.smartautoclicker.core.display.DisplayMetrics
+import com.buzbuz.smartautoclicker.core.base.extensions.translate
+import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeBottom
@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeLeft
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeRight
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ResizeTop
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ZoomCapture
 
@@ -51,12 +52,12 @@ import kotlin.math.min
  *
  * @param context the Android Context.
  * @param selectorStyle the style for this component.
- * @param viewInvalidator calls invalidate on the view hosting this component.
+ * @param viewInvalidator invalidate the parent view
  */
 internal class SelectorComponent(
     context: Context,
     selectorStyle: SelectorComponentStyle,
-    viewInvalidator: () -> Unit,
+    viewInvalidator: ViewInvalidator,
 ): ViewComponent(selectorStyle, viewInvalidator) {
 
     /** Listener for the [gestureDetector] handling the move/resize gesture. */
@@ -306,7 +307,7 @@ internal class SelectorComponent(
         }
     }
 
-    override fun invalidate() {
+    override fun onInvalidate() {
         selectorDrawingPath.apply {
             reset()
 
@@ -322,8 +323,6 @@ internal class SelectorComponent(
             lineTo(selectedArea.left, selectedArea.bottom)
             close()
         }
-
-        super.invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -341,7 +340,7 @@ internal class SelectorComponent(
 /**
  * Style for [SelectorComponent].
  *
- * @param displayMetrics metrics for the device display.
+ * @param displayConfigManager metrics for the device display.
  * @param selectorDefaultSize default size of the selector area in pixels.
  * @param handleSize the size of the selector handle in pixels.
  * @param selectorAreaOffset difference between the center of the selector and its inner content in pixels.
@@ -351,7 +350,7 @@ internal class SelectorComponent(
  * @param selectorBackgroundColor the color of the selector background.
  */
 internal class SelectorComponentStyle(
-    displayMetrics: DisplayMetrics,
+    displayConfigManager: DisplayConfigManager,
     val selectorDefaultSize: PointF,
     val handleSize: Float,
     val selectorAreaOffset: Int,
@@ -359,7 +358,7 @@ internal class SelectorComponentStyle(
     val selectorThickness: Float,
     @ColorInt val selectorColor: Int,
     @ColorInt val selectorBackgroundColor: Int,
-) : ViewStyle(displayMetrics)
+) : ViewStyle(displayConfigManager)
 
 /** The ratio of the maximum width to be considered as the minimum width. */
 private const val SELECTOR_MINIMUM_WIDTH_RATIO = 0.10f

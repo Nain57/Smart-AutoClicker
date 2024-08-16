@@ -23,18 +23,6 @@
     android:layout_height="@dimen/item_height_big"
     android:layout_marginEnd="@dimen/margin_horizontal_large">
 
-    <ImageView
-        android:id="@+id/btn_reorder"
-        android:layout_width="@dimen/image_button_size"
-        android:layout_height="@dimen/image_button_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/action_name"
-        android:scaleType="center"
-        android:src="@drawable/ic_reorder"
-        android:contentDescription="@string/content_desc_drag_and_drop"/>
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/action_name"
         android:layout_width="0dp"
@@ -42,7 +30,7 @@
         android:layout_marginStart="@dimen/margin_horizontal_default"
         android:layout_marginTop="@dimen/margin_vertical_small"
         android:layout_marginBottom="@dimen/margin_vertical_mini"
-        app:layout_constraintStart_toEndOf="@id/btn_reorder"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/action_type_icon"
         app:layout_constraintBottom_toTopOf="@id/action_details"

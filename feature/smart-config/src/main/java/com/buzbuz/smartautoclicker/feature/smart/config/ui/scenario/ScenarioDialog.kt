@@ -90,10 +90,10 @@ class ScenarioDialog(
 
     override fun onResume() {
         super.onResume()
-        viewModel.apply {
-            monitorSaveButtonView(topBarBinding.buttonSave)
-            monitorCreateEventView(createCopyButtons.buttonNew)
-        }
+        viewModel.monitorViews(
+            createEventButton = createCopyButtons.buttonNew,
+            saveButton = topBarBinding.buttonSave,
+        )
     }
 
     override fun onPause() {

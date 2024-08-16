@@ -29,6 +29,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
+import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -40,7 +41,7 @@ import java.io.PrintWriter
  * This class ensure that all dialogs opened from a service will have the same behaviour. It provides basic lifecycle
  * alike methods to ease the view initialization/cleaning.
  */
-abstract class OverlayDialog(@StyleRes theme: Int? = null) : com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay(theme, recreateOnRotation = true) {
+abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
     private lateinit var inputMethodManager: InputMethodManager

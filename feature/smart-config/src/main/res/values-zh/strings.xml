@@ -60,8 +60,8 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_click_desc">单击屏幕某处</string>
-    <string name="item_click_details_at_position">点击坐标(%2$d, %3$d)，每次用时%1$s</string>
-    <string name="item_click_details_on_condition">识别并点击已保存的图片</string>
+    <string name="item_click_details_at_position">在 %1$s 期間</string>
+    <string name="item_click_details_on_condition">在 %2$s 的 %1$s 期間</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">未选择条件</string>
     <string name="field_condition_selection_desc_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
@@ -74,7 +74,7 @@
     <string name="item_pause_details">延迟 %1$s</string>
     <string name="generic_select_the_position">选择一个坐标</string>
     <string name="item_swipe_desc">从A点滑动到B点</string>
-    <string name="item_swipe_details">从 (%2$d, %3$d) 滑动到 (%4$d, %5$d)，每次用时 %1$s</string>
+    <string name="item_swipe_details">延迟 %1$s</string>
     <string name="field_swipe_positions_desc">从 (%1$d, %2$d) 滑动到 (%3$d, %4$d)</string>
     <string name="item_toggle_event_desc">启用或禁用某场景</string>
     <string name="field_change_all_desc_manual">定义要手动更改的事件</string>
@@ -117,6 +117,13 @@
     <string name="item_broadcast_received_title">收到Broadcast</string>
     <string name="field_timer_restart_title">达到后重新启动</string>
     <string name="field_change_all_title">全部更改</string>
+    <string name="item_copy_title">复制</string>
+    <string name="item_copy_desc">从任何场景复制现有操作</string>
+    <string name="item_image_condition_visible">可见</string>
+    <string name="item_image_condition_not_visible">不可见</string>
+    <string name="field_condition_selector_desc">%1$d 个条件</string>
+    <string name="item_intent_details_start_activity">開始 %1$s</string>
+
 
     <!--
       - Fields.
@@ -147,9 +154,9 @@
       -->
     <string name="message_empty_screen_event_desc">屏幕事件包含一组在屏幕上检测到特定条件时执行的操作。\n场景中至少需要一个屏幕或触发器事件才能执行。</string>
     <string name="message_empty_trigger_event_list_desc">触发器事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个屏幕或触发事件才能执行。</string>
-    <string name="message_empty_trigger_condition_list_desc">条件是启动操作的自定义标准。</string>
+    <string name="message_empty_trigger_condition_list_desc">条件是启动一项操作的自定义标准。</string>
     <string name="message_empty_screen_condition_list_desc">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
-    <string name="message_empty_action_list_desc">当条件满足时，创建的动作将被执行（点击、滑动……）\n您的场景中需要至少存在一个动作。</string>
+    <string name="message_empty_action_list_desc">操作是在满足创建的条件时触发的与手机的交互（点击、轻扫…）。</string>
     <string name="message_empty_counter_name_list_desc">使用更改计数器操作或计数器达到条件创建计数器</string>
 
     <!--
@@ -157,6 +164,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">差异: %1$d%%</string>
     <string name="warning_dialog_message_toggle_action_from_another_scenario">" 此事件有一个或多个切换事件操作引用来自另一场景的事件。 在保存场景之前，您必须更新他们的目标事件。"</string>
     <string name="warning_dialog_message_event_delete_associated_action">这个场景存在一个或多个动作被引用。 删除这个场景也会删除相关的动作。\n确认删除？</string>
     <string name="warning_dialog_message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
@@ -267,5 +275,8 @@
     <string name="content_desc_open_event_list">打开脚本列表</string>
     <string name="content_desc_application_icon">应用图标</string>
     <string name="field_application_selection_title">选择一个应用程序</string>
+
+    <string name="brief_empty_actions">无操作。要创建有效的事件，至少需要一个 "操作"。</string>
+    <string name="brief_empty_image_conditions">无屏幕条件。创建有效事件至少需要一个条件</string>
 
 </resources>

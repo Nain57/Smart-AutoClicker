@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2024 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -29,8 +29,10 @@
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
-
     <color name="overlayActionsBriefBackground">#99000000</color>
+    <color name="overlayGestureRecorder">#FFF00006</color>
+
+    <color name="iconColor">@color/md_theme_light_onPrimaryContainer</color>
 
     <!-- Material 3 Theme colors -->
     <color name="seed">#006688</color>

@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefMenu
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioDialog
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioConfigDialog
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 class DumbMainMenu(
     private val dumbScenarioId: Identifier,
     private val onStopClicked: () -> Unit,
-) : OverlayMenu(theme = R.style.DumbScenarioConfigTheme) {
+) : OverlayMenu(theme = R.style.AppTheme) {
 
     /** The view model for this menu. */
     private val viewModel: DumbMainMenuModel by viewModels(
@@ -153,13 +153,11 @@ class DumbMainMenu(
     }
 
     override fun onMenuItemClicked(viewId: Int) {
-        debounceUserInteraction {
-            when (viewId) {
-                R.id.btn_play -> onPlayPauseClicked()
-                R.id.btn_stop -> onStopClicked()
-                R.id.btn_show_actions -> onShowBriefClicked()
-                R.id.btn_action_list -> onDumbScenarioConfigClicked()
-            }
+        when (viewId) {
+            R.id.btn_play -> onPlayPauseClicked()
+            R.id.btn_stop -> onStopClicked()
+            R.id.btn_show_actions -> onShowBriefClicked()
+            R.id.btn_action_list -> onDumbScenarioConfigClicked()
         }
     }
 
@@ -188,7 +186,7 @@ class DumbMainMenu(
         viewModel.startEdition(dumbScenarioId) {
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = DumbScenarioDialog(
+                newOverlay = DumbScenarioConfigDialog(
                     onConfigSaved = viewModel::saveEditions,
                     onConfigDiscarded = viewModel::stopEdition,
                 ),

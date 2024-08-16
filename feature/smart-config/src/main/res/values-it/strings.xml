@@ -60,8 +60,8 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_click_desc">Clicca un punto dello schermo</string>
-    <string name="item_click_details_at_position">Durante %1$s su [%2$d, %3$d]</string>
-    <string name="item_click_details_on_condition">Sulla condizione</string>
+    <string name="item_click_details_at_position">Durante %1$s</string>
+    <string name="item_click_details_on_condition">Durante %1$s su %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Nessuna condizione selezionata</string>
     <string name="field_condition_selection_desc_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
@@ -74,7 +74,7 @@
     <string name="item_pause_details">Durante %1$s</string>
     <string name="generic_select_the_position">Seleziona la posizione</string>
     <string name="item_swipe_desc">Scorri da una posizione sullo schermo all\'altra</string>
-    <string name="item_swipe_details">Durante %1$s da [%2$d, %3$d] a [%4$d, %5$d]</string>
+    <string name="item_swipe_details">Durante %1$s</string>
     <string name="field_swipe_positions_desc">Scorri da %1$d, %2$d a %3$d, %4$d</string>
     <string name="item_toggle_event_desc">Cambia lo stato di abilitazione di un evento</string>
     <string name="field_change_all_desc_manual">Definire gli eventi da modificare manualmente</string>
@@ -117,6 +117,12 @@
     <string name="item_change_counter_title">Modificare contatore</string>
     <string name="field_timer_restart_title">Riavviare quando viene raggiunto</string>
     <string name="field_change_all_title">Cambiare tutti</string>
+    <string name="item_copy_title">Copia</string>
+    <string name="item_copy_desc">Copiare un\'azione esistente da qualsiasi scenario</string>
+    <string name="item_image_condition_visible">Visibile</string>
+    <string name="item_image_condition_not_visible">Non visibile</string>
+    <string name="field_condition_selector_desc">%1$d condizioni</string>
+    <string name="item_intent_details_start_activity">Avviare %1$s</string>
 
     <!--
       - Fields.
@@ -148,8 +154,8 @@
     <string name="message_empty_screen_event_desc">Un evento schermo contiene un insieme di azioni eseguite quando viene rilevata una condizione specifica sullo schermo.\nÈ necessario almeno un evento schermo o trigger nel vostro scenario per eseguirlo.</string>
     <string name="message_empty_trigger_event_list_desc">Un evento trigger contiene una serie di azioni eseguite quando si verificano una serie di condizioni personalizzate.\nPer eseguire lo scenario, è necessario disporre di almeno una schermata o di un evento di attivazione.</string>
     <string name="message_empty_trigger_condition_list_desc">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
-    <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.\nÈ necessaria almeno una condizione nell\'evento.</string>
-    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.\nHai bisogno di almeno un\'azione nel tuo evento.</string>
+    <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.</string>
+    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.</string>
     <string name="message_empty_counter_name_list_desc">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
 
     <!--
@@ -157,6 +163,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">Differenza: %1$d%%</string>
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
     <string name="warning_dialog_message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
@@ -271,5 +278,8 @@
     <string name="content_desc_open_event_list">Apri la lista eventi</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
     <string name="field_application_selection_title">Seleziona un\'applicazione</string>
+
+    <string name="brief_empty_actions">Nessuna azione. È necessaria almeno un\'azione per creare un evento valido</string>
+    <string name="brief_empty_image_conditions">Nessuna condizione dello schermo. Per creare un evento valido è necessaria almeno una condizione</string>
 
 </resources>

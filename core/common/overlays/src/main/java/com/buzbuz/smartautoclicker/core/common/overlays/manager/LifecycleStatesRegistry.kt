@@ -43,5 +43,9 @@ internal class LifecycleStatesRegistry {
         return states
     }
 
+    fun clearStates() {
+        overlaysLifecycleState.clear()
+    }
+
     fun haveStates(): Boolean = overlaysLifecycleState.isNotEmpty()
 }

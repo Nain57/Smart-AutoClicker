@@ -81,8 +81,9 @@ internal class SQLiteTableDetails private constructor(
                     sql.startsWith("CREATE INDEX") -> {
                         val columnName = sql.getColumnNameFromSQLiteCreateIndex()
                         if (filteredColumns.contains(columnName)) return@forEachRow
+                        val sanitizedSql = sql.replace("\"", "`")
 
-                        sqlCreateIndexes.add(sql.replace("`$originTableName`", "`$copyName`"))
+                        sqlCreateIndexes.add(sanitizedSql.replace("`$originTableName`", "`$copyName`"))
                     }
                 }
             }
