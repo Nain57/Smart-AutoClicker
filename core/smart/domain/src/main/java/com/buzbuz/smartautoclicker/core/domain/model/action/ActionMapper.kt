@@ -43,6 +43,7 @@ private fun Action.Click.toClickEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.CLICK,
         pressDuration = pressDuration,
@@ -56,6 +57,7 @@ private fun Action.Swipe.toSwipeEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.SWIPE,
         swipeDuration = swipeDuration,
@@ -69,6 +71,7 @@ private fun Action.Pause.toPauseEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.PAUSE,
         pauseDuration = pauseDuration,
@@ -78,6 +81,7 @@ private fun Action.Intent.toIntentEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.INTENT,
         isAdvanced = isAdvanced,
@@ -91,6 +95,7 @@ private fun Action.ToggleEvent.toToggleEventEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.TOGGLE_EVENT,
         toggleAllType = toggleAllType?.toEntity(),
@@ -101,6 +106,7 @@ private fun Action.ChangeCounter.toChangeCounterEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
+        priority = priority,
         name = name!!,
         type = ActionType.CHANGE_COUNTER,
         counterName = counterName,
