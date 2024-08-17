@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent
 
 import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +27,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.buzbuz.smartautoclicker.core.base.extensions.startWebBrowserActivity
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
@@ -100,13 +100,7 @@ class IntentActionsSelectionDialog (
 
     private fun onActionHelpClicked(uri: Uri) {
         try {
-            context.startActivity(
-                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
-                    .apply {
-                    data = uri
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                }
-            )
+            context.startWebBrowserActivity(uri)
 
             overlayManager.navigateTo(
                 context = context,

@@ -17,8 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.revenue.ui.purchase
 
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
@@ -49,9 +47,6 @@ internal class PurchaseProModeViewModel @Inject constructor(
     fun launchPlayStoreBillingFlow(activity: Activity) {
         revenueRepository.startPlayStoreBillingUiFlow(activity)
     }
-
-    fun getGitHubWebPageIntent(): Intent =
-        Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Nain57/Smart-AutoClicker"))
 }
 
 internal sealed class PurchaseDialogState {

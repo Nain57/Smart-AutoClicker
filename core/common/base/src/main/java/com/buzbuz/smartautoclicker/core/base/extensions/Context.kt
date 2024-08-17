@@ -16,7 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.base.extensions
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -27,3 +31,36 @@ fun Context.getThemeColor(@AttrRes colorAttr: Int): Int {
     theme.resolveAttribute(colorAttr, typedValue, true)
     return typedValue.data
 }
+
+
+fun Context.startWebBrowserActivity(url: String): Boolean =
+    startWebBrowserActivity(Uri.parse(url))
+
+fun Context.startWebBrowserActivity(uri: Uri): Boolean =
+    try {
+        startActivity(
+            Intent(Intent.ACTION_VIEW, uri).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        )
+        true
+    } catch (ex: ActivityNotFoundException) {
+        Log.e(TAG, "Can't open web browser.")
+        startWebBrowserPicker(uri)
+    }
+
+private fun Context.startWebBrowserPicker(uri: Uri): Boolean =
+    try {
+        startActivity(
+            Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER).apply {
+                data = uri
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        )
+        true
+    } catch (ex: ActivityNotFoundException) {
+        Log.e(TAG, "Can't open web browser.")
+        false
+    }
+
+private const val TAG = "ContextExt"

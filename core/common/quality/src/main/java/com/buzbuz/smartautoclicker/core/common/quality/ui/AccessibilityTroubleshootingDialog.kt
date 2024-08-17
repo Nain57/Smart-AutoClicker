@@ -18,12 +18,11 @@ package com.buzbuz.smartautoclicker.core.common.quality.ui
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.buzbuz.smartautoclicker.core.base.extensions.startWebBrowserActivity
 
 import com.buzbuz.smartautoclicker.core.common.quality.databinding.DialogAccessibilityTroubleshootingBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -59,6 +58,6 @@ class AccessibilityTroubleshootingDialog : DialogFragment() {
     }
 
     private fun showDontKillMyApp() {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://dontkillmyapp.com")))
+        context?.startWebBrowserActivity("https://dontkillmyapp.com")
     }
 }
