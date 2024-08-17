@@ -40,9 +40,12 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.data.isLegacyActionUiEnabled
+import com.buzbuz.smartautoclicker.feature.smart.config.data.smartConfigPrefsDataStore
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
@@ -74,7 +77,10 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-) : ViewModel() {
+) : ViewModel(), ActionConfigurator {
+
+    private val configPrefsDataStore = context.smartConfigPrefsDataStore
+    private val isLegacyUiEnabled: Flow<Boolean> = configPrefsDataStore.isLegacyActionUiEnabled()
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
     private val editedEvent: Flow<Event> = editionRepository.editionState.editedEventState.mapNotNull { it.value }
@@ -106,10 +112,13 @@ class SmartActionsBriefViewModel @Inject constructor(
         .filter { !it.second }
         .map { (action, _) -> action?.toActionDescription(context) }
 
+    val canCopyActions: Flow<Boolean> =
+        editionRepository.editionState.canCopyActions
+
     val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
-        editionRepository.editionState.canCopyActions.map { canCopy ->
+        combine(canCopyActions, isLegacyUiEnabled) { canCopy, legacyEnabled ->
             buildList {
-                if (canCopy) add(ActionTypeChoice.Copy)
+                if (!legacyEnabled && canCopy) add(ActionTypeChoice.Copy)
                 add(ActionTypeChoice.Click)
                 add(ActionTypeChoice.Swipe)
                 add(ActionTypeChoice.Pause)
@@ -147,26 +156,37 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
     }
 
-    fun createAction(context: Context, actionType: ActionTypeChoice): Action = when (actionType) {
+    override fun getActionTypeChoices(): List<ActionTypeChoice> =
+        actionTypeChoices.value
+
+    override fun createAction(context: Context, choice: ActionTypeChoice): Action = when (choice) {
         ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
         ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
         ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
         ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
         ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
-        ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $actionType")
+        ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
     }
 
-    fun createNewActionFrom(action: Action): Action =
+    override fun createActionFrom(action: Action): Action =
         editionRepository.editedItemsBuilder.createNewActionFrom(action)
 
-    fun startActionEdition(action: Action) = editionRepository.startActionEdition(action)
+    override fun startActionEdition(action: Action) {
+        editionRepository.startActionEdition(action)
+    }
 
-    fun upsertEditedAction() = editionRepository.upsertEditedAction()
+    override fun upsertEditedAction() {
+        editionRepository.upsertEditedAction()
+    }
 
-    fun removeEditedAction() = editionRepository.deleteEditedAction()
+    override fun removeEditedAction() {
+        editionRepository.deleteEditedAction()
+    }
 
-    fun dismissEditedAction() = editionRepository.stopActionEdition()
+    override fun dismissEditedAction() {
+        editionRepository.stopActionEdition()
+    }
 
     fun playAction(context: Context, index: Int, onCompleted: () -> Unit) {
         val scenario = editionRepository.editionState.getScenario()
@@ -195,6 +215,9 @@ class SmartActionsBriefViewModel @Inject constructor(
 
         editionRepository.updateActionsOrder(actions)
     }
+
+    fun updateActionOrder(actionsBrief: List<ItemBrief>) =
+        editionRepository.updateActionsOrder(actionsBrief.map { brief -> (brief.data as UiAction).action })
 
     fun deleteAction(index: Int) {
         val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return

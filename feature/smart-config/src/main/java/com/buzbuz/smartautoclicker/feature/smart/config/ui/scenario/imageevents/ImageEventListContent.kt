@@ -26,9 +26,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
-
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -56,9 +56,6 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: ImageEventListAdapter
-
-    /** Tells if the billing flow has been triggered by the event count limit. */
-    private var eventLimitReachedClick: Boolean = false
 
     override fun createCopyButtonsAreAvailable(): Boolean = true
 

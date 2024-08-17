@@ -67,6 +67,22 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tutorial_legacy_ui"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large">
+
+            <include layout="@layout/include_field_switch"
+                android:id="@+id/field_legacy_actions_ui"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/tutorial_card"
             style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"

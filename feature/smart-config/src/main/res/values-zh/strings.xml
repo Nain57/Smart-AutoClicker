@@ -181,6 +181,9 @@
     <string name="field_intent_extra_value_title">参数值</string>
     <string name="field_tutorial_title">教程</string>
 
+    <string name="field_legacy_action_ui_title">遗留 UI</string>
+    <string name="field_legacy_action_ui_desc">将操作显示改为列表。适用于复杂场景。</string>
+
     <!--
       - List header.
       - Displayed on one line.

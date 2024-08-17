@@ -33,16 +33,6 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 
 import kotlinx.coroutines.launch
@@ -215,60 +205,10 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     }
 
     private fun showNewActionDialog() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = ActionTypeSelectionDialog(
-                choices = viewModel.actionTypeChoices.value,
-                onChoiceSelectedListener = { choiceClicked ->
-                    if (choiceClicked is ActionTypeChoice.Copy) {
-                        showActionCopyDialog()
-                        return@ActionTypeSelectionDialog
-                    }
-
-                    showActionConfigDialog(viewModel.createAction(context, choiceClicked))
-                },
-            ),
-        )
-    }
-
-    private fun showActionCopyDialog() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = ActionCopyDialog(
-                onActionSelected = { newCopyAction ->
-                    showActionConfigDialog(viewModel.createNewActionFrom(newCopyAction))
-                }
-            ),
-        )
+        showActionTypeSelectionDialog(viewModel)
     }
 
     private fun showActionConfigDialog(action: Action) {
-        viewModel.startActionEdition(action)
-        val actionConfigDialogListener: OnActionConfigCompleteListener by lazy {
-            object : OnActionConfigCompleteListener {
-                override fun onConfirmClicked() {
-                    viewModel.upsertEditedAction()
-                }
-                override fun onDeleteClicked() { viewModel.removeEditedAction() }
-                override fun onDismissClicked() { viewModel.dismissEditedAction() }
-            }
-        }
-
-        val overlay = when (action) {
-            is Action.Click -> ClickDialog(actionConfigDialogListener)
-            is Action.Swipe -> SwipeDialog(actionConfigDialogListener)
-            is Action.Pause -> PauseDialog(actionConfigDialogListener)
-            is Action.Intent -> IntentDialog(actionConfigDialogListener)
-            is Action.ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
-            is Action.ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
-            else -> throw IllegalArgumentException("Not yet supported")
-        }
-
-
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = overlay,
-            hideCurrent = true,
-        )
+        showActionConfigDialog(viewModel, action)
     }
 }

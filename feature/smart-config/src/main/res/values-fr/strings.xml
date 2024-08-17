@@ -181,6 +181,9 @@
     <string name="field_intent_extra_value_title">Valeur</string>
     <string name="field_tutorial_title">Tutoriel</string>
 
+    <string name="field_legacy_action_ui_title">Legacy UI</string>
+    <string name="field_legacy_action_ui_desc">Change l\'affichage des Actions par une liste. Utile pour les Scénario complexes.</string>
+
     <!--
       - List header.
       - Displayed on one line.

@@ -40,6 +40,7 @@ dependencies {
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.recyclerView)
 

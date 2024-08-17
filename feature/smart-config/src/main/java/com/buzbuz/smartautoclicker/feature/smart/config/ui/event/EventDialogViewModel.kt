@@ -32,6 +32,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
+import com.buzbuz.smartautoclicker.feature.smart.config.data.isLegacyActionUiEnabled
+import com.buzbuz.smartautoclicker.feature.smart.config.data.smartConfigPrefsDataStore
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
@@ -44,11 +47,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -60,6 +66,10 @@ class EventDialogViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
+
+    private val configPrefsDataStore = context.smartConfigPrefsDataStore
+    val isLegacyUiEnabled: StateFlow<Boolean> = configPrefsDataStore.isLegacyActionUiEnabled()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }

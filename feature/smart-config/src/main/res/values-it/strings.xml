@@ -180,6 +180,9 @@
     <string name="field_intent_extra_value_title">Valore</string>
     <string name="field_tutorial_title">Tutorial</string>
 
+    <string name="field_legacy_action_ui_title">Legacy UI</string>
+    <string name="field_legacy_action_ui_desc">Modifica la visualizzazione delle azioni tramite un elenco. Utile per scenari complessi.</string>
+
     <!--
       - List header.
       - Displayed on one line.

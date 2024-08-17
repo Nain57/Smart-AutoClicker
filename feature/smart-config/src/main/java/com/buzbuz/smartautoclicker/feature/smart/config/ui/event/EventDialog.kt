@@ -54,6 +54,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
@@ -211,11 +212,11 @@ class EventDialog(
 
             setAdapter(
                 EventChildrenCardsAdapter(
-                    itemClickedListener = ::showActionsBriefMenu,
+                    itemClickedListener = ::showActionsOverlay,
                 ),
             )
 
-            setOnClickListener { debounceUserInteraction { showActionsBriefMenu() } }
+            setOnClickListener { debounceUserInteraction { showActionsOverlay() } }
         }
     }
 
@@ -339,12 +340,20 @@ class EventDialog(
         )
     }
 
-    private fun showActionsBriefMenu(initialFocusedIndex: Int = 0) {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = SmartActionsBriefMenu(initialFocusedIndex),
-            hideCurrent = true,
-        )
+    private fun showActionsOverlay(initialFocusedIndex: Int = 0) {
+        if (viewModel.isLegacyUiEnabled.value) {
+            overlayManager.navigateTo(
+                context = context,
+                newOverlay = SmartActionsLegacyDialog(),
+                hideCurrent = true,
+            )
+        } else {
+            overlayManager.navigateTo(
+                context = context,
+                newOverlay = SmartActionsBriefMenu(initialFocusedIndex),
+                hideCurrent = true,
+            )
+        }
     }
 
     private fun showTryElementMenu() {
