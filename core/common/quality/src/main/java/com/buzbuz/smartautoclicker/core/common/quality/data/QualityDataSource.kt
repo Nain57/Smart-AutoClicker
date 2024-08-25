@@ -14,18 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.data
+package com.buzbuz.smartautoclicker.core.common.quality.data
 
 import android.content.Context
 import android.util.Log
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 
@@ -39,22 +40,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QsTileConfigDataSource @Inject internal constructor(
+class QualityDataSource @Inject internal constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher
 ) {
 
     private companion object {
-        const val PREFERENCES_FILE_NAME = "qsTile"
+        const val PREFERENCES_FILE_NAME = "quality"
 
-        val KEY_SCENARIO_DATABASE_ID: Preferences.Key<Long> =
-            longPreferencesKey("scenarioDbId")
-        val KEY_IS_SMART_SCENARIO: Preferences.Key<Boolean> =
-            booleanPreferencesKey("isSmartScenario")
+        val KEY_LAST_SERVICE_START_TIME_MS: Preferences.Key<Long> =
+            longPreferencesKey("lastServiceStartTimeMs")
+        val KEY_LAST_SERVICE_FOREGROUND_TIME_MS: Preferences.Key<Long> =
+            longPreferencesKey("lastServiceForegroundTimeMs")
+        val KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT: Preferences.Key<Int> =
+            intPreferencesKey("accessibilityPermissionLossCount")
+        val KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT: Preferences.Key<Int> =
+            intPreferencesKey("accessibilityTroubleshootingDialogDisplayCount")
     }
 
     private val dataStore: DataStore<Preferences> = create(
@@ -64,20 +70,29 @@ class QsTileConfigDataSource @Inject internal constructor(
         produceFile = { context.preferencesDataStoreFile(PREFERENCES_FILE_NAME) }
     )
 
-    internal fun getQSTileScenarioInfo(): Flow<QSTileScenarioInfo?> =
-        dataStore.data.map { preferences ->
-            val scenarioDbId = preferences[KEY_SCENARIO_DATABASE_ID]
-            val isSmartScenario = preferences[KEY_IS_SMART_SCENARIO]
+    internal fun qualityMetrics(): Flow<QualityMetrics> =
+        dataStore.data.map { preferences -> preferences.toQualityMetrics() }
 
-            if (scenarioDbId == null || isSmartScenario == null) null
-            else QSTileScenarioInfo(scenarioDbId, isSmartScenario)
-        }
-
-    internal suspend fun putQSTileScenarioInfo(scenarioInfo: QSTileScenarioInfo) =
+    internal suspend fun edit(transform: suspend (current: QualityMetrics) -> QualityMetrics) {
         dataStore.edit { preferences ->
-            preferences[KEY_SCENARIO_DATABASE_ID] = scenarioInfo.id
-            preferences[KEY_IS_SMART_SCENARIO] = scenarioInfo.isSmart
+            preferences.putQualityMetrics(transform(preferences.toQualityMetrics()))
         }
+    }
+
+    private fun Preferences.toQualityMetrics(): QualityMetrics =
+        QualityMetrics(
+            lastServiceStartTimeMs = get(KEY_LAST_SERVICE_START_TIME_MS) ?: INVALID_TIME,
+            lastScenarioStartTimeMs = get(KEY_LAST_SERVICE_FOREGROUND_TIME_MS) ?: INVALID_TIME,
+            accessibilityLossCount = get(KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT) ?: 0,
+            troubleshootingDisplayCount = get(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT) ?: 0,
+        )
+
+    private fun MutablePreferences.putQualityMetrics(qualityMetrics: QualityMetrics) {
+        set(KEY_LAST_SERVICE_START_TIME_MS, qualityMetrics.lastServiceStartTimeMs)
+        set(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, qualityMetrics.lastScenarioStartTimeMs)
+        set(KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT, qualityMetrics.accessibilityLossCount)
+        set(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT, qualityMetrics.troubleshootingDisplayCount)
+    }
 
     private fun onPreferenceFileCorrupted(): Preferences {
         Log.e(PREFERENCES_FILE_NAME, "Preference file is corrupted, resetting preferences")

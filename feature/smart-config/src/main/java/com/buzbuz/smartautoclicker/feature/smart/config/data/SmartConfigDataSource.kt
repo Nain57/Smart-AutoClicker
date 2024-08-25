@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.data
+package com.buzbuz.smartautoclicker.feature.smart.config.data
 
 import android.content.Context
 import android.util.Log
-
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
@@ -26,7 +25,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -39,22 +37,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QsTileConfigDataSource @Inject internal constructor(
+class SmartConfigDataSource @Inject internal constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher
 ) {
 
     private companion object {
-        const val PREFERENCES_FILE_NAME = "qsTile"
+        const val PREFERENCES_FILE_NAME = "smartConfig"
 
-        val KEY_SCENARIO_DATABASE_ID: Preferences.Key<Long> =
-            longPreferencesKey("scenarioDbId")
-        val KEY_IS_SMART_SCENARIO: Preferences.Key<Boolean> =
-            booleanPreferencesKey("isSmartScenario")
+        val KEY_LEGACY_ACTION_UI_ENABLED: Preferences.Key<Boolean> =
+            booleanPreferencesKey("isLegacyActionUiEnabled")
     }
 
     private val dataStore: DataStore<Preferences> = create(
@@ -64,19 +61,12 @@ class QsTileConfigDataSource @Inject internal constructor(
         produceFile = { context.preferencesDataStoreFile(PREFERENCES_FILE_NAME) }
     )
 
-    internal fun getQSTileScenarioInfo(): Flow<QSTileScenarioInfo?> =
-        dataStore.data.map { preferences ->
-            val scenarioDbId = preferences[KEY_SCENARIO_DATABASE_ID]
-            val isSmartScenario = preferences[KEY_IS_SMART_SCENARIO]
+    internal fun isLegacyActionUiEnabled(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_LEGACY_ACTION_UI_ENABLED] ?: false }
 
-            if (scenarioDbId == null || isSmartScenario == null) null
-            else QSTileScenarioInfo(scenarioDbId, isSmartScenario)
-        }
-
-    internal suspend fun putQSTileScenarioInfo(scenarioInfo: QSTileScenarioInfo) =
+    internal suspend fun toggleLegacyActionUi() =
         dataStore.edit { preferences ->
-            preferences[KEY_SCENARIO_DATABASE_ID] = scenarioInfo.id
-            preferences[KEY_IS_SMART_SCENARIO] = scenarioInfo.isSmart
+            preferences[KEY_LEGACY_ACTION_UI_ENABLED] = !(preferences[KEY_LEGACY_ACTION_UI_ENABLED] ?: false)
         }
 
     private fun onPreferenceFileCorrupted(): Preferences {
@@ -84,3 +74,4 @@ class QsTileConfigDataSource @Inject internal constructor(
         return emptyPreferences()
     }
 }
+

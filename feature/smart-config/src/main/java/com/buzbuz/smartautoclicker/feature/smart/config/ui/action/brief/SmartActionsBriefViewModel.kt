@@ -40,8 +40,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.data.isLegacyActionUiEnabled
-import com.buzbuz.smartautoclicker.feature.smart.config.data.smartConfigPrefsDataStore
+import com.buzbuz.smartautoclicker.feature.smart.config.data.SmartConfigDataSource
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
@@ -77,10 +76,10 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
+    configPrefsDataSource : SmartConfigDataSource,
 ) : ViewModel(), ActionConfigurator {
 
-    private val configPrefsDataStore = context.smartConfigPrefsDataStore
-    private val isLegacyUiEnabled: Flow<Boolean> = configPrefsDataStore.isLegacyActionUiEnabled()
+    private val isLegacyUiEnabled: Flow<Boolean> = configPrefsDataSource.isLegacyActionUiEnabled()
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
     private val editedEvent: Flow<Event> = editionRepository.editionState.editedEventState.mapNotNull { it.value }

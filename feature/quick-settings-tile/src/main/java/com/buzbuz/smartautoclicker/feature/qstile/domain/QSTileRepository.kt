@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.feature.qstile.domain
 import android.content.Context
 import android.content.Intent
 import android.service.quicksettings.Tile
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
@@ -32,9 +30,7 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.qstile.R
 import com.buzbuz.smartautoclicker.feature.qstile.data.QSTileScenarioInfo
-import com.buzbuz.smartautoclicker.feature.qstile.data.getQSTileScenarioInfo
-import com.buzbuz.smartautoclicker.feature.qstile.data.putQSTileScenarioInfo
-import com.buzbuz.smartautoclicker.feature.qstile.data.qsTileConfigDataStore
+import com.buzbuz.smartautoclicker.feature.qstile.data.QsTileConfigDataSource
 import com.buzbuz.smartautoclicker.feature.qstile.ui.QSTileService
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -67,6 +63,7 @@ class QSTileRepository @Inject constructor(
     private val dumbEngine: DumbEngine,
     private val smartRepository: IRepository,
     private val smartEngine: DetectionRepository,
+    private val qsTileConfigDataSource: QsTileConfigDataSource,
 ) {
 
     private val coroutineScopeIo: CoroutineScope =
@@ -74,10 +71,7 @@ class QSTileRepository @Inject constructor(
 
     private var qsTileActionHandler: QSTileActionHandler? = null
 
-    private val tileConfigDataSource: DataStore<Preferences> =
-        context.qsTileConfigDataStore
-
-    private val tileDisplayInfo: Flow<QSTileDisplayInfo> = tileConfigDataSource.getQSTileScenarioInfo()
+    private val tileDisplayInfo: Flow<QSTileDisplayInfo> = qsTileConfigDataSource.getQSTileScenarioInfo()
         .flatMapLatest { scenarioInfo ->
             scenarioInfo ?: return@flatMapLatest flowOf(context.getTileDisplayInfo(false, null, null, null))
 
@@ -114,7 +108,7 @@ class QSTileRepository @Inject constructor(
 
     fun setTileScenario(scenarioId: Long, isSmart: Boolean) {
         coroutineScopeIo.launch {
-            tileConfigDataSource.putQSTileScenarioInfo(QSTileScenarioInfo(scenarioId, isSmart))
+            qsTileConfigDataSource.putQSTileScenarioInfo(QSTileScenarioInfo(scenarioId, isSmart))
         }
     }
 

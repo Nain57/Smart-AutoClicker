@@ -17,21 +17,12 @@
 package com.buzbuz.smartautoclicker.core.common.quality.domain
 
 import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.common.quality.data.INVALID_TIME
-import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT
-import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT
-import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_FOREGROUND_TIME_MS
-import com.buzbuz.smartautoclicker.core.common.quality.data.KEY_LAST_SERVICE_START_TIME_MS
+import com.buzbuz.smartautoclicker.core.common.quality.data.QualityDataSource
 import com.buzbuz.smartautoclicker.core.common.quality.data.QualityMetrics
-import com.buzbuz.smartautoclicker.core.common.quality.data.inc
-import com.buzbuz.smartautoclicker.core.common.quality.data.put
-import com.buzbuz.smartautoclicker.core.common.quality.data.qualityMetrics
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -47,14 +38,14 @@ import javax.inject.Singleton
 
 @Singleton
 class QualityMetricsMonitor @Inject constructor(
-    private val qualityDataStore: DataStore<Preferences>,
+    private val qualityDataSource: QualityDataSource,
     @Dispatcher(HiltCoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
 ) {
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    internal val currentQualityMetrics: Flow<QualityMetrics> = qualityDataStore
+    internal val currentQualityMetrics: Flow<QualityMetrics> = qualityDataSource
         .qualityMetrics()
 
     internal val startingQualityMetrics: Flow<QualityMetrics> = currentQualityMetrics
@@ -63,29 +54,35 @@ class QualityMetricsMonitor @Inject constructor(
 
     fun onServiceConnected() {
         coroutineScopeIo.launch {
-            qualityDataStore.edit { preferences ->
-                val serviceStartTime = preferences[KEY_LAST_SERVICE_START_TIME_MS] ?: INVALID_TIME
-                val lastForegroundStartTime = preferences[KEY_LAST_SERVICE_FOREGROUND_TIME_MS] ?: INVALID_TIME
+            qualityDataSource.edit { currentMetrics ->
 
-                if (serviceStartTime != INVALID_TIME && lastForegroundStartTime == INVALID_TIME) {
-                    val lossCount = preferences[KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT] ?: 0
-                    preferences[KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT] = lossCount + 1
+                var newLossCount = currentMetrics.accessibilityLossCount
+                if (currentMetrics.lastServiceStartTimeMs != INVALID_TIME
+                    && currentMetrics.lastScenarioStartTimeMs == INVALID_TIME) {
+                    newLossCount += 1
                 }
 
-                preferences[KEY_LAST_SERVICE_START_TIME_MS] = System.currentTimeMillis()
+                currentMetrics.copy(
+                    lastServiceStartTimeMs = System.currentTimeMillis(),
+                    accessibilityLossCount = newLossCount,
+                )
             }
         }
     }
 
     fun onServiceForegroundStart() {
         coroutineScopeIo.launch {
-            qualityDataStore.put(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, System.currentTimeMillis())
+            qualityDataSource.edit { currentMetrics ->
+                currentMetrics.copy(lastScenarioStartTimeMs = System.currentTimeMillis())
+            }
         }
     }
 
     fun onServiceForegroundEnd() {
         coroutineScopeIo.launch {
-            qualityDataStore.put(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, INVALID_TIME)
+            qualityDataSource.edit { currentMetrics ->
+                currentMetrics.copy(lastScenarioStartTimeMs = INVALID_TIME)
+            }
         }
     }
 
@@ -98,7 +95,9 @@ class QualityMetricsMonitor @Inject constructor(
 
     internal fun onTroubleshootingDisplayed() {
         coroutineScopeIo.launch {
-            qualityDataStore.inc(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT)
+            qualityDataSource.edit { currentMetrics ->
+                currentMetrics.copy(troubleshootingDisplayCount = currentMetrics.troubleshootingDisplayCount + 1)
+            }
         }
     }
 }
