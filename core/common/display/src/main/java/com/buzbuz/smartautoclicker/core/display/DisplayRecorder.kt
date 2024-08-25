@@ -99,16 +99,20 @@ class DisplayRecorder @Inject internal constructor() {
     suspend fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) = mutex.withLock {
         if (projection != null) {
             Log.w(TAG, "Attempting to start media projection while already started.")
-            return
+            return@withLock
         }
 
         Log.d(TAG, "Start media projection")
 
         stopListener = stoppedListener
-        val projectionManager = context.getSystemService(Context.MEDIA_PROJECTION_SERVICE)
-                as MediaProjectionManager
-        projection = projectionManager.getMediaProjection(resultCode, data).apply {
-            registerCallback(projectionCallback, Handler(Looper.getMainLooper()))
+
+        try {
+            projection = context.getMediaProjection(resultCode, data).apply {
+                registerCallback(projectionCallback, Handler(Looper.getMainLooper()))
+            }
+        } catch (sEx: SecurityException) {
+            Log.e(TAG, "Failed to start media projection")
+            stopListener?.invoke()
         }
     }
 

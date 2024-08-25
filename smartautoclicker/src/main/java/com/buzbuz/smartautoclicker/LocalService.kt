@@ -131,8 +131,6 @@ class LocalService(
         displayConfigManager.startMonitoring(context)
         tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
         startJob = serviceScope.launch {
-            delay(500)
-
             detectionRepository.setScenarioId(scenario.id)
 
             overlayManager.navigateTo(
@@ -140,9 +138,6 @@ class LocalService(
                 newOverlay = MainMenu { stop() },
             )
 
-            // If we start too quickly, there is a chance of crash because the service isn't in foreground state yet
-            // That's not really an issue as the user just clicked the permission button and the activity is closing
-            delay(1000)
             detectionRepository.startScreenRecord(
                 context = context,
                 resultCode = resultCode,
