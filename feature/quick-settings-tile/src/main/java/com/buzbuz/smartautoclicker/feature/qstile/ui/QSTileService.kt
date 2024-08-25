@@ -40,6 +40,7 @@ import javax.inject.Inject
 class QSTileService : TileService() {
 
     internal companion object {
+
         /**
          * Depending on the device, the tile service might not be started and thus, can't collect the tile info flow.
          * To fix this, call this static method to request an update of the tile to the system, which will start
@@ -47,7 +48,12 @@ class QSTileService : TileService() {
          */
         fun requestTileUpdate(context: Context) {
             Log.d(TAG, "requestTileUpdate")
-            requestListeningState(context, ComponentName(context, QSTileService::class.java))
+
+            try {
+                requestListeningState(context, ComponentName(context, QSTileService::class.java))
+            } catch (iaEx: IllegalArgumentException) {
+                Log.e(TAG, "Can't request tile update, system is denying it")
+            }
         }
     }
 
