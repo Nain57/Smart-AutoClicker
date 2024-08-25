@@ -96,9 +96,6 @@ class DumbScenarioBriefViewModel @Inject constructor(
         .filter { !it.second }
         .map { (action, _) -> action?.toBriefDescription() }
 
-    val canCopyAction: Flow<Boolean> = dumbEditionRepository.actionsToCopy
-        .map { it.isNotEmpty() }
-
 
     fun startGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value

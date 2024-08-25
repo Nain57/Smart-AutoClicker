@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy
 import android.content.Context
 
 import androidx.annotation.DrawableRes
-import androidx.recyclerview.widget.DiffUtil
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
@@ -41,20 +40,6 @@ data class DumbActionDetails (
     val haveError: Boolean,
     val action: DumbAction,
 )
-
-/** DiffUtil Callback comparing two ActionItem when updating the [DumbActionListAdapter] list. */
-object DumbActionDiffUtilCallback: DiffUtil.ItemCallback<DumbActionDetails>() {
-
-    override fun areItemsTheSame(
-        oldItem: DumbActionDetails,
-        newItem: DumbActionDetails,
-    ): Boolean = oldItem.action.id == newItem.action.id
-
-    override fun areContentsTheSame(
-        oldItem: DumbActionDetails,
-        newItem: DumbActionDetails,
-    ): Boolean = oldItem == newItem
-}
 
 /** @return the [DumbActionDetails] corresponding to this action. */
 fun DumbAction.toDumbActionDetails(

@@ -47,7 +47,13 @@ class DumbActionBriefViewHolder(
             icon.setImageResource(details.icon)
             name.text = details.name
             duration.text = details.detailsText
-            repeat.text = details.repeatCountText
+
+            if (details.repeatCountText != null) {
+                repeat.text = details.repeatCountText
+                repeat.visibility = View.VISIBLE
+            } else {
+                repeat.visibility = View.GONE
+            }
         }
     }
 }
