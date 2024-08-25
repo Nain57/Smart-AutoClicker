@@ -59,15 +59,19 @@ internal class PauseBriefRenderer(
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is PauseDescription) return
 
-        animationDurationMs = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+        if (rotationAnimator.isStarted) rotationAnimator.cancel()
+
+        val animDurationMs = max(description.pauseDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+        animationDurationMs = animDurationMs
+        animatedRotationAngleDegree = 0f
+
+        if (animate) {
+            rotationAnimator.duration = max(animDurationMs, MINIMAL_ANIMATION_DURATION_MS)
+            rotationAnimator.start()
+        }
     }
 
     override fun onInvalidate() {
-        val animDurationMs = animationDurationMs ?: return
-
-        if (rotationAnimator.isStarted) rotationAnimator.cancel()
-        animatedRotationAngleDegree = 0f
-
         val viewSize = getViewSize()
         viewCenter = PointF(
             viewSize.x / 2f,
@@ -86,9 +90,6 @@ internal class PauseBriefRenderer(
             radius = viewStyle.outerRadiusPx * 1.75f,
             color = viewStyle.backgroundColor,
         )
-
-        rotationAnimator.duration = max(animDurationMs, MINIMAL_ANIMATION_DURATION_MS)
-        rotationAnimator.start()
     }
 
     override fun onDraw(canvas: Canvas) {
