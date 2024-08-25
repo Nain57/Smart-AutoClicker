@@ -7,7 +7,7 @@ androidMinSdk = "24"
 # Build script
 googleFirebaseCrashlyticsGradle = "3.0.2"
 googleServices = "4.4.2"
-androidGradlePlugin = "8.5.1"
+androidGradlePlugin = "8.5.2"
 kotlin = "1.9.23"
 kotlinxCoroutines = "1.8.0"
 ksp = "1.9.23-1.0.19"
