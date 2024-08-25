@@ -37,8 +37,9 @@ internal fun Action.Intent.getDescription(context: Context, inError: Boolean): S
         return context.getString(R.string.item_error_action_invalid_generic)
     }
 
-    if (!isBroadcast) {
-        val appName = context.packageManager.getApplicationLabel(Intent(intentAction).setComponent(componentName!!))
+    val compName = componentName
+    if (!isBroadcast && compName != null) {
+        val appName = context.packageManager.getApplicationLabel(Intent(intentAction).setComponent(compName))
         if (appName != null) {
             return context.getString(R.string.item_intent_details_start_activity, appName)
         }
