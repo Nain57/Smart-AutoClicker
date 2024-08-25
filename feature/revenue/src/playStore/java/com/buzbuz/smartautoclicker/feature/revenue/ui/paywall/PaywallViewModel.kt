@@ -46,13 +46,18 @@ internal class AdsLoadingViewModel @Inject constructor(
         revenueRepository.purchaseState,
         revenueRepository.adsState,
         revenueRepository.proModeInfo,
-    ) { purchaseState, adsState, info ->
+        revenueRepository.trialAvailable,
+    ) { purchaseState, adsState, info, isTrialAvailable ->
         when {
             purchaseState == PurchaseState.PURCHASED -> DialogState.Purchased
             adsState == AdState.SHOWING -> DialogState.AdShowing
             adsState == AdState.VALIDATED -> DialogState.AdWatched
             else -> DialogState.NotPurchased(
-                trialDurationMinutes = TRIAL_SESSION_DURATION_DURATION.inWholeMinutes.toInt(),
+                trialButtonState = getTrialButtonState(
+                    appContext,
+                    isTrialAvailable,
+                    TRIAL_SESSION_DURATION_DURATION.inWholeMinutes.toInt(),
+                ) ,
                 adButtonState = adsState.toAdButtonState(appContext),
                 purchaseButtonState = getPurchaseButtonState(appContext, purchaseState, info),
             )
@@ -75,7 +80,7 @@ internal class AdsLoadingViewModel @Inject constructor(
 internal sealed class DialogState {
 
     internal data class NotPurchased(
-        val trialDurationMinutes: Int,
+        val trialButtonState: LoadableButtonState,
         val adButtonState: LoadableButtonState,
         val purchaseButtonState: LoadableButtonState,
     ): DialogState()
@@ -119,4 +124,11 @@ private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseStat
 
         else ->
             LoadableButtonState.Loaded.Enabled(context.getString(R.string.button_text_buy_pro, info?.price))
+    }
+
+private fun getTrialButtonState(context: Context, trialAvailable: Boolean, trialDurationMinutes: Int) =
+    if (trialAvailable) {
+        LoadableButtonState.Loaded.Enabled(context.getString(R.string.button_text_trial, trialDurationMinutes))
+    } else {
+        LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_trial, trialDurationMinutes))
     }

@@ -32,6 +32,7 @@ internal interface InternalRevenueRepository : IRevenueRepository {
     val proModeInfo: Flow<ProModeInfo?>
     val adsState: StateFlow<AdState>
     val purchaseState: StateFlow<PurchaseState>
+    val trialAvailable: Flow<Boolean>
 
     fun showAd(activity: Activity)
     fun requestTrial()

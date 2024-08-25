@@ -113,8 +113,8 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.visibility = View.INVISIBLE
 
-            buttonTrial.visibility = View.VISIBLE
-            buttonTrial.text = requireContext().getString(R.string.button_text_trial, state.trialDurationMinutes)
+            buttonTrial.root.visibility = View.VISIBLE
+            buttonTrial.setState(state.trialButtonState)
 
             buttonWatchAd.root.visibility = View.VISIBLE
             buttonWatchAd.setState(state.adButtonState)
@@ -132,7 +132,7 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.visibility = View.INVISIBLE
 
-            buttonTrial.visibility = View.INVISIBLE
+            buttonTrial.root.visibility = View.INVISIBLE
             buttonWatchAd.root.visibility = View.INVISIBLE
 
             buttonBuy.root.visibility = View.VISIBLE
@@ -150,7 +150,7 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.show()
 
-            buttonTrial.visibility = View.INVISIBLE
+            buttonTrial.root.visibility = View.INVISIBLE
             buttonWatchAd.root.visibility = View.INVISIBLE
             buttonBuy.root.visibility = View.INVISIBLE
         }
@@ -165,7 +165,7 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.animateShow()
             progressAdWatched.show()
 
-            buttonTrial.visibility = View.INVISIBLE
+            buttonTrial.root.visibility = View.INVISIBLE
             buttonWatchAd.root.visibility = View.INVISIBLE
             buttonBuy.root.visibility = View.INVISIBLE
         }

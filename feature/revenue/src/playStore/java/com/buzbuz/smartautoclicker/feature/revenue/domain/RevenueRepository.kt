@@ -87,6 +87,9 @@ internal class RevenueRepository @Inject constructor(
     private val trialRequest: MutableStateFlow<Boolean> =
         MutableStateFlow(false)
 
+    private val trialRequestCount: MutableStateFlow<Int> =
+        MutableStateFlow(0)
+
     override val proModeInfo: Flow<ProModeInfo?> =
         billingDataSource.product.map(::toProModeInfo)
 
@@ -117,6 +120,9 @@ internal class RevenueRepository @Inject constructor(
             billingDataSource.product,
             ::toPurchaseState,
         ).stateIn(coroutineScopeIo, SharingStarted.Eagerly, PurchaseState.CANNOT_PURCHASE)
+
+    override val trialAvailable: Flow<Boolean> =
+        trialRequestCount.map { requestCount -> requestCount < MAX_TRIAL_COUNT }
 
     override val userBillingState: StateFlow<UserBillingState> = combine(
         adsState,
@@ -196,6 +202,7 @@ internal class RevenueRepository @Inject constructor(
         Log.d(TAG, "User consuming trial period")
 
         trialRequest.value = false
+        trialRequestCount.value += 1
         return TRIAL_SESSION_DURATION_DURATION
     }
 
@@ -280,4 +287,5 @@ internal class RevenueRepository @Inject constructor(
 internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
 @VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 1.hours
 
+private const val MAX_TRIAL_COUNT = 3
 private const val TAG = "RevenueRepository"

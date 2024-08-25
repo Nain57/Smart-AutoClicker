@@ -30,11 +30,11 @@ sealed class Quality(internal val backToHighDelay: Duration? = null) {
     data object High : Quality()
 
     /** The issue has occurred due to external perturbations, such as aggressive background service management */
-    data object ExternalIssue : Quality(30.minutes)
+    data object ExternalIssue : Quality(5.minutes)
 
     /** The issue has occurred due to a crash of Smart AutoClicker. */
-    data object Crashed : Quality(6.hours)
+    data object Crashed : Quality(1.hours)
 
     /** The user is using the app for the first time. */
-    data object FirstTime : Quality(2.hours)
+    data object FirstTime : Quality(30.minutes)
 }

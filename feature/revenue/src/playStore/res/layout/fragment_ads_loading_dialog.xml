@@ -68,7 +68,7 @@
             android:visibility="gone"
             tools:visibility="invisible"/>
 
-        <com.google.android.material.button.MaterialButton
+        <include layout="@layout/include_loadable_button_outlined"
             android:id="@+id/button_trial"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="match_parent"
