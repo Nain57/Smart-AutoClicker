@@ -13,7 +13,7 @@ kotlinxCoroutines = "1.8.0"
 ksp = "1.9.23-1.0.19"
 
 # Androidx
-androidxAnnotation = "1.8.1"
+androidxAnnotation = "1.8.2"
 androidxAppCompat = "1.7.0"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.1.4"
@@ -37,10 +37,10 @@ googleDaggerHilt = "2.51"
 
 # PlayStore only
 androidBillingClient = "7.0.0"
-googleFirebaseBom = "33.1.2"
+googleFirebaseBom = "33.2.0"
 googleFirebaseCrashlytics = "19.0.3"
 googleUserMessaging = "3.0.0"
-googleGmsAds = "23.2.0"
+googleGmsAds = "23.3.0"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
