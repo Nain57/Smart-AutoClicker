@@ -234,6 +234,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             Log.w(TAG, "Can't start activity, it is not found.")
         } catch (arex: AndroidRuntimeException) {
             Log.w(TAG, "Can't start activity, Intent is invalid: $intent", arex)
+        } catch (iaex: IllegalArgumentException) {
+            Log.w(TAG, "Can't start activity, Intent contains invalid arguments: $intent")
+        } catch (secEx: SecurityException) {
+            Log.w(TAG, "Can't start activity with intent $intent, permission is denied by the system")
         }
     }
 
