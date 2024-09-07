@@ -26,9 +26,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putSwipeDurationConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.FlowPreview
 
+import dagger.hilt.android.qualifiers.ApplicationContext
+
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
@@ -73,11 +74,10 @@ class SwipeViewModel @Inject constructor(
     /** The start and end positions of the swipe. */
     val positions: Flow<Pair<Point, Point>?> = configuredSwipe
         .map { swipe ->
-            if (swipe.fromX != null && swipe.fromY != null && swipe.toX != null && swipe.toY != null) {
-                Point(swipe.fromX!!, swipe.fromY!!) to Point(swipe.toX!!, swipe.toY!!)
-            } else {
-                null
-            }
+            val from = swipe.from
+            val to = swipe.to
+            if (from != null && to != null) from to to
+            else null
         }
 
     /** Tells if the configured swipe is valid and can be saved. */
@@ -104,7 +104,7 @@ class SwipeViewModel @Inject constructor(
      */
     fun setPositions(from: Point, to: Point) {
         editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
-            editionRepository.updateEditedAction(swipe.copy(fromX = from.x, fromY = from.y, toX = to.x, toY = to.y))
+            editionRepository.updateEditedAction(swipe.copy(from = from, to = to))
         }
     }
 

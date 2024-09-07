@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
+import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -65,8 +66,9 @@ sealed class Action : Identifiable, Completable {
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param pressDuration the duration between the click down and up in milliseconds.
-     * @param x the x position of the click.
-     * @param y the y position of the click.
+     * @param positionType the type of click position.
+     * @param position the position of the click. Not null only if [positionType] is [PositionType.USER_SELECTED].
+     * @param clickOnConditionId the condition to click on. Not null only if [positionType] is [PositionType.ON_DETECTED_CONDITION].
      */
     data class Click(
         override val id: Identifier,
@@ -75,8 +77,7 @@ sealed class Action : Identifiable, Completable {
         override val priority: Int,
         val pressDuration: Long? = null,
         val positionType: PositionType,
-        val x: Int? = null,
-        val y: Int? = null,
+        val position: Point? = null,
         val clickOnConditionId: Identifier? = null,
     ) : Action() {
 
@@ -101,14 +102,14 @@ sealed class Action : Identifiable, Completable {
             super.isComplete() && pressDuration != null && isPositionValid()
 
         override fun hashCodeNoIds(): Int =
-            name.hashCode() + pressDuration.hashCode() + positionType.hashCode() + x.hashCode() + y.hashCode() +
+            name.hashCode() + pressDuration.hashCode() + positionType.hashCode() + position.hashCode() +
                     clickOnConditionId.hashCode()
 
 
         override fun deepCopy(): Click = copy(name = "" + name)
 
         private fun isPositionValid(): Boolean =
-            (positionType == PositionType.USER_SELECTED && x != null && y != null) || positionType == PositionType.ON_DETECTED_CONDITION
+            (positionType == PositionType.USER_SELECTED && position != null) || positionType == PositionType.ON_DETECTED_CONDITION
 
         fun isClickOnConditionValid(): Boolean =
             (positionType == PositionType.ON_DETECTED_CONDITION && clickOnConditionId != null) || positionType == PositionType.USER_SELECTED
@@ -121,10 +122,8 @@ sealed class Action : Identifiable, Completable {
      * @param eventId the identifier of the event for this action.
      * @param name the name of the action.
      * @param swipeDuration the duration between the swipe start and end in milliseconds.
-     * @param fromX the x position of the swipe start.
-     * @param fromY the y position of the swipe start.
-     * @param toX the x position of the swipe end.
-     * @param toY the y position of the swipe end.
+     * @param from the x position of the swipe start.
+     * @param to the x position of the swipe end.
      */
     data class Swipe(
         override val id: Identifier,
@@ -132,18 +131,15 @@ sealed class Action : Identifiable, Completable {
         override val name: String? = null,
         override val priority: Int,
         val swipeDuration: Long? = null,
-        val fromX: Int? = null,
-        val fromY: Int? = null,
-        val toX: Int? = null,
-        val toY: Int? = null,
+        val from: Point? = null,
+        val to: Point? = null,
     ) : Action() {
 
         override fun isComplete(): Boolean =
-            super.isComplete() && swipeDuration != null && fromX != null && fromY != null && toX != null && toY != null
+            super.isComplete() && swipeDuration != null && from != null&& to != null
 
         override fun hashCodeNoIds(): Int =
-            name.hashCode() + swipeDuration.hashCode() + fromX.hashCode() + fromY.hashCode() + toX.hashCode() +
-                    toY.hashCode()
+            name.hashCode() + swipeDuration.hashCode() + from.hashCode() + to.hashCode()
 
         override fun deepCopy(): Swipe = copy(name = "" + name)
     }

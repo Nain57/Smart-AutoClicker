@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data
 
 import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
+import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
 
@@ -95,7 +96,7 @@ class ScenarioProcessorTests {
                 priority = 0,
                 pressDuration = duration,
                 positionType = Action.Click.PositionType.USER_SELECTED,
-                x = 10, y = 10,
+                position = Point(10, 10),
             )
     }
 

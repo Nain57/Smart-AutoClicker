@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
-import android.graphics.PointF
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -25,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -226,7 +226,7 @@ class ClickDialog(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     itemBriefDescription = ClickDescription(
-                        position = click.getEditionPosition(),
+                        position = click.position?.toPointF(),
                         pressDurationMs = click.pressDuration ?: 1L,
                     ),
                     onConfirm = { description ->
@@ -257,10 +257,6 @@ class ClickDialog(
             finish()
         }
     }
-
-    private fun Action.Click.getEditionPosition(): PointF? =
-        if (x == null || y == null) null
-        else PointF(x!!.toFloat(), y!!.toFloat())
 }
 
 private const val TAG = "ClickDialog"

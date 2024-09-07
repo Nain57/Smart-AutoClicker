@@ -18,9 +18,10 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.PointF
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -259,18 +260,15 @@ class SmartActionsBriefViewModel @Inject constructor(
         when (this) {
             is ClickDescription -> editionRepository.editedItemsBuilder.createNewClick(context)
                 .copy(
-                    x = position?.x?.toInt() ?: 0,
-                    y =  position?.y?.toInt() ?: 0,
+                    position = position?.toPoint(),
                     pressDuration = pressDurationMs,
                     positionType = Action.Click.PositionType.USER_SELECTED,
                 )
 
             is SwipeDescription -> editionRepository.editedItemsBuilder.createNewSwipe(context)
                 .copy(
-                    fromX = from?.x?.toInt() ?: 0,
-                    fromY =  from?.y?.toInt() ?: 0,
-                    toX = to?.x?.toInt() ?: 0,
-                    toY =  to?.y?.toInt() ?: 0,
+                    from = from?.toPoint(),
+                    to = to?.toPoint(),
                     swipeDuration = swipeDurationMs,
                 )
 
@@ -279,14 +277,14 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     private suspend fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
         is Action.Click -> ClickDescription(
-            position = PointF((x ?: 0).toFloat(), (y ?: 0).toFloat()),
+            position = position?.toPointF(),
             pressDurationMs = pressDuration ?: 1,
             imageConditionBitmap = findClickOnConditionBitmap(),
         )
 
         is Action.Swipe -> SwipeDescription(
-            from = PointF((fromX ?: 0).toFloat(), (fromY ?: 0).toFloat()),
-            to = PointF((toX ?: 0).toFloat(), (toY ?: 0).toFloat()),
+            from = from?.toPointF(),
+            to = to?.toPointF(),
             swipeDurationMs = swipeDuration ?: 1,
         )
 

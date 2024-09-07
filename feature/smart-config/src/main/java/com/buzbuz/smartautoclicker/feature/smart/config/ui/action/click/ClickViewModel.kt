@@ -162,7 +162,7 @@ class ClickViewModel @Inject constructor(
      */
     fun setPosition(position: Point) {
         editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
-            editionRepository.updateEditedAction(click.copy(x = position.x, y = position.y))
+            editionRepository.updateEditedAction(click.copy(position = position))
         }
     }
 
@@ -223,8 +223,8 @@ class ClickViewModel @Inject constructor(
             isSelectorEnabled = true,
             selectorTitle = getString(R.string.field_click_position_title),
             selectorDescription =
-                if (click.x == null || click.y == null) getString(R.string.generic_select_the_position)
-                else getString(R.string.field_click_position_desc, click.x!!, click.y!!),
+                if (click.position == null) getString(R.string.generic_select_the_position)
+                else getString(R.string.field_click_position_desc, click.position?.x ?: 0, click.position?.y ?: 0),
         )
 
     private fun Context.getOnConditionWithOrPositionState(): ClickPositionUiState =

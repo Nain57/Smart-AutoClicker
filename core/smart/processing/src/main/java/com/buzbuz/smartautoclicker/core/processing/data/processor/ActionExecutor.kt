@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
+import android.graphics.Point
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
@@ -74,8 +75,10 @@ internal class ActionExecutor(
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResult?) {
         val clickPath = when (click.positionType) {
-            Click.PositionType.USER_SELECTED -> Path().apply {
-                moveTo(click.x!!, click.y!!)
+            Click.PositionType.USER_SELECTED -> {
+                click.position?.let { position ->
+                    Path().apply { moveTo(position) }
+                }
             }
 
             Click.PositionType.ON_DETECTED_CONDITION ->
@@ -105,9 +108,7 @@ internal class ActionExecutor(
             return null
         }
 
-        return Path().apply {
-            moveTo(result.position.x, result.position.y)
-        }
+        return Path().apply { moveTo(result.position) }
     }
 
     /**
@@ -116,10 +117,9 @@ internal class ActionExecutor(
      */
     private suspend fun executeSwipe(swipe: Swipe) {
         val swipeGesture = GestureDescription.Builder().buildSingleStroke(
-            path = Path().apply {
-                moveTo(swipe.fromX!!, swipe.fromY!!)
-                lineTo(swipe.toX!!, swipe.toY!!)
-            },
+            path =
+                if (swipe.from == null || swipe.to == null) return
+                else Path().apply { line(swipe.from, swipe.to) },
             durationMs = random.nextLongInOffsetIfNeeded(swipe.swipeDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS),
         )
 
@@ -208,19 +208,26 @@ internal class ActionExecutor(
     }
 
 
-    private fun Path.moveTo(x: Int, y: Int) {
-        if (random == null) safeMoveTo(x, y)
+    private fun Path.moveTo(position: Point) {
+        if (random == null) safeMoveTo(position.x, position.y)
         else safeMoveTo(
-            random.nextIntInOffset(x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-            random.nextIntInOffset(y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
         )
     }
 
-    private fun Path.lineTo(x: Int, y: Int) {
-        if (random == null) safeLineTo(x, y)
+    private fun Path.line(from: Point?, to: Point?) {
+        if (from == null || to == null) return
+
+        moveTo(from)
+        lineTo(to)
+    }
+
+    private fun Path.lineTo(position: Point) {
+        if (random == null) safeLineTo(position.x, position.y)
         else safeLineTo(
-            random.nextIntInOffset(x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-            random.nextIntInOffset(y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
+            random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
         )
     }
 

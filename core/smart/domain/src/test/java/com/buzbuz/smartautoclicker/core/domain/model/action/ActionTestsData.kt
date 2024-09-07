@@ -18,13 +18,13 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
 import android.content.Intent
+import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
-import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
@@ -36,11 +36,11 @@ internal object ActionTestsData {
 
     /* ------- Click Action Data ------- */
 
-    const val CLICK_ID = 7L
-    const val CLICK_NAME = "Click name"
-    const val CLICK_PRESS_DURATION = 250L
-    const val CLICK_X_POSITION = 24
-    const val CLICK_Y_POSITION = 87
+    private const val CLICK_ID = 7L
+    private const val CLICK_NAME = "Click name"
+    private const val CLICK_PRESS_DURATION = 250L
+    private const val CLICK_X_POSITION = 24
+    private const val CLICK_Y_POSITION = 87
 
     fun getNewClickEntity(
         id: Long = CLICK_ID,
@@ -74,20 +74,21 @@ internal object ActionTestsData {
             if (x != null && y != null) Action.Click.PositionType.USER_SELECTED
             else Action.Click.PositionType.ON_DETECTED_CONDITION,
         eventId: Long,
-    ) = Action.Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, positionType, x, y,
-        clickOnConditionId?.let { Identifier(databaseId = clickOnConditionId) }
+    ) = Action.Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, positionType,
+        if (x != null && y != null) Point(x, y) else null,
+        clickOnConditionId?.let { Identifier(databaseId = clickOnConditionId) },
     )
 
 
     /* ------- Swipe Action Data ------- */
 
-    const val SWIPE_ID = 8L
-    const val SWIPE_NAME = "Swipe name"
-    const val SWIPE_DURATION = 1000L
-    const val SWIPE_FROM_X_POSITION = 42
-    const val SWIPE_FROM_Y_POSITION = 78
-    const val SWIPE_TO_X_POSITION = 789
-    const val SWIPE_TO_Y_POSITION = 1445
+    private const val SWIPE_ID = 8L
+    private const val SWIPE_NAME = "Swipe name"
+    private const val SWIPE_DURATION = 1000L
+    private const val SWIPE_FROM_X_POSITION = 42
+    private const val SWIPE_FROM_Y_POSITION = 78
+    private const val SWIPE_TO_X_POSITION = 789
+    private const val SWIPE_TO_Y_POSITION = 1445
 
     fun getNewSwipeEntity(
         id: Long = SWIPE_ID,
@@ -116,14 +117,17 @@ internal object ActionTestsData {
         toX: Int? = SWIPE_TO_X_POSITION,
         toY: Int? = SWIPE_TO_Y_POSITION,
         eventId: Long,
-    ) : Action.Swipe = Action.Swipe(id.asIdentifier(), eventId.asIdentifier(), name, priority, swipeDuration, fromX, fromY, toX, toY)
+    ) : Action.Swipe = Action.Swipe(id.asIdentifier(), eventId.asIdentifier(), name, priority, swipeDuration,
+        if (fromX != null && fromY != null) Point(fromX, fromY) else null,
+        if (toX != null && toY != null) Point(toX, toY) else null,
+    )
 
 
     /* ------- Pause Action Data ------- */
 
-    const val PAUSE_ID = 9L
-    const val PAUSE_NAME = "Pause name"
-    const val PAUSE_DURATION = 500L
+    private const val PAUSE_ID = 9L
+    private const val PAUSE_NAME = "Pause name"
+    private const val PAUSE_DURATION = 500L
 
     fun getNewPauseEntity(
         id: Long = PAUSE_ID,
@@ -148,14 +152,14 @@ internal object ActionTestsData {
 
     /* ------- Intent Action Data ------- */
 
-    const val INTENT_ID = 149L
-    const val INTENT_NAME = "Intent name"
-    const val INTENT_IS_ADVANCED = true
-    const val INTENT_IS_BROADCAST = true
-    const val INTENT_ACTION = "com.toto.tata.ACTION_TOTO"
-    const val INTENT_COMPONENT_NAME_STRING = "com.toto.tata/com.toto.tata.Activity"
-    val INTENT_COMPONENT_NAME = ComponentName.unflattenFromString("com.toto.tata/com.toto.tata.Activity")
-    const val INTENT_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    private const val INTENT_ID = 149L
+    private const val INTENT_NAME = "Intent name"
+    private const val INTENT_IS_ADVANCED = true
+    private const val INTENT_IS_BROADCAST = true
+    private const val INTENT_ACTION = "com.toto.tata.ACTION_TOTO"
+    private const val INTENT_COMPONENT_NAME_STRING = "com.toto.tata/com.toto.tata.Activity"
+    private val INTENT_COMPONENT_NAME = ComponentName.unflattenFromString("com.toto.tata/com.toto.tata.Activity")
+    private const val INTENT_FLAGS = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
     fun getNewIntentEntity(
         id: Long = INTENT_ID,
@@ -191,10 +195,10 @@ internal object ActionTestsData {
 
     /* ------- Intent Extra Data ------- */
 
-    const val INTENT_EXTRA_ID = 547L
-    const val INTENT_EXTRA_ACTION_ID = INTENT_ID
-    val INTENT_EXTRA_TYPE = IntentExtraType.INTEGER
-    const val INTENT_EXTRA_KEY = "toto"
+    private const val INTENT_EXTRA_ID = 547L
+    private const val INTENT_EXTRA_ACTION_ID = INTENT_ID
+    private val INTENT_EXTRA_TYPE = IntentExtraType.INTEGER
+    private const val INTENT_EXTRA_KEY = "toto"
 
     fun getNewIntentExtraEntity(
         id: Long = INTENT_EXTRA_ID,
@@ -214,10 +218,10 @@ internal object ActionTestsData {
 
     /* ------- Toggle Event Action Data ------- */
 
-    const val TOGGLE_EVENT_ID = 159L
-    const val TOGGLE_EVENT_NAME = "Toggle name"
-    const val TOGGLE_EVENT_TOGGLE_ALL = true
-    val TOGGLE_EVENT_TOGGLE_ALL_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
+    private const val TOGGLE_EVENT_ID = 159L
+    private const val TOGGLE_EVENT_NAME = "Toggle name"
+    private const val TOGGLE_EVENT_TOGGLE_ALL = true
+    private val TOGGLE_EVENT_TOGGLE_ALL_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
 
     fun getNewToggleEventEntity(
         id: Long = TOGGLE_EVENT_ID,
@@ -246,10 +250,10 @@ internal object ActionTestsData {
 
     /* ------- Event toggle Data ------- */
 
-    const val EVENT_TOGGLE_ID = 875L
-    const val EVENT_TOGGLE_ACTION_ID = TOGGLE_EVENT_ID
-    const val EVENT_TOGGLE_TARGET_ID = 562L
-    val EVENT_TOGGLE_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
+    private const val EVENT_TOGGLE_ID = 875L
+    private const val EVENT_TOGGLE_ACTION_ID = TOGGLE_EVENT_ID
+    private const val EVENT_TOGGLE_TARGET_ID = 562L
+    private val EVENT_TOGGLE_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
 
     fun getNewEventToggleEntity(
         id: Long = EVENT_TOGGLE_ID,

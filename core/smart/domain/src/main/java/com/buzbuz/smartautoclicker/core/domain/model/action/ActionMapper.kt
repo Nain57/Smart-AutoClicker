@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
+import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
@@ -48,8 +49,8 @@ private fun Action.Click.toClickEntity(): ActionEntity =
         type = ActionType.CLICK,
         pressDuration = pressDuration,
         clickPositionType = positionType.toEntity(),
-        x = x,
-        y = y,
+        x = position?.x,
+        y = position?.y,
         clickOnConditionId = clickOnConditionId?.databaseId,
     )
 
@@ -61,10 +62,10 @@ private fun Action.Swipe.toSwipeEntity(): ActionEntity =
         name = name!!,
         type = ActionType.SWIPE,
         swipeDuration = swipeDuration,
-        fromX = fromX,
-        fromY = fromY,
-        toX = toX,
-        toY = toY,
+        fromX = from?.x,
+        fromY = from?.y,
+        toX = to?.x,
+        toY = to?.y,
     )
 
 private fun Action.Pause.toPauseEntity(): ActionEntity =
@@ -132,8 +133,7 @@ private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Acti
     priority = action.priority,
     pressDuration = action.pressDuration!!,
     positionType = action.clickPositionType!!.toDomain(),
-    x = action.x,
-    y = action.y,
+    position = getPositionIfValid(action.x, action.y),
     clickOnConditionId = action.clickOnConditionId?.let { Identifier(id = it, asTemporary = cleanIds) },
 )
 
@@ -143,10 +143,8 @@ private fun CompleteActionEntity.toDomainSwipe(cleanIds: Boolean = false) = Acti
     name = action.name,
     priority = action.priority,
     swipeDuration = action.swipeDuration!!,
-    fromX = action.fromX!!,
-    fromY = action.fromY!!,
-    toX = action.toX!!,
-    toY = action.toY!!,
+    from = getPositionIfValid(action.fromX, action.fromY),
+    to = getPositionIfValid(action.toX, action.toY),
 )
 
 private fun CompleteActionEntity.toDomainPause(cleanIds: Boolean = false) = Action.Pause(
@@ -202,3 +200,6 @@ private fun ChangeCounterOperationType.toDomain(): Action.ChangeCounter.Operatio
 private fun String?.toComponentName(): ComponentName? = this?.let {
     ComponentName.unflattenFromString(it)
 }
+
+private fun getPositionIfValid(x: Int?, y: Int?): Point? =
+    if (x != null && y != null) Point(x, y) else null

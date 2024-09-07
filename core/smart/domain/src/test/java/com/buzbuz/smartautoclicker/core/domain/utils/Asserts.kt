@@ -77,8 +77,8 @@ private fun assertSameClickNoIdCheck(expected: Action.Click, actual: Action.Clic
     expected.name == actual.name
             && expected.pressDuration == actual.pressDuration
             && expected.positionType == actual.positionType
-            && expected.x == actual.x
-            && expected.y == actual.y
+            && expected.position?.x == actual.position?.x
+            && expected.position?.y == actual.position?.y
             && expected.clickOnConditionId == actual.clickOnConditionId
 )
 
@@ -86,10 +86,10 @@ private fun assertSameSwipeNoIdCheck(expected: Action.Swipe, actual: Action.Swip
     "Swipes are not the same",
     expected.name == actual.name
             && expected.swipeDuration == actual.swipeDuration
-            && expected.fromX == actual.fromX
-            && expected.fromY == actual.fromY
-            && expected.toX == actual.toX
-            && expected.toY == actual.toY
+            && expected.from?.x == actual.from?.x
+            && expected.from?.y == actual.from?.y
+            && expected.to?.x == actual.to?.x
+            && expected.to?.y == actual.to?.y
 )
 
 private fun assertSamePauseNoIdCheck(expected: Action.Pause, actual: Action.Pause) = assertTrue(

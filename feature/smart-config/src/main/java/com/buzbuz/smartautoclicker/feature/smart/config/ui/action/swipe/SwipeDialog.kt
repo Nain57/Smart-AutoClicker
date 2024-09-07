@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe
 
 import android.graphics.Point
-import android.graphics.PointF
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -25,13 +24,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
+import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
@@ -174,8 +173,8 @@ class SwipeDialog(
                 context = context,
                 newOverlay = PositionSelectorMenu(
                     itemBriefDescription = SwipeDescription(
-                        from = swipe.getEditionFromPosition(),
-                        to = swipe.getEditionToPosition(),
+                        from = swipe.from?.toPointF(),
+                        to = swipe.to?.toPointF(),
                         swipeDurationMs = swipe.swipeDuration ?: 250L,
                     ),
                     onConfirm = { description ->
@@ -195,14 +194,6 @@ class SwipeDialog(
             finish()
         }
     }
-
-    private fun Action.Swipe.getEditionFromPosition(): PointF? =
-        if (fromX == null || fromY == null) null
-        else PointF(fromX!!.toFloat(), fromY!!.toFloat())
-
-    private fun Action.Swipe.getEditionToPosition(): PointF? =
-        if (toX == null || toY == null) null
-        else PointF(toX!!.toFloat(), toY!!.toFloat())
 }
 
 private const val TAG = "SwipeDialog"

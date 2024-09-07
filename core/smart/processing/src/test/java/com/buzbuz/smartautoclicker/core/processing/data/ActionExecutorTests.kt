@@ -75,11 +75,11 @@ class ActionExecutorTests {
             ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Action.Click.PositionType.USER_SELECTED, TEST_X1, TEST_Y1, null)
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Action.Click.PositionType.USER_SELECTED, Point(TEST_X1, TEST_Y1), null)
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, null, conditionId?.let { Identifier(databaseId = conditionId) })
+            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, conditionId?.let { Identifier(databaseId = conditionId) })
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, TEST_X1, TEST_Y1, TEST_X2, TEST_Y2)
+            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, Point(TEST_X1, TEST_Y1), Point(TEST_X2, TEST_Y2))
         fun getNewDefaultPause(id: Long) =
             Action.Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
