@@ -151,6 +151,12 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
             } catch (ioEx: IOException) {
                 Log.e(TAG, "Error while reading backup archive.")
                 progress.onError()
+            } catch (secEx: SecurityException) {
+                Log.e(TAG, "Error while reading backup archive, permission is denied")
+                progress.onError()
+            } catch (iaEx: IllegalArgumentException) {
+                Log.e(TAG, "Error while reading backup archive, file is invalid")
+                progress.onError()
             }
         }
     }
