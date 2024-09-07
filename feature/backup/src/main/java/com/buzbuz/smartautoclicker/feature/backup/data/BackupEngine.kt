@@ -89,6 +89,12 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
             } catch (ioEx: IOException) {
                 Log.e(TAG, "Error while creating backup archive.")
                 progress.onError()
+            } catch (isEx: IllegalStateException) {
+                Log.e(TAG, "Error while creating backup archive, target folder can't be written")
+                progress.onError()
+            } catch (secEx: SecurityException) {
+                Log.e(TAG, "Error while creating backup archive, permission is denied")
+                progress.onError()
             }
         }
     }
