@@ -47,6 +47,9 @@ fun Context.startWebBrowserActivity(uri: Uri): Boolean =
     } catch (ex: ActivityNotFoundException) {
         Log.e(TAG, "Can't open web browser.")
         startWebBrowserPicker(uri)
+    } catch (secEx: SecurityException) {
+        Log.e(TAG, "Not allowed to open web browser.")
+        startWebBrowserPicker(uri)
     }
 
 private fun Context.startWebBrowserPicker(uri: Uri): Boolean =
@@ -60,6 +63,9 @@ private fun Context.startWebBrowserPicker(uri: Uri): Boolean =
         true
     } catch (ex: ActivityNotFoundException) {
         Log.e(TAG, "Can't open web browser.")
+        false
+    } catch (secEx: SecurityException) {
+        Log.e(TAG, "Not allowed to open web browser.")
         false
     }
 
