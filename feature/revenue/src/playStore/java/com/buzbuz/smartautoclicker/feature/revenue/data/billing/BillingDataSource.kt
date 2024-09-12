@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.revenue.data.billing
 
 import android.app.Activity
-import android.content.Context
 import com.android.billingclient.api.Purchase
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -26,8 +25,6 @@ import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.InAppProduct
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingClientProxy
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingServiceConnection
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingUiFlowState
-
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +38,6 @@ import javax.inject.Singleton
 
 @Singleton
 internal class BillingDataSource @Inject constructor(
-    @ApplicationContext context: Context,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val billingServiceConnection: BillingServiceConnection,
     private val productDetailsManager: ProductDetailsManager,
@@ -61,7 +57,6 @@ internal class BillingDataSource @Inject constructor(
 
     init {
         billingServiceConnection.monitorConnection(
-            context = context,
             productId = PRODUCT_ID,
             onConnectionChangedListener = { client ->
                 if (client != null) onBillingClientConnected(client)

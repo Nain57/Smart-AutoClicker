@@ -26,6 +26,7 @@ import com.android.billingclient.api.Purchase
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +38,7 @@ import javax.inject.Inject
 import kotlin.math.min
 
 internal class BillingServiceConnection @Inject constructor(
+    @ApplicationContext private val context: Context,
     @Dispatcher(Main) dispatcherMain: CoroutineDispatcher,
 ) {
 
@@ -52,12 +54,13 @@ internal class BillingServiceConnection @Inject constructor(
     private var reconnectMilliseconds = RECONNECT_TIMER_START_MILLISECONDS
 
     private var connectionListener: ((BillingClientProxy?) -> Unit)? = null
+    private var monitoredProductId: String? = null
+    private var productPurchaseListener: ((Purchase?) -> Unit)? = null
 
     var clientProxy: BillingClientProxy? = null
         private set
 
     fun monitorConnection(
-        context: Context,
         productId: String,
         onConnectionChangedListener: (BillingClientProxy?) -> Unit,
         onNewPurchasesListener: (Purchase?) -> Unit,
@@ -65,8 +68,23 @@ internal class BillingServiceConnection @Inject constructor(
         if (clientProxy != null) return
 
         connectionListener = onConnectionChangedListener
-        clientProxy = BillingClientProxy(context, productId, onNewPurchasesListener)
-        clientProxy?.client?.startConnection(clientConnectionListener)
+        monitoredProductId = productId
+        productPurchaseListener = onNewPurchasesListener
+
+        connect()
+    }
+
+    private fun connect() {
+        val productId = monitoredProductId ?: return
+        val clientListener = productPurchaseListener ?: return
+
+        clientProxy = BillingClientProxy(context, productId, clientListener)
+        try {
+            clientProxy?.client?.startConnection(clientConnectionListener)
+        } catch (isex: IllegalStateException) {
+            Log.e(TAG, "connectToBillingService", isex)
+            retryBillingServiceConnectionWithExponentialBackoff()
+        }
     }
 
     private fun onSetupResult(billingResult: BillingResult) {
@@ -102,11 +120,7 @@ internal class BillingServiceConnection @Inject constructor(
             delay(reconnectMilliseconds)
             reconnectMilliseconds = min(reconnectMilliseconds * 2, RECONNECT_TIMER_MAX_TIME_MILLISECONDS)
 
-            try {
-                clientProxy?.client?.startConnection(clientConnectionListener)
-            } catch (isex: IllegalStateException) {
-                Log.e(TAG, "connectToBillingService", isex)
-            }
+            connect()
         }
     }
 }

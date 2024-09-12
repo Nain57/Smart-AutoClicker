@@ -112,7 +112,10 @@ internal class BillingClientProxy(
     }
 
     suspend fun fetchInAppPurchases(): Purchase? {
-        if (!client.isReady) return null
+        if (!client.isReady) {
+            Log.w(TAG, "Cannot refresh purchases, client is not ready.")
+            return null
+        }
 
         Log.i(TAG, "Refreshing purchases")
 
