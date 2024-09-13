@@ -23,13 +23,16 @@
     <!-- Application wide texts. -->
     <string name="notification_title">Сценарий: %1$s</string>
     <string name="notification_message">Нажмите, чтобы поменять сценарий</string>
+    <string name="notification_button_play_and_hide">Запустить и скрыть</string>
+    <string name="notification_button_pause_and_show">Приостановить и показать</string>
     <string name="notification_button_toggle_menu">Скрыть/Показать</string>
     <string name="notification_button_stop">Остановить</string>
+
+
     <string name="activity_title">Сценарии</string>
     <string name="accessibility_service_description">Данному приложению требуется эта служба для 
-        выполнения созданных вами нажатий в других приложениях при исполнении требуемых условий.
-        \n\nНикакие данные с этих приложений собраны не будут. Исходный код открытый, не 
-        стесняйтесь посетить его на GitHub!</string>
+        выполнения созданных вами нажатий в других приложениях при исполнении требуемых условий.\n\nНикакие 
+        данные с этих приложений собраны не будут. Исходный код открытый, не стесняйтесь посетить его на GitHub!</string>
 
     <!--
       - Titles for the dialogs displayed from the activity.
@@ -61,8 +64,7 @@
     <string name="item_desc_dumb_scenario_max_duration_infinite">Неограниченная длительность</string>
     <string name="item_desc_dumb_scenario_repeat_count">Повторить %1$d раз</string>
     <string name="item_desc_dumb_scenario_repeat_infinite">Повторять бесконечно</string>
-    <string name="item_desc_smart_scenario">Используется обнаружение изображений для создания сложных ситуаций.\n
-        Некоторые функции платные.</string>
+    <string name="item_desc_smart_scenario">Используется обнаружение изображений для создания сложных ситуаций.\nНекоторые функции платные.</string>
     <string name="item_desc_smart_scenario_pro_mode">Используется обнаружение изображений для создания сложных ситуаций.</string>
     <string name="item_title_dumb_scenario">Простой</string>
     <string name="item_title_smart_scenario">Умный</string>
