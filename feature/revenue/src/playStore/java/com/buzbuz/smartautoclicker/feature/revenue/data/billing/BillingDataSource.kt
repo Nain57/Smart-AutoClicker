@@ -47,6 +47,7 @@ internal class BillingDataSource @Inject constructor(
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
+    private var billingClient: BillingClientProxy? = null
 
     val product: Flow<InAppProduct?> =
         productDetailsManager.productDetails
@@ -67,6 +68,8 @@ internal class BillingDataSource @Inject constructor(
     }
 
     private fun onBillingClientConnected(client: BillingClientProxy) {
+        billingClient = client
+
         coroutineScopeIo.launch {
             productDetailsManager.startMonitoring(client::fetchInAppProductDetails)
             refreshPurchases()
@@ -74,17 +77,20 @@ internal class BillingDataSource @Inject constructor(
     }
 
     private fun onBillingClientDisconnected() {
+        billingClient = null
         productDetailsManager.stopMonitoring()
     }
 
     private fun onPurchaseUpdatedFromBillingUiFlow(purchase: Purchase?) {
+        val client = billingClient ?: return
+
         coroutineScopeIo.launch {
-            billingServiceConnection.clientProxy?.refreshPurchases(purchase, fromQuery = false)
+            client.refreshPurchases(purchase, fromQuery = false)
         }
     }
 
     fun refreshPurchases() {
-        val client = billingServiceConnection.clientProxy ?: return
+        val client = billingClient ?: return
 
         coroutineScopeIo.launch {
             client.refreshPurchases(
@@ -95,12 +101,11 @@ internal class BillingDataSource @Inject constructor(
     }
 
     fun launchBillingFlow(activity: Activity): StateFlow<BillingUiFlowState>? {
-        val client = billingServiceConnection.clientProxy ?: return null
+        val client = billingClient ?: return null
         val details = productDetailsManager.productDetails.value ?: return null
 
         return client.launchBillingFlow(activity, details)
     }
-
 
     private suspend fun BillingClientProxy.refreshPurchases(purchase: Purchase?, fromQuery: Boolean) {
         purchaseManager.handleNewPurchases(

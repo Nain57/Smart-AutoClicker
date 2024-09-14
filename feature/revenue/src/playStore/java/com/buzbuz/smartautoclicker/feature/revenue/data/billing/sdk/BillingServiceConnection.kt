@@ -30,6 +30,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,20 +46,15 @@ internal class BillingServiceConnection @Inject constructor(
     private val coroutineScopeMain: CoroutineScope =
         CoroutineScope(SupervisorJob() + dispatcherMain)
 
-    private val clientConnectionListener = object : BillingClientStateListener {
-        override fun onBillingServiceDisconnected(): Unit = onDisconnected()
-        override fun onBillingSetupFinished(p0: BillingResult): Unit = onSetupResult(p0)
-    }
-
     /** How long before the data source tries to reconnect to Google play. */
     private var reconnectMilliseconds = RECONNECT_TIMER_START_MILLISECONDS
+    private var reconnectJob: Job? = null
 
     private var connectionListener: ((BillingClientProxy?) -> Unit)? = null
     private var monitoredProductId: String? = null
     private var productPurchaseListener: ((Purchase?) -> Unit)? = null
+    private var clientProxy: BillingClientProxy? = null
 
-    var clientProxy: BillingClientProxy? = null
-        private set
 
     fun monitorConnection(
         productId: String,
@@ -78,9 +74,19 @@ internal class BillingServiceConnection @Inject constructor(
         val productId = monitoredProductId ?: return
         val clientListener = productPurchaseListener ?: return
 
+        // Documentation is unclear about what kind of error to expect here, just catch everything
+        try {
+            clientProxy?.client?.endConnection()
+        } catch (ex: Exception) {
+            Log.e(TAG, "Can't end connection with current client.")
+        }
+
         clientProxy = BillingClientProxy(context, productId, clientListener)
         try {
-            clientProxy?.client?.startConnection(clientConnectionListener)
+            clientProxy?.client?.startConnection(object : BillingClientStateListener {
+                override fun onBillingServiceDisconnected(): Unit = onDisconnected()
+                override fun onBillingSetupFinished(p0: BillingResult): Unit = onSetupResult(p0)
+            })
         } catch (isex: IllegalStateException) {
             Log.e(TAG, "connectToBillingService", isex)
             retryBillingServiceConnectionWithExponentialBackoff()
@@ -116,15 +122,21 @@ internal class BillingServiceConnection @Inject constructor(
      * specified by RECONNECT_TIMER_MAX_TIME_MILLISECONDS.
      */
     private fun retryBillingServiceConnectionWithExponentialBackoff() {
-        coroutineScopeMain.launch {
+        if (reconnectJob != null) {
+            Log.e(TAG, "Reconnection job is already running")
+            return
+        }
+
+        reconnectJob = coroutineScopeMain.launch {
             delay(reconnectMilliseconds)
             reconnectMilliseconds = min(reconnectMilliseconds * 2, RECONNECT_TIMER_MAX_TIME_MILLISECONDS)
 
+            reconnectJob = null
             connect()
         }
     }
 }
 
-private const val TAG = "BillingService"
+private const val TAG = "BillingDataSource"
 private const val RECONNECT_TIMER_START_MILLISECONDS = 1000L
 private const val RECONNECT_TIMER_MAX_TIME_MILLISECONDS = 1000L * 60L * 15L // 15 minutes
