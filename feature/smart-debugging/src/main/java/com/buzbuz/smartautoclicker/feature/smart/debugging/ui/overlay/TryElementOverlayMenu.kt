@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
@@ -89,7 +90,7 @@ class TryElementOverlayMenu(
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
-        if (keyEvent.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) return false
+        if (!keyEvent.isStopScenarioKey()) return false
 
         if (keyEvent.action == KeyEvent.ACTION_DOWN) {
             viewModel.stopTry()

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
@@ -51,6 +53,12 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     )
 
     private lateinit var viewBinding: OverlayActionsBriefMenuBinding
+
+    /**
+     * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
+     * the correct value when ACTION_UP is received.
+     */
+    private var keyDownHandled: Boolean = false
 
 
     override fun onCreate() {
@@ -96,6 +104,29 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
         showActionConfigDialog((item.data as UiAction).action)
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
+        if (!keyEvent.isStopScenarioKey()) return false
+
+        when (keyEvent.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (viewModel.stopAction()) {
+                    keyDownHandled = true
+                    updateReplayingState(false)
+                    return true
+                }
+            }
+
+            KeyEvent.ACTION_UP -> {
+                if (keyDownHandled) {
+                    keyDownHandled = false
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     override fun onMenuItemClicked(viewId: Int) {

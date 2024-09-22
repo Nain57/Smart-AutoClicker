@@ -131,6 +131,13 @@ class DumbScenarioBriefViewModel @Inject constructor(
         }
     }
 
+    fun stopAction(): Boolean {
+        if (!dumbEngine.isRunning.value) return false
+
+        dumbEngine.stopDumbScenario()
+        return true
+    }
+
     fun createNewDumbClick(context: Context, position: Point): DumbAction.DumbClick =
         dumbEditionRepository.dumbActionBuilder.createNewDumbClick(context, position)
 

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief
 
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -23,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
@@ -59,6 +61,12 @@ class DumbScenarioBriefMenu(
     private lateinit var dumbActionCreator: DumbActionCreator
     private lateinit var createCopyActionUiFlowListener: DumbActionUiFlowListener
     private lateinit var updateActionUiFlowListener: DumbActionUiFlowListener
+
+    /**
+     * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
+     * the correct value when ACTION_UP is received.
+     */
+    private var keyDownHandled: Boolean = false
 
     override fun onCreate() {
         super.onCreate()
@@ -131,6 +139,28 @@ class DumbScenarioBriefMenu(
         showDumbActionEditionUiFlow((item.data as DumbActionDetails).action)
     }
 
+    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
+        if (!keyEvent.isStopScenarioKey()) return false
+
+        when (keyEvent.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (viewModel.stopAction()) {
+                    keyDownHandled = true
+                    return true
+                }
+            }
+
+            KeyEvent.ACTION_UP -> {
+                if (keyDownHandled) {
+                    keyDownHandled = false
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_back -> onBackClicked()
@@ -145,6 +175,8 @@ class DumbScenarioBriefMenu(
             stopGestureCapture()
             return
         }
+
+        if (viewModel.stopAction()) return
 
         onConfigSaved()
         back()
@@ -187,7 +219,7 @@ class DumbScenarioBriefMenu(
 
     private fun updateReplayingState(isReplaying: Boolean) {
         setOverlayViewVisibility(!isReplaying)
-        setMenuItemViewEnabled(menuViewBinding.btnBack, !isReplaying)
+        setMenuItemViewEnabled(menuViewBinding.btnBack, true)
         setMenuItemViewEnabled(menuViewBinding.btnAdd, !isReplaying)
         setMenuItemViewEnabled(menuViewBinding.btnHideOverlay, !isReplaying)
         setMenuItemViewEnabled(menuViewBinding.btnMove, !isReplaying)

@@ -201,6 +201,13 @@ class SmartActionsBriefViewModel @Inject constructor(
         }
     }
 
+    fun stopAction(): Boolean {
+        if (!detectionRepository.isRunning()) return false
+
+        detectionRepository.stopDetection()
+        return true
+    }
+
     fun swapActions(i: Int, j: Int) {
         val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return
         Collections.swap(actions, i, j)

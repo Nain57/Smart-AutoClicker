@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
+import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
@@ -143,7 +144,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
-        if (keyEvent.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) return false
+        if (!keyEvent.isStopScenarioKey()) return false
 
         when (keyEvent.action) {
             KeyEvent.ACTION_DOWN -> {
