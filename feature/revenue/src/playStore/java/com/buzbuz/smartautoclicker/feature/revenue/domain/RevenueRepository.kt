@@ -98,14 +98,8 @@ internal class RevenueRepository @Inject constructor(
             billingDataSource.purchaseState,
             userConsentDataSource.isInitialized,
             userConsentDataSource.isUserConsentingForAds,
-        ) { purchaseState, isConsentInit, consent ->
-            when {
-                purchaseState == InAppPurchaseState.PURCHASED -> UserConsentState.ADS_NOT_NEEDED
-                consent -> UserConsentState.CAN_REQUEST_ADS
-                isConsentInit && !consent -> UserConsentState.CANNOT_REQUEST_ADS
-                else -> UserConsentState.UNKNOWN
-            }
-        }
+            ::toUserConsentState,
+        )
 
     override val isPrivacySettingRequired: Flow<Boolean> =
         userConsentDataSource.isPrivacyOptionsRequired
@@ -210,39 +204,6 @@ internal class RevenueRepository @Inject constructor(
     private fun toProModeInfo(product: InAppProduct?): ProModeInfo? =
         product?.let { ProModeInfo(it.title, it.description, it.price) }
 
-    private fun toAdState(remoteAdState: RemoteAdState): AdState =
-        when (remoteAdState) {
-            RemoteAdState.SdkNotInitialized -> AdState.NOT_INITIALIZED
-            RemoteAdState.Initialized -> AdState.INITIALIZED
-            RemoteAdState.Loading -> AdState.LOADING
-            is RemoteAdState.NotShown -> AdState.READY
-            RemoteAdState.Showing -> AdState.SHOWING
-            is RemoteAdState.Shown -> AdState.VALIDATED
-
-            is RemoteAdState.Error.LoadingError,
-            is RemoteAdState.Error.ShowError,
-            RemoteAdState.Error.NoImpressionError -> AdState.ERROR
-        }
-
-    private fun toPurchaseState(state: InAppPurchaseState, product: InAppProduct?): PurchaseState =
-        when {
-            state == InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED -> PurchaseState.PURCHASED
-            state == InAppPurchaseState.PURCHASED -> PurchaseState.PENDING
-            state == InAppPurchaseState.PENDING -> PurchaseState.PENDING
-            state == InAppPurchaseState.NOT_PURCHASED && product != null -> PurchaseState.NOT_PURCHASED
-            else -> PurchaseState.CANNOT_PURCHASE
-        }
-
-    private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, trial: Boolean, quality: Quality): UserBillingState =
-        when {
-            purchaseState == PurchaseState.PURCHASED -> UserBillingState.PURCHASED
-            quality != Quality.High -> UserBillingState.EXEMPTED
-            adState == AdState.VALIDATED -> UserBillingState.AD_WATCHED
-            trial -> UserBillingState.TRIAL
-            else -> UserBillingState.AD_REQUESTED
-        }
-
-
     private fun initAdsOnConsentFlow(context: Context, consent: Flow<Boolean>, adsState: Flow<AdState>) : Flow<Unit> =
         combine(consent, adsState) { isConsenting, state ->
             if (!isConsenting || state != AdState.NOT_INITIALIZED) return@combine
@@ -283,6 +244,46 @@ internal class RevenueRepository @Inject constructor(
         }
     }
 }
+
+private fun toUserConsentState(purchaseState: InAppPurchaseState, isConsentInit: Boolean, isConsenting: Boolean): UserConsentState =
+    when {
+        purchaseState == InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED -> UserConsentState.ADS_NOT_NEEDED
+        isConsenting -> UserConsentState.CAN_REQUEST_ADS
+        isConsentInit && !isConsenting -> UserConsentState.CANNOT_REQUEST_ADS
+        else -> UserConsentState.UNKNOWN
+    }
+
+private fun toAdState(remoteAdState: RemoteAdState): AdState =
+    when (remoteAdState) {
+        RemoteAdState.SdkNotInitialized -> AdState.NOT_INITIALIZED
+        RemoteAdState.Initialized -> AdState.INITIALIZED
+        RemoteAdState.Loading -> AdState.LOADING
+        is RemoteAdState.NotShown -> AdState.READY
+        RemoteAdState.Showing -> AdState.SHOWING
+        is RemoteAdState.Shown -> AdState.VALIDATED
+
+        is RemoteAdState.Error.LoadingError,
+        is RemoteAdState.Error.ShowError,
+        RemoteAdState.Error.NoImpressionError -> AdState.ERROR
+    }
+
+private fun toPurchaseState(state: InAppPurchaseState, product: InAppProduct?): PurchaseState =
+    when {
+        state == InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED -> PurchaseState.PURCHASED
+        state == InAppPurchaseState.PURCHASED -> PurchaseState.PENDING
+        state == InAppPurchaseState.PENDING -> PurchaseState.PENDING
+        state == InAppPurchaseState.NOT_PURCHASED && product != null -> PurchaseState.NOT_PURCHASED
+        else -> PurchaseState.CANNOT_PURCHASE
+    }
+
+private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, trial: Boolean, quality: Quality): UserBillingState =
+    when {
+        purchaseState == PurchaseState.PURCHASED -> UserBillingState.PURCHASED
+        quality != Quality.High -> UserBillingState.EXEMPTED
+        adState == AdState.VALIDATED -> UserBillingState.AD_WATCHED
+        trial -> UserBillingState.TRIAL
+        else -> UserBillingState.AD_REQUESTED
+    }
 
 internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
 @VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 1.hours
