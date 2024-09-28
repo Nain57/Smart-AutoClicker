@@ -34,7 +34,6 @@ import android.widget.ImageButton
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
-import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
@@ -215,7 +214,7 @@ abstract class OverlayMenu(
             backgroundViewGroup = menuBackground,
             resizedContainer = buttonsContainer,
             maximumSize = getWindowMaximumSize(menuBackground),
-            windowSizeListener = { size -> onNewWindowSize(size.width, size.height) }
+            windowResizer = ::onNewWindowSize,
         )
 
         // Add the overlay, if any. It needs to be below the menu or user won't be able to click on the menu.
@@ -475,25 +474,16 @@ abstract class OverlayMenu(
     }
 
     private fun forceWindowResize() {
-        buttonsContainer.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
-
-        // Get the height of all children + the padding
-        val height = buttonsContainer.children.fold(0) { acc, child ->
-            acc + (if (child.visibility == View.GONE) 0 else child.height)
-        } + buttonsContainer.paddingTop + buttonsContainer.paddingBottom
-
-        onNewWindowSize(
-            width = menuLayout.width,
-            height = height,
-        )
+        Log.d(TAG, "Force window resize")
+        onNewWindowSize(resizeController.measureMenuSize())
     }
 
-    private fun onNewWindowSize(width: Int, height: Int) {
-        menuLayoutParams.width = width
-        menuLayoutParams.height = height
+    private fun onNewWindowSize(size: Size) {
+        menuLayoutParams.width = size.width
+        menuLayoutParams.height = size.height
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            Log.d(TAG, "Updating menu window size: $width/$height")
+            Log.d(TAG, "Updating menu window size: ${size.width}/${size.height}")
             windowManager.updateViewLayout(menuLayout, menuLayoutParams)
         }
     }

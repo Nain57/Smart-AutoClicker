@@ -20,7 +20,9 @@ import android.animation.LayoutTransition
 import android.util.Log
 import android.util.Size
 import android.view.View
+import android.view.View.MeasureSpec
 import android.view.ViewGroup
+import androidx.core.view.children
 
 /**
  * Controls the resize of an overlay window.
@@ -37,13 +39,13 @@ import android.view.ViewGroup
  * @param backgroundViewGroup the view displaying the background of the overlay
  * @param resizedContainer the view originally resized and that triggers the window resizing.
  * @param maximumSize the maximum width and height the window can have between all its states.
- * @param windowSizeListener called when the window needs to be resized.
+ * @param windowResizer called when the window needs to be resized.
  */
 internal class OverlayMenuResizeController(
     private val backgroundViewGroup: ViewGroup,
     private val resizedContainer: ViewGroup,
     private val maximumSize: Size,
-    private val windowSizeListener: (size: Size) -> Unit,
+    private val windowResizer: (size: Size) -> Unit,
 ) {
 
     /** True if the window resize animation is running, false if not. */
@@ -63,6 +65,7 @@ internal class OverlayMenuResizeController(
         ) {
             if (view == null) return
 
+            Log.d(TAG, "Layout changes animations start for ${view.id}")
             runningTransitions.add(OverlayTransition(view.id, transitionType))
         }
 
@@ -74,12 +77,15 @@ internal class OverlayMenuResizeController(
         ) {
             if (view == null) return
 
+            Log.d(TAG, "Layout changes animations complete for ${view.id}")
             runningTransitions.remove(OverlayTransition(view.id, transitionType))
+
             if (runningTransitions.isEmpty()) {
-                Log.d(TAG, "Layout changes animations completed")
+                Log.d(TAG, "All layout changes animations completed")
 
                 // The view resize animation is over, restore the window size to wrap the content.
-                windowSizeListener(Size(backgroundViewGroup.measuredWidth, backgroundViewGroup.measuredHeight))
+                windowResizer(measureMenuSize())
+
                 isAnimating = false
             }
         }
@@ -104,7 +110,7 @@ internal class OverlayMenuResizeController(
         Log.d(TAG, "Starting layout changes animations")
 
         // Freeze window size to expanded size
-        windowSizeListener(maximumSize)
+        windowResizer(maximumSize)
 
         // Execute layout changes that will cause a resize
         layoutChanges()
@@ -113,6 +119,27 @@ internal class OverlayMenuResizeController(
     /** Release this controller. */
     fun release() {
         resizedContainer.layoutTransition?.removeTransitionListener(transitionListener)
+    }
+
+    fun measureMenuSize(): Size {
+        resizedContainer.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+
+        // Get the height of all children + the padding
+        val height = resizedContainer.children.fold(0) { acc, child ->
+            acc + (if (child.visibility == View.GONE) 0 else child.height)
+        } + resizedContainer.paddingTop + resizedContainer.paddingBottom
+
+        val firstChild = (backgroundViewGroup.getChildAt(0) as? ViewGroup)
+        val width = if (firstChild == null || firstChild.id == resizedContainer.id) {
+            resizedContainer.width
+        } else {
+            // Case for the view with debug layout
+            firstChild.children.fold(0) { acc, child ->
+                acc + (if (child.visibility == View.GONE) 0 else child.width)
+            }
+        }
+
+        return Size(width, height)
     }
 }
 
