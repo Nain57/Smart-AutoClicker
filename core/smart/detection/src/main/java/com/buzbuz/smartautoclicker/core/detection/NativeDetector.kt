@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,9 @@ class NativeDetector private constructor() : ImageDetector {
     /** The results of the detection. Modified by native code. */
     private val detectionResult = DetectionResult()
 
+    private val detectionQualityMin: Double = DETECTION_QUALITY_MIN.toDouble()
+    private val detectionQualityMax: Double = DETECTION_QUALITY_MAX.toDouble()
+
     /** Native pointer of the detector object. */
     @Keep
     private var nativePtr: Long = newDetector()
@@ -57,10 +60,11 @@ class NativeDetector private constructor() : ImageDetector {
     override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
         if (isClosed) return
 
-        if (detectionQuality < DETECTION_QUALITY_MIN || detectionQuality > DETECTION_QUALITY_MAX)
-            throw IllegalArgumentException("Invalid detection quality")
-
-        updateScreenMetrics(metricsKey, screenBitmap, detectionQuality)
+        updateScreenMetrics(
+            metricsKey,
+            screenBitmap,
+            detectionQuality.coerceIn(detectionQualityMin, detectionQualityMax)
+        )
     }
 
     override fun setupDetection(screenBitmap: Bitmap) {
@@ -129,7 +133,7 @@ class NativeDetector private constructor() : ImageDetector {
      * @param x the horizontal position of the condition.
      * @param y the vertical position of the condition.
      * @param width the width of the condition.
-     * @param height the height of the condtion.
+     * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      * @param result stores the results on this detection.
      */
