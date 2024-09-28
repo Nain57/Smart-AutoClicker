@@ -170,6 +170,9 @@ internal class RevenueRepository @Inject constructor(
     }
 
     override fun showAd(activity: Activity) {
+        // TODO: Revert error handling once the ads account is no longer limited
+        if (adsState.value == AdState.ERROR) adsDataSource.onAdDismissed(true)
+
         if (adsState.value != AdState.READY) return
         adsDataSource.showAd(activity)
     }

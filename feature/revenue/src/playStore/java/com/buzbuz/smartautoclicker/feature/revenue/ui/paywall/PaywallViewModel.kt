@@ -18,14 +18,13 @@ package com.buzbuz.smartautoclicker.feature.revenue.ui.paywall
 
 import android.app.Activity
 import android.content.Context
-
 import androidx.lifecycle.ViewModel
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 import com.buzbuz.smartautoclicker.feature.revenue.R
 import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.domain.TRIAL_SESSION_DURATION_DURATION
+import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.ProModeInfo
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
 
@@ -92,11 +91,12 @@ internal sealed class DialogState {
     internal data object AdWatched : DialogState()
 }
 
-
+// TODO: Revert error handling once the ads account is no longer limited
 private fun AdState.toAdButtonState(context: Context): LoadableButtonState = when (this) {
     AdState.INITIALIZED,
     AdState.LOADING -> LoadableButtonState.Loading
 
+    AdState.ERROR,
     AdState.READY -> LoadableButtonState.Loaded.Enabled(
         text = context.getString(R.string.button_text_watch_ad)
     )
@@ -106,8 +106,7 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
         text = context.getString(R.string.button_text_watch_ad)
     )
 
-    AdState.NOT_INITIALIZED,
-    AdState.ERROR -> LoadableButtonState.Loaded.Disabled(
+    AdState.NOT_INITIALIZED -> LoadableButtonState.Loaded.Disabled(
         text = context.getString(R.string.button_text_watch_ad_error)
     )
 }
