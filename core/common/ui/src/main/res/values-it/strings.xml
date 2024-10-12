@@ -49,6 +49,10 @@
         bloccare l\'utilizzo del menu Klick\'r per interromperlo.\n\nIn questo caso, è
         possibile premere il pulsante fisico \"Volume giù\" del dispositivo per interrompere lo
         scenario in corso.</string>
+    <string name="message_dont_show_again">Non mostrare più questo messaggio</string>
+
+
+    <string name="button_understood">Capito</string>
 
     <!--
       - Text input fields labels and error messages.

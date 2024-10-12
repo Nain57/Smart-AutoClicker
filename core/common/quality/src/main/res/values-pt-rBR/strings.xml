@@ -21,6 +21,5 @@
     <string name="message_accessibility_issues">Parece que a permissão do Serviço de Acessibilidade foi removida várias vezes. Se você não a alterou, isso significa que seu dispositivo a removeu.\n\n
         Alguns fabricantes de dispositivos Android não respeitam o comportamento padrão sobre aplicativos em segundo plano, e dependendo da marca do seu dispositivo, você pode precisar realizar uma configuração adicional.\n\n
         Consulte o site a seguir para encontrar mais informações sobre esse problema e como você pode melhorar a estabilidade das permissões.</string>
-    <string name="button_understood">Entendido</string>
 
 </resources>

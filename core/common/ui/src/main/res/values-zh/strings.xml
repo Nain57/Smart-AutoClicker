@@ -47,6 +47,9 @@
       -->
     <string name="message_tutorial_volume_down_stop">如果您的情景模式点击过快，它会 会阻止你使用智能自动点击菜单来停止它。\n\n
         在这种情况下，你可以按下设备的物理 \"音量减小\"按钮来停止正在运行的程序。</string>
+    <string name="message_dont_show_again">不要再显示这条信息</string>
+
+    <string name="button_understood">明白</string>
 
     <!--
       - Text input fields labels and error messages.

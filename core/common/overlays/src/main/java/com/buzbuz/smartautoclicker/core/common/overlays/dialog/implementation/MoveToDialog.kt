@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
+import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -63,7 +64,7 @@ class MoveToDialog(
             }
         }
 
-        dialog = MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+        dialog = MaterialAlertDialogBuilder(context.getDynamicColorsContext(R.style.AppTheme))
             .setTitle(R.string.dialog_move_to_title)
             .setView(viewBinding.root)
             .setOnKeyListener { _, keyCode, event ->

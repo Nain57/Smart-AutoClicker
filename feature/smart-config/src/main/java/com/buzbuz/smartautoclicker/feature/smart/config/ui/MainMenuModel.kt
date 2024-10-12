@@ -185,10 +185,10 @@ class MainMenuModel @Inject constructor(
     }
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        !tutorialRepository.isTutorialStopVolumeDownPopupShown()
+        detectionState.value == UiState.Idle && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
 
-    fun onStopVolumeDownTutorialDialogShown(): Unit =
-        tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
+    fun setStopWithVolumeDownDontShowAgain(): Unit =
+        tutorialRepository.setStopWithVolumeDownDontShowAgain()
 
     private fun UserBillingState.isAdRequested(): Boolean =
         this == UserBillingState.AD_REQUESTED

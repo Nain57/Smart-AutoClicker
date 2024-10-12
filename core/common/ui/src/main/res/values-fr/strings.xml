@@ -48,6 +48,11 @@
     <string name="message_tutorial_volume_down_stop">Si votre scénario clique trop vite, cela peut
         bloquer l\'écran tactile.\n\nSi cela arrive, vous pouvez appuyer sur le boutton physique
         \"Volume Moins\" de votre appareil afin d\'arrêter le scenario.</string>
+    <string name="message_dont_show_again">Ne plus afficher ce message</string>
+
+
+    <string name="button_understood">Compris</string>
+
 
     <!--
       - Text input fields labels and error messages.

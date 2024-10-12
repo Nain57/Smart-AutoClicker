@@ -84,8 +84,8 @@ class DumbMainMenuModel @Inject constructor(
     }
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        !tutorialRepository.isTutorialStopVolumeDownPopupShown()
+        !isPlaying.value && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
 
-    fun onStopVolumeDownTutorialDialogShown(): Unit =
-        tutorialRepository.setIsTutorialStopVolumeDownPopupShown()
+    fun setStopWithVolumeDownDontShowAgain(): Unit =
+        tutorialRepository.setStopWithVolumeDownDontShowAgain()
 }

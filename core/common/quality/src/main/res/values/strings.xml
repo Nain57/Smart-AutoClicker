@@ -21,7 +21,6 @@
     <string name="message_accessibility_issues">It seems like the Accessibility Service permission has been removed several times. If you haven\'t changed it yourself, this means your device has removed it.\n\n
         Some Android devices manufacturer are not respecting the standard behaviour about background applications, and depending on your device brand, you might need to perform additional configuration.\n\n
         Please refer to the following website to find more insight about that issue and how you can improve the permission stability.</string>
-    <string name="button_understood">Understood</string>
     <string name="button_open_dont_kill_my_app" translatable="false">Don\'t kill my app</string>
 
 </resources>

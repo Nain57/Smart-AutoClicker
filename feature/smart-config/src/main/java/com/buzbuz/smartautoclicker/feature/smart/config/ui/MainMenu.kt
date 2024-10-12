@@ -23,7 +23,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -33,14 +32,15 @@ import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
+import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.DebugModel
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
-import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.Job
@@ -288,7 +288,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         )
 
     private fun showScenarioSaveErrorDialog() {
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+        MaterialAlertDialogBuilder(context.getDynamicColorsContext(R.style.AppTheme))
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.error_dialog_message_scenario_saving)
             .setPositiveButton(R.string.generic_modify) { _: DialogInterface, _: Int ->
@@ -302,22 +302,19 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     private fun showStopVolumeDownTutorialDialog() {
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
-            .setTitle(R.string.dialog_title_tutorial)
-            .setMessage(R.string.message_tutorial_volume_down_stop)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                onPlayPauseClicked()
+        context.createStopWithVolumeDownTutorialDialog(
+            theme = R.style.AppTheme,
+            onDismissed = { showAgain ->
+                if (!showAgain) viewModel.setStopWithVolumeDownDontShowAgain()
+                viewModel.toggleDetection(context)
             }
-            .create()
-            .showAsOverlay()
-
-        viewModel.onStopVolumeDownTutorialDialogShown()
+        ).showAsOverlay()
     }
 
     private fun showNativeLibErrorDialogIfNeeded(haveError: Boolean) {
         if (!haveError) return
 
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
+        MaterialAlertDialogBuilder(context.getDynamicColorsContext(R.style.AppTheme))
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.error_dialog_message_error_native_lib)
             .setPositiveButton(android.R.string.ok) { _, _ ->

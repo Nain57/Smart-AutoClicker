@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStateDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.getTutorialPreferences
-import com.buzbuz.smartautoclicker.feature.tutorial.data.isStopVolumeDownPopupAlreadyShown
-import com.buzbuz.smartautoclicker.feature.tutorial.data.putStopVolumeDownPopupAlreadyShown
+import com.buzbuz.smartautoclicker.feature.tutorial.data.isStopVolumeDownDontShowAgain
+import com.buzbuz.smartautoclicker.feature.tutorial.data.putStopVolumeDownDontShowAgain
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.Tutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
@@ -118,11 +118,11 @@ class TutorialRepository @Inject constructor(
             .launchIn(coroutineScopeMain)
     }
 
-    fun isTutorialStopVolumeDownPopupShown(): Boolean =
-        sharedPrefs.isStopVolumeDownPopupAlreadyShown()
+    fun shouldShowStopWithVolumeDownTutorialDialog(): Boolean =
+        !sharedPrefs.isStopVolumeDownDontShowAgain()
 
-    fun setIsTutorialStopVolumeDownPopupShown() =
-        sharedPrefs.edit().putStopVolumeDownPopupAlreadyShown(true).apply()
+    fun setStopWithVolumeDownDontShowAgain() =
+        sharedPrefs.edit().putStopVolumeDownDontShowAgain(true).apply()
 
     fun setupTutorialMode() {
         if (scenarioId != null) return

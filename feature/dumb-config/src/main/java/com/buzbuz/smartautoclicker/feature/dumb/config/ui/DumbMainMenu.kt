@@ -32,11 +32,13 @@ import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
+import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioConfigDialog
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -197,15 +199,12 @@ class DumbMainMenu(
     }
 
     private fun showStopVolumeDownTutorialDialog() {
-        MaterialAlertDialogBuilder(DynamicColors.wrapContextIfAvailable(ContextThemeWrapper(context, R.style.AppTheme)))
-            .setTitle(R.string.dialog_title_tutorial)
-            .setMessage(R.string.message_tutorial_volume_down_stop)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                onPlayPauseClicked()
+        context.createStopWithVolumeDownTutorialDialog(
+            theme = R.style.AppTheme,
+            onDismissed = { showAgain ->
+                if (!showAgain) viewModel.setStopWithVolumeDownDontShowAgain()
+                viewModel.toggleScenarioPlay()
             }
-            .create()
-            .showAsOverlay()
-
-        viewModel.onStopVolumeDownTutorialDialogShown()
+        ).showAsOverlay()
     }
 }

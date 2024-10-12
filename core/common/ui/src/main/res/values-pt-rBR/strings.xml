@@ -48,6 +48,10 @@
     <string name="message_tutorial_volume_down_stop">Se o seu cenário estiver clicando muito rapidamente, pode
         bloquear você de usar o menu do Klick\'r para pará-lo.\n\nNesse caso, você pode pressionar o
         botão físico "Volume Baixo" do seu dispositivo para parar o cenário em execução.</string>
+    <string name="message_dont_show_again">Não mostre essa mensagem novamente</string>
+
+
+    <string name="button_understood">Entendido</string>
 
 
     <!--

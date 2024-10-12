@@ -48,6 +48,11 @@
     <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
         block you from using Klick\'r menu to stop it.\n\nIn that case, you can press the
         physical \"Volume Down\" button of your device to stop the running scenario.</string>
+    <string name="message_dont_show_again">Don\'t show this message again</string>
+
+
+    <string name="button_understood">Understood</string>
+
 
 
     <!--

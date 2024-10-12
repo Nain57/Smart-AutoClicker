@@ -21,6 +21,5 @@
     <string name="message_accessibility_issues">Il semble que l\'autorisation du Service d\'accessibilité ait été supprimée à plusieurs reprises. Si vous ne l\'avez pas modifiée vous-même, cela signifie que votre appareil l\'a supprimée.\n\n
         Certains fabricants d\'appareils Android ne respectent pas le comportement standard concernant les applications d\'arrière-plan et, selon la marque de votre appareil, il se peut que vous deviez effectuer une configuration supplémentaire.\n\n
         Veuillez consulter le site Web suivant pour en savoir plus sur ce problème et sur la manière d\'améliorer la stabilité des autorisations.</string>
-    <string name="button_understood">Compris</string>
 
 </resources>
