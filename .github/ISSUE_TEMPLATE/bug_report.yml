@@ -8,7 +8,20 @@ body:
     id: app-version
     attributes:
       label: Version of Smart AutoClicker
-      placeholder: "2.4.2"
+      placeholder: "3.0.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Apk
+      description: Installation source. No support is provided on other installation sources and the code itself
+      options:
+        - PlayStore
+        - F-Droid
+        - Github
+      default: 0
     validations:
       required: true
 
@@ -48,9 +61,11 @@ body:
     attributes:
       label: Describe what happened?
       description: |
-        Describe precise steps to reproduce the issue. You can also attach screenshots showing the problem, or a scenario \
-        backup zip file with simple steps reproducing the issue.
-      placeholder: Tell us what you see!
+        Describe precise steps to reproduce the issue. You can also attach screenshots/video showing how to reproduce it. \
+        If your issue is about the behaviour of a condition/action/event, attach a scenario backup zip file with the minimal \
+        elements to reproduce the bug. Do not provide your full scenario with all your events, I won't be able to \
+        understand what is wrong.
+      placeholder: Tell us what's wrong!
     validations:
       required: true
 
