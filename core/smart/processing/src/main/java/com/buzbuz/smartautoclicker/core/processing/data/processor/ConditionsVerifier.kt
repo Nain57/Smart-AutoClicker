@@ -34,7 +34,6 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 import kotlinx.coroutines.yield
-import kotlin.math.max
 
 internal class ConditionsVerifier(
     private val state: ProcessingState,

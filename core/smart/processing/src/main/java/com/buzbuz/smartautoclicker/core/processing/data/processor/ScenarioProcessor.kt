@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
@@ -55,7 +56,7 @@ internal class ScenarioProcessor(
 ) {
 
     /** Handle the processing state of the scenario. */
-    private val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
+    @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
     /** Check conditions and tell if they are fulfilled. */
     private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier, progressListener)
     /** Execute the detected event actions. */
