@@ -77,7 +77,7 @@ internal class EventsState(
         imageEventList.areAllEventsDisabled()
 
     override fun getEnabledImageEvents(): Collection<ImageEvent> =
-        imageEventList.getEnabledEvents()
+        imageEventList.getEnabledEvents().sortedBy { it.priority }
 
     override fun areAllTriggerEventsDisabled(): Boolean =
         triggerEventList.areAllEventsDisabled()
