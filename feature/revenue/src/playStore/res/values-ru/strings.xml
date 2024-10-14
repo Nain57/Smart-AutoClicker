@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="header_starting_detection">Начинается обнаружение</string>
+
+    <string name="message_billing">У этого приложения открытый исходный код и оно с любовью создаётся людьми в их 
+    свободное время.\n\nПоддержите разработку просмотром рекламы или купите Klick\'r Pro, чтобы убрать её навсегда!</string>
+    <string name="message_billing_success">Спасибо Вам за покупку\nKlick\'r Pro !</string>
+
+    <string name="button_text_watch_ad">Посмотреть рекламу</string>
+    <string name="button_text_watch_ad_error">Просмотр недоступен</string>
+    <string name="button_text_buy_pro">Купить Pro (%1$s)</string>
+    <string name="button_text_understood">Понятно</string>
+    <string name="button_text_buy_pro_error">Покупка недоступна</string>
+    <string name="button_text_visit_github">Репозиторий на GitHub</string>
+    <string name="button_text_trial">%1$d-минутный пробный период</string>
+    <string name="button_text_buy_pro_pending">Операция производится</string>
+
+</resources>
