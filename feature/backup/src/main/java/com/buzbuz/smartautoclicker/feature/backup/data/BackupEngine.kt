@@ -163,6 +163,9 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
             } catch (iaEx: IllegalArgumentException) {
                 Log.e(TAG, "Error while reading backup archive, file is invalid")
                 progress.onError()
+            } catch (npEx: NullPointerException) {
+                Log.e(TAG, "Error while reading backup archive, file path is null")
+                progress.onError()
             }
         }
     }
