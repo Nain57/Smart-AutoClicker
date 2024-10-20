@@ -40,7 +40,7 @@ androidBillingClient = "7.1.1"
 googleFirebaseBom = "33.4.0"
 googleFirebaseCrashlytics = "19.2.0"
 googleUserMessaging = "3.0.0"
-googleGmsAds = "23.4.0"
+googleGmsAds = "23.3.0" # Next version needs Android SDK 35
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
