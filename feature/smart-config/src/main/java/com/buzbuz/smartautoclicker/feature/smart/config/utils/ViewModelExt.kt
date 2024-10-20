@@ -38,6 +38,8 @@ fun ViewModel.getImageConditionBitmap(repository: IRepository, condition: ImageC
                 onCompleted.invoke(bitmap)
             }
         } catch (cEx: CancellationException) {
-            onCompleted.invoke(null)
+            withContext(Dispatchers.Main) {
+                onCompleted.invoke(null)
+            }
         }
     }
