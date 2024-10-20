@@ -69,14 +69,14 @@ internal fun BaseOverlay.showActionCopyDialog(configurator: ActionConfigurator) 
     )
 }
 
-internal fun BaseOverlay.showActionConfigDialog(viewModel: ActionConfigurator, action: Action) {
-    viewModel.startActionEdition(action)
+internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator, action: Action) {
+    configurator.startActionEdition(action)
 
     val actionConfigDialogListener: OnActionConfigCompleteListener by lazy {
         object : OnActionConfigCompleteListener {
-            override fun onConfirmClicked() { viewModel.upsertEditedAction() }
-            override fun onDeleteClicked() { viewModel.removeEditedAction() }
-            override fun onDismissClicked() { viewModel.dismissEditedAction() }
+            override fun onConfirmClicked() { configurator.upsertEditedAction() }
+            override fun onDeleteClicked() { configurator.removeEditedAction() }
+            override fun onDismissClicked() { configurator.dismissEditedAction() }
         }
     }
 

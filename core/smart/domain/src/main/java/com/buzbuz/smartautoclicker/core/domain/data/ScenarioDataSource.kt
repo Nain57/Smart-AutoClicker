@@ -91,7 +91,7 @@ internal class ScenarioDataSource(
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)
 
-    suspend fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?> =
+    fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?> =
         scenarioDaoFlow.flatMapLatest { it.getScenarioFlow(scenarioId) }
 
     suspend fun getImageEvents(scenarioId: Long): List<CompleteEventEntity> =
