@@ -20,6 +20,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import android.util.Size
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.normalizePriorities
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
@@ -99,9 +100,7 @@ internal object ProcessingTestData {
     ): TestScenario {
 
         // Setup correct priorities
-        imageEvents.forEachIndexed { index, imageEvent ->
-            imageEvent.priority = index
-        }
+        imageEvents.normalizePriorities()
 
         return TestScenario(
             scenario = Scenario(

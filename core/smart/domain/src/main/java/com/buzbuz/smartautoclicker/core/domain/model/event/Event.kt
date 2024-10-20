@@ -20,6 +20,7 @@ import androidx.annotation.CallSuper
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
+import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -77,8 +78,8 @@ data class ImageEvent(
     override val actions: List<Action> = emptyList(),
     override val conditions: List<ImageCondition> =  emptyList(),
     override val enabledOnStart: Boolean = true,
-    var priority: Int,
-): Event() {
+    override var priority: Int,
+): Event(), Prioritizable {
 
     /** Tells if this event is complete and valid for save. */
     override fun isComplete(): Boolean {

@@ -20,6 +20,8 @@ import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
+import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
+import com.buzbuz.smartautoclicker.core.base.interfaces.normalizePriorities
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 
@@ -150,6 +152,7 @@ internal open class ListEditor<Item , Parent>(
      */
     fun updateList(items: List<Item>?) {
         val newList = items?.toList() ?: return
+        newList.normalizeList()
 
         _editedList.value = newList
         onListUpdated?.invoke(newList)
@@ -170,4 +173,13 @@ internal open class ListEditor<Item , Parent>(
                 if (items.find { item.id == it.id } == null) add(item)
             }
         }
+
+    private fun List<Item>.normalizeList() {
+        if (isEmpty()) return
+
+        @Suppress("UNCHECKED_CAST")
+        if (firstOrNull() is Prioritizable) {
+            (this as List<Prioritizable>).normalizePriorities()
+        }
+    }
 }

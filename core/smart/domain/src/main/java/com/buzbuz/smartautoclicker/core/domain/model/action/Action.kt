@@ -22,19 +22,18 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
+import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 
 /** Base for for all possible actions for an Event. */
-sealed class Action : Identifiable, Completable {
+sealed class Action : Identifiable, Completable, Prioritizable {
 
     /** The identifier of the event for this action. */
     abstract val eventId: Identifier
     /** The name of the action. */
     abstract val name: String?
-    /** The name of the action. */
-    abstract val priority: Int
 
     /** @return true if this action is complete and can be transformed into its entity. */
     override fun isComplete(): Boolean = name != null
@@ -74,7 +73,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val pressDuration: Long? = null,
         val positionType: PositionType,
         val position: Point? = null,
@@ -129,7 +128,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val swipeDuration: Long? = null,
         val from: Point? = null,
         val to: Point? = null,
@@ -156,7 +155,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val pauseDuration: Long? = null,
     ) : Action() {
 
@@ -186,7 +185,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val isAdvanced: Boolean? = null,
         val isBroadcast: Boolean,
         val intentAction: String? = null,
@@ -224,7 +223,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val toggleAll: Boolean = false,
         val toggleAllType: ToggleType? = null,
         val eventToggles: List<EventToggle> = emptyList(),
@@ -265,7 +264,7 @@ sealed class Action : Identifiable, Completable {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        override val priority: Int,
+        override var priority: Int,
         val counterName: String,
         val operation: OperationType,
         val operationValue: Int,
