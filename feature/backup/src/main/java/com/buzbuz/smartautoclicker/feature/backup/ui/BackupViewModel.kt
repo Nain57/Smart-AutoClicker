@@ -27,7 +27,7 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.feature.backup.R
 import com.buzbuz.smartautoclicker.feature.backup.domain.Backup
 import com.buzbuz.smartautoclicker.feature.backup.domain.BackupRepository

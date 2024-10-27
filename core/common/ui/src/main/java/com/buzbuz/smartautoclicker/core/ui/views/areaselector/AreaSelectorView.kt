@@ -25,7 +25,7 @@ import android.view.MotionEvent
 import androidx.core.content.res.use
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ComponentsView

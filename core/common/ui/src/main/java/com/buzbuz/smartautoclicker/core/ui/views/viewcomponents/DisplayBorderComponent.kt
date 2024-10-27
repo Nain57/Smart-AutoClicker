@@ -23,11 +23,11 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import androidx.annotation.ColorInt
 
-import com.buzbuz.smartautoclicker.core.display.Corner
-import com.buzbuz.smartautoclicker.core.display.DisplayConfig
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
-import com.buzbuz.smartautoclicker.core.display.DisplayRoundedCorner
-import com.buzbuz.smartautoclicker.core.display.haveRoundedCorner
+import com.buzbuz.smartautoclicker.core.display.config.Corner
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfig
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayRoundedCorner
+import com.buzbuz.smartautoclicker.core.display.config.haveRoundedCorner
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.display
+package com.buzbuz.smartautoclicker.core.display.recorder
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -28,8 +28,6 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 
 import androidx.annotation.MainThread
@@ -55,16 +53,13 @@ import javax.inject.Singleton
  */
 @MainThread
 @Singleton
-class DisplayRecorder @Inject internal constructor() {
+class DisplayRecorder @Inject internal constructor(
+    private val mediaProjectionProxy: MediaProjectionProxy,
+) {
 
     /** Synchronization mutex. */
     private val mutex = Mutex()
-    /**
-     * The token granting applications the ability to capture screen contents by creating a [VirtualDisplay].
-     * Can only be not null if the user have granted the permission displayed by
-     * [MediaProjectionManager.createScreenCaptureIntent].
-     */
-    private var projection: MediaProjection? = null
+
     /** Virtual display capturing the content of the screen. */
     private var virtualDisplay: VirtualDisplay? = null
     /** Listener to notify upon projection ends. */
@@ -97,7 +92,7 @@ class DisplayRecorder @Inject internal constructor() {
      * @param stoppedListener listener called when the projection have been stopped unexpectedly.
      */
     suspend fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) = mutex.withLock {
-        if (projection != null) {
+        if (mediaProjectionProxy.isMediaProjectionStarted()) {
             Log.w(TAG, "Attempting to start media projection while already started.")
             return@withLock
         }
@@ -106,11 +101,7 @@ class DisplayRecorder @Inject internal constructor() {
 
         stopListener = stoppedListener
 
-        try {
-            projection = context.getMediaProjection(resultCode, data).apply {
-                registerCallback(projectionCallback, Handler(Looper.getMainLooper()))
-            }
-        } catch (sEx: SecurityException) {
+        if (!mediaProjectionProxy.startMediaProjection(context, resultCode, data, stoppedListener)) {
             Log.e(TAG, "Failed to start media projection")
             stopListener?.invoke()
         }
@@ -124,7 +115,7 @@ class DisplayRecorder @Inject internal constructor() {
      * @param displaySize the size of the display, in pixels.
      */
     suspend fun startScreenRecord(context: Context, displaySize: Point): Unit = mutex.withLock {
-        if (projection == null || imageReader != null) {
+        if (!mediaProjectionProxy.isMediaProjectionStarted() || imageReader != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
         }
@@ -134,7 +125,7 @@ class DisplayRecorder @Inject internal constructor() {
         @SuppressLint("WrongConstant")
         imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
         try {
-            virtualDisplay = projection!!.createVirtualDisplay(
+            virtualDisplay = mediaProjectionProxy.getMediaProjection().createVirtualDisplay(
                 VIRTUAL_DISPLAY_NAME, displaySize.x, displaySize.y, context.resources.configuration.densityDpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
                 null)
@@ -218,22 +209,7 @@ class DisplayRecorder @Inject internal constructor() {
         stopScreenRecord()
 
         mutex.withLock {
-            projection?.apply {
-                unregisterCallback(projectionCallback)
-                stop()
-            }
-            projection = null
-            stopListener = null
-        }
-    }
-
-    /** Called when the user have stopped the projection by clicking on the 'Cast' icon in the status bar. */
-    private val projectionCallback = object : MediaProjection.Callback() {
-
-        override fun onStop() {
-            Log.i(TAG, "Projection stopped by the user")
-            // We only notify, we let the detector take care of calling stopScreenRecord
-            stopListener?.invoke()
+            mediaProjectionProxy.stopMediaProjection()
         }
     }
 }

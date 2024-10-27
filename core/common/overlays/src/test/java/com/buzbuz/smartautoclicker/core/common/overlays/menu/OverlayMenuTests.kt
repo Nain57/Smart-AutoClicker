@@ -32,10 +32,10 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedMenuView
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.captureWindowManagerAddedViews
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.R
-import com.buzbuz.smartautoclicker.core.display.DisplayConfig
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfig
 import dagger.hilt.EntryPoints
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
