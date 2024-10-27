@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 @file:Suppress("DEPRECATION")
-package com.buzbuz.smartautoclicker.core.display
+package com.buzbuz.smartautoclicker.core.display.config
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -203,17 +203,9 @@ class DisplayConfigManager @Inject constructor(
         writer.apply {
             append(prefix).println("* DisplayMetrics:")
             append(contentPrefix, displayConfig)
-            append(contentPrefix).append("DisplayRotation: ${display.rotation.toDisplayRotationString()}").println()
+            append(contentPrefix, display)
             append(contentPrefix).append("DisplaySize: ${getCurrentDisplaySize()}").println()
         }
-    }
-
-    private fun Int?.toDisplayRotationString(): String = when (this) {
-        Surface.ROTATION_0 -> "ROTATION_0"
-        Surface.ROTATION_180 -> "ROTATION_180"
-        Surface.ROTATION_90 -> "ROTATION_90"
-        Surface.ROTATION_270 -> "ROTATION_270"
-        else -> "UNDEFINED"
     }
 }
 

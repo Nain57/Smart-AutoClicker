@@ -27,7 +27,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.graphics.toRectF
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponent

@@ -24,8 +24,8 @@ import android.media.projection.MediaProjectionManager
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
-import com.buzbuz.smartautoclicker.core.display.DisplayRecorder
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition

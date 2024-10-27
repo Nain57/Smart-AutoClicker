@@ -20,7 +20,7 @@ import android.graphics.Point
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
