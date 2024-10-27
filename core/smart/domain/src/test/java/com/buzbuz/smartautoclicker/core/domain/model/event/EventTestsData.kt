@@ -42,7 +42,7 @@ internal object EventTestsData {
         enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
         scenarioId: Long,
         priority: Int = 0,
-    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart, EventType.IMAGE_EVENT)
+    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart, EventType.IMAGE_EVENT, keepDetecting = false)
 
     fun getNewTriggerEventEntity(
         id: Long = EVENT_ID,
@@ -61,7 +61,7 @@ internal object EventTestsData {
         conditions: List<ImageCondition> = emptyList(),
         scenarioId: Long,
         priority: Int = 0,
-    ) = ImageEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority)
+    ) = ImageEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
 
     fun getNewTriggerEvent(
         id: Long = EVENT_ID,

@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -106,7 +107,7 @@ internal class ScenarioProcessor(
         // Handle the image detection
         progressListener?.onImageEventsProcessingStarted()
         if (!processingState.areAllImageEventsDisabled()) {
-            processImageEvents(screenFrame, processingState.getEnabledImageEvents())?.let { (imageEvent, results) ->
+            processImageEvents(screenFrame, processingState.getEnabledImageEvents()) { imageEvent, results ->
                 actionExecutor.executeActions(imageEvent, results)
             }
         }
@@ -130,7 +131,8 @@ internal class ScenarioProcessor(
     private suspend fun processImageEvents(
         screenFrame: Bitmap,
         events: Collection<ImageEvent>,
-    ): Pair<ImageEvent, ConditionsResult>? {
+        onDetected: suspend (Event, ConditionsResult) -> Unit,
+    ) {
         // Set the current screen image
         if (invalidateScreenMetrics) {
             imageDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())
@@ -147,12 +149,13 @@ internal class ScenarioProcessor(
             val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
             progressListener?.onImageEventProcessingCompleted(imageEvent, results)
 
-            if (results.fulfilled == true) return imageEvent to results
+            if (results.fulfilled == true) {
+                onDetected(imageEvent, results)
+                if (!imageEvent.keepDetecting) return
+            }
 
             // Stop processing if requested
             yield()
         }
-
-        return null
     }
 }

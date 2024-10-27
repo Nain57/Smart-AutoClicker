@@ -61,6 +61,7 @@ internal class ImageConditionTry(
             priority = 0,
             conditions = listOf(condition.copy(eventId = tryEventId)),
             actions = listOf(getTestPauseAction(tryEventId)),
+            keepDetecting = false,
         )
     }
 
@@ -69,7 +70,7 @@ internal class ImageConditionTry(
             id = Identifier(databaseId = 1L),
             eventId = eventId,
             name = "Test Pause",
-            pauseDuration = 1000L,
+            pauseDuration = 500L,
             priority = 0,
         )
 }

@@ -79,6 +79,7 @@ data class ImageEvent(
     override val conditions: List<ImageCondition> =  emptyList(),
     override val enabledOnStart: Boolean = true,
     override var priority: Int,
+    val keepDetecting: Boolean,
 ): Event(), Prioritizable {
 
     /** Tells if this event is complete and valid for save. */

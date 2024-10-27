@@ -238,6 +238,10 @@
     <string name="field_event_state_desc_enabled">Questo evento verrà interpretato normalmente quando esegui lo scenario</string>
     <string name="field_event_state_desc_disabled">Questo evento avrà bisogno di essere abilitato da un\'azione per essere interpretato quando esegui lo scenario</string>
 
+    <string name="field_event_keep_detecting_title">Continuare a eseguire</string>
+    <string name="field_event_keep_detecting_desc_enabled">Quando questo evento viene attivato, l\'esecuzione continua a partire dall\'evento successivo dell\'elenco.</string>
+    <string name="field_event_keep_detecting_desc_disabled">Quando questo evento viene attivato, riavvia l\'esecuzione dal primo evento dell\'elenco.</string>
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="field_operator_title">Condizioni</string>
     <string name="field_operator_desc_or">Deve essere rispettata almeno una condizione per permettere l\'esecuzione dell\'azione</string>

@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -115,10 +116,15 @@ class EventDialogViewModel @Inject constructor(
     val eventEnabledOnStart: Flow<Boolean> = configuredEvent
         .map { event -> event.enabledOnStart }
 
-    val shouldShowTryCard: Flow<Boolean> = configuredEvent
+    val isImageEvent: Flow<Boolean> = configuredEvent
         .map { it is ImageEvent }
 
+    val keepDetecting: Flow<Boolean> = configuredEvent
+        .filterIsInstance<ImageEvent>()
+        .map { event -> event.keepDetecting }
+
     val canTryEvent: Flow<Boolean> = configuredEvent
+        .filterIsInstance<ImageEvent>()
         .map { it.isComplete() }
 
 
@@ -151,6 +157,13 @@ class EventDialogViewModel @Inject constructor(
     fun toggleEventState() {
         updateEditedEvent { oldValue ->
             oldValue.copyBase(enabledOnStart = !oldValue.enabledOnStart)
+        }
+    }
+
+    fun toggleKeepDetectingState() {
+        updateEditedEvent { oldValue ->
+            if (oldValue is ImageEvent) oldValue.copy(keepDetecting = !oldValue.keepDetecting)
+            else oldValue
         }
     }
 

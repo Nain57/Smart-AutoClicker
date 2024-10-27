@@ -51,6 +51,8 @@ import kotlinx.serialization.Serializable
  * @param priority the order in the scenario. Lowest priority will always be checked first when detecting.
  * @param enabledOnStart if true, the event will be evaluated while the scenario is playing. If false, it must be
  *                       enabled via an action TOGGLE_EVENT to be evaluated.
+ * @param keepDetecting only for [EventType.IMAGE_EVENT]. If true, keep interpreting the next events in the list with
+ *                      the current screen frame. If false, stops and start over the event list with the next frame.
  */
 @Entity(
     tableName = EVENT_TABLE,
@@ -71,6 +73,7 @@ data class EventEntity(
     @ColumnInfo(name = "priority") var priority: Int,
     @ColumnInfo(name = "enabled_on_start", defaultValue="1") var enabledOnStart: Boolean = true,
     @ColumnInfo(name = "type") val type: EventType,
+    @ColumnInfo(name = "keep_detecting") val keepDetecting: Boolean? = null,
 ) : EntityWithId
 
 /**

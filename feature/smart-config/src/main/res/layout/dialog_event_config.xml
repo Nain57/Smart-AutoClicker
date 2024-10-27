@@ -125,6 +125,17 @@
                         android:layout_height="wrap_content"/>
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_keep_detecting"
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
+                    <include layout="@layout/include_field_switch"
+                        android:id="@+id/field_keep_detecting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/divider_try_selector"
                         style="@style/AppTheme.Widget.Divider.Horizontal"
                         android:layout_width="match_parent"
