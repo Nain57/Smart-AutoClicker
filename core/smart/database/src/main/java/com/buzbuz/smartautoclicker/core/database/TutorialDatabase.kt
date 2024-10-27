@@ -44,6 +44,7 @@ import javax.inject.Singleton
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 11, to = 12),
+        AutoMigration (from = 13, to = 14), // add keep_detecting column to event table
     ]
 )
 abstract class TutorialDatabase : ScenarioDatabase() {

@@ -155,6 +155,10 @@
     <string name="field_event_state_desc_enabled">This event will be interpreted normally when playing the scenario</string>
     <string name="field_event_state_desc_disabled">This event needs to be enabled by an action to be interpreted when playing the scenario</string>
 
+    <string name="field_event_keep_detecting_title">Keep executing</string>
+    <string name="field_event_keep_detecting_desc_enabled">When this Event is triggered, continue the execution from the next event on the list</string>
+    <string name="field_event_keep_detecting_desc_disabled">When this Event is triggered, restart the execution from the first event on the list</string>
+
     <string name="field_operator_title">Operator</string>
     <string name="field_operator_button_and" translatable="false">AND</string>
     <string name="field_operator_button_or" translatable="false">"OR  "</string>

@@ -131,6 +131,7 @@ internal object ProcessingTestData {
         actions = actions,
         name = "TestImageEvent",    // No impact on processor
         priority = 0,               // Set correctly once added to a test scenario
+        keepDetecting = false,
     )
 
     fun newTestImageCondition(

@@ -38,6 +38,7 @@ private fun ImageEvent.toEntity() = EventEntity(
     name = name,
     conditionOperator = conditionOperator,
     priority = priority,
+    keepDetecting = keepDetecting,
     enabledOnStart = enabledOnStart,
     type = EventType.IMAGE_EVENT,
 )
@@ -70,6 +71,7 @@ internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): 
         conditionOperator = event.conditionOperator,
         priority = event.priority,
         enabledOnStart = event.enabledOnStart,
+        keepDetecting = event.keepDetecting == true,
         actions = actions.sortedBy { it.action.priority }.map { it.toDomain(cleanIds) }.toMutableList(),
         conditions = conditions.map { it.toDomain(cleanIds) as ImageCondition }.toMutableList(),
     )

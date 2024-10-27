@@ -45,6 +45,7 @@ internal object ProcessingData {
         actions = actions.toMutableList(),
         conditions = conditions.toMutableList(),
         enabledOnStart = enableOnStart,
+        keepDetecting = false,
     )
 
     /** Instantiates a new condition with only the useful values for the tests. */

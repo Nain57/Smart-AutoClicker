@@ -240,6 +240,10 @@
     <string name="field_event_state_desc_enabled">Cet évènement sera interprété normalement quand le scénario sera joué</string>
     <string name="field_event_state_desc_disabled">Cet évènement doit être activé par une action pour être interprété quand le scénario sera joué</string>
 
+    <string name="field_event_keep_detecting_title">Continuer l\'éxécution</string>
+    <string name="field_event_keep_detecting_desc_enabled">Quand cet évènement est déclenché, continuer l\'éxécution depuis l\'évènement suivant dans la liste</string>
+    <string name="field_event_keep_detecting_desc_disabled">Quand cet évènement est déclenché, recommencer l\'éxécution depuis le premier évènement dans la liste</string>
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="field_operator_title">Conditions</string>
     <string name="field_operator_desc_or">Une seule des conditions doit être remplie pour déclencher les actions</string>

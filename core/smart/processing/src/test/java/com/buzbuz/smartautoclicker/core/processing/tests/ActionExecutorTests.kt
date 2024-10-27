@@ -72,7 +72,7 @@ class ActionExecutorTests {
         private const val TEST_Y2 = 76
 
         fun getNewDefaultEvent(operator: Int = OR, conditions: List<ImageCondition> = emptyList(), actions: List<Action> = emptyList()) =
-            ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0)
+            ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0, keepDetecting = false)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
             Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Action.Click.PositionType.USER_SELECTED, Point(
