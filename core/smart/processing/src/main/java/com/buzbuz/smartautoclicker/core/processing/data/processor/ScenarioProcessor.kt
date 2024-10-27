@@ -23,7 +23,6 @@ import androidx.annotation.VisibleForTesting
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -95,7 +94,7 @@ internal class ScenarioProcessor(
 
         // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
-            processTriggerEvents(processingState.getEnabledTriggerEvents())?.let { (triggerEvent, results) ->
+            processTriggerEvents(processingState.getEnabledTriggerEvents()) { triggerEvent, results ->
                 actionExecutor.executeActions(triggerEvent, results)
             }
         }
@@ -116,22 +115,23 @@ internal class ScenarioProcessor(
         return
     }
 
-    private suspend fun processTriggerEvents(events: Collection<TriggerEvent>): Pair<TriggerEvent, ConditionsResult>? {
+    private suspend fun processTriggerEvents(
+        events: Collection<TriggerEvent>,
+        onFulfilled: suspend (TriggerEvent, ConditionsResult) -> Unit,
+    ) {
         for (triggerEvent in events) {
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
             val results = conditionsVerifier.verifyConditions(triggerEvent.conditionOperator, triggerEvent.conditions)
-            if (results.fulfilled == true) return triggerEvent to results
+            if (results.fulfilled == true) onFulfilled(triggerEvent, results)
         }
-
-        return null
     }
 
     private suspend fun processImageEvents(
         screenFrame: Bitmap,
         events: Collection<ImageEvent>,
-        onDetected: suspend (Event, ConditionsResult) -> Unit,
+        onFulfilled: suspend (ImageEvent, ConditionsResult) -> Unit,
     ) {
         // Set the current screen image
         if (invalidateScreenMetrics) {
@@ -150,7 +150,7 @@ internal class ScenarioProcessor(
             progressListener?.onImageEventProcessingCompleted(imageEvent, results)
 
             if (results.fulfilled == true) {
-                onDetected(imageEvent, results)
+                onFulfilled(imageEvent, results)
                 if (!imageEvent.keepDetecting) return
             }
 
