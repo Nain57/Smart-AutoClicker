@@ -16,22 +16,19 @@
  */
 package com.buzbuz.smartautoclicker.core.display.recorder
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.PixelFormat
 import android.graphics.Point
-import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.util.Log
-
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -55,6 +52,7 @@ import javax.inject.Singleton
 @Singleton
 class DisplayRecorder @Inject internal constructor(
     private val mediaProjectionProxy: MediaProjectionProxy,
+    private val imageReaderProxy: ImageReaderProxy,
 ) {
 
     /** Synchronization mutex. */
@@ -64,11 +62,6 @@ class DisplayRecorder @Inject internal constructor(
     private var virtualDisplay: VirtualDisplay? = null
     /** Listener to notify upon projection ends. */
     private var stopListener: (() -> Unit)? = null
-    /** Allow access to [Image] rendered into the surface view of the [VirtualDisplay] */
-    private var imageReader: ImageReader? = null
-
-    /** Cache for the current frame. Interpreted from an [Image]. */
-    private var latestAcquiredFrameBitmap: Bitmap? = null
 
     /**
      * Start the media projection.
@@ -115,65 +108,45 @@ class DisplayRecorder @Inject internal constructor(
      * @param displaySize the size of the display, in pixels.
      */
     suspend fun startScreenRecord(context: Context, displaySize: Point): Unit = mutex.withLock {
-        if (!mediaProjectionProxy.isMediaProjectionStarted() || imageReader != null) {
+        if (!mediaProjectionProxy.isMediaProjectionStarted() || virtualDisplay != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
         }
 
         Log.d(TAG, "Start screen record with display size $displaySize")
 
-        @SuppressLint("WrongConstant")
-        imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
-        try {
-            virtualDisplay = mediaProjectionProxy.getMediaProjection().createVirtualDisplay(
-                VIRTUAL_DISPLAY_NAME, displaySize.x, displaySize.y, context.resources.configuration.densityDpi,
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, imageReader!!.surface, null,
-                null)
-        } catch (sEx: SecurityException) {
-            Log.w(TAG, "Screencast permission is no longer valid, stopping Smart AutoClicker...", sEx)
-            stopListener?.invoke()
-        }
+        imageReaderProxy.resize(displaySize)
+        virtualDisplay = mediaProjectionProxy.createVirtualDisplay(
+            displaySize = displaySize,
+            densityDpi = context.resources.configuration.densityDpi,
+            surface = imageReaderProxy.surface,
+        )
     }
 
     suspend fun resizeDisplay(context: Context, displaySize: Point): Unit = mutex.withLock {
-        if (virtualDisplay == null || imageReader == null) return
+        val vDisplay = virtualDisplay ?: return
 
         Log.d(TAG, "Resizing virtual display to $displaySize")
 
-        virtualDisplay?.let { vDisplay ->
-            imageReader?.close()
-            imageReader = ImageReader.newInstance(displaySize.x, displaySize.y, PixelFormat.RGBA_8888, 2)
-
-            vDisplay.surface = imageReader?.surface
-            vDisplay.resize(
-                displaySize.x,
-                displaySize.y,
-                context.resources.configuration.densityDpi,
-            )
-        }
+        imageReaderProxy.resize(displaySize)
+        vDisplay.surface = imageReaderProxy.surface
+        vDisplay.resize(
+            displaySize.x,
+            displaySize.y,
+            context.resources.configuration.densityDpi,
+        )
     }
 
     /** @return the last image of the screen, or null if they have been processed. */
     suspend fun acquireLatestBitmap(): Bitmap? = mutex.withLock {
-        imageReader?.acquireLatestImage()?.use { image ->
-            latestAcquiredFrameBitmap = image.toBitmap(latestAcquiredFrameBitmap)
-            latestAcquiredFrameBitmap
-        }
+        imageReaderProxy.getLastFrame()
     }
 
     suspend fun takeScreenshot(completion: suspend (Bitmap) -> Unit) {
         var finished = false
         do {
-            imageReader?.acquireLatestImage()?.use { image ->
-                completion(
-                    Bitmap.createBitmap(
-                        image.toBitmap(latestAcquiredFrameBitmap),
-                        0,
-                        0,
-                        image.width,
-                        image.height,
-                    )
-                )
+            imageReaderProxy.getLastFrame()?.let { screenFrame ->
+                completion(screenFrame)
                 finished = true
             }
 
@@ -191,10 +164,7 @@ class DisplayRecorder @Inject internal constructor(
             release()
             virtualDisplay = null
         }
-        imageReader?.apply {
-            close()
-            imageReader = null
-        }
+        imageReaderProxy.close()
     }
 
     /**
@@ -214,32 +184,5 @@ class DisplayRecorder @Inject internal constructor(
     }
 }
 
-/**
- * Transform an Image into a bitmap.
- *
- * @param resultBitmap a bitmap to use as a cache in order to avoid instantiating an new one. If null, a new one is
- *                     created.
- * @return the bitmap corresponding to the image. If [resultBitmap] was provided, it will be the same object.
- */
-private fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
-    var bitmap = resultBitmap
-    val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
-
-    if (bitmap == null) {
-        bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
-    } else if (bitmap.width != imageWidth || bitmap.height != height) {
-        try {
-            bitmap.reconfigure(imageWidth, height, Bitmap.Config.ARGB_8888)
-        } catch (ex: IllegalArgumentException) {
-            bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
-        }
-    }
-
-    bitmap.copyPixelsFromBuffer(planes[0].buffer)
-    return bitmap
-}
-
 /** Tag for logs. */
 private const val TAG = "DisplayRecorder"
-/** Name of the virtual display generating [Image]. */
-internal const val VIRTUAL_DISPLAY_NAME = "SmartAutoClicker"
