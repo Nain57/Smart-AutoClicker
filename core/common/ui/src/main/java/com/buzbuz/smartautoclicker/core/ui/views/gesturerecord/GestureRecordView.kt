@@ -22,7 +22,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.core.content.res.use
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponent

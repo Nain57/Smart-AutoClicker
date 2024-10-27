@@ -28,7 +28,7 @@ import android.view.ScaleGestureDetector
 
 import com.buzbuz.smartautoclicker.core.base.extensions.scale
 import com.buzbuz.smartautoclicker.core.base.extensions.translate
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewStyle

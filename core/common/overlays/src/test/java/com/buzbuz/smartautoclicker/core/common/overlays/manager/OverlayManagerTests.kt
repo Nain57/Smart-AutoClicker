@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.anyNotNull
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import org.junit.Assert
 import org.junit.Before

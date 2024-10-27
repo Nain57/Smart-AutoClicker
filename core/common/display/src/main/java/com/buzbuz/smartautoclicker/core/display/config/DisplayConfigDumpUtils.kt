@@ -14,47 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.display
+package com.buzbuz.smartautoclicker.core.display.config
 
 import android.content.res.Configuration
-import android.graphics.Point
-import android.os.Build
-import android.view.RoundedCorner
-import androidx.annotation.RequiresApi
-
+import android.view.Display
+import android.view.Surface
 import java.io.PrintWriter
 
-data class DisplayConfig(
-    val sizePx: Point,
-    val orientation: Int,
-    val safeInsetTopPx: Int,
-    val roundedCorners: Map<Corner, DisplayRoundedCorner?>,
-)
-
-fun DisplayConfig.haveRoundedCorner(): Boolean =
-    if (roundedCorners.isEmpty()) false
-    else roundedCorners.values.find { corner -> corner != null } != null
-
-data class DisplayRoundedCorner(
-    val centerPx: Point,
-    val radiusPx: Int,
-)
-
-enum class Corner {
-    TOP_LEFT,
-    TOP_RIGHT,
-    BOTTOM_LEFT,
-    BOTTOM_RIGHT,
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-internal fun Corner.toAndroidApiValue(): Int =
-    when (this) {
-        Corner.TOP_LEFT -> RoundedCorner.POSITION_TOP_LEFT
-        Corner.TOP_RIGHT -> RoundedCorner.POSITION_TOP_RIGHT
-        Corner.BOTTOM_LEFT -> RoundedCorner.POSITION_BOTTOM_LEFT
-        Corner.BOTTOM_RIGHT -> RoundedCorner.POSITION_BOTTOM_RIGHT
-    }
 
 internal fun PrintWriter.append(prefix: CharSequence, displayConfig: DisplayConfig): PrintWriter {
     append(prefix).append("DisplayConfig:")
@@ -70,15 +36,32 @@ internal fun PrintWriter.append(prefix: CharSequence, displayConfig: DisplayConf
     return this
 }
 
+internal fun PrintWriter.append(prefix: CharSequence, display: Display): PrintWriter {
+    append(prefix).append("Android Display:")
+
+    val contentPrefix = "$prefix - "
+    append(contentPrefix).append("Display: ${display.name}#${display.displayId}").println()
+    append(contentPrefix).append("Rotation: ${display.rotation.toSurfaceRotationString()}").println()
+
+    return this
+}
+
 private fun PrintWriter.append(corner: Corner, rounderCorner: DisplayRoundedCorner): PrintWriter =
     append("Display corner ").append(corner.name)
         .append(": [center (Px): ").append(rounderCorner.centerPx.toString())
         .append(", radius (Px): ").append(rounderCorner.radiusPx.toString())
         .append("]")
 
-
 private fun Int?.toOrientationString(): String = when (this) {
     Configuration.ORIENTATION_PORTRAIT -> "PORTRAIT"
     Configuration.ORIENTATION_LANDSCAPE -> "LANDSCAPE"
+    else -> "UNDEFINED"
+}
+
+private fun Int?.toSurfaceRotationString(): String = when (this) {
+    Surface.ROTATION_0 -> "ROTATION_0"
+    Surface.ROTATION_180 -> "ROTATION_180"
+    Surface.ROTATION_90 -> "ROTATION_90"
+    Surface.ROTATION_270 -> "ROTATION_270"
     else -> "UNDEFINED"
 }

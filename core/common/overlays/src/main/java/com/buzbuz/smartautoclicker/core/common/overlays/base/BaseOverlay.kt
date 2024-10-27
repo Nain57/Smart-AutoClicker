@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponentBuild
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
 import com.buzbuz.smartautoclicker.core.common.overlays.di.createHiltViewModelFactory
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 
 import com.google.android.material.color.DynamicColors

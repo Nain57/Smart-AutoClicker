@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.monitoring
 
 import android.graphics.Rect
 import android.view.View
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

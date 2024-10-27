@@ -25,7 +25,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription

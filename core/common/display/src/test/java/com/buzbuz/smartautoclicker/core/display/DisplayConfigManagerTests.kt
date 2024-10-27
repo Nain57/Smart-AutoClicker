@@ -32,6 +32,7 @@ import android.view.WindowManager
 import android.view.WindowMetrics
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import junit.framework.TestCase.assertEquals
 

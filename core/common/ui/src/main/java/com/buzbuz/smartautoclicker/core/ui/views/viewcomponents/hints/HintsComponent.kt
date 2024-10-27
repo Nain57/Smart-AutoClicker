@@ -24,7 +24,7 @@ import android.view.MotionEvent
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.toRect
 
-import com.buzbuz.smartautoclicker.core.display.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.GestureType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.MoveSelector
