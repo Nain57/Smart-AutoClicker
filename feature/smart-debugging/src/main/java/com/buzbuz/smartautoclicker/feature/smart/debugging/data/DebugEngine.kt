@@ -77,7 +77,7 @@ internal class DebugEngine : ScenarioProcessingListener {
     val debugReport: Flow<DebugReport?> = _debugReport
 
     /** The DebugInfo for the current image. */
-    val currentInfo = MutableStateFlow<DebugInfo?>(null)
+    val currentInfo = MutableSharedFlow<DebugInfo?>()
 
     override suspend fun onSessionStarted(
         context: Context,
@@ -161,7 +161,7 @@ internal class DebugEngine : ScenarioProcessingListener {
 
         // Notify current detection progress
         val conditionResults = results.getFirstImageDetectedResult() ?: let {
-            currentInfo.value = null
+            currentInfo.emit(null)
             return@withLock
         }
         if (instantData) {
@@ -178,7 +178,8 @@ internal class DebugEngine : ScenarioProcessingListener {
 
             val info = DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
                 conditionResults.position, conditionResults.confidenceRate, coordinates)
-            currentInfo.value = info
+
+            currentInfo.emit(info)
         }
     }
 
@@ -189,7 +190,7 @@ internal class DebugEngine : ScenarioProcessingListener {
     }
 
     override suspend fun onSessionEnded() = mutex.withLock {
-        currentInfo.value = null
+        currentInfo.emit(null)
 
         if (!generateReport) {
             _isDebugging.value = false
