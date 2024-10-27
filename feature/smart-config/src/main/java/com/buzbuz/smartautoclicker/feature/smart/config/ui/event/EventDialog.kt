@@ -134,6 +134,17 @@ class EventDialog(
             setOnClickListener(viewModel::toggleEventState)
         }
 
+        fieldKeepDetecting.apply {
+            setTitle(context.resources.getString(R.string.field_event_keep_detecting_title))
+            setupDescriptions(
+                listOf(
+                    context.getString(R.string.field_event_keep_detecting_desc_disabled),
+                    context.getString(R.string.field_event_keep_detecting_desc_enabled),
+                )
+            )
+            setOnClickListener(viewModel::toggleKeepDetectingState)
+        }
+
         fieldTestEvent.apply {
             setTitle(
                 context.getString(
@@ -234,7 +245,8 @@ class EventDialog(
                 launch { viewModel.eventNameError.collect(viewBinding.fieldEventName::setError) }
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
                 launch { viewModel.eventEnabledOnStart.collect(::updateEnabledOnStart) }
-                launch { viewModel.shouldShowTryCard.collect(::updateTryFieldVisibility) }
+                launch { viewModel.keepDetecting.collect(::updateKeepDetecting) }
+                launch { viewModel.isImageEvent.collect(::updateImageEventSpecificViewsVisibility) }
                 launch { viewModel.canTryEvent.collect(::updateTryFieldEnabledState) }
                 launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
 
@@ -292,9 +304,20 @@ class EventDialog(
         }
     }
 
-    private fun updateTryFieldVisibility(isEnabled: Boolean) {
-        viewBinding.fieldTestEvent.root.visibility = if (isEnabled) View.VISIBLE else View.GONE
-        viewBinding.dividerTrySelector.visibility = if (isEnabled) View.VISIBLE else View.GONE
+    private fun updateKeepDetecting(keepDetecting: Boolean) {
+        viewBinding.fieldKeepDetecting.apply {
+            setChecked(keepDetecting)
+            setDescription(if (keepDetecting) 1 else 0)
+        }
+    }
+
+    private fun updateImageEventSpecificViewsVisibility(isEnabled: Boolean) {
+        viewBinding.apply {
+            fieldKeepDetecting.root.visibility =  if (isEnabled) View.VISIBLE else View.GONE
+            dividerKeepDetecting.visibility =  if (isEnabled) View.VISIBLE else View.GONE
+            fieldTestEvent.root.visibility = if (isEnabled) View.VISIBLE else View.GONE
+            dividerTrySelector.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        }
     }
 
     private fun updateTryFieldEnabledState(isEnabled: Boolean) {

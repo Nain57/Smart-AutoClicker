@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
     private val repository: IRepository,
-    private val editor: com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor,
+    private val editor: ScenarioEditor,
 ) {
 
     private val defaultValues = EditionDefaultValues(repository)
@@ -75,6 +75,7 @@ class EditedItemsBuilder internal constructor(
             priority = getEditedImageEventsCountOrThrow(),
             conditions = mutableListOf(),
             actions = mutableListOf(),
+            keepDetecting = false,
         )
 
     fun createNewTriggerEvent(context: Context): TriggerEvent =

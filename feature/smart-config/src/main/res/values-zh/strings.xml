@@ -240,6 +240,10 @@
     <string name="field_event_state_desc_enabled">运行该脚本时，这个场景将被启用</string>
     <string name="field_event_state_desc_disabled">运行该脚本时，需要其他动作执行状态变更才会被启用（不明白作者为什么要这种表述）</string>
 
+    <string name="field_event_keep_detecting_title">继续执行</string>
+    <string name="field_event_keep_detecting_desc_enabled">触发该事件后，继续执行列表中的下一个事件</string>
+    <string name="field_event_keep_detecting_desc_disabled">触发该事件后，从列表中的第一个事件重新开始执行</string>
+
     <!-- Dropdown field for selecting the conditions operator -->
     <string name="field_operator_title">需匹配的图像</string>
     <string name="field_operator_desc_or">只要满足其中任意一个条件，就能够触发动作</string>
