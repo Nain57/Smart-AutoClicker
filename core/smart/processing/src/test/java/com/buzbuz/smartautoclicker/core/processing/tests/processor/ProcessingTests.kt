@@ -22,7 +22,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import junit.framework.TestCase.assertFalse
@@ -39,7 +41,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
-import org.mockito.Mockito.times
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
@@ -157,7 +158,6 @@ class ProcessingTests {
                     actions = listOf(),
                 ),
             ),
-            triggerEvents = emptyList(),
         )
 
         // Mock the bitmaps for each image conditions
@@ -251,7 +251,6 @@ class ProcessingTests {
                     actions = listOf(testsData.newPauseAction(eventId3)),
                 ),
             ),
-            triggerEvents = emptyList(),
         )
 
         // Mock the bitmaps for each image conditions
@@ -273,11 +272,58 @@ class ProcessingTests {
 
         // Then: Event1 and Event2 should be triggered, Event3 should not
         inOrder(mockProcessingListener).apply {
-            verify(mockProcessingListener, times(1))
-                .onImageConditionProcessingCompleted(testConditionEvt1.expectedResult(true))
-            verify(mockProcessingListener, times(1))
-                .onImageConditionProcessingCompleted(testConditionEvt2.expectedResult(true))
+            mockProcessingListener.verifyImageConditionProcessed(testConditionEvt1, true)
+            mockProcessingListener.verifyImageConditionProcessed(testConditionEvt2, true)
         }
         mockImageDetector.verifyConditionNeverProcessed(testConditionEvt3)
+    }
+
+    /**
+     * Use case: 3 trigger events, all enabled. The first and last one are already fulfilled (=0 counters), the second
+     * one is not.
+     * Expected behaviour: all trigger events are verify, only 1 & 3 are fulfilled
+     */
+    @Test
+    fun `Processor checks all TriggerEvents even when one is triggered`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId1 = testsData.newEventId()
+        val eventId2 = testsData.newEventId()
+        val eventId3 = testsData.newEventId()
+        val testEvent1 = testsData.newTestTriggerEvent(
+            eventId = eventId1,
+            scenarioId = scenarioId,
+            enabledOnStart = true,
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0)),
+            actions = listOf(testsData.newCounterAction(eventId1, "A", OperationType.ADD, 0)),
+        )
+        val testEvent2 = testsData.newTestTriggerEvent(
+            eventId = eventId2,
+            scenarioId = scenarioId,
+            enabledOnStart = true,
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "B", EQUALS, 10)),
+            actions = listOf(testsData.newCounterAction(eventId1, "B", OperationType.ADD, 0)),
+        )
+        val testEvent3 = testsData.newTestTriggerEvent(
+            eventId = eventId3,
+            scenarioId = scenarioId,
+            enabledOnStart = true,
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId3, "C", EQUALS, 0)),
+            actions = listOf(testsData.newCounterAction(eventId1, "C", OperationType.ADD, 0)),
+        )
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            triggerEvents = listOf(testEvent1, testEvent2, testEvent3)
+        )
+
+        // When: Only verify on one frame here
+        scenarioProcessor = createScenarioProcessor(testScenario).apply {
+            process(testsData.newMockedScreenBitmap())
+        }
+
+        // All trigger should be interpreted, no keepDetecting value in TriggerEvents
+        mockProcessingListener.verifyTriggerEventProcessed(testEvent1, true)
+        mockProcessingListener.verifyTriggerEventProcessed(testEvent2, false)
+        mockProcessingListener.verifyTriggerEventProcessed(testEvent3, true)
     }
 }

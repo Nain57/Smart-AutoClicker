@@ -123,8 +123,12 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
+            progressListener?.onTriggerEventProcessingStarted(triggerEvent)
+
             val results = conditionsVerifier.verifyConditions(triggerEvent.conditionOperator, triggerEvent.conditions)
             if (results.fulfilled == true) onFulfilled(triggerEvent, results)
+
+            progressListener?.onTriggerEventProcessingCompleted(triggerEvent, results.getAllResults())
         }
     }
 
