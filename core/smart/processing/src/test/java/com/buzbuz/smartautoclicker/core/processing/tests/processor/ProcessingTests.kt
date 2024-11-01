@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -37,9 +38,13 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.times
 import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
+
+/** Test file for advanced [ScenarioProcessor] tests with complex use cases. */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
@@ -62,6 +67,7 @@ class ProcessingTests {
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
+    @Mock private lateinit var mockProcessingListener: ScenarioProcessingListener
 
     /** The object under test. */
     private lateinit var scenarioProcessor: ScenarioProcessor
@@ -77,6 +83,7 @@ class ProcessingTests {
             androidExecutor = mockAndroidExecutor,
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             onStopRequested = mockEndListener::onStopRequested,
+            progressListener = mockProcessingListener,
         )
 
     @Before
@@ -198,5 +205,79 @@ class ProcessingTests {
             scenarioProcessor.processingState.isEventEnabled(eventId1.databaseId))
         assertFalse("Fourth frame: event2 should be disabled",
             scenarioProcessor.processingState.isEventEnabled(eventId2.databaseId))
+    }
+
+    /**
+     * Use case: 3 events, all enabled. The first one have keepDetecting set to true, the others to false. All
+     * image conditions will be detected.
+     * Expected behaviour: The first event is detected; as it is keepDetecting, it continues and the second event is
+     * detected; as it is not keepDetecting, it stops here and event3 is not checked.
+     */
+    @Test
+    fun `Event keepDetecting property behaviour`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId1 = testsData.newEventId()
+        val eventId2 = testsData.newEventId()
+        val eventId3 = testsData.newEventId()
+        val testConditionEvt1 = testsData.newTestImageCondition(eventId1)
+        val testConditionEvt2 = testsData.newTestImageCondition(eventId2)
+        val testConditionEvt3 = testsData.newTestImageCondition(eventId3)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            imageEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId1,
+                    scenarioId = scenarioId,
+                    enabledOnStart = true,
+                    keepDetecting = true,
+                    conditions = listOf(testConditionEvt1),
+                    actions = listOf(testsData.newPauseAction(eventId1)),
+                ),
+                testsData.newTestImageEvent(
+                    eventId = eventId2,
+                    scenarioId = scenarioId,
+                    enabledOnStart = true,
+                    keepDetecting = false,
+                    conditions = listOf(testConditionEvt2),
+                    actions = listOf(testsData.newPauseAction(eventId2)),
+                ),
+                testsData.newTestImageEvent(
+                    eventId = eventId3,
+                    scenarioId = scenarioId,
+                    enabledOnStart = true,
+                    keepDetecting = false,
+                    conditions = listOf(testConditionEvt3),
+                    actions = listOf(testsData.newPauseAction(eventId3)),
+                ),
+            ),
+            triggerEvents = emptyList(),
+        )
+
+        // Mock the bitmaps for each image conditions
+        mockBitmapSupplier.apply {
+            mockBitmapProviding(testConditionEvt1)
+            mockBitmapProviding(testConditionEvt2)
+            mockBitmapProviding(testConditionEvt3)
+        }
+        // Mock detection results for each condition.
+        mockImageDetector.apply {
+            mockDetectionResult(testConditionEvt1, true)
+            mockDetectionResult(testConditionEvt2, true)
+        }
+
+        // When: Only verify on one frame here
+        scenarioProcessor = createScenarioProcessor(testScenario).apply {
+            process(testsData.newMockedScreenBitmap())
+        }
+
+        // Then: Event1 and Event2 should be triggered, Event3 should not
+        inOrder(mockProcessingListener).apply {
+            verify(mockProcessingListener, times(1))
+                .onImageConditionProcessingCompleted(testConditionEvt1.expectedResult(true))
+            verify(mockProcessingListener, times(1))
+                .onImageConditionProcessingCompleted(testConditionEvt2.expectedResult(true))
+        }
+        mockImageDetector.verifyConditionNeverProcessed(testConditionEvt3)
     }
 }

@@ -17,12 +17,15 @@
 package com.buzbuz.smartautoclicker.core.processing.tests.processor
 
 import android.graphics.Bitmap
+import android.graphics.Point
+
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
 
 
 internal data class TestScenario(
@@ -41,3 +44,10 @@ internal data class TestEventToggle(
     val toggleType: Action.ToggleEvent.ToggleType,
 )
 
+internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(
+    isFulfilled = detected == imageCondition.shouldBeDetected,
+    haveBeenDetected = detected,
+    condition = imageCondition,
+    position = Point(0, 0),
+    confidenceRate = 0.0,
+)

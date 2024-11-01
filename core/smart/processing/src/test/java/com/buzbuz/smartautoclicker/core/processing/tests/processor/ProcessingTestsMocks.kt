@@ -23,6 +23,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 
 
 internal suspend fun BitmapSupplier.mockBitmapProviding(testCondition: TestImageCondition) {
@@ -37,37 +39,51 @@ internal fun ImageDetector.mockAllDetectionResult(testConditions: List<TestImage
 
 internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
     when (testCondition.imageCondition.detectionType) {
-        EXACT -> mockExactDetectionResult(testCondition, isDetected)
-        WHOLE_SCREEN -> mockWholeScreenDetectionResult(testCondition, isDetected)
-        IN_AREA -> mockInAreaDetectionResult(testCondition, isDetected)
+        EXACT -> `when`(
+            detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.area,
+                testCondition.imageCondition.threshold,
+            )
+        ).thenReturn(DetectionResult(isDetected))
+
+        WHOLE_SCREEN -> `when`(
+            detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.threshold,
+            )
+        ).thenReturn(DetectionResult(isDetected))
+
+        IN_AREA -> `when`(
+            detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.detectionArea!!,
+                testCondition.imageCondition.threshold,
+            )
+        ).thenReturn(DetectionResult(isDetected))
     }
 }
 
-private fun ImageDetector.mockExactDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
-    `when`(
-        detectCondition(
-            testCondition.mockedBitmap,
-            testCondition.imageCondition.area,
-            testCondition.imageCondition.threshold,
-        )
-    ).thenReturn(DetectionResult(isDetected))
-}
+internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
+    when (testCondition.imageCondition.detectionType) {
+        EXACT -> verify(this, never())
+            .detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.area,
+                testCondition.imageCondition.threshold,
+            )
 
-private fun ImageDetector.mockWholeScreenDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
-    `when`(
-        detectCondition(
-            testCondition.mockedBitmap,
-            testCondition.imageCondition.threshold,
-        )
-    ).thenReturn(DetectionResult(isDetected))
-}
+        WHOLE_SCREEN -> verify(this, never())
+            .detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.threshold,
+            )
 
-private fun ImageDetector.mockInAreaDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
-    `when`(
-        detectCondition(
-            testCondition.mockedBitmap,
-            testCondition.imageCondition.detectionArea!!,
-            testCondition.imageCondition.threshold,
-        )
-    ).thenReturn(DetectionResult(isDetected))
+        IN_AREA -> verify(this, never())
+            .detectCondition(
+                testCondition.mockedBitmap,
+                testCondition.imageCondition.detectionArea!!,
+                testCondition.imageCondition.threshold,
+            )
+    }
 }

@@ -32,6 +32,7 @@ import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
+import com.buzbuz.smartautoclicker.core.display.recorder.ImageReaderProxy
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionProxy
 import com.buzbuz.smartautoclicker.core.display.recorder.VIRTUAL_DISPLAY_NAME
 
@@ -120,7 +121,7 @@ class DisplayRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        displayRecorder = DisplayRecorder(MediaProjectionProxy())
+        displayRecorder = DisplayRecorder(MediaProjectionProxy(), ImageReaderProxy())
     }
 
     @After
