@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.tests.processor
 
 import android.graphics.Bitmap
+import android.graphics.Point
 import android.graphics.Rect
 import android.util.Size
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -32,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -44,6 +46,8 @@ internal object ProcessingTestData {
 
     private const val TEST_DATA_CONDITION_IMAGE_WIDTH = 100
     private const val TEST_DATA_CONDITION_IMAGE_HEIGHT = 50
+
+    private const val TEST_DATA_ACTION_PAUSE_DURATION_MS_DEFAULT = 50L
 
     private var scenarioIdIndex: Long = 0L
     private var eventIdIndex: Long = 0L
@@ -119,6 +123,7 @@ internal object ProcessingTestData {
         eventId: Identifier,
         scenarioId: Identifier,
         enabledOnStart: Boolean = true,
+        keepDetecting: Boolean = false,
         @ConditionOperator conditionOperator: Int = AND,
         conditions: List<TestImageCondition>,
         actions: List<Action>,
@@ -126,12 +131,12 @@ internal object ProcessingTestData {
         id = eventId,
         scenarioId = scenarioId,
         enabledOnStart = enabledOnStart,
+        keepDetecting = keepDetecting,
         conditionOperator = conditionOperator,
         conditions = conditions.map { it.imageCondition },
         actions = actions,
         name = "TestImageEvent",    // No impact on processor
         priority = 0,               // Set correctly once added to a test scenario
-        keepDetecting = false,
     )
 
     fun newTestImageCondition(
@@ -161,6 +166,15 @@ internal object ProcessingTestData {
 
         return TestImageCondition(condition, mockScreenBitmap)
     }
+
+    fun newPauseAction(eventId: Identifier, durationMs: Long = TEST_DATA_ACTION_PAUSE_DURATION_MS_DEFAULT) =
+        Action.Pause(
+            id = newActionId(),
+            eventId = eventId,
+            name = "TestToggleEventAction",
+            priority = 0,
+            pauseDuration = durationMs,
+        )
 
     fun newToggleEventAction(eventId: Identifier, toggles: List<TestEventToggle>): Action.ToggleEvent {
         val actionId = newActionId()

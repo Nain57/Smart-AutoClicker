@@ -28,6 +28,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Surface
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
@@ -135,7 +136,7 @@ private const val GET_PROJECTION_RETRY_DELAY_MS = 500L
 private const val GET_PROJECTION_RETRY_MAX_COUNT = 10
 
 /** Name of the virtual display generating [Image]. */
-private const val VIRTUAL_DISPLAY_NAME = "Klickr"
+@VisibleForTesting internal const val VIRTUAL_DISPLAY_NAME = "Klickr"
 
 /** Tag for logs. */
 private const val TAG = "MediaProjectionManager"
