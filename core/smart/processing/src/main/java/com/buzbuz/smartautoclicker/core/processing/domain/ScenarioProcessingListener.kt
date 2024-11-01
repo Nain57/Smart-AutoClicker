@@ -32,6 +32,9 @@ interface ScenarioProcessingListener {
         triggerEvents: List<TriggerEvent>,
     ) = Unit
 
+    suspend fun onTriggerEventProcessingStarted(event: TriggerEvent) = Unit
+    suspend fun onTriggerEventProcessingCompleted(event: TriggerEvent, results: List<ConditionResult>) = Unit
+
     suspend fun onImageEventsProcessingStarted() = Unit
 
     suspend fun onImageEventProcessingStarted(event: ImageEvent) = Unit

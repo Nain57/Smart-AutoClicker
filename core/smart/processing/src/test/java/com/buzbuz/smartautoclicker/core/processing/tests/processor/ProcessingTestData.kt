@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.processing.tests.processor
 
 import android.graphics.Bitmap
-import android.graphics.Point
 import android.graphics.Rect
 import android.util.Size
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -29,11 +28,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -48,6 +49,7 @@ internal object ProcessingTestData {
     private const val TEST_DATA_CONDITION_IMAGE_HEIGHT = 50
 
     private const val TEST_DATA_ACTION_PAUSE_DURATION_MS_DEFAULT = 50L
+    const val TEST_DATA_BROADCAST_ACTION = "com.buzbuz.test.broadcast"
 
     private var scenarioIdIndex: Long = 0L
     private var eventIdIndex: Long = 0L
@@ -99,8 +101,8 @@ internal object ProcessingTestData {
 
     fun newTestScenario(
         scenarioId: Identifier,
-        imageEvents: List<ImageEvent>,
-        triggerEvents: List<TriggerEvent>,
+        imageEvents: List<ImageEvent> = emptyList(),
+        triggerEvents: List<TriggerEvent> = emptyList(),
     ): TestScenario {
 
         // Setup correct priorities
@@ -167,6 +169,37 @@ internal object ProcessingTestData {
         return TestImageCondition(condition, mockScreenBitmap)
     }
 
+    fun newTestTriggerEvent(
+        eventId: Identifier,
+        scenarioId: Identifier,
+        enabledOnStart: Boolean = true,
+        @ConditionOperator conditionOperator: Int = AND,
+        conditions: List<TriggerCondition>,
+        actions: List<Action>,
+    ) = TriggerEvent(
+        id = eventId,
+        scenarioId = scenarioId,
+        enabledOnStart = enabledOnStart,
+        conditionOperator = conditionOperator,
+        conditions = conditions,
+        actions = actions,
+        name = "TestImageEvent",    // No impact on processor
+    )
+
+    fun newTestCounterTriggerCondition(
+        eventId: Identifier,
+        counterName: String,
+        operator: ComparisonOperation,
+        value: Int = 0,
+    ) = TriggerCondition.OnCounterCountReached(
+            id = newConditionId(),
+            eventId = eventId,
+            counterName = counterName,
+            comparisonOperation = operator,
+            counterValue = value,
+            name = "TestCounterCondition", // No impact on processor
+        )
+
     fun newPauseAction(eventId: Identifier, durationMs: Long = TEST_DATA_ACTION_PAUSE_DURATION_MS_DEFAULT) =
         Action.Pause(
             id = newActionId(),
@@ -174,6 +207,21 @@ internal object ProcessingTestData {
             name = "TestToggleEventAction",
             priority = 0,
             pauseDuration = durationMs,
+        )
+
+    fun newCounterAction(
+        eventId: Identifier,
+        counterName: String,
+        operator: Action.ChangeCounter.OperationType,
+        value: Int = 0,
+    ) = Action.ChangeCounter(
+            id = newActionId(),
+            eventId = eventId,
+            counterName = counterName,
+            operation = operator,
+            operationValue = value,
+            name = "TestToggleEventAction",
+            priority = 0,
         )
 
     fun newToggleEventAction(eventId: Identifier, toggles: List<TestEventToggle>): Action.ToggleEvent {
