@@ -25,7 +25,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.DefaultResult
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 
 
 internal data class TestScenario(
@@ -51,3 +54,7 @@ internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(
     position = Point(0, 0),
     confidenceRate = 0.0,
 )
+
+internal fun TriggerEvent.expectedResult(detected: Boolean): List<ConditionResult> = ConditionsResult().apply {
+    addResult(conditionId = id.databaseId, DefaultResult(isFulfilled = detected))
+}.getAllResults()

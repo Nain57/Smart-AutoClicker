@@ -21,7 +21,10 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
+import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -64,6 +67,13 @@ internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition
     }
 }
 
+internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
+    condition: TestImageCondition,
+    expectedResult: Boolean,
+    processedCount: Int = 1,
+): Unit = verify(this, times(processedCount))
+    .onImageConditionProcessingCompleted(condition.expectedResult(expectedResult))
+
 internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
     when (testCondition.imageCondition.detectionType) {
         EXACT -> verify(this, never())
@@ -87,3 +97,10 @@ internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImag
             )
     }
 }
+
+internal suspend fun ScenarioProcessingListener.verifyTriggerEventProcessed(
+    event: TriggerEvent,
+    expectedResult: Boolean,
+    processedCount: Int = 1,
+): Unit = verify(this, times(processedCount))
+    .onTriggerEventProcessingCompleted(event, event.expectedResult(expectedResult))
