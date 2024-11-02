@@ -68,6 +68,8 @@ sealed class Action : Identifiable, Completable, Prioritizable {
      * @param positionType the type of click position.
      * @param position the position of the click. Not null only if [positionType] is [PositionType.USER_SELECTED].
      * @param clickOnConditionId the condition to click on. Not null only if [positionType] is [PositionType.ON_DETECTED_CONDITION].
+     * @param clickOffset the offset in px from the detected condition center to apply when clicking. Not null only if
+     * [positionType] is [PositionType.ON_DETECTED_CONDITION].
      */
     data class Click(
         override val id: Identifier,
@@ -78,6 +80,7 @@ sealed class Action : Identifiable, Completable, Prioritizable {
         val positionType: PositionType,
         val position: Point? = null,
         val clickOnConditionId: Identifier? = null,
+        val clickOffset: Point? = null,
     ) : Action() {
 
         /**
