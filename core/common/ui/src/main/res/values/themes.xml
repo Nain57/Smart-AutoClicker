@@ -53,6 +53,7 @@
         <item name="bottomSheetDialogTheme">@style/AppTheme.Widget.BottomSheetDialog</item>
         <item name="itemBriefStyle">@style/AppTheme.Overlay.PositionSelector</item>
         <item name="gestureRecordStyle">@style/AppTheme.Overlay.GestureRecorder</item>
+        <item name="clickOffsetStyle">@style/AppTheme.Widget.ClickOffset</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
