@@ -45,7 +45,7 @@ import javax.inject.Singleton
         AutoMigration (from = 7, to = 8),
         AutoMigration (from = 8, to = 9, spec = Migration8to9::class),
         AutoMigration (from = 11, to = 12),
-        AutoMigration (from = 13, to = 14), // add keep_detecting column to event table
+        AutoMigration (from = 13, to = 14),
     ]
 )
 abstract class ClickDatabase : ScenarioDatabase()
