@@ -190,6 +190,15 @@
     <style name="AppTheme.Widget.BottomSheet" parent="@style/Widget.Material3.BottomSheet.Modal">
         <item name="backgroundTint">?android:attr/colorBackground</item>
     </style>
+    <!-- Style for the ClickOffsetView. -->
+    <style name="AppTheme.Widget.ClickOffset">
+        <item name="radius">@dimen/overlay_click_selector_radius</item>
+        <item name="innerRadius">@dimen/overlay_click_selector_inner_radius</item>
+        <item name="thickness">@dimen/overlay_click_selector_thickness</item>
+        <item name="colorBackground">@color/overlayActionsBriefBackground</item>
+        <item name="colorInner">@color/overlayViewPrimary</item>
+        <item name="colorOutlinePrimary">@color/overlayViewPrimary</item>
+    </style>
 
     <!-- Base overlays theme. -->
     <style name="AppTheme.Overlay" />

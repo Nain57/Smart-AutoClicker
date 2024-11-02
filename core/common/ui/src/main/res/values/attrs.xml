@@ -25,6 +25,8 @@
 
     <attr format="reference" name="gestureRecordStyle"/>
 
+    <attr format="reference" name="clickOffsetStyle"/>
+
     <!-- Color for the inner part of an overlay selector. -->
     <attr name="colorInner" format="color" />
     <!-- Primary color for the outline part of an overlay selector. -->
@@ -39,6 +41,10 @@
     <!-- The length of the recording bars -->
     <attr name="length" format="dimension"/>
 
+    <!-- The radius of the selector circle, in dp. -->
+    <attr name="radius" format="dimension" />
+    <!-- The radius of the small circle at the center of the selector, in dp. -->
+    <attr name="innerRadius" format="dimension" />
     <!-- The radius of the selector corners. -->
     <attr name="cornerRadius" format="dimension" />
     <!-- The default width of the selector when displayed. -->
@@ -76,11 +82,8 @@
         <attr name="colorBackground"/>
         <attr name="thickness"/>
         <attr name="cornerRadius"/>
-
-        <!-- The radius of the selector circle, in dp. -->
-        <attr name="radius" format="dimension" />
-        <!-- The radius of the small circle at the center of the selector, in dp. -->
-        <attr name="innerRadius" format="dimension" />
+        <attr name="radius"/>
+        <attr name="innerRadius"/>
     </declare-styleable>
 
     <!-- Styleable attributes for the ConditionSelectorView. -->
@@ -145,6 +148,17 @@
         <!-- The color of all things drawn by this view -->
         <attr name="recorderColor" format="color"/>
         <attr name="length"/>
+        <attr name="thickness"/>
+    </declare-styleable>
+
+    <!-- Styleable attributes for the ClickOffsetView. -->
+    <declare-styleable name="ClickOffsetView">
+        <!-- The color of all things drawn by this view -->
+        <attr name="colorInner"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="colorBackground"/>
+        <attr name="radius"/>
+        <attr name="innerRadius"/>
         <attr name="thickness"/>
     </declare-styleable>
 </resources>
