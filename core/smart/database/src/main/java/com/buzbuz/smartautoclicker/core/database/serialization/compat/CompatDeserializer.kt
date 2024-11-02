@@ -205,6 +205,8 @@ internal abstract class CompatDeserializer : Deserializer {
             ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
             ?: OPERATOR_DEFAULT_VALUE
 
+        val keepDetecting = jsonEvent.getBoolean("keepDetecting", true) ?: false
+
         return EventEntity(
             id = id,
             scenarioId = scenarioId,
@@ -213,6 +215,7 @@ internal abstract class CompatDeserializer : Deserializer {
             priority = jsonEvent.getInt("priority")?.coerceAtLeast(0) ?: 0,
             enabledOnStart = jsonEvent.getBoolean("enabledOnStart") ?: true,
             type = type,
+            keepDetecting = keepDetecting,
         )
     }
 
@@ -350,6 +353,8 @@ internal abstract class CompatDeserializer : Deserializer {
         val clickOnConditionId: Long?
         val clickPositionType = jsonClick.getEnum<ClickPositionType>("clickPositionType", true)
             ?: return null
+        val clickOffsetX: Int?
+        val clickOffsetY: Int?
 
         when (clickPositionType) {
             ClickPositionType.ON_DETECTED_CONDITION -> {
@@ -360,12 +365,16 @@ internal abstract class CompatDeserializer : Deserializer {
                     Log.w(TAG, "Can't deserialize action, clickOnConditionId is not valid.")
                     return null
                 }
+                clickOffsetX = jsonClick.getInt("clickOffsetX")
+                clickOffsetY = jsonClick.getInt("clickOffsetY")
             }
 
             ClickPositionType.USER_SELECTED -> {
                 x = jsonClick.getInt("x", true) ?: return null
                 y = jsonClick.getInt("y", true) ?: return null
                 clickOnConditionId = null
+                clickOffsetX = null
+                clickOffsetY = null
             }
         }
 
@@ -382,6 +391,8 @@ internal abstract class CompatDeserializer : Deserializer {
             pressDuration = jsonClick.getLong("pressDuration")
                 ?.coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
                 ?: DEFAULT_CLICK_DURATION,
+            clickOffsetX = clickOffsetX,
+            clickOffsetY = clickOffsetY,
         )
     }
 
