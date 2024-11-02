@@ -237,6 +237,9 @@
 
     <string name="field_click_position_desc">Clique em %1$d, %2$d</string>
 
+    <string name="field_click_offset_title">Clique deslocamento</string>
+    <string name="field_click_offset_desc_none">Nenhum</string>
+
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 

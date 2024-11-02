@@ -123,7 +123,7 @@ class ClickViewModel @Inject constructor(
                     context.getUserSelectedClickPositionState(click, forced = false)
 
                 evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
-                    context.getOnConditionWithOrPositionState()
+                    context.getOnConditionWithOrPositionState(click)
 
                 evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
                     context.getOnConditionWithAndPositionState(evt, click)
@@ -225,15 +225,21 @@ class ClickViewModel @Inject constructor(
             selectorDescription =
                 if (click.position == null) getString(R.string.generic_select_the_position)
                 else getString(R.string.field_click_position_desc, click.position?.x ?: 0, click.position?.y ?: 0),
+            isClickOffsetEnabled = false,
+            isClickOffsetVisible = !forced,
+            clickOffsetDescription = getClickOffsetString(click),
         )
 
-    private fun Context.getOnConditionWithOrPositionState(): ClickPositionUiState =
+    private fun Context.getOnConditionWithOrPositionState(click: Action.Click): ClickPositionUiState =
         ClickPositionUiState(
             positionType = Action.Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
             isSelectorEnabled = false,
             selectorTitle = getString(R.string.field_condition_selection_title_or_operator),
             selectorDescription = getString(R.string.field_condition_selection_desc_or_operator),
+            isClickOffsetVisible = true,
+            isClickOffsetEnabled = true,
+            clickOffsetDescription = getClickOffsetString(click),
         )
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
@@ -249,13 +255,28 @@ class ClickViewModel @Inject constructor(
                 if (conditionToClick == null || conditionBitmap == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
                 else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
             selectorBitmap = conditionBitmap,
+            isClickOffsetVisible = true,
+            isClickOffsetEnabled = true,
+            clickOffsetDescription = getClickOffsetString(click),
         )
+    }
+
+    private fun Context.getClickOffsetString(click: Action.Click): String {
+        val offset =
+            if (click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION) click.clickOffset
+            else null
+
+        return offset?.let { getString(R.string.field_click_offset_desc, it.x, it.y) }
+            ?: getString(R.string.field_click_offset_desc_none)
     }
 }
 
 data class ClickPositionUiState(
     val positionType: Action.Click.PositionType,
     val isTypeFieldVisible: Boolean,
+    val isClickOffsetVisible: Boolean,
+    val isClickOffsetEnabled: Boolean,
+    val clickOffsetDescription: String? = null,
     val isSelectorEnabled: Boolean,
     val selectorTitle: String,
     val selectorDescription: String?,

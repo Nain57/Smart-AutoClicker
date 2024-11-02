@@ -35,7 +35,7 @@ fun IncludeFieldTextInputBinding.setText(text: String?, type: Int = InputType.TY
     textField.apply {
         inputType = type
         imeOptions = EditorInfo.IME_ACTION_DONE
-        textField.setText(text)
+        setText(text)
     }
 }
 
