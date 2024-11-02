@@ -28,6 +28,7 @@ import android.view.accessibility.AccessibilityEvent
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
+import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
@@ -41,6 +42,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
+import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationListener
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -114,10 +117,16 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     private val localService: LocalService?
         get() = LOCAL_SERVICE_INSTANCE as? LocalService
 
-    private val notificationManager: ServiceNotificationManager by lazy {
-        ServiceNotificationManager(
+    private val notificationController: ServiceNotificationController by lazy {
+        ServiceNotificationController(
             context = this,
-            actionsCallback = object : ServiceNotificationCallbacks {
+            activityPendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                Intent(this, ScenarioActivity::class.java),
+                PendingIntent.FLAG_IMMUTABLE,
+            ),
+            listener = object : ServiceNotificationListener {
                 override fun onPlayAndHide() = LOCAL_SERVICE_INSTANCE?.playAndHide()
                 override fun onPauseAndShow() = LOCAL_SERVICE_INSTANCE?.pauseAndShow()
                 override fun onShow() = LOCAL_SERVICE_INSTANCE?.show()
@@ -175,8 +184,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 currentScenarioName = name
                 if (isSmart) {
                     startForegroundMediaProjectionServiceCompat(
-                        ServiceNotificationManager.NOTIFICATION_ID,
-                        notificationManager.createNotification(this, currentScenarioName),
+                        ServiceNotificationController.NOTIFICATION_ID,
+                        notificationController.createNotification(this, currentScenarioName),
                     )
                 }
                 requestFilterKeyEvents(true)
@@ -186,10 +195,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
                 currentScenarioName = null
                 requestFilterKeyEvents(false)
                 stopForeground(Service.STOP_FOREGROUND_REMOVE)
-                notificationManager.destroyNotification(this)
+                notificationController.destroyNotification(this)
             },
             onStateChanged = { isRunning, isMenuHidden ->
-                notificationManager.updateNotificationState(this, isRunning, isMenuHidden)
+                notificationController.updateNotificationState(this, isRunning, isMenuHidden)
             }
         )
     }

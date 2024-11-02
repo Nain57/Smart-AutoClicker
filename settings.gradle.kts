@@ -40,6 +40,7 @@ include(":core:smart:processing")
 
 include(":feature:backup")
 include(":feature:permissions")
+include(":feature:notifications")
 include(":feature:quick-settings-tile")
 include(":feature:revenue")
 include(":feature:dumb-config")
