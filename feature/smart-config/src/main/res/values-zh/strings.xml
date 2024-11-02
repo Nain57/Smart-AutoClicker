@@ -262,6 +262,9 @@
     <string name="field_click_type_desc_on_condition">点击条件满足的对应位置坐标</string>
     <string name="field_click_type_desc_on_position">点击自定义坐标位置</string>
 
+    <string name="field_click_offset_title">点击移位</string>
+    <string name="field_click_offset_desc_none">无</string>
+
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_intent_extra_type_title">参数值类型</string>
     <string name="dropdown_intent_sending_type_label">类型</string>

@@ -260,6 +260,9 @@
     <string name="field_click_type_desc_on_condition">Clicca sulla condizione rilevata</string>
     <string name="field_click_type_desc_on_position">Clicca sulla posizione selezionata</string>
 
+    <string name="field_click_offset_title">Clic offset</string>
+    <string name="field_click_offset_desc_none">Nessuno</string>
+
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_intent_sending_type_label">Tipo</string>
 

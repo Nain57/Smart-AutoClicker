@@ -71,7 +71,8 @@ class MinMaxInputFilter(
         dend: Int
     ): CharSequence? {
         try {
-            val input = (dest.toString() + source.toString()).toInt()
+            val sanitizedSource = if (source == "-") "-0" else source
+            val input = (dest.toString() + sanitizedSource.toString()).toInt()
 
             val isOverMin = min == null || min <= input
             val isBelowMax = max == null || input <= max

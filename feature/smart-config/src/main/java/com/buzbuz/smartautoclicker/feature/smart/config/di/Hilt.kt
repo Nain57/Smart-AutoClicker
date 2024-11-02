@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenuModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickOffsetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentViewModel
@@ -64,6 +65,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel
     fun captureViewModel(): CaptureViewModel
     fun changeCounterViewModel(): ChangeCounterViewModel
+    fun clickOffsetViewModel(): ClickOffsetViewModel
     fun clickViewModel(): ClickViewModel
     fun componentSelectionViewModel(): ComponentSelectionModel
     fun conditionCopyViewModel(): ConditionCopyModel

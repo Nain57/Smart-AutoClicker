@@ -241,6 +241,12 @@
 
     <string name="field_click_position_desc">Click on %1$d, %2$d</string>
 
+    <string name="field_click_offset_title">Click offset</string>
+    <string name="field_click_offset_desc_none">None</string>
+    <string name="field_click_offset_desc" translatable="false">X=%1$d Y=%2$d</string>
+    <string name="field_click_offset_x" translatable="false">X</string>
+    <string name="field_click_offset_y" translatable="false">Y</string>
+
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 

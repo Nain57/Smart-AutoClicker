@@ -134,6 +134,11 @@ class ClickDialog(
                     )
                 }
             }
+
+            fieldClickOffset.apply {
+                setTitle(context.getString(R.string.field_click_offset_title))
+                setOnClickListener { showClickOffsetDialog() }
+            }
         }
 
         return viewBinding.root
@@ -214,6 +219,12 @@ class ClickDialog(
                     setOnClickListener { debounceUserInteraction { showConditionSelector() } }
             }
         }
+
+        viewBinding.fieldClickOffset.apply {
+            setEnabled(state.isClickOffsetEnabled)
+            setDescription(state.clickOffsetDescription)
+            root.visibility = if (state.isClickOffsetVisible) View.VISIBLE else View.GONE
+        }
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {
@@ -248,6 +259,13 @@ class ClickDialog(
                 bitmapProvider = viewModel::getConditionBitmap,
                 onConditionSelected = viewModel::setConditionToBeClicked,
             ),
+            hideCurrent = false,
+        )
+
+    private fun showClickOffsetDialog() =
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ClickOffsetDialog(),
             hideCurrent = false,
         )
 
