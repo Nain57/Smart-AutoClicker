@@ -105,7 +105,7 @@ sealed class Action : Identifiable, Completable, Prioritizable {
 
         override fun hashCodeNoIds(): Int =
             name.hashCode() + pressDuration.hashCode() + positionType.hashCode() + position.hashCode() +
-                    clickOnConditionId.hashCode()
+                    clickOnConditionId.hashCode() + clickOffset.hashCode()
 
 
         override fun deepCopy(): Click = copy(name = "" + name)

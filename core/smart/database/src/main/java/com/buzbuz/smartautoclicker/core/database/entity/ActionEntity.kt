@@ -48,6 +48,11 @@ import kotlinx.serialization.Serializable
  *                         If null, the x and y coordinates will be used.
  * @param pressDuration [ActionType.CLICK] only: the duration of the click press in milliseconds.
  *                      Null for others [ActionType].
+ * @param clickOffsetX [ActionType.CLICK] & [ClickPositionType.ON_DETECTED_CONDITION] only: the offset to apply in the X
+ *                      axis when clicking on a condition.
+ *                      Null for others [ActionType].
+ * @param clickOffsetY [ActionType.CLICK] & [ClickPositionType.ON_DETECTED_CONDITION] only: the offset to apply in the Y
+ *                      axis when clicking on a condition.
  *
  * @param fromX [ActionType.SWIPE] only: the swipe start x coordinates. Null for others [ActionType].
  * @param fromY [ActionType.SWIPE] only: the swipe start y coordinates. Null for others [ActionType].
@@ -104,6 +109,8 @@ data class ActionEntity(
     @ColumnInfo(name = "y") val y: Int? = null,
     @ColumnInfo(name = "clickOnConditionId") var clickOnConditionId: Long? = null,
     @ColumnInfo(name = "pressDuration") val pressDuration: Long? = null,
+    @ColumnInfo(name = "clickOffsetX") val clickOffsetX: Int? = null,
+    @ColumnInfo(name = "clickOffsetY") val clickOffsetY: Int? = null,
 
     // ActionType.SWIPE
     @ColumnInfo(name = "fromX") val fromX: Int? = null,

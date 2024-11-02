@@ -52,6 +52,8 @@ private fun Action.Click.toClickEntity(): ActionEntity =
         x = position?.x,
         y = position?.y,
         clickOnConditionId = clickOnConditionId?.databaseId,
+        clickOffsetX = clickOffset?.x,
+        clickOffsetY = clickOffset?.y,
     )
 
 private fun Action.Swipe.toSwipeEntity(): ActionEntity =
@@ -135,6 +137,9 @@ private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Acti
     positionType = action.clickPositionType!!.toDomain(),
     position = getPositionIfValid(action.x, action.y),
     clickOnConditionId = action.clickOnConditionId?.let { Identifier(id = it, asTemporary = cleanIds) },
+    clickOffset =
+        if (action.clickOffsetX != null && action.clickOffsetY != null) Point(action.clickOffsetX!!, action.clickOffsetY!!)
+        else null
 )
 
 private fun CompleteActionEntity.toDomainSwipe(cleanIds: Boolean = false) = Action.Swipe(

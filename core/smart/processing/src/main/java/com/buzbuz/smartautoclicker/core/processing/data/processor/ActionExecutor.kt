@@ -108,7 +108,14 @@ internal class ActionExecutor(
             return null
         }
 
-        return Path().apply { moveTo(result.position) }
+        return Path().apply {
+            moveTo(
+                Point(
+                    result.position.x + (click.clickOffset?.x ?: 0),
+                    result.position.y + (click.clickOffset?.y ?: 0),
+                )
+            )
+        }
     }
 
     /**
