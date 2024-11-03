@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -32,8 +32,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
@@ -58,7 +56,7 @@ class ClickOffsetViewModel @Inject constructor(
     /** The Action currently configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.Click>()
+        .filterIsInstance<Click>()
 
     private val conditionToShow: Flow<ImageCondition?> =
         combine(editedEvent, editedImageConditions, configuredClick) { event, imageConditions, click ->
@@ -108,18 +106,18 @@ class ClickOffsetViewModel @Inject constructor(
     fun saveChanges() {
         val clickOffset = userClickOffset.value?.offset ?: return
 
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(clickOffset = clickOffset))
         }
     }
 
     private fun getCurrentOffset(): Point =
         userClickOffset.value?.offset
-            ?: editionRepository.editionState.getEditedAction<Action.Click>()?.clickOffset
+            ?: editionRepository.editionState.getEditedAction<Click>()?.clickOffset
             ?: Point(0, 0)
 
-    private fun Action.Click.haveDeterminedCondition(@ConditionOperator conditionOperator: Int): Boolean =
-        positionType == Action.Click.PositionType.ON_DETECTED_CONDITION
+    private fun Click.haveDeterminedCondition(@ConditionOperator conditionOperator: Int): Boolean =
+        positionType == Click.PositionType.ON_DETECTED_CONDITION
                 && conditionOperator == AND
                 && clickOnConditionId != null
 

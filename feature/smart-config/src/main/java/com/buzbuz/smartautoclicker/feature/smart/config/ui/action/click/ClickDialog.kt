@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
@@ -129,8 +130,8 @@ class ClickDialog(
                 )
                 setOnCheckedListener { checkedId ->
                     viewModel.setClickOnCondition(
-                        if (checkedId == 0) Action.Click.PositionType.USER_SELECTED
-                        else Action.Click.PositionType.ON_DETECTED_CONDITION
+                        if (checkedId == 0) Click.PositionType.USER_SELECTED
+                        else Click.PositionType.ON_DETECTED_CONDITION
                     )
                 }
             }
@@ -199,7 +200,7 @@ class ClickDialog(
         state ?: return
 
         viewBinding.fieldClickType.apply {
-            val checkIndex = if (state.positionType == Action.Click.PositionType.USER_SELECTED) 0 else 1
+            val checkIndex = if (state.positionType == Click.PositionType.USER_SELECTED) 0 else 1
             setChecked(checkIndex)
             setDescription(checkIndex)
 
@@ -213,9 +214,9 @@ class ClickDialog(
             setIconBitmap(state.selectorBitmap)
 
             when (state.positionType) {
-                Action.Click.PositionType.USER_SELECTED ->
+                Click.PositionType.USER_SELECTED ->
                     setOnClickListener { debounceUserInteraction { showPositionSelector() } }
-                Action.Click.PositionType.ON_DETECTED_CONDITION ->
+                Click.PositionType.ON_DETECTED_CONDITION ->
                     setOnClickListener { debounceUserInteraction { showConditionSelector() } }
             }
         }

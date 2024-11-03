@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -90,12 +90,12 @@ class ScenarioProcessorTests {
         private val TEST_DETECTION_KO = DetectionResult(false)
 
         private fun newDefaultClickAction(duration: Long = 1) =
-            Action.Click(
+            Click(
                 id = Identifier(databaseId = 1),
                 eventId = Identifier(databaseId = 1),
                 priority = 0,
                 pressDuration = duration,
-                positionType = Action.Click.PositionType.USER_SELECTED,
+                positionType = Click.PositionType.USER_SELECTED,
                 position = Point(10, 10),
             )
     }

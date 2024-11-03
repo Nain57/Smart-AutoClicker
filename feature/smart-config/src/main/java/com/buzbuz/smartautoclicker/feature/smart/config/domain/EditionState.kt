@@ -20,8 +20,10 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -247,7 +249,7 @@ internal class EditionState internal constructor(
 
     override fun getEditedActionEventToggles(): List<EventToggle>? =
         editor.currentEventEditor.value?.actionsEditor?.editedItem?.value?.let { action ->
-            if (action is Action.ToggleEvent) action.eventToggles
+            if (action is ToggleEvent) action.eventToggles
             else null
         }
 
@@ -262,7 +264,7 @@ internal class EditionState internal constructor(
             if (scenarioEvent.id == event.id) return@find false
 
             scenarioEvent.actions.find { action ->
-                action is Action.ToggleEvent && !action.toggleAll && action.eventToggles.find { it.targetEventId == event.id } != null
+                action is ToggleEvent && !action.toggleAll && action.eventToggles.find { it.targetEventId == event.id } != null
             } != null
         } != null
     }
@@ -275,7 +277,7 @@ internal class EditionState internal constructor(
         val actions = editor.currentEventEditor.value?.actionsEditor?.editedList?.value ?: return false
 
         return actions.find { action ->
-            action is Action.Click && action.clickOnConditionId == condition.id
+            action is Click && action.clickOnConditionId == condition.id
         } != null
     }
 }

@@ -24,9 +24,15 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click.PositionType
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -202,8 +208,8 @@ class EditedItemsBuilder internal constructor(
             name = "" + condition.name,
         )
 
-    fun createNewClick(context: Context): Action.Click =
-        Action.Click(
+    fun createNewClick(context: Context): Click =
+        Click(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.clickName(context),
@@ -212,8 +218,8 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
-    fun createNewSwipe(context: Context): Action.Swipe =
-        Action.Swipe(
+    fun createNewSwipe(context: Context): Swipe =
+        Swipe(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.swipeName(context),
@@ -221,8 +227,8 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
-    fun createNewPause(context: Context): Action.Pause =
-        Action.Pause(
+    fun createNewPause(context: Context): Pause =
+        Pause(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.pauseName(context),
@@ -230,8 +236,8 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
-    fun createNewIntent(context: Context): Action.Intent =
-        Action.Intent(
+    fun createNewIntent(context: Context): Intent =
+        Intent(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.intentName(context),
@@ -248,8 +254,8 @@ class EditedItemsBuilder internal constructor(
             value = null,
         )
 
-    fun createNewToggleEvent(context: Context): Action.ToggleEvent =
-        Action.ToggleEvent(
+    fun createNewToggleEvent(context: Context): ToggleEvent =
+        ToggleEvent(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.toggleEventName(context),
@@ -262,7 +268,7 @@ class EditedItemsBuilder internal constructor(
     fun createNewEventToggle(
         id: Identifier = eventTogglesIdCreator.generateNewIdentifier(),
         targetEventId: Identifier? = null,
-        toggleType: Action.ToggleEvent.ToggleType = defaultValues.eventToggleType(),
+        toggleType: ToggleEvent.ToggleType = defaultValues.eventToggleType(),
     ) = EventToggle(
             id = id,
             actionId = getEditedActionIdOrThrow(),
@@ -270,27 +276,27 @@ class EditedItemsBuilder internal constructor(
             toggleType = toggleType,
         )
 
-    fun createNewChangeCounter(context: Context): Action.ChangeCounter =
-        Action.ChangeCounter(
+    fun createNewChangeCounter(context: Context): ChangeCounter =
+        ChangeCounter(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.changeCounterName(context),
             counterName = "",
-            operation = Action.ChangeCounter.OperationType.ADD,
+            operation = ChangeCounter.OperationType.ADD,
             operationValue = 0,
             priority = 0,
         )
 
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
-        is Action.Click -> createNewClickFrom(from, eventId)
-        is Action.Swipe -> createNewSwipeFrom(from, eventId)
-        is Action.Pause -> createNewPauseFrom(from, eventId)
-        is Action.Intent -> createNewIntentFrom(from, eventId)
-        is Action.ToggleEvent -> createNewToggleEventFrom(from, eventId)
-        is Action.ChangeCounter -> createNewChangeCounterFrom(from, eventId)
+        is Click -> createNewClickFrom(from, eventId)
+        is Swipe -> createNewSwipeFrom(from, eventId)
+        is Pause -> createNewPauseFrom(from, eventId)
+        is Intent -> createNewIntentFrom(from, eventId)
+        is ToggleEvent -> createNewToggleEventFrom(from, eventId)
+        is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
     }
 
-    private fun createNewClickFrom(from: Action.Click, eventId: Identifier): Action.Click {
+    private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
         val conditionId =
             if (from.positionType == PositionType.ON_DETECTED_CONDITION && from.clickOnConditionId != null)
                 eventCopyConditionIdMap[from.clickOnConditionId]
@@ -304,21 +310,21 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    private fun createNewSwipeFrom(from: Action.Swipe, eventId: Identifier): Action.Swipe =
+    private fun createNewSwipeFrom(from: Swipe, eventId: Identifier): Swipe =
         from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + from.name,
         )
 
-    private fun createNewPauseFrom(from: Action.Pause, eventId: Identifier): Action.Pause =
+    private fun createNewPauseFrom(from: Pause, eventId: Identifier): Pause =
         from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + from.name,
         )
 
-    private fun createNewIntentFrom(from: Action.Intent, eventId: Identifier): Action.Intent {
+    private fun createNewIntentFrom(from: Intent, eventId: Identifier): Intent {
         val actionId = actionsIdCreator.generateNewIdentifier()
 
         return from.copy(
@@ -338,7 +344,7 @@ class EditedItemsBuilder internal constructor(
             key = "" + from.key,
         )
 
-    private fun createNewToggleEventFrom(from: Action.ToggleEvent, eventId: Identifier): Action.ToggleEvent {
+    private fun createNewToggleEventFrom(from: ToggleEvent, eventId: Identifier): ToggleEvent {
         val actionId = actionsIdCreator.generateNewIdentifier()
 
         val eventsToggles = from.eventToggles.mapNotNull { eventToggle ->
@@ -363,7 +369,7 @@ class EditedItemsBuilder internal constructor(
             actionId = actionId,
         )
 
-    private fun createNewChangeCounterFrom(from: Action.ChangeCounter, eventId: Identifier): Action.ChangeCounter {
+    private fun createNewChangeCounterFrom(from: ChangeCounter, eventId: Identifier): ChangeCounter {
         val actionId = actionsIdCreator.generateNewIdentifier()
 
         return from.copy(

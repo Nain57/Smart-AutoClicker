@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
+import android.content.Intent as AndroidIntent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -27,8 +27,8 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.android.application.getAndroidApplicationInfo
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -50,7 +50,7 @@ class IntentViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredIntent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.Intent>()
+        .filterIsInstance<Intent>()
 
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
@@ -130,7 +130,7 @@ class IntentViewModel @Inject constructor(
             if (intent.componentName == null) return@map null
 
             packageManager.getAndroidApplicationInfo(
-                Intent(intent.intentAction).setComponent(intent.componentName!!)
+                AndroidIntent(intent.intentAction).setComponent(intent.componentName!!)
             )
         }
 
@@ -138,21 +138,21 @@ class IntentViewModel @Inject constructor(
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
-    fun isAdvanced(): Boolean = editionRepository.editionState.getEditedAction<Action.Intent>()?.isAdvanced ?: false
+    fun isAdvanced(): Boolean = editionRepository.editionState.getEditedAction<Intent>()?.isAdvanced ?: false
 
     /**
      * Set the name of the intent.
      * @param name the new name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(intent.copy(name = "" + name))
         }
     }
 
     /** Set the configuration mode. */
     fun setIsAdvancedConfiguration(isAdvanced: Boolean) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(
                 intent.copy(
                     isAdvanced = isAdvanced,
@@ -169,12 +169,12 @@ class IntentViewModel @Inject constructor(
      * @param componentName component name of the selected activity.
      */
     fun setActivitySelected(componentName: ComponentName) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(
                 intent.copy(
                     isBroadcast = false,
-                    intentAction = Intent.ACTION_MAIN,
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP,
+                    intentAction = AndroidIntent.ACTION_MAIN,
+                    flags = AndroidIntent.FLAG_ACTIVITY_NEW_TASK or AndroidIntent.FLAG_ACTIVITY_CLEAR_TOP,
                     componentName = componentName,
                 )
             )
@@ -183,21 +183,21 @@ class IntentViewModel @Inject constructor(
 
     /** Set the action for the intent. */
     fun setIntentAction(action: String) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(intent.copy(intentAction = action))
         }
     }
 
     /** Set the action for the intent. */
     fun setIntentFlags(flags: Int?) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(intent.copy(flags = flags))
         }
     }
 
     /** Set the component name for the intent. */
     fun setComponentName(componentName: String) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(
                 intent.copy(componentName = ComponentName.unflattenFromString(componentName))
             )
@@ -206,7 +206,7 @@ class IntentViewModel @Inject constructor(
 
     /** Set the component name for the intent. */
     fun setComponentName(componentName: ComponentName) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             editionRepository.updateEditedAction(
                 intent.copy(componentName = componentName.clone())
             )
@@ -215,7 +215,7 @@ class IntentViewModel @Inject constructor(
 
     /** Set the sending type. of the intent */
     fun setSendingType(newType: DropdownItem) {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             val isBroadcast = when (newType) {
                 sendingTypeBroadcast -> true
                 sendingTypeActivity -> false
@@ -227,13 +227,13 @@ class IntentViewModel @Inject constructor(
     }
 
     fun getConfiguredIntentAction(): String? =
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.intentAction
+        editionRepository.editionState.getEditedAction<Intent>()?.intentAction
 
     fun getConfiguredIntentFlags(): Int =
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.flags ?: 0
+        editionRepository.editionState.getEditedAction<Intent>()?.flags ?: 0
 
     fun isConfiguredIntentBroadcast(): Boolean =
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.isBroadcast ?: false
+        editionRepository.editionState.getEditedAction<Intent>()?.isBroadcast ?: false
 
 
     /** @return creates a new extra for this intent. */
@@ -253,24 +253,11 @@ class IntentViewModel @Inject constructor(
     fun dismissIntentExtraEvent() = editionRepository.stopIntentExtraEdition()
 
     fun saveLastConfig() {
-        editionRepository.editionState.getEditedAction<Action.Intent>()?.let { intent ->
+        editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
             sharedPreferences.edit().putIntentIsAdvancedConfig(intent.isAdvanced == true).apply()
         }
     }
 }
-
-/**
- * Information about an activity to be started by the intent.
- *
- * @param componentName the Android component name of the activity.
- * @param name the name of the activity.
- * @param icon the icon of the activity.
- */
-data class ActivityDisplayInfo(
-    val componentName: ComponentName,
-    val name: String,
-    val icon: Drawable,
-)
 
 /** Items displayed in the extra list. */
 sealed class ExtraListItem {

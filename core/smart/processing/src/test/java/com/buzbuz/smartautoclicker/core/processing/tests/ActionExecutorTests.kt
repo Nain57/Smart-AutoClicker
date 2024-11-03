@@ -29,6 +29,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
@@ -75,17 +78,17 @@ class ActionExecutorTests {
             ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0, keepDetecting = false)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Action.Click.PositionType.USER_SELECTED, Point(
+            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Click.PositionType.USER_SELECTED, Point(
                 TEST_X1, TEST_Y1
             ), null)
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
-            Action.Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Action.Click.PositionType.ON_DETECTED_CONDITION, null, conditionId?.let { Identifier(databaseId = conditionId) })
+            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Click.PositionType.ON_DETECTED_CONDITION, null, conditionId?.let { Identifier(databaseId = conditionId) })
         fun getNewDefaultSwipe(id: Long) =
-            Action.Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, Point(TEST_X1, TEST_Y1), Point(
+            Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, Point(TEST_X1, TEST_Y1), Point(
                 TEST_X2, TEST_Y2
             ))
         fun getNewDefaultPause(id: Long) =
-            Action.Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
+            Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
             ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)

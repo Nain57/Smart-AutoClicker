@@ -21,8 +21,8 @@ import androidx.annotation.StringRes
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -47,7 +47,7 @@ class ToggleEventViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredToggleEvent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.ToggleEvent>()
+        .filterIsInstance<ToggleEvent>()
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
@@ -66,9 +66,9 @@ class ToggleEventViewModel @Inject constructor(
         .map { toggleEventAction ->
             when {
                 !toggleEventAction.toggleAll -> null
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
-                toggleEventAction.toggleAllType == Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
+                toggleEventAction.toggleAllType == ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                toggleEventAction.toggleAllType == ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                toggleEventAction.toggleAllType == ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
                 else -> null
             }
         }
@@ -81,9 +81,9 @@ class ToggleEventViewModel @Inject constructor(
 
             toggleEventAction.eventToggles.forEach {
                 when (it.toggleType) {
-                    Action.ToggleEvent.ToggleType.ENABLE -> enableCount++
-                    Action.ToggleEvent.ToggleType.TOGGLE -> toggleCount++
-                    Action.ToggleEvent.ToggleType.DISABLE -> disableCount++
+                    ToggleEvent.ToggleType.ENABLE -> enableCount++
+                    ToggleEvent.ToggleType.TOGGLE -> toggleCount++
+                    ToggleEvent.ToggleType.DISABLE -> disableCount++
                 }
             }
 
@@ -106,7 +106,7 @@ class ToggleEventViewModel @Inject constructor(
      * @param name the new name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+        editionRepository.editionState.getEditedAction<ToggleEvent>()?.let { toggleEvent ->
             editionRepository.updateEditedAction(toggleEvent.copy (name = "" + name))
         }
     }
@@ -116,11 +116,11 @@ class ToggleEventViewModel @Inject constructor(
      * @param checkedButtonId the new selected type.
      */
     fun setToggleAllType(checkedButtonId: Int?) {
-        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+        editionRepository.editionState.getEditedAction<ToggleEvent>()?.let { toggleEvent ->
             val type = when (checkedButtonId) {
-                BUTTON_ENABLE_EVENT -> Action.ToggleEvent.ToggleType.ENABLE
-                BUTTON_TOGGLE_EVENT -> Action.ToggleEvent.ToggleType.TOGGLE
-                BUTTON_DISABLE_EVENT -> Action.ToggleEvent.ToggleType.DISABLE
+                BUTTON_ENABLE_EVENT -> ToggleEvent.ToggleType.ENABLE
+                BUTTON_TOGGLE_EVENT -> ToggleEvent.ToggleType.TOGGLE
+                BUTTON_DISABLE_EVENT -> ToggleEvent.ToggleType.DISABLE
                 null -> null
                 else -> return
             }
@@ -136,7 +136,7 @@ class ToggleEventViewModel @Inject constructor(
     }
 
     fun setNewEventToggles(toggles: List<EventToggle>) {
-        editionRepository.editionState.getEditedAction<Action.ToggleEvent>()?.let { toggleEvent ->
+        editionRepository.editionState.getEditedAction<ToggleEvent>()?.let { toggleEvent ->
             editionRepository.updateEditedAction(
                 toggleEvent.copy(
                     toggleAll = false,
@@ -147,7 +147,7 @@ class ToggleEventViewModel @Inject constructor(
         }
     }
 
-    private fun Context.getEventToggleListName(toggleEventAction: Action.ToggleEvent): String =
+    private fun Context.getEventToggleListName(toggleEventAction: ToggleEvent): String =
         if (toggleEventAction.eventToggles.isEmpty()) getString(R.string.field_select_toggle_events_title_empty)
         else getString(R.string.field_select_toggle_events_title, toggleEventAction.eventToggles.size)
 

@@ -22,7 +22,7 @@ import android.graphics.Point
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putSwipeDurationConfig
@@ -48,7 +48,7 @@ class SwipeViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredSwipe = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.Swipe>()
+        .filterIsInstance<Swipe>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
@@ -84,7 +84,7 @@ class SwipeViewModel @Inject constructor(
     val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
-    fun getEditedSwipe(): Action.Swipe? =
+    fun getEditedSwipe(): Swipe? =
         editionRepository.editionState.getEditedAction()
 
     /**
@@ -92,7 +92,7 @@ class SwipeViewModel @Inject constructor(
      * @param name the new name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+        editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
             editionRepository.updateEditedAction(swipe.copy(name = "" + name))
         }
     }
@@ -103,7 +103,7 @@ class SwipeViewModel @Inject constructor(
      * @param to the new end position.
      */
     fun setPositions(from: Point, to: Point) {
-        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+        editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
             editionRepository.updateEditedAction(swipe.copy(from = from, to = to))
         }
     }
@@ -113,13 +113,13 @@ class SwipeViewModel @Inject constructor(
      * @param durationMs the new duration in milliseconds.
      */
     fun setSwipeDuration(durationMs: Long?) {
-        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+        editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
             editionRepository.updateEditedAction(swipe.copy(swipeDuration = durationMs))
         }
     }
 
     fun saveLastConfig() {
-        editionRepository.editionState.getEditedAction<Action.Swipe>()?.let { swipe ->
+        editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
             sharedPreferences.edit().putSwipeDurationConfig(swipe.swipeDuration ?: 0).apply()
         }
     }

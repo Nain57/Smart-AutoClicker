@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.count
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
@@ -38,12 +39,12 @@ class CounterNameSelectionViewModel @Inject constructor(
                         if (condition is TriggerCondition.OnCounterCountReached) add(condition.counterName)
                     }
                     event.actions.forEach { action ->
-                        if (action is Action.ChangeCounter) add(action.counterName)
+                        if (action is ChangeCounter) add(action.counterName)
                     }
                 }
 
                 currentActions.value?.forEach { action ->
-                    if (action is Action.ChangeCounter) add(action.counterName)
+                    if (action is ChangeCounter) add(action.counterName)
                 }
             }
         }

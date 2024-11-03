@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.processing.domain.trying
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -65,8 +67,8 @@ internal class ImageConditionTry(
         )
     }
 
-    private fun getTestPauseAction(eventId: Identifier): Action.Pause =
-        Action.Pause(
+    private fun getTestPauseAction(eventId: Identifier): Pause =
+        Pause(
             id = Identifier(databaseId = 1L),
             eventId = eventId,
             name = "Test Pause",
@@ -96,14 +98,14 @@ internal class ActionTry(
         )
     }
 
-    private fun getStopScenarioAction(eventId: Identifier): Action.ToggleEvent =
-        Action.ToggleEvent(
+    private fun getStopScenarioAction(eventId: Identifier): ToggleEvent =
+        ToggleEvent(
             id = Identifier(databaseId = 1L),
             eventId = eventId,
             name = "Test Pause",
             priority = 0,
             toggleAll = true,
-            toggleAllType = Action.ToggleEvent.ToggleType.DISABLE,
+            toggleAllType = ToggleEvent.ToggleType.DISABLE,
         )
 
     private fun getTestTriggerCondition(eventId: Identifier): TriggerCondition.OnTimerReached =

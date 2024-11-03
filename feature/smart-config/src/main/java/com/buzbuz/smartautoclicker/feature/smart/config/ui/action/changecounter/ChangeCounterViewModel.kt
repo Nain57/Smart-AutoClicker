@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -46,7 +46,7 @@ class ChangeCounterViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredChangeCounter = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.ChangeCounter>()
+        .filterIsInstance<ChangeCounter>()
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
@@ -76,9 +76,9 @@ class ChangeCounterViewModel @Inject constructor(
     val operatorDropdownState: Flow<DropdownItem> = configuredChangeCounter
         .map { condition ->
             when (condition.operation) {
-                Action.ChangeCounter.OperationType.ADD -> plusItem
-                Action.ChangeCounter.OperationType.MINUS -> minusItem
-                Action.ChangeCounter.OperationType.SET -> setItem
+                ChangeCounter.OperationType.ADD -> plusItem
+                ChangeCounter.OperationType.MINUS -> minusItem
+                ChangeCounter.OperationType.SET -> setItem
             }
         }
 
@@ -98,10 +98,10 @@ class ChangeCounterViewModel @Inject constructor(
         updateEditedChangeCounter { old ->
             old.copy(
                 operation = when (item) {
-                    plusItem -> Action.ChangeCounter.OperationType.ADD
-                    minusItem -> Action.ChangeCounter.OperationType.MINUS
-                    setItem -> Action.ChangeCounter.OperationType.SET
-                    else -> Action.ChangeCounter.OperationType.ADD
+                    plusItem -> ChangeCounter.OperationType.ADD
+                    minusItem -> ChangeCounter.OperationType.MINUS
+                    setItem -> ChangeCounter.OperationType.SET
+                    else -> ChangeCounter.OperationType.ADD
                 }
             )
         }
@@ -111,13 +111,9 @@ class ChangeCounterViewModel @Inject constructor(
         updateEditedChangeCounter { old -> old.copy(operationValue = value ?: -1) }
     }
 
-    private fun updateEditedChangeCounter(closure: (old: Action.ChangeCounter) -> Action.ChangeCounter) {
-        editionRepository.editionState.getEditedAction<Action.ChangeCounter>()?.let { old ->
+    private fun updateEditedChangeCounter(closure: (old: ChangeCounter) -> ChangeCounter) {
+        editionRepository.editionState.getEditedAction<ChangeCounter>()?.let { old ->
             editionRepository.updateEditedAction(closure(old))
         }
     }
 }
-
-internal const val BUTTON_ADD = 0
-internal const val BUTTON_MINUS = 1
-internal const val BUTTON_SET = 2

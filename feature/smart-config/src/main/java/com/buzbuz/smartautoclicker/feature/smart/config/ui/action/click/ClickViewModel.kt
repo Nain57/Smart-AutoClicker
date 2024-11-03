@@ -28,7 +28,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -74,7 +74,7 @@ class ClickViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredClick = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.Click>()
+        .filterIsInstance<Click>()
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
@@ -119,13 +119,13 @@ class ClickViewModel @Inject constructor(
                 evt is TriggerEvent ->
                     context.getUserSelectedClickPositionState(click, forced = true)
 
-                evt is ImageEvent && click.positionType == Action.Click.PositionType.USER_SELECTED ->
+                evt is ImageEvent && click.positionType == Click.PositionType.USER_SELECTED ->
                     context.getUserSelectedClickPositionState(click, forced = false)
 
-                evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
+                evt is ImageEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
                     context.getOnConditionWithOrPositionState(click)
 
-                evt is ImageEvent && click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
+                evt is ImageEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
                     context.getOnConditionWithAndPositionState(evt, click)
 
                 else -> null
@@ -136,7 +136,7 @@ class ClickViewModel @Inject constructor(
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
-    fun getEditedClick(): Action.Click? =
+    fun getEditedClick(): Click? =
         editionRepository.editionState.getEditedAction()
 
     /**
@@ -144,14 +144,14 @@ class ClickViewModel @Inject constructor(
      * @param name the new name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(name = "" + name))
         }
     }
 
     /** Set if this click should be made on the detected condition. */
-    fun setClickOnCondition(newType: Action.Click.PositionType) {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+    fun setClickOnCondition(newType: Click.PositionType) {
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(positionType = newType))
         }
     }
@@ -161,7 +161,7 @@ class ClickViewModel @Inject constructor(
      * @param position the new position.
      */
     fun setPosition(position: Point) {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(position = position))
         }
     }
@@ -171,7 +171,7 @@ class ClickViewModel @Inject constructor(
      * @param durationMs the new duration in milliseconds.
      */
     fun setPressDuration(durationMs: Long?) {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(pressDuration = durationMs))
         }
     }
@@ -188,14 +188,14 @@ class ClickViewModel @Inject constructor(
 
     /** Set the condition to click on when the events conditions are fulfilled. */
     fun setConditionToBeClicked(condition: ImageCondition) {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
         }
     }
 
     /** Save the configured values to restore them at next creation. */
     fun saveLastConfig() {
-        editionRepository.editionState.getEditedAction<Action.Click>()?.let { click ->
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             sharedPreferences.edit().putClickPressDurationConfig(click.pressDuration ?: 0).apply()
         }
     }
@@ -216,9 +216,9 @@ class ClickViewModel @Inject constructor(
         }
     }
 
-    private fun Context.getUserSelectedClickPositionState(click: Action.Click, forced: Boolean): ClickPositionUiState =
+    private fun Context.getUserSelectedClickPositionState(click: Click, forced: Boolean): ClickPositionUiState =
         ClickPositionUiState(
-            positionType = Action.Click.PositionType.USER_SELECTED,
+            positionType = Click.PositionType.USER_SELECTED,
             isTypeFieldVisible = !forced,
             isSelectorEnabled = true,
             selectorTitle = getString(R.string.field_click_position_title),
@@ -230,9 +230,9 @@ class ClickViewModel @Inject constructor(
             clickOffsetDescription = getClickOffsetString(click),
         )
 
-    private fun Context.getOnConditionWithOrPositionState(click: Action.Click): ClickPositionUiState =
+    private fun Context.getOnConditionWithOrPositionState(click: Click): ClickPositionUiState =
         ClickPositionUiState(
-            positionType = Action.Click.PositionType.ON_DETECTED_CONDITION,
+            positionType = Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
             isSelectorEnabled = false,
             selectorTitle = getString(R.string.field_condition_selection_title_or_operator),
@@ -242,12 +242,12 @@ class ClickViewModel @Inject constructor(
             clickOffsetDescription = getClickOffsetString(click),
         )
 
-    private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Action.Click): ClickPositionUiState {
+    private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
         val conditionBitmap = conditionToClick?.let { condition -> repository.getConditionBitmap(condition) }
 
         return ClickPositionUiState(
-            positionType = Action.Click.PositionType.ON_DETECTED_CONDITION,
+            positionType = Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
             isSelectorEnabled = availableConditions.value.isNotEmpty(),
             selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
@@ -261,9 +261,9 @@ class ClickViewModel @Inject constructor(
         )
     }
 
-    private fun Context.getClickOffsetString(click: Action.Click): String {
+    private fun Context.getClickOffsetString(click: Click): String {
         val offset =
-            if (click.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION) click.clickOffset
+            if (click.positionType == Click.PositionType.ON_DETECTED_CONDITION) click.clickOffset
             else null
 
         return offset?.let { getString(R.string.field_click_offset_desc, it.x, it.y) }
@@ -272,7 +272,7 @@ class ClickViewModel @Inject constructor(
 }
 
 data class ClickPositionUiState(
-    val positionType: Action.Click.PositionType,
+    val positionType: Click.PositionType,
     val isTypeFieldVisible: Boolean,
     val isClickOffsetVisible: Boolean,
     val isClickOffsetEnabled: Boolean,
