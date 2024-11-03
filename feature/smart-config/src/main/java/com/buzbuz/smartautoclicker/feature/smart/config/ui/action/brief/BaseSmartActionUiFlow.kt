@@ -19,6 +19,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 import android.content.Context
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
@@ -81,12 +87,12 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
     }
 
     val overlay = when (action) {
-        is Action.Click -> ClickDialog(actionConfigDialogListener)
-        is Action.Swipe -> SwipeDialog(actionConfigDialogListener)
-        is Action.Pause -> PauseDialog(actionConfigDialogListener)
-        is Action.Intent -> IntentDialog(actionConfigDialogListener)
-        is Action.ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
-        is Action.ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
+        is Click -> ClickDialog(actionConfigDialogListener)
+        is Swipe -> SwipeDialog(actionConfigDialogListener)
+        is Pause -> PauseDialog(actionConfigDialogListener)
+        is Intent -> IntentDialog(actionConfigDialogListener)
+        is ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
+        is ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
         else -> throw IllegalArgumentException("Not yet supported")
     }
 

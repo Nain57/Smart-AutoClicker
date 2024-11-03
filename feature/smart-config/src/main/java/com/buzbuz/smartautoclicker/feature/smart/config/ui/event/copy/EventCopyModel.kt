@@ -20,7 +20,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -99,7 +99,7 @@ class EventCopyModel @Inject constructor(
 
     fun eventCopyShouldWarnUser(event: Event): Boolean =
         !event.isFromEditedScenario() && event.actions.find { action ->
-            action is Action.ToggleEvent && !action.toggleAll
+            action is ToggleEvent && !action.toggleAll
         } != null
 
     private fun Event.isFromEditedScenario(): Boolean =

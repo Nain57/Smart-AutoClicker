@@ -21,6 +21,7 @@ import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -44,7 +45,7 @@ internal data class TestImageCondition(
 
 internal data class TestEventToggle(
     val targetId: Identifier,
-    val toggleType: Action.ToggleEvent.ToggleType,
+    val toggleType: ToggleEvent.ToggleType,
 )
 
 internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(

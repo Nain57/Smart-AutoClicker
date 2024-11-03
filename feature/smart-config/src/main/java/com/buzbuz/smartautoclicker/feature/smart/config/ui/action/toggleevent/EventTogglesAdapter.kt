@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 
 
 class EventToggleAdapter(
-    private val onEventToggleStateChanged: (Identifier, Action.ToggleEvent.ToggleType?) -> Unit,
+    private val onEventToggleStateChanged: (Identifier, ToggleEvent.ToggleType?) -> Unit,
 ) : ListAdapter<EventTogglesListItem, RecyclerView.ViewHolder>(ItemEventToggleDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -108,7 +108,7 @@ class HeaderViewHolder(
  */
 class ItemViewHolder(
     private val viewBinding: ItemEventToggleBinding,
-    private val onEventToggleStateChanged: (Identifier, Action.ToggleEvent.ToggleType?) -> Unit,
+    private val onEventToggleStateChanged: (Identifier, ToggleEvent.ToggleType?) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     private companion object {
@@ -135,18 +135,18 @@ class ItemViewHolder(
 
             toggleTypeButton.setChecked(
                 when (item.toggleState) {
-                    Action.ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
-                    Action.ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
-                    Action.ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
+                    ToggleEvent.ToggleType.ENABLE -> BUTTON_ENABLE_EVENT
+                    ToggleEvent.ToggleType.TOGGLE -> BUTTON_TOGGLE_EVENT
+                    ToggleEvent.ToggleType.DISABLE -> BUTTON_DISABLE_EVENT
                     else -> null
                 }
             )
 
             toggleTypeButton.setOnCheckedListener { newChecked ->
                 val newState = when (newChecked) {
-                    BUTTON_ENABLE_EVENT -> Action.ToggleEvent.ToggleType.ENABLE
-                    BUTTON_TOGGLE_EVENT -> Action.ToggleEvent.ToggleType.TOGGLE
-                    BUTTON_DISABLE_EVENT -> Action.ToggleEvent.ToggleType.DISABLE
+                    BUTTON_ENABLE_EVENT -> ToggleEvent.ToggleType.ENABLE
+                    BUTTON_TOGGLE_EVENT -> ToggleEvent.ToggleType.TOGGLE
+                    BUTTON_DISABLE_EVENT -> ToggleEvent.ToggleType.DISABLE
                     else -> null
                 }
 

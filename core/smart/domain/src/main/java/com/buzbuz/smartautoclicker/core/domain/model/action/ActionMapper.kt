@@ -26,21 +26,23 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
 
 internal fun Action.toEntity(): ActionEntity {
     if (!isComplete()) throw IllegalStateException("Can't transform to entity, action is incomplete.")
 
     return when (this) {
-        is Action.Click -> toClickEntity()
-        is Action.Swipe -> toSwipeEntity()
-        is Action.Pause -> toPauseEntity()
-        is Action.Intent -> toIntentEntity()
-        is Action.ToggleEvent -> toToggleEventEntity()
-        is Action.ChangeCounter -> toChangeCounterEntity()
+        is Click -> toClickEntity()
+        is Swipe -> toSwipeEntity()
+        is Pause -> toPauseEntity()
+        is Intent -> toIntentEntity()
+        is ToggleEvent -> toToggleEventEntity()
+        is ChangeCounter -> toChangeCounterEntity()
     }
 }
 
-private fun Action.Click.toClickEntity(): ActionEntity =
+private fun Click.toClickEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -56,7 +58,7 @@ private fun Action.Click.toClickEntity(): ActionEntity =
         clickOffsetY = clickOffset?.y,
     )
 
-private fun Action.Swipe.toSwipeEntity(): ActionEntity =
+private fun Swipe.toSwipeEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -70,7 +72,7 @@ private fun Action.Swipe.toSwipeEntity(): ActionEntity =
         toY = to?.y,
     )
 
-private fun Action.Pause.toPauseEntity(): ActionEntity =
+private fun Pause.toPauseEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -80,7 +82,7 @@ private fun Action.Pause.toPauseEntity(): ActionEntity =
         pauseDuration = pauseDuration,
     )
 
-private fun Action.Intent.toIntentEntity(): ActionEntity =
+private fun Intent.toIntentEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -94,7 +96,7 @@ private fun Action.Intent.toIntentEntity(): ActionEntity =
         flags = flags,
     )
 
-private fun Action.ToggleEvent.toToggleEventEntity(): ActionEntity =
+private fun ToggleEvent.toToggleEventEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -105,7 +107,7 @@ private fun Action.ToggleEvent.toToggleEventEntity(): ActionEntity =
         toggleAll = toggleAll,
     )
 
-private fun Action.ChangeCounter.toChangeCounterEntity(): ActionEntity =
+private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
@@ -128,7 +130,7 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.CHANGE_COUNTER -> toDomainChangeCounter(cleanIds)
 }
 
-private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Action.Click(
+private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Click(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -142,7 +144,7 @@ private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Acti
         else null
 )
 
-private fun CompleteActionEntity.toDomainSwipe(cleanIds: Boolean = false) = Action.Swipe(
+private fun CompleteActionEntity.toDomainSwipe(cleanIds: Boolean = false) = Swipe(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -152,7 +154,7 @@ private fun CompleteActionEntity.toDomainSwipe(cleanIds: Boolean = false) = Acti
     to = getPositionIfValid(action.toX, action.toY),
 )
 
-private fun CompleteActionEntity.toDomainPause(cleanIds: Boolean = false) = Action.Pause(
+private fun CompleteActionEntity.toDomainPause(cleanIds: Boolean = false) = Pause(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -160,7 +162,7 @@ private fun CompleteActionEntity.toDomainPause(cleanIds: Boolean = false) = Acti
     pauseDuration = action.pauseDuration!!,
 )
 
-private fun CompleteActionEntity.toDomainIntent(cleanIds: Boolean = false) = Action.Intent(
+private fun CompleteActionEntity.toDomainIntent(cleanIds: Boolean = false) = Intent(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -173,7 +175,7 @@ private fun CompleteActionEntity.toDomainIntent(cleanIds: Boolean = false) = Act
     extras = intentExtras.map { it.toDomainIntentExtra(cleanIds) }.toMutableList(),
 )
 
-private fun CompleteActionEntity.toDomainToggleEvent(cleanIds: Boolean = false) = Action.ToggleEvent(
+private fun CompleteActionEntity.toDomainToggleEvent(cleanIds: Boolean = false) = ToggleEvent(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -183,7 +185,7 @@ private fun CompleteActionEntity.toDomainToggleEvent(cleanIds: Boolean = false) 
     eventToggles = eventsToggle.map { it.toDomain(cleanIds) }.toMutableList(),
 )
 
-private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false) = Action.ChangeCounter(
+private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false) = ChangeCounter(
     id = Identifier(id = action.id, asTemporary = cleanIds),
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
@@ -193,14 +195,14 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
     operationValue = action.counterOperationValue!!,
 )
 
-private fun ClickPositionType.toDomain(): Action.Click.PositionType =
-    Action.Click.PositionType.valueOf(name)
+private fun ClickPositionType.toDomain(): Click.PositionType =
+    Click.PositionType.valueOf(name)
 
-private fun EventToggleType.toDomain(): Action.ToggleEvent.ToggleType =
-    Action.ToggleEvent.ToggleType.valueOf(name)
+private fun EventToggleType.toDomain(): ToggleEvent.ToggleType =
+    ToggleEvent.ToggleType.valueOf(name)
 
-private fun ChangeCounterOperationType.toDomain(): Action.ChangeCounter.OperationType =
-    Action.ChangeCounter.OperationType.valueOf(name)
+private fun ChangeCounterOperationType.toDomain(): ChangeCounter.OperationType =
+    ChangeCounter.OperationType.valueOf(name)
 
 private fun String?.toComponentName(): ComponentName? = this?.let {
     ComponentName.unflattenFromString(it)

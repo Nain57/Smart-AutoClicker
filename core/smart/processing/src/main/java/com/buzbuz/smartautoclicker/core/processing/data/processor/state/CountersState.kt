@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -50,7 +50,7 @@ internal class CountersState(
 
         allEvents.forEach { event ->
             event.actions.forEach { action ->
-                if (action is Action.ChangeCounter) {
+                if (action is ChangeCounter) {
                     if (conditionCounterSet.remove(action.counterName)) put(action.counterName, 0)
                 }
             }

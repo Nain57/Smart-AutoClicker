@@ -21,7 +21,7 @@ import android.content.SharedPreferences
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
@@ -54,7 +54,7 @@ class PauseViewModel @Inject constructor(
     /** The action being configured by the user. */
     private val configuredPause = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<Action.Pause>()
+        .filterIsInstance<Pause>()
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
@@ -71,7 +71,7 @@ class PauseViewModel @Inject constructor(
     val nameError: Flow<Boolean> = configuredPause.map { it.name?.isEmpty() ?: true }
 
     private val _selectedUnitItem: MutableStateFlow<TimeUnitDropDownItem> = MutableStateFlow(
-        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { action ->
+        editionRepository.editionState.getEditedAction<Pause>()?.let { action ->
             action.pauseDuration.findAppropriateTimeUnit()
         } ?: TimeUnitDropDownItem.Milliseconds
     )
@@ -96,7 +96,7 @@ class PauseViewModel @Inject constructor(
      * @param name the new name.
      */
     fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
+        editionRepository.editionState.getEditedAction<Pause>()?.let { pause ->
             editionRepository.updateEditedAction(pause.copy(name = "" + name))
         }
     }
@@ -106,7 +106,7 @@ class PauseViewModel @Inject constructor(
      * @param duration the new duration.
      */
     fun setPauseDuration(duration: Long?) {
-        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { oldPause ->
+        editionRepository.editionState.getEditedAction<Pause>()?.let { oldPause ->
             val newDurationMs = duration.toDurationMs(_selectedUnitItem.value)
 
             if (oldPause.pauseDuration != newDurationMs) {
@@ -120,7 +120,7 @@ class PauseViewModel @Inject constructor(
     }
 
     fun saveLastConfig() {
-        editionRepository.editionState.getEditedAction<Action.Pause>()?.let { pause ->
+        editionRepository.editionState.getEditedAction<Pause>()?.let { pause ->
             sharedPreferences.edit().putPauseDurationConfig(pause.pauseDuration ?: 0).apply()
         }
     }

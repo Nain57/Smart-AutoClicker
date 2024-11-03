@@ -27,6 +27,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
 import com.buzbuz.smartautoclicker.core.domain.utils.asIdentifier
 
@@ -70,11 +72,11 @@ internal object ActionTestsData {
         x: Int? = CLICK_X_POSITION,
         y: Int? = CLICK_Y_POSITION,
         clickOnConditionId: Long? = null,
-        positionType: Action.Click.PositionType =
-            if (x != null && y != null) Action.Click.PositionType.USER_SELECTED
-            else Action.Click.PositionType.ON_DETECTED_CONDITION,
+        positionType: Click.PositionType =
+            if (x != null && y != null) Click.PositionType.USER_SELECTED
+            else Click.PositionType.ON_DETECTED_CONDITION,
         eventId: Long,
-    ) = Action.Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, positionType,
+    ) = Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, positionType,
         if (x != null && y != null) Point(x, y) else null,
         clickOnConditionId?.let { Identifier(databaseId = clickOnConditionId) },
     )
@@ -117,7 +119,7 @@ internal object ActionTestsData {
         toX: Int? = SWIPE_TO_X_POSITION,
         toY: Int? = SWIPE_TO_Y_POSITION,
         eventId: Long,
-    ) : Action.Swipe = Action.Swipe(id.asIdentifier(), eventId.asIdentifier(), name, priority, swipeDuration,
+    ) : Swipe = Swipe(id.asIdentifier(), eventId.asIdentifier(), name, priority, swipeDuration,
         if (fromX != null && fromY != null) Point(fromX, fromY) else null,
         if (toX != null && toY != null) Point(toX, toY) else null,
     )
@@ -147,7 +149,7 @@ internal object ActionTestsData {
         priority: Int = 0,
         pauseDuration: Long? = PAUSE_DURATION,
         eventId: Long,
-    ) = Action.Pause(id.asIdentifier(), eventId.asIdentifier(), name, priority, pauseDuration)
+    ) = Pause(id.asIdentifier(), eventId.asIdentifier(), name, priority, pauseDuration)
 
 
     /* ------- Intent Action Data ------- */
@@ -190,7 +192,7 @@ internal object ActionTestsData {
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         intentExtras: MutableList<IntentExtra<out Any>> = mutableListOf()
-    ) = Action.Intent(id.asIdentifier(), eventId.asIdentifier(), name, priority, isAdvanced, isBroadcast, action, componentName, flags, intentExtras)
+    ) = Intent(id.asIdentifier(), eventId.asIdentifier(), name, priority, isAdvanced, isBroadcast, action, componentName, flags, intentExtras)
 
 
     /* ------- Intent Extra Data ------- */
@@ -221,14 +223,14 @@ internal object ActionTestsData {
     private const val TOGGLE_EVENT_ID = 159L
     private const val TOGGLE_EVENT_NAME = "Toggle name"
     private const val TOGGLE_EVENT_TOGGLE_ALL = true
-    private val TOGGLE_EVENT_TOGGLE_ALL_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
+    private val TOGGLE_EVENT_TOGGLE_ALL_TYPE = ToggleEvent.ToggleType.TOGGLE
 
     fun getNewToggleEventEntity(
         id: Long = TOGGLE_EVENT_ID,
         name: String = TOGGLE_EVENT_NAME,
         priority: Int = 0,
         toggleAll: Boolean = TOGGLE_EVENT_TOGGLE_ALL,
-        toggleType: Action.ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
+        toggleType: ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
         eventToggles: List<EventToggleEntity> = emptyList(),
         eventId: Long,
     ) = CompleteActionEntity(
@@ -242,10 +244,10 @@ internal object ActionTestsData {
         name: String? = TOGGLE_EVENT_NAME,
         priority: Int = 0,
         toggleAll: Boolean = TOGGLE_EVENT_TOGGLE_ALL,
-        toggleType: Action.ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
+        toggleType: ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
         eventToggle: MutableList<EventToggle> = mutableListOf(),
         eventId: Long,
-    ) = Action.ToggleEvent(id.asIdentifier(), eventId.asIdentifier(), name, priority, toggleAll, toggleType, eventToggle)
+    ) = ToggleEvent(id.asIdentifier(), eventId.asIdentifier(), name, priority, toggleAll, toggleType, eventToggle)
 
 
     /* ------- Event toggle Data ------- */
@@ -253,19 +255,19 @@ internal object ActionTestsData {
     private const val EVENT_TOGGLE_ID = 875L
     private const val EVENT_TOGGLE_ACTION_ID = TOGGLE_EVENT_ID
     private const val EVENT_TOGGLE_TARGET_ID = 562L
-    private val EVENT_TOGGLE_TYPE = Action.ToggleEvent.ToggleType.TOGGLE
+    private val EVENT_TOGGLE_TYPE = ToggleEvent.ToggleType.TOGGLE
 
     fun getNewEventToggleEntity(
         id: Long = EVENT_TOGGLE_ID,
         actionId: Long = EVENT_TOGGLE_ACTION_ID,
         targetEventId: Long = EVENT_TOGGLE_TARGET_ID,
-        type: Action.ToggleEvent.ToggleType = EVENT_TOGGLE_TYPE,
+        type: ToggleEvent.ToggleType = EVENT_TOGGLE_TYPE,
     ) = EventToggleEntity(id, actionId, type.toEntity(), targetEventId)
 
     fun getNewEventToggleExtra(
         id: Long = EVENT_TOGGLE_ID,
         actionId: Long = EVENT_TOGGLE_ACTION_ID,
         targetEventId: Long = EVENT_TOGGLE_TARGET_ID,
-        type: Action.ToggleEvent.ToggleType = EVENT_TOGGLE_TYPE,
+        type: ToggleEvent.ToggleType = EVENT_TOGGLE_TYPE,
     ) = EventToggle(id.asIdentifier(), actionId.asIdentifier(), targetEventId.asIdentifier(), type)
 }

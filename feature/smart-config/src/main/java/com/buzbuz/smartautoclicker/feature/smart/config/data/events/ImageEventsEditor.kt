@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.data.events
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -38,10 +39,10 @@ internal class ImageEventsEditor(
             actions.forEach { action ->
                 when {
                     // Skip all actions but clicks
-                    action !is Action.Click -> return@forEach
+                    action !is Click -> return@forEach
 
                     // Nothing to do on user selected position
-                    action.positionType == Action.Click.PositionType.USER_SELECTED -> return@forEach
+                    action.positionType == Click.PositionType.USER_SELECTED -> return@forEach
 
                     // Condition was referenced and used by an action, delete it
                     editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null ->

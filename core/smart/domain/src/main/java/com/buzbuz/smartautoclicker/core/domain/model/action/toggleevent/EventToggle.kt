@@ -14,17 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.domain.model.action
+package com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 
 data class EventToggle(
     override val id: Identifier,
     val actionId: Identifier,
     val targetEventId: Identifier?,
-    val toggleType: Action.ToggleEvent.ToggleType,
+    val toggleType: ToggleEvent.ToggleType,
 ): Identifiable, Completable {
+
     override fun isComplete(): Boolean = true
 }

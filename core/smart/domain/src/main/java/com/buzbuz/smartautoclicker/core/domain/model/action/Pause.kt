@@ -17,20 +17,28 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 
-internal fun EventToggle.toEntity(): EventToggleEntity =
-    EventToggleEntity(
-        id = id.databaseId,
-        actionId = actionId.databaseId,
-        toggleEventId = targetEventId!!.databaseId,
-        type = toggleType.toEntity(),
-    )
+/**
+ * Pause action.
+ *
+ * @param id the unique identifier for the action.
+ * @param eventId the identifier of the event for this action.
+ * @param name the name of the action.
+ * @param pauseDuration the duration of the pause in milliseconds.
+ */
+data class Pause(
+    override val id: Identifier,
+    override val eventId: Identifier,
+    override val name: String? = null,
+    override var priority: Int,
+    val pauseDuration: Long? = null,
+) : Action() {
 
-internal fun EventToggleEntity.toDomain(cleanIds: Boolean = false): EventToggle =
-    EventToggle(
-        id = Identifier(id, cleanIds),
-        actionId = Identifier(actionId, cleanIds),
-        targetEventId = Identifier(toggleEventId, cleanIds),
-        toggleType = Action.ToggleEvent.ToggleType.valueOf(type.name),
-    )
+    override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
+
+    override fun hashCodeNoIds(): Int =
+        name.hashCode() + pauseDuration.hashCode()
+
+
+    override fun deepCopy(): Pause = copy(name = "" + name)
+}

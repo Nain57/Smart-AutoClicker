@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 
@@ -92,7 +93,7 @@ data class ImageEvent(
 
         actions.forEach { action ->
             if (!action.isComplete()) return false
-            if (conditionOperator == AND && action is Action.Click && !action.isClickOnConditionValid()) return false
+            if (conditionOperator == AND && action is Click && !action.isClickOnConditionValid()) return false
         }
 
         return true
@@ -128,7 +129,7 @@ data class TriggerEvent(
         if (!isComplete()) return false
 
         return when (this) {
-            is Action.Click -> positionType == Action.Click.PositionType.USER_SELECTED
+            is Click -> positionType == Click.PositionType.USER_SELECTED
                     && clickOnConditionId == null
 
             else -> true
