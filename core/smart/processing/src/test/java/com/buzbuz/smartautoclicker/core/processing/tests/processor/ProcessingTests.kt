@@ -22,7 +22,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ChangeCounter.OperationType
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
@@ -129,8 +130,8 @@ class ProcessingTests {
                         testsData.newToggleEventAction(
                             eventId = eventId1,
                             toggles = listOf(
-                                TestEventToggle(eventId1, Action.ToggleEvent.ToggleType.DISABLE),
-                                TestEventToggle(eventId2, Action.ToggleEvent.ToggleType.ENABLE)
+                                TestEventToggle(eventId1, ToggleEvent.ToggleType.DISABLE),
+                                TestEventToggle(eventId2, ToggleEvent.ToggleType.ENABLE)
                             ),
                         )
                     ),
@@ -144,8 +145,8 @@ class ProcessingTests {
                         testsData.newToggleEventAction(
                             eventId = eventId2,
                             toggles = listOf(
-                                TestEventToggle(eventId1, Action.ToggleEvent.ToggleType.ENABLE),
-                                TestEventToggle(eventId2, Action.ToggleEvent.ToggleType.DISABLE)
+                                TestEventToggle(eventId1, ToggleEvent.ToggleType.ENABLE),
+                                TestEventToggle(eventId2, ToggleEvent.ToggleType.DISABLE)
                             ),
                         )
                     ),

@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.accessibilityservice.GestureDescription
-import android.content.Intent
+import android.content.Intent as AndroidIntent
 import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
@@ -29,13 +29,13 @@ import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Swipe
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ChangeCounter
-import com.buzbuz.smartautoclicker.core.domain.model.action.putDomainExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -66,7 +66,7 @@ internal class ActionExecutor(
                 is Click -> executeClick(event, action, results)
                 is Swipe -> executeSwipe(action)
                 is Pause -> executePause(action)
-                is Action.Intent -> executeIntent(action)
+                is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
             }
@@ -147,8 +147,8 @@ internal class ActionExecutor(
      * Execute the provided intent.
      * @param intent the intent to be executed.
      */
-    private suspend fun executeIntent(intent: Action.Intent) {
-        val androidIntent = Intent().apply {
+    private suspend fun executeIntent(intent: Intent) {
+        val androidIntent = AndroidIntent().apply {
             action = intent.intentAction!!
             flags = intent.flags!!
 

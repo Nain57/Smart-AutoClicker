@@ -18,8 +18,11 @@ package com.buzbuz.smartautoclicker.feature.smart.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.base.ListEditor
@@ -47,8 +50,8 @@ internal class ActionsEditor<Parent>(
         super.startItemEdition(item)
 
         when (item) {
-            is Action.Intent -> intentExtraEditor.startEdition(item.extras ?: emptyList())
-            is Action.ToggleEvent -> eventToggleEditor.startEdition(item.eventToggles)
+            is Intent -> intentExtraEditor.startEdition(item.extras ?: emptyList())
+            is ToggleEvent -> eventToggleEditor.startEdition(item.eventToggles)
             else -> Unit
         }
     }
@@ -59,10 +62,10 @@ internal class ActionsEditor<Parent>(
     }
 
     override fun itemCanBeSaved(item: Action?, parent: Parent?): Boolean =
-        if (item is Action.Click) {
+        if (item is Click) {
             when (parent) {
                 is TriggerEvent ->
-                    item.isComplete() && item.positionType != Action.Click.PositionType.ON_DETECTED_CONDITION
+                    item.isComplete() && item.positionType != Click.PositionType.ON_DETECTED_CONDITION
 
                 is ImageEvent ->
                     if (item.isComplete()) !(parent.conditionOperator == AND && !item.isClickOnConditionValid())
@@ -74,14 +77,14 @@ internal class ActionsEditor<Parent>(
 
     private fun onEditedActionIntentExtraUpdated(extras: List<IntentExtra<out Any>>) {
         val action = editedItem.value
-        if (action == null || action !is Action.Intent) return
+        if (action == null || action !is Intent) return
 
         updateEditedItem(action.copy(extras = extras))
     }
 
     private fun onEditedActionEventToggleUpdated(eventToggles: List<EventToggle>) {
         val action = editedItem.value
-        if (action == null || action !is Action.ToggleEvent) return
+        if (action == null || action !is ToggleEvent) return
 
         updateEditedItem(action.copy(eventToggles = eventToggles))
     }

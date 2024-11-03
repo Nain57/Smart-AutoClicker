@@ -17,6 +17,11 @@
 package com.buzbuz.smartautoclicker.core.domain.utils
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
@@ -63,16 +68,16 @@ private fun assertSameConditionNoIdCheck(expected: ImageCondition, actual: Image
 
 private fun assertSameActionNoIdCheck(expected: Action, actual: Action) {
     when {
-        expected is Action.Click && actual is Action.Click -> assertSameClickNoIdCheck(expected, actual)
-        expected is Action.Swipe && actual is Action.Swipe -> assertSameSwipeNoIdCheck(expected, actual)
-        expected is Action.Pause && actual is Action.Pause -> assertSamePauseNoIdCheck(expected, actual)
-        expected is Action.Intent && actual is Action.Intent -> assertSameIntentNoIdCheck(expected, actual)
-        expected is Action.ToggleEvent && actual is Action.ToggleEvent -> assertSameToggleEventNoIdCheck(expected, actual)
+        expected is Click && actual is Click -> assertSameClickNoIdCheck(expected, actual)
+        expected is Swipe && actual is Swipe -> assertSameSwipeNoIdCheck(expected, actual)
+        expected is Pause && actual is Pause -> assertSamePauseNoIdCheck(expected, actual)
+        expected is Intent && actual is Intent -> assertSameIntentNoIdCheck(expected, actual)
+        expected is ToggleEvent && actual is ToggleEvent -> assertSameToggleEventNoIdCheck(expected, actual)
         else -> fail("Actions doesn't have the same type")
     }
 }
 
-private fun assertSameClickNoIdCheck(expected: Action.Click, actual: Action.Click) = assertTrue(
+private fun assertSameClickNoIdCheck(expected: Click, actual: Click) = assertTrue(
     "Clicks are not the same",
     expected.name == actual.name
             && expected.pressDuration == actual.pressDuration
@@ -82,7 +87,7 @@ private fun assertSameClickNoIdCheck(expected: Action.Click, actual: Action.Clic
             && expected.clickOnConditionId == actual.clickOnConditionId
 )
 
-private fun assertSameSwipeNoIdCheck(expected: Action.Swipe, actual: Action.Swipe) = assertTrue(
+private fun assertSameSwipeNoIdCheck(expected: Swipe, actual: Swipe) = assertTrue(
     "Swipes are not the same",
     expected.name == actual.name
             && expected.swipeDuration == actual.swipeDuration
@@ -92,13 +97,13 @@ private fun assertSameSwipeNoIdCheck(expected: Action.Swipe, actual: Action.Swip
             && expected.to?.y == actual.to?.y
 )
 
-private fun assertSamePauseNoIdCheck(expected: Action.Pause, actual: Action.Pause) = assertTrue(
+private fun assertSamePauseNoIdCheck(expected: Pause, actual: Pause) = assertTrue(
     "Pauses are not the same",
     expected.name == actual.name
             && expected.pauseDuration == actual.pauseDuration
 )
 
-private fun assertSameIntentNoIdCheck(expected: Action.Intent, actual: Action.Intent) = assertTrue(
+private fun assertSameIntentNoIdCheck(expected: Intent, actual: Intent) = assertTrue(
     "Intents are not the same",
     expected.name == actual.name
             && expected.isAdvanced == actual.isAdvanced
@@ -108,7 +113,7 @@ private fun assertSameIntentNoIdCheck(expected: Action.Intent, actual: Action.In
             && expected.flags == actual.flags
 )
 
-private fun assertSameToggleEventNoIdCheck(expected: Action.ToggleEvent, actual: Action.ToggleEvent) = assertTrue(
+private fun assertSameToggleEventNoIdCheck(expected: ToggleEvent, actual: ToggleEvent) = assertTrue(
     "ToggleEvents are not the same",
     expected.name == actual.name
             //&& expected.toggleEventType == actual.toggleEventType

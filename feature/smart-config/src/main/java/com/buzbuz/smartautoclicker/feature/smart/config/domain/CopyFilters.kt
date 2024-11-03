@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.containsIdentifiable
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -88,8 +90,8 @@ internal fun List<Event>.getEditedActionsForCopy(editedEvent: Event): List<Actio
 private fun Event.shouldAddAction(action: Action): Boolean =
     when {
         !action.isComplete() -> false
-        this is TriggerEvent && action is Action.Click && action.isClickOnCondition() -> false
-        this is ImageEvent && action is Action.Click && !action.isClickOnConditionValid() -> false
+        this is TriggerEvent && action is Click && action.isClickOnCondition() -> false
+        this is ImageEvent && action is Click && !action.isClickOnConditionValid() -> false
         else -> true
     }
 
@@ -101,9 +103,9 @@ internal fun List<Action>.filterActionsForCopy(editedEvent: Event, editedActions
             // Remove currently edited events, called should use the up to date values from edition
             action.eventId == editedEvent.id || editedActions.containsIdentifiable(action.id) -> false
             // Remove click on conditions.
-            action is Action.Click && action.positionType == Action.Click.PositionType.ON_DETECTED_CONDITION -> false
+            action is Click && action.positionType == Click.PositionType.ON_DETECTED_CONDITION -> false
             // Remove toggle event that specifies the events toggles.
-            action is Action.ToggleEvent && !action.toggleAll -> false
+            action is ToggleEvent && !action.toggleAll -> false
             // Ok for copy
             else -> true
         }

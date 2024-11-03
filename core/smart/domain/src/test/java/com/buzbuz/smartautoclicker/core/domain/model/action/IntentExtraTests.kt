@@ -22,6 +22,8 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 
 import org.junit.Assert
 import org.junit.Test

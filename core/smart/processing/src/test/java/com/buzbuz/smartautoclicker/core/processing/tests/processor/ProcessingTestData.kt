@@ -26,11 +26,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -201,7 +203,7 @@ internal object ProcessingTestData {
         )
 
     fun newPauseAction(eventId: Identifier, durationMs: Long = TEST_DATA_ACTION_PAUSE_DURATION_MS_DEFAULT) =
-        Action.Pause(
+        Pause(
             id = newActionId(),
             eventId = eventId,
             name = "TestToggleEventAction",
@@ -212,9 +214,9 @@ internal object ProcessingTestData {
     fun newCounterAction(
         eventId: Identifier,
         counterName: String,
-        operator: Action.ChangeCounter.OperationType,
+        operator: ChangeCounter.OperationType,
         value: Int = 0,
-    ) = Action.ChangeCounter(
+    ) = ChangeCounter(
             id = newActionId(),
             eventId = eventId,
             counterName = counterName,
@@ -224,10 +226,10 @@ internal object ProcessingTestData {
             priority = 0,
         )
 
-    fun newToggleEventAction(eventId: Identifier, toggles: List<TestEventToggle>): Action.ToggleEvent {
+    fun newToggleEventAction(eventId: Identifier, toggles: List<TestEventToggle>): ToggleEvent {
         val actionId = newActionId()
 
-        return Action.ToggleEvent(
+        return ToggleEvent(
             id = actionId,
             eventId = eventId,
             name = "TestToggleEventAction",

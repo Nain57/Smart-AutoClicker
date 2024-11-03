@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.data.events
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -68,7 +69,7 @@ internal abstract class EventsEditor<Item : Event, ChildCondition : Condition>(
             if (scenarioEvent.id == event.id) return@mapNotNull null // Skip same item
 
             val newActions = scenarioEvent.actions.map { action ->
-                if (action is Action.ToggleEvent) {
+                if (action is ToggleEvent) {
                     action.copy(
                         eventToggles = action.eventToggles.mapNotNull { eventToggle ->
                             if (eventToggle.targetEventId == event.id) null else eventToggle

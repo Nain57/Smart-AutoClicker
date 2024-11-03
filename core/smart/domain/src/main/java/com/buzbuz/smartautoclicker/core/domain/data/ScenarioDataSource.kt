@@ -37,9 +37,13 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.action.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
@@ -312,7 +316,7 @@ internal class ScenarioDataSource(
     private suspend fun updateActionsChildren(actions: List<Action>) {
         actions.forEach { action ->
             when (action) {
-                is Action.Intent -> {
+                is Intent -> {
                     action.extras?.let { extras ->
                         updateIntentExtras(
                             actionDbId = scenarioUpdateState.getActionDbId(action.id),
@@ -321,7 +325,7 @@ internal class ScenarioDataSource(
                     }
                 }
 
-                is Action.ToggleEvent -> {
+                is ToggleEvent -> {
                     updateEventToggles(
                         actionDbId = scenarioUpdateState.getActionDbId(action.id),
                         newToggles = action.eventToggles,

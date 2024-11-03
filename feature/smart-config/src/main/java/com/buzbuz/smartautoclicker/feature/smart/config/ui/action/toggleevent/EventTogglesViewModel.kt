@@ -20,8 +20,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -43,7 +43,7 @@ class EventTogglesViewModel @Inject constructor(
      * Contains the changes for the events toggle made by the user.
      * Initialized with the values from the edition repository.
      */
-    private val userModifications: MutableStateFlow<Map<Identifier, Pair<Identifier?, Action.ToggleEvent.ToggleType?>>> = MutableStateFlow(
+    private val userModifications: MutableStateFlow<Map<Identifier, Pair<Identifier?, ToggleEvent.ToggleType?>>> = MutableStateFlow(
         buildMap {
             val currentEditedEvent = editionRepository.editionState.getEditedEvent<Event>() ?: return@buildMap
             val allEditedEvents = editionRepository.editionState.getAllEditedEvents()
@@ -99,7 +99,7 @@ class EventTogglesViewModel @Inject constructor(
             }
         }
 
-    fun changeEventToggleState(eventId: Identifier, newState: Action.ToggleEvent.ToggleType?) {
+    fun changeEventToggleState(eventId: Identifier, newState: ToggleEvent.ToggleType?) {
         userModifications.value = userModifications.value.toMutableMap().apply {
             get(eventId)?.let { (toggleId, _) ->
                 put(eventId, toggleId to newState)
@@ -126,7 +126,7 @@ class EventTogglesViewModel @Inject constructor(
             }
         }
 
-    private fun Event.toEventTogglesListItems(toggleState: Action.ToggleEvent.ToggleType?) =
+    private fun Event.toEventTogglesListItems(toggleState: ToggleEvent.ToggleType?) =
         EventTogglesListItem.Item(
             eventId = id,
             eventName = name,
@@ -135,7 +135,7 @@ class EventTogglesViewModel @Inject constructor(
             toggleState = toggleState,
         )
 
-    private fun MutableMap<Identifier, Pair<Identifier?, Action.ToggleEvent.ToggleType?>>.findAndPutToggleState(
+    private fun MutableMap<Identifier, Pair<Identifier?, ToggleEvent.ToggleType?>>.findAndPutToggleState(
         eventId: Identifier,
         toggles: List<EventToggle>,
     ) {
@@ -155,6 +155,6 @@ sealed class EventTogglesListItem {
         val eventName: String,
         val actionsCount: Int,
         val conditionsCount: Int,
-        val toggleState: Action.ToggleEvent.ToggleType?,
+        val toggleState: ToggleEvent.ToggleType?,
     ) : EventTogglesListItem()
 }

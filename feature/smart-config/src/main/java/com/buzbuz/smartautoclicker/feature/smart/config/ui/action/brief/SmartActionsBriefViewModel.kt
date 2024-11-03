@@ -30,6 +30,12 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
@@ -269,7 +275,7 @@ class SmartActionsBriefViewModel @Inject constructor(
                 .copy(
                     position = position?.toPoint(),
                     pressDuration = pressDurationMs,
-                    positionType = Action.Click.PositionType.USER_SELECTED,
+                    positionType = Click.PositionType.USER_SELECTED,
                 )
 
             is SwipeDescription -> editionRepository.editedItemsBuilder.createNewSwipe(context)
@@ -283,37 +289,37 @@ class SmartActionsBriefViewModel @Inject constructor(
         }
 
     private suspend fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
-        is Action.Click -> ClickDescription(
+        is Click -> ClickDescription(
             position = position?.toPointF(),
             pressDurationMs = pressDuration ?: 1,
             imageConditionBitmap = findClickOnConditionBitmap(),
         )
 
-        is Action.Swipe -> SwipeDescription(
+        is Swipe -> SwipeDescription(
             from = from?.toPointF(),
             to = to?.toPointF(),
             swipeDurationMs = swipeDuration ?: 1,
         )
 
-        is Action.Pause -> PauseDescription(
+        is Pause -> PauseDescription(
             pauseDurationMs = pauseDuration ?: 1,
         )
 
-        is Action.ChangeCounter -> DefaultDescription(
+        is ChangeCounter -> DefaultDescription(
             ContextCompat.getDrawable(context, getChangeCounterIconRes())
         )
 
-        is Action.Intent -> DefaultDescription(
+        is Intent -> DefaultDescription(
             ContextCompat.getDrawable(context, getIntentIconRes())
         )
 
-        is Action.ToggleEvent -> DefaultDescription(
+        is ToggleEvent -> DefaultDescription(
             ContextCompat.getDrawable(context, getToggleEventIconRes())
         )
     }
 
-    private suspend fun Action.Click.findClickOnConditionBitmap(): Bitmap? {
-        if (positionType != Action.Click.PositionType.ON_DETECTED_CONDITION) return null
+    private suspend fun Click.findClickOnConditionBitmap(): Bitmap? {
+        if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return null
 
         return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
             ?.find { it.id == clickOnConditionId }

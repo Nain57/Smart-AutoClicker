@@ -19,6 +19,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 
@@ -41,21 +47,21 @@ internal fun Action.toUiAction(context: Context, parent: Event, inError: Boolean
 
 @DrawableRes
 internal fun Action.getIconRes(): Int = when (this) {
-    is Action.Click -> getClickIconRes()
-    is Action.Swipe -> getSwipeIconRes()
-    is Action.Pause -> getPauseIconRes()
-    is Action.Intent -> getIntentIconRes()
-    is Action.ToggleEvent -> getToggleEventIconRes()
-    is Action.ChangeCounter -> getChangeCounterIconRes()
+    is Click -> getClickIconRes()
+    is Swipe -> getSwipeIconRes()
+    is Pause -> getPauseIconRes()
+    is Intent -> getIntentIconRes()
+    is ToggleEvent -> getToggleEventIconRes()
+    is ChangeCounter -> getChangeCounterIconRes()
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
 internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
-    is Action.Click -> getDescription(context, parent, inError)
-    is Action.Swipe -> getDescription(context, inError)
-    is Action.Pause -> getDescription(context, inError)
-    is Action.Intent -> getDescription(context, inError)
-    is Action.ToggleEvent -> getDescription(context, inError)
-    is Action.ChangeCounter -> getDescription(context, inError)
+    is Click -> getDescription(context, parent, inError)
+    is Swipe -> getDescription(context, inError)
+    is Pause -> getDescription(context, inError)
+    is Intent -> getDescription(context, inError)
+    is ToggleEvent -> getDescription(context, inError)
+    is ChangeCounter -> getDescription(context, inError)
     else -> throw IllegalArgumentException("Not yet supported")
 }
