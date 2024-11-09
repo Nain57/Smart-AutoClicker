@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -53,6 +54,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is Intent -> getIntentIconRes()
     is ToggleEvent -> getToggleEventIconRes()
     is ChangeCounter -> getChangeCounterIconRes()
+    is Notification -> getNotificationIconRes()
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
@@ -63,5 +65,6 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is Intent -> getDescription(context, inError)
     is ToggleEvent -> getDescription(context, inError)
     is ChangeCounter -> getDescription(context, inError)
+    is Notification -> getDescription(context, inError)
     else -> throw IllegalArgumentException("Not yet supported")
 }

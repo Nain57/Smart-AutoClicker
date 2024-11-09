@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.notifications.service
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
@@ -27,6 +28,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.buzbuz.smartautoclicker.core.common.permissions.model.Permission
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 
 import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
 import com.buzbuz.smartautoclicker.feature.notifications.common.SERVICE_CHANNEL_ID
@@ -63,10 +66,10 @@ class ServiceNotificationController(
         return builder.build()
     }
 
+    @SuppressLint("MissingPermission")
     fun updateNotificationState(context: Context, isRunning: Boolean, isMenuHidden: Boolean) {
         val builder = notificationBuilder ?: return
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
-            return
+        if (!PermissionPostNotification.checkIfGranted(context)) return
 
         Log.i(TAG, "Updating notification, running=$isRunning; menuHidden=$isMenuHidden")
 

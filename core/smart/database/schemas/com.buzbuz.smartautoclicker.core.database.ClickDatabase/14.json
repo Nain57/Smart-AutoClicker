@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 14,
-    "identityHash": "ed3c46b757646d50ed71da15949f41aa",
+    "identityHash": "88293e76c3393661a0d26c6d0ffe8c5c",
     "entities": [
       {
         "tableName": "action_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value` INTEGER, `channel_importance` INTEGER, `notification_title` TEXT, `notification_message` TEXT, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -174,6 +174,24 @@
             "fieldPath": "counterOperationValue",
             "columnName": "counter_operation_value",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "channelImportance",
+            "columnName": "channel_importance",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notificationTitle",
+            "columnName": "notification_title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notificationMessage",
+            "columnName": "notification_message",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -670,7 +688,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ed3c46b757646d50ed71da15949f41aa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88293e76c3393661a0d26c6d0ffe8c5c')"
     ]
   }
 }

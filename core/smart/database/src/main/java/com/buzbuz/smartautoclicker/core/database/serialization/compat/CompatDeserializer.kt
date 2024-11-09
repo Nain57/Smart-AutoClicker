@@ -340,6 +340,7 @@ internal abstract class CompatDeserializer : Deserializer {
             ActionType.INTENT -> deserializeActionIntent(jsonAction)
             ActionType.TOGGLE_EVENT -> deserializeActionToggleEvent(jsonAction)
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
+            ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
             null -> null
         }
 
@@ -490,6 +491,25 @@ internal abstract class CompatDeserializer : Deserializer {
             counterName = counterName,
             counterOperation = counterOperation,
             counterOperationValue = counterOperationValue,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionNotification(jsonNotification: JsonObject): ActionEntity? {
+        val id = jsonNotification.getLong("id", true) ?: return null
+        val eventId = jsonNotification.getLong("eventId", true) ?: return null
+        val channelImportance = jsonNotification.getInt("channelImportance") ?: return null
+        val notificationTitle = jsonNotification.getString("notificationTitle") ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonNotification.getString("name") ?: "",
+            priority = jsonNotification.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.NOTIFICATION,
+            channelImportance = channelImportance,
+            notificationTitle = notificationTitle,
+            notificationMessage = jsonNotification.getString("notificationMessage"),
         )
     }
 

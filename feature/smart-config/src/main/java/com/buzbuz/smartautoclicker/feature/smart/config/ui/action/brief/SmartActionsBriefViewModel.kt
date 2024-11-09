@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -52,8 +53,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getActionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
 
@@ -305,16 +309,8 @@ class SmartActionsBriefViewModel @Inject constructor(
             pauseDurationMs = pauseDuration ?: 1,
         )
 
-        is ChangeCounter -> DefaultDescription(
-            ContextCompat.getDrawable(context, getChangeCounterIconRes())
-        )
-
-        is Intent -> DefaultDescription(
-            ContextCompat.getDrawable(context, getIntentIconRes())
-        )
-
-        is ToggleEvent -> DefaultDescription(
-            ContextCompat.getDrawable(context, getToggleEventIconRes())
+        else -> DefaultDescription(
+            icon = ContextCompat.getDrawable(context, getIconRes())
         )
     }
 

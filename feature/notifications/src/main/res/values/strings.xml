@@ -18,7 +18,12 @@
 <resources>
 
     <string name="notification_service_channel_name" translatable="false">Klick\'r</string>
-    <string name="notification_scenario_channel_name">Klick\'r scenarios</string>
+    <string name="notification_scenario_channel_group_name">Klick\'r scenarios</string>
+    <string name="notification_scenario_channel_min_name">Min</string>
+    <string name="notification_scenario_channel_low_name">Low</string>
+    <string name="notification_scenario_channel_default_name">Default</string>
+    <string name="notification_scenario_channel_high_name">High</string>
+
 
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Press to change the scenario</string>
