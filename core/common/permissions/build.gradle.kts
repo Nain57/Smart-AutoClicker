@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.permissions.model
+plugins {
+    alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.hilt)
+}
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
+android {
+    namespace = "com.buzbuz.smartautoclicker.core.common.permissions"
+    buildFeatures.viewBinding = true
+}
 
-@SuppressLint("InlinedApi")
-data object PermissionPostNotification : Permission.Dangerous(), Permission.Optional, Permission.ForApiRange {
+dependencies {
+    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.google.material)
 
-    override val fromApiLvl: Int
-        get() = Build.VERSION_CODES.TIRAMISU
-
-    override val permissionString: String
-        get() = Manifest.permission.POST_NOTIFICATIONS
-
-    override fun isGranted(context: Context): Boolean =
-        context.getSystemService(NotificationManager::class.java).areNotificationsEnabled()
+    implementation(project(":core:common:ui"))
 }

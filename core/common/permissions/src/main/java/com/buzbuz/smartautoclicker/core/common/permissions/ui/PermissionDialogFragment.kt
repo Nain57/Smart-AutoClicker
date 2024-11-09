@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.permissions.ui
+package com.buzbuz.smartautoclicker.core.common.permissions.ui
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -28,9 +28,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.feature.permissions.EXTRA_RESULT_KEY_PERMISSION_STATE
-import com.buzbuz.smartautoclicker.feature.permissions.FRAGMENT_RESULT_KEY_PERMISSION_STATE
-import com.buzbuz.smartautoclicker.feature.permissions.databinding.DialogPermissionBinding
+import com.buzbuz.smartautoclicker.core.common.permissions.EXTRA_RESULT_KEY_PERMISSION_STATE
+import com.buzbuz.smartautoclicker.core.common.permissions.FRAGMENT_RESULT_KEY_PERMISSION_STATE
+import com.buzbuz.smartautoclicker.core.common.permissions.databinding.DialogPermissionBinding
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

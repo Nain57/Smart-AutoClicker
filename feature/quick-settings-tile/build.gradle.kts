@@ -37,5 +37,5 @@ dependencies {
     implementation(project(":core:dumb"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
-    implementation(project(":feature:permissions"))
+    implementation(project(":core:common:permissions"))
 }
