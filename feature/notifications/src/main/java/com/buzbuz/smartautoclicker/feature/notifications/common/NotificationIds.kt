@@ -14,18 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.hilt)
-}
+package com.buzbuz.smartautoclicker.feature.notifications.common
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.feature.notifications"
-    buildFeatures.viewBinding = true
-}
+/** The identifier for the foreground notification of Klickr accessibility service. */
+const val FOREGROUND_SERVICE_NOTIFICATION_ID = 1
 
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:ui"))
-    implementation(libs.androidx.appCompat)
-}

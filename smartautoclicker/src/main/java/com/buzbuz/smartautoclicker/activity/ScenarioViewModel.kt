@@ -23,8 +23,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
+import com.buzbuz.smartautoclicker.localservice.ILocalService
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,7 +59,7 @@ class ScenarioViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
-    private val serviceConnection: (SmartAutoClickerService.ILocalService?) -> Unit = { localService ->
+    private val serviceConnection: (ILocalService?) -> Unit = { localService ->
         clickerService = localService
     }
 
@@ -66,7 +67,7 @@ class ScenarioViewModel @Inject constructor(
      * Reference on the [SmartAutoClickerService].
      * Will be not null only if the Accessibility Service is enabled.
      */
-    private var clickerService: SmartAutoClickerService.ILocalService? = null
+    private var clickerService: ILocalService? = null
     /** The Android notification manager. Initialized only if needed.*/
     private val notificationManager: NotificationManager?
 
