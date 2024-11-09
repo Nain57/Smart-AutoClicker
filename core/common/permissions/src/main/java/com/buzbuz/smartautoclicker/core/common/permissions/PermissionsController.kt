@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.permissions
+package com.buzbuz.smartautoclicker.core.common.permissions
 
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
-import com.buzbuz.smartautoclicker.feature.permissions.model.Permission
-import com.buzbuz.smartautoclicker.feature.permissions.ui.PermissionDialogFragment
+import com.buzbuz.smartautoclicker.core.common.permissions.model.Permission
+import com.buzbuz.smartautoclicker.core.common.permissions.ui.PermissionDialogFragment
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

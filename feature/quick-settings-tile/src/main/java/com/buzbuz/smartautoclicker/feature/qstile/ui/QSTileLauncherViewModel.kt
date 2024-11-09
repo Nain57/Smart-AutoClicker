@@ -26,10 +26,10 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
-import com.buzbuz.smartautoclicker.feature.permissions.PermissionsController
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionAccessibilityService
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel

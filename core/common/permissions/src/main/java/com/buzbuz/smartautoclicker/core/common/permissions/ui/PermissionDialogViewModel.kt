@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.permissions.ui
+package com.buzbuz.smartautoclicker.core.common.permissions.ui
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -22,12 +22,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.feature.permissions.PermissionsController
-import com.buzbuz.smartautoclicker.feature.permissions.R
-import com.buzbuz.smartautoclicker.feature.permissions.model.Permission
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionAccessibilityService
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
+import com.buzbuz.smartautoclicker.core.common.permissions.R
+import com.buzbuz.smartautoclicker.core.common.permissions.model.Permission
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

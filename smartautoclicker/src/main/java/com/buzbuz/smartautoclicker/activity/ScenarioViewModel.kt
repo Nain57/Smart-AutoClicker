@@ -34,10 +34,10 @@ import com.buzbuz.smartautoclicker.SmartAutoClickerService
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.permissions.PermissionsController
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionAccessibilityService
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionOverlay
-import com.buzbuz.smartautoclicker.feature.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.localservice.ILocalService

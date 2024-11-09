@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.permissions.model
+package com.buzbuz.smartautoclicker.core.common.permissions.model
 
 import android.content.ActivityNotFoundException
 import android.content.Context
