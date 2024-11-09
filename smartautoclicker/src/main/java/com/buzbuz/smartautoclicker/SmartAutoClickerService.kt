@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.app.*
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.AndroidRuntimeException
@@ -28,7 +27,6 @@ import android.view.accessibility.AccessibilityEvent
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
@@ -37,11 +35,14 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
+import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -72,7 +73,7 @@ import kotlin.coroutines.suspendCoroutine
  * been detected.
  */
 @AndroidEntryPoint
-class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
+class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
     companion object {
 
@@ -105,6 +106,10 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
 
     private val localService: LocalService?
         get() = LOCAL_SERVICE_INSTANCE as? LocalService
+
+    private val userNotificationsController: UserNotificationsController by lazy {
+        UserNotificationsController(this)
+    }
 
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
@@ -213,6 +218,14 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         } catch (iaex: IllegalArgumentException) {
             Log.w(TAG, "Can't send broadcast, Intent is invalid: $intent", iaex)
         }
+    }
+
+    override fun executeNotification(notificationAction: Notification) {
+        userNotificationsController.showNotification(this, notificationAction)
+    }
+
+    override fun clearState() {
+        userNotificationsController.clearAll()
     }
 
     /**

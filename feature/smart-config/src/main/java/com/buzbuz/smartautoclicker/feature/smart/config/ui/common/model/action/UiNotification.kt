@@ -14,20 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.hilt)
-}
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.feature.notifications"
-    buildFeatures.viewBinding = true
-}
+import android.content.Context
+import androidx.annotation.DrawableRes
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:permissions"))
-    implementation(project(":core:common:ui"))
-    implementation(project(":core:smart:domain"))
-    implementation(libs.androidx.appCompat)
-}
+
+@DrawableRes
+internal fun getNotificationIconRes(): Int = R.drawable.ic_notification
+
+internal fun Notification.getDescription(context: Context, inError: Boolean): String = ""

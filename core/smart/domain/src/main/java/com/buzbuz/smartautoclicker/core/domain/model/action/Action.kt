@@ -16,16 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
-import android.content.ComponentName
-
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
-import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
-import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
-import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 
 /** Base for for all possible actions for an Event. */
 sealed class Action : Identifiable, Completable, Prioritizable {
@@ -56,5 +50,6 @@ sealed class Action : Identifiable, Completable, Prioritizable {
             is Pause -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Swipe -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is ToggleEvent -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is Notification -> copy(id = id, eventId = eventId, name = name, priority = priority)
         }
 }

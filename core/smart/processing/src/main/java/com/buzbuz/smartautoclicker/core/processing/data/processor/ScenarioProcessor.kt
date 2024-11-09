@@ -22,6 +22,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -50,7 +51,7 @@ internal class ScenarioProcessor(
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
-    androidExecutor: AndroidExecutor,
+    androidExecutor: SmartActionExecutor,
     private val onStopRequested: () -> Unit,
     private val progressListener: ScenarioProcessingListener? = null,
 ) {

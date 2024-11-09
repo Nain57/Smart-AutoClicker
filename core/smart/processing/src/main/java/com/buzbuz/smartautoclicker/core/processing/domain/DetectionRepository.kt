@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -114,7 +115,7 @@ class DetectionRepository @Inject constructor(
         context: Context,
         resultCode: Int,
         data: Intent,
-        androidExecutor: AndroidExecutor,
+        androidExecutor: SmartActionExecutor,
     ) {
         detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor)
     }

@@ -14,20 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.hilt)
+package com.buzbuz.smartautoclicker.feature.notifications.user
+
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+
+internal class UserNotificationGroups {
+
+    private val groups: MutableMap<Identifier, String> = mutableMapOf()
+
+    fun getGroup(notification: Notification): String =
+        groups[notification.id] ?: let {
+            val name = notification.name ?: DEFAULT_NAME
+            groups[notification.id] = name
+            name
+        }
+
+    fun clear() {
+        groups.clear()
+    }
 }
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.feature.notifications"
-    buildFeatures.viewBinding = true
-}
-
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:permissions"))
-    implementation(project(":core:common:ui"))
-    implementation(project(":core:smart:domain"))
-    implementation(libs.androidx.appCompat)
-}
+private const val DEFAULT_NAME = "Klick'r"

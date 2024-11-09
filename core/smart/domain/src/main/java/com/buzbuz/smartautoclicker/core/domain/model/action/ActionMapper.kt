@@ -39,6 +39,7 @@ internal fun Action.toEntity(): ActionEntity {
         is Intent -> toIntentEntity()
         is ToggleEvent -> toToggleEventEntity()
         is ChangeCounter -> toChangeCounterEntity()
+        is Notification -> toNotificationEntity()
     }
 }
 
@@ -119,6 +120,18 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
         counterOperationValue = operationValue,
     )
 
+private fun Notification.toNotificationEntity(): ActionEntity =
+    ActionEntity(
+        id = id.databaseId,
+        eventId = eventId.databaseId,
+        priority = priority,
+        name = name!!,
+        type = ActionType.NOTIFICATION,
+        channelImportance = channelImportance,
+        notificationTitle = title,
+        notificationMessage = message,
+    )
+
 
 /** Convert an Action entity into a Domain Action. */
 internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = when (action.type) {
@@ -128,6 +141,7 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.INTENT -> toDomainIntent(cleanIds)
     ActionType.TOGGLE_EVENT -> toDomainToggleEvent(cleanIds)
     ActionType.CHANGE_COUNTER -> toDomainChangeCounter(cleanIds)
+    ActionType.NOTIFICATION -> toDomainNotification(cleanIds)
 }
 
 private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Click(
@@ -193,6 +207,16 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
     counterName = action.counterName!!,
     operation = action.counterOperation!!.toDomain(),
     operationValue = action.counterOperationValue!!,
+)
+
+private fun CompleteActionEntity.toDomainNotification(cleanIds: Boolean = false) = Notification(
+    id = Identifier(id = action.id, asTemporary = cleanIds),
+    eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
+    name = action.name,
+    priority = action.priority,
+    channelImportance = action.channelImportance!!,
+    title = action.notificationTitle!!,
+    message = action.notificationMessage,
 )
 
 private fun ClickPositionType.toDomain(): Click.PositionType =

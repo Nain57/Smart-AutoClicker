@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -71,7 +72,7 @@ class DetectorEngine @Inject constructor(
     /** Detect the condition images on the screen image. */
     private var imageDetector: ImageDetector? = null
     /** The executor for the actions requiring an interaction with Android. */
-    private var androidExecutor: AndroidExecutor? = null
+    private var androidExecutor: SmartActionExecutor? = null
 
     /** Coroutine scope for the image processing. */
     private var processingScope: CoroutineScope? = null
@@ -112,7 +113,7 @@ class DetectorEngine @Inject constructor(
         context: Context,
         resultCode: Int,
         data: Intent,
-        androidExecutor: AndroidExecutor,
+        androidExecutor: SmartActionExecutor,
     ) {
         if (_state.value != DetectorState.CREATED) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
