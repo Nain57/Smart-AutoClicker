@@ -28,7 +28,6 @@ import android.view.accessibility.AccessibilityEvent
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
-import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
@@ -42,12 +41,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
-import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationListener
+import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
+import com.buzbuz.smartautoclicker.localservice.ILocalService
+import com.buzbuz.smartautoclicker.localservice.LocalService
 
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
@@ -103,38 +103,8 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         fun isServiceStarted(): Boolean = LOCAL_SERVICE_INSTANCE != null
     }
 
-    interface ILocalService {
-        fun startDumbScenario(dumbScenario: DumbScenario)
-        fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
-        fun playAndHide()
-        fun pauseAndShow()
-        fun show()
-        fun hide()
-        fun stop()
-        fun release()
-    }
-
     private val localService: LocalService?
         get() = LOCAL_SERVICE_INSTANCE as? LocalService
-
-    private val notificationController: ServiceNotificationController by lazy {
-        ServiceNotificationController(
-            context = this,
-            activityPendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                Intent(this, ScenarioActivity::class.java),
-                PendingIntent.FLAG_IMMUTABLE,
-            ),
-            listener = object : ServiceNotificationListener {
-                override fun onPlayAndHide() = LOCAL_SERVICE_INSTANCE?.playAndHide()
-                override fun onPauseAndShow() = LOCAL_SERVICE_INSTANCE?.pauseAndShow()
-                override fun onShow() = LOCAL_SERVICE_INSTANCE?.show()
-                override fun onHide() = LOCAL_SERVICE_INSTANCE?.hide()
-                override fun onStop() = LOCAL_SERVICE_INSTANCE?.stop()
-            }
-        )
-    }
 
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
@@ -146,8 +116,6 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
     @Inject lateinit var revenueRepository: IRevenueRepository
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
-
-    private var currentScenarioName: String? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -179,27 +147,16 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
             revenueRepository = revenueRepository,
             bitmapManager = bitmapManager,
             androidExecutor = this,
-            onStart = { isSmart, name ->
+            onStart = { notification ->
                 qualityMetricsMonitor.onServiceForegroundStart()
-                currentScenarioName = name
-                if (isSmart) {
-                    startForegroundMediaProjectionServiceCompat(
-                        ServiceNotificationController.NOTIFICATION_ID,
-                        notificationController.createNotification(this, currentScenarioName),
-                    )
-                }
+                notification?.let { startForegroundMediaProjectionServiceCompat(FOREGROUND_SERVICE_NOTIFICATION_ID, it) }
                 requestFilterKeyEvents(true)
             },
             onStop = {
                 qualityMetricsMonitor.onServiceForegroundEnd()
-                currentScenarioName = null
                 requestFilterKeyEvents(false)
-                stopForeground(Service.STOP_FOREGROUND_REMOVE)
-                notificationController.destroyNotification(this)
+                stopForeground(STOP_FOREGROUND_REMOVE)
             },
-            onStateChanged = { isRunning, isMenuHidden ->
-                notificationController.updateNotificationState(this, isRunning, isMenuHidden)
-            }
         )
     }
 
@@ -268,7 +225,6 @@ class SmartAutoClickerService : AccessibilityService(), AndroidExecutor {
         writer.append("* SmartAutoClickerService:").println()
         writer.append(Dumpable.DUMP_DISPLAY_TAB)
             .append("- isStarted=").append("${(LOCAL_SERVICE_INSTANCE as? LocalService)?.isStarted ?: false}; ")
-            .append("scenarioName=").append("$currentScenarioName; ")
             .println()
 
         displayConfigManager.dump(writer)
