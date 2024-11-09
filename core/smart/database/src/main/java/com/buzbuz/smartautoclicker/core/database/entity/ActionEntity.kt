@@ -137,6 +137,11 @@ data class ActionEntity(
     @ColumnInfo(name = "counter_name") var counterName: String? = null,
     @ColumnInfo(name = "counter_operation") val counterOperation: ChangeCounterOperationType? = null,
     @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Int? = null,
+
+    // ActionType.NOTIFICATION
+    @ColumnInfo(name = "channel_importance") var channelImportance: Int? = null,
+    @ColumnInfo(name = "notification_title") val notificationTitle: String? = null,
+    @ColumnInfo(name = "notification_message") val notificationMessage: String? = null,
 ) : EntityWithId
 
 /**
@@ -159,6 +164,8 @@ enum class ActionType {
     TOGGLE_EVENT,
     /** Change the value of a counter. */
     CHANGE_COUNTER,
+    /** Send a notification. */
+    NOTIFICATION,
 }
 
 /**

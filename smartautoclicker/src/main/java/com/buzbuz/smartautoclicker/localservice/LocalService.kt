@@ -24,10 +24,10 @@ import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -63,7 +63,7 @@ class LocalService(
     private val tileRepository: QSTileRepository,
     private val revenueRepository: IRevenueRepository,
     private val debugRepository: DebuggingRepository,
-    private val androidExecutor: AndroidExecutor,
+    private val androidExecutor: SmartActionExecutor,
     private val onStart: (foregroundNotification: Notification?) -> Unit,
     private val onStop: () -> Unit,
 ) : ILocalService {

@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -294,6 +295,7 @@ class EditedItemsBuilder internal constructor(
         is Intent -> createNewIntentFrom(from, eventId)
         is ToggleEvent -> createNewToggleEventFrom(from, eventId)
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
+        is Notification -> createNewNotificationFrom(from, eventId)
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
@@ -377,6 +379,18 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + from.name,
             counterName = "" + from.counterName,
+        )
+    }
+
+    private fun createNewNotificationFrom(from: Notification, eventId: Identifier): Notification {
+        val actionId = actionsIdCreator.generateNewIdentifier()
+
+        return from.copy(
+            id = actionId,
+            eventId = eventId,
+            name = "" + from.name,
+            title = "" + from.title,
+            message = from.message?.let { "" + it },
         )
     }
 

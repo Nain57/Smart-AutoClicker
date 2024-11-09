@@ -22,19 +22,20 @@ import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.extensions.buildSingleStroke
 import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -53,10 +54,12 @@ import kotlin.random.Random
  * @param randomize true to randomize the actions values a bit (positions, timers...), false to be precise.
  */
 internal class ActionExecutor(
-    private val androidExecutor: AndroidExecutor,
+    private val androidExecutor: SmartActionExecutor,
     private val processingState: ProcessingState,
     randomize: Boolean,
 ) {
+
+    init { androidExecutor.clearState() }
 
     private val random: Random? = if (randomize) Random(System.currentTimeMillis()) else null
 
@@ -69,6 +72,7 @@ internal class ActionExecutor(
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
+                is Notification -> executeNotification(action)
             }
         }
     }
@@ -212,6 +216,10 @@ internal class ActionExecutor(
                 ChangeCounter.OperationType.SET -> changeCounter.operationValue
             }
         )
+    }
+
+    private fun executeNotification(notification: Notification) {
+        androidExecutor.executeNotification(notification)
     }
 
 

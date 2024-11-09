@@ -34,7 +34,7 @@ sealed class Permission {
         context.getPermissionSharedPrefs().getBoolean(javaClass.simpleName, false)
 
     /** Tells if the [Permission] is granted. */
-    internal fun checkIfGranted(context: Context): Boolean {
+    fun checkIfGranted(context: Context): Boolean {
         if (!isRequiredForAndroidSdkVersion()) return true
         return isGranted(context)
     }
