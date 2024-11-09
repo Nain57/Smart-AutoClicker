@@ -27,6 +27,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+
+import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
 import com.buzbuz.smartautoclicker.feature.notifications.common.SERVICE_CHANNEL_ID
 import com.buzbuz.smartautoclicker.feature.notifications.common.createKlickrServiceNotificationChannel
 import com.buzbuz.smartautoclicker.feature.notifications.service.actions.ServiceNotificationActionsManager
@@ -38,17 +40,10 @@ class ServiceNotificationController(
     private val activityPendingIntent: PendingIntent,
 ) {
 
-    companion object {
-        /** The identifier for the foreground notification of this service. */
-        const val NOTIFICATION_ID = 42
-        /** Tag for logs. */
-        private const val TAG = "ServiceNotificationManager"
-    }
-
-    private val notificationActions: ServiceNotificationActionsManager =
-        ServiceNotificationActionsManager(listener)
     private val notificationManager: NotificationManagerCompat =
         NotificationManagerCompat.from(context)
+    private val notificationActions: ServiceNotificationActionsManager =
+        ServiceNotificationActionsManager(listener)
 
     private var notificationBuilder: NotificationCompat.Builder? = null
 
@@ -76,7 +71,7 @@ class ServiceNotificationController(
         Log.i(TAG, "Updating notification, running=$isRunning; menuHidden=$isMenuHidden")
 
         notificationActions.updateActions(context, builder, isRunning, isMenuHidden)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(FOREGROUND_SERVICE_NOTIFICATION_ID, builder.build())
     }
 
     fun destroyNotification(context: Context) {
@@ -85,3 +80,6 @@ class ServiceNotificationController(
         Log.i(TAG, "Notification destroyed")
     }
 }
+
+/** Tag for logs. */
+private const val TAG = "ServiceNotificationManager"

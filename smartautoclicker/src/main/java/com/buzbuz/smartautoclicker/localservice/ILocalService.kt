@@ -14,18 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.hilt)
-}
+package com.buzbuz.smartautoclicker.localservice
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.feature.notifications"
-    buildFeatures.viewBinding = true
-}
+import android.content.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:ui"))
-    implementation(libs.androidx.appCompat)
+interface ILocalService {
+    fun startDumbScenario(dumbScenario: DumbScenario)
+    fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+    fun stop()
+    fun release()
 }
