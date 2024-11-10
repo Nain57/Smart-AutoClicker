@@ -84,7 +84,10 @@
     <string name="item_intent_details_component_name">Send %1$s to %2$s</string>
     <string name="item_intent_details_start_activity">Start %1$s</string>
 
-
+    <string name="item_notification_title">Notification</string>
+    <string name="item_notification_desc">Send a notification to your device</string>
+    <string name="item_notification_details_text">Send \"%1$s\"</string>
+    <string name="item_notification_details_counter">Send %1$s value</string>
 
     <!-- Dialog Copy =============================================================================================== -->
 
@@ -340,6 +343,28 @@
     <string name="field_select_toggle_events_title">%1$d changes</string>
     <string name="field_select_toggle_events_title_empty">No changes</string>
     <string name="field_select_toggle_events_desc_empty">Select at least one event to change to state of</string>
+
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">Notification</string>
+
+    <string name="field_notification_title_label">Title</string>
+
+    <string name="field_notification_message_title">Message</string>
+    <string name="field_dropdown_notification_message_type_title">Type</string>
+    <string name="field_dropdown_item_notification_message_type_text">Text</string>
+    <string name="field_dropdown_item_notification_message_type_counter">Counter value</string>
+    <string name="field_notification_message_text_label">Content</string>
+    <string name="field_notification_message_counter_label">Counter name</string>
+
+    <string name="field_dropdown_notification_importance_title">Importance</string>
+    <string name="field_dropdown_item_notification_importance_type_low">Low</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">Makes no sound.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">Normal</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">Makes a sound.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">High</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">Makes a sound and appears as a heads-up.</string>
 
 
     <!-- Dialogs warning/error ===================================================================================== -->

@@ -279,6 +279,35 @@
     <string name="field_detection_type_desc_area">Détection sur une zone sélectionnée</string>
 
 
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_notification_title">Notification</string>
+    <string name="item_notification_desc">Envoyer une notification</string>
+    <string name="item_notification_details_text">Envoyer \"%1$s\"</string>
+    <string name="item_notification_details_counter">Envoyer la valeur de %1$s</string>
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">Notification</string>
+
+    <string name="field_notification_title_label">Titre</string>
+
+    <string name="field_notification_message_title">Message</string>
+    <string name="field_dropdown_notification_message_type_title">Type</string>
+    <string name="field_dropdown_item_notification_message_type_text">Texte</string>
+    <string name="field_dropdown_item_notification_message_type_counter">Compteur</string>
+    <string name="field_notification_message_text_label">Contenu</string>
+    <string name="field_notification_message_counter_label">Nom du Compteur</string>
+
+    <string name="field_dropdown_notification_importance_title">Importance</string>
+    <string name="field_dropdown_item_notification_importance_type_low">Basse</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">Ne fait pas de son.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">Normale</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">Fait du son.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">Haute</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">Fait du son et apparaît sur l\'écran.</string>
+
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

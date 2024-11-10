@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.NotificationDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
@@ -93,6 +95,7 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
         is Intent -> IntentDialog(actionConfigDialogListener)
         is ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
         is ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
+        is Notification -> NotificationDialog(actionConfigDialogListener)
         else -> throw IllegalArgumentException("Not yet supported")
     }
 

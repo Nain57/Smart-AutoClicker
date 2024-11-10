@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
@@ -39,13 +40,23 @@ class CounterNameSelectionViewModel @Inject constructor(
                         if (condition is TriggerCondition.OnCounterCountReached) add(condition.counterName)
                     }
                     event.actions.forEach { action ->
-                        if (action is ChangeCounter) add(action.counterName)
+                        action.getContainedCounterName()?.let(::add)
                     }
                 }
 
                 currentActions.value?.forEach { action ->
-                    if (action is ChangeCounter) add(action.counterName)
+                    action.getContainedCounterName()?.let(::add)
                 }
             }
+        }
+
+
+    private fun Action.getContainedCounterName(): String? =
+        when (this) {
+            is ChangeCounter -> counterName
+            is Notification ->
+                if (messageType == Notification.MessageType.COUNTER_VALUE) messageCounterName
+                else null
+            else -> null
         }
 }

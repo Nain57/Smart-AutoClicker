@@ -17,6 +17,11 @@
 -->
 <resources>
 
+    <string name="notification_scenario_channel_group_name">Klick\'r scenarios</string>
+    <string name="notification_scenario_channel_low_name">Basse</string>
+    <string name="notification_scenario_channel_default_name">Normale</string>
+    <string name="notification_scenario_channel_high_name">Haute</string>
+
     <string name="notification_title">Scénario : %1$s</string>
     <string name="notification_message">Appuyez pour changer le scénario</string>
     <string name="notification_button_play_and_hide">Démarrer et cacher</string>

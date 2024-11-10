@@ -274,6 +274,35 @@
     <string name="field_detection_type_desc_area">检测选定区域</string>
 
 
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_notification_title">通知</string>
+    <string name="item_notification_desc">向设备发送通知</string>
+    <string name="item_notification_details_text">发送 \"%1$s\"</string>
+    <string name="item_notification_details_counter">发送 %1$s 值</string>
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">通知</string>
+
+    <string name="field_notification_title_label">标题</string>
+
+    <string name="field_notification_message_title">留言</string>
+    <string name="field_dropdown_notification_message_type_title">类型</string>
+    <string name="field_dropdown_item_notification_message_type_text">文本</string>
+    <string name="field_dropdown_item_notification_message_type_counter">计数器数值</string>
+    <string name="field_notification_message_text_label">内容</string>
+    <string name="field_notification_message_counter_label">计数器名称</string>
+
+    <string name="field_dropdown_notification_importance_title">重要性</string>
+    <string name="field_dropdown_item_notification_importance_type_low">低</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">没有声音</string>
+    <string name="field_dropdown_item_notification_importance_type_default">正常</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">发出声音</string>
+    <string name="field_dropdown_item_notification_importance_type_high">高</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">发出声音并显示提示。</string>
+
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

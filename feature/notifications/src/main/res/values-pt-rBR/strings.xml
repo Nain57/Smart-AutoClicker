@@ -17,6 +17,11 @@
 -->
 <resources>
 
+    <string name="notification_scenario_channel_group_name">Cenários do Klick\'r</string>
+    <string name="notification_scenario_channel_low_name">Baixa</string>
+    <string name="notification_scenario_channel_default_name">Normal</string>
+    <string name="notification_scenario_channel_high_name">Alta</string>
+
     <string name="notification_title">Cenário: %1$s</string>
     <string name="notification_message">Pressione para alterar o cenário</string>
     <string name="notification_button_play_and_hide">Brincar e ocultar</string>
