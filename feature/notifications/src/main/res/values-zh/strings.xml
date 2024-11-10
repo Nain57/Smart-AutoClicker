@@ -17,6 +17,11 @@
 -->
 <resources>
 
+    <string name="notification_scenario_channel_group_name">Klick\'r 场景</string>
+    <string name="notification_scenario_channel_low_name">低</string>
+    <string name="notification_scenario_channel_default_name">正常</string>
+    <string name="notification_scenario_channel_high_name">高</string>
+
     <string name="notification_title">场景: %1$s</string>
     <string name="notification_message">点击停止运行</string>
     <string name="notification_button_play_and_hide">玩耍和隐藏</string>

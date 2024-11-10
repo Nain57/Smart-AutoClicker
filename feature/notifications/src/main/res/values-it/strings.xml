@@ -17,6 +17,11 @@
 -->
 <resources>
 
+    <string name="notification_scenario_channel_group_name">Scenari di Klick\'r</string>
+    <string name="notification_scenario_channel_low_name">Basso</string>
+    <string name="notification_scenario_channel_default_name">Normale</string>
+    <string name="notification_scenario_channel_high_name">Alto</string>
+
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Premi per cambiare scenario</string>
     <string name="notification_button_play_and_hide">Giocare e nascondersi</string>

@@ -24,5 +24,6 @@
     <string name="default_toggle_event_name">Cambia Evento</string>
     <string name="default_change_counter_name">Modificare contatore</string>
     <string name="default_condition_name">Condizione</string>
+    <string name="default_notification_name">Notifica</string>
 
 </resources>
