@@ -46,16 +46,6 @@ internal fun NotificationManagerCompat.createUserScenarioNotificationChannelGrou
     )
 
 @RequiresApi(Build.VERSION_CODES.O)
-internal fun NotificationManagerCompat.createUserScenarioNotificationChannelMin(context: Context) =
-    createNotificationChannel(
-        NotificationChannel(
-            USER_SCENARIO_MIN_CHANNEL_ID,
-            context.getString(R.string.notification_scenario_channel_min_name),
-            NotificationManager.IMPORTANCE_MIN,
-        ).apply { group = USER_SCENARIO_CHANNELS_GROUP_ID }
-    )
-
-@RequiresApi(Build.VERSION_CODES.O)
 internal fun NotificationManagerCompat.createUserScenarioNotificationChannelLow(context: Context) =
     createNotificationChannel(
         NotificationChannel(
@@ -87,7 +77,6 @@ internal fun NotificationManagerCompat.createUserScenarioNotificationChannelHigh
 
 internal fun getUserScenarioNotificationChannelId(importance: Int): String =
     when (importance) {
-        NotificationManager.IMPORTANCE_MIN -> USER_SCENARIO_MIN_CHANNEL_ID
         NotificationManager.IMPORTANCE_LOW -> USER_SCENARIO_LOW_CHANNEL_ID
         NotificationManager.IMPORTANCE_DEFAULT -> USER_SCENARIO_DEFAULT_CHANNEL_ID
         NotificationManager.IMPORTANCE_HIGH -> USER_SCENARIO_HIGH_CHANNEL_ID
@@ -99,8 +88,6 @@ internal fun getUserScenarioNotificationChannelId(importance: Int): String =
 internal const val SERVICE_CHANNEL_ID = "KlickrService"
 
 private const val USER_SCENARIO_CHANNELS_GROUP_ID = "Klickr User Scenarios"
-/** The channel identifier for the notification sent by a user scenario with MIN importance. */
-private const val USER_SCENARIO_MIN_CHANNEL_ID = "KlickrScenario MIN"
 /** The channel identifier for the notification sent by a user scenario with LOW importance. */
 private const val USER_SCENARIO_LOW_CHANNEL_ID = "KlickrScenario LOW"
 /** The channel identifier for the notification sent by a user scenario with DEFAULT importance. */

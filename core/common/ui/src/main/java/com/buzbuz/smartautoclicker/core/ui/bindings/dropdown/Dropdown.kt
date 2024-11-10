@@ -22,14 +22,14 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeInputFieldDropdown
 import com.google.android.material.textfield.TextInputLayout
 
 
-fun IncludeInputFieldDropdownBinding.setItems(
-    items: List<DropdownItem>,
-    onItemSelected: (DropdownItem) -> Unit,
+fun <T: DropdownItem> IncludeInputFieldDropdownBinding.setItems(
+    items: List<T>,
+    onItemSelected: (T) -> Unit,
     label: String? = null,
     enabled: Boolean = true,
     @DrawableRes disabledIcon: Int? = null,
     onDisabledClick: (() -> Unit)? = null,
-    onItemBound: ((DropdownItem, View?) -> Unit)? = null,
+    onItemBound: ((T, View?) -> Unit)? = null,
 ) {
     textLayout.apply {
         if (enabled) {

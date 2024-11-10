@@ -23,7 +23,6 @@ import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector

@@ -39,27 +39,25 @@ import kotlinx.serialization.Serializable
  * @param name the name of this action
  * @param type type of this action. Must be the this representation of the [ActionType] enum.
  *
- * @param clickPositionType [ActionType.CLICK] only: indicates how the click position is interpreted.
- *                          If USER_SELECTED, [x] and [y] will be used.
- *                          If ON_DETECTED_CONDITION, the [clickOnConditionId] will be used.
+ * @param clickPositionType [ActionType.CLICK] only: indicates how the click position is interpreted. If USER_SELECTED,
+ *  [x] and [y] will be used. If ON_DETECTED_CONDITION, the [clickOnConditionId] will be used.
  * @param x [ActionType.CLICK] only: the x position of the click. Null for others [ActionType].
  * @param y [ActionType.CLICK] only: the y position of the click. Null for others [ActionType].
- * @param clickOnConditionId [ActionType.CLICK] only: if defined, the condition to click on.
- *                         If null, the x and y coordinates will be used.
+ * @param clickOnConditionId [ActionType.CLICK] only: if defined, the condition to click on. If null, the x and y
+ *  coordinates will be used.
  * @param pressDuration [ActionType.CLICK] only: the duration of the click press in milliseconds.
- *                      Null for others [ActionType].
+ *  Null for others [ActionType].
  * @param clickOffsetX [ActionType.CLICK] & [ClickPositionType.ON_DETECTED_CONDITION] only: the offset to apply in the X
- *                      axis when clicking on a condition.
- *                      Null for others [ActionType].
+ *  axis when clicking on a condition. Null for others [ActionType].
  * @param clickOffsetY [ActionType.CLICK] & [ClickPositionType.ON_DETECTED_CONDITION] only: the offset to apply in the Y
- *                      axis when clicking on a condition.
+ *  axis when clicking on a condition.
  *
  * @param fromX [ActionType.SWIPE] only: the swipe start x coordinates. Null for others [ActionType].
  * @param fromY [ActionType.SWIPE] only: the swipe start y coordinates. Null for others [ActionType].
  * @param toX [ActionType.SWIPE] only: the swipe end x coordinates. Null for others [ActionType].
  * @param toY [ActionType.SWIPE] only: the swipe end y coordinates. Null for others [ActionType].
  * @param swipeDuration [ActionType.SWIPE] only: the delay between the swipe start and end in milliseconds.
- *                      Null for others [ActionType].
+ *  Null for others [ActionType].
  *
  * @param pauseDuration [ActionType.PAUSE] only: the duration of the pause in milliseconds.
  *
@@ -69,13 +67,20 @@ import kotlinx.serialization.Serializable
  * @param componentName [ActionType.INTENT] only: the component to send the intent to. Null for if [isBroadcast] is true.
  * @param flags [ActionType.INTENT] only: flags for the intent as defined in [android.content.Intent].
  *
- * @param counterName [ActionType.CHANGE_COUNTER] only: the name of the counter to change apply the
- *                     operation on. There is no need for a db object for a "counter", we only need
- *                     to identify them at runtime using their names. Null for others [ActionType].
+ * @param counterName [ActionType.CHANGE_COUNTER] only: the name of the counter to change apply the operation on. There
+ *  is no need for a db object for a "counter", we only need to identify them at runtime using their names.
+ *  Null for others [ActionType].
  * @param counterOperation [ActionType.CHANGE_COUNTER] only: the type of operation to apply to the
- *                                                     counter. Null for others [ActionType].
+ *  counter. Null for others [ActionType].
  * @param counterOperationValue [ActionType.CHANGE_COUNTER] only: the vale to use for the operation
- *                                                          on the counter. Null for others [ActionType].
+ *  on the counter. Null for others [ActionType].
+ *
+ * @param notificationMessageType [ActionType.NOTIFICATION] only: tells what kind of message the notification will contains.
+ * @param notificationMessageText [ActionType.NOTIFICATION] only: used as notification message when [notificationMessageType]
+ *  is [NotificationMessageType.TEXT].
+ * @param notificationMessageCounterName [ActionType.NOTIFICATION] only: the counter value will be used as notification
+ *  message when [notificationMessageType] is [NotificationMessageType.COUNTER_VALUE].
+ * @param notificationImportance [ActionType.NOTIFICATION] only:
  */
 @Entity(
     tableName = ACTION_TABLE,
@@ -139,9 +144,10 @@ data class ActionEntity(
     @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Int? = null,
 
     // ActionType.NOTIFICATION
-    @ColumnInfo(name = "channel_importance") var channelImportance: Int? = null,
-    @ColumnInfo(name = "notification_title") val notificationTitle: String? = null,
-    @ColumnInfo(name = "notification_message") val notificationMessage: String? = null,
+    @ColumnInfo(name = "notification_message_type") val notificationMessageType: NotificationMessageType? = null,
+    @ColumnInfo(name = "notification_message_text") val notificationMessageText: String? = null,
+    @ColumnInfo(name = "notification_message_counter_name") val notificationMessageCounterName: String? = null,
+    @ColumnInfo(name = "notification_importance") var notificationImportance: Int? = null,
 ) : EntityWithId
 
 /**
@@ -196,6 +202,17 @@ enum class ChangeCounterOperationType {
     MINUS,
     /** Set the counter to a specific value. */
     SET;
+}
+
+/**
+ * Types of notification message of a [ActionType.NOTIFICATION].
+ * /!\ DO NOT RENAME: NotificationMessageType enum name is used in the database.
+ */
+enum class NotificationMessageType {
+    /** Display the text defined by [ActionEntity.notificationMessageText]. */
+    TEXT,
+    /** Display the value of the counter defined by [ActionEntity.notificationMessageCounterName]. */
+    COUNTER_VALUE;
 }
 
 /**

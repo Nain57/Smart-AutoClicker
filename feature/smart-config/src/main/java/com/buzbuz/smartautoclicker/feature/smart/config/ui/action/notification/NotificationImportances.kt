@@ -14,25 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.notifications.user
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification
 
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import androidx.annotation.StringRes
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 
-internal class UserNotificationGroups {
+sealed class NotificationMessageTypeItem(
+    @StringRes title: Int,
+) : DropdownItem(title) {
 
-    private val groups: MutableMap<Identifier, String> = mutableMapOf()
+    data object Text : NotificationMessageTypeItem(
+        title = R.string.field_dropdown_item_notification_message_type_text,
+    )
 
-    fun getGroup(notification: Notification): String =
-        groups[notification.id] ?: let {
-            val name = notification.name ?: DEFAULT_NAME
-            groups[notification.id] = name
-            name
-        }
-
-    fun clear() {
-        groups.clear()
-    }
+    data object Counter : NotificationMessageTypeItem(
+        title = R.string.field_dropdown_item_notification_message_type_counter,
+    )
 }
-
-private const val DEFAULT_NAME = "Klick'r"

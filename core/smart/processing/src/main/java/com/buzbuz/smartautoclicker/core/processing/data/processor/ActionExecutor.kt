@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtr
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
+import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -72,7 +73,7 @@ internal class ActionExecutor(
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
-                is Notification -> executeNotification(action)
+                is Notification -> executeNotification(event, action)
             }
         }
     }
@@ -218,8 +219,24 @@ internal class ActionExecutor(
         )
     }
 
-    private fun executeNotification(notification: Notification) {
-        androidExecutor.executeNotification(notification)
+    private fun executeNotification(event: Event, notification: Notification) {
+        val message = when (notification.messageType) {
+            Notification.MessageType.TEXT -> notification.messageText
+            Notification.MessageType.COUNTER_VALUE -> {
+                val counterValue = processingState.getCounterValue(notification.messageCounterName) ?: return
+                notification.messageCounterName + " = " + counterValue
+            }
+        }
+
+        androidExecutor.executeNotification(
+            NotificationRequest(
+                id = notification.id.databaseId,
+                title = notification.name ?: "Klick'r",
+                message = message,
+                groupName = event.name,
+                importance = notification.channelImportance,
+            )
+        )
     }
 
 

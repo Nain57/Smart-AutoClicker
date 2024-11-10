@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
