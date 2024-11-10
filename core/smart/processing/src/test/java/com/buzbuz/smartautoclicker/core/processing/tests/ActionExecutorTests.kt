@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -94,7 +95,7 @@ class ActionExecutorTests {
             ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
     }
 
-    @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
+    @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
     @Mock private lateinit var mockProcessingState: ProcessingState
 
     private lateinit var actionExecutor: ActionExecutor

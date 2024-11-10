@@ -24,7 +24,6 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
@@ -32,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.OR
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -56,6 +56,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
@@ -111,7 +112,7 @@ class ScenarioProcessorTests {
 
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
-    @Mock private lateinit var mockAndroidExecutor: AndroidExecutor
+    @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
 
     @Mock private lateinit var mockScreenBitmap: Bitmap
@@ -159,17 +160,22 @@ class ScenarioProcessorTests {
     private fun createNewScenarioProcessor(
         events: List<ImageEvent>,
         triggerEvent: List<TriggerEvent>,
-    ) = ScenarioProcessor(
-        "",
-        mockImageDetector,
-        TEST_DATA_DETECTION_QUALITY.toInt(),
-        false,
-        events,
-        triggerEvent,
-        mockBitmapSupplier::getBitmap,
-        mockAndroidExecutor,
-        mockEndListener::onStopRequested,
-    )
+    ) : ScenarioProcessor {
+        val processor = ScenarioProcessor(
+            "",
+            mockImageDetector,
+            TEST_DATA_DETECTION_QUALITY.toInt(),
+            false,
+            events,
+            triggerEvent,
+            mockBitmapSupplier::getBitmap,
+            mockAndroidExecutor,
+            mockEndListener::onStopRequested,
+        )
+
+        Mockito.clearInvocations(mockAndroidExecutor)
+        return processor
+    }
 
     @Before
     fun setUp() {
