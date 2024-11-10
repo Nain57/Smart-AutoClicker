@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getClickIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getPauseIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSwipeIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
@@ -79,5 +80,12 @@ sealed class ActionTypeChoice(
         R.string.item_change_counter_title,
         R.string.item_change_counter_desc,
         getChangeCounterIconRes(),
+    )
+
+    /** Notification Action choice. */
+    data object Notification : ActionTypeChoice(
+        R.string.item_notification_title,
+        R.string.item_notification_desc,
+        getNotificationIconRes(),
     )
 }

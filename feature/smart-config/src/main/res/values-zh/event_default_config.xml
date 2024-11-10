@@ -24,5 +24,6 @@
     <string name="default_condition_name">默认条件</string>
     <string name="default_toggle_event_name">切换场景状态</string>
     <string name="default_change_counter_name">修改计数器</string>
+    <string name="default_notification_name">通知</string>
 
 </resources>

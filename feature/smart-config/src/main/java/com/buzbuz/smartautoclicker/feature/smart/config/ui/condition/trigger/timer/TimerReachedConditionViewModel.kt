@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.ti
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
@@ -108,8 +107,8 @@ class TimerReachedConditionViewModel@Inject constructor(
         }
     }
 
-    fun setTimeUnit(unit: DropdownItem) {
-        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
+    fun setTimeUnit(unit: TimeUnitDropDownItem) {
+        _selectedUnitItem.value = unit
     }
 
     fun toggleRestartWhenReached() {

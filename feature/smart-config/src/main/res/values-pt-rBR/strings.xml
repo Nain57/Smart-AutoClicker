@@ -83,6 +83,11 @@
     <string name="item_intent_details_component_name">Enviar %1$s para %2$s</string>
     <string name="item_intent_details_start_activity">Iniciar %1$s</string>
 
+    <string name="item_notification_title">Notificação</string>
+    <string name="item_notification_desc">Enviar uma notificação para seu dispositivo</string>
+    <string name="item_notification_details_text">Enviar \"%1$s\"</string>
+    <string name="item_notification_details_counter">Enviar valor %1$s</string>
+
 
     <!-- Dialog Copy =============================================================================================== -->
 
@@ -332,6 +337,28 @@
     <string name="field_select_toggle_events_title">%1$d alterações</string>
     <string name="field_select_toggle_events_title_empty">Nenhuma alteração</string>
     <string name="field_select_toggle_events_desc_empty">Selecione pelo menos um evento para alterar o estado de</string>
+
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">Notificação</string>
+
+    <string name="field_notification_title_label">Título</string>
+
+    <string name="field_notification_message_title">Mensagem</string>
+    <string name="field_dropdown_notification_message_type_title">Tipo</string>
+    <string name="field_dropdown_item_notification_message_type_text">Texto</string>
+    <string name="field_dropdown_item_notification_message_type_counter">Valor do contador</string>
+    <string name="field_notification_message_text_label">Conteúdo</string>
+    <string name="field_notification_message_counter_label">Nome do contador</string>
+
+    <string name="field_dropdown_notification_importance_title">Importância</string>
+    <string name="field_dropdown_item_notification_importance_type_low">Baixa</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">Não faz nenhum som.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">Normal</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">Faz um som.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">Alta</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">Emite um som e aparece como um alerta.</string>
 
 
     <!-- Dialogs warning/error ===================================================================================== -->

@@ -22,7 +22,6 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
@@ -115,8 +114,8 @@ class PauseViewModel @Inject constructor(
         }
     }
 
-    fun setTimeUnit(unit: DropdownItem) {
-        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
+    fun setTimeUnit(unit: TimeUnitDropDownItem) {
+        _selectedUnitItem.value = unit
     }
 
     fun saveLastConfig() {

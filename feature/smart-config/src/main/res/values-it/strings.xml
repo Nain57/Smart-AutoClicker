@@ -277,6 +277,35 @@
     <string name="field_detection_type_desc_area">Rilevamento su un\'area selezionata</string>
 
 
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_notification_title">Notifica</string>
+    <string name="item_notification_desc">Inviare una notifica al dispositivo</string>
+    <string name="item_notification_details_text">Inviare \"%1$s\"</string>
+    <string name="item_notification_details_counter">Inviare il valore %1$s</string>
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">Notifica</string>
+
+    <string name="field_notification_title_label">Titolo</string>
+
+    <string name="field_notification_message_title">Messaggio</string>
+    <string name="field_dropdown_notification_message_type_title">Tipo</string>
+    <string name="field_dropdown_item_notification_message_type_text">Testo</string>
+    <string name="field_dropdown_item_notification_message_type_counter">Valore del contatore</string>
+    <string name="field_notification_message_text_label">Contenuto</string>
+    <string name="field_notification_message_counter_label">Nome del contatore</string>
+
+    <string name="field_dropdown_notification_importance_title">Importanza</string>
+    <string name="field_dropdown_item_notification_importance_type_low">Basso</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">Non produce alcun suono.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">Normale</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">Emette un suono.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">Alto</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">Emette un suono e appare come un avviso.</string>
+
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
