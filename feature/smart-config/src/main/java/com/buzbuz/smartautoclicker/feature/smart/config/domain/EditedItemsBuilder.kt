@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
+import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -288,6 +289,18 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
+    fun createNewNotification(context: Context): Notification =
+        Notification(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.notificationName(context),
+            channelImportance = NotificationManager.IMPORTANCE_DEFAULT,
+            messageType = Notification.MessageType.TEXT,
+            messageText = "",
+            messageCounterName = "",
+            priority = 0,
+        )
+
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
         is Click -> createNewClickFrom(from, eventId)
         is Swipe -> createNewSwipeFrom(from, eventId)
@@ -389,8 +402,8 @@ class EditedItemsBuilder internal constructor(
             id = actionId,
             eventId = eventId,
             name = "" + from.name,
-            title = "" + from.title,
-            message = from.message?.let { "" + it },
+            messageText = "" + from.messageText,
+            messageCounterName = "" + from.messageCounterName,
         )
     }
 

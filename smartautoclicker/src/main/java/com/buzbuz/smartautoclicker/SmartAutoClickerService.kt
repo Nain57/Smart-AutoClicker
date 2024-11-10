@@ -36,11 +36,11 @@ import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMoni
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
 import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
@@ -220,8 +220,8 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         }
     }
 
-    override fun executeNotification(notificationAction: Notification) {
-        userNotificationsController.showNotification(this, notificationAction)
+    override fun executeNotification(notification: NotificationRequest) {
+        userNotificationsController.showNotification(this, notification)
     }
 
     override fun clearState() {

@@ -24,39 +24,37 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 import com.buzbuz.smartautoclicker.feature.notifications.R
 import com.buzbuz.smartautoclicker.feature.notifications.common.getUserScenarioNotificationChannelId
 
 
 class UserNotificationsController(context: Context) {
 
-    private val notificationGroups: UserNotificationGroups =
-        UserNotificationGroups()
     private val notifier: UserNotificationNotifier =
         UserNotificationNotifier(context)
 
     @SuppressLint("MissingPermission")
-    fun showNotification(context: Context, notificationAction: Notification) {
+    fun showNotification(context: Context, notificationRequest: NotificationRequest) {
         if (!PermissionPostNotification.checkIfGranted(context)) return
 
-        val channelId = getUserScenarioNotificationChannelId(notificationAction.channelImportance)
+        val channelId = getUserScenarioNotificationChannelId(notificationRequest.importance)
         val builder = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(notificationAction.title)
-            .setContentText(notificationAction.message)
+            .setContentTitle(notificationRequest.title)
+            .setContentText(notificationRequest.message)
             .setSmallIcon(notificationIconResId())
             .setCategory(android.app.Notification.CATEGORY_REMINDER)
-            .setGroup(notificationGroups.getGroup(notificationAction))
+            .setGroup(notificationRequest.groupName)
 
-        notifier.notify(notificationAction.id, builder.build())
+        notifier.notify(notificationRequest.id, builder.build())
     }
 
     fun clearAll() {
-        notificationGroups.clear()
+        notifier.clearAllPostedNotifications()
     }
 
     @DrawableRes
     private fun notificationIconResId(): Int =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) R.drawable.ic_notification_vector
-        else R.drawable.ic_notification
+        else R.drawable.ic_action_notification
 }

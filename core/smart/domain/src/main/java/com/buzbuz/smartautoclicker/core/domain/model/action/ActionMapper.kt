@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
+import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
 
@@ -127,9 +128,10 @@ private fun Notification.toNotificationEntity(): ActionEntity =
         priority = priority,
         name = name!!,
         type = ActionType.NOTIFICATION,
-        channelImportance = channelImportance,
-        notificationTitle = title,
-        notificationMessage = message,
+        notificationImportance = channelImportance,
+        notificationMessageType = messageType.toEntity(),
+        notificationMessageText = messageText,
+        notificationMessageCounterName = messageCounterName,
     )
 
 
@@ -214,9 +216,10 @@ private fun CompleteActionEntity.toDomainNotification(cleanIds: Boolean = false)
     eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
     name = action.name,
     priority = action.priority,
-    channelImportance = action.channelImportance!!,
-    title = action.notificationTitle!!,
-    message = action.notificationMessage,
+    channelImportance = action.notificationImportance!!,
+    messageType = action.notificationMessageType!!.toDomain(),
+    messageText = action.notificationMessageText!!,
+    messageCounterName = action.notificationMessageCounterName!!,
 )
 
 private fun ClickPositionType.toDomain(): Click.PositionType =
@@ -227,6 +230,9 @@ private fun EventToggleType.toDomain(): ToggleEvent.ToggleType =
 
 private fun ChangeCounterOperationType.toDomain(): ChangeCounter.OperationType =
     ChangeCounter.OperationType.valueOf(name)
+
+private fun NotificationMessageType.toDomain(): Notification.MessageType =
+    Notification.MessageType.valueOf(name)
 
 private fun String?.toComponentName(): ComponentName? = this?.let {
     ComponentName.unflattenFromString(it)

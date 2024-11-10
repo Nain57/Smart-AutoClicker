@@ -24,12 +24,10 @@ import android.os.Build
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationManagerCompat
 
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.feature.notifications.common.createUserScenarioNotificationChannelDefault
 import com.buzbuz.smartautoclicker.feature.notifications.common.createUserScenarioNotificationChannelGroup
 import com.buzbuz.smartautoclicker.feature.notifications.common.createUserScenarioNotificationChannelHigh
 import com.buzbuz.smartautoclicker.feature.notifications.common.createUserScenarioNotificationChannelLow
-import com.buzbuz.smartautoclicker.feature.notifications.common.createUserScenarioNotificationChannelMin
 
 internal class UserNotificationNotifier(context: Context) {
 
@@ -40,7 +38,6 @@ internal class UserNotificationNotifier(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.apply {
                 createUserScenarioNotificationChannelGroup(context)
-                createUserScenarioNotificationChannelMin(context)
                 createUserScenarioNotificationChannelLow(context)
                 createUserScenarioNotificationChannelDefault(context)
                 createUserScenarioNotificationChannelHigh(context)
@@ -51,8 +48,8 @@ internal class UserNotificationNotifier(context: Context) {
     private val postedIds: MutableSet<Int> = mutableSetOf()
 
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
-    fun notify(actionId: Identifier, notification: Notification) {
-        val notificationId = actionId.hashCode()
+    fun notify(id: Long, notification: Notification) {
+        val notificationId = id.hashCode()
 
         postedIds.add(notificationId)
         notificationManager.notify(notificationId, notification)
