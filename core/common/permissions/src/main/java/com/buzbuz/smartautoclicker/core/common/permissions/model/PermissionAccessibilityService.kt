@@ -36,7 +36,8 @@ import android.util.Log
 data class PermissionAccessibilityService(
     private val componentName: ComponentName,
     private val isServiceRunning: () -> Boolean,
-) : Permission.Special() {
+    private val optional: Boolean = false,
+) : Permission.Special(optional) {
 
     override fun isGranted(context: Context): Boolean =
         isServiceRunning()

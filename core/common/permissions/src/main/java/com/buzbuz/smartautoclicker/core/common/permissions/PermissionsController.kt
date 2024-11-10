@@ -89,7 +89,7 @@ class PermissionsController @Inject constructor() {
         activity.showPermissionDialogFragment(nextPermission) { isGranted ->
             Log.i(TAG, "onPermissionDialogResult: $nextPermission isGranted=$isGranted")
 
-            if (isGranted || nextPermission.isOptional()) handleNextPermission(activity)
+            if (isGranted || nextPermission.isOptional) handleNextPermission(activity)
             else activity.showMandatoryPermissionDeniedDialog()
         }
     }
@@ -134,7 +134,7 @@ class PermissionsController @Inject constructor() {
     }
 
     private fun Permission.isOptionalAndRequestedBefore(context: Context) =
-        isOptional() && hasBeenRequestedBefore(context)
+        isOptional && hasBeenRequestedBefore(context)
 
     private fun MutableSet<Permission>.popFirst() : Permission =
         first().also(::remove)

@@ -36,7 +36,7 @@ class UserNotificationsController(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun showNotification(context: Context, notificationRequest: NotificationRequest) {
-        if (!PermissionPostNotification.checkIfGranted(context)) return
+        if (!PermissionPostNotification().checkIfGranted(context)) return
 
         val channelId = getUserScenarioNotificationChannelId(notificationRequest.importance)
         val builder = NotificationCompat.Builder(context, channelId)

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.permissions.ui
 
+import android.app.Activity
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -31,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostN
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -54,7 +54,7 @@ internal class PermissionDialogViewModel @Inject constructor(
 
         if (permission is Permission.Dangerous) {
             permission.initResultLauncher(fragment) { isGranted ->
-                onResult(isGranted, permission.isOptional())
+                onResult(isGranted, permission.isOptional)
             }
         }
     }
@@ -66,7 +66,7 @@ internal class PermissionDialogViewModel @Inject constructor(
 
     fun shouldBeDismissedOnResume(context: Context): Boolean {
         val permission = permissionsController.currentRequestedPermission.value ?: return true
-        return permission is Permission.Special && (permission.checkIfGranted(context) || permission.isOptional())
+        return permission.checkIfGranted(context) || (permission.isOptional && permission.hasBeenRequestedBefore(context))
     }
 }
 
@@ -78,13 +78,13 @@ internal data class PermissionDialogUiState(
 
 private fun Permission.toPermissionDialogUiState(): PermissionDialogUiState =
     when (this) {
-        PermissionOverlay -> PermissionDialogUiState(
+        is PermissionOverlay -> PermissionDialogUiState(
             permission = this,
             titleRes = R.string.dialog_title_permission_overlay,
             descriptionRes = R.string.message_permission_desc_overlay,
         )
 
-        PermissionPostNotification -> PermissionDialogUiState(
+        is PermissionPostNotification -> PermissionDialogUiState(
             permission = this,
             titleRes = R.string.dialog_title_permission_notification,
             descriptionRes = R.string.message_permission_desc_notification,
