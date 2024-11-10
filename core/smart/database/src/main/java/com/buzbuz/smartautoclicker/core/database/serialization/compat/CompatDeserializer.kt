@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.serialization.Deserializer
 
@@ -498,8 +499,9 @@ internal abstract class CompatDeserializer : Deserializer {
     open fun deserializeActionNotification(jsonNotification: JsonObject): ActionEntity? {
         val id = jsonNotification.getLong("id", true) ?: return null
         val eventId = jsonNotification.getLong("eventId", true) ?: return null
-        val channelImportance = jsonNotification.getInt("channelImportance") ?: return null
-        val notificationTitle = jsonNotification.getString("notificationTitle") ?: return null
+        val channelImportance = jsonNotification.getInt("notification_importance") ?: return null
+        val notificationMessageType = jsonNotification
+            .getEnum<NotificationMessageType>("notification_message_type") ?: return null
 
         return ActionEntity(
             id = id,
@@ -507,9 +509,10 @@ internal abstract class CompatDeserializer : Deserializer {
             name = jsonNotification.getString("name") ?: "",
             priority = jsonNotification.getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.NOTIFICATION,
-            channelImportance = channelImportance,
-            notificationTitle = notificationTitle,
-            notificationMessage = jsonNotification.getString("notificationMessage"),
+            notificationImportance = channelImportance,
+            notificationMessageType = notificationMessageType,
+            notificationMessageText = jsonNotification.getString("notification_message_text") ?: "",
+            notificationMessageCounterName = jsonNotification.getString("notification_message_counter_name") ?: "",
         )
     }
 

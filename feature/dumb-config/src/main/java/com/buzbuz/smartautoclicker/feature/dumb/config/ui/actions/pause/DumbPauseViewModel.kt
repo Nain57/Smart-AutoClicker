@@ -21,7 +21,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.findAppropriateTimeUnit
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.formatDuration
@@ -92,8 +91,8 @@ class DumbPauseViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setTimeUnit(unit: DropdownItem) {
-        _selectedUnitItem.value = unit as? TimeUnitDropDownItem ?: TimeUnitDropDownItem.Milliseconds
+    fun setTimeUnit(unit: TimeUnitDropDownItem) {
+        _selectedUnitItem.value = unit
     }
 
     fun saveLastConfig(context: Context) {

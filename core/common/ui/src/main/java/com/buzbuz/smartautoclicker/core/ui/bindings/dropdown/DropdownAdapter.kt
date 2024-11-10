@@ -24,15 +24,15 @@ import android.widget.Filter
 import android.widget.Filterable
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemDropdownBinding
 
-internal class DropdownAdapter(
-    private val items: List<DropdownItem>,
-    private val onItemSelected: (DropdownItem) -> Unit,
-    private val onItemViewStateChanged: ((DropdownItem, View, isBound: Boolean) -> Unit)?,
+internal class DropdownAdapter<T: DropdownItem>(
+    private val items: List<T>,
+    private val onItemSelected: (T) -> Unit,
+    private val onItemViewStateChanged: ((T, View, isBound: Boolean) -> Unit)?,
 ) : Filterable, BaseAdapter() {
 
     override fun getCount(): Int = items.size
 
-    override fun getItem(position: Int): DropdownItem = items[position]
+    override fun getItem(position: Int): T = items[position]
 
     override fun getItemId(position: Int): Long = position.toLong()
 

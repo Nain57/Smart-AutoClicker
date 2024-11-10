@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -32,27 +33,17 @@ internal class CountersState(
     triggerEvent: List<TriggerEvent>,
 ) : ICountersState {
 
-    /**
-     * Parse the whole event list to get all the counters name.
-     * If a condition listen to a counter but nothing (or the opposite), we skip it to avoid unnecessary processing.
-     */
+    /** Parse the whole event list to get all the counters names. */
     private val counterMap: MutableMap<String, Int> = mutableMapOf<String, Int>().apply {
-        val allEvents = imageEvents + triggerEvent
-        val conditionCounterSet = mutableSetOf<String>()
-
-        allEvents.forEach { event ->
+        (imageEvents + triggerEvent).forEach { event ->
             event.conditions.forEach { condition ->
-                if (condition is TriggerCondition.OnCounterCountReached) {
-                    conditionCounterSet.add(condition.counterName)
-                }
+                if (condition is TriggerCondition.OnCounterCountReached) put(condition.counterName, 0)
             }
-        }
 
-        allEvents.forEach { event ->
             event.actions.forEach { action ->
-                if (action is ChangeCounter) {
-                    if (conditionCounterSet.remove(action.counterName)) put(action.counterName, 0)
-                }
+                if (action is ChangeCounter) put(action.counterName, 0)
+                if (action is Notification && action.messageType == Notification.MessageType.COUNTER_VALUE)
+                    put(action.messageCounterName, 0)
             }
         }
     }
