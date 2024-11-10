@@ -101,12 +101,12 @@ class ScenarioViewModel @Inject constructor(
         permissionController.startPermissionsUiFlow(
             activity = activity,
             permissions = listOf(
-                PermissionOverlay,
+                PermissionOverlay(),
                 PermissionAccessibilityService(
                     componentName = ComponentName(activity, SmartAutoClickerService::class.java),
                     isServiceRunning = { SmartAutoClickerService.isServiceStarted() },
                 ),
-                PermissionPostNotification,
+                PermissionPostNotification(optional = true),
             ),
             onAllGranted = onAllGranted,
         )

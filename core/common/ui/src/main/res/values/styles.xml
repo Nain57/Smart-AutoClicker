@@ -336,4 +336,9 @@
         <item name="android:textColor">@color/textTitle</item>
     </style>
 
+    <style name="AppTheme.TranslucentActivity">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

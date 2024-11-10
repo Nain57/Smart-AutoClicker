@@ -69,7 +69,7 @@ class ServiceNotificationController(
     @SuppressLint("MissingPermission")
     fun updateNotificationState(context: Context, isRunning: Boolean, isMenuHidden: Boolean) {
         val builder = notificationBuilder ?: return
-        if (!PermissionPostNotification.checkIfGranted(context)) return
+        if (!PermissionPostNotification().checkIfGranted(context)) return
 
         Log.i(TAG, "Updating notification, running=$isRunning; menuHidden=$isMenuHidden")
 

@@ -23,7 +23,9 @@ import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 
-data object PermissionOverlay : Permission.Special() {
+data class PermissionOverlay(
+    private val optional: Boolean = false,
+) : Permission.Special(optional) {
 
     override fun isGranted(context: Context): Boolean =
         Settings.canDrawOverlays(context)
