@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.qstile.ui
 
-import android.content.ComponentName
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -24,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.base.klickrServiceComponentName
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
@@ -49,20 +49,15 @@ class QSTileLauncherViewModel @Inject constructor(
 
 
     fun startPermissionFlowIfNeeded(activity: AppCompatActivity, onAllGranted: () -> Unit, onMandatoryDenied: () -> Unit) {
-        val serviceComponentName = ComponentName(
-            "com.buzbuz.smartautoclicker",
-            "com.buzbuz.smartautoclicker.SmartAutoClickerService",
-        )
-
         permissionController.startPermissionsUiFlow(
             activity = activity,
             permissions = listOf(
-                PermissionOverlay,
+                PermissionOverlay(),
                 PermissionAccessibilityService(
-                    componentName = serviceComponentName,
+                    componentName = klickrServiceComponentName,
                     isServiceRunning = { qsTileRepository.isAccessibilityServiceStarted() },
                 ),
-                PermissionPostNotification,
+                PermissionPostNotification(optional = true),
             ),
             onAllGranted = onAllGranted,
             onMandatoryDenied = onMandatoryDenied,

@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 
 import android.content.Context
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.common.permissions.ui.PermissionFromOverlayActivity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -95,7 +97,13 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
         is Intent -> IntentDialog(actionConfigDialogListener)
         is ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
         is ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
-        is Notification -> NotificationDialog(actionConfigDialogListener)
+        is Notification -> {
+            if (PermissionPostNotification().checkIfGranted(context)) NotificationDialog(actionConfigDialogListener)
+            else {
+                context.startActivity(PermissionFromOverlayActivity.getStartIntent(context))
+                return
+            }
+        }
         else -> throw IllegalArgumentException("Not yet supported")
     }
 

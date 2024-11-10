@@ -20,16 +20,26 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.provider.Settings
 
 @SuppressLint("InlinedApi")
-data object PermissionPostNotification : Permission.Dangerous(), Permission.Optional, Permission.ForApiRange {
+data class PermissionPostNotification(
+    private val optional: Boolean = false,
+) : Permission.Dangerous(optional), Permission.ForApiRange {
 
     override val fromApiLvl: Int
         get() = Build.VERSION_CODES.TIRAMISU
 
     override val permissionString: String
         get() = Manifest.permission.POST_NOTIFICATIONS
+
+    override val fallbackSettingsIntent: Intent
+        get() = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra(Settings.EXTRA_APP_PACKAGE, "com.buzbuz.smartautoclicker")
+        }
 
     override fun isGranted(context: Context): Boolean =
         context.getSystemService(NotificationManager::class.java).areNotificationsEnabled()

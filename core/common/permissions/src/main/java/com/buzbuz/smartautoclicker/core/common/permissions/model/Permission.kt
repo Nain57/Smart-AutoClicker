@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.common.permissions.model
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 
@@ -25,10 +26,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 
-sealed class Permission {
-
-    /** Tells if the [Permission] is mandatory or not. */
-    internal fun isOptional(): Boolean = this is Optional
+sealed class Permission(internal val isOptional: Boolean) {
 
     internal fun hasBeenRequestedBefore(context: Context): Boolean =
         context.getPermissionSharedPrefs().getBoolean(javaClass.simpleName, false)
@@ -41,29 +39,33 @@ sealed class Permission {
 
     /** Start the request ui flow for the permission, if required. */
     internal fun startRequestFlowIfNeeded(context: Context): Boolean {
-        if (!isRequiredForAndroidSdkVersion()) return false
+        if (!isRequiredForAndroidSdkVersion()) return true
+
+        val result = onStartRequestFlow(context)
 
         context.getPermissionSharedPrefs()
             .edit()
             .putBoolean(javaClass.simpleName, true)
             .apply()
 
-        return onStartRequestFlow(context)
+        return result
     }
 
     protected abstract fun isGranted(context: Context): Boolean
     protected abstract fun onStartRequestFlow(context: Context): Boolean
 
     /** The permission isn't using the standard Android system, such as overlay, accessibility service ... */
-    sealed class Special : Permission()
+    sealed class Special(isOptional: Boolean) : Permission(isOptional)
 
     /** The permission requires the standard Android permission dialog display. */
-    sealed class Dangerous : Permission() {
+    sealed class Dangerous(isOptional: Boolean) : Permission(isOptional) {
 
         /** Launcher for requesting the permission. */
         private var permissionLauncher: ActivityResultLauncher<String>? = null
         /** The Android permission string value. */
         protected abstract val permissionString: String
+
+        protected open val fallbackSettingsIntent: Intent? = null
 
         internal fun initResultLauncher(fragment: Fragment, onResult: (isGranted: Boolean) -> Unit) {
             permissionLauncher = fragment
@@ -72,21 +74,32 @@ sealed class Permission {
                 }
         }
 
-        override fun onStartRequestFlow(context: Context): Boolean =
-            permissionLauncher?.let { launcher ->
+        override fun onStartRequestFlow(context: Context): Boolean {
+            if (!hasBeenRequestedBefore(context)) {
+                return permissionLauncher?.let { launcher ->
+                    try {
+                        launcher.launch(permissionString)
+                        true
+                    } catch (isEx: IllegalStateException) {
+                        Log.e("PermissionDangerous", "Can't start permission request", isEx)
+                        false
+                    }
+
+                } ?: false
+            }
+
+            fallbackSettingsIntent?.let { intent ->
                 try {
-                    launcher.launch(permissionString)
-                    true
-                } catch (isEx: IllegalStateException) {
-                    Log.e("PermissionDangerous", "Can't start permission request", isEx)
-                    false
+                    context.startActivity(intent)
+                    return true
+                } catch (ex: Exception) {
+                    Log.e("PermissionDangerous", "Can't start permission settings", ex)
                 }
+            }
 
-            } ?: false
+            return false
+        }
     }
-
-    /** Declares a permission as optional. */
-    internal interface Optional
 
     /** Declares a permission that should be requested only for a certain Android SDK. */
     internal interface ForApiRange {
