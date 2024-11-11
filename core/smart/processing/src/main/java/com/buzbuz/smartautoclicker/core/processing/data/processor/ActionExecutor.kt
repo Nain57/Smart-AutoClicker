@@ -230,9 +230,10 @@ internal class ActionExecutor(
 
         androidExecutor.executeNotification(
             NotificationRequest(
-                id = notification.id.databaseId,
+                actionId = notification.id.databaseId,
                 title = notification.name ?: "Klick'r",
                 message = message,
+                eventId = event.id.databaseId,
                 groupName = event.name,
                 importance = notification.channelImportance,
             )

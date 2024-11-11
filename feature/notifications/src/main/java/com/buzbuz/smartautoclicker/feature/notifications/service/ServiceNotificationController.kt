@@ -16,22 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.notifications.service
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.buzbuz.smartautoclicker.core.common.permissions.model.Permission
-import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 
-import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
+import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.common.SERVICE_CHANNEL_ID
 import com.buzbuz.smartautoclicker.feature.notifications.common.createKlickrServiceNotificationChannel
 import com.buzbuz.smartautoclicker.feature.notifications.service.actions.ServiceNotificationActionsManager
@@ -74,7 +70,7 @@ class ServiceNotificationController(
         Log.i(TAG, "Updating notification, running=$isRunning; menuHidden=$isMenuHidden")
 
         notificationActions.updateActions(context, builder, isRunning, isMenuHidden)
-        notificationManager.notify(FOREGROUND_SERVICE_NOTIFICATION_ID, builder.build())
+        notificationManager.notify(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, builder.build())
     }
 
     fun destroyNotification(context: Context) {

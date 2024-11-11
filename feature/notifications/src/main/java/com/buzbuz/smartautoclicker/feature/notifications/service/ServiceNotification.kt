@@ -19,11 +19,10 @@ package com.buzbuz.smartautoclicker.feature.notifications.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
-import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat
 
 import com.buzbuz.smartautoclicker.feature.notifications.R
+import com.buzbuz.smartautoclicker.feature.notifications.common.notificationIconResId
 
 internal fun Context.createServiceNotificationBuilder(
     channelId: String,
@@ -37,8 +36,3 @@ internal fun Context.createServiceNotificationBuilder(
     .setCategory(Notification.CATEGORY_SERVICE)
     .setOngoing(true)
     .setLocalOnly(true)
-
-@DrawableRes
-private fun notificationIconResId(): Int =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) R.drawable.ic_notification_vector
-    else R.drawable.ic_action_notification

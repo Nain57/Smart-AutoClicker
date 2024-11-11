@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
-import com.buzbuz.smartautoclicker.feature.notifications.common.FOREGROUND_SERVICE_NOTIFICATION_ID
+import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
@@ -107,10 +107,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     private val localService: LocalService?
         get() = LOCAL_SERVICE_INSTANCE as? LocalService
 
-    private val userNotificationsController: UserNotificationsController by lazy {
-        UserNotificationsController(this)
-    }
-
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
     @Inject lateinit var detectionRepository: DetectionRepository
@@ -121,6 +117,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var revenueRepository: IRevenueRepository
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
+    @Inject lateinit var userNotificationsController: UserNotificationsController
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -154,7 +151,9 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
             androidExecutor = this,
             onStart = { notification ->
                 qualityMetricsMonitor.onServiceForegroundStart()
-                notification?.let { startForegroundMediaProjectionServiceCompat(FOREGROUND_SERVICE_NOTIFICATION_ID, it) }
+                notification?.let {
+                    startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
+                }
                 requestFilterKeyEvents(true)
             },
             onStop = {
