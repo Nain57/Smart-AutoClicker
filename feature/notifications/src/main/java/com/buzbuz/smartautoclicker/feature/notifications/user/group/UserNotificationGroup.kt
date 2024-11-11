@@ -14,21 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.hilt)
-}
+package com.buzbuz.smartautoclicker.feature.notifications.user.group
 
-android {
-    namespace = "com.buzbuz.smartautoclicker.feature.notifications"
-    buildFeatures.viewBinding = true
-}
+import androidx.core.app.NotificationCompat
 
-dependencies {
-    implementation(libs.androidx.appCompat)
-
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:permissions"))
-    implementation(project(":core:common:ui"))
-    implementation(project(":core:smart:domain"))
-}
+internal data class UserNotificationGroup(
+    val groupName: String,
+    val summaryId: Int,
+    val summaryBuilder: NotificationCompat.Builder,
+)

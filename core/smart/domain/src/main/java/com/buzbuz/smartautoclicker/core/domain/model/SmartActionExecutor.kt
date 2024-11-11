@@ -36,7 +36,8 @@ interface SmartActionExecutor : AndroidExecutor {
 }
 
 data class NotificationRequest(
-    val id: Long,
+    val actionId: Long,
+    val eventId: Long,
     val title: String,
     val message: String,
     val groupName: String,
