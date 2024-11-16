@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.na
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigContent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.imageevents.ImageEventListContent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more.MoreContent
@@ -102,16 +103,30 @@ class ScenarioDialog(
     }
 
     override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
-        if (buttonType == DialogNavigationButton.SAVE) {
-            onConfigSaved()
-            super.back()
-            return
-        }
+        when (buttonType) {
+            DialogNavigationButton.SAVE -> {
+                onConfigSaved()
+                super.back()
+            }
 
-        back()
+            DialogNavigationButton.DISMISS -> {
+                back()
+                return
+            }
+
+            DialogNavigationButton.DELETE -> Unit
+        }
     }
 
     override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                onConfigDiscarded()
+                super.back()
+            }
+            return
+        }
+
         onConfigDiscarded()
         super.back()
     }

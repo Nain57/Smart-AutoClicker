@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -76,7 +77,9 @@ class EventCopyDialog(
 
     private fun onEventClicked(event: Event) {
         if (viewModel.eventCopyShouldWarnUser(event)) {
-            showToggleEventCopyWarning(event)
+            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
+                notifySelectionAndDestroy(event)
+            }
         } else {
             notifySelectionAndDestroy(event)
         }
@@ -85,19 +88,6 @@ class EventCopyDialog(
     private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {
         viewBinding.layoutLoadableList.updateState(newItems)
         eventCopyAdapter.submitList(newItems)
-    }
-
-    /** Show the copy event with toggle event action warning. */
-    private fun showToggleEventCopyWarning(event: Event) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.warning_dialog_message_toggle_action_from_another_scenario)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                notifySelectionAndDestroy(event)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .showAsOverlay()
     }
 
     private fun notifySelectionAndDestroy(event: Event) {

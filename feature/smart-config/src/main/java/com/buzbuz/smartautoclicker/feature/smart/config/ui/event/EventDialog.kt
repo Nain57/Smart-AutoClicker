@@ -16,19 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
-import android.content.DialogInterface
 import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.AND
@@ -55,13 +52,14 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventC
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -100,12 +98,11 @@ class EventDialog(
         )
 
         buttonDismiss.setDebouncedOnClickListener {
-            onDismiss()
             back()
         }
         buttonSave.setDebouncedOnClickListener {
             onConfigComplete()
-            back()
+            super.back()
         }
 
         buttonDelete.setDebouncedOnClickListener {
@@ -269,6 +266,19 @@ class EventDialog(
         )
     }
 
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                onDismiss()
+                super.back()
+            }
+            return
+        }
+
+        onDismiss()
+        super.back()
+    }
+
     override fun onStop() {
         super.onStop()
         viewModel.stopViewMonitoring()
@@ -326,26 +336,15 @@ class EventDialog(
 
     private fun onDeleteButtonClicked() {
         if (viewModel.isEventHaveRelatedActions()) {
-            showMessageDialog(R.string.dialog_overlay_title_warning, R.string.warning_dialog_message_event_delete_associated_action) {
+            context.showDeleteEventWithAssociatedActionsDialog {
                 onDelete()
-                back()
+                super.back()
             }
-        } else {
-            onDelete()
-            back()
+            return
         }
-    }
 
-    private fun showMessageDialog(@StringRes title: Int, @StringRes message: Int, onOkPressed: () -> Unit) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                onOkPressed()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .showAsOverlay()
+        onDelete()
+        super.back()
     }
 
     private fun showImageConditionsBriefMenu(initialFocusedIndex: Int = 0) {

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -25,11 +26,14 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 
 import javax.inject.Inject
@@ -47,6 +51,11 @@ class ChangeCounterViewModel @Inject constructor(
     private val configuredChangeCounter = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<ChangeCounter>()
+
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
@@ -85,6 +94,9 @@ class ChangeCounterViewModel @Inject constructor(
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
+
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     fun setName(name: String) {
         updateEditedChangeCounter { old -> old.copy(name = "" + name) }

@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
@@ -103,13 +104,28 @@ class IntentDialog(
             DialogNavigationButton.SAVE -> {
                 viewModel.saveLastConfig()
                 listener.onConfirmClicked()
+                super.back()
             }
-            DialogNavigationButton.DELETE -> listener.onDeleteClicked()
-            DialogNavigationButton.DISMISS -> listener.onDismissClicked()
-            else -> {}
+            DialogNavigationButton.DISMISS -> back()
+            DialogNavigationButton.DELETE -> {
+                listener.onDeleteClicked()
+                super.back()
+            }
+            else -> Unit
+        }
+    }
+
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                listener.onDismissClicked()
+                super.back()
+            }
+            return
         }
 
-        back()
+        listener.onDismissClicked()
+        super.back()
     }
 
     private fun updateSaveButton(isValidCondition: Boolean) {

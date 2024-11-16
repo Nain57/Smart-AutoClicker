@@ -76,6 +76,11 @@ class ClickViewModel @Inject constructor(
         .mapNotNull { action -> action.value }
         .filterIsInstance<Click>()
 
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
         .distinctUntilChanged()
@@ -138,6 +143,9 @@ class ClickViewModel @Inject constructor(
 
     fun getEditedClick(): Click? =
         editionRepository.editionState.getEditedAction()
+
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     /**
      * Set the name of the click.
