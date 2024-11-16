@@ -71,12 +71,20 @@ class DumbScenarioDataSource @Inject constructor(
         )
     }
 
-    suspend fun addDumbScenarioCopy(scenarioWithActions: DumbScenarioWithActions): Long? {
+    suspend fun addDumbScenarioCopy(scenarioDbId: Long, copyName: String): Long? =
+        dumbScenarioDao.getDumbScenariosWithAction(scenarioDbId)?.let { scenarioWithActions ->
+            addDumbScenarioCopy(scenarioWithActions, copyName)
+        }
+
+    suspend fun addDumbScenarioCopy(scenarioWithActions: DumbScenarioWithActions, copyName: String? = null): Long? {
         Log.d(TAG, "Add dumb scenario to copy ${scenarioWithActions.scenario}")
 
         return try {
             val scenarioId = dumbScenarioDao.addDumbScenario(
-                scenarioWithActions.scenario.copy(id = DATABASE_ID_INSERTION)
+                scenarioWithActions.scenario.copy(
+                    id = DATABASE_ID_INSERTION,
+                    name = copyName ?: scenarioWithActions.scenario.name,
+                )
             )
 
             dumbScenarioDao.addDumbActions(

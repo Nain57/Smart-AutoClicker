@@ -110,8 +110,16 @@ internal class Repository @Inject internal constructor(
     override suspend fun deleteScenario(scenarioId: Identifier): Unit =
         dataSource.deleteScenario(scenarioId)
 
-    override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? =
-        dataSource.importScenario(completeScenario)
+    override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? {
+        val (scenario, events) = completeScenario.toDomain(cleanIds = true)
+        return dataSource.addCompleteScenario(scenario, events)
+    }
+
+    override suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long? {
+        val (scenario, events) = dataSource.getCompleteScenario(scenarioId)
+            ?.toDomain(cleanIds = true) ?: return null
+        return dataSource.addCompleteScenario(scenario.copy(name = copyName), events)
+    }
 
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
         dataSource.updateScenario(scenario, events)
