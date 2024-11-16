@@ -16,11 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.feature.dumb.config.ui
 
-import android.content.DialogInterface
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.view.ContextThemeWrapper
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -32,15 +30,12 @@ import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
-import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefMenu
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioConfigDialog
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioDialog
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
-import com.google.android.material.color.DynamicColors
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -189,7 +184,7 @@ class DumbMainMenu(
         viewModel.startEdition(dumbScenarioId) {
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = DumbScenarioConfigDialog(
+                newOverlay = DumbScenarioDialog(
                     onConfigSaved = viewModel::saveEditions,
                     onConfigDiscarded = viewModel::stopEdition,
                 ),
