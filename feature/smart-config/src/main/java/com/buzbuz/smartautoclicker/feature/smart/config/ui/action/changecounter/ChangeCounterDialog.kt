@@ -46,6 +46,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -68,10 +69,7 @@ class ChangeCounterDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_change_counter)
 
-                buttonDismiss.setDebouncedOnClickListener {
-                    listener.onDismissClicked()
-                    back()
-                }
+                buttonDismiss.setDebouncedOnClickListener { back() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setDebouncedOnClickListener { onSaveButtonClicked() }
@@ -139,14 +137,27 @@ class ChangeCounterDialog(
         }
     }
 
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                listener.onDismissClicked()
+                super.back()
+            }
+            return
+        }
+
+        listener.onDismissClicked()
+        super.back()
+    }
+
     private fun onSaveButtonClicked() {
         listener.onConfirmClicked()
-        back()
+        super.back()
     }
 
     private fun onDeleteButtonClicked() {
         listener.onDeleteClicked()
-        back()
+        super.back()
     }
 
     private fun updateCounterValue(newValue: String?) {

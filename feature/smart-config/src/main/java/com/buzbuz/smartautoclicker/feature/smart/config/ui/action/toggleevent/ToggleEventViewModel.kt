@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
@@ -29,11 +30,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
@@ -48,6 +52,11 @@ class ToggleEventViewModel @Inject constructor(
     private val configuredToggleEvent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<ToggleEvent>()
+
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
@@ -100,6 +109,10 @@ class ToggleEventViewModel @Inject constructor(
     /** Tells if the configured toggle event action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
+
+
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     /**
      * Set the name of the toggle event action.

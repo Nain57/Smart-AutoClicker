@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -25,10 +26,13 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -39,6 +43,11 @@ class NotificationViewModel @Inject constructor(
     private val configuredNotification = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Notification>()
+
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
         .distinctUntilChanged()
@@ -65,6 +74,8 @@ class NotificationViewModel @Inject constructor(
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
 
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     fun setName(name: String) {
         updateEditedNotification { old -> old.copy(name = "" + name) }

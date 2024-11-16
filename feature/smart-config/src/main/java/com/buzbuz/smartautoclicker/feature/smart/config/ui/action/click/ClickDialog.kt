@@ -57,6 +57,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -81,10 +82,7 @@ class ClickDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_click)
 
-                buttonDismiss.setDebouncedOnClickListener {
-                    listener.onDismissClicked()
-                    back()
-                }
+                buttonDismiss.setDebouncedOnClickListener { back() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setDebouncedOnClickListener { onSaveButtonClicked() }
@@ -177,15 +175,28 @@ class ClickDialog(
         viewModel.stopViewMonitoring()
     }
 
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                listener.onDismissClicked()
+                super.back()
+            }
+            return
+        }
+
+        listener.onDismissClicked()
+        super.back()
+    }
+
     private fun onSaveButtonClicked() {
         viewModel.saveLastConfig()
         listener.onConfirmClicked()
-        back()
+        super.back()
     }
 
     private fun onDeleteButtonClicked() {
         listener.onDeleteClicked()
-        back()
+        super.back()
     }
 
     private fun updateClickName(newName: String?) {

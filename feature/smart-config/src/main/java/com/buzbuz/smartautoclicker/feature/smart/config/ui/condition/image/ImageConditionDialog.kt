@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
 
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.text.InputFilter
@@ -30,7 +29,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
@@ -58,10 +56,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -84,15 +83,12 @@ class ImageConditionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_config)
 
-                buttonDismiss.setDebouncedOnClickListener {
-                    listener.onDismissClicked()
-                    back()
-                }
+                buttonDismiss.setDebouncedOnClickListener { back() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setDebouncedOnClickListener {
                         listener.onConfirmClicked()
-                        back()
+                        super.back()
                     }
                 }
                 buttonDelete.apply {
@@ -189,9 +185,26 @@ class ImageConditionDialog(
         viewModel.stopViewMonitoring()
     }
 
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                listener.onDismissClicked()
+                super.back()
+            }
+            return
+        }
+
+        listener.onDismissClicked()
+        super.back()
+    }
+
     private fun onDeleteClicked() {
-        if (viewModel.isConditionRelatedToClick()) showAssociatedActionWarning()
-        else confirmDelete()
+        if (viewModel.isConditionRelatedToClick()) {
+            context.showDeleteConditionsWithAssociatedActionsDialog { confirmDelete() }
+            return
+        }
+
+        confirmDelete()
     }
 
     private fun updateConditionName(newName: String?) {
@@ -244,18 +257,6 @@ class ImageConditionDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
-    private fun showAssociatedActionWarning() {
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.warning_dialog_message_condition_delete_associated_action)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                confirmDelete()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .showAsOverlay()
-    }
-
     private fun showDetectionAreaSelector() {
         overlayManager.navigateTo(
             context = context,
@@ -268,7 +269,7 @@ class ImageConditionDialog(
 
     private fun confirmDelete() {
         listener.onDeleteClicked()
-        back()
+        super.back()
     }
 
     private fun onConditionEditingStateChanged(isEditingCondition: Boolean) {
