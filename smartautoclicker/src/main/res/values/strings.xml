@@ -39,6 +39,7 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">New scenario</string>
+    <string name="dialog_title_copy_scenario">Copy scenario</string>
 
     <!--
       - Text for menu items.

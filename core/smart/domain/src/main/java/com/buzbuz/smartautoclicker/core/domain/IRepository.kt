@@ -66,6 +66,16 @@ interface IRepository {
     suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long?
 
     /**
+     * Create a copy of a scenario and insert it in the database.
+     *
+     * @param scenarioId the identifier of scenario to copy.
+     * @param copyName the name for the copy.
+     *
+     * @return the database id of the copy, or null if the copy has encountered an error.
+     */
+    suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long?
+
+    /**
      * Update a scenario.
      *
      * @param scenario the scenario to update.

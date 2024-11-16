@@ -33,7 +33,7 @@ import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
-import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState
+import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario

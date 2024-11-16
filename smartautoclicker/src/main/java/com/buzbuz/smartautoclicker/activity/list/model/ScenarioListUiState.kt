@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list
+package com.buzbuz.smartautoclicker.activity.list.model
 
 import androidx.annotation.IntRange
 
@@ -126,25 +126,35 @@ data class ScenarioListUiState(
 
             abstract val showExportCheckbox: Boolean
             abstract val checkedForExport: Boolean
+            abstract val expanded: Boolean
+
+            abstract fun getScenarioId(): Long
+
             data class Dumb(
                 override val scenario: DumbScenario,
                 override val showExportCheckbox: Boolean = false,
                 override val checkedForExport: Boolean = false,
+                override val expanded: Boolean = false,
                 val clickCount: Int,
                 val swipeCount: Int,
                 val pauseCount: Int,
                 val repeatText: String,
                 val maxDurationText: String,
-            ) : Valid(displayName = scenario.name,  scenarioTypeIcon = R.drawable.ic_dumb)
+            ) : Valid(displayName = scenario.name,  scenarioTypeIcon = R.drawable.ic_dumb) {
+                override fun getScenarioId(): Long = scenario.id.databaseId
+            }
 
             data class Smart(
                 override val scenario: Scenario,
                 override val showExportCheckbox: Boolean = false,
                 override val checkedForExport: Boolean = false,
+                override val expanded: Boolean = false,
                 val eventsItems: List<EventItem>,
                 val triggerEventCount: Int,
                 val detectionQuality: Int,
             ) : Valid(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart) {
+
+                override fun getScenarioId(): Long = scenario.id.databaseId
 
                 data class EventItem(
                     val id: Long,

@@ -36,6 +36,10 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.creation.ScenarioCreationDialog
+import com.buzbuz.smartautoclicker.activity.list.adapter.ScenarioAdapter
+import com.buzbuz.smartautoclicker.activity.list.copy.ScenarioCopyDialog
+import com.buzbuz.smartautoclicker.activity.list.copy.ScenarioCopyDialog.Companion.FRAGMENT_TAG_COPY_DIALOG
+import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
@@ -82,6 +86,8 @@ class ScenarioListFragment : Fragment() {
             startScenarioListener = ::onStartClicked,
             deleteScenarioListener = ::onDeleteClicked,
             exportClickListener = ::onExportClicked,
+            copyClickedListener = ::showCopyScenarioDialog,
+            expandCollapseListener = scenarioListViewModel::expandCollapseItem,
         )
     }
 
@@ -272,12 +278,20 @@ class ScenarioListFragment : Fragment() {
         smartScenariosToBackup: Collection<Long>? = null,
         dumbScenariosToBackup: Collection<Long>? = null,
     ) {
-        activity?.let {
-            BackupDialogFragment
-                .newInstance(isImport, smartScenariosToBackup, dumbScenariosToBackup)
-                .show(it.supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
-        }
+        BackupDialogFragment
+            .newInstance(isImport, smartScenariosToBackup, dumbScenariosToBackup)
+            .show(requireActivity().supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
+    }
+
+    private fun showCopyScenarioDialog(scenarioItem: ScenarioListUiState.Item.Valid) {
+        ScenarioCopyDialog
+            .newInstance(
+                scenarioId = scenarioItem.getScenarioId(),
+                isSmart = scenarioItem is ScenarioListUiState.Item.Valid.Smart,
+                defaultName = scenarioItem.displayName,
+            )
+            .show(requireActivity().supportFragmentManager, FRAGMENT_TAG_COPY_DIALOG)
     }
 }
 

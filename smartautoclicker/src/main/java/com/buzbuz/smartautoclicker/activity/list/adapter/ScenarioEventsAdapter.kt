@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list
+package com.buzbuz.smartautoclicker.activity.list.adapter
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.activity.list.ScenarioListUiState.Item.Valid.Smart.EventItem
+import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState.Item.Valid.Smart.EventItem
 
 import kotlinx.coroutines.Job
 

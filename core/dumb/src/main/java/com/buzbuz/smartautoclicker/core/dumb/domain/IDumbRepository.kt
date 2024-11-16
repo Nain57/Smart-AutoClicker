@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -35,6 +36,8 @@ interface IDumbRepository {
     suspend fun addDumbScenario(scenario: DumbScenario)
 
     suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long?
+
+    suspend fun addDumbScenarioCopy(scenarioId: Long, copyName: String): Long?
 
     suspend fun updateDumbScenario(scenario: DumbScenario)
 
