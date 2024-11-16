@@ -79,6 +79,8 @@
     <string name="message_delete_scenario">Questo cancellerà %1$s. Sei sicuro ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Il tuo dispositivo non fornisce la finestra
         di dialogo standard per l\'autorizzazione all\'acquisizione dello schermo Android. Klick\'r non potrà essere eseguito su di esso.</string>
+    <string name="message_error_media_projection_lost">La registrazione dello schermo è stata interrotta. Klick\'r lo richiede per poterlo rilevare correttamente.
+        Si desidera riavviare la registrazione?</string>
 
     <!--
       - Section titles.

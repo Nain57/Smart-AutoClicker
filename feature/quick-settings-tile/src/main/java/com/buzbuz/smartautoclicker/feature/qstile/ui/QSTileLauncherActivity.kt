@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.qstile.ui
 
 import android.content.Context
 import android.content.Intent
-import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.util.Log
 
@@ -26,9 +25,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
+import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.feature.qstile.R
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -104,19 +104,9 @@ class QSTileLauncherActivity : AppCompatActivity() {
     /** Show the media projection start warning. */
     private fun showMediaProjectionWarning() {
         Log.i(TAG, "All permissions are granted, request media projection")
-
-        ContextCompat.getSystemService(this, MediaProjectionManager::class.java)
-            ?.let { projectionManager ->
-                // The component name defined in com.android.internal.R.string.config_mediaProjectionPermissionDialogComponent
-                // specifying the dialog to start to request the permission is invalid on some devices (Chinese Honor6X Android 10).
-                // There is nothing to do in those cases, the app can't be used.
-                try {
-                    projectionActivityResult.launch(projectionManager.createScreenCaptureIntent())
-                } catch (ex: Exception) {
-                    Log.e(TAG, "Can't start projection permission screen")
-                    finish()
-                }
-            }
+        projectionActivityResult.showMediaProjectionWarning(this) {
+            finish()
+        }
     }
 }
 

@@ -115,8 +115,9 @@ class DetectionRepository @Inject constructor(
         resultCode: Int,
         data: Intent,
         androidExecutor: SmartActionExecutor,
+        onProjectionLost: () -> Unit,
     ) {
-        detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor)
+        detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor, onProjectionLost)
     }
 
     suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener?, autoStopDuration: Duration? = null) {

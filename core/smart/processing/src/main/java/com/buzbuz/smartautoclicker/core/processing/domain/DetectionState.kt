@@ -27,7 +27,7 @@ enum class DetectionState {
     /** The screen is being recorded and the detection is running. */
     DETECTING,
     /** The native lib is not found and the detector can't work. */
-    ERROR_NO_NATIVE_LIB
+    ERROR_NO_NATIVE_LIB,
 }
 
 internal fun DetectorState.toDetectionState(): DetectionState? = when (this) {

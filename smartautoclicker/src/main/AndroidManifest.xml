@@ -45,6 +45,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.buzbuz.smartautoclicker.projection.MediaProjectionLostActivity"
+            android:theme="@style/AppTheme.TranslucentActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:exported="false"/>
+
         <service
             android:name=".SmartAutoClickerService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"

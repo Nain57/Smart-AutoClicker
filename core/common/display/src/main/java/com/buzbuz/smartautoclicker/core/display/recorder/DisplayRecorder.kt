@@ -92,11 +92,9 @@ class DisplayRecorder @Inject internal constructor(
 
         Log.d(TAG, "Start media projection")
 
-        stopListener = stoppedListener
-
         if (!mediaProjectionProxy.startMediaProjection(context, resultCode, data, stoppedListener)) {
             Log.e(TAG, "Failed to start media projection")
-            stopListener?.invoke()
+            stoppedListener()
         }
     }
 
