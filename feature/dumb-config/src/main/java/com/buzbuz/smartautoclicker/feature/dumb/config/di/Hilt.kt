@@ -23,7 +23,9 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActio
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.pause.DumbPauseViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.swipe.DumbSwipeViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefViewModel
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioConfigViewModel
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioViewModel
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionListViewModel
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.config.DumbScenarioConfigContentViewModel
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -32,10 +34,12 @@ import dagger.hilt.InstallIn
 @InstallIn(OverlayComponent::class)
 interface DumbConfigViewModelsEntryPoint {
     fun dumbActionCopyModel(): DumbActionCopyModel
+    fun dumbActionListViewModel(): DumbActionListViewModel
     fun dumbClickViewModel(): DumbClickViewModel
     fun dumbMainMenuModel(): DumbMainMenuModel
     fun dumbPauseViewModel(): DumbPauseViewModel
     fun dumbScenarioBriefViewModel(): DumbScenarioBriefViewModel
-    fun dumbScenarioConfigViewModel(): DumbScenarioConfigViewModel
+    fun dumbScenarioViewModel(): DumbScenarioViewModel
+    fun dumbScenarioConfigContentViewModel(): DumbScenarioConfigContentViewModel
     fun dumbSwipeViewModel(): DumbSwipeViewModel
 }
