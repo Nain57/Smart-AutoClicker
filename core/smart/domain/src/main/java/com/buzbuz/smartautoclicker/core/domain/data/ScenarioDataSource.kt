@@ -52,7 +52,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -95,6 +94,9 @@ internal class ScenarioDataSource(
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)
 
+    suspend fun getCompleteScenario(scenarioId: Long): CompleteScenario? =
+        currentDatabase.value.scenarioDao().getCompleteScenario(scenarioId)
+
     fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?> =
         scenarioDaoFlow.flatMapLatest { it.getScenarioFlow(scenarioId) }
 
@@ -135,12 +137,8 @@ internal class ScenarioDataSource(
         clearRemovedConditionsBitmaps(removedConditionsPath)
     }
 
-    suspend fun importScenario(completeScenario: CompleteScenario): Long? {
-        Log.d(TAG, "Add scenario copy to the database: ${completeScenario.scenario.id}")
-
-        // The scenario comes from another database, so we need to clean all ids to avoid any insertion conflict while
-        // keeping the correct references of foreign keys
-        val (scenario, events) = completeScenario.toDomain(cleanIds = true)
+    suspend fun addCompleteScenario(scenario: Scenario, events: List<Event>): Long? {
+        Log.d(TAG, "Add scenario copy to the database: ${scenario.id}")
 
         // Check the events correctness
         if (events.find { !it.isComplete() } != null)

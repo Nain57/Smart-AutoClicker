@@ -19,12 +19,16 @@ package com.buzbuz.smartautoclicker.activity.list
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.activity.list.model.ScenarioBackupSelection
+import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
+import com.buzbuz.smartautoclicker.activity.list.model.isEmpty
+import com.buzbuz.smartautoclicker.activity.list.model.toggleAllScenarioSelectionForBackup
+import com.buzbuz.smartautoclicker.activity.list.model.toggleScenarioSelectionForBackup
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -84,21 +88,23 @@ class ScenarioListViewModel @Inject constructor(
             }
         }
 
+    /** Set of scenario with their items expanded. */
+    private val expandedItems = MutableStateFlow(ScenarioExpandedSelection())
     /** Set of scenario identifier selected for a backup. */
     private val selectedForBackup = MutableStateFlow(ScenarioBackupSelection())
 
     val uiState: StateFlow<ScenarioListUiState?> = combine(
         uiStateType,
         filteredScenarios,
-        selectedForBackup,
+        combine(selectedForBackup, expandedItems, ::Pair),
         revenueRepository.userBillingState,
         revenueRepository.isPrivacySettingRequired,
-    ) { stateType, scenarios, backupSelection, billingState, privacyRequired ->
+    ) { stateType, scenarios, (backupSelection, expanded), billingState, privacyRequired ->
         ScenarioListUiState(
             type = stateType,
             menuUiState = stateType.toMenuUiState(scenarios, backupSelection, billingState, privacyRequired),
             listContent =
-                if (stateType != ScenarioListUiState.Type.EXPORT) scenarios
+                if (stateType != ScenarioListUiState.Type.EXPORT) scenarios.updateExpanded(expanded)
                 else scenarios.filterForBackupSelection(backupSelection),
         )
     }.stateIn(
@@ -150,6 +156,30 @@ class ScenarioListViewModel @Inject constructor(
         selectedForBackup.value = selectedForBackup.value.toggleAllScenarioSelectionForBackup(
             uiState.value?.listContent ?: emptyList()
         )
+    }
+
+    fun expandCollapseItem(item: ScenarioListUiState.Item) {
+        if (item !is ScenarioListUiState.Item.Valid) return
+
+        expandedItems.value = expandedItems.value.let { oldSelection ->
+            when (item) {
+                is ScenarioListUiState.Item.Valid.Smart -> {
+                    oldSelection.copy(
+                        smartSelection = oldSelection.smartSelection
+                            .toMutableSet()
+                            .toggleExpandedSelection(item.getScenarioId())
+                    )
+                }
+
+                is ScenarioListUiState.Item.Valid.Dumb -> {
+                    oldSelection.copy(
+                        dumbSelection = oldSelection.dumbSelection
+                            .toMutableSet()
+                            .toggleExpandedSelection(item.getScenarioId())
+                    )
+                }
+            }
+        }
     }
 
     /**
@@ -262,4 +292,28 @@ class ScenarioListViewModel @Inject constructor(
             else -> null
         }
     }
+
+    private fun List<ScenarioListUiState.Item>.updateExpanded(
+        expanded: ScenarioExpandedSelection,
+    ) : List<ScenarioListUiState.Item> = map { item ->
+        when (item) {
+            is ScenarioListUiState.Item.Valid.Dumb ->
+                item.copy(expanded = expanded.dumbSelection.contains(item.getScenarioId()))
+            is ScenarioListUiState.Item.Valid.Smart ->
+                item.copy(expanded = expanded.smartSelection.contains(item.getScenarioId()))
+            else -> item
+        }
+    }
+
+    private fun MutableSet<Long>.toggleExpandedSelection(id: Long): MutableSet<Long> {
+        if (!contains(id)) add(id)
+        else remove(id)
+
+        return this
+    }
 }
+
+data class ScenarioExpandedSelection(
+    val dumbSelection: Set<Long> = mutableSetOf(),
+    val smartSelection: Set<Long> = mutableSetOf(),
+)

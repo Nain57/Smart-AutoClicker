@@ -33,6 +33,7 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">新建脚本</string>
+    <string name="dialog_title_copy_scenario">复制场景</string>
 
     <!--
       - Text for menu items.
