@@ -22,6 +22,9 @@ import android.graphics.Bitmap
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
@@ -34,11 +37,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
@@ -59,6 +64,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class DetectorEngine @Inject constructor(
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val displayRecorder: DisplayRecorder,
 ) {
@@ -107,12 +113,15 @@ class DetectorEngine @Inject constructor(
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param androidExecutor the executor for the actions requiring an interaction with Android.
+     * @param onRecordingStopped called when the screen recording is no longer running and a new request for media
+     * projection should be done.
      */
     internal fun startScreenRecord(
         context: Context,
         resultCode: Int,
         data: Intent,
         androidExecutor: SmartActionExecutor,
+        onRecordingStopped: () -> Unit,
     ) {
         if (_state.value != DetectorState.CREATED) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
@@ -123,13 +132,15 @@ class DetectorEngine @Inject constructor(
         Log.i(TAG, "startScreenRecord")
 
         this.androidExecutor = androidExecutor
-        processingScope = CoroutineScope(Dispatchers.IO)
+        processingScope = CoroutineScope(ioDispatcher)
         displayConfigManager.addOrientationListener(orientationListener)
 
         processingScope?.launch {
             displayRecorder.apply {
                 startProjection(context, resultCode, data) {
+                    Log.i(TAG, "projection lost")
                     this@DetectorEngine.stopScreenRecord()
+                    onRecordingStopped()
                 }
                 startScreenRecord(context, displayConfigManager.displayConfig.sizePx)
             }

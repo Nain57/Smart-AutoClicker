@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
+import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
@@ -100,24 +101,9 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
             when (val scenario = requestedItem?.scenario) {
                 is DumbScenario -> startDumbScenario(scenario)
-                is Scenario -> showMediaProjectionWarning()
-            }
-        }
-    }
-
-    /** Show the media projection start warning. */
-    private fun showMediaProjectionWarning() {
-        ContextCompat.getSystemService(this, MediaProjectionManager::class.java)
-            ?.let { projectionManager ->
-            // The component name defined in com.android.internal.R.string.config_mediaProjectionPermissionDialogComponent
-            // specifying the dialog to start to request the permission is invalid on some devices (Chinese Honor6X Android 10).
-            // There is nothing to do in those cases, the app can't be used.
-            try {
-                projectionActivityResult.launch(projectionManager.createScreenCaptureIntent())
-            } catch (npe: NullPointerException) {
-                showUnsupportedDeviceDialog()
-            } catch (ex: ActivityNotFoundException) {
-                showUnsupportedDeviceDialog()
+                is Scenario -> projectionActivityResult.showMediaProjectionWarning(this) {
+                    showUnsupportedDeviceDialog()
+                }
             }
         }
     }

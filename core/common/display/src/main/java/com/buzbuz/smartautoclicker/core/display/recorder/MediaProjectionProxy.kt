@@ -139,4 +139,4 @@ private const val GET_PROJECTION_RETRY_MAX_COUNT = 10
 @VisibleForTesting internal const val VIRTUAL_DISPLAY_NAME = "Klickr"
 
 /** Tag for logs. */
-private const val TAG = "MediaProjectionManager"
+private const val TAG = "MediaProjectionProxy"
