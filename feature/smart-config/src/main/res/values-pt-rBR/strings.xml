@@ -366,6 +366,7 @@
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Este evento tem uma ou mais ações de alternância de evento que se referem a um evento de outro cenário.\nVocê precisará atualizar os eventos alvo antes de salvar seu cenário.</string>
     <string name="warning_dialog_message_event_delete_associated_action">Este evento tem uma ou mais ações que se referem a ele. Excluir este evento excluirá as ações associadas também.\nVocê tem certeza?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">Esta condição tem uma ou mais ações que se referem a ela. Excluir esta condição excluirá as ações associadas também.\nVocê tem certeza?</string>
+    <string name="warning_dialog_message_close_without_saving">Você tem modificações não salvas, deseja descartá-las?</string>
 
     <string name="error_dialog_message_scenario_saving">Seu cenário não pode ser salvo devido a um erro interno.\nVocê deseja modificar ou cancelar todas as suas alterações?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r está instalado incorretamente e não pode iniciar a detecção.\n\nSe você instalou de uma loja de aplicativos legítima, por favor, contate-nos no GitHub, pois isso ajudará a resolver esse problema.</string>

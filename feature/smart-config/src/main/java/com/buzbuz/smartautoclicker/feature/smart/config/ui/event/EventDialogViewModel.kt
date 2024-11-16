@@ -73,6 +73,11 @@ class EventDialogViewModel @Inject constructor(
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }
 
+    private val editedEventHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedEventState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
         .map { it.canBeSaved }
 
@@ -130,6 +135,9 @@ class EventDialogViewModel @Inject constructor(
 
     fun isConfiguringScreenEvent(): Boolean =
         editionRepository.editionState.getEditedEvent<Event>() is ImageEvent
+
+    fun hasUnsavedModifications(): Boolean =
+        editedEventHasChanged.value
 
     fun getTryInfo(): Pair<Scenario, ImageEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null

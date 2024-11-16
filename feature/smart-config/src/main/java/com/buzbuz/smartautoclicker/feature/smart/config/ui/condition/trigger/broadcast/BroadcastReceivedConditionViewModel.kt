@@ -17,17 +17,21 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
@@ -41,6 +45,11 @@ class BroadcastReceivedConditionViewModel @Inject constructor(
         editionRepository.editionState.editedTriggerConditionState
             .mapNotNull { it.value }
             .filterIsInstance<TriggerCondition.OnBroadcastReceived>()
+
+    private val editedConditionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedTriggerConditionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
     val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
@@ -59,6 +68,9 @@ class BroadcastReceivedConditionViewModel @Inject constructor(
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
         condition.canBeSaved
     }
+
+    fun hasUnsavedModifications(): Boolean =
+        editedConditionHasChanged.value
 
     fun setName(name: String) {
         updateEditedCondition { it.copy(name = name) }

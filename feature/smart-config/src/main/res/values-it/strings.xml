@@ -167,6 +167,7 @@
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Questo evento ha una o più azioni evento di commutazione che fanno riferimento a un evento da un altro scenario.</string>
     <string name="warning_dialog_message_event_delete_associated_action">Questo evento ha una o più azioni che ne fanno riferimento. Cancellare questo evento eliminarà anche le azioni associate.\nSei sicuro ?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">Questa condizione ha una o più azioni che fanno riferimento ad essa. L\'eliminazione di questa condizione eliminerà anche le azioni associate.\nSei sicuro?</string>
+    <string name="warning_dialog_message_close_without_saving">Avete modifiche non salvate, volete scartarle?</string>
     <string name="field_tutorial_desc">Scopri come utilizzare Klick\'r</string>
     <string name="error_dialog_message_scenario_saving">Il tuo scenario non può essere salvato a causa di un errore interno. \nVuoi modificarlo o annullare tutte le tue modifiche?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r non è installato correttamente e non può avviare il rilevamento.\n\nSe l\'avete installata da un negozio di applicazioni legittimo, contattateci su GitHub per aiutarci a risolvere il problema.</string>

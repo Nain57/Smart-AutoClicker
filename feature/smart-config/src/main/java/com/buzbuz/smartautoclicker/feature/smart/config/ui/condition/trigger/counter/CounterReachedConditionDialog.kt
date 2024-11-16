@@ -44,6 +44,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -67,22 +68,19 @@ class CounterReachedConditionDialog(
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_counter_reached)
 
-                buttonDismiss.setDebouncedOnClickListener {
-                    listener.onDismissClicked()
-                    back()
-                }
+                buttonDismiss.setDebouncedOnClickListener { back() }
                 buttonSave.apply {
                     visibility = View.VISIBLE
                     setDebouncedOnClickListener {
                         listener.onConfirmClicked()
-                        back()
+                        super.back()
                     }
                 }
                 buttonDelete.apply {
                     visibility = View.VISIBLE
                     setDebouncedOnClickListener {
                         listener.onDeleteClicked()
-                        back()
+                        super.back()
                     }
                 }
             }
@@ -142,6 +140,19 @@ class CounterReachedConditionDialog(
                 launch { viewModel.conditionCanBeSaved.collect(::updateSaveButton) }
             }
         }
+    }
+
+    override fun back() {
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                listener.onDismissClicked()
+                super.back()
+            }
+            return
+        }
+
+        listener.onDismissClicked()
+        super.back()
     }
 
     private fun updateSaveButton(canBeSaved: Boolean) {

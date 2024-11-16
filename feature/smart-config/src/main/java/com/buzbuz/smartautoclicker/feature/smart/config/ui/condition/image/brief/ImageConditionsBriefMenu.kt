@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
 
-import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
@@ -35,13 +33,13 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.launch
 
@@ -121,7 +119,9 @@ class ImageConditionsBriefMenu(
 
     override fun onDeleteItemClicked(index: Int) {
         if (!viewModel.deleteImageCondition(index)) {
-            showAssociatedActionWarning(index)
+            context.showDeleteConditionsWithAssociatedActionsDialog {
+                viewModel.deleteImageCondition(index, force = true)
+            }
         }
     }
 
@@ -197,17 +197,5 @@ class ImageConditionsBriefMenu(
             newOverlay = ImageConditionDialog(conditionConfigDialogListener),
             hideCurrent = true,
         )
-    }
-
-    private fun showAssociatedActionWarning(index: Int) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.warning_dialog_message_condition_delete_associated_action)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                viewModel.deleteImageCondition(index, force = true)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
-            .showAsOverlay()
     }
 }

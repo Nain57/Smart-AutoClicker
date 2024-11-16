@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario
 
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -27,9 +28,13 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 /** ViewModel for the [ScenarioDialog] and its content. */
@@ -38,6 +43,11 @@ class ScenarioDialogViewModel @Inject constructor(
     editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ): ViewModel() {
+
+    private val editedScenarioHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.scenarioCompleteState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /**
      * Tells if all content have their field correctly configured.
@@ -68,6 +78,9 @@ class ScenarioDialogViewModel @Inject constructor(
         combine(editionRepository.editionState.scenarioCompleteState, editionRepository.isEditingScenario) { state, isEditing ->
             state.canBeSaved && isEditing
         }
+
+    fun hasUnsavedModifications(): Boolean =
+        editedScenarioHasChanged.value
 
     fun monitorViews(createEventButton: View, saveButton: View) {
         monitoredViewsManager.apply {

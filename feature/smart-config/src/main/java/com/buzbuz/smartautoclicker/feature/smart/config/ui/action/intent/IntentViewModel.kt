@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.android.application.AndroidApplicationInfo
 import com.buzbuz.smartautoclicker.core.android.application.getAndroidApplicationInfo
@@ -51,6 +52,11 @@ class IntentViewModel @Inject constructor(
     private val configuredIntent = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Intent>()
+
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
@@ -137,6 +143,10 @@ class IntentViewModel @Inject constructor(
     /** Tells if the configured intent is valid and can be saved. */
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
         .map { it.canBeSaved }
+
+
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     fun isAdvanced(): Boolean = editionRepository.editionState.getEditedAction<Intent>()?.isAdvanced ?: false
 

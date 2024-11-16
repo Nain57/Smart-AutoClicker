@@ -21,6 +21,7 @@ import android.content.SharedPreferences
 import android.graphics.Point
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -33,10 +34,13 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -49,6 +53,12 @@ class SwipeViewModel @Inject constructor(
     private val configuredSwipe = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
         .filterIsInstance<Swipe>()
+
+    private val editedActionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedActionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     /** Event configuration shared preferences. */
     private val sharedPreferences: SharedPreferences = context.getEventConfigPreferences()
 
@@ -86,6 +96,9 @@ class SwipeViewModel @Inject constructor(
 
     fun getEditedSwipe(): Swipe? =
         editionRepository.editionState.getEditedAction()
+
+    fun hasUnsavedModifications(): Boolean =
+        editedActionHasChanged.value
 
     /**
      * Set the name of the swipe.

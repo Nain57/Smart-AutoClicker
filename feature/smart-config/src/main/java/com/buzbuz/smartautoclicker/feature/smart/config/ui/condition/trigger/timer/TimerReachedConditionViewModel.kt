@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
@@ -29,12 +30,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
@@ -48,6 +52,11 @@ class TimerReachedConditionViewModel@Inject constructor(
         editionRepository.editionState.editedTriggerConditionState
             .mapNotNull { it.value }
             .filterIsInstance<TriggerCondition.OnTimerReached>()
+
+    private val editedConditionHasChanged: StateFlow<Boolean> =
+        editionRepository.editionState.editedTriggerConditionState
+            .map { it.hasChanged }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
     val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
@@ -83,6 +92,9 @@ class TimerReachedConditionViewModel@Inject constructor(
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
         condition.canBeSaved
     }
+
+    fun hasUnsavedModifications(): Boolean =
+        editedConditionHasChanged.value
 
     /**
      * Set the configured condition name.
