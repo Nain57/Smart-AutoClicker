@@ -34,6 +34,20 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
 
+            <ImageView
+                android:id="@+id/error_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginEnd="@dimen/margin_horizontal_small"
+                app:layout_constraintEnd_toEndOf="@id/menu_items"
+                app:layout_constraintTop_toTopOf="@id/menu_items"
+                android:src="@drawable/ic_badge_error"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:ignore="ContentDescription" />
+
             <LinearLayout
                 android:id="@+id/menu_items"
                 style="@style/AppTheme.Overlay.FloatingMenu.LayoutButtons"

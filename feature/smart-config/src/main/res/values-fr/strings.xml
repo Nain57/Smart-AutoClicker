@@ -311,7 +311,11 @@
     <string name="button_notification_config">Ouvrir les paramètres</string>
     <string name="message_notification_config">Le comportement des notifications dépend du système d\'exploitation de votre appareil. Vous pouvez configurer le traitement des notifications dans les paramètres de votre appareil.</string>
 
+    <!-- Starters activities.  ===================================================================================== -->
+    <!-- Usually to request a permission or display something from outside the app -->
 
+    <string name="message_error_media_projection_lost">L\'enregistrement de l\'écran s\'est arrêté. Klick\'r en a besoin
+        afin de pouvoir détecter sur votre écran. Voulez vous relancer l\'enregistrement?</string>
 
     <!--
       - Content description texts.

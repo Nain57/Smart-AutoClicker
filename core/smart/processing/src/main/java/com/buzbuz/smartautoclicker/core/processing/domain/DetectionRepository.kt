@@ -73,6 +73,11 @@ class DetectionRepository @Inject constructor(
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
+    /** Interacts with the OS to execute the actions */
+    private var actionExecutor: SmartActionExecutor? = null
+
+    private var projectionErrorHandler: (() -> Unit)? = null
+
     /** Stop the detection automatically after selected delay */
     private var autoStopJob: Job? = null
 
@@ -105,19 +110,23 @@ class DetectionRepository @Inject constructor(
         _scenarioId.value = identifier
     }
 
+    fun setExecutor(androidExecutor: SmartActionExecutor) {
+        actionExecutor = androidExecutor
+    }
+
+    fun setProjectionErrorHandler(handler: () -> Unit) {
+        projectionErrorHandler = handler
+    }
+
     fun getScenarioId(): Identifier? = _scenarioId.value
 
     fun isRunning(): Boolean =
         detectorEngine.state.value == DetectorState.DETECTING
 
-    fun startScreenRecord(
-        context: Context,
-        resultCode: Int,
-        data: Intent,
-        androidExecutor: SmartActionExecutor,
-        onProjectionLost: () -> Unit,
-    ) {
-        detectorEngine.startScreenRecord(context, resultCode, data, androidExecutor, onProjectionLost)
+    fun startScreenRecord(context: Context, resultCode: Int, data: Intent) {
+        actionExecutor?.let { executor ->
+            detectorEngine.startScreenRecord(context, resultCode, data, executor, projectionErrorHandler)
+        }
     }
 
     suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener?, autoStopDuration: Duration? = null) {
@@ -151,11 +160,14 @@ class DetectionRepository @Inject constructor(
     }
 
     fun stopScreenRecord() {
+        projectionErrorHandler = null
+
         detectorEngine.apply {
             stopScreenRecord()
             clear()
         }
 
+        actionExecutor = null
         _scenarioId.value = null
     }
 

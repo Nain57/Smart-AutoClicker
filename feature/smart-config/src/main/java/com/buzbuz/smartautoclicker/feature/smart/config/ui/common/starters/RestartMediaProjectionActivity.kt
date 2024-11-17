@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,24 +28,28 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class RequestMediaProjectionActivity : AppCompatActivity() {
+class RestartMediaProjectionActivity : AppCompatActivity() {
 
     companion object {
 
         fun getStartIntent(context: Context): Intent =
-            Intent(context, RequestMediaProjectionActivity::class.java)
+            Intent(context, RestartMediaProjectionActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     }
 
-    private val viewModel: MediaProjectionLostViewModel by viewModels()
+    private val viewModel: RestartMediaProjectionViewModel by viewModels()
+
+    @Inject lateinit var overlayManager: OverlayManager
 
     /** The result launcher for the projection permission dialog. */
     private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
@@ -54,41 +57,41 @@ class RequestMediaProjectionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_projection_lost)
+        setContentView(R.layout.activity_transparent)
 
+        overlayManager.hideAll()
         projectionActivityResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode != RESULT_OK) {
-                    finish()
+                val data = result.data
+                if (data == null || result.resultCode != RESULT_OK) {
+                    finishActivity()
                     return@registerForActivityResult
                 }
 
                 Log.i(TAG, "Media projection us running, start scenario")
+                viewModel.restartScreenRecord(this, result.resultCode, data)
 
-                viewModel.startSmartScenario(result.resultCode, result.data!!)
-                dialog?.dismiss()
-                finish()
+                finishActivity()
             }
 
         dialog = showProjectionLostDialog()
     }
 
-    override fun onStop() {
-        super.onStop()
-        dialog?.dismiss()
-    }
-
-    private fun showProjectionLostDialog(): AlertDialog {
-        return MaterialAlertDialogBuilder(this)
+    private fun showProjectionLostDialog() =
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.message_error_media_projection_lost)
-            .setPositiveButton(R.string.yes) { _: DialogInterface, _: Int ->
-                projectionActivityResult.showMediaProjectionWarning(this) { finish() }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                projectionActivityResult.showMediaProjectionWarning(this) { finishActivity() }
             }
-            .setNegativeButton(R.string.no) { _: DialogInterface, _: Int ->
-                viewModel.stopApp()
-            }
+            .setNegativeButton(R.string.no) { _, _ -> finishActivity() }
             .create().also { it.showAsOverlay() }
+
+    private fun finishActivity() {
+        dialog?.dismiss()
+        overlayManager.restoreVisibility()
+        overlayManager.navigateUp(this)
+        finish()
     }
 }
 
