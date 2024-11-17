@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -25,7 +24,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.tutorialActivityComponentName
+import com.buzbuz.smartautoclicker.core.base.data.tutorialActivityComponentName
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels

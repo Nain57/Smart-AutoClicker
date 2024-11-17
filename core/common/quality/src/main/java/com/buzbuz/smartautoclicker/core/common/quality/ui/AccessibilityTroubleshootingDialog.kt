@@ -22,7 +22,7 @@ import android.os.Bundle
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import com.buzbuz.smartautoclicker.core.base.extensions.startWebBrowserActivity
+import com.buzbuz.smartautoclicker.core.base.extensions.safeStartWebBrowserActivity
 
 import com.buzbuz.smartautoclicker.core.common.quality.databinding.DialogAccessibilityTroubleshootingBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -58,6 +58,6 @@ class AccessibilityTroubleshootingDialog : DialogFragment() {
     }
 
     private fun showDontKillMyApp() {
-        context?.startWebBrowserActivity("https://dontkillmyapp.com")
+        context?.safeStartWebBrowserActivity("https://dontkillmyapp.com")
     }
 }

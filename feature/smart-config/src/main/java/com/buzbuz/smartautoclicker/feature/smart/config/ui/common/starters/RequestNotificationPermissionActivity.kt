@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.permissions.ui
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters
 
 import android.content.Context
 import android.content.Intent
@@ -24,18 +24,18 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
-import com.buzbuz.smartautoclicker.core.common.permissions.R
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PermissionFromOverlayActivity : AppCompatActivity() {
+class RequestNotificationPermissionActivity : AppCompatActivity() {
 
     companion object {
         fun getStartIntent(context: Context): Intent =
-            Intent(context, PermissionFromOverlayActivity::class.java)
+            Intent(context, RequestNotificationPermissionActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     }
 
@@ -45,7 +45,7 @@ class PermissionFromOverlayActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_permission_from_overlay)
+        setContentView(R.layout.activity_transparent)
 
         overlayManager.hideAll()
         permissionController.startPermissionsUiFlow(
@@ -58,29 +58,7 @@ class PermissionFromOverlayActivity : AppCompatActivity() {
 
     private fun finishActivity() {
         overlayManager.restoreVisibility()
+        overlayManager.navigateUp(this)
         finish()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("TOTO: onStart")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        println("TOTO: onStop")
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        println("TOTO: onPause")
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("TOTO: onResume")
-
     }
 }

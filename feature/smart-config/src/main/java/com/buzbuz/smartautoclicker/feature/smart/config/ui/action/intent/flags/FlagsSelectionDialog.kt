@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.flags
 
-import android.content.ActivityNotFoundException
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,16 +25,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.buzbuz.smartautoclicker.core.base.extensions.startWebBrowserActivity
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.BackToPreviousOverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionIntentFlagsBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newWebBrowserStarterOverlay
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -95,18 +92,10 @@ class FlagsSelectionDialog (
     }
 
     private fun onFlagHelpClicked(uri: Uri) {
-        try {
-            context.startWebBrowserActivity(uri)
-
-            overlayManager.navigateTo(
-                context = context,
-                newOverlay = BackToPreviousOverlayMenu(),
-                hideCurrent = true,
-            )
-        } catch (ex: ActivityNotFoundException) {
-            Log.e(LOG_TAG, "Can't open browser to show documentation.")
-        }
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = newWebBrowserStarterOverlay(uri),
+            hideCurrent = true,
+        )
     }
 }
-
-private const val LOG_TAG = "FlagsSelectionDialog"

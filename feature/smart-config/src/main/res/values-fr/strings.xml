@@ -308,6 +308,10 @@
     <string name="field_dropdown_item_notification_importance_type_high">Haute</string>
     <string name="field_dropdown_item_notification_importance_type_high_desc">Fait du son et apparaît sur l\'écran.</string>
 
+    <string name="button_notification_config">Ouvrir les paramètres</string>
+    <string name="message_notification_config">Le comportement des notifications dépend du système d\'exploitation de votre appareil. Vous pouvez configurer le traitement des notifications dans les paramètres de votre appareil.</string>
+
+
 
     <!--
       - Content description texts.

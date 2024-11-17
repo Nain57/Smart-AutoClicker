@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationSettingsStarterOverlay
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -113,6 +114,11 @@ class NotificationDialog(
                 items = notificationImportanceItems,
                 onItemSelected = viewModel::setNotificationImportance,
             )
+
+            buttonNotificationSettings.apply {
+                visibility = if (viewModel.shouldShowSettingsButton()) View.VISIBLE else View.GONE
+                setDebouncedOnClickListener { showNotificationSettings() }
+            }
         }
 
         return viewBinding.root
@@ -199,6 +205,16 @@ class NotificationDialog(
                 viewModel.setNotificationMessageCounterName(counterName)
                 viewBinding.fieldMessageCounterName.setTextValue(counterName)
             },
+            hideCurrent = true,
+        )
+    }
+
+    private fun showNotificationSettings() {
+        if (!viewModel.shouldShowSettingsButton()) return
+
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = newNotificationSettingsStarterOverlay(),
             hideCurrent = true,
         )
     }

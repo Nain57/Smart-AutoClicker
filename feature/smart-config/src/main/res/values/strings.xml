@@ -366,6 +366,8 @@
     <string name="field_dropdown_item_notification_importance_type_high">High</string>
     <string name="field_dropdown_item_notification_importance_type_high_desc">Makes a sound and appears as a heads-up.</string>
 
+    <string name="button_notification_config">Open settings</string>
+    <string name="message_notification_config">Notification behaviour depends on your device OS. You can configure how notifications are handled in you device settings.</string>
 
     <!-- Dialogs warning/error ===================================================================================== -->
 

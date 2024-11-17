@@ -306,6 +306,11 @@
     <string name="field_dropdown_item_notification_importance_type_high">Alto</string>
     <string name="field_dropdown_item_notification_importance_type_high_desc">Emette un suono e appare come un avviso.</string>
 
+    <string name="button_notification_config">Aprire le impostazioni</string>
+    <string name="message_notification_config">Il comportamento delle notifiche dipende dal sistema operativo del dispositivo.
+        È possibile configurare la gestione delle notifiche nelle impostazioni del dispositivo.</string>
+
+
 
     <!--
       - Content description texts.

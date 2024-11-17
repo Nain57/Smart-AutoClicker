@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
 import android.content.Context
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
-import com.buzbuz.smartautoclicker.core.common.permissions.ui.PermissionFromOverlayActivity
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.RequestNotificationPermissionActivity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.Acti
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationPermissionStarterOverlay
 
 
 internal interface ActionConfigurator {
@@ -99,10 +100,7 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
         is ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
         is Notification -> {
             if (PermissionPostNotification().checkIfGranted(context)) NotificationDialog(actionConfigDialogListener)
-            else {
-                context.startActivity(PermissionFromOverlayActivity.getStartIntent(context))
-                return
-            }
+            else newNotificationPermissionStarterOverlay(context)
         }
         else -> throw IllegalArgumentException("Not yet supported")
     }

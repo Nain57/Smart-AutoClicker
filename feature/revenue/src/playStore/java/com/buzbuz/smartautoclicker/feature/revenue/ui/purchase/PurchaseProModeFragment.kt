@@ -28,7 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
-import com.buzbuz.smartautoclicker.core.base.extensions.startWebBrowserActivity
+import com.buzbuz.smartautoclicker.core.base.extensions.safeStartWebBrowserActivity
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setState
@@ -65,7 +65,7 @@ internal class PurchaseProModeFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewBinding = FragmentPurchaseProModeBinding.inflate(layoutInflater).apply {
             buttonSource.setOnClickListener {
-                context?.startWebBrowserActivity("https://github.com/Nain57/Smart-AutoClicker")
+                context?.safeStartWebBrowserActivity("https://github.com/Nain57/Smart-AutoClicker")
             }
 
             buttonBuy.setOnClickListener {
