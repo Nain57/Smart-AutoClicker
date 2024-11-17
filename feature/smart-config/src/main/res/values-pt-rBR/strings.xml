@@ -360,6 +360,11 @@
     <string name="field_dropdown_item_notification_importance_type_high">Alta</string>
     <string name="field_dropdown_item_notification_importance_type_high_desc">Emite um som e aparece como um alerta.</string>
 
+    <string name="button_notification_config">Abrir configurações</string>
+    <string name="message_notification_config">O comportamento das notificações depende do sistema operacional do seu dispositivo.
+        Você pode definir como as notificações são tratadas nas configurações do dispositivo.</string>
+
+
 
     <!-- Dialogs warning/error ===================================================================================== -->
 
