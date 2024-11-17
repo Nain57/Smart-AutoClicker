@@ -365,6 +365,12 @@
         Você pode definir como as notificações são tratadas nas configurações do dispositivo.</string>
 
 
+    <!-- Starters activities.  ===================================================================================== -->
+    <!-- Usually to request a permission or display something from outside the app -->
+
+    <string name="message_error_media_projection_lost">A gravação da tela foi interrompida.
+        O Klick\'r precisa disso para detectar corretamente. Deseja reiniciar a gravação?</string>
+
 
     <!-- Dialogs warning/error ===================================================================================== -->
 

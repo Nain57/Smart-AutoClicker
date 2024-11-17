@@ -107,9 +107,9 @@ class OverlayManager @Inject internal constructor(
     }
 
     /** Destroys all overlays in the backstack except the root one. */
-    fun navigateUpToRoot(context: Context, completionListener: () -> Unit) {
+    fun navigateUpToRoot(context: Context, completionListener: (() -> Unit)? = null) {
         if (overlayBackStack.size <= 1) {
-            completionListener()
+            completionListener?.invoke()
             return
         }
 

@@ -308,6 +308,11 @@
     <string name="message_notification_config">通知行为取决于设备操作系统。您可以在设备设置中配置如何处理通知。</string>
 
 
+    <!-- Starters activities.  ===================================================================================== -->
+    <!-- Usually to request a permission or display something from outside the app -->
+
+    <string name="message_error_media_projection_lost">屏幕录制已经停止。Klick\'r 需要它才能正确检测。您想重新开始录制吗？</string>
+
 
     <!--
       - Content description texts.

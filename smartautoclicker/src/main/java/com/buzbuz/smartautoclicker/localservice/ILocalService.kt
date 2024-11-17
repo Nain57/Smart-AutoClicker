@@ -23,7 +23,6 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 interface ILocalService {
     fun startDumbScenario(dumbScenario: DumbScenario)
     fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
-    fun retryStartSmartScenario(resultCode: Int, data: Intent)
     fun stop()
     fun release()
 }

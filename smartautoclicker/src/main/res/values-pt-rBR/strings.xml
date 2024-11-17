@@ -81,8 +81,6 @@
     <string name="message_delete_scenario">Isso irá excluir %1$s. Você tem certeza?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Seu dispositivo não fornece o padrão
         diálogo de permissão de captura de tela do Android. O Klick\'r não conseguirá rodar nele.</string>
-    <string name="message_error_media_projection_lost">A gravação da tela foi interrompida.
-        O Klick\'r precisa disso para detectar corretamente. Deseja reiniciar a gravação?</string>
 
 
     <!--

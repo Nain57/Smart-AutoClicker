@@ -83,11 +83,18 @@ class MainMenuModel @Inject constructor(
             UiState.Idle,
         )
 
+    val isMediaProjectionStarted: StateFlow<Boolean> = detectionRepository.detectionState
+        .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
     /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
-    val canStartScenario: Flow<Boolean> = detectionRepository.canStartDetection
-        .combine(editionRepository.isEditionSynchronized) { canStartDetection, isSynchronized ->
-            canStartDetection && isSynchronized
-        }
+    val isStartButtonEnabled: Flow<Boolean> = combine(
+        detectionRepository.canStartDetection,
+        editionRepository.isEditionSynchronized,
+        isMediaProjectionStarted
+    ) { canStartDetection, isSynchronized, isProjectionStarted ->
+        (canStartDetection || !isProjectionStarted) && isSynchronized
+    }
 
     /** Tells if the detector can't work due to a native library load error. */
     val nativeLibError: Flow<Boolean> = detectionRepository.detectionState
@@ -183,6 +190,9 @@ class MainMenuModel @Inject constructor(
             detach(MonitoredViewType.MAIN_MENU_BUTTON_CONFIG)
         }
     }
+
+    fun shouldRestartMediaProjection(): Boolean =
+        !isMediaProjectionStarted.value
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
         detectionState.value == UiState.Idle && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()

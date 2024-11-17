@@ -121,7 +121,7 @@ class DetectorEngine @Inject constructor(
         resultCode: Int,
         data: Intent,
         androidExecutor: SmartActionExecutor,
-        onRecordingStopped: () -> Unit,
+        onRecordingStopped: (() -> Unit)?,
     ) {
         if (_state.value != DetectorState.CREATED) {
             Log.w(TAG, "startScreenRecord: Screen record is already started")
@@ -140,7 +140,7 @@ class DetectorEngine @Inject constructor(
                 startProjection(context, resultCode, data) {
                     Log.i(TAG, "projection lost")
                     this@DetectorEngine.stopScreenRecord()
-                    onRecordingStopped()
+                    onRecordingStopped?.invoke()
                 }
                 startScreenRecord(context, displayConfigManager.displayConfig.sizePx)
             }
