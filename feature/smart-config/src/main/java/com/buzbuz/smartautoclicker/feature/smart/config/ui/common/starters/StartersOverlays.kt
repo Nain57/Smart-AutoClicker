@@ -33,7 +33,7 @@ internal fun newWebBrowserStarterOverlay(uri: Uri) = ActivityStarterOverlayMenu(
 )
 
 internal fun newRestartMediaProjectionStarterOverlay(context: Context) = ActivityStarterOverlayMenu(
-    intent = RestartMediaProjectionActivity.getStartIntent(context)
+    intent = RestartMediaProjectionActivity.getStartIntent(context),
 )
 
 internal fun newNotificationPermissionStarterOverlay(context: Context) = ActivityStarterOverlayMenu(
