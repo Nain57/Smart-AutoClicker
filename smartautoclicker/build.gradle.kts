@@ -28,8 +28,8 @@ android {
     defaultConfig {
         applicationId = "com.buzbuz.smartautoclicker"
 
-        versionCode = 53
-        versionName = "3.0.6"
+        versionCode = 54
+        versionName = "3.1.0-beta01"
     }
 
     flavorDimensions += listOf("version")
