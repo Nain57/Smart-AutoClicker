@@ -304,6 +304,10 @@
     <string name="field_dropdown_item_notification_importance_type_high">高</string>
     <string name="field_dropdown_item_notification_importance_type_high_desc">发出声音并显示提示。</string>
 
+    <string name="button_notification_config">打开设置</string>
+    <string name="message_notification_config">通知行为取决于设备操作系统。您可以在设备设置中配置如何处理通知。</string>
+
+
 
     <!--
       - Content description texts.

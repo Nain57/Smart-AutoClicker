@@ -22,8 +22,12 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
+
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+
+import com.buzbuz.smartautoclicker.core.base.data.getOpenWebBrowserIntent
+import com.buzbuz.smartautoclicker.core.base.data.getOpenWebBrowserPickerIntent
 
 @ColorInt
 fun Context.getThemeColor(@AttrRes colorAttr: Int): Int {
@@ -33,39 +37,26 @@ fun Context.getThemeColor(@AttrRes colorAttr: Int): Int {
 }
 
 
-fun Context.startWebBrowserActivity(url: String): Boolean =
-    startWebBrowserActivity(Uri.parse(url))
+fun Context.safeStartWebBrowserActivity(url: String): Boolean =
+    safeStartWebBrowserActivity(Uri.parse(url))
 
-fun Context.startWebBrowserActivity(uri: Uri): Boolean =
+fun Context.safeStartWebBrowserActivity(uri: Uri): Boolean {
+    if (safeStartActivity(getOpenWebBrowserIntent(uri))) return true
+    return safeStartActivity(getOpenWebBrowserPickerIntent(uri))
+}
+
+fun Context.safeStartActivity(intent: Intent): Boolean =
     try {
-        startActivity(
-            Intent(Intent.ACTION_VIEW, uri).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-        )
+        startActivity(intent)
         true
     } catch (ex: ActivityNotFoundException) {
-        Log.e(TAG, "Can't open web browser.")
-        startWebBrowserPicker(uri)
-    } catch (secEx: SecurityException) {
-        Log.e(TAG, "Not allowed to open web browser.")
-        startWebBrowserPicker(uri)
-    }
-
-private fun Context.startWebBrowserPicker(uri: Uri): Boolean =
-    try {
-        startActivity(
-            Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER).apply {
-                data = uri
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-        )
-        true
-    } catch (ex: ActivityNotFoundException) {
-        Log.e(TAG, "Can't open web browser.")
+        Log.e(TAG, "No activity found to handle startActivity with $intent.")
         false
     } catch (secEx: SecurityException) {
-        Log.e(TAG, "Not allowed to open web browser.")
+        Log.e(TAG, "Not allowed to startActivity with $intent.")
+        false
+    } catch (ex: Exception) {
+        Log.e(TAG, "Error while startActivity with $intent")
         false
     }
 

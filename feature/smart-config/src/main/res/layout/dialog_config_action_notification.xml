@@ -114,8 +114,42 @@
                         android:layout_marginVertical="@dimen/margin_vertical_large"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/separator"
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/margin_vertical_large"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/field_dropdown_channel_type"
+                        app:layout_constraintBottom_toTopOf="@id/message_notification_config"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/message_notification_config"
+                        style="@style/AppTheme.TextAppearance.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/separator"
+                        app:layout_constraintBottom_toTopOf="@id/button_notification_settings"
+                        android:text="@string/message_notification_config"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_notification_settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
+                        android:layout_marginBottom="@dimen/margin_vertical_large"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/message_notification_config"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/button_notification_config"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

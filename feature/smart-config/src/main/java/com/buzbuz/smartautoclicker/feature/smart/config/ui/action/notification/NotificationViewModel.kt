@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification
 
+import android.os.Build
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -76,6 +78,10 @@ class NotificationViewModel @Inject constructor(
 
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
+
+    @ChecksSdkIntAtLeast(Build.VERSION_CODES.O)
+    fun shouldShowSettingsButton(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
     fun setName(name: String) {
         updateEditedNotification { old -> old.copy(name = "" + name) }
