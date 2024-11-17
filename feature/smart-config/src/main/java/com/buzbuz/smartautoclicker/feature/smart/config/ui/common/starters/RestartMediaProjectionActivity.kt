@@ -64,11 +64,12 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 val data = result.data
                 if (data == null || result.resultCode != RESULT_OK) {
+                    Log.i(TAG, "Media projection permission rejected")
                     finishActivity()
                     return@registerForActivityResult
                 }
 
-                Log.i(TAG, "Media projection us running, start scenario")
+                Log.i(TAG, "Media projection permission granted, restart recording")
                 viewModel.restartScreenRecord(this, result.resultCode, data)
 
                 finishActivity()
@@ -82,13 +83,25 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.message_error_media_projection_lost)
             .setPositiveButton(R.string.yes) { _, _ ->
+                dialog = null
                 projectionActivityResult.showMediaProjectionWarning(this) { finishActivity() }
             }
             .setNegativeButton(R.string.no) { _, _ -> finishActivity() }
-            .create().also { it.showAsOverlay() }
+            .setOnDismissListener {
+                if (dialog != null) {
+                    dialog = null
+                    finishActivity()
+                }
+            }
+            .create().also {
+                it.setOnKeyListener { _, _ ,_ -> true }
+                it.showAsOverlay()
+            }
 
     private fun finishActivity() {
         dialog?.dismiss()
+        dialog = null
+
         overlayManager.restoreVisibility()
         overlayManager.navigateUp(this)
         finish()
