@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRestartMediaProjectionStarterOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.DebugModel
@@ -117,7 +118,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canStartScenario.collect(::updatePlayPauseButtonEnabledState) }
+                launch { viewModel.isStartButtonEnabled.collect(::updatePlayPauseButtonEnabledState) }
+                launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
                 launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
@@ -168,11 +170,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_play -> onPlayPauseClicked()
-            R.id.btn_click_list -> {
-                viewModel.startScenarioEdition {
-                    showScenarioConfigDialog()
-                }
-            }
+            R.id.btn_click_list -> onConfigureClicked()
             R.id.btn_stop -> onStopClicked()
         }
     }
@@ -185,7 +183,28 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         )
     }
 
+    fun onMediaProjectionLost() {
+        overlayManager.navigateUpToRoot(context)
+        viewModel.cancelScenarioChanges()
+    }
+
+    private fun onConfigureClicked() {
+        if (viewModel.shouldRestartMediaProjection()) {
+            showRestartMediaProjectionScreen()
+            return
+        }
+
+        viewModel.startScenarioEdition {
+            showScenarioConfigDialog()
+        }
+    }
+
     private fun onPlayPauseClicked() {
+        if (viewModel.shouldRestartMediaProjection()) {
+            showRestartMediaProjectionScreen()
+            return
+        }
+
         if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
             showStopVolumeDownTutorialDialog()
             return
@@ -261,6 +280,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         }
     }
 
+    private fun updateProjectionErrorBadge(isProjectionStarted: Boolean) {
+        viewBinding.errorBadge.visibility = if (isProjectionStarted) View.GONE else View.VISIBLE
+    }
+
     /**
      * Observe the values for the debug and update the debug views.
      * @return the coroutine job for the observable. Can be cancelled to stop the observation.
@@ -322,5 +345,13 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .create()
             .showAsOverlay()
+    }
+
+    private fun showRestartMediaProjectionScreen() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = newRestartMediaProjectionStarterOverlay(context),
+            hideCurrent = true,
+        )
     }
 }

@@ -32,6 +32,10 @@ internal fun newWebBrowserStarterOverlay(uri: Uri) = ActivityStarterOverlayMenu(
     fallbackIntent = getOpenWebBrowserPickerIntent(uri),
 )
 
+internal fun newRestartMediaProjectionStarterOverlay(context: Context) = ActivityStarterOverlayMenu(
+    intent = RestartMediaProjectionActivity.getStartIntent(context)
+)
+
 internal fun newNotificationPermissionStarterOverlay(context: Context) = ActivityStarterOverlayMenu(
     intent = RequestNotificationPermissionActivity.getStartIntent(context)
 )

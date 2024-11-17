@@ -381,6 +381,12 @@
     <string name="error_dialog_message_error_native_lib">Klick\'r is incorrectly installed and can\'t start the detection.\n\nIf you have installed it from a legitimate application store, please contact us on GitHub, as it will help us fix this issue.</string>
 
 
+    <!-- Starters activities.  ===================================================================================== -->
+    <!-- Usually to request a permission or display something from outside the app -->
+
+    <string name="message_error_media_projection_lost">The screen recording have been stopped. Klick\'r requires it
+    in order to detect correctly. Would you like to restart the recording?</string>
+
     <!-- Content description ======================================================================================= -->
     <!--They are use as accessibility texts for visually impaired people. They will not be displayed but spoken. -->
 

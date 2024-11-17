@@ -41,7 +41,6 @@ import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.projection.MediaProjectionLostActivity
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -160,31 +159,23 @@ class LocalService(
         displayConfigManager.startMonitoring(context)
         tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
         startJob = serviceScope.launch {
-            detectionRepository.setScenarioId(scenario.id)
+            val mainMenu = MainMenu { stop() }
+
+            detectionRepository.apply {
+                setScenarioId(scenario.id)
+                setExecutor(androidExecutor)
+                setProjectionErrorHandler { mainMenu.onMediaProjectionLost() }
+            }
 
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = MainMenu { stop() },
+                newOverlay = mainMenu,
             )
 
             detectionRepository.startScreenRecord(
                 context = context,
                 resultCode = resultCode,
                 data = data,
-                androidExecutor = androidExecutor,
-                onProjectionLost = ::startMediaProjectionLostDialog,
-            )
-        }
-    }
-
-    override fun retryStartSmartScenario(resultCode: Int, data: Intent) {
-        startJob = serviceScope.launch {
-            detectionRepository.startScreenRecord(
-                context = context,
-                resultCode = resultCode,
-                data = data,
-                androidExecutor = androidExecutor,
-                onProjectionLost = ::startMediaProjectionLostDialog,
             )
         }
     }
@@ -240,10 +231,6 @@ class LocalService(
             paywallResultJob?.cancel()
             paywallResultJob = null
         }.launchIn(serviceScope)
-    }
-
-    private fun startMediaProjectionLostDialog() {
-        context.startActivity(MediaProjectionLostActivity.getStartIntent(context))
     }
 
     private fun startSmartScenario() {
