@@ -310,12 +310,6 @@
     <string name="message_notification_config">Il comportamento delle notifiche dipende dal sistema operativo del dispositivo.
         È possibile configurare la gestione delle notifiche nelle impostazioni del dispositivo.</string>
 
-    <!-- Starters activities.  ===================================================================================== -->
-    <!-- Usually to request a permission or display something from outside the app -->
-
-    <string name="message_error_media_projection_lost">La registrazione dello schermo è stata interrotta. Klick\'r lo richiede per poterlo rilevare correttamente.
-        Si desidera riavviare la registrazione?</string>
-
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

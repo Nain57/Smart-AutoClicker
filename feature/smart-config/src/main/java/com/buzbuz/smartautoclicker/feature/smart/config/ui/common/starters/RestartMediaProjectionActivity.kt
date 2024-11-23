@@ -27,12 +27,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -59,7 +56,6 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transparent)
 
-        overlayManager.hideAll()
         projectionActivityResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 val data = result.data
@@ -75,34 +71,13 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
                 finishActivity()
             }
 
-        dialog = showProjectionLostDialog()
+        projectionActivityResult.showMediaProjectionWarning(this) { finishActivity() }
     }
-
-    private fun showProjectionLostDialog() =
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_overlay_title_warning)
-            .setMessage(R.string.message_error_media_projection_lost)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                dialog = null
-                projectionActivityResult.showMediaProjectionWarning(this) { finishActivity() }
-            }
-            .setNegativeButton(R.string.no) { _, _ -> finishActivity() }
-            .setOnDismissListener {
-                if (dialog != null) {
-                    dialog = null
-                    finishActivity()
-                }
-            }
-            .create().also {
-                it.setOnKeyListener { _, _ ,_ -> true }
-                it.showAsOverlay()
-            }
 
     private fun finishActivity() {
         dialog?.dismiss()
         dialog = null
 
-        overlayManager.restoreVisibility()
         overlayManager.navigateUp(this)
         finish()
     }

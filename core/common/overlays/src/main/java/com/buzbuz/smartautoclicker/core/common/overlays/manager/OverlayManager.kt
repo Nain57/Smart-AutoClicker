@@ -65,7 +65,7 @@ class OverlayManager @Inject internal constructor(
     private val lifecyclesRegistry = LifecycleStatesRegistry()
 
     /** Tells if we are currently executing navigation requests. */
-    private var isNavigating: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private var isNavigating: MutableStateFlow<OverlayNavigationRequest?> = MutableStateFlow(null)
     /** The overlay at the top of the stack (the top visible one). Null if the stack is empty. */
     private var topOverlay: Overlay? = null
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
@@ -75,7 +75,7 @@ class OverlayManager @Inject internal constructor(
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
-        .filter { navigating -> !navigating }
+        .filter { navigating -> navigating == null }
         .combine(overlayBackStack.topFlow) { _, stackTop ->
             Log.d(TAG, "New back stack top: $stackTop")
             stackTop
@@ -93,7 +93,7 @@ class OverlayManager @Inject internal constructor(
                     ", currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateTo(newOverlay, hideCurrent))
-        if (!isNavigating.value) executeNextNavigationRequest(context)
+        if (isNavigating.value == null) executeNextNavigationRequest(context)
     }
 
     /** Destroys the currently shown overlay. */
@@ -102,7 +102,7 @@ class OverlayManager @Inject internal constructor(
         Log.d(TAG, "Pushing NavigateUp request, currently navigating: ${isNavigating.value}")
 
         overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
-        if (!isNavigating.value) executeNextNavigationRequest(context)
+        if (isNavigating.value == null) executeNextNavigationRequest(context)
         return true
     }
 
@@ -114,13 +114,20 @@ class OverlayManager @Inject internal constructor(
         }
 
         navigateUpToRootCompletionListener = completionListener
-        val navigateUpCount = overlayBackStack.size - 1
+        var navigateUpCount = overlayNavigationRequestStack.toList().fold(overlayBackStack.size - 1) { acc, overlayNavigationRequest ->
+            acc + if (overlayNavigationRequest is OverlayNavigationRequest.NavigateTo) 1 else -1
+        }
+        when (isNavigating.value) {
+            is OverlayNavigationRequest.NavigateTo -> navigateUpCount+= 1
+            is OverlayNavigationRequest.NavigateUp -> navigateUpCount-= 1
+            else -> Unit
+        }
         Log.d(TAG, "Navigating to root, pushing $navigateUpCount NavigateUp requests, currently navigating: ${isNavigating.value}")
 
-        repeat(overlayBackStack.size - 1) {
+        repeat(navigateUpCount) {
             overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
         }
-        if (!isNavigating.value) executeNextNavigationRequest(context)
+        if (isNavigating.value  == null) executeNextNavigationRequest(context)
     }
 
     /** Destroys all overlays on the back stack. */
@@ -135,7 +142,7 @@ class OverlayManager @Inject internal constructor(
         repeat(overlayBackStack.size) {
             overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
         }
-        if (!isNavigating.value) executeNextNavigationRequest(context)
+        if (isNavigating.value == null) executeNextNavigationRequest(context)
     }
 
     /** Propagate the provided touch event to the focused overlay, if any. */
@@ -239,9 +246,8 @@ class OverlayManager @Inject internal constructor(
     }
 
     private fun executeNextNavigationRequest(context: Context) {
-        isNavigating.value = true
-
         val request = if (overlayNavigationRequestStack.isNotEmpty()) overlayNavigationRequestStack.pop() else null
+        isNavigating.value = request
         Log.d(TAG, "Executing next navigation request $request")
 
         when (request) {
@@ -253,7 +259,7 @@ class OverlayManager @Inject internal constructor(
 
     private fun executeNavigateTo(context: Context, request: OverlayNavigationRequest.NavigateTo) {
         // Get the current top overlay
-        val currentOverlay: com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay? =
+        val currentOverlay: Overlay? =
             if (overlayBackStack.isEmpty()) {
                 // First item ? Start listening for orientation.
                 displayConfigManager.addOrientationListener(orientationListener)
@@ -293,8 +299,6 @@ class OverlayManager @Inject internal constructor(
     private fun onOverlayDismissed(context: Context, overlay: Overlay) {
         Log.d(TAG, "Overlay dismissed ${overlay.hashCode()}")
 
-        isNavigating.value = true
-
         // Remove the dismissed overlay from the stack now that we are sure it is destroyed.
         overlayBackStack.pop()
 
@@ -321,7 +325,7 @@ class OverlayManager @Inject internal constructor(
             navigateUpToRootCompletionListener = null
         }
 
-        isNavigating.value = false
+        isNavigating.value = null
     }
 
     private fun onOrientationChanged() {
