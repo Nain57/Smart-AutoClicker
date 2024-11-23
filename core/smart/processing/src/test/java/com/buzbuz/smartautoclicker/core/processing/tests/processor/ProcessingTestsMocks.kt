@@ -21,11 +21,16 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
+import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 
@@ -69,10 +74,25 @@ internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition
 
 internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
     condition: TestImageCondition,
-    expectedResult: Boolean,
+    detected: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
-    .onImageConditionProcessingCompleted(condition.expectedResult(expectedResult))
+    .onImageConditionProcessingCompleted(condition.expectedResult(detected))
+
+internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
+    events: List<ImageEvent>,
+): List<Boolean> {
+    val results = mutableListOf<Boolean>()
+
+    events.forEach { event ->
+        `when`(onImageEventProcessingCompleted(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
+            results.add((invocationOnMock.arguments[1] as ConditionsResult).fulfilled == true)
+            Unit
+        }
+    }
+
+    return results
+}
 
 internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
     when (testCondition.imageCondition.detectionType) {

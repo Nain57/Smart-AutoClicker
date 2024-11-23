@@ -19,10 +19,8 @@ package com.buzbuz.smartautoclicker.core.processing.tests.processor
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -327,5 +325,70 @@ class ProcessingTests {
         mockProcessingListener.verifyTriggerEventProcessed(testEvent1, true)
         mockProcessingListener.verifyTriggerEventProcessed(testEvent2, false)
         mockProcessingListener.verifyTriggerEventProcessed(testEvent3, true)
+    }
+
+    /**
+     * Use case: 2 image events, all enabled. Both should not be detected. First one is present on the frame, second is not
+     * Expected behaviour: First one should not be fulfilled, second one should
+     *
+     * Unit test for [#551](https://github.com/Nain57/Smart-AutoClicker/issues/551)
+     */
+    @Test
+    fun `isAbsent ImageConditions should be triggered when not detected`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId1 = testsData.newEventId()
+        val eventId2 = testsData.newEventId()
+        val testConditionEvt1 = testsData.newTestImageCondition(eventId1, shouldBeDetected = false)
+        val testConditionEvt2 = testsData.newTestImageCondition(eventId2, shouldBeDetected = false)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            imageEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId1,
+                    scenarioId = scenarioId,
+                    enabledOnStart = true,
+                    keepDetecting = true,
+                    conditions = listOf(testConditionEvt1),
+                    actions = listOf(testsData.newPauseAction(eventId1)),
+                ),
+                testsData.newTestImageEvent(
+                    eventId = eventId2,
+                    scenarioId = scenarioId,
+                    enabledOnStart = true,
+                    keepDetecting = true,
+                    conditions = listOf(testConditionEvt2),
+                    actions = listOf(testsData.newPauseAction(eventId2)),
+                ),
+            ),
+        )
+
+        // Mock the bitmaps for each image conditions
+        mockBitmapSupplier.apply {
+            mockBitmapProviding(testConditionEvt1)
+            mockBitmapProviding(testConditionEvt2)
+        }
+        // Mock detection results for each condition.
+        mockImageDetector.apply {
+            mockDetectionResult(testConditionEvt1, true)
+            mockDetectionResult(testConditionEvt2, false)
+        }
+        // Keep track of event fulfillment results
+        val eventsFulfilled = mockProcessingListener.monitorImageEventProcessing(testScenario.imageEvents)
+
+        // When: Only verify on one frame here
+        scenarioProcessor = createScenarioProcessor(testScenario).apply {
+            process(testsData.newMockedScreenBitmap())
+        }
+
+        // Then
+        // Event1 should be detected, Event2 should not
+        inOrder(mockProcessingListener).apply {
+            mockProcessingListener.verifyImageConditionProcessed(testConditionEvt1, true)
+            mockProcessingListener.verifyImageConditionProcessed(testConditionEvt2, false)
+        }
+        // Event1 not be triggered, Event2 should
+        assertFalse(eventsFulfilled[0])
+        assertTrue(eventsFulfilled[1])
     }
 }
