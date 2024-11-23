@@ -139,7 +139,7 @@ class TryElementViewModel @Inject constructor(
         val halfHeight = condition.area.height() / 2
 
         return DetectionResultInfo(
-            positive = haveBeenDetected,
+            positive = isFulfilled,
             coordinates =
                 if (position.x == 0 && position.y == 0) Rect()
                 else Rect(
