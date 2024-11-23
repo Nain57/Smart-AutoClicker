@@ -47,6 +47,7 @@
             app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
             android:drawablePadding="@dimen/margin_horizontal_small"
             android:drawableStart="@drawable/ic_dumb"
+            android:maxLines="2"
             tools:text="My cool scenario " />
 
         <com.google.android.material.divider.MaterialDivider

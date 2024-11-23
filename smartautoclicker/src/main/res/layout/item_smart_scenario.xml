@@ -47,6 +47,7 @@
             app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
             android:drawablePadding="@dimen/margin_horizontal_small"
             android:drawableStart="@drawable/ic_smart"
+            android:maxLines="2"
             tools:text="My cool scenario " />
 
         <com.google.android.material.divider.MaterialDivider
@@ -129,7 +130,8 @@
                 android:orientation="horizontal"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_event_card" />
+                tools:listitem="@layout/item_event_card"
+                tools:visibility="visible"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/no_image_events"
@@ -141,6 +143,7 @@
                 app:layout_constraintEnd_toStartOf="@id/button_copy"
                 app:layout_constraintTop_toBottomOf="@id/detection_quality"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:textAlignment="center"
                 android:text="@string/message_empty_image_events_scenario_list"
                 tools:visibility="gone"/>
 
