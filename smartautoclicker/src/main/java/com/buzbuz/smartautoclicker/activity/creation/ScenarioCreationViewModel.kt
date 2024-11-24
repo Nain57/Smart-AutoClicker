@@ -65,8 +65,10 @@ class ScenarioCreationViewModel @Inject constructor(
         combine(_selectedType, revenueRepository.userBillingState) { selectedType, billingState ->
             ScenarioTypeSelectionState(
                 dumbItem = ScenarioTypeItem.Dumb,
-                smartItem = ScenarioTypeItem.Smart(isProModeEnabled = billingState == UserBillingState.PURCHASED),
+                smartItem = ScenarioTypeItem.Smart,
                 selectedItem = selectedType,
+                showPaidLimitationWarning =
+                    billingState == UserBillingState.PURCHASED && selectedType == ScenarioTypeSelection.SMART
             )
         }
 
@@ -133,6 +135,7 @@ data class ScenarioTypeSelectionState(
     val dumbItem: ScenarioTypeItem.Dumb,
     val smartItem: ScenarioTypeItem.Smart,
     val selectedItem: ScenarioTypeSelection,
+    val showPaidLimitationWarning: Boolean,
 )
 
 sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descriptionText: Int) {
@@ -143,12 +146,10 @@ sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descripti
         descriptionText = R.string.item_desc_dumb_scenario,
     )
 
-    data class Smart(val isProModeEnabled: Boolean): ScenarioTypeItem(
+    data object Smart: ScenarioTypeItem(
         titleRes = R.string.item_title_smart_scenario,
         iconRes = R.drawable.ic_smart,
-        descriptionText =
-            if (isProModeEnabled) R.string.item_desc_smart_scenario_pro_mode
-            else R.string.item_desc_smart_scenario,
+        descriptionText = R.string.item_desc_smart_scenario,
     )
 }
 enum class ScenarioTypeSelection {

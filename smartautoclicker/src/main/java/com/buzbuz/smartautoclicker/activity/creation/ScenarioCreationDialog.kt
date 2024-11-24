@@ -147,12 +147,18 @@ class ScenarioCreationDialog : DialogFragment() {
         viewBinding.apply {
             scenarioTypeDumb.setState(state.dumbItem, state.selectedItem, ScenarioTypeSelection.DUMB)
             scenarioTypeSmart.setState(state.smartItem, state.selectedItem, ScenarioTypeSelection.SMART)
-            scenarioTypeDescription.setText(
-                when (state.selectedItem) {
-                    ScenarioTypeSelection.DUMB -> state.dumbItem.descriptionText
-                    ScenarioTypeSelection.SMART -> state.smartItem.descriptionText
+
+            when (state.selectedItem) {
+                ScenarioTypeSelection.DUMB -> {
+                    scenarioTypeDescription.setText(state.dumbItem.descriptionText)
+                    scenarioTypeDescriptionNotPurchased.visibility = View.GONE
                 }
-            )
+                ScenarioTypeSelection.SMART -> {
+                    scenarioTypeDescription.setText(state.smartItem.descriptionText)
+                    scenarioTypeDescriptionNotPurchased.visibility =
+                        if (state.showPaidLimitationWarning) View.VISIBLE else View.GONE
+                }
+            }
         }
     }
 

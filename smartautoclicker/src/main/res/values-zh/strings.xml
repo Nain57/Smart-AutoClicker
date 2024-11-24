@@ -59,8 +59,8 @@
     <string name="item_desc_dumb_scenario_max_duration_infinite">无最长持续时间</string>
     <string name="item_desc_dumb_scenario_repeat_count">重复 %1$d 次</string>
     <string name="item_desc_dumb_scenario_repeat_infinite">无限重复</string>
-    <string name="item_desc_smart_scenario">使用图像检测创建复杂的用例\n包含付费限制。</string>
-    <string name="item_desc_smart_scenario_pro_mode">使用图像检测创建复杂的用例</string>
+    <string name="item_desc_smart_scenario">使用图像检测创建复杂的用例。</string>
+    <string name="item_desc_smart_scenario_pro_mode">需要观看广告或购买专业模式</string>
     <string name="item_title_dumb_scenario">简单</string>
     <string name="item_title_smart_scenario">智能</string>
 

@@ -61,8 +61,8 @@
     <string name="item_desc_dumb_scenario_max_duration_infinite">Nessuna durata massima</string>
     <string name="item_desc_dumb_scenario_repeat_count">Ripetere %1$d volte</string>
     <string name="item_desc_dumb_scenario_repeat_infinite">Ripetizione infinita</string>
-    <string name="item_desc_smart_scenario">Utilizzate il rilevamento delle immagini per creare casi d\'uso complessi.\nContiene limitazioni a pagamento.</string>
-    <string name="item_desc_smart_scenario_pro_mode">Utilizzate il rilevamento delle immagini per creare casi d\'uso complessi.</string>
+    <string name="item_desc_smart_scenario">Utilizzate il rilevamento delle immagini per creare casi d\'uso complessi.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Richiede la visione di un annuncio o l\'acquisto della modalità pro</string>
     <string name="item_title_dumb_scenario">Semplice</string>
     <string name="item_title_smart_scenario">Intelligente</string>
 

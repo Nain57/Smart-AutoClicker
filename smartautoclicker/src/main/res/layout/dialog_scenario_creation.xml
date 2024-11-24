@@ -87,9 +87,24 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lines="3"
+                android:layout_marginTop="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scenario_type_dumb"
+                app:layout_constraintBottom_toTopOf="@id/scenario_type_description_not_purchased"
+                android:text="@string/item_desc_smart_scenario"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/scenario_type_description_not_purchased"
+                style="@style/AppTheme.TextAppearance.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:gravity="center"
+                android:textColor="?attr/colorError"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scenario_type_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@string/item_desc_smart_scenario_pro_mode"/>
 
