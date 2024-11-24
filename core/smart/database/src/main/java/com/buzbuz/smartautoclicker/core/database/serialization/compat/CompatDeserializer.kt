@@ -53,7 +53,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
-internal abstract class CompatDeserializer : Deserializer {
+internal open class CompatDeserializer : Deserializer {
 
     protected companion object {
         /** Scenario detection quality lower bound on compat deserialization. */

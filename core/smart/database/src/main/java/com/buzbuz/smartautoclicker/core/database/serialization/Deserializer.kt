@@ -20,9 +20,12 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatDeserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV11Deserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV13Deserializer
+
 import kotlinx.serialization.json.JsonObject
+
 
 object DeserializerFactory {
 
@@ -35,7 +38,8 @@ object DeserializerFactory {
 
             databaseVersion < VERSION_DETECTION_QUALITY_UPDATE -> CompatV11Deserializer()
             databaseVersion < VERSION_ADVANCED_AUTOMATION_UPDATE -> CompatV13Deserializer()
-            databaseVersion == VERSION_UP_TO_DATE  -> KotlinDeserializer()
+            databaseVersion < VERSION_UP_TO_DATE -> CompatDeserializer()
+            databaseVersion == VERSION_UP_TO_DATE -> KotlinDeserializer()
 
             else -> {
                 Log.w(TAG, "Json object version not supported, maximum=$VERSION_UP_TO_DATE, actual=$databaseVersion")
