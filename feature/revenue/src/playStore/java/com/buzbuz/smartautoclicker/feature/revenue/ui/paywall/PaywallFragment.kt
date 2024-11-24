@@ -21,6 +21,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import androidx.annotation.AttrRes
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -28,14 +29,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnClickListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setState
+import com.buzbuz.smartautoclicker.core.ui.utils.hideProgress
+import com.buzbuz.smartautoclicker.core.ui.utils.showProgress
 import com.buzbuz.smartautoclicker.feature.revenue.R
 import com.buzbuz.smartautoclicker.feature.revenue.databinding.FragmentAdsLoadingDialogBinding
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -113,14 +116,14 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.visibility = View.INVISIBLE
 
-            buttonTrial.root.visibility = View.VISIBLE
-            buttonTrial.setState(state.trialButtonState)
+            buttonTrial.visibility = View.VISIBLE
+            buttonTrial.setState(state.trialButtonState, R.attr.colorPrimary)
 
-            buttonWatchAd.root.visibility = View.VISIBLE
-            buttonWatchAd.setState(state.adButtonState)
+            buttonWatchAd.visibility = View.VISIBLE
+            buttonWatchAd.setState(state.adButtonState, R.attr.colorPrimary)
 
-            buttonBuy.root.visibility = View.VISIBLE
-            buttonBuy.setState(state.purchaseButtonState)
+            buttonBuy.visibility = View.VISIBLE
+            buttonBuy.setState(state.purchaseButtonState, R.attr.colorOnPrimary)
             buttonBuy.setOnClickListener { activity?.let(viewModel::launchPlayStoreBillingFlow) }
         }
     }
@@ -132,12 +135,13 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.visibility = View.INVISIBLE
 
-            buttonTrial.root.visibility = View.INVISIBLE
-            buttonWatchAd.root.visibility = View.INVISIBLE
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.visibility = View.INVISIBLE
 
-            buttonBuy.root.visibility = View.VISIBLE
+            buttonBuy.visibility = View.VISIBLE
             buttonBuy.setState(
-                LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_understood))
+                LoadableButtonState.Loaded.Enabled(requireContext().getString(R.string.button_text_understood)),
+                R.attr.colorOnPrimary,
             )
             buttonBuy.setOnClickListener { dismiss() }
         }
@@ -150,9 +154,9 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.visibility = View.INVISIBLE
             progressAdWatched.show()
 
-            buttonTrial.root.visibility = View.INVISIBLE
-            buttonWatchAd.root.visibility = View.INVISIBLE
-            buttonBuy.root.visibility = View.INVISIBLE
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.visibility = View.INVISIBLE
+            buttonBuy.visibility = View.INVISIBLE
         }
     }
 
@@ -165,9 +169,9 @@ internal class PaywallFragment : DialogFragment() {
             textAdWatched.animateShow()
             progressAdWatched.show()
 
-            buttonTrial.root.visibility = View.INVISIBLE
-            buttonWatchAd.root.visibility = View.INVISIBLE
-            buttonBuy.root.visibility = View.INVISIBLE
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.visibility = View.INVISIBLE
+            buttonBuy.visibility = View.INVISIBLE
         }
 
         lifecycleScope.launch {
@@ -181,5 +185,31 @@ internal class PaywallFragment : DialogFragment() {
         visibility = View.VISIBLE
         animate().alpha(1f)
             .setDuration(250)
+    }
+}
+
+private fun MaterialButton.setState(state: LoadableButtonState, @AttrRes iconColor: Int) {
+    text = state.text
+
+    when (state) {
+        is LoadableButtonState.Loading -> {
+            showProgress(context.getThemeColor(iconColor))
+            alpha = 0.75f
+            isClickable = false
+        }
+
+        is LoadableButtonState.Loaded -> {
+            hideProgress()
+            when (state) {
+                is LoadableButtonState.Loaded.Enabled -> {
+                    alpha = 1f
+                    isClickable = true
+                }
+                is LoadableButtonState.Loaded.Disabled -> {
+                    alpha = 0.75f
+                    isClickable = false
+                }
+            }
+        }
     }
 }

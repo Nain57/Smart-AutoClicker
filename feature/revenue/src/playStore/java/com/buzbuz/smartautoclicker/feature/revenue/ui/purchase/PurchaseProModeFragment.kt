@@ -105,7 +105,7 @@ internal class PurchaseProModeFragment : DialogFragment() {
         viewBinding.apply {
             purchaseText.visibility = View.VISIBLE
             purchasedText.visibility = View.GONE
-            buttonBuy.setState(LoadableButtonState.Loading)
+            buttonBuy.setState(LoadableButtonState.Loading())
         }
     }
 

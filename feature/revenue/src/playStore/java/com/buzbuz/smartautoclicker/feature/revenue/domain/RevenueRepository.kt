@@ -66,6 +66,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 @Singleton
@@ -170,9 +171,6 @@ internal class RevenueRepository @Inject constructor(
     }
 
     override fun showAd(activity: Activity) {
-        // TODO: Revert error handling once the ads account is no longer limited
-        if (adsState.value == AdState.ERROR) adsDataSource.onAdDismissed(true)
-
         if (adsState.value != AdState.READY) return
         adsDataSource.showAd(activity)
     }
@@ -289,7 +287,7 @@ private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, t
     }
 
 internal val TRIAL_SESSION_DURATION_DURATION = 30.minutes
-@VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 1.hours
+@VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 30.minutes
 
 private const val MAX_TRIAL_COUNT = 3
 private const val TAG = "RevenueRepository"

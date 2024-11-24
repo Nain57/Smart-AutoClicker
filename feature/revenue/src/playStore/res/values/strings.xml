@@ -21,13 +21,14 @@
     <string name="header_billing" translatable="false">Klick\'r Pro</string>
     <string name="header_starting_detection">Starting detection</string>
 
-
     <string name="message_billing">This application is open source and crafted with love by people working on their free time.\n\n
         Support the development by watching an ad, or buy Klick\'r Pro to remove ads forever!</string>
     <string name="message_billing_success">Thank you for buying\nKlick\'r Pro !</string>
 
+    <string name="button_text_watch_ad_loading">Loading Ad</string>
     <string name="button_text_watch_ad">Watch an Ad</string>
     <string name="button_text_watch_ad_error">Ad error</string>
+    <string name="button_text_buy_pro_loading">Buy Pro</string>
     <string name="button_text_buy_pro">Buy Pro (%1$s)</string>
     <string name="button_text_understood">Understood</string>
     <string name="button_text_buy_pro_error">Cannot purchase</string>

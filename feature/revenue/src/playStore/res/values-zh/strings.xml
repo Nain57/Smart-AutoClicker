@@ -21,8 +21,10 @@
     <string name="message_billing">本应用程序是开源软件，由人们利用业余时间精心制作而成。\n\n请观看广告以支持开发，或购买 Klick\'r Pro 以永久去除广告！</string>
     <string name="message_billing_success">感谢您购买\nKlick\'r Pro！</string>
 
+    <string name="button_text_watch_ad_loading">加载广告</string>
     <string name="button_text_watch_ad">观看广告</string>
     <string name="button_text_watch_ad_error">广告错误</string>
+    <string name="button_text_buy_pro_loading">购买专业版</string>
     <string name="button_text_buy_pro">购买专业版 (%1$s)</string>
     <string name="button_text_understood">明白</string>
     <string name="button_text_buy_pro_error">无法购买</string>

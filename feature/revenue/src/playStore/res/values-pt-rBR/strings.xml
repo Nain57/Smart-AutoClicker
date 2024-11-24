@@ -25,8 +25,10 @@
         Apoie o desenvolvimento assistindo a um anúncio ou compre Klick\'r Pro para remover os anúncios para sempre!</string>
     <string name="message_billing_success">Obrigado por comprar\nKlick\'r Pro!</string>
 
+    <string name="button_text_watch_ad_loading">Carregando anúncio</string>
     <string name="button_text_watch_ad">Assistir a um anúncio</string>
     <string name="button_text_watch_ad_error">Erro no anúncio</string>
+    <string name="button_text_buy_pro_loading">Comprar Pro</string>
     <string name="button_text_buy_pro">Comprar Pro (%1$s)</string>
     <string name="button_text_understood">Entendido</string>
     <string name="button_text_buy_pro_error">Não é possível comprar</string>

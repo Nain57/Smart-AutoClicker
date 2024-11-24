@@ -68,7 +68,7 @@
             android:visibility="gone"
             tools:visibility="invisible"/>
 
-        <include layout="@layout/include_loadable_button_outlined"
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_trial"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="match_parent"
@@ -80,9 +80,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/purchase_text"
             app:layout_constraintBottom_toTopOf="@id/button_watch_ad"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/margin_horizontal_small"
             android:text="@string/button_text_trial"/>
 
-        <include layout="@layout/include_loadable_button_outlined"
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_watch_ad"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="match_parent"
@@ -93,10 +95,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_trial"
             app:layout_constraintBottom_toTopOf="@id/button_buy"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/margin_horizontal_small"
             android:text="@string/button_text_watch_ad"/>
 
-        <include layout="@layout/include_loadable_button"
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_buy"
+            style="@style/AppTheme.Widget.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_vertical_large"
@@ -104,7 +109,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_watch_ad"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/margin_horizontal_small"
+            tools:text="@string/button_text_buy_pro"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_ad_watched"

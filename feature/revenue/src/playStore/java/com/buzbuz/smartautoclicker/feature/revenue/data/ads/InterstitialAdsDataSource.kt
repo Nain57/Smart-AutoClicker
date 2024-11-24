@@ -168,8 +168,7 @@ internal class InterstitialAdsDataSource @Inject constructor(
         }
     }
 
-    // TODO: Revert to private once the ads account is no longer limited
-    internal fun onAdDismissed(impression: Boolean) {
+    private fun onAdDismissed(impression: Boolean) {
         Log.i(TAG, "onAdDismissed, impression=$impression")
 
         coroutineScopeMain.launch {

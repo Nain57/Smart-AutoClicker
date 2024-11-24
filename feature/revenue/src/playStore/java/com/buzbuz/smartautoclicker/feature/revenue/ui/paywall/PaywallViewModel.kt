@@ -91,12 +91,12 @@ internal sealed class DialogState {
     internal data object AdWatched : DialogState()
 }
 
-// TODO: Revert error handling once the ads account is no longer limited
 private fun AdState.toAdButtonState(context: Context): LoadableButtonState = when (this) {
     AdState.INITIALIZED,
-    AdState.LOADING -> LoadableButtonState.Loading
+    AdState.LOADING -> LoadableButtonState.Loading(
+        text = context.getString(R.string.button_text_watch_ad_loading)
+    )
 
-    AdState.ERROR,
     AdState.READY -> LoadableButtonState.Loaded.Enabled(
         text = context.getString(R.string.button_text_watch_ad)
     )
@@ -106,6 +106,7 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
         text = context.getString(R.string.button_text_watch_ad)
     )
 
+    AdState.ERROR,
     AdState.NOT_INITIALIZED -> LoadableButtonState.Loaded.Disabled(
         text = context.getString(R.string.button_text_watch_ad_error)
     )
@@ -113,7 +114,9 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
 
 private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState =
     when {
-        info?.price.isNullOrEmpty() -> LoadableButtonState.Loading
+        info?.price.isNullOrEmpty() -> LoadableButtonState.Loading(
+            context.getString(R.string.button_text_buy_pro_loading)
+        )
 
         purchaseState == PurchaseState.PENDING ->
             LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_buy_pro_pending))

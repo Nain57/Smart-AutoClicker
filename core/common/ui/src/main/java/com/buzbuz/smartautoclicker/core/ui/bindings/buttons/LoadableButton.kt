@@ -26,14 +26,15 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 
 /** Configuration for the button represented by [IncludeLoadableButtonBinding] & [IncludeLoadableButtonOutlinedBinding]. */
 sealed class LoadableButtonState {
+
+    /** The text of the button. */
+    abstract val text: String
+
     /** The button is in loading state, the text is hidden and the progress spinner is shown. */
-    data object Loading : LoadableButtonState()
+    data class Loading(override val text: String = "") : LoadableButtonState()
 
     /** The button is in loaded state, the text is shown and the progress spinner is hidden. */
     sealed class Loaded : LoadableButtonState() {
-
-        /** The text of the button. */
-        abstract val text: String
 
         /** The button can be clicked. */
         data class Enabled(override val text: String) : Loaded()
@@ -45,8 +46,6 @@ sealed class LoadableButtonState {
 
 fun IncludeLoadableButtonBinding.setState(state: LoadableButtonState): Unit =
     setState(button, loading, state)
-fun IncludeLoadableButtonOutlinedBinding.setState(state: LoadableButtonState): Unit =
-    setState(button, loading, state)
 
 fun IncludeLoadableButtonBinding.setOnClickListener(onClick: () -> Unit): Unit =
     button.setOnClickListener { onClick() }
@@ -55,9 +54,9 @@ fun IncludeLoadableButtonOutlinedBinding.setOnClickListener(onClick: () -> Unit)
 
 private fun setState(button: MaterialButton, progress: CircularProgressIndicator, state: LoadableButtonState): Unit =
     when (state) {
-        LoadableButtonState.Loading -> {
+        is LoadableButtonState.Loading -> {
             button.alpha = DISABLED_ITEM_ALPHA
-            button.text = ""
+            button.text = state.text
             progress.show()
         }
 
