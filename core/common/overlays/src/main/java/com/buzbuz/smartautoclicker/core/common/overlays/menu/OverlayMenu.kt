@@ -266,6 +266,7 @@ abstract class OverlayMenu(
         Log.d(TAG, "Start show overlay ${hashCode()} animation...")
 
         val animatedOverlayView = if (animateOverlayView()) screenOverlayView else null
+        menuLayout.visibility = View.VISIBLE
         menuBackground.visibility = View.VISIBLE
         animatedOverlayView?.visibility = View.VISIBLE
         animations.startShowAnimation(menuBackground, animatedOverlayView) {
@@ -306,6 +307,7 @@ abstract class OverlayMenu(
         animations.startHideAnimation(menuBackground, animatedOverlayView) {
             Log.d(TAG, "Hide overlay ${hashCode()} animation ended")
 
+            menuLayout.visibility = View.GONE
             menuBackground.visibility = View.GONE
             screenOverlayView?.visibility = View.GONE
 
