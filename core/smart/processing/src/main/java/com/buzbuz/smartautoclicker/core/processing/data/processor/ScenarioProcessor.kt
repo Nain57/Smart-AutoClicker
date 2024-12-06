@@ -120,6 +120,9 @@ internal class ScenarioProcessor(
         onFulfilled: suspend (TriggerEvent, ConditionsResult) -> Unit,
     ) {
         for (triggerEvent in events) {
+            // Enabled state of the event might have changed during the loop
+            if (!processingState.isEventEnabled(triggerEvent.id.databaseId)) continue
+
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 

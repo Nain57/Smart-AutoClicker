@@ -83,7 +83,7 @@ internal class EventsState(
         triggerEventList.areAllEventsDisabled()
 
     override fun getEnabledTriggerEvents(): Collection<TriggerEvent> =
-        triggerEventList.getEnabledEvents()
+        triggerEventList.getEnabledEvents().toList()
 
     override fun enableEvent(eventId: Long) {
         imageEventList.enableEvent(eventId)

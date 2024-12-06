@@ -124,3 +124,8 @@ internal suspend fun ScenarioProcessingListener.verifyTriggerEventProcessed(
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
     .onTriggerEventProcessingCompleted(event, event.expectedResult(expectedResult))
+
+internal suspend fun ScenarioProcessingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
+    verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(true))
+    verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(false))
+}

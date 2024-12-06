@@ -42,6 +42,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.robolectric.annotation.Config
 
 
@@ -390,5 +392,51 @@ class ProcessingTests {
         // Event1 not be triggered, Event2 should
         assertFalse(eventsFulfilled[0])
         assertTrue(eventsFulfilled[1])
+    }
+
+    /**
+     * Use case: 2 trigger events, all enabled. First one is fulfilled and disables the second one.
+     * This verifies the case where the trigger event list is modifying itself during the same iteration.
+     */
+    @Test
+    fun `TriggerEvent concurrent modification`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId1 = testsData.newEventId()
+        val eventId2 = testsData.newEventId()
+        val testEvent1 = testsData.newTestTriggerEvent(
+            eventId = eventId1,
+            scenarioId = scenarioId,
+            enabledOnStart = true,
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0)),
+            actions = listOf(
+                testsData.newToggleEventAction(
+                    eventId = eventId1,
+                    toggles = listOf(
+                        TestEventToggle(eventId2, ToggleEvent.ToggleType.DISABLE)
+                    ),
+                )
+            ),
+        )
+        val testEvent2 = testsData.newTestTriggerEvent(
+            eventId = eventId2,
+            scenarioId = scenarioId,
+            enabledOnStart = true,
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "A", EQUALS, 0)),
+            actions = listOf(testsData.newCounterAction(eventId2, "A", OperationType.ADD, 10)),
+        )
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            triggerEvents = listOf(testEvent1, testEvent2)
+        )
+
+        // When: Only verify on one frame here
+        scenarioProcessor = createScenarioProcessor(testScenario).apply {
+            process(testsData.newMockedScreenBitmap())
+        }
+
+        // Then: Should not crash (ConcurrentModification), event1 is fulfilled, event2 is disabled by event1
+        mockProcessingListener.verifyTriggerEventProcessed(testEvent1, true)
+        mockProcessingListener.verifyTriggerEventNotProcessed(testEvent2)
     }
 }
