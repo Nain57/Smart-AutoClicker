@@ -206,7 +206,7 @@ internal open class CompatDeserializer : Deserializer {
             ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
             ?: OPERATOR_DEFAULT_VALUE
 
-        val keepDetecting = jsonEvent.getBoolean("keepDetecting", true) ?: false
+        val keepDetecting = jsonEvent.getBoolean("keepDetecting") ?: false
 
         return EventEntity(
             id = id,
