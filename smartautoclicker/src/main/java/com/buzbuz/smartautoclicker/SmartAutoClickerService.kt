@@ -208,6 +208,8 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
             Log.w(TAG, "Can't start activity, Intent contains invalid arguments: $intent")
         } catch (secEx: SecurityException) {
             Log.w(TAG, "Can't start activity with intent $intent, permission is denied by the system")
+        } catch (npe: NullPointerException) {
+            Log.w(TAG, "Can't start activity with intent $intent, intent is invalid")
         }
     }
 
