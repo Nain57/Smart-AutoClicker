@@ -63,6 +63,8 @@ internal class DumbBackupDataSource(
         )
 
     override fun verifyExtractedBackup(backup: DumbScenarioBackup, screenSize: Point): DumbScenarioWithActions? {
+        Log.i(TAG, "Verifying dumb scenario ${backup.dumbScenario.scenario.id}")
+
         if (backup.dumbScenario.dumbActions.isEmpty()) {
             Log.w(TAG, "Invalid dumb scenario, dumb action list is empty.")
             return null

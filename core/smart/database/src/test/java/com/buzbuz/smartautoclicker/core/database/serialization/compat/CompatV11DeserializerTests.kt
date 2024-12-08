@@ -101,7 +101,7 @@ class CompatV11DeserializerTests {
 
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, emptyList())
+            .deserializeAction(jsonClick, emptyList(), 1)
 
         // Then
         assertNotNull(decodedClick)
@@ -118,7 +118,7 @@ class CompatV11DeserializerTests {
         val condition = getDefaultImageCondition(true)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, listOf(condition))
+            .deserializeAction(jsonClick, listOf(condition), 1)
 
         // Then
         assertNotNull(decodedClick)
@@ -134,7 +134,7 @@ class CompatV11DeserializerTests {
         val jsonClick = createJsonClick(clickOnCondition = true)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, emptyList())
+            .deserializeAction(jsonClick, emptyList(), 1)
 
         // Then
         assertNotNull(decodedClick)
@@ -151,7 +151,7 @@ class CompatV11DeserializerTests {
         val condition = getDefaultImageCondition(shouldBeDetected = false)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, listOf(condition))
+            .deserializeAction(jsonClick, listOf(condition), 1)
 
         // Then
         assertNotNull(decodedClick)

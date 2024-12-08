@@ -38,7 +38,12 @@ internal open class CompatV11Deserializer : CompatV13Deserializer() {
      * condition id is attached and position type is clearly defined. To fix this, we search for the first condition
      * that should be detected.
      */
-    override fun deserializeActionClick(jsonClick: JsonObject, eventConditions: List<ConditionEntity>): ActionEntity? {
+    override fun deserializeActionClick(
+        jsonClick: JsonObject,
+        eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
+    ): ActionEntity? {
+
         val id = jsonClick.getLong("id", true) ?: return null
         val eventId = jsonClick.getLong("eventId", true) ?: return null
         val clickOnCondition = jsonClick.getBoolean("clickOnCondition") ?: return null

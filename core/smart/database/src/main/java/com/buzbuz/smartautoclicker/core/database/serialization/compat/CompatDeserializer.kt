@@ -133,7 +133,13 @@ internal open class CompatDeserializer : Deserializer {
             }
 
             val completeActions = jsonCompleteEvent.jsonObject.getJsonArray("actions")
-                ?.getListOf { jsonAction -> deserializeCompleteAction(jsonAction, eventEntityList, conditions)}
+                ?.getListOf { jsonAction -> deserializeCompleteAction(
+                    jsonAction,
+                    eventEntityList,
+                    conditions,
+                    eventEntity.conditionOperator,
+                )
+            }
             if (completeActions.isNullOrEmpty()) {
                 Log.w(TAG, "Can't deserialize this complete event, there is no actions")
                 return@mapNotNull null
@@ -151,9 +157,10 @@ internal open class CompatDeserializer : Deserializer {
         jsonCompleteAction: JsonObject,
         scenarioEvents: List<EventEntity>,
         eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
     ): CompleteActionEntity? {
         val actionEntity = jsonCompleteAction.getJsonObject("action")?.let { jsonAction ->
-            deserializeAction(jsonAction, eventConditions)
+            deserializeAction(jsonAction, eventConditions, conditionsOperator)
         } ?: return null
 
         val extraEntityList = jsonCompleteAction.getJsonArray("intentExtras")
@@ -333,9 +340,13 @@ internal open class CompatDeserializer : Deserializer {
     // ======================= ACTION
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-    open fun deserializeAction(jsonAction: JsonObject, eventConditions: List<ConditionEntity>): ActionEntity? =
+    open fun deserializeAction(
+        jsonAction: JsonObject,
+        eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
+    ): ActionEntity? =
         when (deserializeActionType(jsonAction)) {
-            ActionType.CLICK -> deserializeActionClick(jsonAction, eventConditions)
+            ActionType.CLICK -> deserializeActionClick(jsonAction, eventConditions, conditionsOperator)
             ActionType.SWIPE -> deserializeActionSwipe(jsonAction)
             ActionType.PAUSE -> deserializeActionPause(jsonAction)
             ActionType.INTENT -> deserializeActionIntent(jsonAction)
@@ -346,7 +357,11 @@ internal open class CompatDeserializer : Deserializer {
         }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-    open fun deserializeActionClick(jsonClick: JsonObject, eventConditions: List<ConditionEntity>): ActionEntity? {
+    open fun deserializeActionClick(
+        jsonClick: JsonObject,
+        eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
+    ): ActionEntity? {
         val id = jsonClick.getLong("id", true) ?: return null
         val eventId = jsonClick.getLong("eventId", true) ?: return null
 
@@ -358,12 +373,14 @@ internal open class CompatDeserializer : Deserializer {
         val clickOffsetX: Int?
         val clickOffsetY: Int?
 
+        val isAndConditionsOperator = conditionsOperator == 1
+
         when (clickPositionType) {
             ClickPositionType.ON_DETECTED_CONDITION -> {
                 x = null
                 y = null
-                clickOnConditionId = jsonClick.getLong("clickOnConditionId", true) ?: return null
-                if (!eventConditions.containsId(clickOnConditionId)) {
+                clickOnConditionId = jsonClick.getLong("clickOnConditionId", isAndConditionsOperator)
+                if (isAndConditionsOperator && (clickOnConditionId == null || !eventConditions.containsId(clickOnConditionId))) {
                     Log.w(TAG, "Can't deserialize action, clickOnConditionId is not valid.")
                     return null
                 }
@@ -471,7 +488,7 @@ internal open class CompatDeserializer : Deserializer {
             priority = jsonToggleEvent.getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.TOGGLE_EVENT,
             toggleAll = toggleAll,
-            toggleAllType = jsonToggleEvent.getEnum<EventToggleType>("toggleEventType"),
+            toggleAllType = jsonToggleEvent.getEnum<EventToggleType>("toggleAllType"),
         )
     }
 

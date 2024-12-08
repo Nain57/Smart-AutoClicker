@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainInten
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
 
 internal fun Action.toEntity(): ActionEntity {
-    if (!isComplete()) throw IllegalStateException("Can't transform to entity, action is incomplete.")
+    if (!isComplete()) throw IllegalStateException("Can't transform to entity, action is incomplete: $this")
 
     return when (this) {
         is Click -> toClickEntity()

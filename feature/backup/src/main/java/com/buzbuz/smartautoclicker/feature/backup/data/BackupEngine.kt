@@ -107,7 +107,8 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
      * @param progress the object notified about the backup import progress.
      */
     suspend fun loadBackup(zipFileUri: Uri, screenSize: Point, progress: BackupProgress) {
-        Log.d(TAG, "Load backup: $zipFileUri")
+        Log.i(TAG, "Load backup: $zipFileUri")
+
         dumbBackupDataSource.reset()
         smartBackupDataSource.reset()
 
@@ -139,7 +140,7 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
                                     }
                                 }
 
-                                else -> Log.i(TAG, "Nothing found to handle zip entry ${zipEntry.name}.")
+                                else -> Log.w(TAG, "Nothing found to handle zip entry ${zipEntry.name}")
                             }
                         }
                 }
@@ -148,6 +149,9 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
                 dumbBackupDataSource.verifyExtractedScenarios(screenSize)
                 smartBackupDataSource.verifyExtractedScenarios(screenSize)
 
+                Log.i(TAG, "Backup loading completed: $zipFileUri")
+                Log.i(TAG, "Inserting extracted scenarios into database")
+
                 progress.onCompleted(
                     dumbBackupDataSource.validBackups,
                     smartBackupDataSource.validBackups,
@@ -155,16 +159,16 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
                     smartBackupDataSource.screenCompatWarning,
                 )
             } catch (ioEx: IOException) {
-                Log.e(TAG, "Error while reading backup archive.")
+                Log.e(TAG, "Error while loading backup archive", ioEx)
                 progress.onError()
             } catch (secEx: SecurityException) {
-                Log.e(TAG, "Error while reading backup archive, permission is denied")
+                Log.e(TAG, "Error while loading backup archive, permission is denied", secEx)
                 progress.onError()
             } catch (iaEx: IllegalArgumentException) {
-                Log.e(TAG, "Error while reading backup archive, file is invalid")
+                Log.e(TAG, "Error while loading backup archive, file is invalid", iaEx)
                 progress.onError()
             } catch (npEx: NullPointerException) {
-                Log.e(TAG, "Error while reading backup archive, file path is null")
+                Log.e(TAG, "Error while loading backup archive, file path is null", npEx)
                 progress.onError()
             }
         }

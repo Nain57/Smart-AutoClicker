@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 
@@ -60,7 +61,7 @@ data class ToggleEvent(
         return if (toggleAll) {
             toggleAllType != null
         } else {
-            eventToggles.isNotEmpty() && eventToggles.find { !it.isComplete() } == null
+            eventToggles.areComplete()
         }
     }
 

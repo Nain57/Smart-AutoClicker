@@ -89,7 +89,7 @@ internal class SmartBackupDataSource(
         )
 
     override fun verifyExtractedBackup(backup: ScenarioBackup, screenSize: Point): CompleteScenario? {
-        Log.d(TAG, "Verifying scenario ${backup.scenario.scenario.id}")
+        Log.i(TAG, "Verifying smart scenario ${backup.scenario.scenario.id}")
 
         backup.scenario.events.forEach { event ->
             if (event.actions.isEmpty()) {
@@ -115,6 +115,7 @@ internal class SmartBackupDataSource(
             screenCompatWarning = screenSize != Point(backup.screenWidth, backup.screenHeight)
         }
 
+        Log.i(TAG, "Smart scenario is valid, has warnings: $screenCompatWarning")
         return backup.scenario
     }
 

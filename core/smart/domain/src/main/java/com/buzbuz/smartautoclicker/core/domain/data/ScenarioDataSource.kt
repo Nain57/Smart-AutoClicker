@@ -21,6 +21,7 @@ import androidx.room.withTransaction
 
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
@@ -141,7 +142,7 @@ internal class ScenarioDataSource(
         Log.d(TAG, "Add scenario copy to the database: ${scenario.id}")
 
         // Check the events correctness
-        if (events.find { !it.isComplete() } != null)
+        if (!events.areComplete())
             throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
 
         return try {

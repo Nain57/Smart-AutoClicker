@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,4 +18,11 @@ package com.buzbuz.smartautoclicker.core.base.interfaces
 
 interface Completable {
     fun isComplete(): Boolean
+}
+
+fun List<Completable>.areComplete(): Boolean {
+    forEach { completable ->
+        if (!completable.isComplete()) return false
+    }
+    return true
 }
