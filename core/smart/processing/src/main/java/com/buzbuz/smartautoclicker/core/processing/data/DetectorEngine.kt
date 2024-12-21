@@ -138,7 +138,7 @@ class DetectorEngine @Inject constructor(
         processingScope?.launch {
             displayRecorder.apply {
                 startProjection(context, resultCode, data) {
-                    Log.i(TAG, "projection lost")
+                    Log.w(TAG, "projection lost")
                     this@DetectorEngine.stopScreenRecord()
                     onRecordingStopped?.invoke()
                 }
