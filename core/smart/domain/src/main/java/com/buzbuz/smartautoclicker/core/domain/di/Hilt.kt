@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.di
 
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -38,6 +38,6 @@ object RepositoryHiltModule {
     fun providesRepository(
         clickDatabase: ClickDatabase,
         tutorialDatabase: TutorialDatabase,
-        bitmapManager: IBitmapManager,
+        bitmapManager: BitmapRepository,
     ): IRepository = Repository(clickDatabase, tutorialDatabase, bitmapManager)
 }

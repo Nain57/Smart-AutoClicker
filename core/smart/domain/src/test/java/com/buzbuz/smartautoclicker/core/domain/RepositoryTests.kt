@@ -21,7 +21,7 @@ import android.graphics.Rect
 import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
@@ -59,7 +59,7 @@ import java.io.File
 @Config(sdk = [Build.VERSION_CODES.Q])
 class RepositoryTests {
 
-    @Mock private lateinit var mockBitmapManager: IBitmapManager
+    @Mock private lateinit var mockBitmapManager: BitmapRepository
 
     @Mock private lateinit var mockDatabase: ClickDatabase
     @Mock private lateinit var mockScenarioDao: ScenarioDao
@@ -117,7 +117,7 @@ class RepositoryTests {
         mockWhen(mockConditionDao.getValidPathCount("tutu")).thenReturn(0)
         repository.deleteScenario(Identifier(databaseId = ScenarioTestsData.SCENARIO_ID))
 
-        verify(mockBitmapManager).deleteBitmaps(listOf("tutu"))
+        verify(mockBitmapManager).deleteImageConditionBitmaps(listOf("tutu"))
     }
 
     @Test
@@ -188,7 +188,7 @@ class RepositoryTests {
                 path = "toto",
             )
         )
-        verify(mockBitmapManager).loadBitmap("toto", 20, 100)
+        verify(mockBitmapManager).getImageConditionBitmap("toto", 20, 100)
         Unit
     }
 }

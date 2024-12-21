@@ -22,7 +22,7 @@ import androidx.room.withTransaction
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
@@ -65,7 +65,7 @@ import java.lang.Exception
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ScenarioDataSource(
     defaultDatabase: ScenarioDatabase,
-    private val bitmapManager: IBitmapManager,
+    private val bitmapManager: BitmapRepository,
 ) {
 
     /** The database currently in use. */
@@ -410,7 +410,7 @@ internal class ScenarioDataSource(
         }
 
         Log.d(TAG, "Removed conditions count: ${removedPath.size}; Unused bitmaps after removal: ${deletedPaths.size}")
-        if (deletedPaths.isNotEmpty()) bitmapManager.deleteBitmaps(deletedPaths)
+        if (deletedPaths.isNotEmpty()) bitmapManager.deleteImageConditionBitmaps(deletedPaths)
     }
 }
 

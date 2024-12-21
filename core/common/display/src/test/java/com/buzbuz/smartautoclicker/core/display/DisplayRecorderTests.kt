@@ -31,6 +31,7 @@ import android.os.Build
 import android.view.Surface
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.recorder.ImageReaderProxy
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionProxy
@@ -89,6 +90,7 @@ class DisplayRecorderTests {
     @Mock private lateinit var mockSurface: Surface
     @Mock private lateinit var mockVirtualDisplay: VirtualDisplay
     @Mock private lateinit var mockStoppedListener: StoppedListener
+    @Mock private lateinit var mockBitmapRepository: BitmapRepository
 
     /** The object under tests. */
     private lateinit var displayRecorder: DisplayRecorder
@@ -121,7 +123,7 @@ class DisplayRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        displayRecorder = DisplayRecorder(MediaProjectionProxy(), ImageReaderProxy())
+        displayRecorder = DisplayRecorder(MediaProjectionProxy(), ImageReaderProxy(mockBitmapRepository))
     }
 
     @After

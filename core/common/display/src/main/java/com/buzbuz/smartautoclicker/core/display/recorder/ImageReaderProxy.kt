@@ -24,10 +24,13 @@ import android.media.Image
 import android.media.ImageReader
 import android.util.Log
 import android.view.Surface
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import javax.inject.Inject
 
 
-internal class ImageReaderProxy @Inject constructor() {
+internal class ImageReaderProxy @Inject constructor(
+    private val bitmapRepository: BitmapRepository,
+) {
 
     /** Allow access to [Image] rendered into the surface view of the [VirtualDisplay] */
     private var imageReader: ImageReader? = null
@@ -55,36 +58,17 @@ internal class ImageReaderProxy @Inject constructor() {
         }
 
         return reader.acquireLatestImage()
-            ?.use { image -> image.toBitmap(lastFrame).also { lastFrame = it } }
+            ?.use { image -> image.toBitmap().also { lastFrame = it } }
             ?: lastFrame
     }
 
-    /**
-     * Transform an Image into a bitmap.
-     *
-     * @param resultBitmap a bitmap to use as a cache in order to avoid instantiating an new one. If null, a new one is
-     *                     created.
-     * @return the bitmap corresponding to the image. If [resultBitmap] was provided, it will be the same object.
-     */
-    private fun Image.toBitmap(resultBitmap: Bitmap? = null): Bitmap {
-        var bitmap = resultBitmap
+    private fun Image.toBitmap(): Bitmap {
         val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
-
-        if (bitmap == null) {
-            Log.d(TAG, "Creating new screen frame bitmap with size $imageWidth/$height")
-            bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
-
-        } else if (bitmap.width != imageWidth || bitmap.height != height) {
-            try {
-                Log.d(TAG, "Resizing screen frame bitmap with size $imageWidth/$height")
-                bitmap.reconfigure(imageWidth, height, Bitmap.Config.ARGB_8888)
-            } catch (ex: IllegalArgumentException) {
-                bitmap = Bitmap.createBitmap(imageWidth, height, Bitmap.Config.ARGB_8888)
-            }
+        val bitmap = bitmapRepository.getDisplayRecorderBitmap(imageWidth, height).apply {
+            copyPixelsFromBuffer(planes[0].buffer)
         }
 
-        bitmap.copyPixelsFromBuffer(planes[0].buffer)
-        return bitmap
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height)
     }
 }
 

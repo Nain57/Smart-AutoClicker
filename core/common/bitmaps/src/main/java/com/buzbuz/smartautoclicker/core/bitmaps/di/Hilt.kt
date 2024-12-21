@@ -17,8 +17,10 @@
 package com.buzbuz.smartautoclicker.core.bitmaps.di
 
 import android.content.Context
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapManager
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapLRUCache
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepositoryImpl
+import com.buzbuz.smartautoclicker.core.bitmaps.ConditionBitmapsDataSource
 
 import dagger.Module
 import dagger.Provides
@@ -40,6 +42,8 @@ object BitmapsHiltModule {
 
     @Provides
     @Singleton
-    fun providesBitmapManager(appDataDir: File): IBitmapManager =
-        BitmapManager(appDataDir)
+    internal fun providesBitmapRepository(
+        bitmapLRUCache: BitmapLRUCache,
+        conditionBitmapsDataSource: ConditionBitmapsDataSource,
+    ): BitmapRepository = BitmapRepositoryImpl(bitmapLRUCache, conditionBitmapsDataSource)
 }
