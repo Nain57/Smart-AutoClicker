@@ -184,6 +184,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     fun onMediaProjectionLost() {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) return
+
         overlayManager.navigateUpToRoot(context)
         viewModel.cancelScenarioChanges()
     }
