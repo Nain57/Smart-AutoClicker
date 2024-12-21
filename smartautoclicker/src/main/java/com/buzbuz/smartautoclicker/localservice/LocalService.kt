@@ -24,7 +24,7 @@ import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.activity.ScenarioActivity
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
@@ -58,7 +58,7 @@ class LocalService(
     private val overlayManager: OverlayManager,
     private val displayConfigManager: DisplayConfigManager,
     private val detectionRepository: DetectionRepository,
-    private val bitmapManager: IBitmapManager,
+    private val bitmapManager: BitmapRepository,
     private val dumbEngine: DumbEngine,
     private val tileRepository: QSTileRepository,
     private val revenueRepository: IRevenueRepository,

@@ -21,7 +21,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
@@ -57,7 +57,7 @@ import javax.inject.Inject
 internal class Repository @Inject internal constructor(
     private val database: ClickDatabase,
     private val tutorialDatabase: TutorialDatabase,
-    private val bitmapManager: IBitmapManager,
+    private val bitmapManager: BitmapRepository,
 ): IRepository {
 
     private val dataSource: ScenarioDataSource = ScenarioDataSource(database, bitmapManager)
@@ -125,7 +125,7 @@ internal class Repository @Inject internal constructor(
         dataSource.updateScenario(scenario, events)
 
     override suspend fun saveConditionBitmap(bitmap: Bitmap): String {
-        return bitmapManager.saveBitmap(
+        return bitmapManager.saveImageConditionBitmap(
             bitmap,
             if (dataSource.currentDatabase.value == tutorialDatabase) TUTORIAL_CONDITION_FILE_PREFIX
             else CONDITION_FILE_PREFIX,
@@ -133,7 +133,7 @@ internal class Repository @Inject internal constructor(
     }
 
     override suspend fun getConditionBitmap(condition: ImageCondition): Bitmap? =
-        bitmapManager.loadBitmap(condition.path, condition.area.width(), condition.area.height())
+        bitmapManager.getImageConditionBitmap(condition.path, condition.area.width(), condition.area.height())
 
     override suspend fun cleanupUnusedBitmaps(removedPath: List<String>) {
         dataSource.clearRemovedConditionsBitmaps(removedPath)

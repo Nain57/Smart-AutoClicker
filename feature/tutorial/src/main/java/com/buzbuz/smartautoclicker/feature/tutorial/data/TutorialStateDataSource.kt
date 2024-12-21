@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data
 
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.bitmaps.IBitmapManager
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -38,7 +38,7 @@ import javax.inject.Singleton
 @Singleton
 class TutorialStateDataSource @Inject constructor(
     private val tutorialDatabase: TutorialDatabase,
-    private val bitmapManager: IBitmapManager,
+    private val bitmapManager: BitmapRepository,
     private val scenarioRepository: IRepository,
 ) {
 
@@ -112,7 +112,7 @@ class TutorialStateDataSource @Inject constructor(
             val deletedPaths = removedConditionsPath.filter { path ->
                 tutorialDatabase.conditionDao().getValidPathCount(path) == 0
             }
-            bitmapManager.deleteBitmaps(deletedPaths)
+            bitmapManager.deleteImageConditionBitmaps(deletedPaths)
         }
     }
 

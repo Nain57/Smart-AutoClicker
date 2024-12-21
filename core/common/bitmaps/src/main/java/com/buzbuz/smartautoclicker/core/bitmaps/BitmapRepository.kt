@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.core.bitmaps
 import android.graphics.Bitmap
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 
-/** Manages the bitmaps for the click conditions. */
-interface IBitmapManager : Dumpable {
+/** Manages the bitmaps for the application. */
+interface BitmapRepository : Dumpable {
 
     /**
      * Save the provided bitmap into the persistent memory.
@@ -30,7 +30,7 @@ interface IBitmapManager : Dumpable {
      *
      * @return the path of the bitmap.
      */
-    suspend fun saveBitmap(bitmap: Bitmap, prefix: String = CONDITION_FILE_PREFIX) : String
+    suspend fun saveImageConditionBitmap(bitmap: Bitmap, prefix: String = CONDITION_FILE_PREFIX) : String
 
     /**
      * Load a bitmap.
@@ -43,14 +43,24 @@ interface IBitmapManager : Dumpable {
      *
      * @return the loaded bitmap, or null if the path is invalid
      */
-    suspend fun loadBitmap(path: String, width: Int, height: Int) : Bitmap?
+    suspend fun getImageConditionBitmap(path: String, width: Int, height: Int) : Bitmap?
+
+    /**
+     * Get the bitmap for the display recorder
+     *
+     * @param width the width of the bitmap.
+     * @param height the height of the bitmap.
+     *
+     * @return the loaded bitmap, or null if the path is invalid
+     */
+    fun getDisplayRecorderBitmap(width: Int, height: Int): Bitmap
 
     /**
      * Delete the specified bitmaps from the persistent memory.
      *
      * @param paths the paths of the bitmaps to be deleted.
      */
-    fun deleteBitmaps(paths: List<String>)
+    suspend fun deleteImageConditionBitmaps(paths: List<String>)
 
     /** Release the cache of bitmaps. */
     fun releaseCache()
