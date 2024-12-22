@@ -23,6 +23,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        style="@style/AppTheme.Dialog.BackgroundLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">

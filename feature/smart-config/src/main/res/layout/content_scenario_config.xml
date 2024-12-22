@@ -110,13 +110,14 @@
                 <com.google.android.material.slider.Slider
                     android:id="@+id/seekbar_quality"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_height"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_precision"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:trackColor="?attr/colorSecondaryContainer"
                     app:labelBehavior="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

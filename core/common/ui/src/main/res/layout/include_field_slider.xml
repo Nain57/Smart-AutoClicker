@@ -52,7 +52,7 @@
         android:id="@+id/slider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
-        android:layout_marginTop="@dimen/margin_vertical_small"
+        android:layout_marginTop="@dimen/margin_vertical_default"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
