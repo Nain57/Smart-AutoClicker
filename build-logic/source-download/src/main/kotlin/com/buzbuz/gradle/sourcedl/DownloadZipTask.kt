@@ -24,6 +24,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 import java.io.FileOutputStream
+import java.net.URI
 import java.net.URL
 
 abstract class DownloadZipTask : DefaultTask() {
@@ -52,5 +53,6 @@ abstract class DownloadZipTask : DefaultTask() {
     }
 
     private fun getUrlFromInputs(): URL =
-        URL("https://github.com/${projectAccount.get()}/${projectName.get()}/archive/refs/tags/${projectVersion.get()}.zip")
+        URI("https://github.com/${projectAccount.get()}/${projectName.get()}/archive/refs/tags/${projectVersion.get()}.zip")
+            .toURL()
 }

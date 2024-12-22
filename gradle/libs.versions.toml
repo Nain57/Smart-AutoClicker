@@ -1,13 +1,13 @@
 [versions]
 
 # Android SDK
-androidCompileSdk = "34"
+androidCompileSdk = "35"
 androidMinSdk = "24"
 
 # Build script
 googleFirebaseCrashlyticsGradle = "3.0.2"
 googleServices = "4.4.2"
-androidGradlePlugin = "8.5.2"
+androidGradlePlugin = "8.7.3"
 kotlin = "1.9.24"
 kotlinxCoroutines = "1.8.0"
 ksp = "1.9.24-1.0.20"
