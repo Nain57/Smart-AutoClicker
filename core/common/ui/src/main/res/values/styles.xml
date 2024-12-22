@@ -23,7 +23,7 @@
     <style name="AppTheme.Dialog.TopBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dialog_top_bar_height</item>
-        <item name="android:background">?attr/colorSurfaceContainerLowest</item>
+        <item name="android:background">?attr/colorSurfaceContainerLow</item>
         <item name="android:elevation">3dp</item>
     </style>
     <!-- Style for the dialog top bar title. -->
@@ -37,6 +37,10 @@
         <item name="android:maxLines">1</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.TopBarTitle</item>
+    </style>
+    <!-- Style for the dialog background layout. -->
+    <style name="AppTheme.Dialog.BackgroundLayout">
+        <item name="android:background">?attr/colorSurfaceContainerLowest</item>
     </style>
 
     <!-- Base style for the widgets. -->

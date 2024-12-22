@@ -25,6 +25,7 @@
     android:background="?attr/colorBackgroundFloating">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/AppTheme.Dialog.BackgroundLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
