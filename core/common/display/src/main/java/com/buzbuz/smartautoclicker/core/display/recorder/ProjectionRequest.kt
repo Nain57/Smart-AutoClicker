@@ -18,7 +18,9 @@ package com.buzbuz.smartautoclicker.core.display.recorder
 
 import android.content.Context
 import android.content.Intent
+import android.media.projection.MediaProjectionConfig
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
@@ -32,12 +34,19 @@ fun ActivityResultLauncher<Intent>.showMediaProjectionWarning(context: Context, 
             // There is nothing to do in those cases, the app can't be used.
             try {
                 Log.i(TAG, "Requesting MediaProjection")
-                launch(projectionManager.createScreenCaptureIntent())
+                launch(projectionManager.createScreenCaptureIntentCompat())
             } catch (ex: Exception) {
                 Log.e(TAG, "Can't start projection permission screen")
                 onError()
             }
         }
 }
+
+
+private fun MediaProjectionManager.createScreenCaptureIntentCompat(): Intent =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+        createScreenCaptureIntent(MediaProjectionConfig.createConfigForDefaultDisplay())
+    else createScreenCaptureIntent()
+
 
 private const val TAG = "ProjectionRequest"
