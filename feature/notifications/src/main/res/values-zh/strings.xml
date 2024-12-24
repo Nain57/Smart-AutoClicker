@@ -24,9 +24,11 @@
 
     <string name="notification_title">场景: %1$s</string>
     <string name="notification_message">点击停止运行</string>
-    <string name="notification_button_play_and_hide">玩耍和隐藏</string>
-    <string name="notification_button_pause_and_show">暂停并显示</string>
-    <string name="notification_button_toggle_menu">显示/隐藏</string>
+    <string name="notification_button_play">游戏</string>
+    <string name="notification_button_pause">暂停</string>
+    <string name="notification_button_show">显示</string>
+    <string name="notification_button_hide">隐藏</string>
     <string name="notification_button_stop">停止</string>
+    <string name="notification_button_config">配置</string>
 
 </resources>

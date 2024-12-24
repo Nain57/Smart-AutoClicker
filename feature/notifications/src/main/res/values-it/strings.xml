@@ -24,9 +24,11 @@
 
     <string name="notification_title">Scenario: %1$s</string>
     <string name="notification_message">Premi per cambiare scenario</string>
-    <string name="notification_button_play_and_hide">Giocare e nascondersi</string>
-    <string name="notification_button_pause_and_show">Pausa e mostra</string>
-    <string name="notification_button_toggle_menu">Mostra/Nascondi</string>
+    <string name="notification_button_play">Gioco</string>
+    <string name="notification_button_pause">Pausa</string>
+    <string name="notification_button_show">Mostra</string>
+    <string name="notification_button_hide">Nascondere</string>
     <string name="notification_button_stop">Stop</string>
+    <string name="notification_button_config">Configurazione</string>
 
 </resources>

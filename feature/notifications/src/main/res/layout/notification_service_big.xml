@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:background="@color/md_theme_light_surfaceVariant">
+
+    <TextView
+        android:id="@+id/text_scenario_name"
+        style="@style/AppTheme.TextAppearance.BodyLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+        android:gravity="center"
+        android:textColor="@color/notification_text_color"
+        android:maxLines="1"
+        tools:text="My cool scenario name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/notification_buttons_size"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/button_play_pause"
+                style="@style/AppTheme.Notification.Button.Filled"
+                android:layout_width="@dimen/notification_buttons_size"
+                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_play_arrow" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/button_show_hide"
+                style="@style/AppTheme.Notification.Button.Outlined"
+                android:layout_width="@dimen/notification_buttons_size"
+                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_visible_on"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/button_config"
+                style="@style/AppTheme.Notification.Button.Outlined"
+                android:layout_width="@dimen/notification_buttons_size"
+                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_settings_filled"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/button_exit"
+                style="@style/AppTheme.Notification.Button.Outlined"
+                android:layout_width="@dimen/notification_buttons_size"
+                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_notification_cancel"/>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
