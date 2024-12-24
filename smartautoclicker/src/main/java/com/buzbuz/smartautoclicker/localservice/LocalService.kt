@@ -17,13 +17,11 @@
 package com.buzbuz.smartautoclicker.localservice
 
 import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
-import com.buzbuz.smartautoclicker.activity.ScenarioActivity
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
@@ -79,17 +77,11 @@ class LocalService(
     private val notificationController: ServiceNotificationController by lazy {
         ServiceNotificationController(
             context = context,
-            activityPendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                Intent(context, ScenarioActivity::class.java),
-                PendingIntent.FLAG_IMMUTABLE,
-            ),
             listener = object : ServiceNotificationListener {
-                override fun onPlayAndHide() = playAndHide()
-                override fun onPauseAndShow() = pauseAndShow()
-                override fun onShow() = show()
-                override fun onHide() = hide()
+                override fun onPlay() = play()
+                override fun onPause()= pause()
+                override fun onShow() = showMenu()
+                override fun onHide() = hideMenu()
                 override fun onStop() = stop()
             }
         )
@@ -105,14 +97,14 @@ class LocalService(
         combine(dumbEngine.isRunning, detectionRepository.detectionState) { dumbIsRunning, smartState ->
             dumbIsRunning || smartState == DetectionState.DETECTING
         }.onEach { isRunning ->
-            notificationController.updateNotificationState(context, isRunning, overlayManager.isStackHidden())
+            notificationController.updateNotification(context, isRunning, !overlayManager.isStackHidden())
         }.launchIn(serviceScope)
 
         overlayManager.onVisibilityChangedListener = {
-            notificationController.updateNotificationState(
+            notificationController.updateNotification(
                 context,
                 dumbEngine.isRunning.value || detectionRepository.isRunning(),
-                overlayManager.isStackHidden()
+                !overlayManager.isStackHidden()
             )
         }
     }
@@ -154,7 +146,14 @@ class LocalService(
         if (isStarted) return
         state = LocalServiceState(isStarted = true, isSmartLoaded = true)
 
-        onStart(notificationController.createNotification(context, scenario.name))
+        onStart(
+            notificationController.createNotification(
+                context = context,
+                scenarioName = scenario.name,
+                isRunning = false,
+                isMenuVisible = true
+            )
+        )
 
         displayConfigManager.startMonitoring(context)
         tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
@@ -208,15 +207,22 @@ class LocalService(
         return overlayManager.propagateKeyEvent(event)
     }
 
-    private fun playAndHide() {
+    private fun play() {
         serviceScope.launch {
-            overlayManager.hideAll()
-
             if (state.isSmartLoaded && !detectionRepository.isRunning()) {
                 if (revenueRepository.userBillingState.value == UserBillingState.AD_REQUESTED) startPaywall()
                 else startSmartScenario()
             } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {
                 dumbEngine.startDumbScenario()
+            }
+        }
+    }
+
+    private fun pause() {
+        serviceScope.launch {
+            when {
+                dumbEngine.isRunning.value -> dumbEngine.stopDumbScenario()
+                detectionRepository.isRunning() -> detectionRepository.stopDetection()
             }
         }
     }
@@ -243,22 +249,11 @@ class LocalService(
         }
     }
 
-    private fun pauseAndShow() {
-        serviceScope.launch {
-            when {
-                dumbEngine.isRunning.value -> dumbEngine.stopDumbScenario()
-                detectionRepository.isRunning() -> detectionRepository.stopDetection()
-            }
-
-            overlayManager.restoreVisibility()
-        }
-    }
-
-    private fun hide() {
+    private fun hideMenu() {
         overlayManager.hideAll()
     }
 
-    private fun show() {
+    private fun showMenu() {
         overlayManager.restoreVisibility()
     }
 }

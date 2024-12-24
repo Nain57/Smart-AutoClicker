@@ -14,24 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.data
+package com.buzbuz.smartautoclicker.feature.notifications.service.model
 
-import android.content.ComponentName
-
-val klickrServiceComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.SmartAutoClickerService",
-    )
-
-val scenarioActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.activity.ScenarioActivity",
-    )
-
-val tutorialActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity",
-    )
+internal data class ServiceNotificationState(
+    val scenarioName: String,
+    val isScenarioRunning: Boolean,
+    val isMenuVisible: Boolean,
+    val isNightMode: Boolean,
+)
