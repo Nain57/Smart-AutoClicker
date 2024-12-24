@@ -35,7 +35,7 @@
             <path
                 android:name="iconPath"
                 android:pathData="@string/path_pause"
-                android:fillColor="@color/notification_icon_color"
+                android:fillColor="@color/notification_icon_color_secondary"
                 android:strokeLineCap="butt"
                 android:strokeLineJoin="miter"
                 android:strokeMiterLimit="10"/>
