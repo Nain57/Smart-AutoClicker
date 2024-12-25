@@ -190,11 +190,11 @@ class LocalService(
             dumbEngine.release()
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
-            displayConfigManager.stopMonitoring(context)
+            displayConfigManager.stopMonitoring()
             bitmapManager.releaseCache()
 
             onStop()
-            notificationController.destroyNotification(context)
+            notificationController.destroyNotification()
         }
     }
 

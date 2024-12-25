@@ -16,12 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.core.content.ContextCompat
 
+import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
@@ -49,7 +48,7 @@ internal class BroadcastsState(
         broadcastsState.keys.forEach(::addAction)
     }
 
-    private val broadcastReceiver = object : BroadcastReceiver() {
+    private val broadcastReceiver = object : SafeBroadcastReceiver(broadcastFilter) {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.action?.let { intentAction ->
                 broadcastsState[intentAction] = true
@@ -57,24 +56,14 @@ internal class BroadcastsState(
         }
     }
 
-    private var context: Context? = null
-
     fun onProcessingStarted(context: Context) {
         if (broadcastsState.isEmpty()) return
-        this.context = context
-
-        ContextCompat.registerReceiver(
-            context,
-            broadcastReceiver,
-            broadcastFilter,
-            ContextCompat.RECEIVER_EXPORTED,
-        )
+        broadcastReceiver.register(context)
     }
 
     fun onProcessingStopped() {
         if (broadcastsState.isEmpty()) return
-        context?.unregisterReceiver(broadcastReceiver)
-        context = null
+        broadcastReceiver.unregister()
     }
 
     override fun isBroadcastReceived(condition: TriggerCondition.OnBroadcastReceived): Boolean =

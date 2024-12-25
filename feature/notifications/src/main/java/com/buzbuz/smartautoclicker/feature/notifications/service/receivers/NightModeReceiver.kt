@@ -16,18 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.notifications.service.receivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.util.Log
-import androidx.core.content.ContextCompat
+
+import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
 
 
-internal class NightModeReceiver(private val onChanged: (context: Context, isNightMode: Boolean) -> Unit): BroadcastReceiver() {
-
-    private var isRegistered: Boolean = false
+internal class NightModeReceiver(
+    private val onChanged: (context: Context, isNightMode: Boolean) -> Unit,
+): SafeBroadcastReceiver(IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED)) {
 
     var isNightModeEnabled: Boolean = false
         private set
@@ -36,26 +36,11 @@ internal class NightModeReceiver(private val onChanged: (context: Context, isNig
             return field
         }
 
-    fun register(context: Context) {
-        if (isRegistered) return
-
-        isRegistered = true
+    override fun onRegistered(context: Context) {
         isNightModeEnabled = context.isNightModeEnabled()
-
-        ContextCompat.registerReceiver(
-            context,
-            this,
-            IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED),
-            ContextCompat.RECEIVER_EXPORTED,
-        )
     }
 
-    fun unregister(context: Context) {
-        if (!isRegistered) return
-
-        context.unregisterReceiver(this)
-
-        isRegistered = false
+    override fun onUnregistered() {
         isNightModeEnabled = false
     }
 
