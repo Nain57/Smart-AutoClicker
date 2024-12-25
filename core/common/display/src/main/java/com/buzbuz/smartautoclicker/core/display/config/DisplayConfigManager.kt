@@ -28,9 +28,9 @@ import android.os.Build
 import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -60,7 +60,11 @@ class DisplayConfigManager @Inject constructor(
     private val orientationListeners: MutableSet<((Context) -> Unit)> = mutableSetOf()
 
     /** Listen to the configuration changes and calls [orientationListeners] when needed. */
-    private var configChangedReceiver: BroadcastReceiver? = null
+    private val configChangedReceiver = object : SafeBroadcastReceiver(IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED)) {
+        override fun onReceive(context: Context, intent: Intent) {
+            onAndroidConfigurationChanged(context)
+        }
+    }
 
     var displayConfig: DisplayConfig = getCurrentDisplayConfig()
         private set
@@ -72,20 +76,12 @@ class DisplayConfigManager @Inject constructor(
             configToPatch = getCurrentDisplayConfig(),
         )
 
-        configChangedReceiver = newConfigChangedReceiver()
-        ContextCompat.registerReceiver(
-            context,
-            configChangedReceiver,
-            IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED),
-            ContextCompat.RECEIVER_EXPORTED,
-        )
+        configChangedReceiver.register(context)
     }
 
     /** Stop the monitoring of the screen metrics. All listeners will be unregistered. */
-    fun stopMonitoring(context: Context) {
-        configChangedReceiver?.let { context.unregisterReceiver(it) }
-        configChangedReceiver = null
-
+    fun stopMonitoring() {
+        configChangedReceiver.unregister()
         orientationListeners.clear()
     }
 
@@ -189,13 +185,6 @@ class DisplayConfigManager @Inject constructor(
             sizePx = patchedSize,
         )
     }
-
-    private fun newConfigChangedReceiver(): BroadcastReceiver =
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                onAndroidConfigurationChanged(context)
-            }
-        }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()

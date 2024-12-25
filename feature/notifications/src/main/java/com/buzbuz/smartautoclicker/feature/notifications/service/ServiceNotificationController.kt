@@ -104,9 +104,9 @@ class ServiceNotificationController(
         notificationManager.notify(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, builder.build())
     }
 
-    fun destroyNotification(context: Context) {
-        nightModeReceiver.unregister(context)
-        notificationActionReceiver.unregister(context)
+    fun destroyNotification() {
+        nightModeReceiver.unregister()
+        notificationActionReceiver.unregister()
         notificationBuilder = null
 
         Log.i(TAG, "Notification destroyed")

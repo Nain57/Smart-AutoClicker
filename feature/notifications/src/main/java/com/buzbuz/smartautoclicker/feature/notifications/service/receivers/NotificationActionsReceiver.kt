@@ -16,12 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.notifications.service.receivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContextCompat
 
+import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
 import com.buzbuz.smartautoclicker.feature.notifications.service.model.ServiceNotificationAction
 import com.buzbuz.smartautoclicker.feature.notifications.service.model.getAllActionsBroadcastIntentFilter
 import com.buzbuz.smartautoclicker.feature.notifications.service.model.toServiceNotificationAction
@@ -29,30 +28,7 @@ import com.buzbuz.smartautoclicker.feature.notifications.service.model.toService
 
 internal class NotificationActionsReceiver(
     private val onReceived: (ServiceNotificationAction) -> Unit,
-): BroadcastReceiver() {
-
-    private var isRegistered: Boolean = false
-
-    fun register(context: Context) {
-        if (isRegistered) return
-
-        isRegistered = true
-
-        ContextCompat.registerReceiver(
-            context,
-            this,
-            getAllActionsBroadcastIntentFilter(),
-            ContextCompat.RECEIVER_EXPORTED,
-        )
-    }
-
-    fun unregister(context: Context) {
-        if (!isRegistered) return
-
-        context.unregisterReceiver(this)
-
-        isRegistered = false
-    }
+): SafeBroadcastReceiver(getAllActionsBroadcastIntentFilter()) {
 
     override fun onReceive(context: Context, intent: Intent) {
         intent.toServiceNotificationAction()?.let { action ->
