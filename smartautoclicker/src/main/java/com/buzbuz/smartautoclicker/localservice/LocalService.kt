@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
@@ -55,6 +56,7 @@ class LocalService(
     private val context: Context,
     private val overlayManager: OverlayManager,
     private val displayConfigManager: DisplayConfigManager,
+    private val settingsRepository: SettingsRepository,
     private val detectionRepository: DetectionRepository,
     private val bitmapManager: BitmapRepository,
     private val dumbEngine: DumbEngine,
@@ -77,6 +79,7 @@ class LocalService(
     private val notificationController: ServiceNotificationController by lazy {
         ServiceNotificationController(
             context = context,
+            settingsRepository = settingsRepository,
             listener = object : ServiceNotificationListener {
                 override fun onPlay() = play()
                 override fun onPause()= pause()

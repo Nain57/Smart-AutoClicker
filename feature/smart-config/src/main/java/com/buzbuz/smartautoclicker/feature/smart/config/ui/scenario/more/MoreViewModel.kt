@@ -18,8 +18,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.feature.smart.config.data.SmartConfigDataSource
 
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 
@@ -28,16 +26,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MoreViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val debuggingRepository: DebuggingRepository,
-    private val configPrefsDataSource : SmartConfigDataSource,
 ) : ViewModel() {
-
-    val isLegacyUiEnabled: Flow<Boolean> = configPrefsDataSource.isLegacyActionUiEnabled()
 
     /** Tells if the debug view is enabled or not. */
     private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(context))
@@ -50,10 +44,6 @@ class MoreViewModel @Inject constructor(
     /** Tells if a debug report is available. */
     val debugReportAvailability: Flow<Boolean> = debuggingRepository.debugReport
         .map { it != null }
-
-    fun toggleLegacyActionUi() {
-        viewModelScope.launch { configPrefsDataSource.toggleLegacyActionUi() }
-    }
 
     fun toggleIsDebugViewEnabled() {
         _isDebugViewEnabled.value = !_isDebugViewEnabled.value

@@ -363,7 +363,7 @@ class EventDialog(
     }
 
     private fun showActionsOverlay(initialFocusedIndex: Int = 0) {
-        if (viewModel.isLegacyUiEnabled.value) {
+        if (viewModel.isLegacyActionUiEnabled()) {
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = SmartActionsLegacyDialog(),

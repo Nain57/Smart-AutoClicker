@@ -14,22 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list
+package com.buzbuz.smartautoclicker.scenarios.list
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.list.model.ScenarioBackupSelection
-import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.activity.list.model.isEmpty
-import com.buzbuz.smartautoclicker.activity.list.model.toggleAllScenarioSelectionForBackup
-import com.buzbuz.smartautoclicker.activity.list.model.toggleScenarioSelectionForBackup
-import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
+import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioBackupSelection
+import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
+import com.buzbuz.smartautoclicker.scenarios.list.model.isEmpty
+import com.buzbuz.smartautoclicker.scenarios.list.model.toggleAllScenarioSelectionForBackup
+import com.buzbuz.smartautoclicker.scenarios.list.model.toggleScenarioSelectionForBackup
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -38,8 +35,6 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,8 +57,6 @@ class ScenarioListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
-    private val revenueRepository: IRevenueRepository,
-    private val qualityRepository: QualityRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -96,13 +89,12 @@ class ScenarioListViewModel @Inject constructor(
     val uiState: StateFlow<ScenarioListUiState?> = combine(
         uiStateType,
         filteredScenarios,
-        combine(selectedForBackup, expandedItems, ::Pair),
-        revenueRepository.userBillingState,
-        revenueRepository.isPrivacySettingRequired,
-    ) { stateType, scenarios, (backupSelection, expanded), billingState, privacyRequired ->
+        selectedForBackup,
+        expandedItems,
+    ) { stateType, scenarios, backupSelection, expanded,  ->
         ScenarioListUiState(
             type = stateType,
-            menuUiState = stateType.toMenuUiState(scenarios, backupSelection, billingState, privacyRequired),
+            menuUiState = stateType.toMenuUiState(scenarios, backupSelection),
             listContent =
                 if (stateType != ScenarioListUiState.Type.EXPORT) scenarios.updateExpanded(expanded)
                 else scenarios.filterForBackupSelection(backupSelection),
@@ -208,23 +200,9 @@ class ScenarioListViewModel @Inject constructor(
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(smartRepository, condition, onBitmapLoaded)
 
-    fun showPrivacySettings(activity: Activity) {
-        revenueRepository.startPrivacySettingUiFlow(activity)
-    }
-
-    fun showPurchaseActivity(context: Context) {
-        revenueRepository.startPurchaseUiFlow(context)
-    }
-
-    fun showTroubleshootingDialog(activity: FragmentActivity) {
-        qualityRepository.startTroubleshootingUiFlow(activity)
-    }
-
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,
         backupSelection: ScenarioBackupSelection,
-        billingState: UserBillingState,
-        isPrivacyRequired: Boolean,
     ): ScenarioListUiState.Menu = when (this) {
         ScenarioListUiState.Type.SEARCH -> ScenarioListUiState.Menu.Search
         ScenarioListUiState.Type.EXPORT -> ScenarioListUiState.Menu.Export(
@@ -233,8 +211,6 @@ class ScenarioListViewModel @Inject constructor(
         ScenarioListUiState.Type.SELECTION -> ScenarioListUiState.Menu.Selection(
             searchEnabled = scenarioItems.isNotEmpty(),
             exportEnabled = scenarioItems.firstOrNull { it is ScenarioListUiState.Item.Valid } != null,
-            privacyRequired = isPrivacyRequired,
-            canPurchase = billingState != UserBillingState.PURCHASED,
         )
     }
 

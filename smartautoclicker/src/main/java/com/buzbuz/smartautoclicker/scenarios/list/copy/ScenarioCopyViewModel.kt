@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list.copy
+package com.buzbuz.smartautoclicker.scenarios.list.copy
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

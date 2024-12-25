@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
@@ -44,7 +45,6 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.data.SmartConfigDataSource
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
@@ -78,10 +78,10 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-    configPrefsDataSource : SmartConfigDataSource,
+    settingsRepository: SettingsRepository,
 ) : ViewModel(), ActionConfigurator {
 
-    private val isLegacyUiEnabled: Flow<Boolean> = configPrefsDataSource.isLegacyActionUiEnabled()
+    private val isLegacyUiEnabled: Flow<Boolean> = settingsRepository.isLegacyActionUiEnabledFlow
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
     private val editedEvent: Flow<Event> = editionRepository.editionState.editedEventState.mapNotNull { it.value }

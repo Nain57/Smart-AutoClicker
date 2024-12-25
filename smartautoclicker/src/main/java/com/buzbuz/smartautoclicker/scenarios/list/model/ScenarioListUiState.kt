@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list.model
+package com.buzbuz.smartautoclicker.scenarios.list.model
 
 import androidx.annotation.IntRange
 
@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITE
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM_INT
 
 /**
- * Ui State for the [ScenarioListFragment]
+ * Ui State for the [com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment]
  *
  * @param type the current ui type
  * @param menuUiState the ui state for the action bar menu
@@ -55,9 +55,7 @@ data class ScenarioListUiState(
         val cancelItemState: Item = Item(false),
         val importItemState: Item = Item(false),
         val exportItemState: Item = Item(false),
-        val privacyItemState: Item = Item(false),
-        val purchaseItemState: Item = Item(false),
-        val troubleshootingItemState: Item = Item(false),
+        val settingsItemState: Item = Item(false),
     ) {
 
         /**
@@ -88,8 +86,6 @@ data class ScenarioListUiState(
         data class Selection(
             private val searchEnabled: Boolean,
             private val exportEnabled: Boolean,
-            private val privacyRequired: Boolean,
-            private val canPurchase: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
             selectAllItemState = Item(false),
@@ -102,9 +98,7 @@ data class ScenarioListUiState(
                 visible = exportEnabled,
                 enabled = exportEnabled,
             ),
-            privacyItemState = Item(privacyRequired),
-            purchaseItemState = Item(canPurchase),
-            troubleshootingItemState = Item(true),
+            settingsItemState = Item(true),
         )
     }
 

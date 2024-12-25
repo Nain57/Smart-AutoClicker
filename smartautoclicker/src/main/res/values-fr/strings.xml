@@ -25,7 +25,7 @@
     <string name="notification_button_toggle_menu">Afficher/Cacher</string>
     <string name="notification_button_stop">Stop</string>
 
-    <string name="activity_title">Scénarios</string>
+    <string name="activity_scenario_title">Scénarios</string>
     <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
         que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
         n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
@@ -44,9 +44,6 @@
     <string name="menu_item_title_export">Exporter</string>
     <string name="menu_item_title_import">Importer</string>
     <string name="menu_item_title_select_all">Tout sélectionner</string>
-    <string name="menu_item_title_privacy">Confidentialité</string>
-    <string name="menu_item_title_remove_ads">Enlever les pubs</string>
-    <string name="menu_item_title_troubleshooting">Dépannage</string>
     <string name="menu_item_title_cancel">Annuler</string>
     <string name="menu_item_title_search">Rechercher</string>
 
@@ -111,5 +108,20 @@
     <!-- Default name when creating a new scenario -->
     <string name="default_scenario_name">Nom par défaut</string>
     <string name="message_empty_image_events_scenario_list">No image events</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">Paramètres</string>
+
+    <string name="field_legacy_action_ui_title">Legacy Action UI</string>
+    <string name="field_legacy_action_ui_desc">Modifie l\'affichage de l\'action par une liste. Utile pour les scénarios complexes.</string>
+
+    <string name="field_legacy_notification_ui_title">Legacy Notification UI</string>
+    <string name="field_legacy_notification_ui_desc">Utiliser les boutons du système au lieu des boutons d\'icône dans la notification.</string>
+
+    <string name="field_privacy">Paramètres de confidentialité</string>
+    <string name="field_remove_ads">Supprimer les publicités</string>
+    <string name="field_troubleshooting">Dépannage</string>
 
 </resources>

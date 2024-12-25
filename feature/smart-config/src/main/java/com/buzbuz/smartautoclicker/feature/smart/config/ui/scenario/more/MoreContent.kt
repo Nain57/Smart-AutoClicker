@@ -60,12 +60,6 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
                 setOnClickListener(::onTutorialClicked)
             }
 
-            fieldLegacyActionsUi.apply {
-                setTitle(context.getString(R.string.field_legacy_action_ui_title))
-                setupDescriptions(listOf(context.getString(R.string.field_legacy_action_ui_desc)))
-                setOnClickListener(viewModel::toggleLegacyActionUi)
-            }
-
             fieldDebugOverlay.apply {
                 setTitle(context.getString(R.string.field_show_debug_view_title))
                 setupDescriptions(emptyList())
@@ -96,7 +90,6 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isLegacyUiEnabled.collect(viewBinding.fieldLegacyActionsUi::setChecked) }
                 launch { viewModel.isDebugViewEnabled.collect(viewBinding.fieldDebugOverlay::setChecked) }
                 launch { viewModel.isDebugReportEnabled.collect(viewBinding.fieldDebugReport::setChecked) }
                 launch { viewModel.debugReportAvailability.collect(::updateDebugReportAvailability) }

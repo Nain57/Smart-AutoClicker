@@ -25,6 +25,7 @@ import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.common.SERVICE_CHANNEL_ID
 import com.buzbuz.smartautoclicker.feature.notifications.common.createKlickrServiceNotificationChannel
@@ -37,6 +38,7 @@ import com.buzbuz.smartautoclicker.feature.notifications.service.ui.newServiceNo
 
 class ServiceNotificationController(
     context: Context,
+    private val settingsRepository: SettingsRepository,
     listener: ServiceNotificationListener,
 ) {
 
@@ -68,8 +70,10 @@ class ServiceNotificationController(
             isNightMode = nightModeReceiver.isNightModeEnabled,
         )
 
+        val forceLegacyNotification = settingsRepository.isLegacyNotificationUiEnabled()
+
         val builder = notificationBuilder
-            ?: context.newServiceNotificationBuilder(SERVICE_CHANNEL_ID, notificationState!!)
+            ?: context.newServiceNotificationBuilder(SERVICE_CHANNEL_ID, notificationState!!, forceLegacyNotification)
         notificationBuilder = builder
         return builder.build()
     }

@@ -14,24 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.data
 
-import android.content.ComponentName
+plugins {
+    alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.hilt)
+}
 
-val klickrServiceComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.SmartAutoClickerService",
-    )
+android {
+    namespace = "com.buzbuz.smartautoclicker.core.common.settings"
+    buildFeatures.viewBinding = true
+}
 
-val scenarioActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.scenarios.ScenarioActivity",
-    )
+dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.datastore)
 
-val tutorialActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity",
-    )
+    implementation(project(":core:common:base"))
+}
