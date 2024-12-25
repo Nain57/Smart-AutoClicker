@@ -29,7 +29,7 @@
     <string name="notification_button_stop">Stop</string>
 
 
-    <string name="activity_title">Scenarios</string>
+    <string name="activity_scenario_title">Scenarios</string>
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application. Feel free to visit our github, the code is open source !</string>
@@ -48,11 +48,9 @@
     <string name="menu_item_title_export">Export</string>
     <string name="menu_item_title_import">Import</string>
     <string name="menu_item_title_select_all">Select all</string>
-    <string name="menu_item_title_privacy">Privacy settings</string>
-    <string name="menu_item_title_remove_ads">Remove ads</string>
-    <string name="menu_item_title_troubleshooting">Troubleshooting</string>
     <string name="menu_item_title_cancel">Cancel</string>
     <string name="menu_item_title_search">Search</string>
+    <string name="menu_item_title_settings">Settings</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -114,5 +112,20 @@
     <!-- Default name when creating a new scenario -->
     <string name="default_scenario_name">Default name</string>
     <string name="message_empty_image_events_scenario_list">No image events</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">Settings</string>
+
+    <string name="field_legacy_action_ui_title">Legacy Action UI</string>
+    <string name="field_legacy_action_ui_desc">Change the action display by a list. Useful for complex scenarios.</string>
+
+    <string name="field_legacy_notification_ui_title">Legacy Notification UI</string>
+    <string name="field_legacy_notification_ui_desc">Use the system buttons instead of icon buttons in the notification.</string>
+
+    <string name="field_privacy">Privacy settings</string>
+    <string name="field_remove_ads">Remove ads</string>
+    <string name="field_troubleshooting">Troubleshooting</string>
 
 </resources>

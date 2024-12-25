@@ -25,7 +25,7 @@
     <string name="notification_button_toggle_menu">Mostra/Nascondi</string>
     <string name="notification_button_stop">Stop</string>
 
-    <string name="activity_title">Scenari</string>
+    <string name="activity_scenario_title">Scenari</string>
     <string name="accessibility_service_description">Questa applicazione ha bisogno di questo servizio per inserire i clic che hai
          creato nelle altre applicazioni una volta che le condizioni sono state rilevate.\n\nNon verranno raccolti dati da
          questa applicazione. Sentiti libero di visitare il nostro github, il codice è open source!</string>
@@ -44,9 +44,6 @@
     <string name="menu_item_title_export">Esporta</string>
     <string name="menu_item_title_import">Importa</string>
     <string name="menu_item_title_select_all">Seleziona tutto</string>
-    <string name="menu_item_title_privacy">Impostazioni sulla privacy</string>
-    <string name="menu_item_title_remove_ads">Rimuovere gli annunci</string>
-    <string name="menu_item_title_troubleshooting">Risoluzione dei problemi</string>
     <string name="menu_item_title_cancel">Annulla</string>
     <string name="menu_item_title_search">Cerca</string>
 
@@ -108,5 +105,20 @@
     <!-- Default name when creating a new scenario -->
     <string name="default_scenario_name">Nome predefinito</string>
     <string name="message_empty_image_events_scenario_list">No image events</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">Impostazioni</string>
+
+    <string name="field_legacy_action_ui_title">Interfaccia utente dell\'azione legacy</string>
+    <string name="field_legacy_action_ui_desc">Modifica la visualizzazione delle azioni tramite un elenco. Utile per scenari complessi.</string>
+
+    <string name="field_legacy_notification_ui_title">Interfaccia di notifica legacy</string>
+    <string name="field_legacy_notification_ui_desc">Utilizzare i pulsanti di sistema invece dei pulsanti delle icone nella notifica.</string>
+
+    <string name="field_privacy">Impostazioni sulla privacy</string>
+    <string name="field_remove_ads">Rimuovere gli annunci</string>
+    <string name="field_troubleshooting">Risoluzione dei problemi</string>
 
 </resources>

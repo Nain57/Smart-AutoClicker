@@ -21,7 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ScenarioActivity">
+    tools:context=".scenarios.ScenarioActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -33,7 +33,7 @@
             android:id="@+id/topAppBar"
             style="@style/AppTheme.Widget.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/activity_title"
+            app:title="@string/activity_scenario_title"
             app:menu="@menu/menu_scenario_fragment" />
 
     </com.google.android.material.appbar.AppBarLayout>

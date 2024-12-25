@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list.adapter
+package com.buzbuz.smartautoclicker.scenarios.list.adapter
 
 import android.graphics.Bitmap
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
+import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario

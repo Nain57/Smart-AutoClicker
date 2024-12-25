@@ -36,7 +36,7 @@
         tools:ignore="DataExtractionRules">
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.activity.ScenarioActivity"
+            android:name="com.buzbuz.smartautoclicker.scenarios.ScenarioActivity"
             android:screenOrientation="locked"
             android:exported="true">
             <intent-filter>
@@ -44,6 +44,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.buzbuz.smartautoclicker.settings.SettingsActivity"
+            android:exported="false" />
 
         <service
             android:name=".SmartAutoClickerService"

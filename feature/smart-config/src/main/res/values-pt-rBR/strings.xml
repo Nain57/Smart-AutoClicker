@@ -131,9 +131,6 @@
     <string name="field_tutorial_title">Tutorial</string>
     <string name="field_tutorial_desc">Aprenda a usar o Klick\'r</string>
 
-    <string name="field_legacy_action_ui_title">Legacy UI</string>
-    <string name="field_legacy_action_ui_desc">Altere a exibição da ação por uma lista. Útil para cenários complexos.</string>
-
     <!-- Dialog Event ============================================================================================== -->
 
     <string name="dialog_title_image_event">Evento de Tela</string>

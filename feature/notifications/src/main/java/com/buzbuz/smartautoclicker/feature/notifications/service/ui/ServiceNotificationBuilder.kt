@@ -32,10 +32,15 @@ internal abstract class ServiceNotificationBuilder(
 internal fun Context.newServiceNotificationBuilder(
     channelId: String,
     initialState: ServiceNotificationState,
-): ServiceNotificationBuilder =
-    try {
+    forceLegacy: Boolean,
+): ServiceNotificationBuilder {
+    if (forceLegacy) return LegacyNotificationBuilder(this, channelId, initialState)
+
+    return try {
         CustomLayoutNotificationBuilder(this, channelId, initialState)
     } catch (ex: Exception) {
         // Some devices doesn't support custom views in notification, use the regular format instead
         LegacyNotificationBuilder(this, channelId, initialState)
     }
+}
+

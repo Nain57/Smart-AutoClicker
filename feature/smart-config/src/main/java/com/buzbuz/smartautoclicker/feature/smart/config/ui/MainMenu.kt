@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 /**
  * [OverlayMenu] implementation for displaying the main menu overlay.
  *
- * This is the menu displayed once the service is started via the [com.buzbuz.smartautoclicker.activity.ScenarioActivity]
+ * This is the menu displayed once the service is started via the [com.buzbuz.smartautoclicker.scenarios.ScenarioActivity]
  * once the user has selected a scenario to be used. It allows the user to start the detection on the currently loaded
  * scenario, as well as editing the attached list of events.
  *

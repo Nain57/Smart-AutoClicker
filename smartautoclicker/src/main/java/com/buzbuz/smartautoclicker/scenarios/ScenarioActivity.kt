@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity
+package com.buzbuz.smartautoclicker.scenarios
 
-import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
-import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -29,11 +27,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.list.ScenarioListFragment
-import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
+import com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment
+import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario

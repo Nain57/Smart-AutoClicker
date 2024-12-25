@@ -30,9 +30,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.feature.smart.config.data.SmartConfigDataSource
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
@@ -64,11 +64,8 @@ class EventDialogViewModel @Inject constructor(
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-    configPrefsDataSource : SmartConfigDataSource,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
-
-    val isLegacyUiEnabled: StateFlow<Boolean> = configPrefsDataSource.isLegacyActionUiEnabled()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val configuredEvent = editionRepository.editionState.editedEventState
         .mapNotNull { it.value }
@@ -174,6 +171,9 @@ class EventDialogViewModel @Inject constructor(
             else oldValue
         }
     }
+
+    fun isLegacyActionUiEnabled(): Boolean =
+        settingsRepository.isLegacyActionUiEnabled()
 
     fun monitorViews(conditionsField: View, conditionOperatorAndView: View, actionsField: View, saveButton: View) {
         monitoredViewsManager.apply {

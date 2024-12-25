@@ -14,24 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.base.data
+package com.buzbuz.smartautoclicker.core.settings
 
-import android.content.ComponentName
+import kotlinx.coroutines.flow.Flow
 
-val klickrServiceComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.SmartAutoClickerService",
-    )
 
-val scenarioActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.scenarios.ScenarioActivity",
-    )
+interface SettingsRepository {
 
-val tutorialActivityComponentName: ComponentName
-    get() = ComponentName(
-        "com.buzbuz.smartautoclicker",
-        "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity",
-    )
+    val isLegacyActionUiEnabledFlow: Flow<Boolean>
+    fun isLegacyActionUiEnabled(): Boolean
+    fun toggleLegacyActionUi()
+
+    val isLegacyNotificationUiEnabledFlow: Flow<Boolean>
+    fun isLegacyNotificationUiEnabled(): Boolean
+    fun toggleLegacyNotificationUi()
+}

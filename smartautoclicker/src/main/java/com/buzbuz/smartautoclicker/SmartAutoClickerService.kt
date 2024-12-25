@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
@@ -114,6 +115,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var bitmapManager: BitmapRepository
     @Inject lateinit var qualityRepository: QualityRepository
     @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
+    @Inject lateinit var settingsRepository: SettingsRepository
     @Inject lateinit var revenueRepository: IRevenueRepository
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
@@ -147,6 +149,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
             tileRepository = tileRepository,
             debugRepository = debugRepository,
             revenueRepository = revenueRepository,
+            settingsRepository = settingsRepository,
             bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = { notification ->

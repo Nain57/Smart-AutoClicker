@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.activity.list
+package com.buzbuz.smartautoclicker.scenarios.list
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,14 +36,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.activity.creation.ScenarioCreationDialog
-import com.buzbuz.smartautoclicker.activity.list.adapter.ScenarioAdapter
-import com.buzbuz.smartautoclicker.activity.list.copy.ScenarioCopyDialog
-import com.buzbuz.smartautoclicker.activity.list.copy.ScenarioCopyDialog.Companion.FRAGMENT_TAG_COPY_DIALOG
-import com.buzbuz.smartautoclicker.activity.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
+import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
+import com.buzbuz.smartautoclicker.scenarios.creation.ScenarioCreationDialog
+import com.buzbuz.smartautoclicker.scenarios.list.adapter.ScenarioAdapter
+import com.buzbuz.smartautoclicker.scenarios.list.copy.ScenarioCopyDialog
+import com.buzbuz.smartautoclicker.scenarios.list.copy.ScenarioCopyDialog.Companion.FRAGMENT_TAG_COPY_DIALOG
+import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
+import com.buzbuz.smartautoclicker.settings.SettingsActivity
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -128,9 +130,7 @@ class ScenarioListFragment : Fragment() {
             R.id.action_cancel -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
             R.id.action_search -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioListViewModel.toggleAllScenarioSelectionForBackup()
-            R.id.action_privacy_settings -> activity?.let(scenarioListViewModel::showPrivacySettings)
-            R.id.action_purchase -> context?.let(scenarioListViewModel::showPurchaseActivity)
-            R.id.action_troubleshooting -> activity?.let(scenarioListViewModel::showTroubleshootingDialog)
+            R.id.action_settings -> startSettingsActivity()
             else -> return false
         }
 
@@ -177,9 +177,7 @@ class ScenarioListFragment : Fragment() {
                     }
                 }
             }
-            findItem(R.id.action_privacy_settings)?.bind(menuState.privacyItemState)
-            findItem(R.id.action_purchase)?.bind(menuState.purchaseItemState)
-            findItem(R.id.action_troubleshooting)?.bind(menuState.troubleshootingItemState)
+            findItem(R.id.action_settings)?.bind(menuState.settingsItemState)
         }
     }
 
@@ -292,6 +290,10 @@ class ScenarioListFragment : Fragment() {
                 defaultName = scenarioItem.displayName,
             )
             .show(requireActivity().supportFragmentManager, FRAGMENT_TAG_COPY_DIALOG)
+    }
+
+    private fun startSettingsActivity() {
+        requireContext().startActivity(Intent(context, SettingsActivity::class.java))
     }
 }
 
