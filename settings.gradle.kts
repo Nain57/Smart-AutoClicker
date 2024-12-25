@@ -23,7 +23,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Smart Auto Clicker"
+rootProject.name = "Klick'r"
 
 include(":core:common:android")
 include(":core:common:base")
