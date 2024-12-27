@@ -18,29 +18,22 @@ package com.buzbuz.smartautoclicker.core.settings.data
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStoreFile
-import kotlinx.coroutines.CoroutineScope
+
+import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
+
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 
 
 internal class LegacySettingsMigration(
     context: Context,
-    ioScope: CoroutineScope,
+    ioDispatcher: CoroutineDispatcher,
 ) : DataMigration<Preferences> {
 
-    private val legacyDataStore: DataStore<Preferences> = create(
-        corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
-        migrations = emptyList(),
-        scope = ioScope,
-        produceFile = { context.preferencesDataStoreFile(LEGACY_PREFERENCES_FILE_NAME) },
-    )
+    private val legacyDataStore: PreferencesDataStore =
+        PreferencesDataStore(context, ioDispatcher, LEGACY_PREFERENCES_FILE_NAME)
 
     // Specify your condition for whether the migration should happen
     override suspend fun shouldMigrate(currentData: Preferences) = true
