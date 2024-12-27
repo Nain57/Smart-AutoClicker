@@ -17,26 +17,17 @@
 package com.buzbuz.smartautoclicker.feature.qstile.data
 
 import android.content.Context
-import android.util.Log
-
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.preferencesDataStoreFile
 
+import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -57,12 +48,8 @@ class QsTileConfigDataSource @Inject internal constructor(
             booleanPreferencesKey("isSmartScenario")
     }
 
-    private val dataStore: DataStore<Preferences> = create(
-        corruptionHandler = ReplaceFileCorruptionHandler { onPreferenceFileCorrupted() },
-        migrations = emptyList(),
-        scope = CoroutineScope(ioDispatcher + SupervisorJob()),
-        produceFile = { context.preferencesDataStoreFile(PREFERENCES_FILE_NAME) }
-    )
+    private val dataStore: PreferencesDataStore =
+        PreferencesDataStore(context, ioDispatcher, PREFERENCES_FILE_NAME)
 
     internal fun getQSTileScenarioInfo(): Flow<QSTileScenarioInfo?> =
         dataStore.data.map { preferences ->
@@ -78,9 +65,4 @@ class QsTileConfigDataSource @Inject internal constructor(
             preferences[KEY_SCENARIO_DATABASE_ID] = scenarioInfo.id
             preferences[KEY_IS_SMART_SCENARIO] = scenarioInfo.isSmart
         }
-
-    private fun onPreferenceFileCorrupted(): Preferences {
-        Log.e(PREFERENCES_FILE_NAME, "Preference file is corrupted, resetting preferences")
-        return emptyPreferences()
-    }
 }

@@ -32,6 +32,7 @@ dependencies {
 
     implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.kotlinx.coroutines.test)

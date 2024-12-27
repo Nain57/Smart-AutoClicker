@@ -17,18 +17,12 @@
 package com.buzbuz.smartautoclicker.core.common.quality.data
 
 import android.content.Context
-import android.util.Log
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.MutablePreferences
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.preferencesDataStoreFile
+import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
@@ -36,8 +30,6 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -63,12 +55,8 @@ class QualityDataSource @Inject internal constructor(
             intPreferencesKey("accessibilityTroubleshootingDialogDisplayCount")
     }
 
-    private val dataStore: DataStore<Preferences> = create(
-        corruptionHandler = ReplaceFileCorruptionHandler { onPreferenceFileCorrupted() },
-        migrations = emptyList(),
-        scope = CoroutineScope(ioDispatcher + SupervisorJob()),
-        produceFile = { context.preferencesDataStoreFile(PREFERENCES_FILE_NAME) }
-    )
+    private val dataStore: PreferencesDataStore =
+        PreferencesDataStore(context, ioDispatcher, PREFERENCES_FILE_NAME)
 
     internal fun qualityMetrics(): Flow<QualityMetrics> =
         dataStore.data.map { preferences -> preferences.toQualityMetrics() }
@@ -92,10 +80,5 @@ class QualityDataSource @Inject internal constructor(
         set(KEY_LAST_SERVICE_FOREGROUND_TIME_MS, qualityMetrics.lastScenarioStartTimeMs)
         set(KEY_ACCESSIBILITY_SERVICE_PERMISSION_LOSS_COUNT, qualityMetrics.accessibilityLossCount)
         set(KEY_ACCESSIBILITY_SERVICE_TROUBLESHOOTING_DIALOG_COUNT, qualityMetrics.troubleshootingDisplayCount)
-    }
-
-    private fun onPreferenceFileCorrupted(): Preferences {
-        Log.e(PREFERENCES_FILE_NAME, "Preference file is corrupted, resetting preferences")
-        return emptyPreferences()
     }
 }

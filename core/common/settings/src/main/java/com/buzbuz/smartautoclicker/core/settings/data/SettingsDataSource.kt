@@ -17,26 +17,17 @@
 package com.buzbuz.smartautoclicker.core.settings.data
 
 import android.content.Context
-import android.util.Log
-import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory.create
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 
+import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,14 +48,13 @@ internal class SettingsDataSource @Inject constructor(
             booleanPreferencesKey("isLegacyNotificationUiEnabled")
     }
 
-    private val coroutineScope: CoroutineScope = CoroutineScope(ioDispatcher + SupervisorJob())
-
-    private val dataStore: DataStore<Preferences> = create(
-        corruptionHandler = ReplaceFileCorruptionHandler { onPreferenceFileCorrupted() },
-        migrations = listOf(LegacySettingsMigration(context, coroutineScope)),
-        scope = coroutineScope,
-        produceFile = { context.preferencesDataStoreFile(PREFERENCES_FILE_NAME) }
-    )
+    private val dataStore: PreferencesDataStore =
+        PreferencesDataStore(
+            context = context,
+            dispatcher = ioDispatcher,
+            fileName = PREFERENCES_FILE_NAME,
+            migrations = listOf(LegacySettingsMigration(context, ioDispatcher))
+        )
 
     internal fun isLegacyActionUiEnabled(): Flow<Boolean> =
         dataStore.data.map { preferences -> preferences[KEY_IS_LEGACY_ACTION_UI] ?: false }
@@ -81,9 +71,4 @@ internal class SettingsDataSource @Inject constructor(
         dataStore.edit { preferences ->
             preferences[KEY_IS_LEGACY_NOTIFICATION_UI] = !(preferences[KEY_IS_LEGACY_NOTIFICATION_UI] ?: false)
         }
-
-    private fun onPreferenceFileCorrupted(): Preferences {
-        Log.e(PREFERENCES_FILE_NAME, "Preference file is corrupted, resetting preferences")
-        return emptyPreferences()
-    }
 }
