@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,6 +46,7 @@ class QSTileLauncherViewModel @Inject constructor(
     private val permissionController: PermissionsController,
     private val smartRepository: IRepository,
     private val dumbRepository: DumbRepository,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
 
@@ -77,4 +79,7 @@ class QSTileLauncherViewModel @Inject constructor(
             qsTileRepository.startDumbScenario(scenario)
         }
     }
+
+    fun isEntireScreenCaptureForced(): Boolean =
+        settingsRepository.isEntireScreenCaptureForced()
 }

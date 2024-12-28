@@ -46,6 +46,9 @@ internal class SettingsRepositoryImpl @Inject constructor(
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isLegacyNotificationUiEnabledFlow: Flow<Boolean> = _isLegacyNotificationUiEnabledFlow
 
+    private val _isEntireScreenCaptureForcedFlow: StateFlow<Boolean> = dataSource.isEntireScreenCaptureForced()
+        .stateIn(coroutineScope, SharingStarted.Eagerly, false)
+    override val isEntireScreenCaptureForcedFlow: Flow<Boolean> = _isEntireScreenCaptureForcedFlow
 
     override fun isLegacyActionUiEnabled(): Boolean =
         _isLegacyActionUiEnabledFlow.value
@@ -63,6 +66,16 @@ internal class SettingsRepositoryImpl @Inject constructor(
     override fun toggleLegacyNotificationUi() {
         coroutineScope.launch {
             dataSource.toggleLegacyNotificationUi()
+        }
+    }
+
+
+    override fun isEntireScreenCaptureForced(): Boolean =
+        _isEntireScreenCaptureForcedFlow.value
+
+    override fun toggleForceEntireScreenCapture() {
+        coroutineScope.launch {
+            dataSource.toggleForceEntireScreenCapture()
         }
     }
 }

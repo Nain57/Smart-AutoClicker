@@ -124,6 +124,9 @@
     <string name="field_legacy_notification_ui_title">Legacy Notification UI</string>
     <string name="field_legacy_notification_ui_desc">Use the system buttons instead of icon buttons in the notification.</string>
 
+    <string name="field_force_entire_screen_title">Force entire screen</string>
+    <string name="field_force_entire_screen_desc">Force the screen capture selector to \"Entire Screen\". Might not work depending on your device</string>
+
     <string name="field_privacy">Privacy settings</string>
     <string name="field_remove_ads">Remove ads</string>
     <string name="field_troubleshooting">Troubleshooting</string>

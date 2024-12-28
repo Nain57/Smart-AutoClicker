@@ -98,9 +98,11 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
             when (val scenario = requestedItem?.scenario) {
                 is DumbScenario -> startDumbScenario(scenario)
-                is Scenario -> projectionActivityResult.showMediaProjectionWarning(this) {
-                    showUnsupportedDeviceDialog()
-                }
+                is Scenario -> projectionActivityResult.showMediaProjectionWarning(
+                    context = this,
+                    forceEntireScreen = scenarioViewModel.isEntireScreenCaptureForced(),
+                    onError = { showUnsupportedDeviceDialog() },
+                )
             }
         }
     }

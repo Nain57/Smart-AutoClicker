@@ -120,6 +120,10 @@
     <string name="field_legacy_notification_ui_title">IU de notificação herdada</string>
     <string name="field_legacy_notification_ui_desc">Use os botões do sistema em vez dos botões de ícones na notificação.</string>
 
+    <string name="field_force_entire_screen_title">Forçar a tela inteira</string>
+    <string name="field_force_entire_screen_desc">Force o seletor de captura de tela a \"Tela inteira\". Pode não funcionar dependendo de seu dispositivo</string>
+
+
     <string name="field_privacy">Configurações de privacidade</string>
     <string name="field_remove_ads">Remover anúncios</string>
     <string name="field_troubleshooting">Solução de problemas</string>

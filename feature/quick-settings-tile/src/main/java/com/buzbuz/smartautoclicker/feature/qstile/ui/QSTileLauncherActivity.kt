@@ -104,7 +104,7 @@ class QSTileLauncherActivity : AppCompatActivity() {
     /** Show the media projection start warning. */
     private fun showMediaProjectionWarning() {
         Log.i(TAG, "All permissions are granted, request media projection")
-        projectionActivityResult.showMediaProjectionWarning(this) {
+        projectionActivityResult.showMediaProjectionWarning(this, viewModel.isEntireScreenCaptureForced()) {
             finish()
         }
     }

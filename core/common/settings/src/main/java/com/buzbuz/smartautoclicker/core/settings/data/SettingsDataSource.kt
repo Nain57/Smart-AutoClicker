@@ -46,6 +46,8 @@ internal class SettingsDataSource @Inject constructor(
             booleanPreferencesKey("isLegacyActionUiEnabled")
         val KEY_IS_LEGACY_NOTIFICATION_UI: Preferences.Key<Boolean> =
             booleanPreferencesKey("isLegacyNotificationUiEnabled")
+        val KEY_FORCE_ENTIRE_SCREEN: Preferences.Key<Boolean> =
+            booleanPreferencesKey("forceEntireScreen")
     }
 
     private val dataStore: PreferencesDataStore =
@@ -70,5 +72,13 @@ internal class SettingsDataSource @Inject constructor(
     internal suspend fun toggleLegacyNotificationUi() =
         dataStore.edit { preferences ->
             preferences[KEY_IS_LEGACY_NOTIFICATION_UI] = !(preferences[KEY_IS_LEGACY_NOTIFICATION_UI] ?: false)
+        }
+
+    internal fun isEntireScreenCaptureForced(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_FORCE_ENTIRE_SCREEN] ?: false }
+
+    internal suspend fun toggleForceEntireScreenCapture() =
+        dataStore.edit { preferences ->
+            preferences[KEY_FORCE_ENTIRE_SCREEN] = !(preferences[KEY_FORCE_ENTIRE_SCREEN] ?: false)
         }
 }

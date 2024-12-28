@@ -115,6 +115,10 @@
     <string name="field_legacy_notification_ui_title">传统通知用户界面</string>
     <string name="field_legacy_notification_ui_desc">在通知中使用系统按钮而不是图标按钮。</string>
 
+    <string name="field_force_entire_screen_title">强制整个屏幕</string>
+    <string name="field_force_entire_screen_desc">强制屏幕截图选择器为 “整个屏幕”。根据设备不同，可能无法使用</string>
+
+
     <string name="field_privacy">隐私设置</string>
     <string name="field_remove_ads">删除广告</string>
     <string name="field_troubleshooting">故障排除</string>

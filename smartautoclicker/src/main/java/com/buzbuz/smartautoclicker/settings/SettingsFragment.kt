@@ -63,6 +63,12 @@ class SettingsFragment : Fragment() {
             setOnClickListener(viewModel::toggleLegacyNotificationUi)
         }
 
+        viewBinding.fieldForceEntireScreen.apply {
+            setTitle(requireContext().getString(R.string.field_force_entire_screen_title))
+            setDescription(requireContext().getString(R.string.field_force_entire_screen_desc))
+            setOnClickListener(viewModel::toggleForceEntireScreenCapture)
+        }
+
         viewBinding.fieldPrivacySettings.apply {
             setTitle(requireContext().getString(R.string.field_privacy))
             setOnClickListener { viewModel.showPrivacySettings(requireActivity()) }
@@ -82,9 +88,21 @@ class SettingsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isLegacyActionUiEnabled.collect(viewBinding.fieldLegacyActionsUi::setChecked) }
                 launch { viewModel.isLegacyNotificationUiEnabled.collect(viewBinding.fieldLegacyNotificationUi::setChecked) }
+                launch { viewModel.isEntireScreenCaptureForced.collect(viewBinding.fieldForceEntireScreen::setChecked) }
+                launch { viewModel.shouldShowEntireScreenCapture.collect(::updateForceEntireScreenVisibility) }
                 launch { viewModel.shouldShowPrivacySettings.collect(::updatePrivacySettingsVisibility) }
                 launch { viewModel.shouldShowPurchase.collect(::updateRemoveAdsVisibility) }
             }
+        }
+    }
+
+    private fun updateForceEntireScreenVisibility(shouldBeVisible: Boolean) {
+        if (shouldBeVisible) {
+            viewBinding.dividerForceEntireScreen.visibility = View.VISIBLE
+            viewBinding.fieldForceEntireScreen.root.visibility = View.VISIBLE
+        } else {
+            viewBinding.dividerForceEntireScreen.visibility = View.GONE
+            viewBinding.fieldForceEntireScreen.root.visibility = View.GONE
         }
     }
 

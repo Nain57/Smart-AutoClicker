@@ -34,6 +34,7 @@ dependencies {
 
     implementation(project(":core:common:base"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:settings"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:dumb"))
     implementation(project(":core:smart:domain"))

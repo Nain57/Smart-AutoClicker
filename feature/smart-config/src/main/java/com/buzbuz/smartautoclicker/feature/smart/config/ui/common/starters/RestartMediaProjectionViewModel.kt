@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +36,7 @@ import javax.inject.Inject
 class RestartMediaProjectionViewModel @Inject constructor(
     @Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val detectionRepository: DetectionRepository,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     fun restartScreenRecord(context: Context, resultCode: Int, data: Intent) {
@@ -43,4 +45,6 @@ class RestartMediaProjectionViewModel @Inject constructor(
         }
     }
 
+    fun isEntireScreenCaptureForced(): Boolean =
+        settingsRepository.isEntireScreenCaptureForced()
 }
