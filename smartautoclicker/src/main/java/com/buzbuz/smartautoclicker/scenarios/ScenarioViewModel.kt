@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.localservice.ILocalService
@@ -56,6 +57,7 @@ class ScenarioViewModel @Inject constructor(
     private val revenueRepository: IRevenueRepository,
     private val qualityRepository: QualityRepository,
     private val permissionController: PermissionsController,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     /** Callback upon the availability of the [SmartAutoClickerService]. */
@@ -87,6 +89,9 @@ class ScenarioViewModel @Inject constructor(
         SmartAutoClickerService.getLocalService(null)
         super.onCleared()
     }
+
+    fun isEntireScreenCaptureForced(): Boolean =
+        settingsRepository.isEntireScreenCaptureForced()
 
     fun requestUserConsentIfNeeded(activity: Activity) {
         revenueRepository.refreshPurchases()

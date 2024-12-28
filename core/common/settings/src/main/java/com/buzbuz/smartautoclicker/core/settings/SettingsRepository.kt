@@ -28,4 +28,8 @@ interface SettingsRepository {
     val isLegacyNotificationUiEnabledFlow: Flow<Boolean>
     fun isLegacyNotificationUiEnabled(): Boolean
     fun toggleLegacyNotificationUi()
+
+    val isEntireScreenCaptureForcedFlow: Flow<Boolean>
+    fun isEntireScreenCaptureForced(): Boolean
+    fun toggleForceEntireScreenCapture()
 }

@@ -26,7 +26,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 
 
-fun ActivityResultLauncher<Intent>.showMediaProjectionWarning(context: Context, onError: () -> Unit) {
+fun ActivityResultLauncher<Intent>.showMediaProjectionWarning(context: Context, forceEntireScreen: Boolean, onError: () -> Unit) {
     ContextCompat.getSystemService(context, MediaProjectionManager::class.java)
         ?.let { projectionManager ->
             // The component name defined in com.android.internal.R.string.config_mediaProjectionPermissionDialogComponent
@@ -34,7 +34,7 @@ fun ActivityResultLauncher<Intent>.showMediaProjectionWarning(context: Context, 
             // There is nothing to do in those cases, the app can't be used.
             try {
                 Log.i(TAG, "Requesting MediaProjection")
-                launch(projectionManager.createScreenCaptureIntentCompat())
+                launch(projectionManager.createScreenCaptureIntentCompat(forceEntireScreen))
             } catch (ex: Exception) {
                 Log.e(TAG, "Can't start projection permission screen")
                 onError()
@@ -43,8 +43,8 @@ fun ActivityResultLauncher<Intent>.showMediaProjectionWarning(context: Context, 
 }
 
 
-private fun MediaProjectionManager.createScreenCaptureIntentCompat(): Intent =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+private fun MediaProjectionManager.createScreenCaptureIntentCompat(forceEntireScreen: Boolean): Intent =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && forceEntireScreen)
         createScreenCaptureIntent(MediaProjectionConfig.createConfigForDefaultDisplay())
     else createScreenCaptureIntent()
 
