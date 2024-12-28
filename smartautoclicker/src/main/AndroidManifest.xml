@@ -37,7 +37,6 @@
 
         <activity
             android:name="com.buzbuz.smartautoclicker.scenarios.ScenarioActivity"
-            android:screenOrientation="locked"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
