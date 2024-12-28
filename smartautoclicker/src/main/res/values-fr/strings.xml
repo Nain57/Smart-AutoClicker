@@ -120,7 +120,7 @@
     <string name="field_legacy_notification_ui_title">Legacy Notification UI</string>
     <string name="field_legacy_notification_ui_desc">Utiliser les boutons du système au lieu des boutons d\'icône dans la notification.</string>
 
-    <string name="field_force_entire_screen_title">Forcer toue l\'écran</string>
+    <string name="field_force_entire_screen_title">Forcer tout l\'écran</string>
     <string name="field_force_entire_screen_desc">Forcer le selecteur de la popup de capture d\'écran sur \"Tout l\'écran\". Peut ne pas fonctionner en fonction de votre appareil.</string>
 
     <string name="field_privacy">Paramètres de confidentialité</string>
