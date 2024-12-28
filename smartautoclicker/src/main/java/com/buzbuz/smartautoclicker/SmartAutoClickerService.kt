@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
+import android.app.Notification
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.AndroidRuntimeException
@@ -47,6 +48,7 @@ import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsC
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
+import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.localservice.ILocalService
 import com.buzbuz.smartautoclicker.localservice.LocalService
@@ -120,11 +122,13 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
     @Inject lateinit var userNotificationsController: UserNotificationsController
+    @Inject lateinit var reviewRepository: ReviewRepository
 
     override fun onServiceConnected() {
         super.onServiceConnected()
 
         qualityMetricsMonitor.onServiceConnected()
+
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {
                 override fun isRunning(): Boolean = isServiceStarted()
@@ -152,18 +156,8 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
             settingsRepository = settingsRepository,
             bitmapManager = bitmapManager,
             androidExecutor = this,
-            onStart = { notification ->
-                qualityMetricsMonitor.onServiceForegroundStart()
-                notification?.let {
-                    startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
-                }
-                requestFilterKeyEvents(true)
-            },
-            onStop = {
-                qualityMetricsMonitor.onServiceForegroundEnd()
-                requestFilterKeyEvents(false)
-                stopForeground(STOP_FOREGROUND_REMOVE)
-            },
+            onStart = ::onLocalServiceStarted,
+            onStop = ::onLocalServiceStopped,
         )
     }
 
@@ -174,6 +168,33 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
         qualityMetricsMonitor.onServiceUnbind()
         return super.onUnbind(intent)
+    }
+
+    private fun onLocalServiceStarted(serviceNotification: Notification?) {
+        reviewRepository.onUserSessionStarted()
+        qualityMetricsMonitor.onServiceForegroundStart()
+
+        serviceNotification?.let {
+            startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
+        }
+        requestFilterKeyEvents(true)
+    }
+
+    private fun onLocalServiceStopped() {
+        qualityMetricsMonitor.onServiceForegroundEnd()
+        reviewRepository.onUserSessionStopped()
+
+        if (reviewRepository.isUserCandidateForReview()) {
+            Log.i(TAG, "User is candidate for review, ")
+
+            reviewRepository.getReviewActivityIntent(this)?.let { intent ->
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+        }
+
+        requestFilterKeyEvents(false)
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean =
@@ -252,6 +273,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         qualityRepository.dump(writer)
 
         revenueRepository.dump(writer)
+        reviewRepository.dump(writer)
     }
 
     override fun onInterrupt() { /* Unused */ }

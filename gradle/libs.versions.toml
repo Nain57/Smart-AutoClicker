@@ -41,6 +41,7 @@ googleFirebaseBom = "33.7.0"
 googleFirebaseCrashlytics = "19.3.0"
 googleUserMessaging = "3.1.0"
 googleGmsAds = "23.6.0"
+googlePlayReview = "2.0.2"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
@@ -113,6 +114,7 @@ google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "fireb
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
 google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
 google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
+google-play-review = { group = "com.google.android.play", name = "review", version.ref = "googlePlayReview" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }
