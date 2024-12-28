@@ -22,9 +22,7 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -36,7 +34,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
 import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationListener
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -55,16 +52,13 @@ import kotlinx.coroutines.launch
 class LocalService(
     private val context: Context,
     private val overlayManager: OverlayManager,
-    private val displayConfigManager: DisplayConfigManager,
     private val settingsRepository: SettingsRepository,
     private val detectionRepository: DetectionRepository,
-    private val bitmapManager: BitmapRepository,
     private val dumbEngine: DumbEngine,
-    private val tileRepository: QSTileRepository,
     private val revenueRepository: IRevenueRepository,
     private val debugRepository: DebuggingRepository,
     private val androidExecutor: SmartActionExecutor,
-    private val onStart: (foregroundNotification: Notification?) -> Unit,
+    private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
     private val onStop: () -> Unit,
 ) : ILocalService {
 
@@ -115,10 +109,8 @@ class LocalService(
     override fun startDumbScenario(dumbScenario: DumbScenario) {
         if (state.isStarted) return
         state = LocalServiceState(isStarted = true, isSmartLoaded = false)
-        onStart(null)
+        onStart(dumbScenario.id.databaseId, false, null)
 
-        displayConfigManager.startMonitoring(context)
-        tileRepository.setTileScenario(scenarioId = dumbScenario.id.databaseId, isSmart = false)
         startJob = serviceScope.launch {
             delay(500)
 
@@ -150,6 +142,8 @@ class LocalService(
         state = LocalServiceState(isStarted = true, isSmartLoaded = true)
 
         onStart(
+            scenario.id.databaseId,
+            true,
             notificationController.createNotification(
                 context = context,
                 scenarioName = scenario.name,
@@ -158,8 +152,6 @@ class LocalService(
             )
         )
 
-        displayConfigManager.startMonitoring(context)
-        tileRepository.setTileScenario(scenarioId = scenario.id.databaseId, isSmart = true)
         startJob = serviceScope.launch {
             val mainMenu = MainMenu { stop() }
 
@@ -193,8 +185,6 @@ class LocalService(
             dumbEngine.release()
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
-            displayConfigManager.stopMonitoring()
-            bitmapManager.releaseCache()
 
             onStop()
             notificationController.destroyNotification()

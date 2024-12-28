@@ -147,14 +147,11 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         LOCAL_SERVICE_INSTANCE = LocalService(
             context = this,
             overlayManager = overlayManager,
-            displayConfigManager = displayConfigManager,
             detectionRepository = detectionRepository,
             dumbEngine = dumbEngine,
-            tileRepository = tileRepository,
             debugRepository = debugRepository,
             revenueRepository = revenueRepository,
             settingsRepository = settingsRepository,
-            bitmapManager = bitmapManager,
             androidExecutor = this,
             onStart = ::onLocalServiceStarted,
             onStop = ::onLocalServiceStopped,
@@ -170,7 +167,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         return super.onUnbind(intent)
     }
 
-    private fun onLocalServiceStarted(serviceNotification: Notification?) {
+    private fun onLocalServiceStarted(scenarioId: Long, isSmart: Boolean, serviceNotification: Notification?) {
         reviewRepository.onUserSessionStarted()
         qualityMetricsMonitor.onServiceForegroundStart()
 
@@ -178,6 +175,9 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
             startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
         }
         requestFilterKeyEvents(true)
+
+        displayConfigManager.startMonitoring(this)
+        tileRepository.setTileScenario(scenarioId = scenarioId, isSmart = isSmart)
     }
 
     private fun onLocalServiceStopped() {
@@ -195,6 +195,9 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
         requestFilterKeyEvents(false)
         stopForeground(STOP_FOREGROUND_REMOVE)
+
+        displayConfigManager.stopMonitoring()
+        bitmapManager.releaseCache()
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean =
