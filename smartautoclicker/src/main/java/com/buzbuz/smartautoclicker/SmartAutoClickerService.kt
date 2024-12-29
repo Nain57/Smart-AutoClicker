@@ -19,15 +19,14 @@ package com.buzbuz.smartautoclicker
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.app.Notification
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
 import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
+import com.buzbuz.smartautoclicker.actions.ServiceActionExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
@@ -57,9 +56,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import javax.inject.Inject
-
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
@@ -124,10 +120,13 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var userNotificationsController: UserNotificationsController
     @Inject lateinit var reviewRepository: ReviewRepository
 
+    private var serviceActionExecutor: ServiceActionExecutor? = null
+
     override fun onServiceConnected() {
         super.onServiceConnected()
 
         qualityMetricsMonitor.onServiceConnected()
+        serviceActionExecutor = ServiceActionExecutor(this)
 
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {
@@ -164,6 +163,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         LOCAL_SERVICE_INSTANCE = null
 
         qualityMetricsMonitor.onServiceUnbind()
+        serviceActionExecutor = null
         return super.onUnbind(intent)
     }
 
@@ -204,48 +204,15 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         localService?.onKeyEvent(event) ?: super.onKeyEvent(event)
 
     override suspend fun executeGesture(gestureDescription: GestureDescription) {
-        suspendCoroutine<Unit?> { continuation ->
-            try {
-                dispatchGesture(
-                    gestureDescription,
-                    object : GestureResultCallback() {
-                        override fun onCompleted(gestureDescription: GestureDescription?) = continuation.resume(null)
-                        override fun onCancelled(gestureDescription: GestureDescription?) {
-                            Log.w(TAG, "Gesture cancelled: $gestureDescription")
-                            continuation.resume(null)
-                        }
-                    },
-                    null,
-                )
-            } catch (rEx: RuntimeException) {
-                Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
-                continuation.resume(null)
-            }
-        }
+        serviceActionExecutor?.safeDispatchGesture(gestureDescription)
     }
 
     override fun executeStartActivity(intent: Intent) {
-        try {
-            startActivity(intent)
-        } catch (anfe: ActivityNotFoundException) {
-            Log.w(TAG, "Can't start activity, it is not found.")
-        } catch (arex: AndroidRuntimeException) {
-            Log.w(TAG, "Can't start activity, Intent is invalid: $intent", arex)
-        } catch (iaex: IllegalArgumentException) {
-            Log.w(TAG, "Can't start activity, Intent contains invalid arguments: $intent")
-        } catch (secEx: SecurityException) {
-            Log.w(TAG, "Can't start activity with intent $intent, permission is denied by the system")
-        } catch (npe: NullPointerException) {
-            Log.w(TAG, "Can't start activity with intent $intent, intent is invalid")
-        }
+        serviceActionExecutor?.safeStartActivity(intent)
     }
 
     override fun executeSendBroadcast(intent: Intent) {
-        try {
-            sendBroadcast(intent)
-        } catch (iaex: IllegalArgumentException) {
-            Log.w(TAG, "Can't send broadcast, Intent is invalid: $intent", iaex)
-        }
+        serviceActionExecutor?.safeSendBroadcast(intent)
     }
 
     override fun executeNotification(notification: NotificationRequest) {
