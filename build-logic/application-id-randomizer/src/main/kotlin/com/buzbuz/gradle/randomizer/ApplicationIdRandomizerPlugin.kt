@@ -14,21 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.randomizer
 
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.create
+
+
+class ApplicationIdRandomizerPlugin : Plugin<Project> {
+
+    override fun apply(target: Project): Unit = with(target) {
+        extensions.create<ApplicationIdRandomizerPluginExtension>(PLUGIN_EXTENSION_NAME)
     }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
+
+    private companion object {
+        const val PLUGIN_EXTENSION_NAME = "appIdRandomizer"
     }
 }
-
-rootProject.name = "build-logic"
-include(":application-id-randomizer")
-include(":convention")
-include(":parameters")
-include(":source-download")

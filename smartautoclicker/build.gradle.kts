@@ -17,16 +17,26 @@
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
+    alias(libs.plugins.buzbuz.appIdRandomizer)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
+
+
+val appId =
+    if (buildParameters["randomizeAppId"].asBoolean()) appIdRandomizer.getRandomAppId()
+    else "com.buzbuz.smartautoclicker"
+
+logger.info("Using application id $appId")
+rootProject.ext.set("appId", appId)
+
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
     buildFeatures.viewBinding = true
 
     defaultConfig {
-        applicationId = "com.buzbuz.smartautoclicker"
+        applicationId = rootProject.ext.get("appId") as String
 
         versionCode = 58
         versionName = "3.1.1"

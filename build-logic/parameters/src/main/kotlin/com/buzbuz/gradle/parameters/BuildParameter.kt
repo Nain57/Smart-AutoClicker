@@ -28,6 +28,10 @@ class BuildParameter(private val project: Project, private val name: String, pri
         return value
     }
 
+    fun asBoolean(): Boolean {
+        return value == "true" || value == "TRUE"
+    }
+
     fun asIntBuildConfigField(variant: LibraryProductFlavor, default: Int? = null) {
         if (!project.isBuildForVariant(variant.name)) return
 
