@@ -14,23 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.convention.utils
+package com.buzbuz.gradle.core
 
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 
-internal fun DependencyHandlerScope.implementation(dependency: Provider<MinimalExternalModuleDependency>) =
+fun DependencyHandlerScope.implementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("implementation", dependency)
 
-internal fun DependencyHandlerScope.playStoreImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+fun DependencyHandlerScope.playStoreImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("playStoreImplementation", dependency)
 
-internal fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
+fun DependencyHandlerScope.ksp(dependency: Provider<MinimalExternalModuleDependency>) =
     add("ksp", dependency)
 
-internal fun DependencyHandlerScope.kspTest(dependency: Provider<MinimalExternalModuleDependency>) =
+fun DependencyHandlerScope.kspTest(dependency: Provider<MinimalExternalModuleDependency>) =
     add("kspTest", dependency)
 
-internal fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("testImplementation", dependency)

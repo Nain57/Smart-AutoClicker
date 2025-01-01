@@ -30,5 +30,6 @@ dependencyResolutionManagement {
 rootProject.name = "build-logic"
 include(":application-id-randomizer")
 include(":convention")
+include(":core")
 include(":parameters")
 include(":source-download")

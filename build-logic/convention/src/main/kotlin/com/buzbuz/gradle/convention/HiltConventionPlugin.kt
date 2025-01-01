@@ -17,11 +17,11 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.getLibs
-import com.buzbuz.gradle.convention.utils.implementation
-import com.buzbuz.gradle.convention.utils.plugins
-import com.buzbuz.gradle.convention.utils.ksp
-import com.buzbuz.gradle.convention.utils.kspTest
-import com.buzbuz.gradle.convention.utils.testImplementation
+import com.buzbuz.gradle.core.implementation
+import com.buzbuz.gradle.core.ksp
+import com.buzbuz.gradle.core.kspTest
+import com.buzbuz.gradle.core.testImplementation
+import com.buzbuz.gradle.core.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

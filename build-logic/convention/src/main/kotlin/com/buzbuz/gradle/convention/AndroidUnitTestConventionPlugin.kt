@@ -16,11 +16,10 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.convention.utils.android
 import com.buzbuz.gradle.convention.utils.getLibs
-
-import com.buzbuz.gradle.convention.utils.plugins
-import com.buzbuz.gradle.convention.utils.testImplementation
+import com.buzbuz.gradle.core.testImplementation
+import com.buzbuz.gradle.core.android
+import com.buzbuz.gradle.core.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
