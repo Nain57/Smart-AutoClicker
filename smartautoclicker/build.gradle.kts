@@ -1,3 +1,5 @@
+import org.gradle.internal.extensions.core.extra
+
 /*
  * Copyright (C) 2024 Kevin Buzeau
  *
@@ -22,21 +24,17 @@ plugins {
     alias(libs.plugins.buzbuz.hilt)
 }
 
-
-val appId =
-    if (buildParameters["randomizeAppId"].asBoolean()) appIdRandomizer.getRandomAppId()
-    else "com.buzbuz.smartautoclicker"
-
-logger.info("Using application id $appId")
-rootProject.ext.set("appId", appId)
-
+applicationIdProvider.generateApplicationId(
+    shouldRandomize = buildParameters["randomizeAppId"].asBoolean() && buildParameters.isBuildForVariant("fDroid"),
+    regularApplicationId = "com.buzbuz.smartautoclicker"
+)
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
     buildFeatures.viewBinding = true
 
     defaultConfig {
-        applicationId = rootProject.ext.get("appId") as String
+        applicationId = applicationIdProvider.applicationId
 
         versionCode = 58
         versionName = "3.1.1"

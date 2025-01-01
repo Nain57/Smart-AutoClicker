@@ -16,12 +16,27 @@
  */
 package com.buzbuz.gradle.randomizer
 
+import org.gradle.api.Project
+import org.gradle.internal.extensions.core.extra
 import kotlin.random.Random
 
 
 abstract class ApplicationIdRandomizerPluginExtension {
 
-    fun getRandomAppId(): String =
+    internal lateinit var project: Project
+
+    val applicationId: String
+        get() = project.rootProject.extra.get(EXTRA_APPLICATION_ID) as String
+
+    fun generateApplicationId(shouldRandomize: Boolean, regularApplicationId: String) {
+        val appId =
+            if (shouldRandomize) generateRandomAppId()
+            else regularApplicationId
+
+        project.rootProject.extra.set(EXTRA_APPLICATION_ID, appId)
+    }
+
+    private fun generateRandomAppId(): String =
         Random(System.currentTimeMillis()).let { random ->
             val firstPart = random.nextString(length = 3)
             val secondPartLength = random.nextString(length = random.nextInt(1, 15))
@@ -29,7 +44,6 @@ abstract class ApplicationIdRandomizerPluginExtension {
 
             "$firstPart.$secondPartLength.$thirdPartLength"
         }
-
 
     private fun Random.nextString(length: Int): String {
         var result = ""
@@ -44,7 +58,12 @@ abstract class ApplicationIdRandomizerPluginExtension {
             from = CHAR_CODE_A_LOWERCASE,
             until = CHAR_CODE_A_LOWERCASE + ALPHABET_SIZE,
         ).toChar()
+
+
+    private companion object {
+        private const val EXTRA_APPLICATION_ID = "randomizer_applicationId"
+        private const val CHAR_CODE_A_LOWERCASE = 97
+        private const val ALPHABET_SIZE = 26
+    }
 }
 
-private const val CHAR_CODE_A_LOWERCASE = 97
-private const val ALPHABET_SIZE = 26

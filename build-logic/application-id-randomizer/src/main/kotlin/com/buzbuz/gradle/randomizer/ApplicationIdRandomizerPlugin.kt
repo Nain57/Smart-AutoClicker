@@ -24,10 +24,14 @@ import org.gradle.kotlin.dsl.create
 class ApplicationIdRandomizerPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
-        extensions.create<ApplicationIdRandomizerPluginExtension>(PLUGIN_EXTENSION_NAME)
+        extensions.create<ApplicationIdRandomizerPluginExtension>(PLUGIN_EXTENSION_NAME).apply {
+            project = target
+        }
     }
 
+
+
     private companion object {
-        const val PLUGIN_EXTENSION_NAME = "appIdRandomizer"
+        const val PLUGIN_EXTENSION_NAME = "applicationIdProvider"
     }
 }
