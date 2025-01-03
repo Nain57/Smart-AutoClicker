@@ -1,5 +1,3 @@
-import org.gradle.internal.extensions.core.extra
-
 /*
  * Copyright (C) 2024 Kevin Buzeau
  *
@@ -24,18 +22,28 @@ plugins {
     alias(libs.plugins.buzbuz.hilt)
 }
 
-applicationIdProvider.generateApplicationId(
-    shouldRandomize = buildParameters["randomizeAppId"].asBoolean() && buildParameters.isBuildForVariant("fDroid"),
-    regularApplicationId = "com.buzbuz.smartautoclicker"
-)
+obfuscationConfig {
+    obfuscatedComponents {
+        create("com.buzbuz.smartautoclicker.scenarios.ScenarioActivity")
+        create("com.buzbuz.smartautoclicker.SmartAutoClickerService")
+    }
+
+    setup(
+        applicationId = "com.buzbuz.smartautoclicker",
+        shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
+                buildParameters.isBuildForVariant("fDroid"),
+    )
+}
 
 android {
     namespace = "com.buzbuz.smartautoclicker"
-    buildFeatures.viewBinding = true
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
 
     defaultConfig {
-        applicationId = applicationIdProvider.applicationId
-
         versionCode = 58
         versionName = "3.1.1"
     }
