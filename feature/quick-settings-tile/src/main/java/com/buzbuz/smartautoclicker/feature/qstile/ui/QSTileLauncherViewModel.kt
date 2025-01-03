@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
-import com.buzbuz.smartautoclicker.core.base.data.klickrServiceComponentName
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
@@ -47,6 +47,7 @@ class QSTileLauncherViewModel @Inject constructor(
     private val smartRepository: IRepository,
     private val dumbRepository: DumbRepository,
     private val settingsRepository: SettingsRepository,
+    private val appComponentsProvider: AppComponentsProvider,
 ) : ViewModel() {
 
 
@@ -56,7 +57,7 @@ class QSTileLauncherViewModel @Inject constructor(
             permissions = listOf(
                 PermissionOverlay(),
                 PermissionAccessibilityService(
-                    componentName = klickrServiceComponentName,
+                    componentName = appComponentsProvider.klickrServiceComponentName,
                     isServiceRunning = { qsTileRepository.isAccessibilityServiceStarted() },
                 ),
                 PermissionPostNotification(optional = true),

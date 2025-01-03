@@ -36,7 +36,7 @@
         tools:ignore="DataExtractionRules">
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.scenarios.ScenarioActivity"
+            android:name="${scenarioActivity}"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +49,7 @@
             android:exported="false" />
 
         <service
-            android:name=".SmartAutoClickerService"
+            android:name="${smartAutoClickerService}"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:foregroundServiceType="mediaProjection"
             android:exported="true">

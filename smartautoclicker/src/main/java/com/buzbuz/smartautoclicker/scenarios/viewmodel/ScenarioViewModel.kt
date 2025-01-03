@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.scenarios
+package com.buzbuz.smartautoclicker.scenarios.viewmodel
 
 import android.Manifest
 import android.app.Activity
 import android.app.NotificationManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -30,7 +29,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.SmartAutoClickerService
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -42,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.localservice.ILocalService
+import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,15 +58,16 @@ class ScenarioViewModel @Inject constructor(
     private val qualityRepository: QualityRepository,
     private val permissionController: PermissionsController,
     private val settingsRepository: SettingsRepository,
+    private val appComponentsProvider: AppComponentsProvider,
 ) : ViewModel() {
 
-    /** Callback upon the availability of the [SmartAutoClickerService]. */
+    /** Callback upon the availability of SmartAutoClickerService. */
     private val serviceConnection: (ILocalService?) -> Unit = { localService ->
         clickerService = localService
     }
 
     /**
-     * Reference on the [SmartAutoClickerService].
+     * Reference on SmartAutoClickerService.
      * Will be not null only if the Accessibility Service is enabled.
      */
     private var clickerService: ILocalService? = null
@@ -77,7 +78,7 @@ class ScenarioViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, UserConsentState.UNKNOWN)
 
     init {
-        SmartAutoClickerService.getLocalService(serviceConnection)
+        LocalServiceProvider.getLocalService(serviceConnection)
 
         notificationManager =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -86,7 +87,7 @@ class ScenarioViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        SmartAutoClickerService.getLocalService(null)
+        LocalServiceProvider.getLocalService(null)
         super.onCleared()
     }
 
@@ -108,8 +109,8 @@ class ScenarioViewModel @Inject constructor(
             permissions = listOf(
                 PermissionOverlay(),
                 PermissionAccessibilityService(
-                    componentName = ComponentName(activity, SmartAutoClickerService::class.java),
-                    isServiceRunning = { SmartAutoClickerService.isServiceStarted() },
+                    componentName = appComponentsProvider.klickrServiceComponentName,
+                    isServiceRunning = { LocalServiceProvider.isServiceStarted() },
                 ),
                 PermissionPostNotification(optional = true),
             ),

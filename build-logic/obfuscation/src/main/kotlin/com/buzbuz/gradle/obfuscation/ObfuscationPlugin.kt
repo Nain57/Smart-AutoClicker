@@ -16,6 +16,7 @@
  */
 package com.buzbuz.gradle.obfuscation
 
+import com.android.build.gradle.AppExtension
 import com.buzbuz.gradle.core.android
 import com.buzbuz.gradle.obfuscation.component.ConfigFileContentBuilder
 import com.buzbuz.gradle.obfuscation.component.ObfuscatedComponent
@@ -72,16 +73,16 @@ class ObfuscationPlugin : Plugin<Project> {
             components = obfuscatedComponents,
             shouldRandomize = configPluginExtension.randomize,
         )
+    }
 
+    private fun afterEvaluate() {
         // Create values for the manifests
         registerManifestPlaceholders(
             target = target,
             components = obfuscatedComponents,
             shouldRandomize = configPluginExtension.randomize,
         )
-    }
 
-    private fun afterEvaluate() {
         if (!configPluginExtension.randomize) return
 
         obfuscatedComponents.forEach { component ->
@@ -118,10 +119,10 @@ class ObfuscationPlugin : Plugin<Project> {
     }
 
     private fun registerManifestPlaceholders(target: Project, components: List<ObfuscatedComponent>, shouldRandomize: Boolean) {
-        target.android {
-            defaultConfig {
+        target.extensions.findByType(AppExtension::class.java)?.apply {
+            this.applicationVariants.forEach { variant ->
                 components.forEach { component ->
-                    manifestPlaceholders[component.manifestPlaceholderKey] =
+                    variant.mergedFlavor.manifestPlaceholders[component.manifestPlaceholderKey] =
                         if (shouldRandomize) component.manifestPlaceholderValue
                         else component.originalComponentName
                 }

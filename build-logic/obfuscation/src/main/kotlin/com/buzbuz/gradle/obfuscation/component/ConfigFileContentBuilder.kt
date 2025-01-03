@@ -51,6 +51,7 @@ internal class ConfigFileContentBuilder {
             if (isRandomized == true) randomizedFlattenComponentName
             else originalFlattenComponentName
 
-        return "    val $variableName = ComponentName.unflattenFromString(\"$flattenComponentName\")"
+        return "    val $variableName = ComponentName.unflattenFromString(\"$flattenComponentName\") \n" +
+                "            ?: throw IllegalStateException(\"Invalid component name for $variableName\")"
     }
 }

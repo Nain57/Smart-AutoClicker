@@ -58,7 +58,7 @@ internal fun ObfuscatedComponentNamedObject.toDomain(target: Project, random: Ra
     val randomFilePath = "$randomizedFileDirectoryPath/$randomClassName.kt"
     val randomizedFlattenComponentName = "$randomizedAppId/.$randomClassName"
 
-    val placeholderKey = name.replaceFirstChar { it.lowercase() }
+    val placeholderKey = originalClassName.replaceFirstChar { it.lowercase() }
     val placeholderValue = "$randomizedAppId.$randomClassName"
 
     return ObfuscatedComponent(

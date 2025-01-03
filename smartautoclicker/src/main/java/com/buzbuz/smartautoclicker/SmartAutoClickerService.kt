@@ -24,10 +24,9 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 
-import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.LOCAL_SERVICE_INSTANCE
-import com.buzbuz.smartautoclicker.SmartAutoClickerService.Companion.getLocalService
 import com.buzbuz.smartautoclicker.actions.ServiceActionExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
@@ -49,8 +48,8 @@ import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.localservice.ILocalService
 import com.buzbuz.smartautoclicker.localservice.LocalService
+import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
 
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
@@ -63,9 +62,9 @@ import javax.inject.Inject
  * Started automatically by Android once the user has defined this service has an accessibility service, it provides
  * an API to start and stop the DetectorEngine correctly in order to display the overlay UI and record the screen for
  * clicks detection.
- * This API is offered through the [LocalService] class, which is instantiated in the [LOCAL_SERVICE_INSTANCE] object.
+ * This API is offered through the [LocalService] class, which is instantiated in the [LocalServiceProvider] object.
  * This system is used instead of the usual binder interface because an [AccessibilityService] already has its own
- * binder and it can't be changed. To access this local service, use [getLocalService].
+ * binder and it can't be changed. To access this local service, use [LocalServiceProvider].
  *
  * We need this service to be an accessibility service in order to inject the detected event on the currently
  * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
@@ -74,37 +73,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
-    companion object {
-
-        /** The instance of the [ILocalService], providing access for this service to the Activity. */
-        private var LOCAL_SERVICE_INSTANCE: ILocalService? = null
-            set(value) {
-                field = value
-                LOCAL_SERVICE_CALLBACK?.invoke(field)
-            }
-        /** Callback upon the availability of the [LOCAL_SERVICE_INSTANCE]. */
-        private var LOCAL_SERVICE_CALLBACK: ((ILocalService?) -> Unit)? = null
-            set(value) {
-                field = value
-                value?.invoke(LOCAL_SERVICE_INSTANCE)
-            }
-
-        /**
-         * Static method allowing an activity to register a callback in order to monitor the availability of the
-         * [ILocalService]. If the service is already available upon registration, the callback will be immediately
-         * called.
-         *
-         * @param stateCallback the object to be notified upon service availability.
-         */
-        fun getLocalService(stateCallback: ((ILocalService?) -> Unit)?) {
-            LOCAL_SERVICE_CALLBACK = stateCallback
-        }
-
-        fun isServiceStarted(): Boolean = LOCAL_SERVICE_INSTANCE != null
-    }
+    private val localServiceProvider = LocalServiceProvider
 
     private val localService: LocalService?
-        get() = LOCAL_SERVICE_INSTANCE as? LocalService
+        get() = localServiceProvider.localServiceInstance as? LocalService
 
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
@@ -119,6 +91,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var debugRepository: DebuggingRepository
     @Inject lateinit var userNotificationsController: UserNotificationsController
     @Inject lateinit var reviewRepository: ReviewRepository
+    @Inject lateinit var appComponentsProvider: AppComponentsProvider
 
     private var serviceActionExecutor: ServiceActionExecutor? = null
 
@@ -130,37 +103,42 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {
-                override fun isRunning(): Boolean = isServiceStarted()
+                override fun isRunning(): Boolean = localServiceProvider.isServiceStarted()
                 override fun startDumbScenario(dumbScenario: DumbScenario) {
-                    LOCAL_SERVICE_INSTANCE?.startDumbScenario(dumbScenario)
+                    localServiceProvider.localServiceInstance?.startDumbScenario(dumbScenario)
                 }
                 override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
-                    LOCAL_SERVICE_INSTANCE?.startSmartScenario(resultCode, data, scenario)
+                    localServiceProvider.localServiceInstance?.startSmartScenario(resultCode, data, scenario)
                 }
                 override fun stop() {
-                    LOCAL_SERVICE_INSTANCE?.stop()
+                    localServiceProvider.localServiceInstance?.stop()
                 }
             }
         )
 
-        LOCAL_SERVICE_INSTANCE = LocalService(
-            context = this,
-            overlayManager = overlayManager,
-            detectionRepository = detectionRepository,
-            dumbEngine = dumbEngine,
-            debugRepository = debugRepository,
-            revenueRepository = revenueRepository,
-            settingsRepository = settingsRepository,
-            androidExecutor = this,
-            onStart = ::onLocalServiceStarted,
-            onStop = ::onLocalServiceStopped,
+        localServiceProvider.setLocalService(
+            LocalService(
+                context = this,
+                overlayManager = overlayManager,
+                appComponentsProvider = appComponentsProvider,
+                detectionRepository = detectionRepository,
+                dumbEngine = dumbEngine,
+                debugRepository = debugRepository,
+                revenueRepository = revenueRepository,
+                settingsRepository = settingsRepository,
+                androidExecutor = this,
+                onStart = ::onLocalServiceStarted,
+                onStop = ::onLocalServiceStopped,
+            )
         )
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        LOCAL_SERVICE_INSTANCE?.stop()
-        LOCAL_SERVICE_INSTANCE?.release()
-        LOCAL_SERVICE_INSTANCE = null
+        localServiceProvider.localServiceInstance?.apply {
+            stop()
+            release()
+        }
+        localServiceProvider.setLocalService(null)
 
         qualityMetricsMonitor.onServiceUnbind()
         serviceActionExecutor = null
@@ -232,7 +210,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
         writer.append("* SmartAutoClickerService:").println()
         writer.append(Dumpable.DUMP_DISPLAY_TAB)
-            .append("- isStarted=").append("${(LOCAL_SERVICE_INSTANCE as? LocalService)?.isStarted ?: false}; ")
+            .append("- isStarted=").append("${localService?.isStarted ?: false}; ")
             .println()
 
         displayConfigManager.dump(writer)

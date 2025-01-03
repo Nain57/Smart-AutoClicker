@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
+import android.content.ComponentName
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 
@@ -30,6 +32,7 @@ import javax.inject.Inject
 
 class MoreViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    private val appComponentsProvider: AppComponentsProvider,
     private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
 
@@ -56,4 +59,7 @@ class MoreViewModel @Inject constructor(
     fun saveConfig() {
         debuggingRepository.setDebuggingConfig(_isDebugViewEnabled.value, _isDebugReportEnabled.value)
     }
+
+    fun getTutorialActivityComponent(): ComponentName =
+        appComponentsProvider.tutorialActivityComponentName
 }

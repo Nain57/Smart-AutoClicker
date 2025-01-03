@@ -17,14 +17,25 @@
 package com.buzbuz.smartautoclicker
 
 import android.app.Application
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsManager
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 class SmartAutoClickerApplication : Application() {
 
+    private val componentConfig = ComponentConfig
+    @Inject lateinit var appComponentsManager: AppComponentsManager
+
     override fun onCreate() {
         super.onCreate()
+
+        appComponentsManager.apply {
+            registerSmartAutoClickerService(componentConfig.smartAutoClickerService)
+            registerScenarioActivity(componentConfig.scenarioActivity)
+        }
+
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
 }
