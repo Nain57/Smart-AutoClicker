@@ -38,7 +38,6 @@ private fun ObfuscatedApplication.cleanup(target: Project) {
     val tmpFile = File(tempFilePath)
     if (tmpFile.exists()) {
         tmpFile.renameTo(File(originalFilePath))
-        tmpFile.delete()
     }
 
     val file = File(randomizedFilePath)
