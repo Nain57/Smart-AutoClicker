@@ -25,15 +25,18 @@ abstract class ObfuscationConfigPluginExtension {
 
     abstract val obfuscatedComponents: NamedDomainObjectContainer<ObfuscatedComponentNamedObject>
 
-    lateinit var originalApplicationId: String
+    internal lateinit var originalApplicationId: String
         private set
-    var randomize: Boolean = false
+    internal lateinit var appNameRes: String
+        private set
+    internal var randomize: Boolean = false
         private set
 
     private var setupListener: (() -> Unit)? = null
 
-    fun setup(applicationId: String, shouldRandomize: Boolean) {
+    fun setup(applicationId: String, appNameResId: String, shouldRandomize: Boolean) {
         originalApplicationId = applicationId
+        appNameRes = appNameResId
         randomize = shouldRandomize
         setupListener?.invoke()
     }

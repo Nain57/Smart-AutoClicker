@@ -32,6 +32,7 @@ obfuscationConfig {
 
     setup(
         applicationId = "com.buzbuz.smartautoclicker",
+        appNameResId = "@string/app_name",
         shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
                 buildParameters.isBuildForVariant("fDroid"),
     )

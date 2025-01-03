@@ -71,7 +71,6 @@ class ObfuscationPlugin : Plugin<Project> {
             target = target,
             originalAppId = configPluginExtension.originalApplicationId,
             components = obfuscatedComponents,
-            shouldRandomize = configPluginExtension.randomize,
         )
     }
 
@@ -80,7 +79,6 @@ class ObfuscationPlugin : Plugin<Project> {
         registerManifestPlaceholders(
             target = target,
             components = obfuscatedComponents,
-            shouldRandomize = configPluginExtension.randomize,
         )
 
         if (!configPluginExtension.randomize) return
@@ -103,11 +101,11 @@ class ObfuscationPlugin : Plugin<Project> {
         if (shouldRandomize) random.nextApplicationId()
         else regularApplicationId
 
-    private fun createComponentConfigFile(target: Project, originalAppId: String, components: List<ObfuscatedComponent>, shouldRandomize: Boolean) {
+    private fun createComponentConfigFile(target: Project, originalAppId: String, components: List<ObfuscatedComponent>) {
         val configFileContent = ConfigFileContentBuilder().apply {
             appId = originalAppId
             obfuscatedComponents  = components
-            isRandomized = shouldRandomize
+            isRandomized = configPluginExtension.randomize
         }.build()
 
         val path = "${target.layout.projectDirectory}/src/main/java/${originalAppId.replace('.', '/')}"
@@ -118,12 +116,18 @@ class ObfuscationPlugin : Plugin<Project> {
         configFile.writeText(configFileContent)
     }
 
-    private fun registerManifestPlaceholders(target: Project, components: List<ObfuscatedComponent>, shouldRandomize: Boolean) {
+    private fun registerManifestPlaceholders(target: Project, components: List<ObfuscatedComponent>) {
         target.extensions.findByType(AppExtension::class.java)?.apply {
             this.applicationVariants.forEach { variant ->
+                // Register the app name
+                variant.mergedFlavor.manifestPlaceholders[MANIFEST_PLACEHOLDER_APP_NAME] =
+                    if (configPluginExtension.randomize) random.nextString(10)
+                    else configPluginExtension.appNameRes
+
+                // Register the components
                 components.forEach { component ->
                     variant.mergedFlavor.manifestPlaceholders[component.manifestPlaceholderKey] =
-                        if (shouldRandomize) component.manifestPlaceholderValue
+                        if (configPluginExtension.randomize) component.manifestPlaceholderValue
                         else component.originalComponentName
                 }
             }
@@ -131,6 +135,7 @@ class ObfuscationPlugin : Plugin<Project> {
     }
 
     private companion object {
+        private const val MANIFEST_PLACEHOLDER_APP_NAME = "appName"
         private const val COMPONENT_CONFIG_FILE_NAME = "ComponentConfig.kt"
     }
 }
