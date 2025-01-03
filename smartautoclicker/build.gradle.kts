@@ -1,5 +1,7 @@
+import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
+
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +19,7 @@
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
-    alias(libs.plugins.buzbuz.appIdRandomizer)
+    alias(libs.plugins.buzbuz.obfuscation)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
@@ -44,6 +46,8 @@ android {
     }
 
     defaultConfig {
+        applicationId = getExtraActualApplicationId()
+
         versionCode = 58
         versionName = "3.1.1"
     }

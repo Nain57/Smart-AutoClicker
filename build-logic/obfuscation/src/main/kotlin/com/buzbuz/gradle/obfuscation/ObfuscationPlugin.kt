@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.randomizer
+package com.buzbuz.gradle.obfuscation
 
 import com.buzbuz.gradle.core.android
-import com.buzbuz.gradle.randomizer.component.ConfigFileContentBuilder
-import com.buzbuz.gradle.randomizer.component.ObfuscatedComponent
-import com.buzbuz.gradle.randomizer.component.toDomain
-import com.buzbuz.gradle.randomizer.extensions.ObfuscationConfigPluginExtension
-import com.buzbuz.gradle.randomizer.tasks.registerCleanupTask
-import com.buzbuz.gradle.randomizer.tasks.registerRandomizeTask
+import com.buzbuz.gradle.obfuscation.component.ConfigFileContentBuilder
+import com.buzbuz.gradle.obfuscation.component.ObfuscatedComponent
+import com.buzbuz.gradle.obfuscation.component.toDomain
+import com.buzbuz.gradle.obfuscation.extensions.ObfuscationConfigPluginExtension
+import com.buzbuz.gradle.obfuscation.tasks.registerCleanupTask
+import com.buzbuz.gradle.obfuscation.tasks.registerRandomizeTask
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -30,7 +30,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import kotlin.random.Random
 
-class ApplicationIdRandomizerPlugin : Plugin<Project> {
+class ObfuscationPlugin : Plugin<Project> {
 
     private val random: Random = Random(System.currentTimeMillis())
 

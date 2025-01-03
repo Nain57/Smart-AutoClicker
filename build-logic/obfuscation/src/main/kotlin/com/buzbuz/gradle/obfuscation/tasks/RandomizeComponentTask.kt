@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.randomizer.tasks
+package com.buzbuz.gradle.obfuscation.tasks
 
-import com.buzbuz.gradle.randomizer.component.ObfuscatedComponent
-import com.buzbuz.gradle.randomizer.getExtraActualApplicationId
+import com.buzbuz.gradle.obfuscation.component.ObfuscatedComponent
+import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider

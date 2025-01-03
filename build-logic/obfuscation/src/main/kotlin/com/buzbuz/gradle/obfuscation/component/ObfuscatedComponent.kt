@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.randomizer.component
+package com.buzbuz.gradle.obfuscation.component
 
-import com.buzbuz.gradle.randomizer.extensions.ObfuscatedComponentNamedObject
-import com.buzbuz.gradle.randomizer.getExtraActualApplicationId
-import com.buzbuz.gradle.randomizer.getExtraOriginalApplicationId
-import com.buzbuz.gradle.randomizer.nextString
-import com.buzbuz.gradle.randomizer.sourceFolderPath
+import com.buzbuz.gradle.obfuscation.extensions.ObfuscatedComponentNamedObject
+import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
+import com.buzbuz.gradle.obfuscation.getExtraOriginalApplicationId
+import com.buzbuz.gradle.obfuscation.nextString
+import com.buzbuz.gradle.obfuscation.sourceFolderPath
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import kotlin.random.Random

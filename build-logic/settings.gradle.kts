@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-include(":application-id-randomizer")
+include(":obfuscation")
 include(":convention")
 include(":core")
 include(":parameters")

@@ -21,7 +21,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.buzbuz.gradle.buildlogic.randomizer"
+group = "com.buzbuz.gradle.buildlogic.obfuscation"
 
 // Configure the build-logic plugins to target JDK 17
 // This matches the JDK used to build the project, and is not related to what is running on device.
@@ -53,9 +53,9 @@ tasks {
 
 gradlePlugin {
     plugins {
-        register("applicationIdRandomizer") {
-            id = "com.buzbuz.gradle.randomizer"
-            implementationClass = "com.buzbuz.gradle.randomizer.ApplicationIdRandomizerPlugin"
+        register("obfuscation") {
+            id = "com.buzbuz.gradle.obfuscation"
+            implementationClass = "com.buzbuz.gradle.obfuscation.ObfuscationPlugin"
         }
     }
 }

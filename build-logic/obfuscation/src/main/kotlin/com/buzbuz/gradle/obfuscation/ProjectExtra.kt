@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.randomizer
+package com.buzbuz.gradle.obfuscation
 
 import org.gradle.api.Project
 import org.gradle.internal.extensions.core.extra
@@ -26,14 +26,14 @@ internal fun Project.sourceFolderPath(): String =
 
 internal fun Project.setExtraOriginalApplicationId(appId: String): Unit =
     rootProject.extra.set(EXTRA_APPLICATION_ID, appId)
-internal fun Project.getExtraOriginalApplicationId(): String =
+fun Project.getExtraOriginalApplicationId(): String =
     rootProject.extra.get(EXTRA_APPLICATION_ID) as String
 
 internal fun Project.setExtraActualApplicationId(appId: String): Unit =
-    rootProject.extra.set(EXTRA_RANDOMIZED_APPLICATION_ID, appId)
-internal fun Project.getExtraActualApplicationId(): String =
-    rootProject.extra.get(EXTRA_RANDOMIZED_APPLICATION_ID) as String
+    rootProject.extra.set(EXTRA_ACTUAL_APPLICATION_ID, appId)
+fun Project.getExtraActualApplicationId(): String =
+    rootProject.extra.get(EXTRA_ACTUAL_APPLICATION_ID) as String
 
 
-private const val EXTRA_APPLICATION_ID = "randomizer_applicationId"
-private const val EXTRA_RANDOMIZED_APPLICATION_ID = "randomizer_randomized_applicationId"
+private const val EXTRA_APPLICATION_ID = "obfuscation_applicationId"
+private const val EXTRA_ACTUAL_APPLICATION_ID = "obfuscation_actual_applicationId"
