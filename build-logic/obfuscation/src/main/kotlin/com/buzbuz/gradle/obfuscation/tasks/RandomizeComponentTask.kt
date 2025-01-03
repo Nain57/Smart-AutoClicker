@@ -56,7 +56,7 @@ private fun ObfuscatedComponent.randomize(target: Project) {
 
     // Replace the package declaration and the class name
     val updatedContent = fileContent
-        .replace(Regex("package\\s+$originalComponentName"), "package ${target.getExtraActualApplicationId()}")
+        .replace(Regex("package\\s+$originalPackageName"), "package ${target.getExtraActualApplicationId()}")
         .replace("\\b$originalClassName\\b".toRegex(), randomizedClassName) // Replace old class name with the new one
 
     // Write the updated content back to the file
