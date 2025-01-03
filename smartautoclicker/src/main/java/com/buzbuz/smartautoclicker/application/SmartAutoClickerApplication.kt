@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker
+package com.buzbuz.smartautoclicker.application
 
 import android.app.Application
+import com.buzbuz.smartautoclicker.ComponentConfig
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsManager
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
@@ -25,12 +26,12 @@ import javax.inject.Inject
 @HiltAndroidApp
 class SmartAutoClickerApplication : Application() {
 
-    private val componentConfig = ComponentConfig
     @Inject lateinit var appComponentsManager: AppComponentsManager
 
     override fun onCreate() {
         super.onCreate()
 
+        val componentConfig = ComponentConfig
         appComponentsManager.apply {
             registerOriginalAppId(componentConfig.ORIGINAL_APP_ID)
             registerSmartAutoClickerService(componentConfig.smartAutoClickerService)

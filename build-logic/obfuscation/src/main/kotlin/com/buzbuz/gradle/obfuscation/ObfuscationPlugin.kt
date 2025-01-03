@@ -17,13 +17,16 @@
 package com.buzbuz.gradle.obfuscation
 
 import com.android.build.gradle.AppExtension
-import com.buzbuz.gradle.core.android
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+import com.buzbuz.gradle.obfuscation.application.ObfuscatedApplication
+import com.buzbuz.gradle.obfuscation.application.toDomain
 import com.buzbuz.gradle.obfuscation.component.ConfigFileContentBuilder
 import com.buzbuz.gradle.obfuscation.component.ObfuscatedComponent
 import com.buzbuz.gradle.obfuscation.component.toDomain
 import com.buzbuz.gradle.obfuscation.extensions.ObfuscationConfigPluginExtension
 import com.buzbuz.gradle.obfuscation.tasks.registerCleanupTask
-import com.buzbuz.gradle.obfuscation.tasks.registerRandomizeTask
+import com.buzbuz.gradle.obfuscation.tasks.registerRandomizeApplicationTask
+import com.buzbuz.gradle.obfuscation.tasks.registerRandomizeComponentTask
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -38,6 +41,9 @@ class ObfuscationPlugin : Plugin<Project> {
     private lateinit var target: Project
 
     private lateinit var configPluginExtension: ObfuscationConfigPluginExtension
+    private val obfuscatedApplication: ObfuscatedApplication by lazy {
+        configPluginExtension.obfuscatedApplication.first().toDomain(target, random)
+    }
     private val obfuscatedComponents: List<ObfuscatedComponent> by lazy {
         configPluginExtension.obfuscatedComponents.map { namedObject ->
             namedObject.toDomain(target, random)
@@ -58,6 +64,13 @@ class ObfuscationPlugin : Plugin<Project> {
     }
 
     private fun onConfigure() {
+        // Delete the build folder if we randomize
+        if (configPluginExtension.randomize) {
+            target.layout.buildDirectory.asFileTree.files.forEach { buildFile ->
+                buildFile.delete()
+            }
+        }
+
         // Generate the randomized application id, if needed
         val actualAppId = generateApplicationId(
             shouldRandomize = configPluginExtension.randomize,
@@ -76,24 +89,31 @@ class ObfuscationPlugin : Plugin<Project> {
 
     private fun afterEvaluate() {
         // Create values for the manifests
-        registerManifestPlaceholders(
-            target = target,
-            components = obfuscatedComponents,
-        )
+        registerManifestPlaceholders(target)
 
         if (!configPluginExtension.randomize) return
+
+        val randomizeApplicationTask = target.registerRandomizeApplicationTask(obfuscatedApplication)
+        val cleanupApplicationTask = target.registerCleanupTask(obfuscatedApplication)
+
+        target.tasks.withType(KotlinCompile::class.java).configureEach {
+            finalizedBy(cleanupApplicationTask)
+        }
 
         obfuscatedComponents.forEach { component ->
             target.logger.info("Randomizing ${component.originalClassName}")
 
-            val randomizeTask = target.registerRandomizeTask(component)
-            val cleanupTask = target.registerCleanupTask(component)
-
-            // Hook the tasks into the build lifecycle
+            // Hook the task into the build lifecycle
+            val randomizeComponentsTask = target.registerRandomizeComponentTask(component)
+            randomizeComponentsTask.dependsOn(randomizeApplicationTask)
             target.tasks.withType(KotlinCompile::class.java).configureEach {
-                dependsOn(randomizeTask)
-                finalizedBy(cleanupTask)
+                dependsOn(randomizeComponentsTask)
             }
+
+            // Hook cleanupComponentsTask to run after the `mergeProjectDex` task
+            val cleanupComponentsTask = target.registerCleanupTask(component)
+            target.tasks.first { task -> task.name.startsWith("package") }
+                .finalizedBy(cleanupComponentsTask)
         }
     }
 
@@ -116,7 +136,7 @@ class ObfuscationPlugin : Plugin<Project> {
         configFile.writeText(configFileContent)
     }
 
-    private fun registerManifestPlaceholders(target: Project, components: List<ObfuscatedComponent>) {
+    private fun registerManifestPlaceholders(target: Project) {
         target.extensions.findByType(AppExtension::class.java)?.apply {
             this.applicationVariants.forEach { variant ->
                 // Register the app name
@@ -124,8 +144,13 @@ class ObfuscationPlugin : Plugin<Project> {
                     if (configPluginExtension.randomize) random.nextString(10)
                     else configPluginExtension.appNameRes
 
+                // Register the application
+                variant.mergedFlavor.manifestPlaceholders[obfuscatedApplication.manifestPlaceholderKey] =
+                    if (configPluginExtension.randomize) obfuscatedApplication.manifestPlaceholderValue
+                    else obfuscatedApplication.originalFullClassName
+
                 // Register the components
-                components.forEach { component ->
+                obfuscatedComponents.forEach { component ->
                     variant.mergedFlavor.manifestPlaceholders[component.manifestPlaceholderKey] =
                         if (configPluginExtension.randomize) component.manifestPlaceholderValue
                         else component.originalComponentName

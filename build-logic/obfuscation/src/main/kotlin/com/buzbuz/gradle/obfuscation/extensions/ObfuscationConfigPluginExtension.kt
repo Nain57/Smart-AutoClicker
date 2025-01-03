@@ -23,6 +23,7 @@ import org.gradle.kotlin.dsl.create
 
 abstract class ObfuscationConfigPluginExtension {
 
+    abstract val obfuscatedApplication: NamedDomainObjectContainer<ObfuscatedApplicationNamedObject>
     abstract val obfuscatedComponents: NamedDomainObjectContainer<ObfuscatedComponentNamedObject>
 
     internal lateinit var originalApplicationId: String

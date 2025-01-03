@@ -25,6 +25,9 @@ plugins {
 }
 
 obfuscationConfig {
+    obfuscatedApplication {
+        create("com.buzbuz.smartautoclicker.application.SmartAutoClickerApplication")
+    }
     obfuscatedComponents {
         create("com.buzbuz.smartautoclicker.scenarios.ScenarioActivity")
         create("com.buzbuz.smartautoclicker.SmartAutoClickerService")
