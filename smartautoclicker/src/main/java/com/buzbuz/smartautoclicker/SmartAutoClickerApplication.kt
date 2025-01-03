@@ -32,6 +32,7 @@ class SmartAutoClickerApplication : Application() {
         super.onCreate()
 
         appComponentsManager.apply {
+            registerOriginalAppId(componentConfig.ORIGINAL_APP_ID)
             registerSmartAutoClickerService(componentConfig.smartAutoClickerService)
             registerScenarioActivity(componentConfig.scenarioActivity)
         }

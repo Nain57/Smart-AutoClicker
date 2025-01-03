@@ -40,10 +40,15 @@ internal class ConfigFileContentBuilder {
             object ComponentConfig {
         """.trimIndent()
 
-    private fun buildContent(): String =
-        obfuscatedComponents!!.fold("") { acc, new ->
+    private fun buildContent(): String {
+        val appIdVal = createAppIdConstVal(appId ?: "")
+        val componentVals = obfuscatedComponents!!.fold("") { acc, new ->
             acc + "\n" + createComponentConstVal(new)
         }
+
+        return appIdVal + componentVals
+    }
+
 
     private fun createComponentConstVal(obfuscatedComponent: ObfuscatedComponent): String = with(obfuscatedComponent) {
         val variableName = originalClassName.replaceFirstChar { it.lowercase() }
@@ -54,4 +59,7 @@ internal class ConfigFileContentBuilder {
         return "    val $variableName = ComponentName.unflattenFromString(\"$flattenComponentName\") \n" +
                 "            ?: throw IllegalStateException(\"Invalid component name for $variableName\")"
     }
+
+    private fun createAppIdConstVal(appId: String): String =
+        "\n    const val ORIGINAL_APP_ID = \"$appId\" \n"
 }

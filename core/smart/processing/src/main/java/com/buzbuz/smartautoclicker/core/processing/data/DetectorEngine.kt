@@ -22,10 +22,10 @@ import android.graphics.Bitmap
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
+
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
-
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
@@ -41,9 +41,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
@@ -67,6 +65,7 @@ class DetectorEngine @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val displayRecorder: DisplayRecorder,
+    private val appComponentsProvider: AppComponentsProvider,
 ) {
 
     /** Listener upon orientation changes. */
@@ -191,8 +190,9 @@ class DetectorEngine @Inject constructor(
             detectionProgressListener = progressListener
             progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
 
+
             scenarioProcessor = ScenarioProcessor(
-                processingTag = context.packageName,
+                processingTag = appComponentsProvider.originalAppId,
                 imageDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
