@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker
+package com.buzbuz.gradle.obfuscation.extensions
 
-import android.app.Application
-import com.google.android.material.color.DynamicColors
-import dagger.hilt.android.HiltAndroidApp
-
-@HiltAndroidApp
-class SmartAutoClickerApplication : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        DynamicColors.applyToActivitiesIfAvailable(this)
-    }
+abstract class ObfuscatedComponentNamedObject {
+    abstract val name: String
 }

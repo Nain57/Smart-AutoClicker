@@ -37,6 +37,7 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.android.gradlePlugin)
+    implementation(project(":core"))
 }
 
 tasks {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.parameters
+package com.buzbuz.smartautoclicker.core.base.di
 
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
+object BaseHiltModule {
 
-internal fun Project.isBuildForVariant(variantName: String): Boolean {
-    val normalizedName = variantName.uppercaseFirstChar()
-
-    return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
-        taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
-    } != null
+    @Provides
+    @Singleton
+    fun providesAppComponentsProvider(appComponentsManager: AppComponentsManager): AppComponentsProvider =
+        appComponentsManager
 }

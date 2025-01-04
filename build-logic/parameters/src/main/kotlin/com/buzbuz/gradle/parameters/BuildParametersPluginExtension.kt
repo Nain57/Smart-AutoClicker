@@ -16,9 +16,9 @@
  */
 package com.buzbuz.gradle.parameters
 
+import com.buzbuz.gradle.core.isBuildForVariant
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
-import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 import java.io.FileInputStream
 import java.util.Properties

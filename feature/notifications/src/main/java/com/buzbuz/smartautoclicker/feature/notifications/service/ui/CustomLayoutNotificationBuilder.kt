@@ -21,6 +21,7 @@ import android.content.Context
 import android.widget.RemoteViews
 import androidx.annotation.IdRes
 import androidx.core.app.NotificationCompat
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.feature.notifications.R
 import com.buzbuz.smartautoclicker.feature.notifications.common.notificationIconResId
 import com.buzbuz.smartautoclicker.feature.notifications.service.model.ServiceNotificationAction
@@ -31,6 +32,7 @@ internal class CustomLayoutNotificationBuilder(
     context: Context,
     channelId: String,
     initialState: ServiceNotificationState,
+    private val appComponentsProvider: AppComponentsProvider,
 ) : ServiceNotificationBuilder(context, channelId) {
 
     init {
@@ -84,9 +86,11 @@ internal class CustomLayoutNotificationBuilder(
             addAction(context, R.id.button_config, ServiceNotificationAction.Config)
             addAction(context, R.id.button_exit, ServiceNotificationAction.Stop)
         }
+
+    private fun RemoteViews.addAction(context: Context, @IdRes viewId: Int, action: ServiceNotificationAction) {
+        setImageViewResource(viewId, action.iconRes)
+        setOnClickPendingIntent(viewId, action.getPendingIntent(context, appComponentsProvider))
+    }
 }
 
-private fun RemoteViews.addAction(context: Context, @IdRes viewId: Int, action: ServiceNotificationAction) {
-    setImageViewResource(viewId, action.iconRes)
-    setOnClickPendingIntent(viewId, action.getPendingIntent(context))
-}
+

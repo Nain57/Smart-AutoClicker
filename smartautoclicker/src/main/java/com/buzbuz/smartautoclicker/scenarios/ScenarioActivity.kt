@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarn
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
+import com.buzbuz.smartautoclicker.scenarios.viewmodel.ScenarioViewModel
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint

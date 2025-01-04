@@ -23,6 +23,7 @@ import android.os.Build
 import android.util.Log
 
 import androidx.core.app.NotificationManagerCompat
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
@@ -39,6 +40,7 @@ import com.buzbuz.smartautoclicker.feature.notifications.service.ui.newServiceNo
 class ServiceNotificationController(
     context: Context,
     private val settingsRepository: SettingsRepository,
+    private val appComponentsProvider: AppComponentsProvider,
     listener: ServiceNotificationListener,
 ) {
 
@@ -73,7 +75,12 @@ class ServiceNotificationController(
         val forceLegacyNotification = settingsRepository.isLegacyNotificationUiEnabled()
 
         val builder = notificationBuilder
-            ?: context.newServiceNotificationBuilder(SERVICE_CHANNEL_ID, notificationState!!, forceLegacyNotification)
+            ?: context.newServiceNotificationBuilder(
+                channelId = SERVICE_CHANNEL_ID,
+                initialState = notificationState!!,
+                appComponentsProvider = appComponentsProvider,
+                forceLegacy = forceLegacyNotification,
+            )
         notificationBuilder = builder
         return builder.build()
     }

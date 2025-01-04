@@ -28,6 +28,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
+include(":obfuscation")
 include(":convention")
+include(":core")
 include(":parameters")
 include(":source-download")

@@ -17,6 +17,7 @@
 package com.buzbuz.gradle.parameters
 
 import com.android.build.api.dsl.LibraryProductFlavor
+import com.buzbuz.gradle.core.isBuildForVariant
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
@@ -26,6 +27,10 @@ class BuildParameter(private val project: Project, private val name: String, pri
     fun asString(): String? {
         if (value == null) project.logger.info("INFO: Build property $name not found.")
         return value
+    }
+
+    fun asBoolean(): Boolean {
+        return value == "true" || value == "TRUE"
     }
 
     fun asIntBuildConfigField(variant: LibraryProductFlavor, default: Int? = null) {

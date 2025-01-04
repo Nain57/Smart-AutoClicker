@@ -143,6 +143,7 @@ buzbuz-androidLibrary = { id = "com.buzbuz.gradle.android.library", version = "u
 buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspecified" }
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }
 buzbuz-androidSigning = { id = "com.buzbuz.gradle.android.signing", version = "unspecified" }
+buzbuz-obfuscation = { id = "com.buzbuz.gradle.obfuscation", version = "unspecified" }
 buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = "unspecified" }
 buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecified" }
 buzbuz-hilt = { id = "com.buzbuz.gradle.android.hilt", version = "unspecified" }

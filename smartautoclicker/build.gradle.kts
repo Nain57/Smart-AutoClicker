@@ -1,5 +1,7 @@
+import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
+
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +19,38 @@
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
+    alias(libs.plugins.buzbuz.obfuscation)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
 
+obfuscationConfig {
+    obfuscatedApplication {
+        create("com.buzbuz.smartautoclicker.application.SmartAutoClickerApplication")
+    }
+    obfuscatedComponents {
+        create("com.buzbuz.smartautoclicker.scenarios.ScenarioActivity")
+        create("com.buzbuz.smartautoclicker.SmartAutoClickerService")
+    }
+
+    setup(
+        applicationId = "com.buzbuz.smartautoclicker",
+        appNameResId = "@string/app_name",
+        shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
+                buildParameters.isBuildForVariant("fDroid"),
+    )
+}
+
 android {
     namespace = "com.buzbuz.smartautoclicker"
-    buildFeatures.viewBinding = true
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
 
     defaultConfig {
-        applicationId = "com.buzbuz.smartautoclicker"
+        applicationId = getExtraActualApplicationId()
 
         versionCode = 58
         versionName = "3.1.1"

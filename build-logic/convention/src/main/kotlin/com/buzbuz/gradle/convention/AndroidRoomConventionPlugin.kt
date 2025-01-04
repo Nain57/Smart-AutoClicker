@@ -19,9 +19,9 @@ package com.buzbuz.gradle.convention
 import androidx.room.gradle.RoomExtension
 
 import com.buzbuz.gradle.convention.utils.getLibs
-import com.buzbuz.gradle.convention.utils.implementation
-import com.buzbuz.gradle.convention.utils.ksp
-import com.buzbuz.gradle.convention.utils.plugins
+import com.buzbuz.gradle.core.implementation
+import com.buzbuz.gradle.core.ksp
+import com.buzbuz.gradle.core.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

@@ -22,6 +22,7 @@ import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -52,6 +53,7 @@ import kotlinx.coroutines.launch
 class LocalService(
     private val context: Context,
     private val overlayManager: OverlayManager,
+    private val appComponentsProvider: AppComponentsProvider,
     private val settingsRepository: SettingsRepository,
     private val detectionRepository: DetectionRepository,
     private val dumbEngine: DumbEngine,
@@ -73,6 +75,7 @@ class LocalService(
     private val notificationController: ServiceNotificationController by lazy {
         ServiceNotificationController(
             context = context,
+            appComponentsProvider = appComponentsProvider,
             settingsRepository = settingsRepository,
             listener = object : ServiceNotificationListener {
                 override fun onPlay() = play()
