@@ -18,6 +18,7 @@ package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.convention.utils.getLibs
 import com.buzbuz.gradle.core.androidLib
+import com.buzbuz.gradle.core.kotlinOptions
 import com.buzbuz.gradle.core.plugins
 
 import org.gradle.api.JavaVersion
@@ -44,6 +45,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             compileOptions.apply {
                 sourceCompatibility = JavaVersion.VERSION_21
                 targetCompatibility = JavaVersion.VERSION_21
+            }
+
+            kotlinOptions {
+                jvmTarget = "21"
             }
         }
     }
