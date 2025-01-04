@@ -27,11 +27,11 @@ jobs:
         with:
           ref: "${{ steps.get_latest_release.outputs.tag_name }}"
 
-      - name: Setup JDK 17
+      - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Restore keystore
         run: |
