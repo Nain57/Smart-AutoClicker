@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.convention.utils.getLibs
+import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.testImplementation
 import com.buzbuz.gradle.core.android
 import com.buzbuz.gradle.core.plugins
@@ -31,7 +31,7 @@ class AndroidUnitTestConventionPlugin : Plugin<Project> {
         val libs = getLibs()
 
         plugins {
-            apply(libs.plugins.jetbrainsKotlinAndroid)
+            apply(libs.plugins.jetBrains.kotlin.android)
         }
 
         android {

@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.convention.utils.getLibs
+import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.androidLib
 import com.buzbuz.gradle.core.kotlinOptions
 import com.buzbuz.gradle.core.plugins
@@ -30,25 +30,25 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         val libs = getLibs()
 
         plugins {
-            apply(libs.plugins.androidLibrary)
-            apply(libs.plugins.jetbrainsKotlinAndroid)
+            apply(libs.plugins.android.library)
+            apply(libs.plugins.jetBrains.kotlin.android)
         }
 
         androidLib {
-            compileSdk = libs.versions.androidCompileSdk
+            compileSdk = libs.versions.android.compileSdk
 
             defaultConfig.apply {
-                targetSdk = libs.versions.androidCompileSdk
-                minSdk = libs.versions.androidMinSdk
+                targetSdk = libs.versions.android.compileSdk
+                minSdk = libs.versions.android.minSdk
             }
 
             compileOptions.apply {
-                sourceCompatibility = JavaVersion.VERSION_21
-                targetCompatibility = JavaVersion.VERSION_21
+                sourceCompatibility = libs.versions.java
+                targetCompatibility = libs.versions.java
             }
 
             kotlinOptions {
-                jvmTarget = "21"
+                jvmTarget = libs.versions.jvmTarget
             }
         }
     }

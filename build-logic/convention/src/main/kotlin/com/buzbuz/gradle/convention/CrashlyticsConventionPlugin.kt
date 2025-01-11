@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.convention.utils.getLibs
+import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.playStoreImplementation
 import com.buzbuz.gradle.core.android
 import com.buzbuz.gradle.core.plugins
@@ -34,8 +34,8 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
         val libs = getLibs()
 
         plugins {
-            apply(libs.plugins.googleCrashlytics)
-            apply(libs.plugins.googleGms)
+            apply(libs.plugins.google.crashlytics)
+            apply(libs.plugins.google.gms)
         }
 
         android {

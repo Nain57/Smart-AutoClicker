@@ -18,7 +18,7 @@ package com.buzbuz.gradle.convention
 
 import androidx.room.gradle.RoomExtension
 
-import com.buzbuz.gradle.convention.utils.getLibs
+import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.implementation
 import com.buzbuz.gradle.core.ksp
 import com.buzbuz.gradle.core.plugins
@@ -34,8 +34,8 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
         val libs = getLibs()
 
         plugins {
-            apply(libs.plugins.androidxRoom)
-            apply(libs.plugins.googleKsp)
+            apply(libs.plugins.androidX.room)
+            apply(libs.plugins.google.ksp)
         }
 
         extensions.configure<RoomExtension> {

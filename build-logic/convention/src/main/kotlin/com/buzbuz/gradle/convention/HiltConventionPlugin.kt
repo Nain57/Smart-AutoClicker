@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.convention.utils.getLibs
+import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.implementation
 import com.buzbuz.gradle.core.ksp
 import com.buzbuz.gradle.core.kspTest
@@ -32,8 +32,8 @@ class HiltConventionPlugin : Plugin<Project> {
         val libs = getLibs()
 
         plugins {
-            apply(libs.plugins.googleKsp)
-            apply(libs.plugins.googleDaggerHiltAndroid)
+            apply(libs.plugins.google.ksp)
+            apply(libs.plugins.google.daggerHiltAndroid)
         }
 
         dependencies {
