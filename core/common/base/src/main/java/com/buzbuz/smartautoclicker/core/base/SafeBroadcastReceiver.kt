@@ -29,8 +29,6 @@ abstract class SafeBroadcastReceiver(private val intentFilter: IntentFilter) : B
         get() = registrationContext != null
 
     fun register(context: Context, exported: Boolean = true) {
-        if (isRegistered) return
-
         registrationContext = context
         ContextCompat.registerReceiver(
             context,
@@ -43,11 +41,13 @@ abstract class SafeBroadcastReceiver(private val intentFilter: IntentFilter) : B
     }
 
     fun unregister() {
-        if (!isRegistered) return
+        try {
+            registrationContext?.unregisterReceiver(this)
+        } catch (iaEx: IllegalArgumentException) {
+            return
+        }
 
-        registrationContext!!.unregisterReceiver(this)
         registrationContext = null
-
         onUnregistered()
     }
 
