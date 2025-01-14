@@ -41,6 +41,13 @@ internal sealed class InAppProduct {
         override val description = productDetails.description
         override val price: String= productDetails.price
     }
+
+    data class Debug(
+        override val productDetails: Any = Unit,
+        override val title: String = "Test Product",
+        override val description: String = "Test description",
+        override val price: String = "4.99€",
+    ) : InAppProduct()
 }
 
 internal fun ProductDetails.toInAppProduct(): InAppProduct =

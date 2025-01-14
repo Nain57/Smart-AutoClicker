@@ -99,6 +99,7 @@ internal class BillingClientProxy(
             when (product) {
                 is InAppProduct.Modern -> billingFlowQueryParams(product.productDetails)
                 is InAppProduct.Legacy -> legacyBillingFlowQueryParams(product.productDetails)
+                else -> throw IllegalStateException("Can't start flow for debug values")
             },
         )
 

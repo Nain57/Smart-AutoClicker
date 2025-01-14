@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk.IAdsSdk
 import com.buzbuz.smartautoclicker.feature.revenue.data.getAdsDebugTestDevicesIds
 
@@ -34,7 +35,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
@@ -60,13 +60,26 @@ internal class InterstitialAdsDataSource @Inject constructor(
     private val pendingLoadRequest: MutableStateFlow<Boolean> =
         MutableStateFlow(false)
 
+    private val debugRemoteAdState: MutableStateFlow<RemoteAdState?> =
+        MutableStateFlow(null)
     private val _remoteAdState: MutableStateFlow<RemoteAdState> =
         MutableStateFlow(RemoteAdState.SdkNotInitialized)
-    val remoteAdState: StateFlow<RemoteAdState> = _remoteAdState
+
+    val remoteAdState: Flow<RemoteAdState> = combine(_remoteAdState, debugRemoteAdState) { adState, debugState ->
+        debugState ?: adState
+    }
+
+    private var debugReceiver: DebugAdStateReceiver? = null
 
     init {
         loadAdRequestConsumerFlow(context, _remoteAdState, pendingLoadRequest)
             .launchIn(coroutineScopeMain)
+
+        if (BuildConfig.DEBUG) {
+            debugReceiver = DebugAdStateReceiver { adState ->
+                debugRemoteAdState.value = adState
+            }.apply { register(context) }
+        }
     }
 
     fun initialize(context: Context) {

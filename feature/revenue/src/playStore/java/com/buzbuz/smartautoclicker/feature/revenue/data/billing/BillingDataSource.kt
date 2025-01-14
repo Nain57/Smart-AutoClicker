@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,25 @@
 package com.buzbuz.smartautoclicker.feature.revenue.data.billing
 
 import android.app.Activity
+import android.content.Context
 import com.android.billingclient.api.Purchase
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.InAppProduct
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingClientProxy
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingServiceConnection
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.BillingUiFlowState
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -38,6 +43,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class BillingDataSource @Inject constructor(
+    @ApplicationContext context: Context,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val billingServiceConnection: BillingServiceConnection,
     private val productDetailsManager: ProductDetailsManager,
@@ -49,12 +55,19 @@ internal class BillingDataSource @Inject constructor(
 
     private var billingClient: BillingClientProxy? = null
 
-    val product: Flow<InAppProduct?> =
-        productDetailsManager.productDetails
+    private val debugProduct: MutableStateFlow<InAppProduct?> =
+        MutableStateFlow(null)
+    val product: Flow<InAppProduct?> = combine(productDetailsManager.productDetails, debugProduct) { details, debugDetails ->
+        debugDetails ?: details
+    }
 
-    val purchaseState: Flow<InAppPurchaseState> =
-        purchaseManager.state
+    private val debugPurchaseState: MutableStateFlow<InAppPurchaseState?> =
+        MutableStateFlow(null)
+    val purchaseState: Flow<InAppPurchaseState> = combine(purchaseManager.state, debugPurchaseState) { state, debugState ->
+        debugState ?: state
+    }
 
+    private var debugReceiver: DebugBillingStateReceiver? = null
 
     init {
         billingServiceConnection.monitorConnection(
@@ -65,6 +78,16 @@ internal class BillingDataSource @Inject constructor(
             },
             onNewPurchasesListener = ::onPurchaseUpdatedFromBillingUiFlow
         )
+
+        if (BuildConfig.DEBUG) {
+            debugReceiver = DebugBillingStateReceiver { billingState ->
+                debugPurchaseState.value = billingState
+                debugProduct.value =
+                    if (billingState == null) null
+                    else InAppProduct.Debug()
+
+            }.apply { register(context) }
+        }
     }
 
     private fun onBillingClientConnected(client: BillingClientProxy) {
