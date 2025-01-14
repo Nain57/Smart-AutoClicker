@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.quality.domain
 
+import android.content.Context
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.fragment.app.FragmentActivity
@@ -26,19 +27,23 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
+import com.buzbuz.smartautoclicker.core.common.quality.BuildConfig
 import com.buzbuz.smartautoclicker.core.common.quality.data.INVALID_TIME
 import com.buzbuz.smartautoclicker.core.common.quality.data.QualityMetrics
 import com.buzbuz.smartautoclicker.core.common.quality.ui.AccessibilityTroubleshootingDialog
 import com.buzbuz.smartautoclicker.core.common.quality.ui.AccessibilityTroubleshootingDialog.Companion.FRAGMENT_RESULT_KEY_TROUBLESHOOTING
 import com.buzbuz.smartautoclicker.core.common.quality.ui.AccessibilityTroubleshootingDialog.Companion.FRAGMENT_TAG_TROUBLESHOOTING_DIALOG
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -52,6 +57,7 @@ import javax.inject.Singleton
 
 @Singleton
 class QualityRepository @Inject constructor(
+    @ApplicationContext context: Context,
     private val qualityMetricsMonitor: QualityMetricsMonitor,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
@@ -76,7 +82,21 @@ class QualityRepository @Inject constructor(
     private val _quality: MutableStateFlow<Quality> = MutableStateFlow(Quality.Unknown)
     val quality: StateFlow<Quality> = _quality
 
-    init { monitorQuality(startingQuality, _quality).launchIn(coroutineScopeIo) }
+    private var backToHighJob: Job? = null
+
+    private val debugQuality: MutableStateFlow<Quality?> =
+        MutableStateFlow(null)
+    private var debugReceiver: DebugQualityReceiver? = null
+
+    init {
+        monitorQuality(startingQuality, debugQuality, _quality).launchIn(coroutineScopeIo)
+
+        if (BuildConfig.DEBUG) {
+            debugReceiver = DebugQualityReceiver { quality ->
+                debugQuality.value = quality
+            }.apply { register(context) }
+        }
+    }
 
     /**
      * Starts the ui flow for the troubleshooting, if the user needs it.
@@ -124,19 +144,26 @@ class QualityRepository @Inject constructor(
         AccessibilityTroubleshootingDialog().show(activity.supportFragmentManager, FRAGMENT_TAG_TROUBLESHOOTING_DIALOG)
     }
 
-    private fun monitorQuality(startingQuality: Flow<Quality>, currentQuality: MutableStateFlow<Quality>) : Flow<Quality> =
-        startingQuality.onEach { quality ->
+    private fun monitorQuality(
+        startingQuality: Flow<Quality>,
+        debugQuality: Flow<Quality?>,
+        currentQuality: MutableStateFlow<Quality>,
+    ) : Flow<Quality?> =
+        combine(startingQuality, debugQuality) { starting, debug ->
+            debug ?: starting
+        }.onEach { quality ->
             currentQuality.emit(quality)
+            backToHighJob?.cancel()
 
             quality.backToHighDelay?.let { backToHighDuration ->
-                delay(backToHighDuration)
+                backToHighJob = coroutineScopeIo.launch {
+                    delay(backToHighDuration)
 
-                Log.i(TAG, "Grace period expired, quality is back to High")
-                currentQuality.emit(Quality.High)
+                    Log.i(TAG, "Grace period expired, quality is back to High")
+                    currentQuality.emit(Quality.High)
+                }
             }
         }
-
-
 
     private fun QualityMetrics.toQuality(): Quality = when {
         // Check if that's not the first time the service is started

@@ -23,7 +23,11 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.common.quality"
-    buildFeatures.viewBinding = true
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
 }
 
 dependencies {
