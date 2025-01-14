@@ -23,7 +23,9 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk.IAdsSdk
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -70,63 +72,63 @@ class InterstitialAdsDataSourceTests {
     }
 
     @Test
-    fun `initial state`() {
-        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.value)
+    fun `initial state`() = runTest {
+        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `initialize sdk`() {
+    fun `initialize sdk`() = runTest {
         testedDataSource.initializeAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Initialized, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Initialized, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `load initialized`() {
+    fun `load initialized`() = runTest {
         testedDataSource.initializeAndWaitForCoroutines()
         testedDataSource.loadAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Loading, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Loading, testedDataSource.remoteAdState.first())
         verify(mockAdsSdk).loadInterstitialAd(eq(mockContext), any(), any())
     }
 
     @Test
-    fun `load pending execution`() {
+    fun `load pending execution`() = runTest {
         testedDataSource.loadAdAndWaitForCoroutines()
 
         // Ensure the loading request doesn't change the ad state
-        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.first())
 
         testedDataSource.initializeAndWaitForCoroutines()
 
         // Previous loading request should be executed automatically
-        assertEquals(RemoteAdState.Loading, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Loading, testedDataSource.remoteAdState.first())
         verify(mockAdsSdk, times(1)).loadInterstitialAd(eq(mockContext), any(), any())
     }
 
     @Test
-    fun `load complete`() {
+    fun `load complete`() = runTest {
         mockAdsSdk.mockLoadImmediateCompletion()
 
         testedDataSource.initializeAndWaitForCoroutines()
         testedDataSource.loadAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.NotShown, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.NotShown, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `load other states`() {
+    fun `load other states`() = runTest {
         mockAdsSdk.mockLoadImmediateCompletion()
 
         testedDataSource.initializeAndWaitForCoroutines()
         testedDataSource.loadAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.NotShown, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.NotShown, testedDataSource.remoteAdState.first())
         verify(mockAdsSdk, times(1)).loadInterstitialAd(eq(mockContext), any(), any())
     }
 
     @Test
-    fun `load retry and error`() {
+    fun `load retry and error`() = runTest {
         val errorCode = 1
         val errorMessage = "error"
         mockAdsSdk.mockLoadImmediateFailure(errorCode, errorMessage)
@@ -134,7 +136,7 @@ class InterstitialAdsDataSourceTests {
         testedDataSource.initializeAndWaitForCoroutines()
         testedDataSource.loadAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Error.LoadingError(errorCode, errorMessage), testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Error.LoadingError(errorCode, errorMessage), testedDataSource.remoteAdState.first())
         verify(mockAdsSdk, times(MAX_LOADING_RETRIES)).loadInterstitialAd(eq(mockContext), any(), any())
     }
 
@@ -158,7 +160,7 @@ class InterstitialAdsDataSourceTests {
     }
 
     @Test
-    fun `show success`() {
+    fun `show success`() = runTest {
         mockAdsSdk.mockLoadImmediateCompletion()
         mockAdsSdk.mockShown()
 
@@ -166,11 +168,11 @@ class InterstitialAdsDataSourceTests {
         testedDataSource.loadAdAndWaitForCoroutines()
         testedDataSource.showAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Showing, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Showing, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `shown dismiss with impression`() {
+    fun `shown dismiss with impression`() = runTest {
         mockAdsSdk.mockLoadImmediateCompletion()
         mockAdsSdk.mockShown()
         mockAdsSdk.mockDismissed(impression = true)
@@ -179,11 +181,11 @@ class InterstitialAdsDataSourceTests {
         testedDataSource.loadAdAndWaitForCoroutines()
         testedDataSource.showAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Shown, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Shown, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `shown dismiss without impression`() {
+    fun `shown dismiss without impression`() = runTest {
         mockAdsSdk.mockLoadImmediateCompletion()
         mockAdsSdk.mockShown()
         mockAdsSdk.mockDismissed(impression = false)
@@ -192,11 +194,11 @@ class InterstitialAdsDataSourceTests {
         testedDataSource.loadAdAndWaitForCoroutines()
         testedDataSource.showAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Error.NoImpressionError, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Error.NoImpressionError, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `shown error`() {
+    fun `shown error`() = runTest {
         val errorCode = 1
         val errorMessage = "error"
         mockAdsSdk.mockLoadImmediateCompletion()
@@ -207,23 +209,34 @@ class InterstitialAdsDataSourceTests {
         testedDataSource.loadAdAndWaitForCoroutines()
         testedDataSource.showAdAndWaitForCoroutines()
 
-        assertEquals(RemoteAdState.Error.ShowError(errorCode, errorMessage), testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Error.ShowError(errorCode, errorMessage), testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `reset from sdk not initialized`() {
+    fun `reset from sdk not initialized`() = runTest {
         testedDataSource.resetAndWaitForCoroutines()
-        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.SdkNotInitialized, testedDataSource.remoteAdState.first())
     }
 
     @Test
-    fun `reset from other`() {
+    fun `reset from error`() = runTest {
+        mockAdsSdk.mockLoadImmediateCompletion()
+        mockAdsSdk.mockShowError(92, "errorMessage")
+        testedDataSource.initializeAndWaitForCoroutines()
+        testedDataSource.loadAdAndWaitForCoroutines()
+        testedDataSource.showAdAndWaitForCoroutines()
+
+        testedDataSource.loadAdAndWaitForCoroutines()
+
+        assertEquals(RemoteAdState.NotShown, testedDataSource.remoteAdState.first())
+    }
+
+    @Test
+    fun `reset from other states`() = runTest {
         testedDataSource.initializeAndWaitForCoroutines()
         testedDataSource.loadAdAndWaitForCoroutines()
 
-        testedDataSource.resetAndWaitForCoroutines()
-
-        assertEquals(RemoteAdState.Initialized, testedDataSource.remoteAdState.value)
+        assertEquals(RemoteAdState.Loading, testedDataSource.remoteAdState.first())
     }
 
     private fun InterstitialAdsDataSource.initializeAndWaitForCoroutines() {

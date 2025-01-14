@@ -76,7 +76,9 @@ internal class PaywallFragment : DialogFragment() {
                 viewModel.requestTrial()
                 dismiss()
             }
-            buttonWatchAd.setOnClickListener { activity?.let(viewModel::showAd) }
+            buttonWatchAd.setOnClickListener {
+                activity?.let(viewModel::showAd)
+            }
             buttonBuy.setOnClickListener { activity?.let(viewModel::launchPlayStoreBillingFlow) }
         }
 

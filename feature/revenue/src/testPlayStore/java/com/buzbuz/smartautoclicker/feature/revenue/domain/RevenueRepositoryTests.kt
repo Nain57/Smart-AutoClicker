@@ -26,12 +26,15 @@ import com.buzbuz.smartautoclicker.feature.revenue.data.ads.InterstitialAdsDataS
 import com.buzbuz.smartautoclicker.feature.revenue.data.UserConsentDataSource
 import com.buzbuz.smartautoclicker.feature.revenue.data.ads.RemoteAdState
 import com.buzbuz.smartautoclicker.feature.revenue.data.billing.BillingDataSource
+import com.buzbuz.smartautoclicker.feature.revenue.data.billing.InAppPurchaseState
+import com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk.InAppProduct
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -65,9 +68,8 @@ class RevenueRepositoryTests {
 
     private val userConsent = MutableStateFlow(false)
     private val adState: MutableStateFlow<RemoteAdState> = MutableStateFlow(RemoteAdState.SdkNotInitialized)
-    private val canPurchase = MutableStateFlow(false)
-    private val isPurchased = MutableStateFlow(false)
-    private val playStoreBillingInProgress = MutableStateFlow(false)
+    private val purchaseState = MutableStateFlow(InAppPurchaseState.NOT_PURCHASED)
+    private val product = MutableStateFlow<InAppProduct?>(null)
     private val quality: MutableStateFlow<Quality> = MutableStateFlow(Quality.High)
 
     private lateinit var testedBillingRepository: RevenueRepository
@@ -78,9 +80,8 @@ class RevenueRepositoryTests {
 
         Mockito.`when`(mockUserConsentDataSource.isUserConsentingForAds).thenReturn(userConsent)
         Mockito.`when`(mockAdsDataSource.remoteAdState).thenReturn(adState)
-        Mockito.`when`(mockBillingDataSource.canPurchase).thenReturn(canPurchase)
-        Mockito.`when`(mockBillingDataSource.isPurchased).thenReturn(isPurchased)
-        Mockito.`when`(mockBillingDataSource.billingFlowInProgress).thenReturn(playStoreBillingInProgress)
+        Mockito.`when`(mockBillingDataSource.purchaseState).thenReturn(purchaseState)
+        Mockito.`when`(mockBillingDataSource.product).thenReturn(product)
         Mockito.`when`(mockQualityRepository.quality).thenReturn(quality)
 
         testedBillingRepository = RevenueRepository(
@@ -91,6 +92,15 @@ class RevenueRepositoryTests {
             mockBillingDataSource,
             mockQualityRepository,
         )
+    }
+
+    @After
+    fun tearDown() {
+        userConsent.value = false
+        adState.value = RemoteAdState.SdkNotInitialized
+        product.value = null
+        purchaseState.value = InAppPurchaseState.NOT_PURCHASED
+        quality.value = Quality.High
     }
 
     @Test
@@ -104,7 +114,9 @@ class RevenueRepositoryTests {
 
     @Test
     fun `can purchase`() {
-        canPurchase.value = true
+        product.value = InAppProduct.Debug()
+        purchaseState.value = InAppPurchaseState.NOT_PURCHASED
+
         testedBillingRepository.assertStates(
             ad = AdState.NOT_INITIALIZED,
             purchase = PurchaseState.NOT_PURCHASED,
@@ -114,8 +126,7 @@ class RevenueRepositoryTests {
 
     @Test
     fun `purchased product`() {
-        canPurchase.value = false
-        isPurchased.value = true
+        purchaseState.value = InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED
 
         testedBillingRepository.assertStates(
             ad = AdState.NOT_INITIALIZED,
@@ -126,13 +137,11 @@ class RevenueRepositoryTests {
 
     @Test
     fun `playStore billing in progress`() {
-        canPurchase.value = true
-        isPurchased.value = false
-        playStoreBillingInProgress.value = true
+        purchaseState.value = InAppPurchaseState.PENDING
 
         testedBillingRepository.assertStates(
             ad = AdState.NOT_INITIALIZED,
-            purchase = PurchaseState.BILLING_IN_PROGRESS,
+            purchase = PurchaseState.PENDING,
             billing = UserBillingState.AD_REQUESTED,
         )
     }

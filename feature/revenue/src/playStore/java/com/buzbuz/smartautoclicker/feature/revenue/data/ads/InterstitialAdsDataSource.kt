@@ -96,18 +96,18 @@ internal class InterstitialAdsDataSource @Inject constructor(
     }
 
     fun loadAd(context: Context) {
-        val adState = _remoteAdState.value
-        if (adState == RemoteAdState.SdkNotInitialized) {
+        if (_remoteAdState.value == RemoteAdState.SdkNotInitialized) {
             Log.i(TAG, "Load ad request delayed, SDK is not initialized")
             pendingLoadRequest.value = true
             return
         }
 
-        if (adState != RemoteAdState.Initialized) return
+        if (_remoteAdState.value != RemoteAdState.Initialized && _remoteAdState.value !is RemoteAdState.Error) return
 
         Log.i(TAG, "Load interstitial ad")
         coroutineScopeMain.launch {
             _remoteAdState.emit(RemoteAdState.Loading)
+
             adsSdk.loadInterstitialAd(
                 context = context,
                 onLoaded = ::onAdLoaded,

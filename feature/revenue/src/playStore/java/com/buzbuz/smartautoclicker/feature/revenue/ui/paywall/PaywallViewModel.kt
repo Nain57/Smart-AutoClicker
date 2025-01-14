@@ -89,9 +89,7 @@ internal sealed class DialogState {
     ): DialogState()
 
     internal data object Purchased : DialogState()
-
     internal data object AdShowing : DialogState()
-
     internal data object AdWatched : DialogState()
 }
 
@@ -118,9 +116,8 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
 
 private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseState, info: ProModeInfo?): LoadableButtonState =
     when {
-        info?.price.isNullOrEmpty() -> LoadableButtonState.Loading(
-            context.getString(R.string.button_text_buy_pro_loading)
-        )
+        info?.price.isNullOrEmpty() ->
+            LoadableButtonState.Loading(context.getString(R.string.button_text_buy_pro_loading))
 
         purchaseState == PurchaseState.PENDING ->
             LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_buy_pro_pending))
