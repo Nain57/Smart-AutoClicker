@@ -66,6 +66,8 @@ internal class PaywallFragment : DialogFragment() {
                 launch { viewModel.dialogState.collect(::updateDialogState) }
             }
         }
+
+        viewModel.loadAdIfNeeded(requireContext())
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -63,6 +63,10 @@ internal class AdsLoadingViewModel @Inject constructor(
         }
     }
 
+    fun loadAdIfNeeded(context: Context) {
+        revenueRepository.loadAdIfNeeded(context)
+    }
+
     fun launchPlayStoreBillingFlow(activity: Activity) {
         revenueRepository.startPlayStoreBillingUiFlow(activity)
     }
