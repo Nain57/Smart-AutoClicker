@@ -145,6 +145,13 @@ internal class InterstitialAdsDataSource @Inject constructor(
         }
     }
 
+    fun forceShown() {
+        Log.i(TAG, "Force add shown")
+        coroutineScopeMain.launch {
+            _remoteAdState.emit(RemoteAdState.Shown)
+        }
+    }
+
     private fun onAdLoaded() {
         Log.i(TAG, "onAdLoaded")
         coroutineScopeMain.launch {

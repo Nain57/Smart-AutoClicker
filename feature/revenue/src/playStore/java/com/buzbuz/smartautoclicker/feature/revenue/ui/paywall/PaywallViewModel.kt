@@ -99,6 +99,7 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
         text = context.getString(R.string.button_text_watch_ad_loading)
     )
 
+    AdState.ERROR,
     AdState.READY -> LoadableButtonState.Loaded.Enabled(
         text = context.getString(R.string.button_text_watch_ad)
     )
@@ -108,7 +109,6 @@ private fun AdState.toAdButtonState(context: Context): LoadableButtonState = whe
         text = context.getString(R.string.button_text_watch_ad)
     )
 
-    AdState.ERROR,
     AdState.NOT_INITIALIZED -> LoadableButtonState.Loaded.Disabled(
         text = context.getString(R.string.button_text_watch_ad_error)
     )

@@ -171,8 +171,11 @@ internal class RevenueRepository @Inject constructor(
     }
 
     override fun showAd(activity: Activity) {
-        if (adsState.value != AdState.READY) return
-        adsDataSource.showAd(activity)
+        when (adsState.value) {
+            AdState.READY -> adsDataSource.showAd(activity)
+            AdState.ERROR -> adsDataSource.forceShown()
+            else -> Unit
+        }
     }
 
     override fun startPlayStoreBillingUiFlow(activity: Activity) {
