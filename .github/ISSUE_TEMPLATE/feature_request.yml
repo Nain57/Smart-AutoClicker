@@ -7,8 +7,13 @@ body:
     attributes:
       label: Describe the feature
       description: |
-        Describe what is the new feature and how it should behave. You can add screenshot or sketches to illustrate it.
-      placeholder: "Ex: I would like to have a new type of actions that turns off the devices when executed."
+        Describe what is the new feature and how it should behave. \
+        Klick'r cannot include every feature request, only the ones that have a real use case for the most people that uses the app. \
+        Please be generic and avoid referencing specific apps use cases, the feature must be thought for the community, not just you. \
+        Also think about where/how it should be displayed/controlled.
+      placeholder: |
+        Good: We need to a way to detect only colors in an area and not shapes \
+        Bad: I want a condition for detecting quickly the gorzlub in MyWhateverGame
     validations:
       required: true
 
@@ -17,9 +22,9 @@ body:
     attributes:
       label: Describe the usage
       description: |
-        Smart AutoClicker cannot include every feature request, only the ones that have a real use case for the most \
-        people that uses the app. Please be generic and avoid referencing specific apps use cases (or as an example for \
-        a more general type of usage).
+        Provide a concrete usage for the feature. Here you need to be more specific, and you can provide your specific use case and \
+        app (always provide a link). You can also add screenshot to illustrate it. The more usages and details you provide, \
+        the more chances you have for the developers to consider the proposition and implement it.
       placeholder: "Ex: Xiaomi phones can explode if they are turned on for more that 10 hours, we need a way to avoid dying "
     validations:
       required: true
@@ -29,7 +34,9 @@ body:
     attributes:
       label: Is it a duplicate?
       description: |
-        I have checked if this feature was not already requested in another ticket.
+        I have checked if this feature was not already requested in another ticket. \
+        [List of all features requests](https://github.com/Nain57/Smart-AutoClicker/issues?q=is%3Aissue+label%3Aenhancement+)
+        
       options:
         - label: There is no duplicates
           required: true
