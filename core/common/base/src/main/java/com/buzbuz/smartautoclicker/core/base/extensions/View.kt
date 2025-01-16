@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.base.extensions
 
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -51,14 +52,14 @@ fun View.delayDrawUntil(timeOutMs: Long = DEFAULT_DRAW_DELAY_TIMEOUT_MS, closure
     )
 }
 
-fun View.applySystemBarInsets() {
+fun View.applySystemBarInsets(margin: Rect) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         // Apply the system bar insets as a margin to the view.
         windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).let { insets ->
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                leftMargin += insets.left
-                bottomMargin += insets.bottom
-                rightMargin += insets.right
+                leftMargin = margin.left + insets.left
+                bottomMargin = margin.bottom + insets.bottom
+                rightMargin = margin.right + insets.right
             }
         }
 

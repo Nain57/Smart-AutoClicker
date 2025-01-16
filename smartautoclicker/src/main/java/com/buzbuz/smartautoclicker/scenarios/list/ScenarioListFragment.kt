@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.scenarios.list
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -106,7 +107,9 @@ class ScenarioListFragment : Fragment() {
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
             topAppBar.setOnMenuItemClickListener { onMenuItemSelected(it) }
 
-            add.applySystemBarInsets()
+            val fabEndMargin = resources.getDimensionPixelSize(R.dimen.margin_horizontal_default)
+            val fabBottomMargin = resources.getDimensionPixelSize(R.dimen.margin_vertical_default)
+            add.applySystemBarInsets(Rect(0, 0, fabEndMargin, fabBottomMargin))
         }
 
         lifecycleScope.launch {
