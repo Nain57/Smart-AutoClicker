@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,12 @@
 package com.buzbuz.smartautoclicker.core.base.extensions
 
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.updateLayoutParams
 
 
 fun View.doWhenMeasured(closure: () -> Unit) {
@@ -45,6 +49,22 @@ fun View.delayDrawUntil(timeOutMs: Long = DEFAULT_DRAW_DELAY_TIMEOUT_MS, closure
             }
         }
     )
+}
+
+fun View.applySystemBarInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        // Apply the system bar insets as a margin to the view.
+        windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()).let { insets ->
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                leftMargin += insets.left
+                bottomMargin += insets.bottom
+                rightMargin += insets.right
+            }
+        }
+
+        // Return CONSUMED as we don't want want the window insets to keep passing down to descendant views.
+        WindowInsetsCompat.CONSUMED
+    }
 }
 
 private const val DEFAULT_DRAW_DELAY_TIMEOUT_MS = 3_000L

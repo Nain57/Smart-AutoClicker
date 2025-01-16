@@ -36,6 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.base.extensions.applySystemBarInsets
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
@@ -104,6 +105,8 @@ class ScenarioListFragment : Fragment() {
 
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
             topAppBar.setOnMenuItemClickListener { onMenuItemSelected(it) }
+
+            add.applySystemBarInsets()
         }
 
         lifecycleScope.launch {
