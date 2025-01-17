@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryElementOverlayMenu
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
 
@@ -150,7 +150,7 @@ class ImageConditionsBriefMenu(
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = TryElementOverlayMenu(
+                newOverlay = TryImageConditionOverlayMenu(
                     scenario,
                     (getFocusedItemBrief().data as UiImageCondition).condition,
                 ),

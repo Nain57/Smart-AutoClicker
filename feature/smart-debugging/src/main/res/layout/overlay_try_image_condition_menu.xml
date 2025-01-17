@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="false">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu_background"
+        style="@style/AppTheme.Overlay.FloatingMenu.CardView"
+        android:animateLayoutChanges="true"
+        tools:viewBindingIgnore="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <LinearLayout
+                android:id="@+id/menu_items"
+                style="@style/AppTheme.Overlay.FloatingMenu.LayoutButtons"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_result"
+                android:animateLayoutChanges="true">
+
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                    android:src="@drawable/ic_back"
+                    android:contentDescription="@string/content_desc_go_back" />
+
+                <ImageButton
+                    android:id="@+id/btn_hide_overlay"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                    android:src="@drawable/ic_visible_on"
+                    android:contentDescription="@string/content_desc_go_back" />
+
+                <ImageButton
+                    android:id="@+id/btn_move"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                    android:src="@drawable/ic_move"
+                    android:contentDescription="@string/content_desc_move_menu" />
+
+            </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_result"
+            style="@style/AppTheme.TextAppearance.OverlayBig"
+            android:layout_width="@dimen/overlay_debug_text_width"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+            android:maxLines="1"
+            android:gravity="center"
+            android:textColor="@color/textTitle"
+            app:layout_constraintStart_toEndOf="@id/menu_items"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/text_result"
+                style="@style/AppTheme.TextAppearance.OverlayBig"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                android:maxLines="1"
+                android:gravity="center"
+                android:textColor="@color/textTitle"
+                tools:text="4/5"/>
+
+        </FrameLayout>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</FrameLayout>
