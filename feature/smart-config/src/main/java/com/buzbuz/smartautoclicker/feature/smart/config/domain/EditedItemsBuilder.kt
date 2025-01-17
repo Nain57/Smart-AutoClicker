@@ -142,6 +142,7 @@ class EditedItemsBuilder internal constructor(
             detectionType = defaultValues.conditionDetectionType(),
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
             path = newPath,
+            priority = 0,
         )
     }
 

@@ -45,7 +45,7 @@ class DeserializerTests {
                 CompleteEventEntity(
                     event = EventEntity(1, 1, "Event", 1, 0, true, EventType.IMAGE_EVENT),
                     conditions = listOf(
-                        ConditionEntity(1, 1, "Condition", ConditionType.ON_IMAGE_DETECTED, "/toto/tutu", 1, 2, 3, 4, 5, 1, true)
+                        ConditionEntity(1, 1, "Condition", ConditionType.ON_IMAGE_DETECTED, 0, "/toto/tutu", 1, 2, 3, 4, 5, 1, true)
                     ),
                     actions = listOf(
                         CompleteActionEntity(

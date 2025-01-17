@@ -65,7 +65,7 @@ class CompatV11DeserializerTests {
     private fun getDefaultImageCondition(shouldBeDetected: Boolean): ConditionEntity = ConditionEntity(
         id = 1L, eventId = 1L, name = "toto", type = ConditionType.ON_IMAGE_DETECTED, path = "/toto",
         areaLeft = 1, areaTop = 2, areaRight = 3, areaBottom = 4, threshold = 10,
-        shouldBeDetected = shouldBeDetected, detectionType = 1,
+        shouldBeDetected = shouldBeDetected, detectionType = 1, priority = 0,
     )
 
     @Test

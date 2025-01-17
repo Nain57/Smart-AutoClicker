@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -27,8 +28,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsE
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -100,6 +101,9 @@ internal class ScenarioEditor {
 
     fun updateActionsOrder(actions: List<Action>) =
         currentEventEditor.value?.actionsEditor?.updateList(actions)
+
+    fun updateImageConditionsOrder(imageConditions: List<ImageCondition>) =
+        currentEventEditor.value?.conditionsEditor?.updateList(imageConditions)
 
     fun upsertEditedEvent() =
         currentEventEditor.value?.upsertEditedItem()

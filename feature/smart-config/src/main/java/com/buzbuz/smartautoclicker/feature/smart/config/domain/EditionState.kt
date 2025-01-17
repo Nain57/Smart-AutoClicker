@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -75,7 +76,7 @@ internal class EditionState internal constructor(
 
     override val editedImageEventsState: Flow<EditedListState<ImageEvent>> =
         editor.editedImageEventListState.map { listState ->
-            listState.copy(value = listState.value?.sortedBy { it.priority } ?: emptyList())
+            listState.copy(value = listState.value?.sortedByPriority()?.toList() ?: emptyList())
         }
 
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =

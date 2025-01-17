@@ -209,6 +209,7 @@ internal open class CompatV13Deserializer : CompatDeserializer() {
                     counterName = endConditionCounterName,
                     counterComparisonOperation = CounterComparisonOperation.GREATER_OR_EQUALS,
                     counterValue = legacyEndCondition.executions,
+                    priority = 0,
                 )
             )
 

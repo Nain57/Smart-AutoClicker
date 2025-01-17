@@ -92,7 +92,7 @@ class ActionExecutorTests {
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
-            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, "path", Rect(), 10, EXACT, true, null)
+            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, "path", Rect(), 10, EXACT, true, null)
     }
 
     @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
