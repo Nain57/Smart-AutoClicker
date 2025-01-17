@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -140,6 +141,11 @@ class EditionRepository @Inject constructor(
     fun updateActionsOrder(actions: List<Action>) {
         scenarioEditor.updateActionsOrder(
             actions.mapIndexed { index, action -> action.copyBase(priority = index) }
+        )
+    }
+    fun updateImageConditionsOrder(imageConditions: List<ImageCondition>) {
+        scenarioEditor.updateImageConditionsOrder(
+            imageConditions.mapIndexed { index, imgCond -> imgCond.copy(priority = index) }
         )
     }
 

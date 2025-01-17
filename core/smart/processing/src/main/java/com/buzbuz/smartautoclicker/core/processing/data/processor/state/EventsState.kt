@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
+import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -77,7 +78,7 @@ internal class EventsState(
         imageEventList.areAllEventsDisabled()
 
     override fun getEnabledImageEvents(): Collection<ImageEvent> =
-        imageEventList.getEnabledEvents().sortedBy { it.priority }
+        imageEventList.getEnabledEvents().sortedByPriority()
 
     override fun areAllTriggerEventsDisabled(): Boolean =
         triggerEventList.areAllEventsDisabled()

@@ -70,6 +70,7 @@ data class ConditionEntity(
     @ColumnInfo(name = "eventId") var eventId: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "type") val type: ConditionType,
+    @ColumnInfo(name = "priority", defaultValue = "0") val priority: Int,
 
     // ConditionType.ON_IMAGE_DETECTED
     @ColumnInfo(name = "path") var path: String? = null,

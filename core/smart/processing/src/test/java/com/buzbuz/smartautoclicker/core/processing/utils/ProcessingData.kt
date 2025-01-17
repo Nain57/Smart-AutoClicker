@@ -59,6 +59,7 @@ internal object ProcessingData {
         Identifier(databaseId = 1L),
         Identifier(databaseId = 1L),
         "TOTO",
+        0,
         path,
         area,
         threshold,

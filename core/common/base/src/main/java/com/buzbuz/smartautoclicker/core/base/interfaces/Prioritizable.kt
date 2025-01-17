@@ -20,6 +20,9 @@ interface Prioritizable {
     var priority: Int
 }
 
-fun List<Prioritizable>.normalizePriorities() {
+fun <T : Prioritizable> Collection<T>.sortedByPriority(): Collection<T> =
+    sortedBy { it.priority }
+
+fun Collection<Prioritizable>.normalizePriorities() {
     forEachIndexed { index, item -> item.priority = index }
 }

@@ -186,6 +186,7 @@ class RepositoryTests {
                 shouldBeDetected = true,
                 area = Rect(0, 0, 20, 100),
                 path = "toto",
+                priority = 0,
             )
         )
         verify(mockBitmapManager).getImageConditionBitmap("toto", 20, 100)

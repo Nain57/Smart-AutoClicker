@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -41,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -51,6 +53,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.util.Collections
 
 import javax.inject.Inject
 
@@ -120,6 +123,21 @@ class ImageConditionsBriefViewModel @Inject constructor(
     fun upsertEditedCondition() = editionRepository.upsertEditedCondition()
     fun removeEditedCondition() = editionRepository.deleteEditedCondition()
     fun dismissEditedCondition() = editionRepository.stopConditionEdition()
+
+    fun swapConditions(i: Int, j: Int) {
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
+        Collections.swap(imageConditions, i, j)
+
+        editionRepository.updateImageConditionsOrder(imageConditions)
+    }
+
+    fun moveConditions(from: Int, to: Int) {
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
+        val movedAction = imageConditions.removeAt(from)
+        imageConditions.add(to, movedAction)
+
+        editionRepository.updateImageConditionsOrder(imageConditions)
+    }
 
     fun monitorBriefFirstItemView(briefItemView: View) {
         monitoredViewsManager.attach(

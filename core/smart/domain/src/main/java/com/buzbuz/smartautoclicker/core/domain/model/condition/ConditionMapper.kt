@@ -28,6 +28,7 @@ internal fun ImageCondition.toEntity() = ConditionEntity(
     id = id.databaseId,
     eventId = eventId.databaseId,
     name = name,
+    priority = priority,
     type = ConditionType.ON_IMAGE_DETECTED,
     path = path,
     areaLeft = area.left,
@@ -56,6 +57,7 @@ private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): Co
         name = name,
         type = ConditionType.ON_BROADCAST_RECEIVED,
         broadcastAction = intentAction,
+        priority = 0,
     )
 
 private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): ConditionEntity =
@@ -67,6 +69,7 @@ private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): Con
         counterName = counterName,
         counterComparisonOperation = comparisonOperation.toEntity(),
         counterValue = counterValue,
+        priority = 0,
     )
 
 private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEntity =
@@ -77,6 +80,7 @@ private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEnt
         type = ConditionType.ON_TIMER_REACHED,
         timerValueMs = durationMs,
         restartWhenReached = restartWhenReached,
+        priority = 0,
     )
 
 
@@ -95,6 +99,7 @@ private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): I
         id = Identifier(id = id, asTemporary = cleanIds),
         eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,
+        priority = priority,
         path = path!!,
         area = Rect(areaLeft!!, areaTop!!, areaRight!!, areaBottom!!),
         threshold = threshold!!,

@@ -161,6 +161,7 @@ internal object ProcessingTestData {
             detectionArea = Rect(0, 0, TEST_DATA_SCREEN_IMAGE_WIDTH, TEST_DATA_SCREEN_IMAGE_HEIGHT),
             threshold = 10,              // No impact with mocked detection
             name = "TestImageCondition", // No impact on processor
+            priority = 0,
         )
 
         val mockScreenBitmap = Mockito.mock(Bitmap::class.java)
