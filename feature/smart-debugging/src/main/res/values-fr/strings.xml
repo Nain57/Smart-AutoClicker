@@ -49,4 +49,8 @@
     <string name="section_title_report_timing_title">Temps d\'analyse</string>
     <string name="section_title_report_confidence_title">Taux de confiance</string>
 
+    <!-- Overlay texts -->
+    <string name="overlay_title_results">Résultats</string>
+    <string name="overlay_title_threshold">Seuil</string>
+
 </resources>

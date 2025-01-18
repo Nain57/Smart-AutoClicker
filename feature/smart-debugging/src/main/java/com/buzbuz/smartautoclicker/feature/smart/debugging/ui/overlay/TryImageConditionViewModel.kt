@@ -28,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.formatConfidenceRate
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,45 +37,60 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TryImageConditionViewModel @Inject constructor(
-    private val detectionRepository: DetectionRepository
+    private val detectionRepository: DetectionRepository,
 ) : ViewModel() {
 
     private val triedImageCondition: MutableStateFlow<TriedImageCondition?> = MutableStateFlow(null)
+    private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val tryResults: MutableStateFlow<ImageConditionResult?> = MutableStateFlow(null)
 
     private val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.DETECTING }
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.Eagerly, initialValue = false)
 
-    private val tryResults: MutableStateFlow<List<DetectionResultInfo>> = MutableStateFlow(emptyList())
-    private val detectionResults: Flow<List<DetectionResultInfo>> = tryResults
-        .combine(isPlaying) { results, playing -> if (playing) results else emptyList() }
-        .transformLatest { results ->
-            if (results.isEmpty()) return@transformLatest
 
+    private val detectionResults: Flow<DetectionResultInfo> =
+        combine(tryResults, userThreshold, isPlaying) { results, threshold, playing ->
+            results ?: return@combine null
+            if (playing) results.toDetectionResultInfo(threshold) else null
+        }.filterNotNull().transformLatest { results ->
             emit(results)
             delay(3.seconds)
-            tryResults.emit(emptyList())
+            tryResults.emit(null)
         }
 
-    val displayResults: Flow<ImageConditionResultsDisplay?> = triedImageCondition.combine(detectionResults) { element, results ->
-        if (element == null || results.isEmpty()) return@combine null
-        val text = results.first().confidenceRate.formatConfidenceRate()
-        ImageConditionResultsDisplay(text, results)
-    }
+    val displayResults: Flow<ImageConditionResultsDisplay?> =
+        combine(triedImageCondition, detectionResults) { element, results ->
+            if (element == null) return@combine null
+            val text = results.confidenceRate.formatConfidenceRate()
+            ImageConditionResultsDisplay(text, results)
+        }
+
+    val thresholdText: Flow<String> =
+        userThreshold.map { threshold -> (1 - (threshold / 100.0)).formatConfidenceRate() }
 
     fun setImageConditionElement(scenario: Scenario, imageCondition: ImageCondition) {
         viewModelScope.launch {
             triedImageCondition.value = TriedImageCondition(scenario, imageCondition)
+            userThreshold.value = imageCondition.threshold
+        }
+    }
+
+    fun setThreshold(newThreshold: Int) {
+        viewModelScope.launch {
+            userThreshold.value = newThreshold
         }
     }
 
@@ -86,7 +101,7 @@ class TryImageConditionViewModel @Inject constructor(
 
             delay(500)
             detectionRepository.tryImageCondition(context, tryElement.scenario, tryElement.imageCondition) { result ->
-                tryResults.value = listOf(result.toDetectionResultInfo())
+                tryResults.value = result
             }
         }
     }
@@ -99,12 +114,14 @@ class TryImageConditionViewModel @Inject constructor(
         }
     }
 
-    private fun ImageConditionResult.toDetectionResultInfo(): DetectionResultInfo {
+    fun getSelectedThreshold(): Int = userThreshold.value
+
+    private fun ImageConditionResult.toDetectionResultInfo(overriddenThreshold: Int): DetectionResultInfo {
         val halfWidth = condition.area.width() / 2
         val halfHeight = condition.area.height() / 2
 
         return DetectionResultInfo(
-            positive = isFulfilled,
+            positive = (1.0 - (overriddenThreshold / 100.0)) < confidenceRate,
             coordinates =
                 if (position.x == 0 && position.y == 0) Rect()
                 else Rect(
@@ -120,10 +137,15 @@ class TryImageConditionViewModel @Inject constructor(
 
 data class ImageConditionResultsDisplay(
     val resultText: String,
-    val detectionResults: List<DetectionResultInfo>,
+    val detectionResults: DetectionResultInfo,
 )
 
 private data class TriedImageCondition(
     val scenario: Scenario,
     val imageCondition: ImageCondition,
 )
+
+/** The minimum threshold value selectable by the user. */
+const val MIN_THRESHOLD = 0f
+/** The maximum threshold value selectable by the user. */
+const val MAX_THRESHOLD = 20f

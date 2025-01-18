@@ -21,7 +21,8 @@
     <dimen name="text_size_list_item_text">16sp</dimen>
     <dimen name="text_size_list_item_text_big">17sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
-    <dimen name="text_size_overlay_big">30sp</dimen>
+    <dimen name="text_size_overlay_default">16sp</dimen>
+    <dimen name="text_size_overlay_big">26sp</dimen>
 
 
     <dimen name="margin_horizontal_extra_large">32dp</dimen>

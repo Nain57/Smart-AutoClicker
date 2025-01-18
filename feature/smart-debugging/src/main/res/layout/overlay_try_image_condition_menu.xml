@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2024 Kevin Buzeau
+* Copyright (C) 2025 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -63,34 +63,106 @@
 
             </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_result"
-            style="@style/AppTheme.TextAppearance.OverlayBig"
-            android:layout_width="@dimen/overlay_debug_text_width"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-            android:maxLines="1"
-            android:gravity="center"
-            android:textColor="@color/textTitle"
-            app:layout_constraintStart_toEndOf="@id/menu_items"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_result"
+                android:layout_width="275dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
+                android:layout_marginEnd="@dimen/margin_horizontal_mini"
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                android:layout_marginBottom="@dimen/margin_vertical_small"
+                app:layout_constraintStart_toEndOf="@id/menu_items"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:id="@+id/text_result"
-                style="@style/AppTheme.TextAppearance.OverlayBig"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-                android:maxLines="1"
-                android:gravity="center"
-                android:textColor="@color/textTitle"
-                tools:text="4/5"/>
+                <TextView
+                    android:id="@+id/title_result"
+                    style="@style/AppTheme.TextAppearance.Overlay.Default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/divider"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/textTitle"
+                    android:text="@string/overlay_title_results"/>
 
-        </FrameLayout>
+                <TextView
+                    android:id="@+id/value_result"
+                    style="@style/AppTheme.TextAppearance.Overlay.Big"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/divider"
+                    app:layout_constraintTop_toBottomOf="@+id/title_result"
+                    app:layout_constraintBottom_toTopOf="@id/slider_threshold"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/textTitle"
+                    tools:text="80.99%"/>
 
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    style="@style/AppTheme.Widget.Divider.Vertical"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/slider_threshold"/>
 
+                <TextView
+                    android:id="@+id/title_threshold"
+                    style="@style/AppTheme.TextAppearance.Overlay.Default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/textTitle"
+                    android:text="@string/overlay_title_threshold"/>
+
+                <TextView
+                    android:id="@+id/value_threshold"
+                    style="@style/AppTheme.TextAppearance.Overlay.Big"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title_threshold"
+                    app:layout_constraintBottom_toTopOf="@id/slider_threshold"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/textTitle"
+                    tools:text="100%"/>
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/slider_threshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:thumbHeight="32dp"
+                    app:trackHeight="12dp"
+                    app:trackColor="@color/overlayMenuButtons"
+                    app:thumbColor="@color/overlayMenuButtons"
+                    android:stepSize="1.0"
+                    tools:value="10"
+                    tools:valueFrom="0"
+                    tools:valueTo="20"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

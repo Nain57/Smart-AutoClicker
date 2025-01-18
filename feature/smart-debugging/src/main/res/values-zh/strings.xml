@@ -48,4 +48,8 @@
     <string name="section_title_report_timing_max">最高</string>
     <string name="section_title_report_timing_avg">平均</string>
 
+    <!-- Overlay texts -->
+    <string name="overlay_title_results">成果</string>
+    <string name="overlay_title_threshold">阈值</string>
+
 </resources>
