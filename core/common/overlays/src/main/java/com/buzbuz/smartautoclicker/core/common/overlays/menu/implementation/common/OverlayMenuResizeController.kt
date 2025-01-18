@@ -23,6 +23,8 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import androidx.core.view.children
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 
 /**
  * Controls the resize of an overlay window.
@@ -133,9 +135,11 @@ internal class OverlayMenuResizeController(
         val width = if (firstChild == null || firstChild.id == resizedContainer.id) {
             resizedContainer.width
         } else {
-            // Case for the view with debug layout
             firstChild.children.fold(0) { acc, child ->
-                acc + (if (child.visibility == View.GONE) 0 else child.width)
+                acc + (
+                    if (child.visibility == View.GONE) 0
+                    else child.width + child.marginStart + child.marginEnd
+                )
             }
         }
 
