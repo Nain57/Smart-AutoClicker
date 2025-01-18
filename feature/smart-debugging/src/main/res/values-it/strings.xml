@@ -48,4 +48,8 @@
     <string name="section_title_report_timing_title">Tempo di processo</string>
     <string name="section_title_report_confidence_title">Tasso affidabilità rilevamento</string>
 
+    <!-- Overlay texts -->
+    <string name="overlay_title_results">Risultati</string>
+    <string name="overlay_title_threshold">Soglia</string>
+
 </resources>

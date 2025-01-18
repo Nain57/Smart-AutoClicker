@@ -151,8 +151,11 @@ class ImageConditionsBriefMenu(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = TryImageConditionOverlayMenu(
-                    scenario,
-                    (getFocusedItemBrief().data as UiImageCondition).condition,
+                    scenario = scenario,
+                    imageCondition = (getFocusedItemBrief().data as UiImageCondition).condition,
+                    onNewThresholdSelected = { threshold ->
+                        viewModel.updateConditionThreshold(threshold)
+                    }
                 ),
                 hideCurrent = true,
             )

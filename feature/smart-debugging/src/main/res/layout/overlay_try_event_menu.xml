@@ -63,34 +63,32 @@
 
             </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_result"
-            style="@style/AppTheme.TextAppearance.OverlayBig"
-            android:layout_width="@dimen/overlay_debug_text_width"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-            android:maxLines="1"
-            android:gravity="center"
-            android:textColor="@color/textTitle"
-            app:layout_constraintStart_toEndOf="@id/menu_items"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/text_result"
-                style="@style/AppTheme.TextAppearance.OverlayBig"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:id="@+id/layout_result"
+                style="@style/AppTheme.TextAppearance.Overlay.Big"
+                android:layout_width="@dimen/overlay_debug_text_width"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
                 android:maxLines="1"
                 android:gravity="center"
                 android:textColor="@color/textTitle"
-                tools:text="4/5"/>
+                app:layout_constraintStart_toEndOf="@id/menu_items"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-        </FrameLayout>
+                <TextView
+                    android:id="@+id/text_result"
+                    style="@style/AppTheme.TextAppearance.Overlay.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/textTitle"
+                    tools:text="4/5"/>
 
-
+            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
