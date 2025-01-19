@@ -42,4 +42,6 @@ interface IDumbRepository {
     suspend fun updateDumbScenario(scenario: DumbScenario)
 
     suspend fun deleteDumbScenario(scenario: DumbScenario)
+
+    suspend fun markAsUsed(scenarioId: Identifier)
 }

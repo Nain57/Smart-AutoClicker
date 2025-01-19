@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain.model
 
+import com.buzbuz.smartautoclicker.core.base.ScenarioStats
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioEntity
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 
 internal fun DumbScenarioWithActions.toDomain(asDomain: Boolean = false): DumbScenario =
@@ -31,7 +33,8 @@ internal fun DumbScenarioWithActions.toDomain(asDomain: Boolean = false): DumbSc
         randomize = scenario.randomize,
         dumbActions = dumbActions
             .sortedBy { it.priority }
-            .map { dumbAction -> dumbAction.toDomain(asDomain) }
+            .map { dumbAction -> dumbAction.toDomain(asDomain) },
+        stats = stats.toDomain(),
     )
 
 internal fun DumbScenario.toEntity(): DumbScenarioEntity =
@@ -43,4 +46,14 @@ internal fun DumbScenario.toEntity(): DumbScenarioEntity =
         maxDurationMin = maxDurationMin,
         isDurationInfinite = isDurationInfinite,
         randomize = randomize,
+    )
+
+
+private fun DumbScenarioStatsEntity?.toDomain() =
+    if (this == null) ScenarioStats(
+        lastStartTimestampMs = 0,
+        startCount = 0,
+    ) else ScenarioStats(
+        lastStartTimestampMs = lastStartTimestampMs,
+        startCount = startCount,
     )

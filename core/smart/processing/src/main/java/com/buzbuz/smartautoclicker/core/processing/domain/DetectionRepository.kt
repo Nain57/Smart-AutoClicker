@@ -110,8 +110,12 @@ class DetectionRepository @Inject constructor(
             false
         }
 
-    fun setScenarioId(identifier: Identifier) {
+    fun setScenarioId(identifier: Identifier, markAsUsed: Boolean = false) {
         _scenarioId.value = identifier
+
+        if (markAsUsed) {
+            coroutineScopeIo.launch { scenarioRepository.markAsUsed(identifier) }
+        }
     }
 
     fun setExecutor(androidExecutor: SmartActionExecutor) {

@@ -76,6 +76,9 @@ class DumbEngine @Inject constructor(
         dumbScenarioDbId.value = dumbScenario.id.databaseId
 
         processingScope = CoroutineScope(Dispatchers.IO)
+        processingScope?.launch {
+            dumbRepository.markAsUsed(dumbScenario.id)
+        }
     }
 
     fun startDumbScenario() {

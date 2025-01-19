@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain.model
 
+import com.buzbuz.smartautoclicker.core.base.ScenarioStats
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
@@ -28,6 +29,7 @@ data class DumbScenario(
     val maxDurationMin: Int,
     val isDurationInfinite: Boolean,
     val randomize: Boolean,
+    val stats: ScenarioStats? = null,
 ) : Identifiable, Repeatable {
 
     fun isValid(): Boolean = name.isNotEmpty() && dumbActions.isNotEmpty()

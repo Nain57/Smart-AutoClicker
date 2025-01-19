@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
+import com.buzbuz.smartautoclicker.core.base.ScenarioStats
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.domain.utils.asIdentifier
 
@@ -41,5 +42,9 @@ internal object ScenarioTestsData {
         detectionQuality: Int = SCENARIO_DETECTION_QUALITY,
         randomize: Boolean = SCENARIO_RANDOMIZE,
         eventCount: Int = 0,
-    ) = Scenario(id.asIdentifier(), name, detectionQuality, randomize, eventCount)
+        stats: ScenarioStats? = null,
+    ) = Scenario(id.asIdentifier(), name, detectionQuality, randomize, eventCount, stats)
+
+    fun defaultStats(): ScenarioStats =
+        ScenarioStats(lastStartTimestampMs=0, startCount=0)
 }
