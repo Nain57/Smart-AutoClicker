@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioDao
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -100,6 +101,27 @@ class DumbScenarioDataSource @Inject constructor(
         } catch (ex: Exception) {
             Log.e(TAG, "Error while inserting scenario copy", ex)
             null
+        }
+    }
+
+    suspend fun markAsUsed(scenarioDbId: Long) {
+        val previousStats = dumbScenarioDao.getScenarioStats(scenarioDbId)
+        if (previousStats != null) {
+            dumbScenarioDao.updateScenarioStats(
+                previousStats.copy(
+                    lastStartTimestampMs = System.currentTimeMillis(),
+                    startCount = previousStats.startCount + 1,
+                )
+            )
+        } else {
+            dumbScenarioDao.addScenarioStats(
+                DumbScenarioStatsEntity(
+                    id = DATABASE_ID_INSERTION,
+                    scenarioId = scenarioDbId,
+                    lastStartTimestampMs = System.currentTimeMillis(),
+                    startCount = 1,
+                )
+            )
         }
     }
 

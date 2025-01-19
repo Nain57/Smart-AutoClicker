@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.TutorialSuccessEntity
 import javax.inject.Singleton
 
@@ -39,6 +40,7 @@ import javax.inject.Singleton
         IntentExtraEntity::class,
         EventToggleEntity::class,
         TutorialSuccessEntity::class,
+        ScenarioStatsEntity::class,
     ],
     version = TUTORIAL_DATABASE_VERSION,
     exportSchema = true,

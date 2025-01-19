@@ -22,9 +22,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.buzbuz.smartautoclicker.core.database.SCENARIO_USAGE_TABLE
 
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 
 import kotlinx.coroutines.flow.Flow
@@ -95,4 +97,28 @@ interface ScenarioDao {
      */
     @Query("DELETE FROM scenario_table WHERE id = :scenarioId")
     suspend fun delete(scenarioId: Long)
+
+    /**
+     * Get a scenario stats
+     *
+     * @return the scenario stats.
+     */
+    @Query("SELECT * FROM $SCENARIO_USAGE_TABLE WHERE id=:scenarioId")
+    suspend fun getScenarioStats(scenarioId: Long): ScenarioStatsEntity?
+
+    /**
+     * Add the stats for a scenario.
+     *
+     * @param stats the stats to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addScenarioStats(stats: ScenarioStatsEntity)
+
+    /**
+     * Update the stats for a scenario.
+     *
+     * @param stats the stats to be updated.
+     */
+    @Update
+    suspend fun updateScenarioStats(stats: ScenarioStatsEntity)
 }

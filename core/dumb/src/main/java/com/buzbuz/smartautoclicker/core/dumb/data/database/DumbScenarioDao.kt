@@ -113,4 +113,27 @@ interface DumbScenarioDao {
     @Delete
     suspend fun deleteDumbActions(dumbActions: List<DumbActionEntity>)
 
+    /**
+     * Get a scenario stats
+     *
+     * @return the scenario stats.
+     */
+    @Query("SELECT * FROM dumb_scenario_stats_table WHERE id=:scenarioId")
+    suspend fun getScenarioStats(scenarioId: Long): DumbScenarioStatsEntity?
+
+    /**
+     * Add the stats for a scenario.
+     *
+     * @param stats the stats to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addScenarioStats(stats: DumbScenarioStatsEntity)
+
+    /**
+     * Update the stats for a scenario.
+     *
+     * @param stats the stats to be updated.
+     */
+    @Update
+    suspend fun updateScenarioStats(stats: DumbScenarioStatsEntity)
 }

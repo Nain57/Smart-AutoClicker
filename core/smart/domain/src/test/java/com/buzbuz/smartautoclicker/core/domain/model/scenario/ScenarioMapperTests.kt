@@ -47,9 +47,15 @@ class ScenarioMapperTests {
     fun toDomain_from_ScenarioWithEvents() {
         val scenarioWithEvents = ScenarioWithEvents(
             ScenarioTestsData.getNewScenarioEntity(),
-            listOf(EventTestsData.getNewTriggerEventEntity(scenarioId = ScenarioTestsData.SCENARIO_ID))
+            listOf(EventTestsData.getNewTriggerEventEntity(scenarioId = ScenarioTestsData.SCENARIO_ID)),
+            stats = null,
         ).toDomain()
-        val expectedScenario = ScenarioTestsData.getNewScenario(ScenarioTestsData.SCENARIO_ID, ScenarioTestsData.SCENARIO_NAME, eventCount = 1)
+        val expectedScenario = ScenarioTestsData.getNewScenario(
+            ScenarioTestsData.SCENARIO_ID,
+            ScenarioTestsData.SCENARIO_NAME,
+            eventCount = 1,
+            stats = ScenarioTestsData.defaultStats(),
+        )
 
         assertEquals(expectedScenario, scenarioWithEvents)
     }
@@ -68,6 +74,6 @@ class ScenarioMapperTests {
         ).toDomain()
         val expectedScenario = ScenarioTestsData.getNewScenario(ScenarioTestsData.SCENARIO_ID, ScenarioTestsData.SCENARIO_NAME)
 
-        assertEquals(scenario, expectedScenario)
+        assertEquals(expectedScenario, scenario)
     }
 }

@@ -81,7 +81,7 @@ internal class Repository @Inject internal constructor(
     override suspend fun getScenario(scenarioId: Long): Scenario? =
         dataSource.getScenario(scenarioId)?.toDomain()
 
-    override suspend fun getScenarioFlow(scenarioId: Long): Flow<Scenario?> =
+    override fun getScenarioFlow(scenarioId: Long): Flow<Scenario?> =
         dataSource.getScenarioFlow(scenarioId).map { it?.toDomain() }
 
     override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
@@ -109,6 +109,10 @@ internal class Repository @Inject internal constructor(
 
     override suspend fun deleteScenario(scenarioId: Identifier): Unit =
         dataSource.deleteScenario(scenarioId)
+
+    override suspend fun markAsUsed(scenarioId: Identifier) {
+        dataSource.markAsUsed(scenarioId.databaseId)
+    }
 
     override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? {
         val (scenario, events) = completeScenario.toDomain(cleanIds = true)

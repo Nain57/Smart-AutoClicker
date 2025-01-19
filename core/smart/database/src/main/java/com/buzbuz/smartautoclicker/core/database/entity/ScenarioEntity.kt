@@ -63,7 +63,12 @@ data class ScenarioWithEvents(
         parentColumn = "id",
         entityColumn = "scenario_id"
     )
-    val events: List<EventEntity>
+    val events: List<EventEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "scenario_id"
+    )
+    val stats: ScenarioStatsEntity?,
 )
 
 /**

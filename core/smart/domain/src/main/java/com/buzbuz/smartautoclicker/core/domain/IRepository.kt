@@ -92,6 +92,14 @@ interface IRepository {
     suspend fun deleteScenario(scenarioId: Identifier)
 
     /**
+     * Mark a scenario as used.
+     * This will update the ScenarioStats for this scenario.
+     *
+     * @param scenarioId the identifier of the scenario to update the usage stats of.
+     */
+    suspend fun markAsUsed(scenarioId: Identifier)
+
+    /**
      * Get the requested scenario.
      *
      * @param scenarioId the identifier of the scenario.
@@ -105,7 +113,7 @@ interface IRepository {
      * @param scenarioId the identifier of the scenario.
      * @return the scenario.
      */
-    suspend fun getScenarioFlow(scenarioId: Long): Flow<Scenario?>
+    fun getScenarioFlow(scenarioId: Long): Flow<Scenario?>
 
     /**
      * Get the list of events for a given scenario.

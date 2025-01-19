@@ -65,5 +65,11 @@ data class DumbScenarioWithActions(
         parentColumn = "id",
         entityColumn = "dumb_scenario_id"
     )
-    val dumbActions: List<DumbActionEntity>
+    val dumbActions: List<DumbActionEntity>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "dumb_scenario_id"
+    )
+    val stats: DumbScenarioStatsEntity?,
+
 )

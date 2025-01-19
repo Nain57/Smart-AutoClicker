@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.scenario
 
+import com.buzbuz.smartautoclicker.core.base.ScenarioStats
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
@@ -35,4 +36,5 @@ data class Scenario(
     val detectionQuality: Int,
     val randomize: Boolean = false,
     val eventCount: Int = 0,
+    val stats: ScenarioStats? = null,
 ): Identifiable

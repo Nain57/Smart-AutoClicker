@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -32,6 +33,7 @@ class DumbRepository @Inject constructor(
 
     override val dumbScenarios: Flow<List<DumbScenario>> =
         dumbScenarioDataSource.getAllDumbScenarios
+
     override suspend fun getDumbScenario(dbId: Long): DumbScenario? =
         dumbScenarioDataSource.getDumbScenario(dbId)
 
@@ -57,5 +59,9 @@ class DumbRepository @Inject constructor(
 
     override suspend fun deleteDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.deleteDumbScenario(scenario)
+    }
+
+    override suspend fun markAsUsed(scenarioId: Identifier) {
+        dumbScenarioDataSource.markAsUsed(scenarioId.databaseId)
     }
 }

@@ -25,10 +25,12 @@ import com.buzbuz.smartautoclicker.core.base.extensions.getJsonArray
 import com.buzbuz.smartautoclicker.core.base.extensions.getJsonObject
 import com.buzbuz.smartautoclicker.core.base.extensions.getLong
 import com.buzbuz.smartautoclicker.core.base.extensions.getString
+import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DUMB_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionType
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioEntity
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MAX_DURATION_MINUTES
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DUMB_SCENARIO_MIN_DURATION_MINUTES
@@ -115,7 +117,13 @@ internal class DumbScenarioSerializer : ScenarioBackupSerializer<DumbScenarioBac
             scenario = scenario,
             dumbActions = jsonCompleteDumbScenario.getJsonArray("dumbActions")
                 ?.deserializeDumbActionsCompat()
-                ?: return null
+                ?: return null,
+            stats = DumbScenarioStatsEntity(
+                id = DATABASE_ID_INSERTION,
+                scenarioId = scenario.id,
+                lastStartTimestampMs = 0,
+                startCount = 0,
+            )
         )
     }
 

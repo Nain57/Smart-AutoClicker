@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.room.withTransaction
 
 import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
+import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
@@ -36,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -183,6 +185,29 @@ internal class ScenarioDataSource(
         } catch (ex: Exception) {
             Log.e(TAG, "Error while updating scenario\n* Scenario=$scenario\n* Events=$events\n", ex)
             false
+        }
+    }
+
+    suspend fun markAsUsed(scenarioDbId: Long) {
+        currentDatabase.value.scenarioDao().let { scenarioDao ->
+            val previousStats = scenarioDao.getScenarioStats(scenarioDbId)
+            if (previousStats != null) {
+                scenarioDao.updateScenarioStats(
+                    previousStats.copy(
+                        lastStartTimestampMs = System.currentTimeMillis(),
+                        startCount = previousStats.startCount + 1,
+                    )
+                )
+            } else {
+                scenarioDao.addScenarioStats(
+                    ScenarioStatsEntity(
+                        id = DATABASE_ID_INSERTION,
+                        scenarioId = scenarioDbId,
+                        lastStartTimestampMs = System.currentTimeMillis(),
+                        startCount = 1,
+                    )
+                )
+            }
         }
     }
 
