@@ -152,6 +152,10 @@ class ScenarioListFragment : Fragment() {
 
         updateMenu(uiState.menuUiState)
         updateScenarioList(uiState)
+
+        viewBinding.add.visibility =
+            if (uiState.type == ScenarioListUiState.Type.SELECTION) View.VISIBLE
+            else View.GONE
     }
 
     /**
