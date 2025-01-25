@@ -52,6 +52,10 @@
     <string name="menu_item_title_search">Search</string>
     <string name="menu_item_title_settings">Settings</string>
 
+    <string name="item_scenario_filter_by_name">Name</string>
+    <string name="item_scenario_filter_by_recent">Recent</string>
+    <string name="item_scenario_filter_by_favorite">Favorite</string>
+
     <!--
       - Text for items in a list or vertical layout.
       -  * Title should be short and concise.

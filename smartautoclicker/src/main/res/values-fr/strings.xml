@@ -46,6 +46,11 @@
     <string name="menu_item_title_select_all">Tout sélectionner</string>
     <string name="menu_item_title_cancel">Annuler</string>
     <string name="menu_item_title_search">Rechercher</string>
+    <string name="menu_item_title_settings">Settings</string>
+
+    <string name="item_scenario_filter_by_name">Nom</string>
+    <string name="item_scenario_filter_by_recent">Récent</string>
+    <string name="item_scenario_filter_by_favorite">Favoris</string>
 
 
     <!--

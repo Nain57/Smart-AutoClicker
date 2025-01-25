@@ -38,7 +38,7 @@
             android:id="@+id/button_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/item_scenario_filter_by_name"
             app:icon="@drawable/ic_sort_name"/>
 
         <Button
@@ -46,7 +46,7 @@
             android:id="@+id/button_recent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recent"
+            android:text="@string/item_scenario_filter_by_recent"
             app:icon="@drawable/ic_sort_recent"/>
 
         <Button
@@ -54,7 +54,7 @@
             android:id="@+id/button_most_used"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Favorites"
+            android:text="@string/item_scenario_filter_by_favorite"
             app:icon="@drawable/ic_sort_favourites"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>

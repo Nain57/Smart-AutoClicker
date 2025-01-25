@@ -44,6 +44,11 @@
     <string name="menu_item_title_select_all">全选</string>
     <string name="menu_item_title_cancel">取消</string>
     <string name="menu_item_title_search">搜索</string>
+    <string name="menu_item_title_settings">设置</string>
+
+    <string name="item_scenario_filter_by_name">名称</string>
+    <string name="item_scenario_filter_by_recent">最近</string>
+    <string name="item_scenario_filter_by_favorite">最爱</string>
 
     <!--
       - Text for items in a list or vertical layout.
