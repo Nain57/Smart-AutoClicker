@@ -120,6 +120,9 @@
 
     <string name="activity_settings_title">Configurações</string>
 
+    <string name="field_show_scenario_filters_ui_title">Mostrar filtros de cenários</string>
+    <string name="field_show_scenario_filters_ui_desc">Exibir ou ocultar os filtros na tela da lista de cenários.</string>
+
     <string name="field_legacy_action_ui_title">IU de ação herdada</string>
     <string name="field_legacy_action_ui_desc">Altere a exibição da ação por uma lista. Útil para cenários complexos.</string>
 

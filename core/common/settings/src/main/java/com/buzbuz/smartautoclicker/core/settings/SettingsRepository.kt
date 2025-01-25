@@ -32,4 +32,8 @@ interface SettingsRepository {
     val isEntireScreenCaptureForcedFlow: Flow<Boolean>
     fun isEntireScreenCaptureForced(): Boolean
     fun toggleForceEntireScreenCapture()
+
+    val isFilterScenarioUiEnabledFlow: Flow<Boolean>
+    fun isFilterScenarioUiEnabled(): Boolean
+    fun toggleFilterScenarioUi()
 }

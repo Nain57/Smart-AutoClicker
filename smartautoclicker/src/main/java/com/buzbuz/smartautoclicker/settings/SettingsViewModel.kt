@@ -39,6 +39,9 @@ class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
+    val isScenarioFiltersUiEnabled: Flow<Boolean> =
+        settingsRepository.isFilterScenarioUiEnabledFlow
+
     val isLegacyActionUiEnabled: Flow<Boolean> =
         settingsRepository.isLegacyActionUiEnabledFlow
 
@@ -58,6 +61,10 @@ class SettingsViewModel @Inject constructor(
         revenueRepository.userBillingState.map { billingState ->
             billingState != UserBillingState.PURCHASED
         }
+
+    fun toggleScenarioFiltersUi() {
+        settingsRepository.toggleFilterScenarioUi()
+    }
 
     fun toggleLegacyActionUi() {
         settingsRepository.toggleLegacyActionUi()

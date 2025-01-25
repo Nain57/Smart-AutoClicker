@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@ internal class SettingsDataSource @Inject constructor(
     internal companion object {
         const val PREFERENCES_FILE_NAME = "settings"
 
+        val KEY_IS_FILTER_SCENARIO_UI_ENABLED: Preferences.Key<Boolean> =
+            booleanPreferencesKey("isFilterScenarioUiEnabled")
         val KEY_IS_LEGACY_ACTION_UI: Preferences.Key<Boolean> =
             booleanPreferencesKey("isLegacyActionUiEnabled")
         val KEY_IS_LEGACY_NOTIFICATION_UI: Preferences.Key<Boolean> =
@@ -57,6 +59,14 @@ internal class SettingsDataSource @Inject constructor(
             fileName = PREFERENCES_FILE_NAME,
             migrations = listOf(LegacySettingsMigration(context, ioDispatcher))
         )
+
+    internal fun isFilterScenarioUiEnabled(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_IS_FILTER_SCENARIO_UI_ENABLED] ?: true }
+
+    internal suspend fun toggleFilterScenarioUi() =
+        dataStore.edit { preferences ->
+            preferences[KEY_IS_FILTER_SCENARIO_UI_ENABLED] = !(preferences[KEY_IS_FILTER_SCENARIO_UI_ENABLED] ?: true)
+        }
 
     internal fun isLegacyActionUiEnabled(): Flow<Boolean> =
         dataStore.data.map { preferences -> preferences[KEY_IS_LEGACY_ACTION_UI] ?: false }
