@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM_INT
+import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
 
 /**
  * Ui State for the [com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment]
@@ -102,61 +103,81 @@ data class ScenarioListUiState(
         )
     }
 
-    sealed class Item(val displayName: String, val scenarioTypeIcon: Int) {
+    sealed class Item {
 
-        abstract val scenario: Any
+        data class SortItem(
+            val sortType: ScenarioSortType,
+            val smartVisible: Boolean,
+            val dumbVisible: Boolean,
+            val changeOrderChecked: Boolean,
+        ): Item()
 
-        sealed class Empty(displayName: String, scenarioTypeIcon: Int) : Item(displayName, scenarioTypeIcon) {
-            data class Dumb(
-                override val scenario: DumbScenario,
-            ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_dumb)
+        sealed class ScenarioItem(val displayName: String, val scenarioTypeIcon: Int): Item() {
 
-            data class Smart(
-                override val scenario: Scenario,
-            ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart)
-        }
+            abstract val scenario: Any
+            abstract val lastStartTimestamp: Long
+            abstract val startCount: Long
 
-        sealed class Valid(displayName: String, scenarioTypeIcon: Int) : Item(displayName, scenarioTypeIcon) {
+            sealed class Empty(displayName: String, scenarioTypeIcon: Int) : ScenarioItem(displayName, scenarioTypeIcon) {
+                data class Dumb(
+                    override val scenario: DumbScenario,
+                    override val lastStartTimestamp: Long,
+                    override val startCount: Long,
+                ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_dumb)
 
-            abstract val showExportCheckbox: Boolean
-            abstract val checkedForExport: Boolean
-            abstract val expanded: Boolean
-
-            abstract fun getScenarioId(): Long
-
-            data class Dumb(
-                override val scenario: DumbScenario,
-                override val showExportCheckbox: Boolean = false,
-                override val checkedForExport: Boolean = false,
-                override val expanded: Boolean = false,
-                val clickCount: Int,
-                val swipeCount: Int,
-                val pauseCount: Int,
-                val repeatText: String,
-                val maxDurationText: String,
-            ) : Valid(displayName = scenario.name,  scenarioTypeIcon = R.drawable.ic_dumb) {
-                override fun getScenarioId(): Long = scenario.id.databaseId
+                data class Smart(
+                    override val scenario: Scenario,
+                    override val lastStartTimestamp: Long,
+                    override val startCount: Long,
+                ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart)
             }
 
-            data class Smart(
-                override val scenario: Scenario,
-                override val showExportCheckbox: Boolean = false,
-                override val checkedForExport: Boolean = false,
-                override val expanded: Boolean = false,
-                val eventsItems: List<EventItem>,
-                val triggerEventCount: Int,
-                val detectionQuality: Int,
-            ) : Valid(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart) {
+            sealed class Valid(displayName: String, scenarioTypeIcon: Int) : ScenarioItem(displayName, scenarioTypeIcon) {
 
-                override fun getScenarioId(): Long = scenario.id.databaseId
+                abstract val showExportCheckbox: Boolean
+                abstract val checkedForExport: Boolean
+                abstract val expanded: Boolean
 
-                data class EventItem(
-                    val id: Long,
-                    val eventName: String,
-                    val actionsCount: Int,
-                    val conditionsCount: Int,
-                    val firstCondition: ImageCondition?,
-                )
+                abstract fun getScenarioId(): Long
+
+                data class Dumb(
+                    override val scenario: DumbScenario,
+                    override val showExportCheckbox: Boolean = false,
+                    override val checkedForExport: Boolean = false,
+                    override val expanded: Boolean = false,
+                    override val lastStartTimestamp: Long,
+                    override val startCount: Long,
+                    val clickCount: Int,
+                    val swipeCount: Int,
+                    val pauseCount: Int,
+                    val repeatText: String,
+                    val maxDurationText: String,
+                ) : Valid(displayName = scenario.name,  scenarioTypeIcon = R.drawable.ic_dumb) {
+                    override fun getScenarioId(): Long = scenario.id.databaseId
+                }
+
+                data class Smart(
+                    override val scenario: Scenario,
+                    override val showExportCheckbox: Boolean = false,
+                    override val checkedForExport: Boolean = false,
+                    override val expanded: Boolean = false,
+                    override val lastStartTimestamp: Long,
+                    override val startCount: Long,
+                    val eventsItems: List<EventItem>,
+                    val triggerEventCount: Int,
+                    val detectionQuality: Int,
+                ) : Valid(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart) {
+
+                    override fun getScenarioId(): Long = scenario.id.databaseId
+
+                    data class EventItem(
+                        val id: Long,
+                        val eventName: String,
+                        val actionsCount: Int,
+                        val conditionsCount: Int,
+                        val firstCondition: ImageCondition?,
+                    )
+                }
             }
         }
     }

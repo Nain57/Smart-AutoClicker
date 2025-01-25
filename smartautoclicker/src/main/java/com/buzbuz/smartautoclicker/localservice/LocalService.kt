@@ -159,7 +159,7 @@ class LocalService(
             val mainMenu = MainMenu { stop() }
 
             detectionRepository.apply {
-                setScenarioId(scenario.id)
+                setScenarioId(scenario.id, markAsUsed = true)
                 setExecutor(androidExecutor)
                 setProjectionErrorHandler { mainMenu.onMediaProjectionLost() }
             }

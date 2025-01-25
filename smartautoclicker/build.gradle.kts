@@ -95,9 +95,10 @@ if (buildParameters.isBuildForVariant("playStoreRelease")) {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation(libs.androidx.appCompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.datastore)
     implementation(libs.androidx.recyclerView)
     implementation(libs.androidx.fragment.ktx)
 

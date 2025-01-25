@@ -56,7 +56,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
 
     /** Scenario clicked by the user. */
-    private var requestedItem: ScenarioListUiState.Item? = null
+    private var requestedItem: ScenarioListUiState.Item.ScenarioItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +86,7 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         scenarioViewModel.refreshPurchaseState()
     }
 
-    override fun startScenario(item: ScenarioListUiState.Item) {
+    override fun startScenario(item: ScenarioListUiState.Item.ScenarioItem) {
         requestedItem = item
 
         scenarioViewModel.startPermissionFlowIfNeeded(
