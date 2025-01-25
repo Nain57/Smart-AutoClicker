@@ -114,6 +114,9 @@
 
     <string name="activity_settings_title">设置</string>
 
+    <string name="field_show_scenario_filters_ui_title">显示场景筛选器</string>
+    <string name="field_show_scenario_filters_ui_desc">显示或隐藏场景列表界面中的筛选器。</string>
+
     <string name="field_legacy_action_ui_title">传统动作用户界面</string>
     <string name="field_legacy_action_ui_desc">通过列表更改操作显示。适用于复杂场景。</string>
 

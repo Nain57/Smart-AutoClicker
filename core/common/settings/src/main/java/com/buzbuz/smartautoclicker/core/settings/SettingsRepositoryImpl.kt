@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,22 @@ internal class SettingsRepositoryImpl @Inject constructor(
     private val _isEntireScreenCaptureForcedFlow: StateFlow<Boolean> = dataSource.isEntireScreenCaptureForced()
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isEntireScreenCaptureForcedFlow: Flow<Boolean> = _isEntireScreenCaptureForcedFlow
+
+    private val _isFilterScenarioUiEnabled: StateFlow<Boolean> = dataSource.isFilterScenarioUiEnabled()
+        .stateIn(coroutineScope, SharingStarted.Eagerly, false)
+    override val isFilterScenarioUiEnabledFlow: Flow<Boolean> = _isFilterScenarioUiEnabled
+
+
+    override fun isFilterScenarioUiEnabled(): Boolean =
+        _isFilterScenarioUiEnabled.value
+
+
+    override fun toggleFilterScenarioUi() {
+        coroutineScope.launch {
+            dataSource.toggleFilterScenarioUi()
+        }
+    }
+
 
     override fun isLegacyActionUiEnabled(): Boolean =
         _isLegacyActionUiEnabledFlow.value

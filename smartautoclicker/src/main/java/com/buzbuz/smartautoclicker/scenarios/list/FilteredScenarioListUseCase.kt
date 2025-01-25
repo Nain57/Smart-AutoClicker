@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortConfig
@@ -41,6 +42,7 @@ class FilteredScenarioListUseCase @Inject constructor(
     @ApplicationContext context: Context,
     dumbRepository: IDumbRepository,
     sortConfigRepository: ScenarioSortConfigRepository,
+    settingsRepository: SettingsRepository,
     private val smartRepository: IRepository,
 ) {
 
@@ -58,19 +60,28 @@ class FilteredScenarioListUseCase @Inject constructor(
 
     /** Flow upon the list of Dumb & Smart scenarios, filtered with the search query and ordered with the sort config */
     val orderedItems: Flow<List<ScenarioListUiState.Item>> =
-        combine(allScenarios, searchQuery, sortConfigRepository.getSortConfig()) { scenarios, searchQuery, sortConfig ->
+        combine(
+            allScenarios,
+            searchQuery,
+            sortConfigRepository.getSortConfig(),
+            settingsRepository.isFilterScenarioUiEnabledFlow,
+        ) { scenarios, searchQuery, sortConfig, filtersEnabled ->
             if (searchQuery == null) {
-                val filteredAndSortedItems = scenarios.sortAndFilter(sortConfig)
-                val sortItem = ScenarioListUiState.Item.SortItem(
-                    sortType = sortConfig.type,
-                    smartVisible = sortConfig.showSmartScenario,
-                    dumbVisible = sortConfig.showDumbScenario,
-                    changeOrderChecked = sortConfig.inverted,
-                )
+                if (filtersEnabled) {
+                    val filteredAndSortedItems = scenarios.sortAndFilter(sortConfig)
+                    val sortItem = ScenarioListUiState.Item.SortItem(
+                        sortType = sortConfig.type,
+                        smartVisible = sortConfig.showSmartScenario,
+                        dumbVisible = sortConfig.showDumbScenario,
+                        changeOrderChecked = sortConfig.inverted,
+                    )
 
-                buildList {
-                    if (scenarios.isNotEmpty()) add(sortItem)
-                    addAll(filteredAndSortedItems)
+                    buildList {
+                        if (scenarios.isNotEmpty()) add(sortItem)
+                        addAll(filteredAndSortedItems)
+                    }
+                } else {
+                    scenarios
                 }
             } else {
                 scenarios.filterByName(searchQuery)
