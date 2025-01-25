@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class UiImageEvent internal constructor(
+data class UiImageEvent(
     override val event: ImageEvent,
     val name: String,
     val conditionsCountText: String,

@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class UiImageCondition internal constructor(
+data class UiImageCondition(
     override val condition: ImageCondition,
     override val name: String,
     override val haveError: Boolean,
