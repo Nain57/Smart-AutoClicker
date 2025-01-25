@@ -152,10 +152,6 @@ class ScenarioListFragment : Fragment() {
 
         updateMenu(uiState.menuUiState)
         updateScenarioList(uiState)
-
-        viewBinding.add.visibility =
-            if (uiState.type == ScenarioListUiState.Type.SELECTION) View.VISIBLE
-            else View.GONE
     }
 
     /**
@@ -210,7 +206,9 @@ class ScenarioListFragment : Fragment() {
                 layoutEmpty.visibility = View.VISIBLE
             } else {
                 list.visibility = View.VISIBLE
-                add.visibility = View.VISIBLE
+                add.visibility =
+                    if (uiState.type == ScenarioListUiState.Type.SELECTION) View.VISIBLE
+                    else View.GONE
                 layoutEmpty.visibility = View.GONE
             }
         }
