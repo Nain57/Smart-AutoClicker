@@ -46,6 +46,12 @@
     <string name="menu_item_title_select_all">Seleziona tutto</string>
     <string name="menu_item_title_cancel">Annulla</string>
     <string name="menu_item_title_search">Cerca</string>
+    <string name="menu_item_title_settings">Impostazioni</string>
+
+
+    <string name="item_scenario_filter_by_name">Nome</string>
+    <string name="item_scenario_filter_by_recent">Recente</string>
+    <string name="item_scenario_filter_by_favorite">Preferito</string>
 
     <!--
       - Text for items in a list or vertical layout.
