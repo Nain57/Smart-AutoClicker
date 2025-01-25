@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class UiTriggerEvent internal constructor(
+data class UiTriggerEvent(
     override val event: TriggerEvent,
     val name: String,
     val conditionsCountText: String,

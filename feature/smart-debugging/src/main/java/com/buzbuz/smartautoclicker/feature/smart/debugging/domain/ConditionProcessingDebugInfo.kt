@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.domain
 
-data class ConditionProcessingDebugInfo internal constructor(
+data class ConditionProcessingDebugInfo(
     val processingCount: Long = 0,
     val successCount: Long = 0,
     val totalProcessingTimeMs: Long = 0,

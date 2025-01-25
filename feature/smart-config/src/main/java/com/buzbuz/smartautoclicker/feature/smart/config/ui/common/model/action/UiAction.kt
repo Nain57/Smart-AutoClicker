@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 
-data class UiAction internal constructor(
+data class UiAction(
     @DrawableRes val icon: Int,
     val name: String,
     val description: String,

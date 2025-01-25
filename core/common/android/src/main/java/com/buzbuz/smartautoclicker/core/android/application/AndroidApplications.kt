@@ -23,7 +23,7 @@ import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.os.Build
 
-data class AndroidApplicationInfo internal constructor(
+data class AndroidApplicationInfo(
     val componentName: ComponentName,
     val name: String,
     val icon: Drawable,

@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class UiTriggerCondition internal constructor (
+data class UiTriggerCondition(
     override val condition: TriggerCondition,
     override val name: String,
     override val haveError: Boolean,

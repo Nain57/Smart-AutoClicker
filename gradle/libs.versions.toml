@@ -9,9 +9,9 @@ googleFirebaseCrashlyticsGradle = "3.0.2"
 googleServices = "4.4.2"
 androidGradlePlugin = "8.7.3"
 java = "21"
-kotlin = "1.9.24"
-kotlinxCoroutines = "1.8.0"
-ksp = "1.9.24-1.0.20"
+kotlin = "2.1.0"
+kotlinxCoroutines = "1.10.0"
+ksp = "2.1.0-1.0.29"
 
 # Androidx
 androidxAnnotation = "1.9.1"
@@ -34,7 +34,7 @@ airbnbLottie = "6.1.0"
 googleMaterial = "1.12.0"
 kotlinSerializationJson = "1.6.3"
 openCv = "4.9.0"
-googleDaggerHilt = "2.51"
+googleDaggerHilt = "2.55"
 
 # PlayStore only
 androidBillingClient = "7.1.1"

@@ -20,7 +20,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
-data class DebugReport internal constructor(
+data class DebugReport(
     val scenario: Scenario,
     val sessionInfo: ProcessingDebugInfo,
     val imageProcessedInfo: ProcessingDebugInfo,
