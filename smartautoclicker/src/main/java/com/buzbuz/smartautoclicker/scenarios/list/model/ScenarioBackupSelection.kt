@@ -33,8 +33,8 @@ fun ScenarioBackupSelection.isEmpty(): Boolean =
  */
 fun ScenarioBackupSelection.toggleScenarioSelectionForBackup(item: ScenarioListUiState.Item): ScenarioBackupSelection? =
     when (item) {
-        is ScenarioListUiState.Item.Valid.Dumb -> toggleDumbScenarioSelectionForBackup(item.scenario)
-        is ScenarioListUiState.Item.Valid.Smart -> toggleSmartScenarioSelectionForBackup(item.scenario)
+        is ScenarioListUiState.Item.ScenarioItem.Valid.Dumb -> toggleDumbScenarioSelectionForBackup(item.scenario)
+        is ScenarioListUiState.Item.ScenarioItem.Valid.Smart -> toggleSmartScenarioSelectionForBackup(item.scenario)
         else -> null
     }
 
@@ -47,8 +47,8 @@ fun ScenarioBackupSelection.toggleAllScenarioSelectionForBackup(allItems: List<S
 
         allItems.forEach { item ->
             when (item) {
-                is ScenarioListUiState.Item.Valid.Dumb -> dumbIds.add(item.scenario.id.databaseId)
-                is ScenarioListUiState.Item.Valid.Smart -> smartIds.add(item.scenario.id.databaseId)
+                is ScenarioListUiState.Item.ScenarioItem.Valid.Dumb -> dumbIds.add(item.scenario.id.databaseId)
+                is ScenarioListUiState.Item.ScenarioItem.Valid.Smart -> smartIds.add(item.scenario.id.databaseId)
                 else -> Unit
             }
         }

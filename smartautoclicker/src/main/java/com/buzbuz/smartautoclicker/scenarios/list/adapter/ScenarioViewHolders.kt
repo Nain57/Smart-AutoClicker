@@ -31,11 +31,11 @@ import kotlinx.coroutines.Job
 
 class EmptyScenarioHolder(
     private val viewBinding: ItemEmptyScenarioBinding,
-    private val startScenarioListener: ((ScenarioListUiState.Item) -> Unit),
-    private val deleteScenarioListener: ((ScenarioListUiState.Item) -> Unit),
+    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
+    private val deleteScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(scenarioItem: ScenarioListUiState.Item.Empty) = viewBinding.apply {
+    fun onBind(scenarioItem: ScenarioListUiState.Item.ScenarioItem.Empty) = viewBinding.apply {
         scenarioName.text = scenarioItem.displayName
         scenarioName.setLeftCompoundDrawable(
             if (scenarioItem.scenario is DumbScenario) R.drawable.ic_dumb
@@ -50,14 +50,14 @@ class EmptyScenarioHolder(
 /** ViewHolder for the [ScenarioAdapter]. */
 class DumbScenarioViewHolder(
     private val viewBinding: ItemDumbScenarioBinding,
-    private val startScenarioListener: ((ScenarioListUiState.Item) -> Unit),
-    private val expandCollapseListener: ((ScenarioListUiState.Item) -> Unit),
-    private val exportClickListener: ((ScenarioListUiState.Item) -> Unit),
-    private val copyClickedListener: ((ScenarioListUiState.Item.Valid) -> Unit),
-    private val deleteScenarioListener: ((ScenarioListUiState.Item) -> Unit),
+    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val copyClickedListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val deleteScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(scenarioItem: ScenarioListUiState.Item.Valid.Dumb) = viewBinding.apply {
+    fun onBind(scenarioItem: ScenarioListUiState.Item.ScenarioItem.Valid.Dumb) = viewBinding.apply {
         scenarioName.text = scenarioItem.displayName
 
         if (scenarioItem.showExportCheckbox) {
@@ -102,11 +102,11 @@ class DumbScenarioViewHolder(
 class SmartScenarioViewHolder(
     private val viewBinding: ItemSmartScenarioBinding,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val startScenarioListener: ((ScenarioListUiState.Item) -> Unit),
-    private val expandCollapseListener: ((ScenarioListUiState.Item) -> Unit),
-    private val exportClickListener: ((ScenarioListUiState.Item) -> Unit),
-    private val copyClickedListener: ((ScenarioListUiState.Item.Valid) -> Unit),
-    private val deleteScenarioListener: ((ScenarioListUiState.Item) -> Unit),
+    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val copyClickedListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val deleteScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     private val eventsAdapter = ScenarioEventsAdapter(bitmapProvider)
@@ -115,7 +115,7 @@ class SmartScenarioViewHolder(
         viewBinding.listEvent.adapter = eventsAdapter
     }
 
-    fun onBind(scenarioItem: ScenarioListUiState.Item.Valid.Smart) = viewBinding.apply {
+    fun onBind(scenarioItem: ScenarioListUiState.Item.ScenarioItem.Valid.Smart) = viewBinding.apply {
         scenarioName.text = scenarioItem.displayName
 
         if (scenarioItem.showExportCheckbox) {

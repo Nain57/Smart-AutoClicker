@@ -62,4 +62,10 @@ class PreferencesDataStore(
         dataStore.edit(transform)
 }
 
+inline fun <reified T : Enum<T>> Preferences.getEnum(key: Preferences.Key<String>): T? =
+    get(key)?.let { stringValue -> enumValueOf<T>(stringValue) }
+
+inline fun <reified T : Enum<T>> MutablePreferences.setEnum(key: Preferences.Key<String>, value: T) =
+    set(key, value.name)
+
 private const val TAG = "PreferencesDataSource"

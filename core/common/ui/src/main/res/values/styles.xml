@@ -145,6 +145,7 @@
     <style name="AppTheme.Widget.CheckableButton" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:checkable">true</item>
         <item name="backgroundTint">@color/selector_button_checkable_background</item>
         <item name="iconTint">@color/selector_button_checkable_tint</item>
     </style>
