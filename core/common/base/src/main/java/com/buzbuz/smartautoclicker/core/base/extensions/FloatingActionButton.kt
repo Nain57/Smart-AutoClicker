@@ -25,13 +25,13 @@ import androidx.core.view.updateLayoutParams
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
-fun FloatingActionButton.applySafeContentInsets(margins: Rect) {
+fun FloatingActionButton.applySafeContentInsets(marginsIfInset: Rect, marginIfNot: Rect) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         windowInsets.getSafeContentInsets().let { insets ->
             view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = margins.bottom + insets.bottom
-                rightMargin = margins.right + insets.right
-                leftMargin = margins.left + insets.left
+                bottomMargin = if (insets.bottom != 0) marginsIfInset.bottom + insets.bottom else marginIfNot.bottom
+                rightMargin = if (insets.right != 0) marginsIfInset.right + insets.right else marginIfNot.right
+                leftMargin = if (insets.left != 0) marginsIfInset.left + insets.left else marginIfNot.left
             }
         }
 
@@ -41,6 +41,5 @@ fun FloatingActionButton.applySafeContentInsets(margins: Rect) {
 
 private fun WindowInsetsCompat.getSafeContentInsets(): Insets =
     getInsets(WindowInsetsCompat.Type.systemBars() or
-            WindowInsetsCompat.Type.systemGestures() or
             WindowInsetsCompat.Type.displayCutout()
     )

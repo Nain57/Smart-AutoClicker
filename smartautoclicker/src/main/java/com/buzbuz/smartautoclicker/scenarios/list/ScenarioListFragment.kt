@@ -112,9 +112,14 @@ class ScenarioListFragment : Fragment() {
 
             topAppBar.setOnMenuItemClickListener { onMenuItemSelected(it) }
 
-            val fabHorizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_horizontal_default)
-            val fabBottomMargin = resources.getDimensionPixelSize(R.dimen.margin_vertical_large)
-            add.applySafeContentInsets(Rect(fabHorizontalMargin, 0, fabHorizontalMargin, fabBottomMargin))
+            val fabHorizontalMarginInset = resources.getDimensionPixelSize(R.dimen.margin_horizontal_mini)
+            val fabHorizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_horizontal_large)
+            val fabBottomMarginInset = resources.getDimensionPixelSize(R.dimen.margin_vertical_default)
+            val fabBottomMargin = resources.getDimensionPixelSize(R.dimen.margin_vertical_extra_large)
+            add.applySafeContentInsets(
+                marginsIfInset = Rect(fabHorizontalMarginInset, 0, fabHorizontalMarginInset, fabBottomMarginInset),
+                marginIfNot =  Rect(fabHorizontalMargin, 0, fabHorizontalMargin, fabBottomMargin),
+            )
         }
 
         lifecycleScope.launch {
