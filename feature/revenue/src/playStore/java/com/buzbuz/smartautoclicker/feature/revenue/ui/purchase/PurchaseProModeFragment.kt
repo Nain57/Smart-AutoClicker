@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setState
 import com.buzbuz.smartautoclicker.feature.revenue.R
 import com.buzbuz.smartautoclicker.feature.revenue.databinding.FragmentPurchaseProModeBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -85,6 +86,7 @@ internal class PurchaseProModeFragment : DialogFragment() {
             }
 
             create()
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
