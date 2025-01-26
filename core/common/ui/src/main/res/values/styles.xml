@@ -49,7 +49,6 @@
     <style name="AppTheme.Widget.AppBarLayout" parent="@style/Widget.Material3.AppBarLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:fitsSystemWindows">true</item>
     </style>
     <!-- Style for the toolbar. -->
     <style name="AppTheme.Widget.Toolbar" parent="@style/Widget.Material3.Toolbar">

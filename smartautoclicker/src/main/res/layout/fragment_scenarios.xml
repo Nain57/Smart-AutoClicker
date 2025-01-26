@@ -21,6 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".scenarios.ScenarioActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -33,6 +34,7 @@
             android:id="@+id/topAppBar"
             style="@style/AppTheme.Widget.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollEffect="compress"
             app:title="@string/activity_scenario_title"
             app:menu="@menu/menu_scenario_fragment" />
 
@@ -42,7 +44,6 @@
         android:id="@+id/layout_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -90,6 +91,7 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -37,7 +37,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.base.extensions.applySystemBarInsets
+import com.buzbuz.smartautoclicker.core.base.extensions.applySafeContentInsets
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
@@ -109,11 +109,12 @@ class ScenarioListFragment : Fragment() {
             add.setOnClickListener { onCreateClicked() }
 
             appBarLayout.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(context)
+
             topAppBar.setOnMenuItemClickListener { onMenuItemSelected(it) }
 
-            val fabEndMargin = resources.getDimensionPixelSize(R.dimen.margin_horizontal_default)
-            val fabBottomMargin = resources.getDimensionPixelSize(R.dimen.margin_vertical_default)
-            add.applySystemBarInsets(Rect(0, 0, fabEndMargin, fabBottomMargin))
+            val fabHorizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_horizontal_default)
+            val fabBottomMargin = resources.getDimensionPixelSize(R.dimen.margin_vertical_large)
+            add.applySafeContentInsets(Rect(fabHorizontalMargin, 0, fabHorizontalMargin, fabBottomMargin))
         }
 
         lifecycleScope.launch {

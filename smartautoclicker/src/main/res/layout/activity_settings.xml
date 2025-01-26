@@ -21,6 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".settings.SettingsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -33,6 +34,7 @@
             android:id="@+id/topAppBar"
             style="@style/AppTheme.Widget.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollEffect="compress"
             app:title="@string/activity_settings_title" />
 
     </com.google.android.material.appbar.AppBarLayout>

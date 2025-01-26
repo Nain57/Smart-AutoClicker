@@ -50,7 +50,6 @@
         <item name="autoCompleteTextViewStyle">@style/AppTheme.Widget.SearchView</item>
         <item name="clickOffsetStyle">@style/AppTheme.Widget.ClickOffset</item>
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
