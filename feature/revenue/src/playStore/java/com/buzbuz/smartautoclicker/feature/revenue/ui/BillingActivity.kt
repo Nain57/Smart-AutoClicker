@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +56,7 @@ internal class BillingActivity : AppCompatActivity() {
     private val viewModel: BillingActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pro_mode)
 
