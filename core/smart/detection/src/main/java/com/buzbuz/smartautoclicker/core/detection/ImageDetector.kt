@@ -27,6 +27,9 @@ import androidx.annotation.Keep
  */
 interface ImageDetector : AutoCloseable {
 
+    /** Initialize the detector. Must be called on the same thread as the detection. */
+    fun init()
+
     /**
      * Set the current metrics of the screen.
      * This MUST be called before the first detection, with the first bitmap provided by the screen. All orientation

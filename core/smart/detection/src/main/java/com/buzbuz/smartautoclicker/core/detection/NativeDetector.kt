@@ -39,16 +39,21 @@ class NativeDetector private constructor() : ImageDetector {
     }
 
     /** The results of the detection. Modified by native code. */
+    @Keep
     private val detectionResult = DetectionResult()
+    /** Native pointer of the detector object. */
+    @Keep
+    private var nativePtr: Long = -1
 
     private val detectionQualityMin: Double = DETECTION_QUALITY_MIN.toDouble()
     private val detectionQualityMax: Double = DETECTION_QUALITY_MAX.toDouble()
 
-    /** Native pointer of the detector object. */
-    @Keep
-    private var nativePtr: Long = newDetector()
-
     private var isClosed: Boolean = false
+
+    override fun init() {
+        nativePtr = newDetector(detectionResult)
+    }
+
 
     override fun close() {
         if (isClosed) return
@@ -93,7 +98,7 @@ class NativeDetector private constructor() : ImageDetector {
      *
      * @return the pointer of the native detector object.
      */
-    private external fun newDetector(): Long
+    private external fun newDetector(result: DetectionResult): Long
 
     /**
      * Deletes the native detector.

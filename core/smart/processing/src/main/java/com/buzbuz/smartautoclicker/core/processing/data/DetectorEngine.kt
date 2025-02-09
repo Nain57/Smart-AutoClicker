@@ -186,10 +186,10 @@ class DetectorEngine @Inject constructor(
 
         processingScope?.launchProcessingJob {
             imageDetector = detector
+            detector.init()
 
             detectionProgressListener = progressListener
             progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
-
 
             scenarioProcessor = ScenarioProcessor(
                 processingTag = appComponentsProvider.originalAppId,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,33 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <opencv2/core/types.hpp>
+#ifndef KLICK_R_DETECTION_RESULTS
+#define KLICK_R_DETECTION_RESULTS
+
+#include "../jni/jni_java_wrapper.hpp"
+#include <jni.h>
 
 namespace smartautoclicker {
 
-    class DetectionResult {
+    class DetectionResult: public JniJavaWrapper {
+
+    private:
+        jmethodID methodSetResults = nullptr;
 
     public:
-        bool isDetected;
-        double centerX;
-        double centerY;
+        void onAttachedToJavaObject(JNIEnv *env) override;
+        void onDetachedFromJavaObject() override;
 
-        double minVal;
-        double maxVal;
-        cv::Point minLoc;
-        cv::Point maxLoc;
-
-        void reset() {
-            isDetected = false;
-            centerX = 0;
-            centerY = 0;
-            minVal = 0;
-            maxVal = 0;
-            minLoc.x = 0;
-            minLoc.y = 0;
-            maxLoc.x = 0;
-            maxLoc.y = 0;
-        }
+        void setResults(JNIEnv *env, bool detected, double centerX, double centerY, double maxVal);
+        void clearResults(JNIEnv *env);
     };
 }
 
+#endif //KLICK_R_DETECTION_RESULTS
