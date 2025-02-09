@@ -15,50 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <android/log.h>
-#include <android/bitmap.h>
-#include <jni.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <string>
-
-#include "detector.hpp"
+#include "jni/jni_helper.h"
 
 using namespace smartautoclicker;
 
-/**
- * This function is a helper providing the boiler plate code to return the native object from Java object.
- * The "nativePtr" is reached from this code, casted to Detector's pointer and returned. This will be used in
- * all our native methods wrappers to recover the object before invoking it's methods.
- */
-static Detector *getObject(JNIEnv *env, jobject self) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
-
-    jfieldID nativeObjectPointerID = env->GetFieldID(cls, "nativePtr", "J");
-    if (!nativeObjectPointerID)
-        env->FatalError("GetFieldID failed");
-
-    jlong nativeObjectPointer = env->GetLongField(self, nativeObjectPointerID);
-    return reinterpret_cast<Detector *>(nativeObjectPointer);
-}
-
-static void setDetectionResult(JNIEnv *env, jobject self, DetectionResult result) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
-
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
-
-    env->CallVoidMethod(self, methodId, result.isDetected, (int) result.centerX, (int) result.centerY, result.maxVal);
-}
-
 extern "C" {
+
     JNIEXPORT jlong JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_newDetector(
             JNIEnv *env,
-            jobject self
-    ) {
-        return reinterpret_cast<jlong>(new Detector());
+            jobject self,
+            jobject result) {
+
+        auto detector = new Detector();
+        detector->initialize(env, result);
+        return reinterpret_cast<jlong>(detector);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_updateScreenMetrics(
@@ -66,16 +36,16 @@ extern "C" {
             jobject self,
             jstring metricsTag,
             jobject screenBitmap,
-            jdouble detectionQuality
-    ) {
+            jdouble detectionQuality) {
+
         getObject(env, self)->setScreenMetrics(env, metricsTag, screenBitmap, detectionQuality);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setScreenImage(
             JNIEnv *env,
             jobject self,
-            jobject screenBitmap
-    ) {
+            jobject screenBitmap) {
+
         getObject(env, self)->setScreenImage(env, screenBitmap);
     }
 
@@ -84,9 +54,9 @@ extern "C" {
             jobject self,
             jobject conditionBitmap,
             jint threshold,
-            jobject result
-    ) {
-        setDetectionResult(env, result, getObject(env, self)->detectCondition(env, conditionBitmap, threshold));
+            jobject result) {
+
+        getObject(env, self)->detectCondition(env, conditionBitmap, threshold);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectAt(
@@ -98,15 +68,17 @@ extern "C" {
             jint width,
             jint height,
             jint threshold,
-            jobject result
-    ) {
-        setDetectionResult(env, result, getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold));
+            jobject result) {
+
+        getObject(env, self)->detectCondition(env, conditionBitmap, x, y, width, height, threshold);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_deleteDetector(
             JNIEnv *env,
-            jobject self
-    ) {
-        delete getObject(env, self);
+            jobject self) {
+
+        auto detector = getObject(env, self);
+        detector->release(env);
+        delete detector;
     }
 }
