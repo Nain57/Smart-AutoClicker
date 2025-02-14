@@ -20,6 +20,7 @@
 
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
 #include "../types/scalable_roi.hpp"
 
 namespace smartautoclicker {

@@ -18,8 +18,8 @@
 #ifndef KLICK_R_DETECTION_RESULTS
 #define KLICK_R_DETECTION_RESULTS
 
-#include "../jni/jni_java_wrapper.hpp"
 #include <jni.h>
+#include "../jni/jni_java_wrapper.hpp"
 
 namespace smartautoclicker {
 

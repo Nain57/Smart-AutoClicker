@@ -81,7 +81,7 @@ class NativeDetector private constructor() : ImageDetector {
     override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult {
         if (isClosed) return detectionResult.copy()
 
-        detect(conditionBitmap, threshold, detectionResult)
+        detect(conditionBitmap, threshold)
         return detectionResult.copy()
     }
 
@@ -127,9 +127,8 @@ class NativeDetector private constructor() : ImageDetector {
      *
      * @param conditionBitmap the condition to detect in the screen.
      * @param threshold the allowed error threshold allowed for the condition.
-     * @param result stores the results on this detection.
      */
-    private external fun detect(conditionBitmap: Bitmap, threshold: Int, result: DetectionResult)
+    private external fun detect(conditionBitmap: Bitmap, threshold: Int)
 
     /**
      * Native method for detecting if the bitmap is at a specific position in the current screen bitmap.
@@ -140,7 +139,6 @@ class NativeDetector private constructor() : ImageDetector {
      * @param width the width of the condition.
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
-     * @param result stores the results on this detection.
      */
     private external fun detectAt(
         conditionBitmap: Bitmap,
