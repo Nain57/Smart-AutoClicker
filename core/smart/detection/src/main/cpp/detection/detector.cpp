@@ -69,29 +69,11 @@ void Detector::detectCondition(JNIEnv *env, jobject conditionBitmap, int x, int 
 }
 
 void Detector::match(JNIEnv *env, jobject conditionBitmap, int threshold) {
-    // Prepare the detector for matching and check if input parameters are valid
-    if (!prepareForMatching(env, conditionBitmap)) {
-        LOGW(LOG_TAG, "Invalid detection parameters, skipping condition");
+    // Check of dimensions are valid
+    if (!screenImage.isFullSizeContains(detectionRoi.fullSize) || !screenImage.isScaledContains(detectionRoi.scaled)) {
+        LOGE(LOG_TAG, "Detection ROI is invalid, skipping condition");
         detectionResult.clearResults(env);
         return;
-    }
-
-    // Search for the condition in the image
-    bool isFound = matchTemplate(threshold);
-
-    // Set the results to the java object
-    detectionResult.setResults(
-            env,
-            isFound,
-            detectionRoi.fullSize.x + matchingResults.roi.fullSizeCenterX(),
-            detectionRoi.fullSize.y + matchingResults.roi.fullSizeCenterY(),
-            matchingResults.maxVal);
-}
-
-bool Detector::prepareForMatching(JNIEnv *env, jobject conditionBitmap) {
-    if (!screenImage.isFullSizeContains(detectionRoi.fullSize) || !screenImage.isScaledContains(detectionRoi.scaled)) {
-        LOGE(LOG_TAG, "Detection ROI is invalid");
-        return false;
     }
 
     // Read condition bitmap image
@@ -100,14 +82,11 @@ bool Detector::prepareForMatching(JNIEnv *env, jobject conditionBitmap) {
     // Crop the scaled gray current image to only get the detection area and verify it is equals or bigger than the condition
     screenImage.setCropping(detectionRoi);
     if (!screenImage.isCroppedScaledContains(conditionImage.scaledSize)) {
-        LOGE(LOG_TAG, "Condition is bigger than screen image");
-        return false;
+        LOGE(LOG_TAG, "Condition is bigger than screen image, skipping it");
+        detectionResult.clearResults(env);
+        return;
     }
 
-    return true;
-}
-
-bool Detector::matchTemplate(int threshold) {
     // Get the matching results
     cv::matchTemplate(
             *screenImage.croppedScaledGray,
@@ -116,6 +95,7 @@ bool Detector::matchTemplate(int threshold) {
             cv::TM_CCOEFF_NORMED);
 
     // Until a condition is detected or none fits
+    bool isFound = false;
     while (true) {
         // Find new best matching candidate location
         matchingResults.locateNextMinMax(*conditionImage.scaledGray, scaleRatioManager.getScaleRatio());
@@ -127,15 +107,25 @@ bool Detector::matchTemplate(int threshold) {
 
         // If the maximum for the whole picture is below the threshold, we will never find.
         if (!isResultAboveThreshold(matchingResults, threshold)) {
-            return false;
+            isFound = false;
+            break;
         }
 
         // Check if the colors are matching in the candidate area. If not, continue to search
         double colorDiff = getColorDiff(*screenImage.croppedFullSizeColor, *conditionImage.fullSizeColor);
         if (colorDiff < threshold) {
-            return true;
+            isFound = true;
+            break;
         }
     }
+
+    // Set the results to the java object
+    detectionResult.setResults(
+            env,
+            isFound,
+            detectionRoi.fullSize.x + matchingResults.roi.fullSizeCenterX(),
+            detectionRoi.fullSize.y + matchingResults.roi.fullSizeCenterY(),
+            matchingResults.maxVal);
 }
 
 bool Detector::isResultAboveThreshold(const MatchingResults& results, const int threshold) {

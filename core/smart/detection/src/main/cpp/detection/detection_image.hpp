@@ -21,6 +21,7 @@
 #include <jni.h>
 #include <android/bitmap.h>
 #include <opencv2/core/types.hpp>
+
 #include "../types/scalable_roi.hpp"
 
 namespace smartautoclicker {
@@ -48,20 +49,14 @@ namespace smartautoclicker {
 
             DetectionImage() = default;
 
-            /** */
             static void readBitmapInfo(JNIEnv *env, jobject bitmap, AndroidBitmapInfo* result) ;
 
-            /** */
             void processBitmap(JNIEnv *env, jobject bitmap, double scaleRatio);
 
-            /** */
             void setCropping(const ScalableRoi& cropRoi);
 
-            /** */
             bool isFullSizeContains(const cv::Rect& roi) const;
-            /** */
             bool isScaledContains(const cv::Rect& roi) const;
-            /** */
             bool isCroppedScaledContains(const cv::Size& size) const;
 
 
