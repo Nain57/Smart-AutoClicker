@@ -19,6 +19,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLowest"
     android:minHeight="@dimen/bottom_sheet_min_height">
 
     <LinearLayout
@@ -34,8 +35,7 @@
             android:id="@+id/layout_loadable_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
-            android:background="@color/listBackground"/>
+            android:layout_marginBottom="@dimen/margin_vertical_default"/>
 
     </LinearLayout>
 

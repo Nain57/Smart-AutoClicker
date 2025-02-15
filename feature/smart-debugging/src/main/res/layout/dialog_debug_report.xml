@@ -20,6 +20,7 @@
     style="@style/AppTheme.Dialog.BackgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLowest"
     android:orientation="vertical">
 
     <include layout="@layout/include_dialog_navigation_top_bar"
