@@ -20,6 +20,8 @@ import android.content.Context
 import android.graphics.Point
 import android.util.Log
 import android.view.KeyEvent
+import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
@@ -51,6 +53,18 @@ class OverlayManager @Inject internal constructor(
     private val displayConfigManager: DisplayConfigManager,
     private val menuPositionDataSource: OverlayMenuPositionDataSource,
 ): Dumpable {
+
+    companion object {
+        /** The type of window used for the overlays. */
+        const val OVERLAY_WINDOW_TYPE: Int = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+
+        fun AlertDialog.showAsOverlay() {
+            window?.setType(OVERLAY_WINDOW_TYPE)
+            show()
+        }
+    }
+
+
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 

@@ -23,19 +23,17 @@ import android.view.LayoutInflater
 
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ContextThemeWrapper
 
-import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseMoveToBinding
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 
-import com.google.android.material.color.DynamicColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MoveToDialog(
@@ -79,7 +77,7 @@ class MoveToDialog(
             .setNegativeButton(android.R.string.cancel) { _, _ -> back() }
             .create()
 
-        dialog?.window?.setType(WindowManagerCompat.TYPE_COMPAT_OVERLAY)
+        dialog?.window?.setType(OverlayManager.OVERLAY_WINDOW_TYPE)
     }
 
     override fun onStart() {
