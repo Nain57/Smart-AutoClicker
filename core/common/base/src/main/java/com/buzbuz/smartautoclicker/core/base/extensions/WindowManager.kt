@@ -24,17 +24,6 @@ import android.view.WindowManager
 import java.lang.reflect.Field
 
 
-object WindowManagerCompat {
-
-    /** WindowManager LayoutParams type for a window over applications. */
-    @Suppress("DEPRECATION")
-    @JvmField
-    val TYPE_COMPAT_OVERLAY =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        else WindowManager.LayoutParams.TYPE_PHONE
-
-}
-
 fun WindowManager.safeAddView(view: View?, params: WindowManager.LayoutParams?): Boolean {
     if (view == null || params == null) return false
 

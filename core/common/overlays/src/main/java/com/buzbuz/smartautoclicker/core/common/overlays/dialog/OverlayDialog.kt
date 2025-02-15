@@ -28,8 +28,8 @@ import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
-import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -104,7 +104,7 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
             create()
 
             window?.apply {
-                setType(WindowManagerCompat.TYPE_COMPAT_OVERLAY)
+                setType(OverlayManager.OVERLAY_WINDOW_TYPE)
                 setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
                 decorView.setOnTouchListener(hideSoftInputTouchListener)
             }

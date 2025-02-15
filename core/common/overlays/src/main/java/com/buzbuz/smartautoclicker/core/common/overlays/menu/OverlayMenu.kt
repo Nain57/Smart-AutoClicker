@@ -38,13 +38,13 @@ import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
-import com.buzbuz.smartautoclicker.core.base.extensions.WindowManagerCompat
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.base.extensions.doWhenMeasured
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuAnimations
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuMoveTouchEventHandler
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
@@ -87,7 +87,7 @@ abstract class OverlayMenu(
     private val baseLayoutParams: WindowManager.LayoutParams = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
-        WindowManagerCompat.TYPE_COMPAT_OVERLAY,
+        OverlayManager.OVERLAY_WINDOW_TYPE,
         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
@@ -195,8 +195,8 @@ abstract class OverlayMenu(
         overlayLayoutParams = onCreateOverlayViewLayoutParams()
 
         // Set the clicks listener on the menu items
-        menuBackground = menuLayout.findViewById<ViewGroup>(R.id.menu_background)
-        buttonsContainer = menuLayout.findViewById<ViewGroup>(R.id.menu_items)
+        menuBackground = menuLayout.findViewById(R.id.menu_background)
+        buttonsContainer = menuLayout.findViewById(R.id.menu_items)
         setupButtons(buttonsContainer)
 
         // Setup the touch event handler for the move button

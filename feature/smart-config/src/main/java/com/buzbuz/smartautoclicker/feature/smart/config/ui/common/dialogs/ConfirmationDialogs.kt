@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs
 import android.content.Context
 import android.content.DialogInterface
 import androidx.annotation.StringRes
+import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager.Companion.showAsOverlay
 
-import com.buzbuz.smartautoclicker.core.base.extensions.showAsOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
