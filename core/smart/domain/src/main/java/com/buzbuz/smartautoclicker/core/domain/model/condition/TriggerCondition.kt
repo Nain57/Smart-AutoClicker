@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
 sealed class TriggerCondition: Condition(), Identifiable, Completable {
 
@@ -53,7 +54,7 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
         override val name: String,
         val counterName: String,
         val comparisonOperation: ComparisonOperation,
-        val counterValue: Int,
+        val counterValue: CounterOperationValue,
     ) : TriggerCondition() {
 
         /**
@@ -76,7 +77,7 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
         }
 
         override fun isComplete(): Boolean =
-            super.isComplete() && counterName.isNotEmpty()
+            super.isComplete() && counterName.isNotEmpty() && counterValue.isComplete()
 
         override fun hashCodeNoIds(): Int =
             super.hashCode() + counterName.hashCode() + comparisonOperation.hashCode() + counterValue.hashCode()

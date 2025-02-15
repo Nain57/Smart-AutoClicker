@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
 data class ChangeCounter(
     override val id: Identifier,
@@ -26,7 +27,7 @@ data class ChangeCounter(
     override var priority: Int,
     val counterName: String,
     val operation: OperationType,
-    val operationValue: Int,
+    val operationValue: CounterOperationValue,
 ): Action() {
 
     /**
@@ -45,7 +46,7 @@ data class ChangeCounter(
     }
 
     override fun isComplete(): Boolean =
-        super.isComplete() && counterName.isNotEmpty() && operationValue >= 0
+        super.isComplete() && counterName.isNotEmpty() && operationValue.isComplete()
 
     override fun hashCodeNoIds(): Int =
         name.hashCode() + counterName.hashCode() + operation.hashCode() + operationValue.hashCode()

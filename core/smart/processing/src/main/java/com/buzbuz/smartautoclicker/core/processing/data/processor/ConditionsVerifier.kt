@@ -22,6 +22,7 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -98,21 +99,27 @@ internal class ConditionsVerifier(
 
     private fun verifyOnCounterReached(condition: TriggerCondition.OnCounterCountReached): Boolean =
         state.getCounterValue(condition.counterName)?.let { counterValue ->
+
+            val operandValue = when (val operationValue = condition.counterValue) {
+                is CounterOperationValue.Counter -> state.getCounterValue(operationValue.value) ?: 0
+                is CounterOperationValue.Number -> operationValue.value
+            }
+
             when (condition.comparisonOperation) {
                 TriggerCondition.OnCounterCountReached.ComparisonOperation.GREATER ->
-                    counterValue > condition.counterValue
+                    counterValue > operandValue
 
                 TriggerCondition.OnCounterCountReached.ComparisonOperation.GREATER_OR_EQUALS ->
-                    counterValue >= condition.counterValue
+                    counterValue >= operandValue
 
                 TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS ->
-                    counterValue == condition.counterValue
+                    counterValue == operandValue
 
                 TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER_OR_EQUALS ->
-                    counterValue <= condition.counterValue
+                    counterValue <= operandValue
 
                 TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER ->
-                    counterValue < condition.counterValue
+                    counterValue < operandValue
             }
         } ?: false
 

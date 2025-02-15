@@ -101,8 +101,3 @@ data class CompleteEventEntity(
     )
     val conditions: List<ConditionEntity>,
 )
-
-enum class EventType {
-    IMAGE_EVENT,
-    TRIGGER_EVENT,
-}

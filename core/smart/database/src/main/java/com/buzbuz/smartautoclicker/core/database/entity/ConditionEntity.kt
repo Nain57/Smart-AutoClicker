@@ -49,10 +49,6 @@ import kotlinx.serialization.Serializable
  * @param detectionType the type of detection. Can be any of the values defined in
  *                      [com.buzbuz.smartautoclicker.domain.DetectionType].
  * @param shouldBeDetected true if this condition should be detected to be true, false if it should not be found.
- * @param detectionAreaLeft
- * @param detectionAreaTop
- * @param detectionAreaRight
- * @param detectionAreaBottom
  */
 @Entity(
     tableName = CONDITION_TABLE,
@@ -92,47 +88,11 @@ data class ConditionEntity(
     // ConditionType.ON_COUNTER_REACHED
     @ColumnInfo(name = "counter_name") val counterName: String? = null,
     @ColumnInfo(name = "counter_comparison_operation") val counterComparisonOperation: CounterComparisonOperation? = null,
+    @ColumnInfo(name = "counter_operation_value_type") val counterOperationValueType: CounterOperationValueType? = null,
     @ColumnInfo(name = "counter_value") val counterValue: Int? = null,
+    @ColumnInfo(name = "counter_value_counter_name") val counterOperationCounterName: String? = null,
 
     // ConditionType.ON_TIMER_REACHED
     @ColumnInfo(name = "timer_value_ms") val timerValueMs: Long? = null,
     @ColumnInfo(name = "timer_restart_when_reached") val restartWhenReached: Boolean? = null,
 ) : EntityWithId
-
-/**
- * Type of [ConditionEntity].
- * For each type there is a set of values that will be available in the database, all others will always be null. Refers
- * to the [ConditionEntity] documentation for values/type association.
- *
- * /!\ DO NOT RENAME: TriggerConditionType enum name is used in the database.
- */
-enum class ConditionType {
-    /** Condition fulfilled upon broadcast reception. */
-    ON_BROADCAST_RECEIVED,
-    /** Condition fulfilled upon counter value. */
-    ON_COUNTER_REACHED,
-    /** Condition fulfilled upon image detected. */
-    ON_IMAGE_DETECTED,
-    /** Toggle the enabled state of an event. */
-    ON_TIMER_REACHED,
-}
-
-/**
- * Type of counter comparison for [ConditionEntity] of type [ConditionType.ON_COUNTER_REACHED].
- * For each type there is a set of values that will be available in the database, all others will always be null. Refers
- * to the [CounterComparisonOperation] documentation for values/type association.
- *
- * /!\ DO NOT RENAME: TriggerConditionType enum name is used in the database.
- */
-enum class CounterComparisonOperation {
-    /** The counter value is strictly equals to the value. */
-    EQUALS,
-    /** The counter value is strictly lower than the value. */
-    LOWER,
-    /** The counter value is lower or equals to the value */
-    LOWER_OR_EQUALS,
-    /** The counter value is strictly greater than the value. */
-    GREATER,
-    /** The counter value is greater or equals to the value. */
-    GREATER_OR_EQUALS,
-}

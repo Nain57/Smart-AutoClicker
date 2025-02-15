@@ -87,9 +87,9 @@
     <string name="item_toggle_event_details_invert_all">Tout inverser</string>
     <string name="item_toggle_event_details_manual">Changer %1$d évènements</string>
     <string name="item_change_counter_desc">Modifier une valeur pour la vérifier plus tard</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_broadcast_received_details">%1$s reçu</string>
-    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
     <string name="item_timer_reached_details">%1$s après l\'activation de l\'évènement</string>
     <string name="item_broadcast_received_desc">Remplie quand un Broadcast est reçu</string>
     <string name="item_counter_reached_desc">Vérifie la valeur d\'un compteur modifié par une Action</string>

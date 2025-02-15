@@ -24,6 +24,7 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -168,8 +169,8 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
             counterName = "",
-            counterValue = 0,
-            comparisonOperation = defaultValues.counterComparisonOperation()
+            comparisonOperation = defaultValues.counterComparisonOperation(),
+            counterValue = CounterOperationValue.Number(0)
         )
 
     fun createNewOnTimerReached(context: Context): TriggerCondition.OnTimerReached =
@@ -286,7 +287,7 @@ class EditedItemsBuilder internal constructor(
             name = defaultValues.changeCounterName(context),
             counterName = "",
             operation = ChangeCounter.OperationType.ADD,
-            operationValue = 0,
+            operationValue = CounterOperationValue.Number(0),
             priority = 0,
         )
 

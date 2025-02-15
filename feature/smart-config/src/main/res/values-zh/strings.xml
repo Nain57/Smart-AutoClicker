@@ -87,9 +87,9 @@
     <string name="item_toggle_event_details_invert_all">全部反转</string>
     <string name="item_toggle_event_details_manual">更改 %1$d 事件</string>
     <string name="item_change_counter_desc">更改数值以便稍后验证</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_broadcast_received_details">%1$s 收到</string>
-    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
     <string name="item_timer_reached_details">%1$s 事件启用后</string>
     <string name="item_broadcast_received_desc">收到Broadcast时执行</string>
     <string name="item_timer_reached_desc">在该触发器激活后的规定时间内完成</string>

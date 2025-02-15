@@ -58,14 +58,4 @@ data class IntentExtraEntity(
     @ColumnInfo(name = "value") val value: String,
 ) : EntityWithId
 
-/** The list of supported types for the value of an [IntentExtraEntity]. */
-enum class IntentExtraType {
-    BOOLEAN,
-    BYTE,
-    CHAR,
-    DOUBLE,
-    INTEGER,
-    FLOAT,
-    SHORT,
-    STRING
-}
+

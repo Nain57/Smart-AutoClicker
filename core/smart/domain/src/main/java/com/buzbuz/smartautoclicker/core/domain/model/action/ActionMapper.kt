@@ -26,7 +26,9 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
 
@@ -109,8 +111,10 @@ private fun ToggleEvent.toToggleEventEntity(): ActionEntity =
         toggleAll = toggleAll,
     )
 
-private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
-    ActionEntity(
+private fun ChangeCounter.toChangeCounterEntity(): ActionEntity {
+    val isNumberValue = operationValue is CounterOperationValue.Number
+
+    return ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
         priority = priority,
@@ -118,8 +122,11 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
         type = ActionType.CHANGE_COUNTER,
         counterName = counterName,
         counterOperation = operation.toEntity(),
-        counterOperationValue = operationValue,
+        counterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
+        counterOperationValue = if (isNumberValue) operationValue.value as Int else null,
+        counterOperationCounterName = if (isNumberValue) null else operationValue.value as String,
     )
+}
 
 private fun Notification.toNotificationEntity(): ActionEntity =
     ActionEntity(
@@ -208,7 +215,11 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
     priority = action.priority,
     counterName = action.counterName!!,
     operation = action.counterOperation!!.toDomain(),
-    operationValue = action.counterOperationValue!!,
+    operationValue = CounterOperationValue.getCounterOperationValue(
+        type = action.counterOperationValueType,
+        numberValue = action.counterOperationValue,
+        counterName = action.counterOperationCounterName,
+    ),
 )
 
 private fun CompleteActionEntity.toDomainNotification(cleanIds: Boolean = false) = Notification(

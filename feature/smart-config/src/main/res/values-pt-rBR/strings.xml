@@ -38,7 +38,7 @@
 
     <string name="item_counter_reached_title">Quando o contador for alcançado</string>
     <string name="item_counter_reached_desc">Verifique o valor de um contador modificado por uma ação</string>
-    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
 
     <string name="item_timer_reached_title">Quando o timer for alcançado</string>
     <string name="item_timer_reached_desc">Cumprido após um tempo definido desde a ativação do evento</string>
@@ -66,7 +66,7 @@
 
     <string name="item_change_counter_title">Alterar contador</string>
     <string name="item_change_counter_desc">Alterar um valor para verificar mais tarde</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Contador inválido</string>
 
     <string name="item_toggle_event_title">Alterar estado do evento</string>

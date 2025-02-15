@@ -40,6 +40,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionChangeCounterBinding
@@ -95,7 +100,7 @@ class ChangeCounterDialog(
                 textField.filters = arrayOf<InputFilter>(
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
-                setOnCheckboxClickedListener { showCounterSelectionDialog() }
+                setOnCheckboxClickedListener { showCounterSelectionDialog(viewModel::setCounterName) }
             }
             hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
 
@@ -105,14 +110,60 @@ class ChangeCounterDialog(
                 onItemSelected = viewModel::setOperationItem,
             )
 
+            valueTypeMultiStateButton.apply {
+                setup(
+                    MultiStateButtonConfig(
+                        icons = listOf(R.drawable.ic_numbers, R.drawable.ic_change_counter),
+                        singleSelection = true,
+                        selectionRequired = true,
+                    )
+                )
+                setOnCheckedListener { checkedId ->
+                    viewModel.setOperationValue(
+                        if (checkedId == 0) {
+                            CounterOperationValue.Number(
+                                if (editValueLayout.textField.text.isNullOrEmpty()) 0
+                                else editValueLayout.textField.text.toString().toInt()
+                            )
+                        } else {
+                            CounterOperationValue.Counter(
+                                if (editValueCounterName.textField.text.isNullOrEmpty()) ""
+                                else editValueCounterName.textField.text.toString()
+                            )
+                        }
+                    )
+                }
+            }
+
             editValueLayout.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
                 setLabel(R.string.field_counter_operation_value_label)
                 setOnTextChangedListener {
-                    viewModel.setOperationValue(if (it.isNotEmpty()) it.toString().toInt() else null)
+                    viewModel.setOperationValue(
+                        CounterOperationValue.Number(
+                            if (editValueLayout.textField.text.isNullOrEmpty()) 0
+                            else editValueLayout.textField.text.toString().toInt()
+                        )
+                    )
                 }
             }
             hideSoftInputOnFocusLoss(editValueLayout.textField)
+
+            editValueCounterName.apply {
+                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
+                setOnTextChangedListener {
+                    viewModel.setOperationValue(CounterOperationValue.Counter(it.toString()))
+                }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
+                setOnCheckboxClickedListener {
+                    showCounterSelectionDialog { counterName ->
+                        viewModel.setOperationValue(CounterOperationValue.Counter(counterName))
+                    }
+                }
+            }
+            hideSoftInputOnFocusLoss(editValueCounterName.textField)
         }
 
         return viewBinding.root
@@ -131,7 +182,9 @@ class ChangeCounterDialog(
                 launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
                 launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
                 launch { viewModel.operatorDropdownState.collect(viewBinding.operatorField::setSelectedItem) }
-                launch { viewModel.valueText.collect(::updateCounterValue) }
+                launch { viewModel.isNumberValue.collect(::updateOperationValueVisibility) }
+                launch { viewModel.numberValueText.collect(::updateNumberValue) }
+                launch { viewModel.counterNameValueText.collect(::updateCounterValue) }
                 launch { viewModel.isValidAction.collect(::updateSaveButton) }
             }
         }
@@ -160,18 +213,36 @@ class ChangeCounterDialog(
         super.back()
     }
 
-    private fun updateCounterValue(newValue: String?) {
+    private fun updateOperationValueVisibility(isNumberValue: Boolean) {
+        viewBinding.apply {
+            if (isNumberValue) {
+                editValueCounterName.root.visibility = View.GONE
+                editValueLayout.root.visibility = View.VISIBLE
+                valueTypeMultiStateButton.setChecked(0)
+            } else {
+                editValueCounterName.root.visibility = View.VISIBLE
+                editValueLayout.root.visibility = View.GONE
+                valueTypeMultiStateButton.setChecked(1)
+            }
+        }
+    }
+
+    private fun updateNumberValue(newValue: String?) {
         viewBinding.editValueLayout.setText(newValue, InputType.TYPE_CLASS_NUMBER)
+    }
+
+    private fun updateCounterValue(newValue: String?) {
+        viewBinding.editValueCounterName.setTextValue(newValue)
     }
 
     private fun updateSaveButton(isValidAction: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidAction)
     }
 
-    private fun showCounterSelectionDialog() {
+    private fun showCounterSelectionDialog(onCounterSelected: (String) -> Unit) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = CounterNameSelectionDialog(viewModel::setCounterName),
+            newOverlay = CounterNameSelectionDialog(onCounterSelected),
             hideCurrent = true,
         )
     }

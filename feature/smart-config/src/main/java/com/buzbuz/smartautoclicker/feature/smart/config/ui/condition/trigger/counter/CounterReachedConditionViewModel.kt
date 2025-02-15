@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.co
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
@@ -73,8 +74,19 @@ class CounterReachedConditionViewModel @Inject constructor(
         .take(1)
     val counterNameError: Flow<Boolean> = configuredCondition.map { it.counterName.isEmpty() }
 
-    val comparisonValueText: Flow<String?> = configuredCondition
-        .map { it.counterValue.toString() }
+    val isNumberValue: Flow<Boolean> = configuredCondition
+        .map { it.counterValue is CounterOperationValue.Number }
+
+    val numberValueText: Flow<String?> = configuredCondition
+        .map { it.counterValue }
+        .filterIsInstance<CounterOperationValue.Number>()
+        .map { it.value.toString() }
+        .take(1)
+
+    val counterNameValueText: Flow<String?> = configuredCondition
+        .map { it.counterValue }
+        .filterIsInstance<CounterOperationValue.Counter>()
+        .map { it.value }
         .take(1)
 
     val operatorDropdownItems = listOf(greaterItem, greaterOrEqualsItem, equalsItem, lowerOrEqualsItem, lowerItem)
@@ -120,8 +132,10 @@ class CounterReachedConditionViewModel @Inject constructor(
         }
     }
 
-    fun setComparisonValue(value: Int?) {
-        updateEditedCondition { old -> old.copy(counterValue = value ?: -1) }
+    fun setOperationValue(value: CounterOperationValue) {
+        updateEditedCondition { old ->
+            old.copy(counterValue = value)
+        }
     }
 
     private fun updateEditedCondition(
