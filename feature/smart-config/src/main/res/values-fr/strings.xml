@@ -178,7 +178,7 @@
       - Should be short and concise.
       -->
     <string name="field_title_condition_threshold">Différence tolérée</string>
-    <string name="field_scenario_quality_title">Qualité de détection</string>
+    <string name="field_scenario_quality_title">Résolution de détection</string>
     <string name="field_intent_extra_value_title">Valeur</string>
     <string name="field_tutorial_title">Tutoriel</string>
 
@@ -207,8 +207,7 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="field_scenario_quality_button_speed">Vitesse</string>
-    <string name="field_scenario_quality_button_precision">Précision</string>
+    <string name="field_scenario_quality_description">Pour accélérer la détection, Klick\'r réduit la résolution des images avant de procéder à la détection.\n\nSi vous augmentez la résolution, la détection sera plus lente, mais plus précise. Si vous diminuez la résolution, la détection sera plus rapide, mais moins précise. Trouvez le bon rapport entre la résolution de détection et les seuils de conditions pour tirer le meilleur parti de vos scénarios !</string>
 
     <!--
       - Text input fields labels and error messages.

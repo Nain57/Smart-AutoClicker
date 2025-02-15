@@ -60,7 +60,7 @@ internal open class CompatDeserializer : Deserializer {
         /** Scenario detection quality lower bound on compat deserialization. */
         const val DETECTION_QUALITY_LOWER_BOUND = 400
         /** Scenario detection quality upper bound on compat deserialization. */
-        const val DETECTION_QUALITY_UPPER_BOUND = 3216
+        const val DETECTION_QUALITY_UPPER_BOUND = 10000
         /** Scenario detection quality default value on compat deserialization. */
         const val DETECTION_QUALITY_DEFAULT_VALUE = 1200
 

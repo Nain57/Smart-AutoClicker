@@ -46,7 +46,6 @@ class NativeDetector private constructor() : ImageDetector {
     private var nativePtr: Long = -1
 
     private val detectionQualityMin: Double = DETECTION_QUALITY_MIN.toDouble()
-    private val detectionQualityMax: Double = DETECTION_QUALITY_MAX.toDouble()
 
     private var isClosed: Boolean = false
 
@@ -68,7 +67,7 @@ class NativeDetector private constructor() : ImageDetector {
         updateScreenMetrics(
             metricsKey,
             screenBitmap,
-            detectionQuality.coerceIn(detectionQualityMin, detectionQualityMax)
+            detectionQuality.coerceIn(detectionQualityMin, 10000.0),
         )
     }
 

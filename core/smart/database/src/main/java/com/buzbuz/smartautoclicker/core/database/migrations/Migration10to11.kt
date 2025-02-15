@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 object Migration10to11 : Migration(10, 11) {
 
     private const val DETECTION_QUALITY_INCREASE = 600
-    private const val DETECTION_QUALITY_NEW_MAX = 3216
+    private const val DETECTION_QUALITY_NEW_MAX = 10000
 
 
     private val scenarioIdColumn = SQLiteColumn.PrimaryKey()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2022 Kevin Buzeau
+* Copyright (C) 2025 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,21 @@
             android:layout_marginBottom="@dimen/margin_horizontal_small"/>
 
         <com.google.android.material.card.MaterialCardView
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large">
+
+            <include layout="@layout/include_field_switch"
+                android:id="@+id/field_anti_detection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/detection_quality_card"
             style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
@@ -54,7 +69,7 @@
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/detection_quality_title"
-                    style="@style/AppTheme.TextAppearance.FieldTitle"
+                    style="@style/AppTheme.Field.TitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -62,84 +77,102 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="@string/field_scenario_quality_title" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/text_quality_value"
-                    style="@style/AppTheme.TextAppearance.BodyLarge"
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/detection_quality_value_card"
+                    style="@style/AppTheme.Widget.Card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_horizontal_small"
-                    android:layout_marginEnd="@dimen/margin_horizontal_small"
-                    android:gravity="center"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/detection_quality_title"
-                    app:layout_constraintBottom_toTopOf="@id/seekbar_quality"
-                    tools:text="600"/>
+                    app:layout_constraintStart_toEndOf="@id/text_speed"
+                    app:layout_constraintEnd_toStartOf="@id/text_precision"
+                    app:layout_constraintTop_toTopOf="@id/text_speed"
+                    app:layout_constraintBottom_toBottomOf="@id/text_speed"
+                    app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/text_quality_value"
+                        style="@style/AppTheme.TextAppearance.ListItemTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                        android:layout_marginVertical="@dimen/margin_vertical_small"
+                        android:layout_gravity="center"
+                        tools:text="1920 x 1024"/>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/text_speed"
-                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    style="@style/AppTheme.Widget.IconButtonFilledTonal"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/item_height"
-                    android:layout_marginTop="@dimen/margin_vertical_small"
+                    android:layout_marginTop="@dimen/margin_vertical_default"
+                    android:layout_marginStart="@dimen/margin_horizontal_default"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/text_quality_value"
-                    app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
+                    app:layout_constraintTop_toBottomOf="@id/detection_quality_title"
+                    app:layout_constraintBottom_toTopOf="@id/seekbar_resolution"
                     app:icon="@drawable/ic_chevron_left"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/field_scenario_quality_button_speed"/>
+                    android:gravity="center_vertical"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/text_precision"
-                    style="@style/Widget.Material3.Button.TextButton.Icon"
+                    style="@style/AppTheme.Widget.IconButtonFilledTonal"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/item_height"
-                    android:layout_marginTop="@dimen/margin_vertical_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_default"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/text_quality_value"
-                    app:layout_constraintBottom_toBottomOf="@id/text_quality_value"
+                    app:layout_constraintTop_toTopOf="@id/text_speed"
+                    app:layout_constraintBottom_toBottomOf="@id/text_speed"
                     app:icon="@drawable/ic_chevron_right"
-                    app:iconGravity="end"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/field_scenario_quality_button_precision"/>
+                    android:gravity="center_vertical"/>
 
                 <com.google.android.material.slider.Slider
-                    android:id="@+id/seekbar_quality"
+                    android:id="@+id/seekbar_resolution"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_horizontal_small"
                     android:layout_marginEnd="@dimen/margin_horizontal_small"
+                    android:layout_marginTop="@dimen/margin_vertical_small"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_precision"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/divider_resolution"
                     app:trackColor="?attr/colorSecondaryContainer"
+                    app:thumbHeight="32dp"
+                    app:trackHeight="12dp"
                     app:labelBehavior="gone"/>
 
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_resolution"
+                    style="@style/AppTheme.Widget.Divider.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/seekbar_resolution"
+                    app:layout_constraintBottom_toTopOf="@id/detection_resolution_description"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/detection_resolution_description"
+                    style="@style/AppTheme.Field.SubText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="@dimen/margin_horizontal_default"
+                    android:layout_marginTop="@dimen/margin_vertical_large"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
+                    android:gravity="center_vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider_resolution"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/field_scenario_quality_description" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/AppTheme.Widget.Card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_large">
-
-            <include layout="@layout/include_field_switch"
-                android:id="@+id/field_anti_detection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/margin_vertical_default"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
 
         </com.google.android.material.card.MaterialCardView>
 

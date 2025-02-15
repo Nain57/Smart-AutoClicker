@@ -118,9 +118,10 @@
     <string name="menu_item_title_trigger_events">Triggers</string>
     <string name="menu_item_title_more">More</string>
 
-    <string name="field_scenario_quality_title">Detection quality</string>
-    <string name="field_scenario_quality_button_speed">Speed</string>
-    <string name="field_scenario_quality_button_precision">Precision</string>
+    <string name="field_scenario_quality_title">Detection resolution</string>
+    <string name="field_scenario_quality_description">To achieve faster detection, Klick\'r is downscaling the images before detecting.\n\nIf you increase the resolution, the detection will be slower, but more accurate. If you decrease the resolution, the detection will be faster, but less accurate. Find the good ratio between the detection resolution and the conditions thresholds to get the best of your scenarios!</string>
+    <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>
+
 
     <string name="field_show_debug_view_title">Show debug view</string>
     <string name="item_title_debug_generate_report">Generate a report</string>
