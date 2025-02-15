@@ -20,6 +20,8 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
@@ -97,6 +99,7 @@ internal object ConditionTestsData {
         eventId: Long
     ) = ConditionEntity(id, eventId, name, ConditionType.ON_COUNTER_REACHED, counterName = counterName,
         counterComparisonOperation = counterOperator.toEntity(), priority = 0, counterValue = counterValue,
+        counterOperationValueType = CounterOperationValueType.NUMBER,
     )
 
     fun getNewCounterReachedCondition(
@@ -106,7 +109,8 @@ internal object ConditionTestsData {
         counterOperator: ComparisonOperation = CONDITION_COUNTER_OPERATION,
         counterValue: Int = CONDITION_COUNTER_VALUE,
         eventId: Long
-    ) = TriggerCondition.OnCounterCountReached(id.asIdentifier(), eventId.asIdentifier(), name, counterName, counterOperator, counterValue)
+    ) = TriggerCondition.OnCounterCountReached(id.asIdentifier(), eventId.asIdentifier(), name, counterName,
+        counterOperator, CounterOperationValue.Number(counterValue))
 
     fun getNewTimerReachedConditionEntity(
         id: Long = CONDITION_ID,
