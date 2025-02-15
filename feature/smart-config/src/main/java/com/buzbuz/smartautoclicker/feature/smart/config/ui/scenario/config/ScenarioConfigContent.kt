@@ -78,7 +78,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
-            seekbarQuality.addOnChangeListener { _, value, fromUser ->
+            seekbarResolution.addOnChangeListener { _, value, fromUser ->
                 if (fromUser) viewModel.setDetectionQuality(value.roundToInt())
             }
         }
@@ -108,18 +108,16 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    private fun updateQuality(quality: Int?) {
-        if (quality == null) return
-
+    private fun updateQuality(quality: UiDetectionQuality) {
         viewBinding.apply {
-            textQualityValue.text = quality.toString()
+            textQualityValue.text = quality.displayText
 
-            val isNotInitialized = seekbarQuality.value == 0f
-            seekbarQuality.value = quality.toFloat()
+            val isNotInitialized = seekbarResolution.value == 0f
+            seekbarResolution.value = quality.qualityValue
 
             if (isNotInitialized) {
-                seekbarQuality.valueFrom = SLIDER_QUALITY_MIN
-                seekbarQuality.valueTo = SLIDER_QUALITY_MAX
+                seekbarResolution.valueFrom = quality.min
+                seekbarResolution.valueTo = quality.max
             }
         }
     }

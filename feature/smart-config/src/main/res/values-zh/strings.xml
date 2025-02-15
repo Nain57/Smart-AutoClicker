@@ -179,7 +179,7 @@
       - Should be short and concise.
       -->
     <string name="field_title_condition_threshold">容差</string>
-    <string name="field_scenario_quality_title">检测质量</string>
+    <string name="field_scenario_quality_title">检测分辨率</string>
     <string name="field_intent_extra_value_title">参数值</string>
     <string name="field_tutorial_title">教程</string>
 
@@ -209,8 +209,7 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="field_scenario_quality_button_speed">速度</string>
-    <string name="field_scenario_quality_button_precision">精准度</string>
+    <string name="field_scenario_quality_description">为了加快检测速度，Klick\'r 会在检测前降低图像的分辨率。\n\n如果提高分辨率，检测会更慢，但更准确。如果降低分辨率，检测速度会更快，但准确性会降低。 找到检测分辨率和条件阈值之间的最佳比例，以获得最佳方案！</string>
 
     <!--
       - Text input fields labels and error messages.

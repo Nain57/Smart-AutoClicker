@@ -117,9 +117,8 @@
     <string name="menu_item_title_trigger_events">Triggers</string>
     <string name="menu_item_title_more">Mais</string>
 
-    <string name="field_scenario_quality_title">Qualidade de detecção</string>
-    <string name="field_scenario_quality_button_speed">Velocidade</string>
-    <string name="field_scenario_quality_button_precision">Precisão</string>
+    <string name="field_scenario_quality_title">Resolução de detecção</string>
+    <string name="field_scenario_quality_description">Para obter uma detecção mais rápida, o Klick\'r está reduzindo a escala das imagens antes da detecção.\n\nSe você aumentar a resolução, a detecção será mais lenta, mas mais precisa. Se você diminuir a resolução, a detecção será mais rápida, mas menos precisa. Encontre a melhor relação entre a resolução de detecção e os limites de condições para obter o melhor de seus cenários!</string>
 
     <string name="field_show_debug_view_title">Mostrar visualização de depuração</string>
     <string name="item_title_debug_generate_report">Gerar relatório</string>

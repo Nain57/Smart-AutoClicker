@@ -177,7 +177,7 @@
       - Should be short and concise.
       -->
     <string name="field_title_condition_threshold">Differenza tollerato</string>
-    <string name="field_scenario_quality_title">Qualità rilevamento</string>
+    <string name="field_scenario_quality_title">Risoluzione di rilevamento</string>
     <string name="field_intent_extra_value_title">Valore</string>
     <string name="field_tutorial_title">Tutorial</string>
 
@@ -206,8 +206,7 @@
       - TextButton content.
       - Should be short and concise.
       -->
-    <string name="field_scenario_quality_button_speed">Velocità</string>
-    <string name="field_scenario_quality_button_precision">Precisione</string>
+    <string name="field_scenario_quality_description">Per ottenere un rilevamento più rapido, Klick\'r ridimensiona le immagini prima di rilevarle.\n\nSe si aumenta la risoluzione, il rilevamento sarà più lento, ma più accurato. Se si riduce la risoluzione, il rilevamento sarà più veloce, ma meno accurato. Trovare il giusto rapporto tra la risoluzione del rilevamento e le soglie delle condizioni per ottenere il meglio dai propri scenari!</string>
 
     <!--
       - Text input fields labels and error messages.
