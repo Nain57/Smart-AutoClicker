@@ -72,8 +72,14 @@ import kotlinx.serialization.Serializable
  *  Null for others [ActionType].
  * @param counterOperation [ActionType.CHANGE_COUNTER] only: the type of operation to apply to the
  *  counter. Null for others [ActionType].
- * @param counterOperationValue [ActionType.CHANGE_COUNTER] only: the vale to use for the operation
- *  on the counter. Null for others [ActionType].
+ * @param counterOperationValueType [ActionType.CHANGE_COUNTER] only: the type of value.
+ * If [CounterOperationValueType.NUMBER], the param [counterOperationValue] will be used for the operation.
+ * If [CounterOperationValueType.COUNTER], the value contained by the counter defined by the param
+ * [counterOperationCounterName] will be used for the operation.
+ * @param counterOperationValue [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.NUMBER] only: the value to use
+ * for the operation on this counter. Null for others [ActionType].
+ * @param counterOperationCounterName [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.COUNTER] only: the name
+ * of the counter containing the value for the operation on this counter. Null for others [ActionType].
  *
  * @param notificationMessageType [ActionType.NOTIFICATION] only: tells what kind of message the notification will contains.
  * @param notificationMessageText [ActionType.NOTIFICATION] only: used as notification message when [notificationMessageType]
@@ -141,7 +147,9 @@ data class ActionEntity(
     // ActionType.CHANGE_COUNTER
     @ColumnInfo(name = "counter_name") var counterName: String? = null,
     @ColumnInfo(name = "counter_operation") val counterOperation: ChangeCounterOperationType? = null,
+    @ColumnInfo(name = "counter_operation_value_type") val counterOperationValueType: CounterOperationValueType? = null,
     @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Int? = null,
+    @ColumnInfo(name = "counter_operation_counter_name") val counterOperationCounterName: String? = null,
 
     // ActionType.NOTIFICATION
     @ColumnInfo(name = "notification_message_type") val notificationMessageType: NotificationMessageType? = null,
@@ -149,71 +157,6 @@ data class ActionEntity(
     @ColumnInfo(name = "notification_message_counter_name") val notificationMessageCounterName: String? = null,
     @ColumnInfo(name = "notification_importance") var notificationImportance: Int? = null,
 ) : EntityWithId
-
-/**
- * Type of [ActionEntity].
- * For each type there is a set of values that will be available in the database, all others will always be null. Refers
- * to the [ActionEntity] documentation for values/type association.
- *
- * /!\ DO NOT RENAME: ActionType enum name is used in the database.
- */
-enum class ActionType {
-    /** A single tap on the screen. */
-    CLICK,
-    /** A swipe on the screen. */
-    SWIPE,
-    /** A pause, waiting before the next action. */
-    PAUSE,
-    /** An Android Intent, allowing to interact with other applications. */
-    INTENT,
-    /** Toggle the enabled state of an event. */
-    TOGGLE_EVENT,
-    /** Change the value of a counter. */
-    CHANGE_COUNTER,
-    /** Send a notification. */
-    NOTIFICATION,
-}
-
-/**
- * Type of click position for a [ActionType.CLICK].
- * Indicates how to click on the screen for the action.
- *
- * /!\ DO NOT RENAME: ClickPositionType enum name is used in the database.
- */
-enum class ClickPositionType {
-    /** The user must manually select a position to be clicked. */
-    USER_SELECTED,
-    /**
-     * Click on the detected condition.
-     * When the condition operator is AND, click on the condition specified by the user.
-     * When the condition operator is OR, click on the condition detected condition.
-     */
-    ON_DETECTED_CONDITION,
-}
-
-/**
- * Types of counter change of a [ActionType.CHANGE_COUNTER].
- * /!\ DO NOT RENAME: ChangeCounterOperationType enum name is used in the database.
- */
-enum class ChangeCounterOperationType {
-    /** Add to the current counter value. */
-    ADD,
-    /** Remove from the current counter value. */
-    MINUS,
-    /** Set the counter to a specific value. */
-    SET;
-}
-
-/**
- * Types of notification message of a [ActionType.NOTIFICATION].
- * /!\ DO NOT RENAME: NotificationMessageType enum name is used in the database.
- */
-enum class NotificationMessageType {
-    /** Display the text defined by [ActionEntity.notificationMessageText]. */
-    TEXT,
-    /** Display the value of the counter defined by [ActionEntity.notificationMessageCounterName]. */
-    COUNTER_VALUE;
-}
 
 /**
  * Entity embedding an intent action and its extras.

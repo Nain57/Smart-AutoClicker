@@ -39,7 +39,7 @@
 
     <string name="item_counter_reached_title">On counter reached</string>
     <string name="item_counter_reached_desc">Verify the value of a counter modified by an Action</string>
-    <string name="item_counter_reached_details">%1$s %2$s %3$d</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
 
     <string name="item_timer_reached_title">On timer reached</string>
     <string name="item_timer_reached_desc">Fulfilled after a defined time from this trigger activation</string>
@@ -67,7 +67,7 @@
 
     <string name="item_change_counter_title">Change counter</string>
     <string name="item_change_counter_desc">Change a value to verify it later</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$d</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Counter is invalid</string>
 
     <string name="item_toggle_event_title">Change event state</string>

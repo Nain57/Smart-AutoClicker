@@ -127,7 +127,7 @@ class ConditionCopyModel @Inject constructor(
 
                         is TriggerCondition.OnCounterCountReached -> item.uiCondition.condition.name.hashCode() +
                                 item.uiCondition.condition.counterName.hashCode() +
-                                item.uiCondition.condition.counterValue +
+                                item.uiCondition.condition.counterValue.hashCode() +
                                 item.uiCondition.condition.comparisonOperation.hashCode()
 
                         is TriggerCondition.OnTimerReached -> item.uiCondition.condition.name.hashCode() +

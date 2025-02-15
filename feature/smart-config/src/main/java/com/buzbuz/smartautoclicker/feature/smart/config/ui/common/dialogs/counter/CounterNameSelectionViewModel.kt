@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.count
 
 import androidx.lifecycle.ViewModel
 
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
@@ -37,25 +38,37 @@ class CounterNameSelectionViewModel @Inject constructor(
             buildSet {
                 allEditedEvents.forEach { event ->
                     event.conditions.forEach { condition ->
-                        if (condition is TriggerCondition.OnCounterCountReached) add(condition.counterName)
+                        if (condition is TriggerCondition.OnCounterCountReached) {
+                            add(condition.counterName)
+                            if (condition.counterValue is CounterOperationValue.Counter) {
+                                add(condition.counterValue.value.toString())
+                            }
+                        }
                     }
                     event.actions.forEach { action ->
-                        action.getContainedCounterName()?.let(::add)
+                        action.getContainedCounterNames()?.let(::addAll)
                     }
                 }
 
                 currentActions.value?.forEach { action ->
-                    action.getContainedCounterName()?.let(::add)
+                    action.getContainedCounterNames()?.let(::addAll)
                 }
             }
         }
 
 
-    private fun Action.getContainedCounterName(): String? =
+    private fun Action.getContainedCounterNames(): Set<String>? =
         when (this) {
-            is ChangeCounter -> counterName
+            is ChangeCounter -> {
+                buildSet {
+                    add(counterName)
+                    if (operationValue is CounterOperationValue.Counter) {
+                        add(operationValue.value.toString())
+                    }
+                }
+            }
             is Notification ->
-                if (messageType == Notification.MessageType.COUNTER_VALUE) messageCounterName
+                if (messageType == Notification.MessageType.COUNTER_VALUE) setOf(messageCounterName)
                 else null
             else -> null
         }

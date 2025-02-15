@@ -61,7 +61,7 @@ private fun TriggerCondition.getTriggerConditionDescription(context: Context): S
             R.string.item_counter_reached_details,
             counterName,
             getComparisonOperationDisplayName(context),
-            counterValue,
+            counterValue.value.toString(),
         )
 
         is TriggerCondition.OnTimerReached -> context.getString(

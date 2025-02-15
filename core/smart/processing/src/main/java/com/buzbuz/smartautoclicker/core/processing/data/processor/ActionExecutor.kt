@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -209,12 +210,17 @@ internal class ActionExecutor(
     private fun executeChangeCounter(changeCounter: ChangeCounter) {
         val oldValue = processingState.getCounterValue(changeCounter.counterName) ?: return
 
+        val operandValue = when (val operationValue = changeCounter.operationValue) {
+            is CounterOperationValue.Counter -> processingState.getCounterValue(operationValue.value) ?: 0
+            is CounterOperationValue.Number -> operationValue.value
+        }
+
         processingState.setCounterValue(
             counterName = changeCounter.counterName,
             value = when (changeCounter.operation) {
-                ChangeCounter.OperationType.ADD -> oldValue + changeCounter.operationValue
-                ChangeCounter.OperationType.MINUS -> oldValue - changeCounter.operationValue
-                ChangeCounter.OperationType.SET -> changeCounter.operationValue
+                ChangeCounter.OperationType.ADD -> oldValue + operandValue
+                ChangeCounter.OperationType.MINUS -> oldValue - operandValue
+                ChangeCounter.OperationType.SET -> operandValue
             }
         )
     }

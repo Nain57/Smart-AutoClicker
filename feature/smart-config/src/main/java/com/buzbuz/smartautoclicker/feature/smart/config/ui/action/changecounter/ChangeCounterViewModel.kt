@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -76,11 +78,6 @@ class ChangeCounterViewModel @Inject constructor(
     /** Tells if the name of the counter is valid or not. */
     val counterNameError: Flow<Boolean> = configuredChangeCounter.map { it.counterName.isEmpty() }
 
-    /** The name of the counter. */
-    val valueText: Flow<String?> = configuredChangeCounter
-        .map { it.operationValue.toString() }
-        .take(1)
-
     val operatorDropdownItems = listOf(plusItem, setItem, minusItem)
     val operatorDropdownState: Flow<DropdownItem> = configuredChangeCounter
         .map { condition ->
@@ -90,6 +87,21 @@ class ChangeCounterViewModel @Inject constructor(
                 ChangeCounter.OperationType.SET -> setItem
             }
         }
+
+    val isNumberValue: Flow<Boolean> = configuredChangeCounter
+        .map { it.operationValue is CounterOperationValue.Number }
+
+    val numberValueText: Flow<String?> = configuredChangeCounter
+        .map { it.operationValue }
+        .filterIsInstance<CounterOperationValue.Number>()
+        .map { it.value.toString() }
+        .take(1)
+
+    val counterNameValueText: Flow<String?> = configuredChangeCounter
+        .map { it.operationValue }
+        .filterIsInstance<CounterOperationValue.Counter>()
+        .map { it.value }
+        .take(1)
 
     /** Tells if the configured action is valid and can be saved. */
     val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
@@ -119,8 +131,10 @@ class ChangeCounterViewModel @Inject constructor(
         }
     }
 
-    fun setOperationValue(value: Int?) {
-        updateEditedChangeCounter { old -> old.copy(operationValue = value ?: -1) }
+    fun setOperationValue(value: CounterOperationValue) {
+        updateEditedChangeCounter { old ->
+            old.copy(operationValue = value)
+        }
     }
 
     private fun updateEditedChangeCounter(closure: (old: ChangeCounter) -> ChangeCounter) {

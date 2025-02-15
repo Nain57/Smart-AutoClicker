@@ -64,15 +64,3 @@ data class EventToggleEntity(
     @ColumnInfo(name = "toggle_event_id") var toggleEventId: Long,
 ) : EntityWithId
 
-/**
- * The type of manipulation to apply to an event with a [EventToggleEntity].
- * /!\ DO NOT RENAME: EventToggleType enum name is used in the database.
- */
-enum class EventToggleType {
-    /** Enable the event. Has no effect if the event is already enabled. */
-    ENABLE,
-    /** Disable the event. Has no effect if the event is already disabled. */
-    DISABLE,
-    /** Enable the event if it is disabled, disable it if it is enabled. */
-    TOGGLE,
-}

@@ -36,5 +36,5 @@ internal fun ChangeCounter.getDescription(context: Context, inError: Boolean): S
             ChangeCounter.OperationType.MINUS -> "-"
             ChangeCounter.OperationType.SET -> "="
         },
-        operationValue,
+        operationValue.value.toString(),
     )
