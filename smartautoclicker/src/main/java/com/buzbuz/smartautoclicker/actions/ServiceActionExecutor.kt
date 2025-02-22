@@ -22,35 +22,25 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.AndroidRuntimeException
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.base.Dumpable
 import kotlinx.coroutines.delay
+import java.io.PrintWriter
 
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
-class ServiceActionExecutor(private val service: AccessibilityService) {
+class ServiceActionExecutor(private val service: AccessibilityService) : Dumpable {
 
-    private val gestureResultCallback = SuspendableGestureResultCallback()
+    private val gestureExecutor: GestureExecutor = GestureExecutor()
+
+    fun reset() {
+        gestureExecutor.reset()
+    }
 
     suspend fun safeDispatchGesture(gestureDescription: GestureDescription) {
-        if (!dispatchGestureSync(gestureDescription)) {
+        if (!gestureExecutor.dispatchGesture(service, gestureDescription)) {
             Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
             delay(500)
         }
     }
-
-    private suspend fun dispatchGestureSync(gestureDescription: GestureDescription): Boolean =
-        suspendCoroutine { continuation ->
-            try {
-                service.dispatchGesture(
-                    gestureDescription,
-                    gestureResultCallback.withContinuation(continuation),
-                    null,
-                )
-            } catch (rEx: RuntimeException) {
-                Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
-                continuation.resume(false)
-            }
-        }
 
     fun safeStartActivity(intent: Intent) {
         try {
@@ -74,6 +64,10 @@ class ServiceActionExecutor(private val service: AccessibilityService) {
         } catch (iaex: IllegalArgumentException) {
             Log.w(TAG, "Can't send broadcast, Intent is invalid: $intent", iaex)
         }
+    }
+
+    override fun dump(writer: PrintWriter, prefix: CharSequence) {
+        gestureExecutor.dump(writer, prefix)
     }
 }
 

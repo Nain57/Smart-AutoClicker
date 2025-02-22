@@ -148,6 +148,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     private fun onLocalServiceStarted(scenarioId: Long, isSmart: Boolean, serviceNotification: Notification?) {
         reviewRepository.onUserSessionStarted()
         qualityMetricsMonitor.onServiceForegroundStart()
+        serviceActionExecutor?.reset()
 
         serviceNotification?.let {
             startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
@@ -218,6 +219,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)
+        serviceActionExecutor?.dump(writer)
         qualityRepository.dump(writer)
 
         revenueRepository.dump(writer)
