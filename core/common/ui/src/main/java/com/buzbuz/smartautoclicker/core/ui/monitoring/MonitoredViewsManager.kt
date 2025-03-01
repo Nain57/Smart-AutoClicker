@@ -35,7 +35,7 @@ class MonitoredViewsManager @Inject constructor(
     fun attach(
         type: MonitoredViewType,
         monitoredView: View,
-        positioningType: ViewPositioningType = ViewPositioningType.WINDOW,
+        positioningType: ViewPositioningType = ViewPositioningType.SCREEN,
     ) {
         if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayConfigManager)
         monitoredViews[type]?.attachView(monitoredView, positioningType)

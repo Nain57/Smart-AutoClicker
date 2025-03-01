@@ -22,6 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.TutorialActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,6 +33,7 @@
             android:id="@+id/topAppBar"
             style="@style/AppTheme.Widget.Toolbar"
             app:layout_scrollFlags="enterAlways|noScroll"
+            app:layout_scrollEffect="compress"
             app:title="@string/activity_tutorial_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
