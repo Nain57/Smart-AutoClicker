@@ -51,6 +51,7 @@ internal class ScenarioProcessor(
     triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
     androidExecutor: SmartActionExecutor,
+    unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
     private val progressListener: ScenarioProcessingListener? = null,
 ) {
@@ -60,7 +61,12 @@ internal class ScenarioProcessor(
     /** Check conditions and tell if they are fulfilled. */
     private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier, progressListener)
     /** Execute the detected event actions. */
-    private val actionExecutor = ActionExecutor(androidExecutor, processingState, randomize)
+    private val actionExecutor = ActionExecutor(
+        androidExecutor = androidExecutor,
+        processingState = processingState,
+        randomize = randomize,
+        unblockWorkaroundEnabled = unblockWorkaroundEnabled,
+    )
 
     /** Tells if the screen metrics have been invalidated and should be updated. */
     private var invalidateScreenMetrics = true
@@ -111,6 +117,9 @@ internal class ScenarioProcessor(
             }
         }
         progressListener?.onImageEventsProcessingCompleted()
+
+        // Loop is completed
+        actionExecutor.onScenarioLoopFinished()
 
         return
     }

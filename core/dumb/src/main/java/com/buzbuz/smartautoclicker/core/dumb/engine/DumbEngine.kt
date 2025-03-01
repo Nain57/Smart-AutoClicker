@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,7 @@ import javax.inject.Singleton
 @Singleton
 class DumbEngine @Inject constructor(
     private val dumbRepository: IDumbRepository,
+    private val settingsRepository: SettingsRepository,
 ): Dumpable {
 
     /** Execute the dumb actions. */
@@ -72,7 +74,7 @@ class DumbEngine @Inject constructor(
     val isRunning: StateFlow<Boolean> = _isRunning
 
     fun init(androidExecutor: AndroidExecutor, dumbScenario: DumbScenario) {
-        dumbActionExecutor = DumbActionExecutor(androidExecutor)
+        dumbActionExecutor = DumbActionExecutor(androidExecutor, settingsRepository.isInputBlockWorkaroundEnabled())
         dumbScenarioDbId.value = dumbScenario.id.databaseId
 
         processingScope = CoroutineScope(Dispatchers.IO)
@@ -148,6 +150,8 @@ class DumbEngine @Inject constructor(
                 dumbScenario.dumbActions.forEach { dumbAction ->
                     dumbActionExecutor?.executeDumbAction(dumbAction, dumbScenario.randomize)
                 }
+
+                dumbActionExecutor?.onScenarioLoopFinished()
             }
 
             processingScope?.launch { stopDumbScenario() }

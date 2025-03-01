@@ -126,6 +126,9 @@
     <string name="field_force_entire_screen_title">强制整个屏幕</string>
     <string name="field_force_entire_screen_desc">强制屏幕截图选择器为 “整个屏幕”。根据设备不同，可能无法使用</string>
 
+    <string name="field_input_block_workaround_title">解锁触摸屏</string>
+    <string name="field_input_block_workaround_desc">在装有 Android 15 的 Pixel 设备上，使用自动点击器可能会阻挡触摸屏。此设置会尝试每 10 秒钟模拟一次。</string>
+
 
     <string name="field_privacy">隐私设置</string>
     <string name="field_remove_ads">删除广告</string>

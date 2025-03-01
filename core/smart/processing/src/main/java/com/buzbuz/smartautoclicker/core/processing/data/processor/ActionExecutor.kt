@@ -27,6 +27,8 @@ import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
+import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
+import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
@@ -59,11 +61,29 @@ internal class ActionExecutor(
     private val androidExecutor: SmartActionExecutor,
     private val processingState: ProcessingState,
     randomize: Boolean,
+    unblockWorkaroundEnabled: Boolean = false,
 ) {
 
     init { androidExecutor.clearState() }
 
-    private val random: Random? = if (randomize) Random(System.currentTimeMillis()) else null
+    private val random: Random? =
+        if (randomize) Random(System.currentTimeMillis()) else null
+
+    private val unblockGestureScheduler: UnblockGestureScheduler? =
+        if (unblockWorkaroundEnabled) UnblockGestureScheduler()
+        else null
+
+
+    suspend fun onScenarioLoopFinished() {
+        if (unblockGestureScheduler?.shouldTrigger() == true) {
+            withContext(Dispatchers.Main) {
+                Log.i(TAG, "Injecting unblock gesture")
+                androidExecutor.executeGesture(
+                    GestureDescription.Builder().buildUnblockGesture()
+                )
+            }
+        }
+    }
 
     suspend fun executeActions(event: Event, results: ConditionsResult? = null) {
         event.actions.forEach { action ->

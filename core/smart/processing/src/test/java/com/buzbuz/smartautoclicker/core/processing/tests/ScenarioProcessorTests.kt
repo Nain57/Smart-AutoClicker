@@ -162,15 +162,15 @@ class ScenarioProcessorTests {
         triggerEvent: List<TriggerEvent>,
     ) : ScenarioProcessor {
         val processor = ScenarioProcessor(
-            "",
-            mockImageDetector,
-            TEST_DATA_DETECTION_QUALITY.toInt(),
-            false,
-            events,
-            triggerEvent,
-            mockBitmapSupplier::getBitmap,
-            mockAndroidExecutor,
-            mockEndListener::onStopRequested,
+            processingTag = "",
+            imageDetector = mockImageDetector,
+            detectionQuality = TEST_DATA_DETECTION_QUALITY.toInt(),
+            randomize = false,
+            imageEvents = events,
+            triggerEvents = triggerEvent,
+            bitmapSupplier = mockBitmapSupplier::getBitmap,
+            androidExecutor = mockAndroidExecutor,
+            onStopRequested = mockEndListener::onStopRequested,
         )
 
         Mockito.clearInvocations(mockAndroidExecutor)

@@ -129,6 +129,10 @@
     <string name="field_force_entire_screen_title">Forza l\'intero schermo</string>
     <string name="field_force_entire_screen_desc">Forzare il selettore di cattura dello schermo su \"Intero schermo\". Potrebbe non funzionare a seconda del dispositivo</string>
 
+    <string name="field_input_block_workaround_title">Sbloccare il touch screen</string>
+    <string name="field_input_block_workaround_desc">Sui dispositivi Pixel con Android 15, l\'uso di un cliccatore automatico può bloccare il touch screen.\nPer sbloccarlo, è necessario toccare lo schermo con più dita contemporaneamente. Questa impostazione cerca di simulare questa operazione ogni 10 secondi.</string>
+
+
     <string name="field_privacy">Impostazioni sulla privacy</string>
     <string name="field_remove_ads">Rimuovere gli annunci</string>
     <string name="field_troubleshooting">Risoluzione dei problemi</string>

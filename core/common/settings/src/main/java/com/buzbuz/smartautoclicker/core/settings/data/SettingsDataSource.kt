@@ -23,6 +23,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.base.workarounds.isImpactedByInputBlock
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -50,6 +51,8 @@ internal class SettingsDataSource @Inject constructor(
             booleanPreferencesKey("isLegacyNotificationUiEnabled")
         val KEY_FORCE_ENTIRE_SCREEN: Preferences.Key<Boolean> =
             booleanPreferencesKey("forceEntireScreen")
+        val KEY_INPUT_BLOCK_WORKAROUND: Preferences.Key<Boolean> =
+            booleanPreferencesKey("inputBlockWorkaround")
     }
 
     private val dataStore: PreferencesDataStore =
@@ -91,4 +94,14 @@ internal class SettingsDataSource @Inject constructor(
         dataStore.edit { preferences ->
             preferences[KEY_FORCE_ENTIRE_SCREEN] = !(preferences[KEY_FORCE_ENTIRE_SCREEN] ?: false)
         }
+
+    internal fun isInputBlockWorkaroundEnabled(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: isImpactedByInputBlock() }
+
+    internal suspend fun toggleInputBlockWorkaround() {
+        if (!isImpactedByInputBlock()) return
+        dataStore.edit { preferences ->
+            preferences[KEY_INPUT_BLOCK_WORKAROUND] = !(preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: isImpactedByInputBlock())
+        }
+    }
 }

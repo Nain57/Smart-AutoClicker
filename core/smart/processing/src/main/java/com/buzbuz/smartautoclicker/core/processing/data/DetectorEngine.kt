@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +66,7 @@ class DetectorEngine @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val displayRecorder: DisplayRecorder,
+    private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
 ) {
 
@@ -200,6 +202,7 @@ class DetectorEngine @Inject constructor(
                 triggerEvents = triggerEvents,
                 bitmapSupplier = bitmapSupplier,
                 androidExecutor = executor,
+                unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
                 onStopRequested = { stopDetection() },
                 progressListener  = progressListener,
             )

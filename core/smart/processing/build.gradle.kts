@@ -30,6 +30,7 @@ dependencies {
 
     implementation(project(":core:common:base"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:settings"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
 

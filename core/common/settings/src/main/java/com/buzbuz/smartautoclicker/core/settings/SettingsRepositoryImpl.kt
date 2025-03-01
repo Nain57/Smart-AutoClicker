@@ -54,6 +54,10 @@ internal class SettingsRepositoryImpl @Inject constructor(
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isFilterScenarioUiEnabledFlow: Flow<Boolean> = _isFilterScenarioUiEnabled
 
+    private val _isInputBlockWorkaroundEnabledFlow: StateFlow<Boolean> = dataSource.isInputBlockWorkaroundEnabled()
+        .stateIn(coroutineScope, SharingStarted.Eagerly, false)
+    override val isInputBlockWorkaroundEnabledFlow: Flow<Boolean> = _isInputBlockWorkaroundEnabledFlow
+
 
     override fun isFilterScenarioUiEnabled(): Boolean =
         _isFilterScenarioUiEnabled.value
@@ -92,6 +96,16 @@ internal class SettingsRepositoryImpl @Inject constructor(
     override fun toggleForceEntireScreenCapture() {
         coroutineScope.launch {
             dataSource.toggleForceEntireScreenCapture()
+        }
+    }
+
+
+    override fun isInputBlockWorkaroundEnabled(): Boolean =
+        _isInputBlockWorkaroundEnabledFlow.value
+
+    override fun toggleInputBlockWorkaround() {
+        coroutineScope.launch {
+            dataSource.toggleInputBlockWorkaround()
         }
     }
 }

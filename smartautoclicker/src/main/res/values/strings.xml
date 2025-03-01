@@ -134,6 +134,9 @@
     <string name="field_force_entire_screen_title">Force entire screen</string>
     <string name="field_force_entire_screen_desc">Force the screen capture selector to \"Entire Screen\". Might not work depending on your device</string>
 
+    <string name="field_input_block_workaround_title">Unblock touch screen</string>
+    <string name="field_input_block_workaround_desc">On Pixel Devices With Android 15, using an auto clicker can block the touch screen.\nTo unblock it, you need to touch the screen with multiple fingers at the same time. This setting tries to simulate this every 10s.</string>
+
     <string name="field_privacy">Privacy settings</string>
     <string name="field_remove_ads">Remove ads</string>
     <string name="field_troubleshooting">Troubleshooting</string>

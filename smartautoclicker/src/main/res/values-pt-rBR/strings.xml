@@ -132,6 +132,8 @@
     <string name="field_force_entire_screen_title">Forçar a tela inteira</string>
     <string name="field_force_entire_screen_desc">Force o seletor de captura de tela a \"Tela inteira\". Pode não funcionar dependendo de seu dispositivo</string>
 
+    <string name="field_input_block_workaround_title">Desbloquear o toque</string>
+    <string name="field_input_block_workaround_desc">Em dispositivos Pixel com Android 15, o uso de um clicker automático pode bloquear a tela de toque.\nPara desbloqueá-la, você precisa tocar a tela com vários dedos ao mesmo tempo. Essa configuração tenta simular isso a cada 10s.</string>
 
     <string name="field_privacy">Configurações de privacidade</string>
     <string name="field_remove_ads">Remover anúncios</string>

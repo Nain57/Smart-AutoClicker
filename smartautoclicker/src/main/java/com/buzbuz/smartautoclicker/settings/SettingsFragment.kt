@@ -75,6 +75,12 @@ class SettingsFragment : Fragment() {
             setOnClickListener(viewModel::toggleForceEntireScreenCapture)
         }
 
+        viewBinding.fieldInputBlockWorkaround.apply {
+            setTitle(requireContext().getString(R.string.field_input_block_workaround_title))
+            setDescription(requireContext().getString(R.string.field_input_block_workaround_desc))
+            setOnClickListener(viewModel::toggleInputBlockWorkaround)
+        }
+
         viewBinding.fieldPrivacySettings.apply {
             setTitle(requireContext().getString(R.string.field_privacy))
             setOnClickListener { viewModel.showPrivacySettings(requireActivity()) }
@@ -96,6 +102,8 @@ class SettingsFragment : Fragment() {
                 launch { viewModel.isLegacyActionUiEnabled.collect(viewBinding.fieldLegacyActionsUi::setChecked) }
                 launch { viewModel.isLegacyNotificationUiEnabled.collect(viewBinding.fieldLegacyNotificationUi::setChecked) }
                 launch { viewModel.isEntireScreenCaptureForced.collect(viewBinding.fieldForceEntireScreen::setChecked) }
+                launch { viewModel.isInputWorkaroundEnabled.collect(viewBinding.fieldInputBlockWorkaround::setChecked) }
+                launch { viewModel.shouldShowInputBlockWorkaround.collect(::updateInputBlockWorkaroundVisibility) }
                 launch { viewModel.shouldShowEntireScreenCapture.collect(::updateForceEntireScreenVisibility) }
                 launch { viewModel.shouldShowPrivacySettings.collect(::updatePrivacySettingsVisibility) }
                 launch { viewModel.shouldShowPurchase.collect(::updateRemoveAdsVisibility) }
@@ -110,6 +118,16 @@ class SettingsFragment : Fragment() {
         } else {
             viewBinding.dividerForceEntireScreen.visibility = View.GONE
             viewBinding.fieldForceEntireScreen.root.visibility = View.GONE
+        }
+    }
+
+    private fun updateInputBlockWorkaroundVisibility(shouldBeVisible: Boolean) {
+        if (shouldBeVisible) {
+            viewBinding.dividerInputBlockWorkaround.visibility = View.VISIBLE
+            viewBinding.fieldInputBlockWorkaround.root.visibility = View.VISIBLE
+        } else {
+            viewBinding.dividerInputBlockWorkaround.visibility = View.GONE
+            viewBinding.fieldInputBlockWorkaround.root.visibility = View.GONE
         }
     }
 

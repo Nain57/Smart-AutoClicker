@@ -21,6 +21,7 @@ import android.content.Context
 import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.base.workarounds.isImpactedByInputBlock
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -51,6 +52,9 @@ class SettingsViewModel @Inject constructor(
     val isEntireScreenCaptureForced: Flow<Boolean> =
         settingsRepository.isEntireScreenCaptureForcedFlow
 
+    val isInputWorkaroundEnabled: Flow<Boolean> =
+        settingsRepository.isInputBlockWorkaroundEnabledFlow
+
     val shouldShowEntireScreenCapture: Flow<Boolean> =
         flowOf(Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
 
@@ -61,6 +65,10 @@ class SettingsViewModel @Inject constructor(
         revenueRepository.userBillingState.map { billingState ->
             billingState != UserBillingState.PURCHASED
         }
+
+    val shouldShowInputBlockWorkaround: Flow<Boolean> =
+        flowOf(isImpactedByInputBlock())
+
 
     fun toggleScenarioFiltersUi() {
         settingsRepository.toggleFilterScenarioUi()
@@ -76,6 +84,10 @@ class SettingsViewModel @Inject constructor(
 
     fun toggleForceEntireScreenCapture() {
         settingsRepository.toggleForceEntireScreenCapture()
+    }
+
+    fun toggleInputBlockWorkaround() {
+        settingsRepository.toggleInputBlockWorkaround()
     }
 
     fun showPrivacySettings(activity: Activity) {

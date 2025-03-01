@@ -131,6 +131,10 @@
     <string name="field_force_entire_screen_title">Forcer tout l\'écran</string>
     <string name="field_force_entire_screen_desc">Forcer le selecteur de la popup de capture d\'écran sur \"Tout l\'écran\". Peut ne pas fonctionner en fonction de votre appareil.</string>
 
+    <string name="field_input_block_workaround_title">Débloquer l\'écran tactile</string>
+    <string name="field_input_block_workaround_desc">Sur les appareils Pixel équipés d\'Android 15, l\'utilisation d\'un auto cliqueur peut bloquer l\'écran tactile.\nPour le débloquer, vous devez toucher l\'écran avec plusieurs doigts en même temps. Ce paramètre tente de simuler cela toutes les 10 secondes.</string>
+
+
     <string name="field_privacy">Paramètres de confidentialité</string>
     <string name="field_remove_ads">Supprimer les publicités</string>
     <string name="field_troubleshooting">Dépannage</string>
