@@ -5,7 +5,7 @@ androidCompileSdk = "35"
 androidMinSdk = "24"
 
 # Build script
-googleFirebaseCrashlyticsGradle = "3.0.2"
+googleFirebaseCrashlyticsGradle = "3.0.3"
 googleServices = "4.4.2"
 androidGradlePlugin = "8.7.3"
 java = "21"
@@ -38,8 +38,8 @@ googleDaggerHilt = "2.55"
 
 # PlayStore only
 androidBillingClient = "7.1.1"
-googleFirebaseBom = "33.8.0"
-googleFirebaseCrashlytics = "19.4.0"
+googleFirebaseBom = "33.10.0"
+googleFirebaseCrashlytics = "19.4.1"
 googleUserMessaging = "3.1.0"
 googleGmsAds = "24.0.0"
 googlePlayReview = "2.0.2"
