@@ -34,3 +34,6 @@ fun DependencyHandlerScope.kspTest(dependency: Provider<MinimalExternalModuleDep
 
 fun DependencyHandlerScope.testImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
     add("testImplementation", dependency)
+
+fun DependencyHandlerScope.androidTestImplementation(dependency: Provider<MinimalExternalModuleDependency>) =
+    add("androidTestImplementation", dependency)

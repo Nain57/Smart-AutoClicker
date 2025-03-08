@@ -97,8 +97,8 @@ void DetectionImage::computeFullSizeGray() const {
 
 void DetectionImage::computeScaledGray(double scaleRatio) {
     // Calculate new dimensions and ensure non-zero dimensions
-    scaledSize.width = std::max(1, static_cast<int>(fullSizeRoi.width * scaleRatio));
-    scaledSize.height = std::max(1, static_cast<int>(fullSizeRoi.height * scaleRatio));
+    scaledSize.width = std::max(1, cvRound(fullSizeRoi.width * scaleRatio));
+    scaledSize.height = std::max(1, cvRound(fullSizeRoi.height * scaleRatio));
     scaledRoi.width = scaledSize.width;
     scaledRoi.height = scaledSize.height;
 

@@ -71,6 +71,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerializationJson" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestCore" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestCore" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
@@ -143,6 +145,7 @@ buzbuz-androidApplication = { id = "com.buzbuz.gradle.android.application", vers
 buzbuz-androidLibrary = { id = "com.buzbuz.gradle.android.library", version = "unspecified" }
 buzbuz-androidRoom = { id = "com.buzbuz.gradle.android.room", version = "unspecified" }
 buzbuz-androidUnitTest = { id = "com.buzbuz.gradle.android.unittest", version = "unspecified" }
+buzbuz-androidLocalTest = { id = "com.buzbuz.gradle.android.localtest", version = "unspecified" }
 buzbuz-androidSigning = { id = "com.buzbuz.gradle.android.signing", version = "unspecified" }
 buzbuz-obfuscation = { id = "com.buzbuz.gradle.obfuscation", version = "unspecified" }
 buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = "unspecified" }

@@ -73,6 +73,11 @@ gradlePlugin {
             implementationClass = "com.buzbuz.gradle.convention.AndroidUnitTestConventionPlugin"
         }
 
+        register("androidLocalTest") {
+            id = "com.buzbuz.gradle.android.localtest"
+            implementationClass = "com.buzbuz.gradle.convention.AndroidLocalTestConventionPlugin"
+        }
+
         register("androidSigning") {
             id = "com.buzbuz.gradle.android.signing"
             implementationClass = "com.buzbuz.gradle.convention.AndroidSigningConvention"

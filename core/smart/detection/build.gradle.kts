@@ -18,6 +18,7 @@
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidLocalTest)
     alias(libs.plugins.buzbuz.sourceDownload)
 }
 
@@ -120,4 +121,5 @@ android {
 
 dependencies {
     implementation(libs.androidx.annotation)
+
 }
