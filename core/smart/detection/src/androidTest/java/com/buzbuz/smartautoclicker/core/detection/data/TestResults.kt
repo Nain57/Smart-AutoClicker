@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.detection.data
 
 import android.graphics.Point
 
-internal data class ActualDetectionResults(
+internal data class TestResults(
     val resolution: DetectionResolution,
     val expectedCenterPosition: Point,
     val actualCenterPosition: Point,
@@ -27,13 +27,32 @@ internal data class ActualDetectionResults(
 )
 
 
-internal fun ActualDetectionResults.isValid(): Boolean =
-    actualConfidence >= expectedConfidence && isCenterPositionValid(expectedCenterPosition, actualCenterPosition)
+internal fun TestResults.isValid(): Boolean =
+    actualConfidence >= expectedConfidence &&
+            isCenterPositionValid(
+                expected = expectedCenterPosition,
+                actual = actualCenterPosition,
+                delta = getToleratedRoundingErrorPixels(),
+            )
 
-private fun isCenterPositionValid(expected: Point, actual: Point, delta: Int = TOLERATED_SCALING_ERROR_PIXELS): Boolean =
+private fun isCenterPositionValid(expected: Point, actual: Point, delta: Int): Boolean =
     isCenterPositionValid(expected.x, actual.x, delta) && isCenterPositionValid(expected.y, actual.y, delta)
 
 private fun isCenterPositionValid(expected: Int, actual: Int, delta: Int) : Boolean =
     actual in (expected - delta)..(expected + delta)
 
-private const val TOLERATED_SCALING_ERROR_PIXELS = 2
+private fun TestResults.getToleratedRoundingErrorPixels(): Int =
+    when (resolution) {
+        DetectionResolution.MAX -> 0
+
+        DetectionResolution.VERY_HIGH,
+        DetectionResolution.HIGH,
+        DetectionResolution.ABOVE_AVERAGE -> 1
+
+        DetectionResolution.AVERAGE,
+        DetectionResolution.BELOW_AVERAGE,
+        DetectionResolution.LOW -> 2
+
+        DetectionResolution.VERY_LOW,
+        DetectionResolution.MIN -> 3
+    }

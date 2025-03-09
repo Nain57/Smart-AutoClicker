@@ -60,3 +60,8 @@ internal sealed class TestImage(@RawRes val fileRes: Int, val size: Point) {
         )
     }
 }
+
+internal data class ExpectedDetectionResults(
+    val centerPosition: Point,
+    val resultsForQualities: Map<DetectionResolution, Double>,
+)

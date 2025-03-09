@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.detection.data
 
 import com.buzbuz.smartautoclicker.core.detection.DETECTION_QUALITY_MIN
 
+
 internal enum class DetectionResolution(val value: Double) {
     MAX(Double.MAX_VALUE),
     VERY_HIGH(2500.0),
