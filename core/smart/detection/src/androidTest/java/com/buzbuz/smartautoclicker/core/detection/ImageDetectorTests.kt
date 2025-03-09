@@ -18,11 +18,14 @@ package com.buzbuz.smartautoclicker.core.detection
 
 import android.content.Context
 import android.graphics.Point
+import android.graphics.Rect
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
-import com.buzbuz.smartautoclicker.core.detection.data.ActualDetectionResults
+import com.buzbuz.smartautoclicker.core.detection.data.TestResults
 import com.buzbuz.smartautoclicker.core.detection.data.TestImage
+import com.buzbuz.smartautoclicker.core.detection.data.getDetectionExactArea
+import com.buzbuz.smartautoclicker.core.detection.data.getValidCustomDetectionArea
 import com.buzbuz.smartautoclicker.core.detection.data.isValid
 import com.buzbuz.smartautoclicker.core.detection.utils.loadTestBitmap
 import com.buzbuz.smartautoclicker.core.detection.utils.setScreenMetrics
@@ -60,27 +63,68 @@ class ImageDetectorTests {
     }
 
     @Test
-    fun verifyScreen1Condition1FullScreen() {
+    fun detection_Screen1_Condition1_WholeScreen() {
         // Given
         val screenImage = TestImage.Screen.TutorialWithTarget
         val conditionImage = TestImage.Condition.TutorialTargetBlue
 
         // When
         val results = testedDetector.executeImageDetectionTest(
+            context = context,
             screenImage = screenImage,
             conditionImage = conditionImage,
-            threshold = TEST_DETECTION_THRESHOLD_ALL,
         )
 
         // Then
         results.verify()
     }
 
+    @Test
+    fun detection_Screen1_Condition1_InArea() {
+        // Given
+        val screenImage = TestImage.Screen.TutorialWithTarget
+        val conditionImage = TestImage.Condition.TutorialTargetBlue
+        val validArea = getValidCustomDetectionArea(screenImage, conditionImage)
+
+        // When
+        val results = testedDetector.executeImageDetectionTest(
+            context = context,
+            screenImage = screenImage,
+            conditionImage = conditionImage,
+            area = validArea,
+        )
+
+        // Then
+        results.verify()
+    }
+
+    @Test
+    fun detection_Screen1_Condition1_Exact() {
+        // Given
+        val screenImage = TestImage.Screen.TutorialWithTarget
+        val conditionImage = TestImage.Condition.TutorialTargetBlue
+        val exactArea = getDetectionExactArea(screenImage, conditionImage)
+
+        // When
+        val results = testedDetector.executeImageDetectionTest(
+            context = context,
+            screenImage = screenImage,
+            conditionImage = conditionImage,
+            area = exactArea,
+        )
+
+        // Then
+        results.verify()
+    }
+
+
     private fun ImageDetector.executeImageDetectionTest(
+        context: Context,
         screenImage: TestImage.Screen,
         conditionImage: TestImage.Condition,
-        threshold: Int,
-    ): List<ActualDetectionResults> = conditionImage.expectedResults[screenImage]?.let { expectedResults ->
+        area: Rect? = null,
+    ): List<TestResults> = conditionImage.expectedResults[screenImage]?.let { expectedResults ->
+
         buildList {
             val screenBitmap = context.loadTestBitmap(screenImage)
             val conditionBitmap = context.loadTestBitmap(conditionImage)
@@ -89,8 +133,11 @@ class ImageDetectorTests {
                 setScreenMetrics(screenBitmap, quality.value)
                 setupDetection(screenBitmap)
 
-                val results = detectCondition(conditionBitmap, threshold)
-                add(ActualDetectionResults(
+                val results =
+                    if (area != null) detectCondition(conditionBitmap, area, TEST_DETECTION_THRESHOLD_ALL)
+                    else detectCondition(conditionBitmap, TEST_DETECTION_THRESHOLD_ALL)
+
+                add(TestResults(
                     resolution = quality,
                     expectedCenterPosition = expectedResults.centerPosition,
                     actualCenterPosition = Point(results.position),
@@ -101,7 +148,7 @@ class ImageDetectorTests {
         }
     } ?: emptyList()
 
-    private fun List<ActualDetectionResults>.verify() {
+    private fun List<TestResults>.verify() {
         var globalResult = true
         println("---------- Detection results START ----------  ")
         forEach { result ->
@@ -113,9 +160,11 @@ class ImageDetectorTests {
         assertTrue("Image detection failed", globalResult)
     }
 
-    private fun ActualDetectionResults.print() {
+    private fun TestResults.print() {
         println("$resolution(${resolution.value}): Confidence=$actualConfidence/$expectedConfidence; " +
                 "Position=$actualCenterPosition/$expectedCenterPosition}; isValid=${isValid()}")
 
     }
 }
+
+
