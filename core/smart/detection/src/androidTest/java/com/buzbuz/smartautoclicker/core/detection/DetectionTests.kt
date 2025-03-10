@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.detection.data.TestImage
 import com.buzbuz.smartautoclicker.core.detection.data.getDetectionExactArea
 import com.buzbuz.smartautoclicker.core.detection.data.getValidCustomDetectionArea
 import com.buzbuz.smartautoclicker.core.detection.data.isValid
+import com.buzbuz.smartautoclicker.core.detection.utils.TEST_DETECTION_THRESHOLD_ALL
 import com.buzbuz.smartautoclicker.core.detection.utils.loadTestBitmap
 import com.buzbuz.smartautoclicker.core.detection.utils.setScreenMetrics
 import org.junit.After
@@ -38,12 +39,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class ImageDetectorTests {
-
-    private companion object {
-        /** Allow to always returns the best match, even if not up to standards. */
-        private const val TEST_DETECTION_THRESHOLD_ALL = 100
-    }
+class DetectionTests {
 
     private lateinit var context: Context
     private lateinit var testedDetector: ImageDetector
