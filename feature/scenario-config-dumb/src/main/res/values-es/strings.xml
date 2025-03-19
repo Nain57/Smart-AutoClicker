@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_dumb_action_type">Tipo de acción</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">Escenario</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_dumb_actions">Acciones</string>
+    <string name="menu_item_title_dumb_config">Configurar</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_action_duration">Durante %1$s</string>
+    <string name="item_desc_dumb_click">Pulse en algún lugar de la pantalla</string>
+    <string name="item_desc_dumb_click_details">Durante %1$s en [%2$d, %3$d]</string>
+    <string name="item_desc_dumb_click_on_position">Clic en %1$d, %2$d</string>
+    <string name="item_desc_dumb_pause">Pausar la ejecución</string>
+    <string name="item_desc_dumb_pause_details">Durante %1$s</string>
+    <string name="item_desc_dumb_repeat_count">Repetir %1$d veces</string>
+    <string name="item_desc_dumb_swipe">Deslizar de una posición a otra de la pantalla</string>
+    <string name="item_desc_dumb_swipe_details">Durante %1$s de [%2$d, %3$d] hacia [%4$d, %5$d]</string>
+    <string name="item_desc_dumb_swipe_positions">Deslizar de %1$d, %2$d hacia %3$d, %4$d</string>
+    <string name="item_title_dumb_click">Clic</string>
+    <string name="item_title_dumb_pause">Esperar</string>
+    <string name="item_title_dumb_swipe">Deslizar</string>
+    <string name="item_title_no_dumb_actions">Sin acciones</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_dumb_action_list">¡ No se han creado acciones !</string>
+    <string name="message_empty_secondary_dumb_action_list">Necesitas al menos una acción para ejecutar el escenario</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_dumb_brief_empty_action_list">Se necesita al menos una acción para ejecutar un escenario</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_dumb_action_this">Acciones de este escenario</string>
+    <string name="list_header_copy_dumb_action_all">Acciones de todos los escenarios</string>
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_dumb_action_copy">Buscar por nombre de acción</string>
+
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_maximum_duration">Duración máxima (minutos)</string>
+    <string name="input_field_label_repeat_count">Cantidad de repeticiones</string>
+    <string name="input_field_label_repeat_delay">Retraso de repeticiónes (ms)</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_action">Añadir una nueva acción al escenario</string>
+    <string name="content_desc_show_actions">Mostrar u ocultar las acciones creadas</string>
+    <string name="content_desc_open_action_list">Abrir la lista de acciones</string>
+
+    <!--
+      - The following strings should be kept the same in all languages.
+      - DO NOT TRANSLATE.
+      -->
+    <string name="title_action_count" translatable="false">%1$d/%2$d</string>
+</resources>
