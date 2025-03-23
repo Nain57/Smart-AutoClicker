@@ -1,3 +1,6 @@
+
+#include "screen_image.hpp"
+
 /*
  * Copyright (C) 2025 Kevin Buzeau
  *
@@ -15,32 +18,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "detection_result.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include "screen_image.hpp"
+#include "../utils/log.h"
 
 using namespace smartautoclicker;
 
 
-void DetectionResult::onAttachedToJavaObject(JNIEnv *env) {
-    methodSetResults = env->GetMethodID(globalClass, "setResults", "(ZIID)V");
+void ScreenImage::onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) {
+    fullSizeColorMat = std::move(fullSizeColor);
+    scaledGrayMat = std::move(scaledGray);
 }
 
-void DetectionResult::onDetachedFromJavaObject() {
-    methodSetResults = nullptr;
+cv::Mat* ScreenImage::getFullSizeColorMat() const {
+    return fullSizeColorMat.get();
 }
 
-void DetectionResult::setResults(JNIEnv *env, bool detected, double centerX, double centerY, double maxVal) {
-    if (!methodSetResults) return;
-
-    env->CallVoidMethod(
-            globalObject,
-            methodSetResults,
-            detected,
-            (int) centerX,
-            (int) centerY,
-            maxVal);
+cv::Mat* ScreenImage::getScaledGrayColorMat() const {
+    return scaledGrayMat.get();
 }
 
-void DetectionResult::clearResults(JNIEnv *env) {
-    setResults(env, false, 0.0, 0.0, 0.0);
+cv::Mat ScreenImage::cropFullSizeColor(const cv::Rect &roi) const {
+    return { *fullSizeColorMat, roi };
 }
+
+cv::Mat ScreenImage::cropScaledGray(const cv::Rect &roi) const {
+    return { *scaledGrayMat, roi };
+}
+
 

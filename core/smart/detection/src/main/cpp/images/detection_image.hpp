@@ -15,32 +15,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KLICK_R_MATCHING_RESULTS_HPP
-#define KLICK_R_MATCHING_RESULTS_HPP
+#ifndef KLICK_R_DETECTION_IMAGE_HPP
+#define KLICK_R_DETECTION_IMAGE_HPP
 
+#include <jni.h>
+#include <android/bitmap.h>
 #include <opencv2/core/types.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
 
-#include "../types/scalable_roi.hpp"
+#include "../utils/scalable_roi.hpp"
 
 namespace smartautoclicker {
 
-    class MatchingResults {
+    class DetectionImage {
 
     private:
-        std::unique_ptr<cv::Mat> templateMatchingResult = std::make_unique<cv::Mat>();
-        std::unique_ptr<cv::Mat> minMaxMask = std::make_unique<cv::Mat>();
+        static std::unique_ptr<cv::Mat> loadFullSizeColorMat(JNIEnv *env, jobject bitmap);
 
-    public:
-        double minVal;
-        double maxVal;
-        cv::Point minLoc = cv::Point(0, 0);
-        cv::Point maxLoc = cv::Point(0, 0);
+    protected:
+        /** */
         ScalableRoi roi;
 
-        cv::Mat* initResults(const cv::Mat& screenImage, const cv::Mat& conditionImage);
-        void locateNextMinMax(const cv::Mat& conditionImage, double scaleRatio);
+        /**
+         *
+         * @param fullSizeColor
+         * @param scaleRatio
+         */
+        virtual void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) = 0;
+
+    public:
+        void processFullSizeBitmap(JNIEnv *env, jobject bitmap, double scaleRatio);
+        ScalableRoi getRoi() const;
     };
 }
 
-#endif //KLICK_R_MATCHING_RESULTS_HPP
+#endif //KLICK_R_DETECTION_IMAGE_HPP

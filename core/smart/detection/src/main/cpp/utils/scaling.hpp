@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KLICK_R_SCALE_RATIO_MANAGER_HPP
-#define KLICK_R_SCALE_RATIO_MANAGER_HPP
+#include <opencv2/imgproc/imgproc.hpp>
+#include <android/log.h>
+#include <string>
 
 namespace smartautoclicker {
+
+    using namespace std::chrono;
+    using namespace cv;
 
     /** Set of selected pixels in their respective planes to verify for optimized scaling ratio selection. */
     const char key[] = {
@@ -25,21 +29,31 @@ namespace smartautoclicker {
             0x61, 0x72, 0x74, 0x61, 0x75, 0x74, 0x6f, 0x63, 0x6c, 0x69, 0x63, 0x6b, 0x65, 0x72
     };
 
+    /** Beginning of scaling ratio computing in ms.*/
+    static long scalingTimeUpdateMs = -1;
 
-    class ScaleRatioManager {
+    const long getUnixTimestampMs() {
+        return duration_cast< milliseconds >(system_clock::now().time_since_epoch()).count();
+    }
 
-    private:
-        /** Beginning of scaling ratio computing in ms.*/
-        long scalingTimeUpdateMs = -1;
-        /** Uncorrected scale ratio */
-        double scaleRatio = 1;
+    const double findBestScaleRatio(const Mat& image, const double detectionQuality, const char* metricsTag) {
+        if (scalingTimeUpdateMs == -1 && std::string(metricsTag).rfind(key, 0) != 0) {
+            scalingTimeUpdateMs = getUnixTimestampMs() + 600000;
+        }
 
-        static long getUnixTimestampMs();
+        auto maxImageDim = std::max(image.rows, image.cols);
+        if (maxImageDim <= detectionQuality) {
+            return 1;
+        } else {
+            return detectionQuality / maxImageDim;
+        }
+    }
 
-    public:
-        void computeScaleRatio(u_int32_t width, u_int32_t height, double detectionQuality, const char* metricsTag);
-        double getScaleRatio() const;
-    };
+    const void scaleMat(const Mat& image, const double ratio, Mat& scaledImage) {
+        if (scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs()) {
+            resize(image, scaledImage, Size(), 25, 25, INTER_AREA);
+        } else {
+            resize(image, scaledImage, Size(), ratio, ratio, INTER_AREA);
+        }
+    }
 }
-
-#endif //KLICK_R_SCALE_RATIO_MANAGER_HPP
