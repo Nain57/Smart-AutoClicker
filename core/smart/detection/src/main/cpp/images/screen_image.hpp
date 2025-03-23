@@ -15,26 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KLICK_R_DETECTION_RESULTS
-#define KLICK_R_DETECTION_RESULTS
 
-#include <jni.h>
-#include "../jni/jni_java_wrapper.hpp"
+#ifndef KLICK_R_SCREEN_IMAGE_HPP
+#define KLICK_R_SCREEN_IMAGE_HPP
+
+#include "detection_image.hpp"
 
 namespace smartautoclicker {
 
-    class DetectionResult: public JniJavaWrapper {
+    class ScreenImage : public DetectionImage {
 
     private:
-        jmethodID methodSetResults = nullptr;
+        /** */
+        std::unique_ptr<cv::Mat> fullSizeColorMat = nullptr;
+        /** */
+        std::unique_ptr<cv::Mat> scaledGrayMat = nullptr;
+
+        void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) override;
 
     public:
-        void onAttachedToJavaObject(JNIEnv *env) override;
-        void onDetachedFromJavaObject() override;
-
-        void setResults(JNIEnv *env, bool detected, double centerX, double centerY, double maxVal);
-        void clearResults(JNIEnv *env);
+        cv::Mat* getFullSizeColorMat() const;
+        cv::Mat* getScaledGrayColorMat() const;
+        cv::Mat cropFullSizeColor(const cv::Rect& roi) const;
+        cv::Mat cropScaledGray(const cv::Rect& roi) const;
     };
 }
 
-#endif //KLICK_R_DETECTION_RESULTS
+#endif //KLICK_R_SCREEN_IMAGE_HPP

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2023 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,27 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KLICK_R_SCALABLE_ROI_HPP
-#define KLICK_R_SCALABLE_ROI_HPP
-
 #include <opencv2/core/types.hpp>
 
 namespace smartautoclicker {
 
-    class ScalableRoi {
+    class DetectionResult {
+
     public:
-        cv::Rect fullSize;
-        cv::Rect scaled;
+        bool isDetected;
+        double centerX;
+        double centerY;
 
-        void setFullSize(const cv::Rect& fullSizeRoi, double scaleRatio);
-        void setFullSize(int x, int y, int width, int height, double scaleRatio);
-        void setScaled(int x, int y, int width, int height, double scaleRatio);
-        void clear();
+        double minVal;
+        double maxVal;
+        cv::Point minLoc;
+        cv::Point maxLoc;
 
-        int fullSizeCenterX() const;
-        int fullSizeCenterY() const;
-        bool isEmpty() const;
+        void reset() {
+            isDetected = false;
+            centerX = 0;
+            centerY = 0;
+            minVal = 0;
+            maxVal = 0;
+            minLoc.x = 0;
+            minLoc.y = 0;
+            maxLoc.x = 0;
+            maxLoc.y = 0;
+        }
     };
 }
 
-#endif //KLICK_R_SCALABLE_ROI_HPP
