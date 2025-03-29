@@ -46,7 +46,7 @@ googlePlayReview = "2.0.2"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
-androidxTestCore = "1.6.2"
+androidxTestCore = "1.6.1"
 androidxTestExtJunit = "1.2.1"
 junit = "4.13.2"
 mockitoCore = "5.6.0"
