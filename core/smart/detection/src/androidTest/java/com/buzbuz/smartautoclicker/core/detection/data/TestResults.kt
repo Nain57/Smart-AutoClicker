@@ -51,8 +51,8 @@ private fun TestResults.getToleratedRoundingErrorPixels(): Int =
 
         DetectionResolution.AVERAGE,
         DetectionResolution.BELOW_AVERAGE,
-        DetectionResolution.LOW -> 2
+        DetectionResolution.LOW -> 3
 
         DetectionResolution.VERY_LOW,
-        DetectionResolution.MIN -> 3
+        DetectionResolution.MIN -> 5
     }

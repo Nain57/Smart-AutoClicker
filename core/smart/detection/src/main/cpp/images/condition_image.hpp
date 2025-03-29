@@ -35,7 +35,7 @@ namespace smartautoclicker {
 
     public:
         cv::Scalar getFullSizeColorMean() const;
-        cv::Mat* getScaledGrayColorMat() const;
+        cv::Mat* getScaledGrayMat() const;
     };
 }
 

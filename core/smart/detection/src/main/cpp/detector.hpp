@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,10 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include "matching/template_matcher.hpp"
+#include "matching/template_matching_result.hpp"
 #include "images/condition_image.hpp"
 #include "images/screen_image.hpp"
-#include "types/detectionResult.hpp"
 
 namespace smartautoclicker {
 
@@ -32,17 +33,7 @@ namespace smartautoclicker {
         double scaleRatio = 1;
 
         std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
-
-        DetectionResult detectionResult;
-
-        static std::unique_ptr<cv::Mat> matchTemplate(const cv::Mat& image, const cv::Mat& condition);
-        static void locateMinMax(const cv::Mat& matchingResult, DetectionResult& results);
-        static bool isResultAboveThreshold(const DetectionResult& results, int threshold);
-        static double getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans);
-
-        cv::Rect getDetectionResultFullSizeRoi(const cv::Rect& detectionRoi, int fullSizeWidth, int fullSizeHeight) const;
-
-        DetectionResult detectCondition(ConditionImage& conditionImage, ScalableRoi detectionArea, int threshold);
+        std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
 
     public:
 
@@ -51,8 +42,8 @@ namespace smartautoclicker {
         void setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag);
         void setScreenImage(cv::Mat* screenMat);
 
-        DetectionResult detectCondition(cv::Mat* conditionMat, int threshold);
-        DetectionResult detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
+        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int threshold);
+        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
     };
 }
 

@@ -23,6 +23,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "../detector.hpp"
+#include "../matching/template_matching_result.hpp"
+
 
 using namespace smartautoclicker;
 
@@ -33,6 +35,6 @@ using namespace smartautoclicker;
  */
 Detector *getDetectorFromJavaRef(JNIEnv *env, jobject self);
 cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult result);
+void setDetectionResult(JNIEnv *env, jobject self, TemplateMatchingResult* result);
 
 #endif //KLICK_R_JNI_HPP

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,18 +40,17 @@ void Detector::setScreenImage(cv::Mat* screenMat) {
     screenImage->processFullSizeBitmap(screenMat, scaleRatio);
 }
 
-DetectionResult Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
-    detectionResult.reset();
-
-    // Load condition and check if the condition fits in the detection area
-    ConditionImage conditionImage = ConditionImage();
-    conditionImage.processFullSizeBitmap(conditionMat, scaleRatio);
-
-    return detectCondition(conditionImage, screenImage->getRoi(), threshold);
+TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
+    return detectCondition(
+            conditionMat,
+            0, 0,
+            screenImage->getRoi().getFullSize().width,
+            screenImage->getRoi().getFullSize().height,
+            threshold);
 }
 
-DetectionResult Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
-    detectionResult.reset();
+TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
+    templateMatcher->reset();
 
     // Load condition and check if the condition fits in the detection area
     ConditionImage conditionImage = ConditionImage();
@@ -61,120 +60,28 @@ DetectionResult Detector::detectCondition(cv::Mat* conditionMat, int x, int y, i
     ScalableRoi detectionArea = ScalableRoi();
     detectionArea.setFullSize(cv::Rect(x, y, width, height), scaleRatio);
 
-    return detectCondition(conditionImage, detectionArea, threshold);
-}
-
-DetectionResult Detector::detectCondition(ConditionImage& conditionImage, ScalableRoi detectionArea, int threshold) {
     // Check if the detection area fits the screen
     if (!screenImage->getRoi().containsOrEquals(detectionArea)) {
         LOGE("Detector", "Can't detectCondition, detection roi is outside the screen");
-        return detectionResult;
+        return templateMatcher->getMatchingResults();
     }
 
     // Check if the condition fits in the detection area
     if (!detectionArea.isBiggerOrEquals(conditionImage.getRoi())) {
         LOGE("Detector", "Can't detectCondition, detection roi is smaller than the condition");
-        return detectionResult;
+        return templateMatcher->getMatchingResults();
     }
 
     // Crop the scaled gray current image to only get the detection area
     cv::Mat screenCroppedScaledGrayMat = screenImage->cropScaledGray(detectionArea.getScaled());
 
-    // Get the matching results
-    auto matchingResults = matchTemplate(screenCroppedScaledGrayMat, *conditionImage.getScaledGrayColorMat());
+    // Apply template matching and get global results
+    templateMatcher->matchTemplate(
+            screenImage.get(),
+            &conditionImage,
+            &detectionArea,
+            scaleRatio,
+            threshold);
 
-    // Until a condition is detected or none fits
-    cv::Rect scaledMatchingRoi;
-    cv::Rect fullSizeMatchingRoi;
-    detectionResult.isDetected = false;
-    while (!detectionResult.isDetected) {
-        // Find the max value and its position in the result
-        locateMinMax(*matchingResults, detectionResult);
-
-        // If the maximum for the whole picture is below the threshold, we will never find.
-        if (!isResultAboveThreshold(detectionResult, threshold)) break;
-
-        // Calculate the ROI based on the maximum location
-        scaledMatchingRoi = getRoiForResult(detectionResult.maxLoc, *conditionImage.getScaledGrayColorMat());
-        fullSizeMatchingRoi = getDetectionResultFullSizeRoi(
-                detectionArea.getFullSize(),
-                conditionImage.getRoi().getFullSize().width,
-                conditionImage.getRoi().getFullSize().height);
-
-        if (isRoiNotContainingImage(scaledMatchingRoi, *conditionImage.getScaledGrayColorMat()) ||
-            isRoiNotContainedInImage(fullSizeMatchingRoi, *screenImage->getFullSizeColorMat())) {
-/*
-            LOGE("Detector", "roi is out of bound, scaleRatio %1f", scaleRatio);
-            LOGE("Detector", "roi is out of bound, conditionImage %1d/%2d - %3d/%4d", conditionImage.getRoi().getFullSize().width, conditionImage.getRoi().getFullSize().height, conditionImage.getRoi().getScaled().width, conditionImage.getRoi().getScaled().height);
-            LOGE("Detector", "roi is out of bound, detectionArea %1d/%2d - %3d/%4d", detectionArea.getFullSize().width, detectionArea.getFullSize().height, detectionArea.getScaled().width, detectionArea.getScaled().height);
-
-            LOGE("Detector", "roi is out of bound, scaledMatchingRoi %1d/%2d %3d/%4d - %7d/%8d - %9d",
-                 scaledMatchingRoi.x, scaledMatchingRoi.y, scaledMatchingRoi.width, scaledMatchingRoi.height,
-                 conditionImage.getScaledGrayColorMat()->cols, conditionImage.getScaledGrayColorMat()->rows,
-                 isRoiNotContainingImage(scaledMatchingRoi, *conditionImage.getScaledGrayColorMat()));
-            LOGE("Detector", "roi is out of bound, fullSizeMatchingRoi %1d/%2d %3d/%4d - %7d/%8d - %9d",
-                 fullSizeMatchingRoi.x, fullSizeMatchingRoi.y, fullSizeMatchingRoi.width, fullSizeMatchingRoi.height,
-                 screenImage->getFullSizeColorMat()->cols, screenImage->getFullSizeColorMat()->rows,
-                 isRoiNotContainedInImage(fullSizeMatchingRoi, *screenImage->getFullSizeColorMat()));
-*/
-            // Roi is out of bounds, invalid match
-            detectionResult.centerX = 0;
-            detectionResult.centerY = 0;
-            markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
-            continue;
-        }
-
-        detectionResult.centerX = fullSizeMatchingRoi.x + ((int) (fullSizeMatchingRoi.width / 2));
-        detectionResult.centerY = fullSizeMatchingRoi.y + ((int) (fullSizeMatchingRoi.height / 2));
-
-        // Check if the colors are matching in the candidate area.
-        cv::Mat fullSizeColorCroppedCurrentImage = screenImage->cropFullSizeColor(fullSizeMatchingRoi);
-        double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage, conditionImage.getFullSizeColorMean());
-        if (colorDiff < threshold) {
-            detectionResult.isDetected = true;
-        } else {
-            // Colors are invalid, modify the matching result to indicate that.
-            markRoiAsInvalidInResults(scaledMatchingRoi, *matchingResults);
-        }
-    }
-
-    return detectionResult;
+    return templateMatcher->getMatchingResults();
 }
-
-std::unique_ptr<Mat> Detector::matchTemplate(const Mat& image, const Mat& condition) {
-    cv::Mat resultMat(max(image.rows - condition.rows + 1, 0),
-                      max(image.cols - condition.cols + 1, 0),
-                      CV_32F);
-
-    cv::matchTemplate(image, condition, resultMat, cv::TM_CCOEFF_NORMED);
-
-    return std::make_unique<cv::Mat>(resultMat);
-}
-
-void Detector::locateMinMax(const Mat& matchingResult, DetectionResult& results) {
-    minMaxLoc(matchingResult, &results.minVal, &results.maxVal, &results.minLoc, &results.maxLoc, Mat());
-}
-
-bool Detector::isResultAboveThreshold(const DetectionResult& results, const int threshold) {
-    return results.maxVal > ((double) (100 - threshold) / 100);
-}
-
-double Detector::getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans) {
-    auto imageColorMeans = mean(image);
-
-    double diff = 0;
-    for (int i = 0; i < 3; i++) {
-        diff += abs(imageColorMeans.val[i] - conditionColorMeans.val[i]);
-    }
-    return (diff * 100) / (255 * 3);
-}
-
-cv::Rect Detector::getDetectionResultFullSizeRoi(const cv::Rect& fullSizeDetectionRoi, int fullSizeWidth, int fullSizeHeight) const {
-    return {
-            fullSizeDetectionRoi.x + cvRound(detectionResult.maxLoc.x / scaleRatio),
-            fullSizeDetectionRoi.y + cvRound(detectionResult.maxLoc.y / scaleRatio),
-            fullSizeWidth,
-            fullSizeHeight
-    };
-}
-
