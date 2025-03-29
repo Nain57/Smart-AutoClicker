@@ -21,7 +21,7 @@
 using namespace smartautoclicker;
 
 
-void TemplateMatchingResult::updateResults(ScalableRoi *detectionArea, cv::Mat* condition,
+void TemplateMatchingResult::updateResults(ScalableRoi* detectionArea, cv::Mat* condition,
                                            cv::Mat* matchingResults, double scaleRatio) {
 
     cv::minMaxLoc(*matchingResults, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());

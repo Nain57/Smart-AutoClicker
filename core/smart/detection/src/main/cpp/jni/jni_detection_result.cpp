@@ -16,7 +16,7 @@
  */
 
 #include "jni.hpp"
-#include "../matching/template_matching_result.hpp"
+#include "../detector/matching/template_matching_result.hpp"
 
 void setDetectionResult(JNIEnv *env, jobject self, TemplateMatchingResult* result) {
     jclass cls = env->GetObjectClass(self);

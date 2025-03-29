@@ -15,23 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <opencv2/imgproc/imgproc.hpp>
+#ifndef KLICK_R_DETECTION_IMAGE_HPP
+#define KLICK_R_DETECTION_IMAGE_HPP
 
-#include "condition_image.hpp"
-#include "../utils/log.h"
+#include <opencv2/core/types.hpp>
 
-using namespace smartautoclicker;
+#include "../../scaling/scalable_roi.hpp"
 
+namespace smartautoclicker {
 
-void ConditionImage::onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) {
-    fullSizeColorMean = cv::mean(*fullSizeColor);
-    scaledGrayMat = std::move(scaledGray);
+    class DetectionImage {
+
+    protected:
+        /** */
+        ScalableRoi roi;
+
+        /**
+         *
+         * @param fullSizeColor
+         * @param scaleRatio
+         */
+        virtual void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) = 0;
+
+    public:
+        void processFullSizeBitmap(cv::Mat* screenMat, double scaleRatio);
+        ScalableRoi getRoi() const;
+    };
 }
 
-cv::Scalar ConditionImage::getFullSizeColorMean() const {
-    return fullSizeColorMean;
-}
-
-cv::Mat* ConditionImage::getScaledGrayMat() const {
-    return scaledGrayMat.get();
-}
+#endif //KLICK_R_DETECTION_IMAGE_HPP

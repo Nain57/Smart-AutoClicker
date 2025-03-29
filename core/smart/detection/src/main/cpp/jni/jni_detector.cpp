@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../detector.hpp"
+#include "../detector/detector.hpp"
 #include "jni.hpp"
 
 

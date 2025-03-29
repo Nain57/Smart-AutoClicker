@@ -22,8 +22,8 @@
 #include <jni.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "../detector.hpp"
-#include "../matching/template_matching_result.hpp"
+#include "../detector/detector.hpp"
+#include "../detector/matching/template_matching_result.hpp"
 
 
 using namespace smartautoclicker;
