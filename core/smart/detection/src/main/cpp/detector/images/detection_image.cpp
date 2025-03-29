@@ -16,9 +16,7 @@
  */
 
 #include <opencv2/imgproc/imgproc.hpp>
-
 #include "detection_image.hpp"
-#include "../utils/log.h"
 
 using namespace smartautoclicker;
 

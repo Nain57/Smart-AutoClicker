@@ -22,7 +22,7 @@
 #include <string>
 
 #include "jni/jni.hpp"
-#include "detector.hpp"
+#include "detector/detector.hpp"
 
 using namespace smartautoclicker;
 

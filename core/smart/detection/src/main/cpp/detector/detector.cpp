@@ -19,9 +19,8 @@
 #include <memory>
 #include <opencv2/imgproc/imgproc_c.h>
 
-#include "utils/roi.hpp"
-#include "utils/scaling.hpp"
-#include "utils/log.h"
+#include "../scaling/scaling.hpp"
+#include "../logs/log.h"
 #include "detector.hpp"
 
 using namespace cv;

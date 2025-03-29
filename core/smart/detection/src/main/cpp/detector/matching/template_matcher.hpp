@@ -22,7 +22,7 @@
 
 #include "../images/condition_image.hpp"
 #include "../images/screen_image.hpp"
-#include "../utils/scalable_roi.hpp"
+#include "../../scaling/scalable_roi.hpp"
 #include "template_matching_result.hpp"
 
 namespace smartautoclicker {

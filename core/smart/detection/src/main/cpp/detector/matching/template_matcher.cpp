@@ -19,7 +19,7 @@
 #include <opencv2/imgproc/imgproc_c.h>
 
 #include "template_matcher.hpp"
-#include "../utils/log.h"
+#include "../../logs/log.h"
 
 
 using namespace smartautoclicker;

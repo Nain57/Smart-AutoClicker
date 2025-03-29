@@ -19,7 +19,7 @@
 #define KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
 
 #include <opencv2/core/types.hpp>
-#include "../utils/scalable_roi.hpp"
+#include "../../scaling/scalable_roi.hpp"
 
 namespace smartautoclicker {
 

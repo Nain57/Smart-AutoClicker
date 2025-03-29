@@ -30,29 +30,28 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        main/cpp/utils/roi.hpp
-        main/cpp/utils/scaling.hpp
         main/cpp/smartautoclicker.cpp
-        main/cpp/detector.cpp
-        main/cpp/detector.hpp
-        main/cpp/images/detection_image.cpp
-        main/cpp/images/detection_image.hpp
-        main/cpp/images/screen_image.cpp
-        main/cpp/images/screen_image.hpp
-        main/cpp/images/condition_image.cpp
-        main/cpp/images/condition_image.hpp
-        main/cpp/utils/log.cpp
-        main/cpp/utils/log.h
-        main/cpp/utils/scalable_roi.cpp
-        main/cpp/utils/scalable_roi.hpp
+        main/cpp/detector/detector.cpp
+        main/cpp/detector/detector.hpp
+        main/cpp/detector/images/condition_image.cpp
+        main/cpp/detector/images/condition_image.hpp
+        main/cpp/detector/images/detection_image.cpp
+        main/cpp/detector/images/detection_image.hpp
+        main/cpp/detector/images/screen_image.cpp
+        main/cpp/detector/images/screen_image.hpp
+        main/cpp/detector/matching/template_matcher.cpp
+        main/cpp/detector/matching/template_matcher.hpp
+        main/cpp/detector/matching/template_matching_result.cpp
+        main/cpp/detector/matching/template_matching_result.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp
         main/cpp/jni/jni_detection_result.cpp
-        main/cpp/matching/template_matcher.cpp
-        main/cpp/matching/template_matcher.hpp
-        main/cpp/matching/template_matching_result.cpp
-        main/cpp/matching/template_matching_result.hpp)
+        main/cpp/logs/log.cpp
+        main/cpp/logs/log.h
+        main/cpp/scaling/scaling.hpp
+        main/cpp/scaling/scalable_roi.cpp
+        main/cpp/scaling/scalable_roi.hpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
