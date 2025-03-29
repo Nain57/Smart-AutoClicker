@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <android/bitmap.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "detection_image.hpp"
@@ -24,9 +23,9 @@
 using namespace smartautoclicker;
 
 
-void DetectionImage::processFullSizeBitmap(JNIEnv *env, jobject bitmap, double scaleRatio) {
+void DetectionImage::processFullSizeBitmap(cv::Mat* screenMat, double scaleRatio) {
     // Read bitmap to create full size color Mat
-    std::unique_ptr<cv::Mat> fullSizeMat = loadFullSizeColorMat(env, bitmap);
+    std::unique_ptr<cv::Mat> fullSizeMat = std::make_unique<cv::Mat>(*screenMat);
 
     // Compute full and scaled sizes
     roi.setFullSize(fullSizeMat.get(), scaleRatio);
@@ -45,28 +44,4 @@ void DetectionImage::processFullSizeBitmap(JNIEnv *env, jobject bitmap, double s
 
 ScalableRoi DetectionImage::getRoi() const {
     return roi;
-}
-
-std::unique_ptr<cv::Mat> DetectionImage::loadFullSizeColorMat(JNIEnv *env, jobject bitmap) {
-    try {
-        AndroidBitmapInfo info;
-        void *pixels = nullptr;
-
-        CV_Assert(AndroidBitmap_getInfo(env, bitmap, &info) >= 0);
-        CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
-        CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
-
-        auto fullSizeMat = std::make_unique<cv::Mat>((int) info.height,(int) info.width,CV_8UC4,pixels);
-        AndroidBitmap_unlockPixels(env, bitmap);
-
-        return fullSizeMat;
-    } catch (...) {
-        AndroidBitmap_unlockPixels(env, bitmap);
-
-        LOGE("androidBitmap", "createColorMatFromARGB8888BitmapData caught an exception");
-        jclass je = env->FindClass("java/lang/Exception");
-        env->ThrowNew(je, "Android Bitmap exception in JNI code {createColorMatFromARGB8888BitmapData}");
-
-        return nullptr;
-    }
 }

@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <jni.h>
+#ifndef KLICK_R_DETECTOR_HPP
+#define KLICK_R_DETECTOR_HPP
+
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "images/condition_image.hpp"
@@ -29,7 +31,7 @@ namespace smartautoclicker {
     private:
         double scaleRatio = 1;
 
-        std::unique_ptr<ScreenImage> screenImage = nullptr;
+        std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
 
         DetectionResult detectionResult;
 
@@ -46,13 +48,12 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        void setScreenMetrics(JNIEnv *env, jstring metricsTag, jobject screenBitmap, double detectionQuality);
+        void setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag);
+        void setScreenImage(cv::Mat* screenMat);
 
-        void setScreenImage(JNIEnv *env, jobject screenBitmap);
-
-        DetectionResult detectCondition(JNIEnv *env, jobject conditionBitmap, int threshold);
-        DetectionResult detectCondition(JNIEnv *env, jobject conditionBitmap, int x, int y, int width, int height, int threshold);
+        DetectionResult detectCondition(cv::Mat* conditionMat, int threshold);
+        DetectionResult detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
     };
 }
 
-
+#endif //KLICK_R_DETECTOR_HPP
