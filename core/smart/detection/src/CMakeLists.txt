@@ -31,7 +31,6 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         main/cpp/types/detectionResult.hpp
-        main/cpp/utils/androidBitmap.hpp
         main/cpp/utils/roi.hpp
         main/cpp/utils/scaling.hpp
         main/cpp/smartautoclicker.cpp
@@ -46,7 +45,11 @@ add_library( # Sets the name of the library.
         main/cpp/utils/log.cpp
         main/cpp/utils/log.h
         main/cpp/utils/scalable_roi.cpp
-        main/cpp/utils/scalable_roi.hpp)
+        main/cpp/utils/scalable_roi.hpp
+        main/cpp/jni/jni.hpp
+        main/cpp/jni/jni_bitmap.cpp
+        main/cpp/jni/jni_detector.cpp
+        main/cpp/jni/jni_detection_result.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

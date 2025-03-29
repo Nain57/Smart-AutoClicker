@@ -15,32 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KLICK_R_DETECTION_IMAGE_HPP
-#define KLICK_R_DETECTION_IMAGE_HPP
+#include "jni.hpp"
 
-#include <opencv2/core/types.hpp>
+void setDetectionResult(JNIEnv *env, jobject self, DetectionResult result) {
+    jclass cls = env->GetObjectClass(self);
+    if (!cls)
+        env->FatalError("GetObjectClass failed");
 
-#include "../utils/scalable_roi.hpp"
+    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
 
-namespace smartautoclicker {
-
-    class DetectionImage {
-
-    protected:
-        /** */
-        ScalableRoi roi;
-
-        /**
-         *
-         * @param fullSizeColor
-         * @param scaleRatio
-         */
-        virtual void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) = 0;
-
-    public:
-        void processFullSizeBitmap(cv::Mat* screenMat, double scaleRatio);
-        ScalableRoi getRoi() const;
-    };
+    env->CallVoidMethod(self, methodId, result.isDetected, (int) result.centerX, (int) result.centerY, result.maxVal);
 }
-
-#endif //KLICK_R_DETECTION_IMAGE_HPP

@@ -19,7 +19,6 @@
 #include <memory>
 #include <opencv2/imgproc/imgproc_c.h>
 
-#include "utils/androidBitmap.hpp"
 #include "utils/roi.hpp"
 #include "utils/scaling.hpp"
 #include "utils/log.h"
@@ -29,52 +28,34 @@ using namespace cv;
 using namespace smartautoclicker;
 
 
-void Detector::setScreenMetrics(JNIEnv *env, jstring metricsTag, jobject screenBitmap, double detectionQuality) {
-    // Load the screen bitmap to get the screen size and determine the scale ratio
-    screenImage = std::make_unique<ScreenImage>();
-    screenImage->processFullSizeBitmap(env, screenBitmap, 1);
-
+void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag) {
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
     // the performance of the detection.
-    const char *tag = env->GetStringUTFChars(metricsTag, 0);
-    scaleRatio = findBestScaleRatio(*screenImage->getFullSizeColorMat(), detectionQuality, tag);
-    env->ReleaseStringUTFChars(metricsTag, tag);
+    scaleRatio = findBestScaleRatio(*screenMat, detectionQuality, metricsTag);
+    delete screenMat;
 }
 
-void Detector::setScreenImage(JNIEnv *env, jobject screenBitmap) {
-    if (screenImage == nullptr) {
-        LOGE("Detector", "Can't set screenImage, screen metrics are not initialized");
-        return;
-    }
-
-    screenImage->processFullSizeBitmap(env, screenBitmap, scaleRatio);
+void Detector::setScreenImage(cv::Mat* screenMat) {
+    screenImage->processFullSizeBitmap(screenMat, scaleRatio);
 }
 
-DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionBitmap, int threshold) {
+DetectionResult Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
     detectionResult.reset();
-    if (screenImage == nullptr) {
-        LOGE("Detector", "Can't detectCondition, screen metrics are not initialized");
-        return detectionResult;
-    }
 
     // Load condition and check if the condition fits in the detection area
     ConditionImage conditionImage = ConditionImage();
-    conditionImage.processFullSizeBitmap(env, conditionBitmap, scaleRatio);
+    conditionImage.processFullSizeBitmap(conditionMat, scaleRatio);
 
     return detectCondition(conditionImage, screenImage->getRoi(), threshold);
 }
 
-DetectionResult Detector::detectCondition(JNIEnv *env, jobject conditionBitmap, int x, int y, int width, int height, int threshold) {
+DetectionResult Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
     detectionResult.reset();
-    if (screenImage == nullptr) {
-        LOGE("Detector", "Can't detectCondition, screen metrics are not initialized");
-        return detectionResult;
-    }
 
     // Load condition and check if the condition fits in the detection area
     ConditionImage conditionImage = ConditionImage();
-    conditionImage.processFullSizeBitmap(env, conditionBitmap, scaleRatio);
+    conditionImage.processFullSizeBitmap(conditionMat, scaleRatio);
 
     // Compute the detection area
     ScalableRoi detectionArea = ScalableRoi();
