@@ -21,19 +21,19 @@
 using namespace smartautoclicker;
 
 void ScalableRoi::setFullSize(cv::Mat* fullSize, double scaleRatio) {
-    setFullSize(cv::Rect(0, 0, fullSize->cols, fullSize->rows), scaleRatio);
+    setFullSize(0, 0, fullSize->cols, fullSize->rows, scaleRatio);
 }
 
-void ScalableRoi::setFullSize(cv::Rect fullSize, double scaleRatio) {
-    fullSizeRoi.x = fullSize.x;
-    fullSizeRoi.y = fullSize.y;
-    fullSizeRoi.width = fullSize.width;
-    fullSizeRoi.height = fullSize.height;
+void ScalableRoi::setFullSize(int x, int y, int width, int height, double scaleRatio) {
+    fullSizeRoi.x = x;
+    fullSizeRoi.y = y;
+    fullSizeRoi.width = width;
+    fullSizeRoi.height = height;
 
-    scaledRoi.x = cvRound(fullSize.x * scaleRatio);
-    scaledRoi.y = cvRound(fullSize.y * scaleRatio);
-    scaledRoi.width = std::max(1, cvRound(fullSize.width * scaleRatio));
-    scaledRoi.height = std::max(1, cvRound(fullSize.height * scaleRatio));
+    scaledRoi.x = cvRound(x * scaleRatio);
+    scaledRoi.y = cvRound(y * scaleRatio);
+    scaledRoi.width = std::max(1, cvRound(width * scaleRatio));
+    scaledRoi.height = std::max(1, cvRound(height * scaleRatio));
 }
 
 void ScalableRoi::setScaled(int scaledX, int scaledY, int scaledWidth, int scaledHeight, double scaleRatio) {

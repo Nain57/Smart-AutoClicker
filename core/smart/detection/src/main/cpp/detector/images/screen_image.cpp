@@ -29,14 +29,6 @@ void ScreenImage::onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::
     scaledGrayMat = std::move(scaledGray);
 }
 
-cv::Mat* ScreenImage::getFullSizeColorMat() const {
-    return fullSizeColorMat.get();
-}
-
-cv::Mat* ScreenImage::getScaledGrayColorMat() const {
-    return scaledGrayMat.get();
-}
-
 cv::Mat ScreenImage::cropFullSizeColor(const cv::Rect &roi) const {
     return { *fullSizeColorMat, roi };
 }
