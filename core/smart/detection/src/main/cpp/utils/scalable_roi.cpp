@@ -36,16 +36,16 @@ void ScalableRoi::setFullSize(cv::Rect fullSize, double scaleRatio) {
     scaledRoi.height = std::max(1, cvRound(fullSize.height * scaleRatio));
 }
 
-void ScalableRoi::setScaled(cv::Rect scaled, double scaleRatio) {
-    fullSizeRoi.x = cvRound(scaled.x / scaleRatio);
-    fullSizeRoi.y = cvRound(scaled.y / scaleRatio);
-    fullSizeRoi.width = cvRound(scaled.width / scaleRatio);
-    fullSizeRoi.height = cvRound(scaled.height / scaleRatio);
+void ScalableRoi::setScaled(int scaledX, int scaledY, int scaledWidth, int scaledHeight, double scaleRatio) {
+    fullSizeRoi.x = cvRound(scaledX / scaleRatio);
+    fullSizeRoi.y = cvRound(scaledY / scaleRatio);
+    fullSizeRoi.width = cvRound(scaledWidth / scaleRatio);
+    fullSizeRoi.height = cvRound(scaledHeight / scaleRatio);
 
-    scaledRoi.x = scaled.x;
-    scaledRoi.y = scaled.y;
-    scaledRoi.width = scaled.width;
-    scaledRoi.height = scaled.height;
+    scaledRoi.x = scaledX;
+    scaledRoi.y = scaledY;
+    scaledRoi.width = scaledWidth;
+    scaledRoi.height = scaledHeight;
 }
 
 void ScalableRoi::clear() {

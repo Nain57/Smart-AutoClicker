@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ extern "C" {
             jint threshold,
             jobject result
     ) {
-        setDetectionResult(env, result,getDetectorFromJavaRef(env, self)->detectCondition(
+        setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectCondition(
                 loadMatFromRGBA8888Bitmap(env, conditionBitmap), threshold));
     }
 

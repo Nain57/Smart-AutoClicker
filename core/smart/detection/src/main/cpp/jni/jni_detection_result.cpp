@@ -16,13 +16,17 @@
  */
 
 #include "jni.hpp"
+#include "../matching/template_matching_result.hpp"
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult result) {
+void setDetectionResult(JNIEnv *env, jobject self, TemplateMatchingResult* result) {
     jclass cls = env->GetObjectClass(self);
     if (!cls)
         env->FatalError("GetObjectClass failed");
 
     jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
 
-    env->CallVoidMethod(self, methodId, result.isDetected, (int) result.centerX, (int) result.centerY, result.maxVal);
+    env->CallVoidMethod(self, methodId,
+                        result->isDetected(),
+                        (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
+                        result->getResultConfidence());
 }

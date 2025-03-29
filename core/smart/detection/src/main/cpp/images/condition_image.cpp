@@ -32,6 +32,6 @@ cv::Scalar ConditionImage::getFullSizeColorMean() const {
     return fullSizeColorMean;
 }
 
-cv::Mat* ConditionImage::getScaledGrayColorMat() const {
+cv::Mat* ConditionImage::getScaledGrayMat() const {
     return scaledGrayMat.get();
 }
