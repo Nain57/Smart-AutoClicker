@@ -26,16 +26,12 @@ namespace smartautoclicker {
     class ScreenImage : public DetectionImage {
 
     private:
-        /** */
         std::unique_ptr<cv::Mat> fullSizeColorMat = nullptr;
-        /** */
         std::unique_ptr<cv::Mat> scaledGrayMat = nullptr;
 
         void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) override;
 
     public:
-        cv::Mat* getFullSizeColorMat() const;
-        cv::Mat* getScaledGrayColorMat() const;
         cv::Mat cropFullSizeColor(const cv::Rect& roi) const;
         cv::Mat cropScaledGray(const cv::Rect& roi) const;
     };

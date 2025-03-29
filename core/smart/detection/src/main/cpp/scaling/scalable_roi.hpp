@@ -38,7 +38,7 @@ namespace smartautoclicker {
         bool isBiggerOrEquals(const ScalableRoi& other) const;
 
         void setFullSize(cv::Mat* fullSize, double scaleRatio);
-        void setFullSize(cv::Rect fullSize, double scaleRatio);
+        void setFullSize(int x, int y, int width, int height, double scaleRatio);
         void setScaled(int scaledX, int scaledY, int scaledWidth, int scaledHeight, double scaleRatio);
         void clear();
     };

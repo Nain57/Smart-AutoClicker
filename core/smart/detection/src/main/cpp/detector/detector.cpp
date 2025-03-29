@@ -57,7 +57,7 @@ TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, 
 
     // Compute the detection area
     ScalableRoi detectionArea = ScalableRoi();
-    detectionArea.setFullSize(cv::Rect(x, y, width, height), scaleRatio);
+    detectionArea.setFullSize(x, y, width, height, scaleRatio);
 
     // Check if the detection area fits the screen
     if (!screenImage->getRoi().containsOrEquals(detectionArea)) {

@@ -27,14 +27,7 @@ namespace smartautoclicker {
     class DetectionImage {
 
     protected:
-        /** */
         ScalableRoi roi;
-
-        /**
-         *
-         * @param fullSizeColor
-         * @param scaleRatio
-         */
         virtual void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) = 0;
 
     public:
