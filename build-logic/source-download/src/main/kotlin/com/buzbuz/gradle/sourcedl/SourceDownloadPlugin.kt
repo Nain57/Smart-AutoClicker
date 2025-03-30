@@ -71,6 +71,8 @@ class SourceDownloadPlugin : Plugin<Project> {
 
             inputZipFile.set(downloadTask.flatMap { it.outputFile })
             sourceVersion.set(sourceProject.projectVersion)
+            fileFiltersRegexes.set(sourceProject.fileFiltersRegexes)
+            foldersMapping.set(sourceProject.foldersMapping)
             outputDirectory.set(
                 sourceProject.unzipPath.map { path ->
                     layout.projectDirectory.dir(path.path)
