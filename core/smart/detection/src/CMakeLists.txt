@@ -1,4 +1,4 @@
-# Copyright (C) 2022 Nain57
+# Copyright (C) 2025 Nain57
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,6 +18,12 @@ cmake_minimum_required(VERSION 3.22.1)
 
 # Declares and names the project.
 project("smartautoclicker")
+
+# Tesseract requires newer C++ standard, so let's enable it for all libraries
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -68,6 +74,7 @@ find_library( # Sets the name of the path variable.
 # In debug, we want to use the prebuilts of OpenCV in order to speed up the dev process/CI
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 
+    # --- OpenCV START
     set(PREBUILT_OPENCV_PATH "${CMAKE_CURRENT_SOURCE_DIR}/debug/opencv")
 
     add_library( opencv_core SHARED IMPORTED )
@@ -86,12 +93,45 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             smartautoclicker
             PUBLIC
             ${PREBUILT_OPENCV_PATH}/include )
+    # --- OpenCV END
+
+    # --- Tesseract4Android START
+    set(PREBUILT_TESSERACT_4_ANDROID_PATH "${CMAKE_CURRENT_SOURCE_DIR}/debug/tesseract4android")
+    add_library( jpeg SHARED IMPORTED )
+    set_target_properties(
+            jpeg
+            PROPERTIES IMPORTED_LOCATION
+            "${PREBUILT_TESSERACT_4_ANDROID_PATH}/libs/${ANDROID_ABI}/libjpeg.so" )
+
+    add_library( pngx SHARED IMPORTED )
+    set_target_properties(
+            pngx
+            PROPERTIES IMPORTED_LOCATION
+            "${PREBUILT_TESSERACT_4_ANDROID_PATH}/libs/${ANDROID_ABI}/libpngx.so" )
+
+    add_library( leptonica SHARED IMPORTED )
+    set_target_properties(
+            leptonica
+            PROPERTIES IMPORTED_LOCATION
+            "${PREBUILT_TESSERACT_4_ANDROID_PATH}/libs/${ANDROID_ABI}/libleptonica.so" )
+
+    add_library( tesseract SHARED IMPORTED )
+    set_target_properties(
+            tesseract
+            PROPERTIES IMPORTED_LOCATION
+            "${PREBUILT_TESSERACT_4_ANDROID_PATH}/libs/${ANDROID_ABI}/libtesseract.so" )
+    target_include_directories(
+            smartautoclicker
+            PUBLIC
+            ${PREBUILT_TESSERACT_4_ANDROID_PATH}/include )
+
+    target_link_libraries(smartautoclicker jpeg pngx leptonica tesseract )
+    # --- Tesseract4Android END
+
 ELSEIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
+    # --- OpenCV START
     set(SOURCE_OPENCV_PATH "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
-
-    # Adds the CMakeLists.txt file located in the specified directory
-    # as a build dependency.
     add_subdirectory(${SOURCE_OPENCV_PATH})
 
     # For a reason I'm missing, we have to set the correct output for opencv_core
@@ -103,6 +143,19 @@ ELSEIF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
 
     # Required to get opencv2/open_modules.hpp generated at build time
     include_directories (${CMAKE_BINARY_DIR})
+    # --- OpenCV END
+
+    # --- Tesseract4Android START
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/release/tesseract4android/libjpeg")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/release/tesseract4android/libpng")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/release/tesseract4android/leptonica")
+
+    set(SOURCE_TESSERACT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/release/tesseract4android/tesseract")
+    add_subdirectory(${SOURCE_TESSERACT_PATH})
+    target_include_directories(smartautoclicker PUBLIC
+            ${SOURCE_TESSERACT_PATH}/src/include/tesseract )
+
+    # --- Tesseract4Android END
 ENDIF()
 
 # Specifies libraries CMake should link to your target library. You
