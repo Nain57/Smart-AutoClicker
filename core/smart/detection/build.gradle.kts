@@ -32,6 +32,24 @@ sourceDownload {
             unzipPath = File("src/release/opencv")
             requiredForTask = "configureCMakeRelease"
         }
+
+        register("tesseract4Android") {
+            projectAccount = "adaptech-cz"
+            projectName = "Tesseract4Android"
+            projectVersion = libs.versions.tesseract4Android.get()
+
+            unzipPath = File("src/release/tesseract4android")
+            fileFiltersRegexes = listOf(
+                "tesseract4android/src/main/cpp/leptonica/.*",
+                "tesseract4android/src/main/cpp/libjpeg/.*",
+                "tesseract4android/src/main/cpp/libpng/.*",
+                "tesseract4android/src/main/cpp/tesseract/.*",
+            )
+            foldersMapping = mapOf(
+                "tesseract4android/src/main/cpp/" to "",
+            )
+            requiredForTask = "configureCMakeRelease"
+        }
     }
 }
 
