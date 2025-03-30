@@ -17,6 +17,8 @@
 package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.NamedDomainObjectContainer
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import java.io.File
 
@@ -31,6 +33,9 @@ abstract class SourceProject {
     abstract val projectName: Property<String>
     abstract val projectVersion: Property<String>
 
-    abstract val requiredForTask: Property<String>
     abstract val unzipPath: Property<File>
+    abstract val fileFiltersRegexes: ListProperty<String>
+    abstract val foldersMapping: MapProperty<String, String>
+
+    abstract val requiredForTask: Property<String>
 }

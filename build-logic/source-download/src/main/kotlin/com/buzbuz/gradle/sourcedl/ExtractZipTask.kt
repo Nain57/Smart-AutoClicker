@@ -18,6 +18,8 @@ package com.buzbuz.gradle.sourcedl
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.MapProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
@@ -33,6 +35,10 @@ abstract class ExtractZipTask : DefaultTask() {
     abstract val sourceVersion: Property<String>
     @get:Input
     abstract val inputZipFile: Property<File>
+    @get:Input
+    abstract val fileFiltersRegexes: ListProperty<String>
+    @get:Input
+    abstract val foldersMapping: MapProperty<String, String>
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
@@ -49,12 +55,15 @@ abstract class ExtractZipTask : DefaultTask() {
                 return
             }
         }
-
         project.mkdir(outputDir)
+
+
+        val filters = fileFiltersRegexes.get().map { Regex(it) }
+        val mapping = foldersMapping.get()
 
         ZipFile(inputZipFile.get()).use { zipFile ->
             zipFile.entries().asSequence().forEach { entry ->
-                zipFile.copyZipEntry(entry, outputDir.asFile)
+                zipFile.copyZipEntryIfNeeded(entry, outputDir.asFile, filters, mapping)
             }
         }
 
@@ -62,10 +71,18 @@ abstract class ExtractZipTask : DefaultTask() {
             .writeText(sourceVersion.get())
     }
 
-    private fun ZipFile.copyZipEntry(entry: ZipEntry, outputDir: File) {
+    private fun ZipFile.copyZipEntryIfNeeded(entry: ZipEntry, outputDir: File, filters: List<Regex>, mapping: Map<String, String>) {
         if (entry.isDirectory) return
+        var entryPath = entry.name.split("/").drop(1).joinToString("/")
 
-        val entryPath = entry.name.split("/").drop(1).joinToString("/")
+        // Filters unwanted files
+        if (filters.isNotEmpty() && !entryPath.matchFilters(filters)) return
+
+        // Map to new folder if needed
+        entryPath.getMapping(mapping)?.let { (toReplace, replacement) ->
+            entryPath = entryPath.replace(toReplace, replacement)
+        }
+
         File("${outputDir.path}/$entryPath").let { outputFile ->
             project.mkdir(outputFile.parentFile.toPath())
             getInputStream(entry).use { input ->
@@ -74,5 +91,16 @@ abstract class ExtractZipTask : DefaultTask() {
                 }
             }
         }
+    }
+
+    private fun String.matchFilters(filters: List<Regex>): Boolean =
+        filters.find { filter -> matches(filter) } != null
+
+    private fun String.getMapping(mapping: Map<String, String>): Pair<String, String>? {
+        mapping.forEach { (toReplace, replacement) ->
+            if (startsWith(toReplace)) return toReplace to replacement
+        }
+
+        return null
     }
 }
