@@ -15,18 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "jni.hpp"
-#include "../detector/detection_result.hpp"
+#ifndef KLICK_R_OCR_RESULT_HPP
+#define KLICK_R_OCR_RESULT_HPP
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
+#include <tesseract/baseapi.h>
+#include "../detection_result.hpp"
 
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
+namespace smartautoclicker {
 
-    env->CallVoidMethod(self, methodId,
-                        result->isDetected(),
-                        (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
-                        result->getResultConfidence());
-}
+    class OcrResult : public DetectionResult {
+
+    private:
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = 0;
+        int y2 = 0;
+
+    public:
+        void updateResults(
+                const tesseract::ResultIterator* tesseractResult,
+                const tesseract::PageIteratorLevel* level,
+                const ScalableRoi& detectionArea,
+                double scaleRatio);
+
+        void reset() override;
+    };
+
+} // smartautoclicker
+
+#endif //KLICK_R_OCR_RESULT_HPP

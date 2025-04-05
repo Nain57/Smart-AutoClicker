@@ -27,6 +27,10 @@ using namespace cv;
 using namespace smartautoclicker;
 
 
+void Detector::setTextLanguages(const std::vector<std::string> &langCodes) {
+    textMatcher->setLanguages(langCodes);
+}
+
 void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag) {
     // Select the scale ratio depending on the screen size.
     // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
@@ -37,9 +41,10 @@ void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, con
 
 void Detector::setScreenImage(cv::Mat* screenMat) {
     screenImage->processFullSizeBitmap(screenMat, scaleRatio);
+    textMatcher->setScreenImage(*screenImage);
 }
 
-TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
+DetectionResult* Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
     return detectCondition(
             conditionMat,
             0, 0,
@@ -48,7 +53,7 @@ TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int thr
             threshold);
 }
 
-TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
+DetectionResult* Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
     templateMatcher->reset();
 
     // Load condition and check if the condition fits in the detection area
@@ -77,4 +82,29 @@ TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, 
             threshold);
 
     return templateMatcher->getMatchingResults();
+}
+
+DetectionResult* Detector::detectText(const std::string& text, int threshold) {
+    return detectText(
+            text,
+            0, 0,
+            screenImage->getRoi().getFullSize().width,
+            screenImage->getRoi().getFullSize().height,
+            threshold);
+}
+
+DetectionResult* Detector::detectText(const std::string& text, int x, int y, int width, int height, int threshold) {
+    textMatcher->reset();
+
+    // Compute the detection area
+    ScalableRoi detectionArea = ScalableRoi();
+    detectionArea.setFullSize(x, y, width, height, scaleRatio);
+    if (!screenImage->getRoi().containsOrEquals(detectionArea)) {
+        LOGE("Detector", "Can't detectText, detection roi is outside the screen");
+        return templateMatcher->getMatchingResults();
+    }
+
+    textMatcher->matchText(text, detectionArea, scaleRatio, threshold);
+
+    return textMatcher->getMatchingResults();
 }

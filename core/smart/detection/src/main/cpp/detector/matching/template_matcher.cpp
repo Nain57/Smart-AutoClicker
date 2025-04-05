@@ -29,7 +29,7 @@ void TemplateMatcher::reset() {
     currentMatchingResult.reset();
 }
 
-TemplateMatchingResult *TemplateMatcher::getMatchingResults() {
+DetectionResult* TemplateMatcher::getMatchingResults() {
     return &currentMatchingResult;
 }
 

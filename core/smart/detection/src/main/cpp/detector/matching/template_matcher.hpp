@@ -52,7 +52,7 @@ namespace smartautoclicker {
                 double scalingRatio,
                 int threshold);
 
-        TemplateMatchingResult* getMatchingResults();
+        DetectionResult* getMatchingResults();
 
     };
 }

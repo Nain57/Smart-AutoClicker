@@ -34,6 +34,7 @@ namespace smartautoclicker {
     public:
         cv::Mat cropFullSizeColor(const cv::Rect& roi) const;
         cv::Mat cropScaledGray(const cv::Rect& roi) const;
+        cv::Mat* getScaledGrayMat() const;
     };
 }
 

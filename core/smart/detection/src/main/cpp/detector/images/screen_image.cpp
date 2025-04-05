@@ -37,4 +37,8 @@ cv::Mat ScreenImage::cropScaledGray(const cv::Rect &roi) const {
     return { *scaledGrayMat, roi };
 }
 
+cv::Mat* ScreenImage::getScaledGrayMat() const {
+    return scaledGrayMat.get();
+}
+
 
