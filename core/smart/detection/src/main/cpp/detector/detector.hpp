@@ -21,9 +21,10 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "matching/template_matcher.hpp"
-#include "matching/template_matching_result.hpp"
 #include "images/condition_image.hpp"
 #include "images/screen_image.hpp"
+#include "ocr/text_matcher.hpp"
+#include "detection_result.hpp"
 
 namespace smartautoclicker {
 
@@ -34,16 +35,20 @@ namespace smartautoclicker {
 
         std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
         std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
+        std::unique_ptr<TextMatcher> textMatcher = std::make_unique<TextMatcher>();
 
     public:
-
         Detector() = default;
 
+        void setTextLanguages(const std::vector<std::string>& langCodes);
         void setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag);
         void setScreenImage(cv::Mat* screenMat);
 
-        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int threshold);
-        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
+        DetectionResult* detectCondition(cv::Mat* conditionMat, int threshold);
+        DetectionResult* detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
+
+        DetectionResult* detectText(const std::string& text, int threshold);
+        DetectionResult* detectText(const std::string& text, int x, int y, int width, int height, int threshold);
     };
 }
 

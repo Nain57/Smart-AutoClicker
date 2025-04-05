@@ -53,12 +53,17 @@ class NativeDetector private constructor() : ImageDetector {
         nativePtr = newDetector()
     }
 
-
     override fun close() {
         if (isClosed) return
 
         isClosed = true
         deleteDetector()
+    }
+
+    override fun setTextMatchingLanguages(langCodes: List<String>) {
+        if (isClosed) return
+
+        setLanguages(langCodes.toTypedArray())
     }
 
     override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
@@ -91,6 +96,20 @@ class NativeDetector private constructor() : ImageDetector {
         return detectionResult.copy()
     }
 
+    override fun detectText(text: String, threshold: Int): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
+        detectText(text, threshold, detectionResult)
+        return detectionResult.copy()
+    }
+
+    override fun detectText(text: String, position: Rect, threshold: Int): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
+        detectTextAt(text, position.left, position.top, position.width(), position.height(), threshold, detectionResult)
+        return detectionResult.copy()
+    }
+
     /**
      * Creates the detector. Must be called before any other methods.
      * Call [close] to release resources once the detection process is finished.
@@ -104,6 +123,9 @@ class NativeDetector private constructor() : ImageDetector {
      * Once called, this object can't be used anymore.
      */
     private external fun deleteDetector()
+
+    /** Set the languages supported by the text matching. */
+    private external fun setLanguages(langCodes: Array<String>)
 
     /**
      * Native method for screen metrics setup.
@@ -141,6 +163,34 @@ class NativeDetector private constructor() : ImageDetector {
      */
     private external fun detectAt(
         conditionBitmap: Bitmap,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        threshold: Int,
+        result: DetectionResult
+    )
+
+    /**
+     * Native method for detecting if the text is in the whole current screen bitmap.
+     *
+     * @param text the text to detect in the screen.
+     * @param threshold the allowed error threshold allowed for the text.
+     */
+    private external fun detectText(text: String, threshold: Int, result: DetectionResult)
+
+    /**
+     * Native method for detecting if the text is at a specific position in the current screen bitmap.
+     *
+     * @param text the text to detect in the screen.
+     * @param x the horizontal position of the text.
+     * @param y the vertical position of the text.
+     * @param width the width of the text.
+     * @param height the height of the text.
+     * @param threshold the allowed error threshold allowed for the text.
+     */
+    private external fun detectTextAt(
+        text: String,
         x: Int,
         y: Int,
         width: Int,

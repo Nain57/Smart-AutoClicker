@@ -15,18 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "jni.hpp"
-#include "../detector/detection_result.hpp"
+#include "detection_result.hpp"
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
+using namespace smartautoclicker;
 
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
-
-    env->CallVoidMethod(self, methodId,
-                        result->isDetected(),
-                        (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
-                        result->getResultConfidence());
+void DetectionResult::markResultAsDetected() {
+    detected = true;
 }
+
+void DetectionResult::reset() {
+    detected = false;
+    confidence = 0.0;
+    centerX = 0;
+    centerY = 0;
+    area.clear();
+}
+
+bool DetectionResult::isDetected() const {
+    return detected;
+}
+
+double DetectionResult::getResultConfidence() const {
+    return confidence;
+}
+
+ScalableRoi DetectionResult::getResultArea() const {
+    return area;
+}
+
+int DetectionResult::getResultAreaCenterX() const {
+    return centerX;
+}
+
+int DetectionResult::getResultAreaCenterY() const {
+    return centerY;
+}
+
+

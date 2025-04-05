@@ -34,6 +34,14 @@ extern "C" {
         return reinterpret_cast<jlong>(new Detector());
     }
 
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setLanguages(
+            JNIEnv *env,
+            jobject self,
+            jobjectArray langCodes
+    ) {
+        getDetectorFromJavaRef(env, self)->setTextLanguages(getStrings(env, langCodes));
+    }
+
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_updateScreenMetrics(
             JNIEnv *env,
             jobject self,
@@ -84,6 +92,36 @@ extern "C" {
     ) {
         setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectCondition(
                 loadMatFromRGBA8888Bitmap(env, conditionBitmap), x, y, width, height, threshold));
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectText(
+            JNIEnv *env,
+            jobject self,
+            jstring text,
+            jint threshold,
+            jobject result
+    ) {
+        const char *textToDetect = env->GetStringUTFChars(text, 0);
+        setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectText(
+                textToDetect, threshold));
+        env->ReleaseStringUTFChars(text, textToDetect);
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectTextAt(
+            JNIEnv *env,
+            jobject self,
+            jstring text,
+            jint x,
+            jint y,
+            jint width,
+            jint height,
+            jint threshold,
+            jobject result
+    ) {
+        const char *textToDetect = env->GetStringUTFChars(text, 0);
+        setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectText(
+                textToDetect, x, y, width, height, threshold));
+        env->ReleaseStringUTFChars(text, textToDetect);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_deleteDetector(

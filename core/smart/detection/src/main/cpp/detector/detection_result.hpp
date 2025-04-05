@@ -15,33 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
-#define KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
+#ifndef KLICK_R_DETECTION_RESULT_HPP
+#define KLICK_R_DETECTION_RESULT_HPP
 
 #include <opencv2/core/types.hpp>
-#include "../detection_result.hpp"
-#include "../../scaling/scalable_roi.hpp"
+#include "../scaling/scalable_roi.hpp"
 
 namespace smartautoclicker {
 
-    class TemplateMatchingResult : public DetectionResult {
+    class DetectionResult {
 
-    private:
-        double minVal;
-        double maxVal;
-        cv::Point minLoc;
-        cv::Point maxLoc;
+    protected:
+        bool detected;
+        double confidence;
+        int centerX;
+        int centerY;
+        ScalableRoi area;
 
     public:
-        void updateResults(
-                ScalableRoi *detectionArea,
-                cv::Mat *condition,
-                cv::Mat *matchingResults,
-                double scaleRatio);
+        void markResultAsDetected();
+        virtual void reset();
 
-        void invalidateCurrentResult(cv::Mat *matchingResults, const cv::Mat* condition) const;
-        void reset() override;
+        bool isDetected() const;
+        double getResultConfidence() const;
+        ScalableRoi getResultArea() const;
+        int getResultAreaCenterX() const;
+        int getResultAreaCenterY() const;
     };
 } // smartautoclicker
 
-#endif //KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
+
+#endif //KLICK_R_DETECTION_RESULT_HPP

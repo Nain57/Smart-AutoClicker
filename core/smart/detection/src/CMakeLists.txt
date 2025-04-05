@@ -39,6 +39,8 @@ add_library( # Sets the name of the library.
         main/cpp/smartautoclicker.cpp
         main/cpp/detector/detector.cpp
         main/cpp/detector/detector.hpp
+        main/cpp/detector/detection_result.cpp
+        main/cpp/detector/detection_result.hpp
         main/cpp/detector/images/condition_image.cpp
         main/cpp/detector/images/condition_image.hpp
         main/cpp/detector/images/detection_image.cpp
@@ -49,10 +51,15 @@ add_library( # Sets the name of the library.
         main/cpp/detector/matching/template_matcher.hpp
         main/cpp/detector/matching/template_matching_result.cpp
         main/cpp/detector/matching/template_matching_result.hpp
+        main/cpp/detector/ocr/ocr_result.cpp
+        main/cpp/detector/ocr/ocr_result.hpp
+        main/cpp/detector/ocr/text_matcher.cpp
+        main/cpp/detector/ocr/text_matcher.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp
         main/cpp/jni/jni_detection_result.cpp
+        main/cpp/jni/jni_string_array.cpp
         main/cpp/logs/log.cpp
         main/cpp/logs/log.h
         main/cpp/scaling/scaling.hpp

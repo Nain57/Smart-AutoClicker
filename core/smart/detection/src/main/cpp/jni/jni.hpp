@@ -23,7 +23,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "../detector/detector.hpp"
-#include "../detector/matching/template_matching_result.hpp"
+#include "../detector/detection_result.hpp"
 
 
 using namespace smartautoclicker;
@@ -34,7 +34,8 @@ using namespace smartautoclicker;
  * all our native methods wrappers to recover the object before invoking it's methods.
  */
 Detector *getDetectorFromJavaRef(JNIEnv *env, jobject self);
+std::vector<std::string> getStrings(JNIEnv* env, jobjectArray jStrArray);
 cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
-void setDetectionResult(JNIEnv *env, jobject self, TemplateMatchingResult* result);
+void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result);
 
 #endif //KLICK_R_JNI_HPP

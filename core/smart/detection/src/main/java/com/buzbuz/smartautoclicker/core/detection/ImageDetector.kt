@@ -29,6 +29,12 @@ interface ImageDetector : AutoCloseable {
     fun init()
 
     /**
+     * Defines the languages supported by the text matching.
+     * Should be called before [detectText] or all results will be invalids.
+     */
+    fun setTextMatchingLanguages(langCodes: List<String>);
+
+    /**
      * Set the current metrics of the screen.
      * This MUST be called before the first detection, with the first bitmap provided by the screen. All orientation
      * changes must also trigger a call to this method.
@@ -70,6 +76,31 @@ interface ImageDetector : AutoCloseable {
      * @return the results of the detection.
      */
     fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult
+
+    /**
+     * Detect if the text is in the whole current screen bitmap.
+     * If you are using this method, don't forget to call [setTextMatchingLanguages] to setup the matching languages.
+     * [setupDetection] must have been called first with the content of the screen.
+     *
+     * @param text the text to detect in the screen.
+     * @param threshold the allowed error threshold allowed for the condition.
+     *
+     * @return the results of the detection.
+     */
+    fun detectText(text: String, threshold: Int): DetectionResult
+
+    /**
+     * Detect if the text is at a specific position in the current screen bitmap.
+     * If you are using this method, don't forget to call [setTextMatchingLanguages] to setup the matching languages.
+     * [setupDetection] must have been called first with the content of the screen.
+     *
+     * @param text the text to detect in the screen.
+     * @param position the position on the screen where the condition should be detected.
+     * @param threshold the allowed error threshold allowed for the condition.
+     *
+     * @return the results of the detection.
+     */
+    fun detectText(text: String, position: Rect, threshold: Int): DetectionResult
 }
 
 /** The minimum detection quality for the algorithm. */
