@@ -84,7 +84,7 @@ class ImageConditionViewModel @Inject constructor(
     /** The type of detection currently selected by the user. */
     val detectionType: Flow<DetectionTypeState> = configuredCondition
         .map { condition ->
-            context.getDetectionTypeState(condition.detectionType, condition.detectionArea ?: condition.area)
+            context.getDetectionTypeState(condition.detectionType, condition.detectionArea ?: condition.captureArea)
         }
         .filterNotNull()
 
@@ -121,7 +121,7 @@ class ImageConditionViewModel @Inject constructor(
     fun setDetectionType(newType: Int) {
         updateEditedCondition { oldCondition ->
             val detectionArea =
-                if (oldCondition.detectionArea == null && newType == IN_AREA) oldCondition.area
+                if (oldCondition.detectionArea == null && newType == IN_AREA) oldCondition.captureArea
                 else oldCondition.detectionArea
 
             oldCondition.copy(detectionType = newType, detectionArea = detectionArea)
@@ -131,7 +131,7 @@ class ImageConditionViewModel @Inject constructor(
     /** Set the area to detect in. */
     fun setDetectionArea(area: Rect) {
         updateEditedCondition { oldCondition ->
-            oldCondition.copy(detectionArea = sanitizeAreaForCondition(area, oldCondition.area))
+            oldCondition.copy(detectionArea = sanitizeAreaForCondition(area, oldCondition.captureArea))
         }
     }
 

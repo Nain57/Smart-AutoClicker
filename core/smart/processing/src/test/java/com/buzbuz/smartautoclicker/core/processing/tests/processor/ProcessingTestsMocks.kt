@@ -50,7 +50,7 @@ internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition
         EXACT -> `when`(
             detectCondition(
                 testCondition.mockedBitmap,
-                testCondition.imageCondition.area,
+                testCondition.imageCondition.captureArea,
                 testCondition.imageCondition.threshold,
             )
         ).thenReturn(DetectionResult(isDetected))
@@ -99,7 +99,7 @@ internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImag
         EXACT -> verify(this, never())
             .detectCondition(
                 testCondition.mockedBitmap,
-                testCondition.imageCondition.area,
+                testCondition.imageCondition.captureArea,
                 testCondition.imageCondition.threshold,
             )
 

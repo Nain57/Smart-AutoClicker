@@ -48,12 +48,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -273,14 +271,7 @@ internal class ScenarioDataSource(
         updater.refreshUpdateValues(
             currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
             newItems = newConditions,
-            mappingClosure = { condition ->
-                when (condition) {
-                    is ImageCondition ->
-                        condition.copy(eventId = Identifier(databaseId = eventDbId)).toEntity()
-                    is TriggerCondition ->
-                        condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity()
-                }
-            }
+            mappingClosure = { condition -> condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity() }
         )
         Log.d(TAG, "Conditions updater: $updater")
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,9 @@ import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 
 sealed class Condition : Identifiable, Completable {
 
+    /** The identifier of the event for this condition. */
     abstract val eventId: Identifier
+    /** The name of the condition. */
     abstract val name: String
 
     @CallSuper
@@ -33,4 +35,12 @@ sealed class Condition : Identifiable, Completable {
 
     abstract fun hashCodeNoIds(): Int
 
+    @Suppress("USELESS_CAST") // Yet it is required by Android Studio
+    fun copy(evtId: Identifier) = when (this) {
+        is TriggerCondition.OnBroadcastReceived -> (this as TriggerCondition.OnBroadcastReceived).copy(eventId = evtId)
+        is TriggerCondition.OnCounterCountReached -> (this as TriggerCondition.OnCounterCountReached).copy(eventId = evtId)
+        is TriggerCondition.OnTimerReached -> (this as TriggerCondition.OnTimerReached).copy(eventId = evtId)
+        is ImageCondition -> (this as ImageCondition).copy(eventId = evtId)
+        is TextCondition -> (this as TextCondition).copy(eventId = evtId)
+    }
 }

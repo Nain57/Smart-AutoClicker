@@ -165,8 +165,8 @@ internal class DebugEngine : ScenarioProcessingListener {
             return@withLock
         }
         if (instantData) {
-            val halfWidth = conditionResults.condition.area.width() / 2
-            val halfHeight = conditionResults.condition.area.height() / 2
+            val halfWidth = conditionResults.condition.captureArea.width() / 2
+            val halfHeight = conditionResults.condition.captureArea.height() / 2
 
             val coordinates = if (conditionResults.position.x == 0 && conditionResults.position.y == 0) Rect()
             else Rect(

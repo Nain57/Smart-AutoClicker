@@ -24,8 +24,6 @@ import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.*
 import com.buzbuz.smartautoclicker.core.database.utils.encodeToJsonObject
 
-import kotlinx.serialization.json.*
-
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +43,20 @@ class DeserializerTests {
                 CompleteEventEntity(
                     event = EventEntity(1, 1, "Event", 1, 0, true, EventType.IMAGE_EVENT),
                     conditions = listOf(
-                        ConditionEntity(1, 1, "Condition", ConditionType.ON_IMAGE_DETECTED, 0, "/toto/tutu", 1, 2, 3, 4, 5, 1, true)
+                        ConditionEntity(
+                            id = 1,
+                            eventId = 1,
+                            name = "Condition",
+                            type = ConditionType.ON_IMAGE_DETECTED,
+                            priority = 0,
+                            path = "/toto/tutu",
+                            areaLeft = 1,
+                            areaTop = 2,
+                            areaRight = 3,
+                            areaBottom = 4,
+                            threshold = 5,
+                            detectionType = 1,
+                            shouldBeDetected = true)
                     ),
                     actions = listOf(
                         CompleteActionEntity(

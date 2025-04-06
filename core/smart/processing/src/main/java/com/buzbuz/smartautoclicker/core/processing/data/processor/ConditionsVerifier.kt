@@ -140,7 +140,7 @@ internal class ConditionsVerifier(
         val result = bitmapSupplier(condition)?.let { conditionBitmap ->
             val detectionResult = when (condition.detectionType) {
                 EXACT ->
-                    imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+                    imageDetector.detectCondition(conditionBitmap, condition.captureArea, condition.threshold)
 
                 WHOLE_SCREEN ->
                     imageDetector.detectCondition(conditionBitmap, condition.threshold)

@@ -138,7 +138,7 @@ class EditedItemsBuilder internal constructor(
             id = id,
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
-            area = area,
+            captureArea = area,
             threshold = defaultValues.conditionThreshold(context),
             detectionType = defaultValues.conditionDetectionType(),
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),

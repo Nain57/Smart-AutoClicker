@@ -189,10 +189,10 @@ private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?)
             IN_AREA -> ImageConditionBriefRenderingType.AREA
             else -> ImageConditionBriefRenderingType.WHOLE_SCREEN
         },
-        conditionPosition = area,
+        conditionPosition = captureArea,
         conditionDetectionArea =
             when (detectionType) {
-                EXACT -> area
+                EXACT -> captureArea
                 IN_AREA -> detectionArea
                 WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
                 else -> null

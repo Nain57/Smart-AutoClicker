@@ -157,7 +157,7 @@ internal object ProcessingTestData {
             shouldBeDetected = shouldBeDetected,
             path = conditionId.databaseId.toString(),
             detectionType = detectionType,
-            area = Rect(0, 0, TEST_DATA_CONDITION_IMAGE_WIDTH, TEST_DATA_CONDITION_IMAGE_HEIGHT),
+            captureArea = Rect(0, 0, TEST_DATA_CONDITION_IMAGE_WIDTH, TEST_DATA_CONDITION_IMAGE_HEIGHT),
             detectionArea = Rect(0, 0, TEST_DATA_SCREEN_IMAGE_WIDTH, TEST_DATA_SCREEN_IMAGE_HEIGHT),
             threshold = 10,              // No impact with mocked detection
             name = "TestImageCondition", // No impact on processor

@@ -137,7 +137,7 @@ internal class Repository @Inject internal constructor(
     }
 
     override suspend fun getConditionBitmap(condition: ImageCondition): Bitmap? =
-        bitmapManager.getImageConditionBitmap(condition.path, condition.area.width(), condition.area.height())
+        bitmapManager.getImageConditionBitmap(condition.path, condition.captureArea.width(), condition.captureArea.height())
 
     override suspend fun cleanupUnusedBitmaps(removedPath: List<String>) {
         dataSource.clearRemovedConditionsBitmaps(removedPath)

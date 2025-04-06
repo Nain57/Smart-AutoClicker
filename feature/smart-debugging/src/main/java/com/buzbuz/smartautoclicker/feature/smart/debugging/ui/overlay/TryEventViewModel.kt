@@ -22,7 +22,6 @@ import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
@@ -116,8 +115,8 @@ class TryElementViewModel @Inject constructor(
     }
 
     private fun ImageConditionResult.toDetectionResultInfo(): DetectionResultInfo {
-        val halfWidth = condition.area.width() / 2
-        val halfHeight = condition.area.height() / 2
+        val halfWidth = condition.captureArea.width() / 2
+        val halfHeight = condition.captureArea.height() / 2
 
         return DetectionResultInfo(
             positive = isFulfilled,
