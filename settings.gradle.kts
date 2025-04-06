@@ -39,6 +39,7 @@ include(":core:smart:database")
 include(":core:smart:detection")
 include(":core:smart:domain")
 include(":core:smart:processing")
+include(":core:smart:training")
 
 include(":feature:backup")
 include(":feature:dumb-config")
