@@ -42,8 +42,8 @@ class ImageConditionAreaSelectorViewModel @Inject constructor(
         .mapNotNull { condition ->
             if (condition.detectionType != IN_AREA) null
             else SelectorUiState(
-                initialArea = condition.detectionArea ?: condition.area,
-                minimalArea = condition.area,
+                initialArea = condition.detectionArea ?: condition.captureArea,
+                minimalArea = condition.captureArea,
             )
         }
 }

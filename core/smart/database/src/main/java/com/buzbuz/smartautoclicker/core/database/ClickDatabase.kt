@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,10 @@ import javax.inject.Singleton
         AutoMigration (from = 13, to = 14),
         AutoMigration (from = 14, to = 15),
         AutoMigration (from = 15, to = 16),
+        AutoMigration (from = 16, to = 17),
     ]
 )
 abstract class ClickDatabase : ScenarioDatabase()
 
 /** Current version of the database. */
-const val CLICK_DATABASE_VERSION = 16
+const val CLICK_DATABASE_VERSION = 17

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,19 +68,25 @@ data class ConditionEntity(
     @ColumnInfo(name = "type") val type: ConditionType,
     @ColumnInfo(name = "priority", defaultValue = "0") val priority: Int,
 
-    // ConditionType.ON_IMAGE_DETECTED
-    @ColumnInfo(name = "path") var path: String? = null,
-    @ColumnInfo(name = "area_left") val areaLeft: Int? = null,
-    @ColumnInfo(name = "area_top") val areaTop: Int? = null,
-    @ColumnInfo(name = "area_right") val areaRight: Int? = null,
-    @ColumnInfo(name = "area_bottom") val areaBottom: Int? = null,
-    @ColumnInfo(name = "threshold") val threshold: Int? = null,
+    // ConditionType.ON_IMAGE_DETECTED && ConditionType.ON_TEXT_DETECTED
     @ColumnInfo(name = "detection_type") val detectionType: Int? = null,
     @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean? = null,
     @ColumnInfo(name = "detection_area_left") val detectionAreaLeft: Int? = null,
     @ColumnInfo(name = "detection_area_top") val detectionAreaTop: Int? = null,
     @ColumnInfo(name = "detection_area_right") val detectionAreaRight: Int? = null,
     @ColumnInfo(name = "detection_area_bottom") val detectionAreaBottom: Int? = null,
+    @ColumnInfo(name = "threshold") val threshold: Int? = null,
+
+    // ConditionType.ON_IMAGE_DETECTED
+    @ColumnInfo(name = "path") var path: String? = null,
+    @ColumnInfo(name = "area_left") val areaLeft: Int? = null,
+    @ColumnInfo(name = "area_top") val areaTop: Int? = null,
+    @ColumnInfo(name = "area_right") val areaRight: Int? = null,
+    @ColumnInfo(name = "area_bottom") val areaBottom: Int? = null,
+
+    // ConditionType.ON_TEXT_DETECTED
+    @ColumnInfo(name = "text_to_detect") val textToDetect: String? = null,
+    @ColumnInfo(name = "text_language") val textLanguage: String? = null,
 
     // ConditionType.ON_BROADCAST_RECEIVED
     @ColumnInfo(name = "broadcast_action") val broadcastAction: String? = null,

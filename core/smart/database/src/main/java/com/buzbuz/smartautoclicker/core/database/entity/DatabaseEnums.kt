@@ -89,6 +89,8 @@ enum class ConditionType {
     ON_COUNTER_REACHED,
     /** Condition fulfilled upon image detected. */
     ON_IMAGE_DETECTED,
+    /** Condition fulfilled upon text detected. */
+    ON_TEXT_DETECTED,
     /** Toggle the enabled state of an event. */
     ON_TIMER_REACHED,
 }

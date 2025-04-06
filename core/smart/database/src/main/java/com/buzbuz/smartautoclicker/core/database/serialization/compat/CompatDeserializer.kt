@@ -243,11 +243,11 @@ internal open class CompatDeserializer : Deserializer {
             ConditionType.ON_BROADCAST_RECEIVED -> deserializeConditionBroadcastReceived(jsonCondition)
             ConditionType.ON_COUNTER_REACHED -> deserializeConditionCounterReached(jsonCondition)
             ConditionType.ON_IMAGE_DETECTED -> deserializeConditionImageDetected(jsonCondition)
+            ConditionType.ON_TEXT_DETECTED -> deserializeConditionTextDetected(jsonCondition)
             ConditionType.ON_TIMER_REACHED -> deserializeConditionTimerReached(jsonCondition)
             null -> null
         }
 
-    /** @return the type of condition. */
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     open fun deserializeConditionImageDetected(jsonCondition: JsonObject): ConditionEntity? {
         val id = jsonCondition.getLong("id", true) ?: return null
@@ -267,6 +267,35 @@ internal open class CompatDeserializer : Deserializer {
             areaTop = area.top,
             areaRight = area.right,
             areaBottom = area.bottom,
+            shouldBeDetected = jsonCondition.getBoolean("shouldBeDetected") ?: true,
+            detectionType = jsonCondition.getInt("detectionType")
+                ?.coerceIn(DETECTION_TYPE_LOWER_BOUND, DETECTION_TYPE_UPPER_BOUND)
+                ?: DETECTION_TYPE_DEFAULT_VALUE,
+            threshold = jsonCondition.getInt("threshold")
+                ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
+                ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
+            detectionAreaLeft = jsonCondition.getInt("detectionAreaLeft"),
+            detectionAreaTop = jsonCondition.getInt("detectionAreaTop"),
+            detectionAreaRight = jsonCondition.getInt("detectionAreaRight"),
+            detectionAreaBottom = jsonCondition.getInt("detectionAreaBottom"),
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeConditionTextDetected(jsonCondition: JsonObject): ConditionEntity? {
+        val id = jsonCondition.getLong("id", true) ?: return null
+        val eventId = jsonCondition.getLong("eventId", true) ?: return null
+        val textToDetect = jsonCondition.getString("textToDetect", true) ?: return null
+        val textLanguage = jsonCondition.getString("textLanguage", true) ?: return null
+
+        return ConditionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonCondition.getString("name") ?: "",
+            priority = jsonCondition.getInt("priority") ?: 0,
+            type = ConditionType.ON_IMAGE_DETECTED,
+            textToDetect = textToDetect,
+            textLanguage = textLanguage,
             shouldBeDetected = jsonCondition.getBoolean("shouldBeDetected") ?: true,
             detectionType = jsonCondition.getInt("detectionType")
                 ?.coerceIn(DETECTION_TYPE_LOWER_BOUND, DETECTION_TYPE_UPPER_BOUND)

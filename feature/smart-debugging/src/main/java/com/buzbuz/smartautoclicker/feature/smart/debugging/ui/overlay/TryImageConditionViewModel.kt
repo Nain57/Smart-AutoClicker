@@ -117,8 +117,8 @@ class TryImageConditionViewModel @Inject constructor(
     fun getSelectedThreshold(): Int = userThreshold.value
 
     private fun ImageConditionResult.toDetectionResultInfo(overriddenThreshold: Int): DetectionResultInfo {
-        val halfWidth = condition.area.width() / 2
-        val halfHeight = condition.area.height() / 2
+        val halfWidth = condition.captureArea.width() / 2
+        val halfHeight = condition.captureArea.height() / 2
 
         return DetectionResultInfo(
             positive = (1.0 - (overriddenThreshold / 100.0)) < confidenceRate,
