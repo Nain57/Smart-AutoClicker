@@ -25,19 +25,19 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 
-fun assertSameEventListNoIdCheck(expected: List<ImageEvent>, actual: List<ImageEvent>) {
+fun assertSameEventListNoIdCheck(expected: List<ScreenEvent>, actual: List<ScreenEvent>) {
     forEachExpectedAndActual(expected, actual) { expectedEvent, actualEvent ->
         assertSameEventNoIdCheck(expectedEvent, actualEvent)
     }
 }
 
-private fun assertSameEventNoIdCheck(expected: ImageEvent, actual: ImageEvent) {
+private fun assertSameEventNoIdCheck(expected: ScreenEvent, actual: ScreenEvent) {
     assertTrue(
         "Events content are not the same",
         expected.name == actual.name

@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
@@ -55,10 +55,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Detects [ImageEvent] conditions on a display and execute its actions.
+ * Detects [ScreenEvent] conditions on a display and execute its actions.
  *
  * In order to detect, you must start recording the screen to get images to detect on, this can be done by calling
- * [startScreenRecord]. Or, you can start the detection of a list of [ImageEvent] by using [startDetection].
+ * [startScreenRecord]. Or, you can start the detection of a list of [ScreenEvent] by using [startDetection].
  * The states of the recording and the detection are available in [state].
  * Once you no longer needs to capture or detect, call [stopDetection] or [stopScreenRecord] to release all processing resources.
  */
@@ -165,7 +165,7 @@ class DetectorEngine @Inject constructor(
     internal fun startDetection(
         context: Context,
         scenario: Scenario,
-        imageEvents: List<ImageEvent>,
+        screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>,
         trainedTextData: TrainedTextData,
         bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
@@ -198,14 +198,14 @@ class DetectorEngine @Inject constructor(
             }
 
             detectionProgressListener = progressListener
-            progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
+            progressListener?.onSessionStarted(context, scenario, screenEvents, triggerEvents)
 
             scenarioProcessor = ScenarioProcessor(
                 processingTag = appComponentsProvider.originalAppId,
                 screenDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
-                imageEvents = imageEvents,
+                screenEvents = screenEvents,
                 triggerEvents = triggerEvents,
                 bitmapSupplier = bitmapSupplier,
                 androidExecutor = executor,

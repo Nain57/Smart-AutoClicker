@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
@@ -40,7 +40,7 @@ import java.util.Collections
  * @param itemViewBound listener called when a view is bound to an Event item.
  */
 class ImageEventListAdapter(
-    private val itemClickedListener: (ImageEvent) -> Unit,
+    private val itemClickedListener: (ScreenEvent) -> Unit,
     private val itemReorderListener: (List<UiImageEvent>) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
 ) : ListAdapter<UiImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
@@ -98,7 +98,7 @@ class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
      * @param item the item providing the binding data.
      * @param itemClickedListener listener called when an event is clicked.
      */
-    fun bindEvent(item: UiImageEvent, itemClickedListener: (ImageEvent) -> Unit) {
+    fun bindEvent(item: UiImageEvent, itemClickedListener: (ScreenEvent) -> Unit) {
         holderViewBinding.bind(item, true, itemClickedListener)
     }
 }

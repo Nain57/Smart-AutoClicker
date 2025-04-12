@@ -24,16 +24,16 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.isClickOnCondition
 
 
-internal fun List<ImageEvent>.getEditedImageEventsForCopy(): List<ImageEvent> = filter { event ->
+internal fun List<ScreenEvent>.getEditedImageEventsForCopy(): List<ScreenEvent> = filter { event ->
     event.isComplete()
 }
 
-internal fun List<ImageEvent>.filterForImageEventCopy(editedEvents: List<ImageEvent>): List<ImageEvent> = filter { event ->
+internal fun List<ScreenEvent>.filterForImageEventCopy(editedEvents: List<ScreenEvent>): List<ScreenEvent> = filter { event ->
     event.isComplete() && (editedEvents.find { it.id == event.id } == null)
 }
 
@@ -91,7 +91,7 @@ private fun Event.shouldAddAction(action: Action): Boolean =
     when {
         !action.isComplete() -> false
         this is TriggerEvent && action is Click && action.isClickOnCondition() -> false
-        this is ImageEvent && action is Click && !action.isClickOnConditionValid() -> false
+        this is ScreenEvent && action is Click && !action.isClickOnConditionValid() -> false
         else -> true
     }
 
@@ -112,4 +112,4 @@ internal fun List<Action>.filterActionsForCopy(editedEvent: Event, editedActions
     }
 
 private fun Event.isConditionCompatibleForCopy(condition: Condition): Boolean =
-    (this is ImageEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)
+    (this is ScreenEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)

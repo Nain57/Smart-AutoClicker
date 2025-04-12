@@ -23,7 +23,7 @@ import androidx.annotation.VisibleForTesting
 import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
@@ -31,12 +31,12 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingList
 import kotlinx.coroutines.yield
 
 /**
- * Process a screen image and tries to detect the list of [ImageEvent] on it.
+ * Process a screen image and tries to detect the list of [ScreenEvent] on it.
  *
  * @param screenDetector the detector for images.
  * @param detectionQuality the quality of the detection.
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
- * @param imageEvents the list of scenario events to be detected.
+ * @param screenEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param androidExecutor execute the actions requiring an interaction with Android..
  * @param onStopRequested called when a end condition of the scenario have been reached or all events are disabled.
@@ -47,7 +47,7 @@ internal class ScenarioProcessor(
     private val screenDetector: ScreenDetector,
     private val detectionQuality: Int,
     randomize: Boolean,
-    imageEvents: List<ImageEvent>,
+    screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
     androidExecutor: SmartActionExecutor,
@@ -57,7 +57,7 @@ internal class ScenarioProcessor(
 ) {
 
     /** Handle the processing state of the scenario. */
-    @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
+    @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(screenEvents, triggerEvents)
     /** Check conditions and tell if they are fulfilled. */
     private val conditionsVerifier = ConditionsVerifier(processingState, screenDetector, bitmapSupplier, progressListener)
     /** Execute the detected event actions. */
@@ -146,8 +146,8 @@ internal class ScenarioProcessor(
 
     private suspend fun processImageEvents(
         screenFrame: Bitmap,
-        events: Collection<ImageEvent>,
-        onFulfilled: suspend (ImageEvent, ConditionsResult) -> Unit,
+        events: Collection<ScreenEvent>,
+        onFulfilled: suspend (ScreenEvent, ConditionsResult) -> Unit,
     ) {
         // Set the current screen image
         if (invalidateScreenMetrics) {

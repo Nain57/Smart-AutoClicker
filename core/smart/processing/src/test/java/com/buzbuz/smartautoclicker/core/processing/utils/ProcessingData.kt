@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 /** Test data and helpers for the detection tests. */
 internal object ProcessingData {
@@ -36,7 +36,7 @@ internal object ProcessingData {
         actions: List<Action> = emptyList(),
         conditions: List<ImageCondition> = emptyList(),
         enableOnStart: Boolean = true,
-    ) = ImageEvent(
+    ) = ScreenEvent(
         id = Identifier(databaseId = id),
         scenarioId = Identifier(databaseId = 1L),
         name = "TOTO",

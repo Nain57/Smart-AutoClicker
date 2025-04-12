@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
 import android.view.View
 import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 fun ItemImageEventBinding.bind(
     item: UiImageEvent,
     canDrag: Boolean,
-    itemClickedListener: (ImageEvent) -> Unit,
+    itemClickedListener: (ScreenEvent) -> Unit,
 ) {
     textName.text = item.name
     textConditionsCount.text = item.conditionsCountText

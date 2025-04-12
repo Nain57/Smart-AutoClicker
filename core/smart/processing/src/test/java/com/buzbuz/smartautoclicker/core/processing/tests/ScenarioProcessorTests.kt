@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
@@ -158,7 +158,7 @@ class ScenarioProcessorTests {
 
     /** @return a new SceanarioProcessor with all necessary mocks. */
     private fun createNewScenarioProcessor(
-        events: List<ImageEvent>,
+        events: List<ScreenEvent>,
         triggerEvent: List<TriggerEvent>,
     ) : ScenarioProcessor {
         val processor = ScenarioProcessor(
@@ -166,7 +166,7 @@ class ScenarioProcessorTests {
             screenDetector = mockScreenDetector,
             detectionQuality = TEST_DATA_DETECTION_QUALITY.toInt(),
             randomize = false,
-            imageEvents = events,
+            screenEvents = events,
             triggerEvents = triggerEvent,
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             androidExecutor = mockAndroidExecutor,

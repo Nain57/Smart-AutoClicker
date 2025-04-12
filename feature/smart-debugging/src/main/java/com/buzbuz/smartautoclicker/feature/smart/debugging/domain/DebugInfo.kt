@@ -20,11 +20,11 @@ import android.graphics.Point
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 /** Debug information for the scenario processing */
 data class DebugInfo(
-    val event: ImageEvent,
+    val event: ScreenEvent,
     val condition: ImageCondition,
     val isDetected: Boolean,
     val position: Point = Point(),

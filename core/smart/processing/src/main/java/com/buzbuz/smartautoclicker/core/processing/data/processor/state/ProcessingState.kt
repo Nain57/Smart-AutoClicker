@@ -20,15 +20,15 @@ import android.content.Context
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
 internal class ProcessingState(
-    imageEvents: List<ImageEvent>,
+    screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
-    private val eventsState: EventsState = EventsState(imageEvents, triggerEvents),
+    private val eventsState: EventsState = EventsState(screenEvents, triggerEvents),
     private val broadcastsState: BroadcastsState = BroadcastsState(triggerEvents),
-    private val countersState: CountersState = CountersState(imageEvents, triggerEvents),
+    private val countersState: CountersState = CountersState(screenEvents, triggerEvents),
     private val timersState: TimersState = TimersState(triggerEvents),
 ) : IBroadcastsState by broadcastsState, ICountersState by countersState, ITimersState by timersState, IEventsState by eventsState {
 

@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
@@ -80,7 +80,7 @@ internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
     .onScreenConditionProcessingCompleted(condition.expectedResult(detected))
 
 internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
-    events: List<ImageEvent>,
+    events: List<ScreenEvent>,
 ): List<Boolean> {
     val results = mutableListOf<Boolean>()
 

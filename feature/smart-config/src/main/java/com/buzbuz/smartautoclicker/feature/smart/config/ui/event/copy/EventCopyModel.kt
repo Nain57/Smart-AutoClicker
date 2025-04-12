@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -53,7 +53,7 @@ class EventCopyModel @Inject constructor(
     private val requestedCopyItems: Flow<List<Event>> = requestTriggerEvents
         .flatMapLatest { isRequestingTriggerEvents ->
             if (isRequestingTriggerEvents == true) editionRepository.editionState.triggerEventsForCopy
-            else editionRepository.editionState.imageEventsForCopy
+            else editionRepository.editionState.screenEventsForCopy
         }
 
     private val allCopyItems: Flow<List<EventCopyItem>> =
@@ -107,7 +107,7 @@ class EventCopyModel @Inject constructor(
 
     private fun List<Event>.toCopyItems(): List<EventCopyItem.EventItem> = map { event ->
         when (event) {
-            is ImageEvent -> EventCopyItem.EventItem.Image(
+            is ScreenEvent -> EventCopyItem.EventItem.Image(
                 name = event.name,
                 uiEvent = event.toUiImageEvent(inError = !event.isComplete()),
                 actionsIcons = event.actions.map { it.getIconRes() },

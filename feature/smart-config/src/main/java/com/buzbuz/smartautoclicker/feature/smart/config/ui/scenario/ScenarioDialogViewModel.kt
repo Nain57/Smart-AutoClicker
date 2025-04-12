@@ -55,7 +55,7 @@ class ScenarioDialogViewModel @Inject constructor(
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = combine(
         editionRepository.editionState.scenarioState.filterNotNull(),
-        editionRepository.editionState.editedImageEventsState.filterNotNull(),
+        editionRepository.editionState.editedScreenEventsState.filterNotNull(),
         editionRepository.editionState.editedTriggerEventsState.filterNotNull(),
     ) { scenarioState, imageEventsState, triggerEventsState ->
         buildMap {

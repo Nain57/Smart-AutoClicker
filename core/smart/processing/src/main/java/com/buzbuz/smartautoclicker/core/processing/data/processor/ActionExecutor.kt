@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 
@@ -121,7 +121,7 @@ internal class ActionExecutor(
     }
 
     private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResult?): Path? {
-        if (event !is ImageEvent) return null
+        if (event !is ScreenEvent) return null
 
         val result = when {
             event.conditionOperator == OR -> results?.getFirstScreenDetectedResult()

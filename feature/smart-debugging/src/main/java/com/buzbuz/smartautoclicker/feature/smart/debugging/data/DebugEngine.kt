@@ -22,7 +22,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
@@ -62,7 +62,7 @@ internal class DebugEngine : ScenarioProcessingListener {
     /** The scenario currently processed. */
     private var currentScenario: Scenario? = null
     /** The events for the scenario currently processed. */
-    private var currentEvents: List<ImageEvent> = emptyList()
+    private var currentEvents: List<ScreenEvent> = emptyList()
 
     /** The event currently processed. */
     private var currProcEvtId: Long? = null
@@ -83,7 +83,7 @@ internal class DebugEngine : ScenarioProcessingListener {
     override suspend fun onSessionStarted(
         context: Context,
         scenario: Scenario,
-        imageEvents: List<ImageEvent>,
+        screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>
     ) = mutex.withLock {
 
@@ -97,7 +97,7 @@ internal class DebugEngine : ScenarioProcessingListener {
         }
 
         currentScenario = scenario
-        currentEvents = imageEvents.toList()
+        currentEvents = screenEvents.toList()
 
         if (generateReport) sessionRecorder.onProcessingStart()
     }
@@ -108,7 +108,7 @@ internal class DebugEngine : ScenarioProcessingListener {
         imageRecorder.onProcessingStart()
     }
 
-    override suspend fun onImageEventProcessingStarted(event: ImageEvent) = mutex.withLock {
+    override suspend fun onImageEventProcessingStarted(event: ScreenEvent) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcEvtId != null)
@@ -149,7 +149,7 @@ internal class DebugEngine : ScenarioProcessingListener {
         currProcCondId = null
     }
 
-    override suspend fun onImageEventProcessingCompleted(event: ImageEvent, results: IConditionsResult) = mutex.withLock {
+    override suspend fun onImageEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) = mutex.withLock {
         if (generateReport) {
             if (currProcEvtId == null) {
                 Log.w(TAG, "onEventProcessingCompleted called before start")
