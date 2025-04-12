@@ -40,7 +40,7 @@ namespace smartautoclicker {
     public:
         Detector() = default;
 
-        void setTextLanguages(const std::vector<std::string>& langCodes);
+        void setTextLanguages(const char *langCodes, const char *dataPath);
         void setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag);
         void setScreenImage(cv::Mat* screenMat);
 

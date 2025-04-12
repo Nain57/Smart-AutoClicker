@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 202 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import android.graphics.Rect
  * Detects bitmaps within other bitmaps for conditions detection on the screen.
  * All calls should be made on the same thread.
  */
-interface ImageDetector : AutoCloseable {
+interface ScreenDetector : AutoCloseable {
 
     /** Initialize the detector. Must be called on the same thread as the detection. */
     fun init()
@@ -32,7 +32,7 @@ interface ImageDetector : AutoCloseable {
      * Defines the languages supported by the text matching.
      * Should be called before [detectText] or all results will be invalids.
      */
-    fun setTextMatchingLanguages(langCodes: List<String>);
+    fun setTextMatchingLanguages(langCodes: String, trainingFilesPath: String)
 
     /**
      * Set the current metrics of the screen.

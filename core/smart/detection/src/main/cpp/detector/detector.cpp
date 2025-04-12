@@ -27,8 +27,8 @@ using namespace cv;
 using namespace smartautoclicker;
 
 
-void Detector::setTextLanguages(const std::vector<std::string> &langCodes) {
-    textMatcher->setLanguages(langCodes);
+void Detector::setTextLanguages(const char *langCodes, const char *dataPath) {
+    textMatcher->setLanguages(langCodes, dataPath);
 }
 
 void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag) {

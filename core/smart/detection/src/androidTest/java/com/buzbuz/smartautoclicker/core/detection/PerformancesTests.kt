@@ -44,7 +44,7 @@ import kotlin.math.max
 class PerformancesTests {
 
     private lateinit var context: Context
-    private lateinit var testedDetector: ImageDetector
+    private lateinit var testedDetector: ScreenDetector
 
     @Before
     fun setUp() {

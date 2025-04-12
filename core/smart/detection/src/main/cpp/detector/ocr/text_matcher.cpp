@@ -32,21 +32,9 @@ DetectionResult* TextMatcher::getMatchingResults() {
     return &currentResult;
 }
 
-void TextMatcher::setLanguages(const std::vector<std::string>& langCodes) {
-    if (langCodes.empty()) {
-        LOGW("TextDetector", "Can't set languages, no languages code provided!");
-        return;
-    }
-
-    // Join all lang codes as lang+lang+lang
-    std::ostringstream oss;
-    for (size_t i = 0; i < langCodes.size(); ++i) {
-        oss << langCodes[i];
-        if (i < langCodes.size() - 1) oss << '+';
-    }
-
+void TextMatcher::setLanguages(const char *langCodes, const char *datapath) {
     // Set the languages
-    tesseract->Init("/", oss.str().c_str());
+    tesseract->Init(datapath, langCodes);
     areLanguagesSet = true;
 }
 
