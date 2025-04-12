@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Bitmap
-import android.graphics.Point
 import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.detection.ScreenDetector

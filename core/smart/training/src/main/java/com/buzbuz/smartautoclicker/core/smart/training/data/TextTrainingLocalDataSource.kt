@@ -55,7 +55,7 @@ internal class TextTrainingLocalDataSource @Inject constructor(
     val trainingDataFiles: Flow<Map<TrainedTextLanguage, File>> = refresh
         .onStart { emit(Unit) }
         .map { listLanguagesFiles() }
-        .flowOn(coroutineScopeIo.coroutineContext)
+        .flowOn(ioDispatcher)
 
 
     fun refreshTrainingDataFiles() {

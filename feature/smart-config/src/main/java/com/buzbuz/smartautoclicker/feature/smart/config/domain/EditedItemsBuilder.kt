@@ -37,9 +37,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
@@ -105,7 +108,7 @@ class EditedItemsBuilder internal constructor(
             scenarioId = scenarioId,
             name = "" + from.name,
             conditions = from.conditions.map { conditionOrig ->
-                val conditionCopy = createNewImageConditionFrom(conditionOrig, eventId)
+                val conditionCopy = createNewScreenConditionFrom(conditionOrig, eventId)
                 eventCopyConditionIdMap[conditionOrig.id] = conditionCopy.id
                 conditionCopy
             },
@@ -147,12 +150,17 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    fun createNewImageConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()): ImageCondition =
-        condition.copy(
+    fun createNewTextCondition(context: Context, text: String, language: TrainedTextLanguage): TextCondition =
+        TextCondition(
             id = conditionsIdCreator.generateNewIdentifier(),
-            eventId = eventId,
-            name = "" + condition.name,
-            path = "" + condition.path,
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            threshold = defaultValues.conditionThreshold(context),
+            detectionType = defaultValues.conditionDetectionType(),
+            shouldBeDetected = defaultValues.conditionShouldBeDetected(),
+            priority = 0,
+            textToDetect = text,
+            textLanguage = language,
         )
 
     fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =
@@ -188,6 +196,28 @@ class EditedItemsBuilder internal constructor(
             is TriggerCondition.OnCounterCountReached -> createNewOnCounterReachedFrom(condition, eventId)
             is TriggerCondition.OnTimerReached -> createNewOnTimerReachedFrom(condition, eventId)
         }
+
+    fun createNewScreenConditionFrom(condition: ScreenCondition, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition =
+        when (condition) {
+            is ImageCondition -> createNewImageConditionFrom(condition, eventId)
+            is TextCondition -> createNewTextConditionFrom(condition, eventId)
+        }
+
+    private fun createNewImageConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()): ImageCondition =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+            path = "" + condition.path,
+        )
+
+    private fun createNewTextConditionFrom(condition: TextCondition, eventId: Identifier = getEditedEventIdOrThrow()): TextCondition =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+            textToDetect = "" + condition.textToDetect,
+        )
 
     private fun createNewOnBroadcastReceivedFrom(condition: TriggerCondition.OnBroadcastReceived, eventId: Identifier) =
         condition.copy(
