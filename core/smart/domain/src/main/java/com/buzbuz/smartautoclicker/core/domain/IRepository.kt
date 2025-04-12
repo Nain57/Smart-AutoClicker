@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
@@ -40,7 +40,7 @@ interface IRepository {
     /** The list of scenarios. */
     val scenarios: Flow<List<Scenario>>
     /** All image events from all scenarios.  */
-    val allImageEvents: Flow<List<ImageEvent>>
+    val allScreenEvents: Flow<List<ScreenEvent>>
     /** All trigger events from all scenarios. */
     val allTriggerEvents: Flow<List<TriggerEvent>>
     /** All conditions from all events. */
@@ -129,7 +129,7 @@ interface IRepository {
      * @param scenarioId the identifier of the scenario.
      * @return the list of image events.
      */
-    suspend fun getImageEvents(scenarioId: Long): List<ImageEvent>
+    suspend fun getImageEvents(scenarioId: Long): List<ScreenEvent>
 
     /**
      * Get the list of complete image events for a given scenario.
@@ -137,7 +137,7 @@ interface IRepository {
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of image events, ordered by execution priority.
      */
-    fun getImageEventsFlow(scenarioId: Long): Flow<List<ImageEvent>>
+    fun getImageEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>>
 
     /**
      * Get the list of trigger events for a given scenario.

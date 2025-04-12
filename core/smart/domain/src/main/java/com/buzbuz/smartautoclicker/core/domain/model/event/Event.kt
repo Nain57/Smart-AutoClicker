@@ -57,7 +57,7 @@ sealed class Event: Identifiable, Completable {
         conditions: List<Condition> = this.conditions,
     ): Event =
         when (this) {
-            is ImageEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
+            is ScreenEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
                 enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<ImageCondition>)
             is TriggerEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
                 enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<TriggerCondition>)
@@ -69,12 +69,8 @@ sealed class Event: Identifiable, Completable {
                 conditions.isNotEmpty() && conditions.areComplete()
 }
 
-/**
- * Event of a scenario.
- *
- * @param priority the execution priority of the event in the scenario.
- */
-data class ImageEvent(
+
+data class ScreenEvent(
     override val id: Identifier,
     override val scenarioId: Identifier,
     override val name: String,

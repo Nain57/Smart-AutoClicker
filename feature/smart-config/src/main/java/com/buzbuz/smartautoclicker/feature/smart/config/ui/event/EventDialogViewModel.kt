@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -118,27 +118,27 @@ class EventDialogViewModel @Inject constructor(
     val eventEnabledOnStart: Flow<Boolean> = configuredEvent
         .map { event -> event.enabledOnStart }
 
-    val isImageEvent: Flow<Boolean> = configuredEvent
-        .map { it is ImageEvent }
+    val isScreenEvent: Flow<Boolean> = configuredEvent
+        .map { it is ScreenEvent }
 
     val keepDetecting: Flow<Boolean> = configuredEvent
-        .filterIsInstance<ImageEvent>()
+        .filterIsInstance<ScreenEvent>()
         .map { event -> event.keepDetecting }
 
     val canTryEvent: Flow<Boolean> = configuredEvent
-        .filterIsInstance<ImageEvent>()
+        .filterIsInstance<ScreenEvent>()
         .map { it.isComplete() }
 
 
     fun isConfiguringScreenEvent(): Boolean =
-        editionRepository.editionState.getEditedEvent<Event>() is ImageEvent
+        editionRepository.editionState.getEditedEvent<Event>() is ScreenEvent
 
     fun hasUnsavedModifications(): Boolean =
         editedEventHasChanged.value
 
-    fun getTryInfo(): Pair<Scenario, ImageEvent>? {
+    fun getTryInfo(): Pair<Scenario, ScreenEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
-        val event = editionRepository.editionState.getEditedEvent<ImageEvent>() ?: return null
+        val event = editionRepository.editionState.getEditedEvent<ScreenEvent>() ?: return null
 
         return scenario to event
     }
@@ -167,7 +167,7 @@ class EventDialogViewModel @Inject constructor(
 
     fun toggleKeepDetectingState() {
         updateEditedEvent { oldValue ->
-            if (oldValue is ImageEvent) oldValue.copy(keepDetecting = !oldValue.keepDetecting)
+            if (oldValue is ScreenEvent) oldValue.copy(keepDetecting = !oldValue.keepDetecting)
             else oldValue
         }
     }

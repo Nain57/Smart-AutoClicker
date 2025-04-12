@@ -20,7 +20,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
@@ -72,24 +72,24 @@ internal class ScenarioEditor {
         eventsEditor?.editedItem ?: emptyFlow()
     }
 
-    val editedImageEventListState: Flow<EditedListState<ImageEvent>> = imageEventsEditor.listState
-    val editedImageEventState: Flow<EditedElementState<ImageEvent>> = imageEventsEditor.editedItemState
+    val editedScreenEventListState: Flow<EditedListState<ScreenEvent>> = imageEventsEditor.listState
+    val editedScreenEventState: Flow<EditedElementState<ScreenEvent>> = imageEventsEditor.editedItemState
 
     val editedTriggerEventListState: Flow<EditedListState<TriggerEvent>> = triggerEventsEditor.listState
     val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> = triggerEventsEditor.editedItemState
 
-    fun startEdition(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) {
+    fun startEdition(scenario: Scenario, screenEvents: List<ScreenEvent>, triggerEvents: List<TriggerEvent>) {
         referenceScenario.value = scenario
         _editedScenario.value = scenario
 
-        imageEventsEditor.startEdition(imageEvents)
+        imageEventsEditor.startEdition(screenEvents)
         triggerEventsEditor.startEdition(triggerEvents)
     }
 
     @Suppress("UNCHECKED_CAST")
     fun startEventEdition(event: Event) {
         _currentEventEditor.value = when (event) {
-            is ImageEvent -> imageEventsEditor
+            is ScreenEvent -> imageEventsEditor
             is TriggerEvent -> triggerEventsEditor
         } as EventsEditor<Event, Condition>
 
@@ -129,7 +129,7 @@ internal class ScenarioEditor {
         _editedScenario.value = item
     }
 
-    fun updateImageEventsOrder(newEvents: List<ImageEvent>) {
+    fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {
         imageEventsEditor.updateList(newEvents)
     }
 

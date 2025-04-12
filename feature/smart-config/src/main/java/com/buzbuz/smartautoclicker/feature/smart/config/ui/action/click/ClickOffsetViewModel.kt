@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,9 +44,9 @@ class ClickOffsetViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** The ImageEvent being edited by the user. */
-    private val editedEvent: Flow<ImageEvent> = editionRepository.editionState.editedEventState
+    private val editedEvent: Flow<ScreenEvent> = editionRepository.editionState.editedEventState
         .mapNotNull { event -> event.value }
-        .filterIsInstance<ImageEvent>()
+        .filterIsInstance<ScreenEvent>()
 
     /** The ImageConditions being edited by the user. */
     private val editedImageConditions: Flow<List<ImageCondition>> =

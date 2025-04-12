@@ -28,12 +28,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 
 internal fun Event.toEntity(): EventEntity =
     when (this) {
-        is ImageEvent -> toEntity()
+        is ScreenEvent -> toEntity()
         is TriggerEvent -> toEntity()
     }
 
 /** @return the entity equivalent of this event. */
-private fun ImageEvent.toEntity() = EventEntity(
+private fun ScreenEvent.toEntity() = EventEntity(
     id = id.databaseId,
     scenarioId = scenarioId.databaseId,
     name = name,
@@ -64,8 +64,8 @@ internal fun CompleteEventEntity.toDomain(cleanIds: Boolean = false): Event =
     }
 
 /** @return the complete event for this entity. */
-internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): ImageEvent =
-    ImageEvent(
+internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): ScreenEvent =
+    ScreenEvent(
         id = Identifier(id = event.id, asTemporary = cleanIds),
         scenarioId = Identifier(id = event.scenarioId, asTemporary = cleanIds),
         name= event.name,

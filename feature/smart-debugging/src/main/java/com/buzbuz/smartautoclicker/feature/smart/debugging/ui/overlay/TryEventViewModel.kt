@@ -22,7 +22,7 @@ import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
@@ -71,22 +71,22 @@ class TryElementViewModel @Inject constructor(
         if (element == null || results.isEmpty()) return@combine null
 
         val text =
-            if (element.imageEvent.conditions.size == 1) {
+            if (element.screenEvent.conditions.size == 1) {
                 results.first().confidenceRate.formatConfidenceRate()
             } else {
                 val detected = results.fold(0) { acc, detectionResultInfo ->
                     acc + (if (detectionResultInfo.positive) 1 else 0)
                 }
-                "$detected/${element.imageEvent.conditions.size}"
+                "$detected/${element.screenEvent.conditions.size}"
             }
 
 
         ImageEventResultsDisplay(text, results)
     }
 
-    fun setTriedElement(scenario: Scenario, imageEvent: ImageEvent) {
+    fun setTriedElement(scenario: Scenario, screenEvent: ScreenEvent) {
         viewModelScope.launch {
-            triedElement.emit(TriedImageEvent(scenario, imageEvent))
+            triedElement.emit(TriedImageEvent(scenario, screenEvent))
         }
     }
 
@@ -96,7 +96,7 @@ class TryElementViewModel @Inject constructor(
 
             delay(500)
             triedElement.value?.let { element ->
-                detectionRepository.tryEvent(context, element.scenario, element.imageEvent) { results ->
+                detectionRepository.tryEvent(context, element.scenario, element.screenEvent) { results ->
                     tryResults.value = results.getAllResults().mapNotNull { result ->
                         if (result is ScreenConditionResult) result.toDetectionResultInfo()
                         else null
@@ -140,5 +140,5 @@ data class ImageEventResultsDisplay(
 
 private data class TriedImageEvent(
     val scenario: Scenario,
-    val imageEvent: ImageEvent,
+    val screenEvent: ScreenEvent,
 )

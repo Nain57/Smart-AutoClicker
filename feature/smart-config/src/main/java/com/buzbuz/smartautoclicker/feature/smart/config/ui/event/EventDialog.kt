@@ -243,7 +243,7 @@ class EventDialog(
                 launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
                 launch { viewModel.eventEnabledOnStart.collect(::updateEnabledOnStart) }
                 launch { viewModel.keepDetecting.collect(::updateKeepDetecting) }
-                launch { viewModel.isImageEvent.collect(::updateImageEventSpecificViewsVisibility) }
+                launch { viewModel.isScreenEvent.collect(::updateImageEventSpecificViewsVisibility) }
                 launch { viewModel.canTryEvent.collect(::updateTryFieldEnabledState) }
                 launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
 

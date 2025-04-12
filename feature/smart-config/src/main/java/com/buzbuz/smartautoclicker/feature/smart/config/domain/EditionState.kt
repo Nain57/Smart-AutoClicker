@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
@@ -56,7 +56,7 @@ internal class EditionState internal constructor(
     override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
         combine(
             editor.editedScenarioState,
-            editor.editedImageEventListState,
+            editor.editedScreenEventListState,
             editor.editedTriggerEventListState,
         ) { scenario, imageEvents, triggerEvents ->
 
@@ -74,16 +74,16 @@ internal class EditionState internal constructor(
     override val scenarioState: Flow<EditedElementState<Scenario>> =
         editor.editedScenarioState
 
-    override val editedImageEventsState: Flow<EditedListState<ImageEvent>> =
-        editor.editedImageEventListState.map { listState ->
+    override val editedScreenEventsState: Flow<EditedListState<ScreenEvent>> =
+        editor.editedScreenEventListState.map { listState ->
             listState.copy(value = listState.value?.sortedByPriority()?.toList() ?: emptyList())
         }
 
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
         editor.editedTriggerEventListState
 
-    override val editedImageEventState: Flow<EditedElementState<ImageEvent>> =
-        editor.editedImageEventState
+    override val editedScreenEventState: Flow<EditedElementState<ScreenEvent>> =
+        editor.editedScreenEventState
 
     override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
         editor.editedTriggerEventState
@@ -166,8 +166,8 @@ internal class EditionState internal constructor(
             eventEditor?.actionsEditor?.eventToggleEditor?.listState  ?: emptyFlow()
         }
 
-    override val imageEventsForCopy: Flow<List<ImageEvent>> =
-        combine(editedImageEventsState, repository.allImageEvents) { allEditedEvents, dbEvents ->
+    override val screenEventsForCopy: Flow<List<ScreenEvent>> =
+        combine(editedScreenEventsState, repository.allScreenEvents) { allEditedEvents, dbEvents ->
             buildList {
                 val scenarioEvents = allEditedEvents.value?.getEditedImageEventsForCopy() ?: emptyList()
                 addAll(scenarioEvents)
@@ -205,7 +205,7 @@ internal class EditionState internal constructor(
         }
 
     override val canCopyImageEvents: Flow<Boolean> =
-        imageEventsForCopy.map { it.isNotEmpty() }
+        screenEventsForCopy.map { it.isNotEmpty() }
 
     override val canCopyTriggerEvents: Flow<Boolean> =
         triggerEventsForCopy.map { it.isNotEmpty() }

@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventTog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
@@ -103,22 +103,22 @@ internal object ProcessingTestData {
 
     fun newTestScenario(
         scenarioId: Identifier,
-        imageEvents: List<ImageEvent> = emptyList(),
+        screenEvents: List<ScreenEvent> = emptyList(),
         triggerEvents: List<TriggerEvent> = emptyList(),
     ): TestScenario {
 
         // Setup correct priorities
-        imageEvents.normalizePriorities()
+        screenEvents.normalizePriorities()
 
         return TestScenario(
             scenario = Scenario(
                 id = scenarioId,
-                eventCount = imageEvents.size,
+                eventCount = screenEvents.size,
                 name = "TestScenario",   // No impact on processor
                 detectionQuality = 1000, // No impact with mocked detection
                 randomize = false,       // Always keep false, we dont want randomness in tests
             ),
-            imageEvents = imageEvents,
+            screenEvents = screenEvents,
             triggerEvents = triggerEvents,
         )
     }
@@ -131,7 +131,7 @@ internal object ProcessingTestData {
         @ConditionOperator conditionOperator: Int = AND,
         conditions: List<TestImageCondition>,
         actions: List<Action>,
-    ) = ImageEvent(
+    ) = ScreenEvent(
         id = eventId,
         scenarioId = scenarioId,
         enabledOnStart = enabledOnStart,

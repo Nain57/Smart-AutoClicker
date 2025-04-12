@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.domain.model.event
 
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
-import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -61,7 +60,7 @@ internal object EventTestsData {
         conditions: List<ImageCondition> = emptyList(),
         scenarioId: Long,
         priority: Int = 0,
-    ) = ImageEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
+    ) = ScreenEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
 
     fun getNewTriggerEvent(
         id: Long = EVENT_ID,

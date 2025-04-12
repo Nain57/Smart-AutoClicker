@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
@@ -153,7 +153,7 @@ class DetectionRepository @Inject constructor(
         detectorEngine.startDetection(
             context = context,
             scenario = scenario,
-            imageEvents = events,
+            screenEvents = events,
             triggerEvents = triggerEvents,
             trainedTextData = trainedTextData,
             bitmapSupplier = scenarioRepository::getConditionBitmap,
@@ -187,7 +187,7 @@ class DetectionRepository @Inject constructor(
         _scenarioId.value = null
     }
 
-    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent, listener: (IConditionsResult) -> Unit) {
+    fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent, listener: (IConditionsResult) -> Unit) {
         val triedElement = ImageEventTry(scenario, event)
         tryElement(
             context,
@@ -219,13 +219,13 @@ class DetectionRepository @Inject constructor(
     }
 
     private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
-        Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
-        val trainedTextData = elementTry.imageEvents.getRequiredTrainedTextData() ?: return
+        Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.screenEvents}")
+        val trainedTextData = elementTry.screenEvents.getRequiredTrainedTextData() ?: return
 
         detectorEngine.startDetection(
             context = context,
             scenario = elementTry.scenario,
-            imageEvents = elementTry.imageEvents,
+            screenEvents = elementTry.screenEvents,
             triggerEvents = elementTry.triggerEvents,
             trainedTextData = trainedTextData,
             bitmapSupplier = scenarioRepository::getConditionBitmap,
@@ -247,7 +247,7 @@ class DetectionRepository @Inject constructor(
         }
     }
 
-    private fun List<ImageEvent>.getRequiredTrainedTextData(): TrainedTextData? {
+    private fun List<ScreenEvent>.getRequiredTrainedTextData(): TrainedTextData? {
         val requiredLanguages = buildSet {
             this@getRequiredTrainedTextData.forEach { screenEvent ->
                 screenEvent.conditions.forEach { screenCondition ->

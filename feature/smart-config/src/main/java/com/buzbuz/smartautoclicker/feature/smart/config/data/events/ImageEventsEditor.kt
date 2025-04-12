@@ -21,15 +21,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 import kotlinx.coroutines.flow.StateFlow
 
 internal class ImageEventsEditor(
-    onDeleteEvent: (ImageEvent) -> Unit,
+    onDeleteEvent: (ScreenEvent) -> Unit,
     parentItem: StateFlow<Scenario?>,
-) : EventsEditor<ImageEvent, ImageCondition>(onDeleteEvent, canBeEmpty = true, parentItem) {
+) : EventsEditor<ScreenEvent, ImageCondition>(onDeleteEvent, canBeEmpty = true, parentItem) {
 
     override fun onEditedEventConditionsUpdated(conditions: List<ImageCondition>) {
         val editedEvent = editedItem.value ?: return
@@ -63,9 +63,9 @@ internal class ImageEventsEditor(
     }
 
     override fun copyEventWithNewChildren(
-        event: ImageEvent,
+        event: ScreenEvent,
         conditions: List<ImageCondition>,
         actions: List<Action>,
-    ): ImageEvent = event.copy(conditions = conditions, actions = actions)
+    ): ScreenEvent = event.copy(conditions = conditions, actions = actions)
 
 }

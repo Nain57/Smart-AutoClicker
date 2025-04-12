@@ -21,7 +21,7 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -39,7 +39,7 @@ class ImageEventListViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** Currently configured events. */
-    val eventsItems = editionRepository.editionState.editedImageEventsState
+    val eventsItems = editionRepository.editionState.editedScreenEventsState
         .mapNotNull { imageEventsState ->
             imageEventsState.value?.map { imageEvent ->
                 imageEvent.toUiImageEvent(inError = !imageEvent.isComplete())
@@ -54,12 +54,12 @@ class ImageEventListViewModel @Inject constructor(
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: ImageEvent? = null): ImageEvent = with(editionRepository.editedItemsBuilder) {
+    fun createNewEvent(context: Context, event: ScreenEvent? = null): ScreenEvent = with(editionRepository.editedItemsBuilder) {
         if (event == null) createNewImageEvent(context)
         else createNewImageEventFrom(event)
     }
 
-    fun startEventEdition(event: ImageEvent) = editionRepository.startEventEdition(event)
+    fun startEventEdition(event: ScreenEvent) = editionRepository.startEventEdition(event)
 
     /** Add or update an event. If the event id is unset, it will be added. If not, updated. */
     fun saveEventEdition() = editionRepository.upsertEditedEvent()

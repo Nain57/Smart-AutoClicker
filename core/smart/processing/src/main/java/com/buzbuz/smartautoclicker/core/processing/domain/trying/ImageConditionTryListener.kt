@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.domain.trying
 
 import android.util.Log
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
@@ -28,7 +28,7 @@ internal class ImageConditionProcessingTryListener(
     private val clientListener: (ScreenConditionResult) -> Unit,
 ) : ScenarioProcessingListener {
 
-    override suspend fun onImageEventProcessingStarted(event: ImageEvent) {
+    override suspend fun onImageEventProcessingStarted(event: ScreenEvent) {
         Log.d(TAG, "onImageEventProcessingStarted: $event")
     }
 

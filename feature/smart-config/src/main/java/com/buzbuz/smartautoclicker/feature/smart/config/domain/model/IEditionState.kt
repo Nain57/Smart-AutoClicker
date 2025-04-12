@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
@@ -38,12 +38,12 @@ interface IEditionState {
 
     // Edited Scenario child items (ImageEvents and TriggerEvents)
     val allEditedEvents: Flow<List<Event>>
-    val editedImageEventsState: Flow<EditedListState<ImageEvent>>
+    val editedScreenEventsState: Flow<EditedListState<ScreenEvent>>
     val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>>
 
     // Edited Event
     val editedEventState: Flow<EditedElementState<Event>>
-    val editedImageEventState: Flow<EditedElementState<ImageEvent>>
+    val editedScreenEventState: Flow<EditedElementState<ScreenEvent>>
     val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>>
 
     // Edited Event child conditions
@@ -69,7 +69,7 @@ interface IEditionState {
     val canCopyActions: Flow<Boolean>
 
     // Possible items for copy depending on current edition state
-    val imageEventsForCopy: Flow<List<ImageEvent>>
+    val screenEventsForCopy: Flow<List<ScreenEvent>>
     val triggerEventsForCopy: Flow<List<TriggerEvent>>
     val conditionsForCopy: Flow<List<Condition>>
     val actionsForCopy: Flow<List<Action>>

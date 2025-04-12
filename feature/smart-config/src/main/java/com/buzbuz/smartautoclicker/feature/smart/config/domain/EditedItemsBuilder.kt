@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventTog
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
@@ -75,8 +75,8 @@ class EditedItemsBuilder internal constructor(
         _newImageConditionsPaths.clear()
     }
 
-    fun createNewImageEvent(context: Context): ImageEvent =
-        ImageEvent(
+    fun createNewImageEvent(context: Context): ScreenEvent =
+        ScreenEvent(
             id = eventsIdCreator.generateNewIdentifier(),
             scenarioId = getEditedScenarioIdOrThrow(),
             name = defaultValues.eventName(context),
@@ -97,7 +97,7 @@ class EditedItemsBuilder internal constructor(
             actions = mutableListOf(),
         )
 
-    fun createNewImageEventFrom(from: ImageEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ImageEvent {
+    fun createNewImageEventFrom(from: ScreenEvent, scenarioId: Identifier = getEditedScenarioIdOrThrow()): ScreenEvent {
         val eventId = eventsIdCreator.generateNewIdentifier()
 
         return from.copy(

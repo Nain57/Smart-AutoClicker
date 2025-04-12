@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.IEditionState
@@ -90,7 +90,7 @@ class EditionRepository @Inject constructor(
 
         scenarioEditor.startEdition(
             scenario = scenario,
-            imageEvents = repository.getImageEvents(scenarioId),
+            screenEvents = repository.getImageEvents(scenarioId),
             triggerEvents = repository.getTriggerEvents(scenarioId),
         )
         return true
@@ -126,7 +126,7 @@ class EditionRepository @Inject constructor(
     /** Update the currently edited scenario. */
     fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
     /** Update the priority of the events in the scenario. */
-    fun updateImageEventsOrder(newEvents: List<ImageEvent>) {
+    fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {
         scenarioEditor.updateImageEventsOrder(
             newEvents.mapIndexed { index, event -> event.copy(priority = index) }
         )
