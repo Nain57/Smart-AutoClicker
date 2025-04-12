@@ -23,6 +23,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
 import org.junit.Assert.assertEquals
@@ -57,14 +59,30 @@ private fun assertSameEventNoIdCheck(expected: ImageEvent, actual: ImageEvent) {
     }
 }
 
-private fun assertSameConditionNoIdCheck(expected: ImageCondition, actual: ImageCondition) = assertTrue(
-    "Conditions are not the same",
-    expected.name == actual.name
-            && expected.shouldBeDetected == actual.shouldBeDetected
-            && expected.captureArea == actual.captureArea
-            && expected.detectionType == actual.detectionType
-            && expected.threshold == actual.threshold
-)
+private fun assertSameConditionNoIdCheck(expected: ScreenCondition, actual: ScreenCondition) {
+    when {
+        expected is ImageCondition && actual is ImageCondition -> assertTrue(
+            "Conditions are not the same",
+            expected.name == actual.name
+                    && expected.shouldBeDetected == actual.shouldBeDetected
+                    && expected.captureArea == actual.captureArea
+                    && expected.detectionType == actual.detectionType
+                    && expected.threshold == actual.threshold
+        )
+
+        expected is TextCondition && actual is TextCondition -> assertTrue(
+            "Conditions are not the same",
+            expected.name == actual.name
+                    && expected.shouldBeDetected == actual.shouldBeDetected
+                    && expected.textToDetect == actual.textToDetect
+                    && expected.textLanguage == actual.textLanguage
+                    && expected.detectionType == actual.detectionType
+                    && expected.threshold == actual.threshold
+        )
+
+        else ->  assertTrue("Conditions are not the same type", false)
+    }
+}
 
 private fun assertSameActionNoIdCheck(expected: Action, actual: Action) {
     when {
@@ -116,7 +134,8 @@ private fun assertSameIntentNoIdCheck(expected: Intent, actual: Intent) = assert
 private fun assertSameToggleEventNoIdCheck(expected: ToggleEvent, actual: ToggleEvent) = assertTrue(
     "ToggleEvents are not the same",
     expected.name == actual.name
-            //&& expected.toggleEventType == actual.toggleEventType
+            && expected.toggleAll == actual.toggleAll
+            && expected.toggleAllType == actual.toggleAllType
 )
 
 private fun <T> forEachExpectedAndActual(expected: List<T>, actual: List<T>, closure: (T, T) -> Unit) {

@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 
 sealed class Event: Identifiable, Completable {
@@ -79,7 +80,7 @@ data class ImageEvent(
     override val name: String,
     @ConditionOperator override val conditionOperator: Int,
     override val actions: List<Action> = emptyList(),
-    override val conditions: List<ImageCondition> =  emptyList(),
+    override val conditions: List<ScreenCondition> =  emptyList(),
     override val enabledOnStart: Boolean = true,
     override var priority: Int,
     val keepDetecting: Boolean,

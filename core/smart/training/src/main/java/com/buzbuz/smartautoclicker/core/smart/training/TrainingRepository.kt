@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.training
 
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextData
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataSyncState
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import kotlinx.coroutines.flow.Flow
 
@@ -24,8 +25,9 @@ import kotlinx.coroutines.flow.Flow
 interface TrainingRepository {
 
     /** State of the training data for the text languages. */
-    val trainedTextLanguages: Flow<TrainedTextData>
+    val trainedTextLanguagesSyncState: Flow<Map<TrainedTextLanguage, TrainedTextDataSyncState>>
 
+    fun getTrainedTextDataForLanguages(languages: Set<TrainedTextLanguage>): TrainedTextData?
     fun downloadTextLanguageDataFile(language: TrainedTextLanguage)
     fun deleteTextLanguageDataFile(language: TrainedTextLanguage)
 }

@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.tests.processor
 
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
@@ -39,13 +39,13 @@ internal suspend fun BitmapSupplier.mockBitmapProviding(testCondition: TestImage
     `when`(getBitmap(testCondition.imageCondition)).thenReturn(testCondition.mockedBitmap)
 }
 
-internal fun ImageDetector.mockAllDetectionResult(testConditions: List<TestImageCondition>, areAllDetected: Boolean) {
+internal fun ScreenDetector.mockAllDetectionResult(testConditions: List<TestImageCondition>, areAllDetected: Boolean) {
     testConditions.forEach { testCondition ->
         mockDetectionResult(testCondition, areAllDetected)
     }
 }
 
-internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
+internal fun ScreenDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
     when (testCondition.imageCondition.detectionType) {
         EXACT -> `when`(
             detectCondition(
@@ -77,7 +77,7 @@ internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
     detected: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
-    .onImageConditionProcessingCompleted(condition.expectedResult(detected))
+    .onScreenConditionProcessingCompleted(condition.expectedResult(detected))
 
 internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
     events: List<ImageEvent>,
@@ -94,7 +94,7 @@ internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
     return results
 }
 
-internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
+internal fun ScreenDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
     when (testCondition.imageCondition.detectionType) {
         EXACT -> verify(this, never())
             .detectCondition(

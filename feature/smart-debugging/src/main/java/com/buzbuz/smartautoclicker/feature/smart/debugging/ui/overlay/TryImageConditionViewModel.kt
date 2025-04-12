@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.formatConfidenceRate
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +53,7 @@ class TryImageConditionViewModel @Inject constructor(
 
     private val triedImageCondition: MutableStateFlow<TriedImageCondition?> = MutableStateFlow(null)
     private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val tryResults: MutableStateFlow<ImageConditionResult?> = MutableStateFlow(null)
+    private val tryResults: MutableStateFlow<ScreenConditionResult?> = MutableStateFlow(null)
 
     private val isPlaying: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.DETECTING }
@@ -116,7 +116,7 @@ class TryImageConditionViewModel @Inject constructor(
 
     fun getSelectedThreshold(): Int = userThreshold.value
 
-    private fun ImageConditionResult.toDetectionResultInfo(overriddenThreshold: Int): DetectionResultInfo {
+    private fun ScreenConditionResult.toDetectionResultInfo(overriddenThreshold: Int): DetectionResultInfo {
         val halfWidth = condition.captureArea.width() / 2
         val halfHeight = condition.captureArea.height() / 2
 

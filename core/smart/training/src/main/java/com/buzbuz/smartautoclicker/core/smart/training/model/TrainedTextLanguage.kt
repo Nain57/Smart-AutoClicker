@@ -60,15 +60,6 @@ enum class TrainedTextLanguage(internal val langCode: String) {
 
     companion object {
 
-        /**
-         * Format the collection of languages into the tesseract language format.
-         * This will happen the ISO 639-1 language code with a + between them.
-         *
-         * Ex: [eng,fra,ita] = "eng+fra+ita"
-         */
-        fun Collection<TrainedTextLanguage>.toTesseractLangCodes(): String =
-            joinToString(separator = "+")
-
         /** Get the TrainedTextLanguage corresponding to the locale, if any. */
         fun Locale.getTrainedTextLanguage(): TrainedTextLanguage? =
             when (language) {

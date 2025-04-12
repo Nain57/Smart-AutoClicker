@@ -60,11 +60,11 @@ internal object ProcessingData {
         Identifier(databaseId = 1L),
         "TOTO",
         0,
+        threshold,
+        shouldBeDetected,
+        detectionType,
+        null,
         path,
         area,
-        threshold,
-        detectionType,
-        shouldBeDetected,
-        null
     )
 }

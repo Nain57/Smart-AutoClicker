@@ -18,13 +18,14 @@ package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
 interface IConditionsResult {
 
     val fulfilled: Boolean?
 
-    fun getImageConditionResult(conditionId: Long): ImageConditionResult?
-    fun getFirstImageDetectedResult(): ImageConditionResult?
+    fun getScreenConditionResult(conditionId: Long): ScreenConditionResult?
+    fun getFirstScreenDetectedResult(): ScreenConditionResult?
     fun getAllResults(): List<ConditionResult>
 }
 
@@ -32,9 +33,9 @@ interface ConditionResult {
     val isFulfilled: Boolean
 }
 
-interface ImageConditionResult : ConditionResult {
+interface ScreenConditionResult : ConditionResult {
     val haveBeenDetected: Boolean
-    val condition: ImageCondition
+    val condition: ScreenCondition
     val position: Point
     val confidenceRate: Double
 }

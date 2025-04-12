@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextData
 import kotlinx.coroutines.CoroutineDispatcher
 
 import kotlinx.coroutines.CoroutineScope
@@ -76,7 +77,7 @@ class DetectorEngine @Inject constructor(
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
     /** Detect the condition images on the screen image. */
-    private var imageDetector: ImageDetector? = null
+    private var screenDetector: ScreenDetector? = null
     /** The executor for the actions requiring an interaction with Android. */
     private var androidExecutor: SmartActionExecutor? = null
 
@@ -166,6 +167,7 @@ class DetectorEngine @Inject constructor(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
+        trainedTextData: TrainedTextData,
         bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
         progressListener: ScenarioProcessingListener? = null,
     ) {
@@ -187,15 +189,20 @@ class DetectorEngine @Inject constructor(
         Log.i(TAG, "startDetection")
 
         processingScope?.launchProcessingJob {
-            imageDetector = detector
-            detector.init()
+            screenDetector = detector.apply {
+                init()
+                setTextMatchingLanguages(
+                    langCodes = trainedTextData.languagesCodes,
+                    trainingFilesPath = trainedTextData.dataFolder,
+                )
+            }
 
             detectionProgressListener = progressListener
             progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
 
             scenarioProcessor = ScenarioProcessor(
                 processingTag = appComponentsProvider.originalAppId,
-                imageDetector = detector,
+                screenDetector = detector,
                 detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
                 imageEvents = imageEvents,
@@ -258,8 +265,8 @@ class DetectorEngine @Inject constructor(
 
             processingJob?.cancelAndJoin()
             processingJob = null
-            imageDetector?.close()
-            imageDetector = null
+            screenDetector?.close()
+            screenDetector = null
             scenarioProcessor?.onScenarioEnd()
             scenarioProcessor = null
             detectionProgressListener?.onSessionEnded()

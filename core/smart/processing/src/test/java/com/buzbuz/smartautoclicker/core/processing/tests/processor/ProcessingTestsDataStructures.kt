@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.data.processor.DefaultResult
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ScreenResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 
 
@@ -47,7 +47,7 @@ internal data class TestEventToggle(
     val toggleType: ToggleEvent.ToggleType,
 )
 
-internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(
+internal fun TestImageCondition.expectedResult(detected: Boolean) = ScreenResult(
     isFulfilled = detected == imageCondition.shouldBeDetected,
     haveBeenDetected = detected,
     condition = imageCondition,

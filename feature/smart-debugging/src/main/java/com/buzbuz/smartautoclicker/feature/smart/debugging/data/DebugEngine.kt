@@ -21,12 +21,13 @@ import android.graphics.Rect
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.feature.smart.debugging.getDebugConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.debugging.getIsDebugReportEnabled
@@ -119,7 +120,7 @@ internal class DebugEngine : ScenarioProcessingListener {
             .onProcessingStart()
     }
 
-    override suspend fun onImageConditionProcessingStarted(condition: ImageCondition) = mutex.withLock {
+    override suspend fun onScreenConditionProcessingStarted(condition: ScreenCondition) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcCondId != null)
@@ -131,7 +132,7 @@ internal class DebugEngine : ScenarioProcessingListener {
             .onProcessingStart()
     }
 
-    override suspend fun onImageConditionProcessingCompleted(result: ConditionResult) {
+    override suspend fun onScreenConditionProcessingCompleted(result: ConditionResult) {
         if (!generateReport) return
 
         if (currProcCondId == null) {
@@ -139,7 +140,7 @@ internal class DebugEngine : ScenarioProcessingListener {
             return
         }
 
-        if (result is ImageConditionResult) {
+        if (result is ScreenConditionResult) {
             conditionsRecorderMap[currProcCondId]?.onProcessingEnd(
                 result.haveBeenDetected,
                 result.confidenceRate
@@ -160,7 +161,7 @@ internal class DebugEngine : ScenarioProcessingListener {
         }
 
         // Notify current detection progress
-        val conditionResults = results.getFirstImageDetectedResult() ?: let {
+        val conditionResults = results.getFirstScreenDetectedResult() ?: let {
             currentInfo.emit(null)
             return@withLock
         }

@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Point
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 
 
 internal class ConditionsResult : IConditionsResult {
@@ -31,14 +31,14 @@ internal class ConditionsResult : IConditionsResult {
     override var fulfilled: Boolean? = null
         private set
 
-    override fun getImageConditionResult(conditionId: Long): ImageConditionResult? =
+    override fun getScreenConditionResult(conditionId: Long): ScreenConditionResult? =
         _results[conditionId]?.let { result ->
-            if (result is ImageResult) result else null
+            if (result is ScreenResult) result else null
         }
 
-    override fun getFirstImageDetectedResult(): ImageResult? =
-        _results.values.find { it is ImageResult && it.isFulfilled && it.condition.shouldBeDetected }
-                as ImageResult?
+    override fun getFirstScreenDetectedResult(): ScreenResult? =
+        _results.values.find { it is ScreenResult && it.isFulfilled && it.condition.shouldBeDetected }
+                as ScreenResult?
 
     override fun getAllResults(): List<ConditionResult> = buildList {
         _results.forEach { (_, result) -> add(result) }
@@ -62,12 +62,12 @@ internal data class DefaultResult(
     override val isFulfilled: Boolean,
 ) : ConditionResult
 
-internal data class ImageResult(
+internal data class ScreenResult(
     override val isFulfilled: Boolean,
     override val haveBeenDetected: Boolean,
-    override val condition: ImageCondition,
+    override val condition: ScreenCondition,
     override val position: Point = Point(),
     override var confidenceRate: Double = 0.0,
-) : ImageConditionResult
+) : ScreenConditionResult
 
 

@@ -17,27 +17,27 @@
 package com.buzbuz.smartautoclicker.core.processing.domain.trying
 
 import android.util.Log
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 internal class ImageConditionProcessingTryListener(
     private val triedItem: ImageConditionTry,
-    private val clientListener: (ImageConditionResult) -> Unit,
+    private val clientListener: (ScreenConditionResult) -> Unit,
 ) : ScenarioProcessingListener {
 
     override suspend fun onImageEventProcessingStarted(event: ImageEvent) {
         Log.d(TAG, "onImageEventProcessingStarted: $event")
     }
 
-    override suspend fun onImageConditionProcessingStarted(condition: ImageCondition) {
+    override suspend fun onScreenConditionProcessingStarted(condition: ScreenCondition) {
         Log.d(TAG, "onImageConditionProcessingStarted: $condition")
     }
 
-    override suspend fun onImageConditionProcessingCompleted(result: ConditionResult) {
-        if (result !is ImageConditionResult) return
+    override suspend fun onScreenConditionProcessingCompleted(result: ConditionResult) {
+        if (result !is ScreenConditionResult) return
         if (result.condition.id != triedItem.condition.id) return
 
         Log.d(TAG, "Image Processing completed: $result")

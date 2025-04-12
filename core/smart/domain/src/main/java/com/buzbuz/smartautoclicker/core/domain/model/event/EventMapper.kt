@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 
@@ -74,7 +74,7 @@ internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): 
         enabledOnStart = event.enabledOnStart,
         keepDetecting = event.keepDetecting == true,
         actions = actions.map { it.toDomain(cleanIds) }.sortedByPriority().toMutableList(),
-        conditions = conditions.map { it.toDomain(cleanIds) as ImageCondition }.sortedByPriority().toMutableList(),
+        conditions = conditions.map { it.toDomain(cleanIds) as ScreenCondition }.sortedByPriority().toMutableList(),
     )
 
 /** @return the complete trigger event for this entity. */
