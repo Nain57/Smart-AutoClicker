@@ -96,12 +96,12 @@ internal class SettingsDataSource @Inject constructor(
         }
 
     internal fun isInputBlockWorkaroundEnabled(): Flow<Boolean> =
-        dataStore.data.map { preferences -> preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: isImpactedByInputBlock() }
+        dataStore.data.map { preferences -> preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: false }
 
     internal suspend fun toggleInputBlockWorkaround() {
         if (!isImpactedByInputBlock()) return
         dataStore.edit { preferences ->
-            preferences[KEY_INPUT_BLOCK_WORKAROUND] = !(preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: isImpactedByInputBlock())
+            preferences[KEY_INPUT_BLOCK_WORKAROUND] = !(preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: false)
         }
     }
 }
