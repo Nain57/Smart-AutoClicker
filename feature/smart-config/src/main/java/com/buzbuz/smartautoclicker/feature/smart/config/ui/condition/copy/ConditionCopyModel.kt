@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -102,8 +103,7 @@ class ConditionCopyModel @Inject constructor(
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(repository, condition, onBitmapLoaded)
 
-    /** */
-    private fun List<Condition>.toCopyItems(context: Context) = map { condition ->
+    private fun List<Condition>.toCopyItems(context: Context) = mapNotNull { condition ->
         when (condition) {
             is ImageCondition -> ConditionCopyItem.ConditionItem.Image(
                 condition.toUiImageCondition(context, shortThreshold = true, inError = !condition.isComplete())
@@ -111,6 +111,9 @@ class ConditionCopyModel @Inject constructor(
             is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(
                 condition.toUiTriggerCondition(context, inError = !condition.isComplete())
             )
+
+            // TODO: handle text condition
+            is TextCondition -> null
         }
     }
 

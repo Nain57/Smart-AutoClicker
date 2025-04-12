@@ -103,8 +103,9 @@ class ImageConditionsBriefViewModel @Inject constructor(
         currentFocusItemIndex.value = index
     }
 
+    //TODO: handle text condition
     fun createNewImageConditionFromCopy(condition: ImageCondition): ImageCondition =
-        editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
+        editionRepository.editedItemsBuilder.createNewScreenConditionFrom(condition) as ImageCondition
 
     fun deleteImageCondition(index: Int, force: Boolean = false): Boolean {
         val conditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return false

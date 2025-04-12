@@ -62,6 +62,7 @@ class NativeDetector private constructor() : ScreenDetector {
 
     override fun setTextMatchingLanguages(langCodes: String, trainingFilesPath: String) {
         if (isClosed) return
+        if (langCodes.isBlank()) return
 
         setLanguages(langCodes, trainingFilesPath)
     }
