@@ -32,8 +32,8 @@ void TemplateMatchingResult::updateResults(ScalableRoi* detectionArea, cv::Mat* 
             detectionArea->getScaled().y + maxLoc.y,
             condition->cols, condition->rows, scaleRatio,
             *detectionArea);
-    centerX = area.getFullSize().x + ((int) (area.getFullSize().width / 2));
-    centerY = area.getFullSize().y + ((int) (area.getFullSize().height / 2));
+
+    confidence = maxVal;
 }
 
 void TemplateMatchingResult::invalidateCurrentResult(cv::Mat *matchingResults, const cv::Mat* condition) const {

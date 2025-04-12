@@ -32,9 +32,6 @@ void OcrResult::updateResults(const tesseract::ResultIterator* tesseractResult, 
             x2 - x1,
             y2 - y1,
             scaleRatio);
-
-    centerX = area.getFullSize().x + ((int) (area.getFullSize().width / 2));
-    centerY = area.getFullSize().y + ((int) (area.getFullSize().height / 2));
 }
 
 void OcrResult::reset() {

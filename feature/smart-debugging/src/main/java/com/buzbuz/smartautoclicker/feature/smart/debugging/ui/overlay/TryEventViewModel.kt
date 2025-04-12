@@ -115,19 +115,9 @@ class TryElementViewModel @Inject constructor(
     }
 
     private fun ScreenConditionResult.toDetectionResultInfo(): DetectionResultInfo {
-        val halfWidth = condition.captureArea.width() / 2
-        val halfHeight = condition.captureArea.height() / 2
-
         return DetectionResultInfo(
             positive = isFulfilled,
-            coordinates =
-                if (position.x == 0 && position.y == 0) Rect()
-                else Rect(
-                    position.x - halfWidth,
-                    position.y - halfHeight,
-                    position.x + halfWidth,
-                    position.y + halfHeight,
-                ),
+            coordinates = position,
             confidenceRate = confidenceRate,
         )
     }

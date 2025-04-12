@@ -16,8 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.domain
 
-import android.graphics.Point
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
 interface IConditionsResult {
@@ -36,6 +35,6 @@ interface ConditionResult {
 interface ScreenConditionResult : ConditionResult {
     val haveBeenDetected: Boolean
     val condition: ScreenCondition
-    val position: Point
+    val position: Rect
     val confidenceRate: Double
 }

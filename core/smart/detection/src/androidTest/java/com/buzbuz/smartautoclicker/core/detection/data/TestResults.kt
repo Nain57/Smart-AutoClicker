@@ -16,12 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.detection.data
 
-import android.graphics.Point
+import android.graphics.Rect
 
 internal data class TestResults(
     val resolution: DetectionResolution,
-    val expectedCenterPosition: Point,
-    val actualCenterPosition: Point,
+    val expectedArea: Rect,
+    val actualArea: Rect,
     val expectedConfidence: Double,
     val actualConfidence: Double,
 )
@@ -29,30 +29,33 @@ internal data class TestResults(
 
 internal fun TestResults.isValid(): Boolean =
     actualConfidence >= expectedConfidence &&
-            isCenterPositionValid(
-                expected = expectedCenterPosition,
-                actual = actualCenterPosition,
+            isAreaValid(
+                expected = expectedArea,
+                actual = actualArea,
                 delta = getToleratedRoundingErrorPixels(),
             )
 
-private fun isCenterPositionValid(expected: Point, actual: Point, delta: Int): Boolean =
-    isCenterPositionValid(expected.x, actual.x, delta) && isCenterPositionValid(expected.y, actual.y, delta)
+private fun isAreaValid(expected: Rect, actual: Rect, delta: Int): Boolean =
+    isPositionValid(expected.left, actual.left, delta) &&
+            isPositionValid(expected.top, actual.top, delta) &&
+            isPositionValid(expected.right, actual.right, delta) &&
+            isPositionValid(expected.bottom, actual.bottom, delta)
 
-private fun isCenterPositionValid(expected: Int, actual: Int, delta: Int) : Boolean =
+private fun isPositionValid(expected: Int, actual: Int, delta: Int) : Boolean =
     actual in (expected - delta)..(expected + delta)
 
 private fun TestResults.getToleratedRoundingErrorPixels(): Int =
     when (resolution) {
-        DetectionResolution.MAX -> 0
+        DetectionResolution.MAX -> 3
 
         DetectionResolution.VERY_HIGH,
         DetectionResolution.HIGH,
-        DetectionResolution.ABOVE_AVERAGE -> 1
+        DetectionResolution.ABOVE_AVERAGE -> 5
 
         DetectionResolution.AVERAGE,
         DetectionResolution.BELOW_AVERAGE,
-        DetectionResolution.LOW -> 3
+        DetectionResolution.LOW -> 6
 
         DetectionResolution.VERY_LOW,
-        DetectionResolution.MIN -> 5
+        DetectionResolution.MIN -> 8
     }

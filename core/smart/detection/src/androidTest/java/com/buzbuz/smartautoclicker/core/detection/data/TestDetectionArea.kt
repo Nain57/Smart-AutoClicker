@@ -22,29 +22,17 @@ import kotlin.math.min
 
 
 internal fun getDetectionExactArea(screen: TestImage.Screen, condition: TestImage.Condition): Rect =
-    condition.expectedResults[screen]?.let { expectedResults ->
-        val halfConditionWidth = condition.size.x / 2
-        val halfConditionHeight = condition.size.y / 2
-
-        Rect(
-            expectedResults.centerPosition.x - halfConditionWidth,
-            expectedResults.centerPosition.y - halfConditionHeight,
-            expectedResults.centerPosition.x + halfConditionWidth,
-            expectedResults.centerPosition.y + halfConditionHeight,
-        )
-    } ?: throw IllegalArgumentException("Screen $screen is not expected in $condition")
+    condition.expectedResults[screen]?.area
+        ?: throw IllegalArgumentException("Screen $screen is not expected in $condition")
 
 
 internal fun getValidCustomDetectionArea(screen: TestImage.Screen, condition: TestImage.Condition): Rect =
-    condition.expectedResults[screen]?.let { expectedResults ->
-        val halfConditionWidth = condition.size.x / 2
-        val halfConditionHeight = condition.size.y / 2
-
+    condition.expectedResults[screen]?.area?.let { expectedArea ->
         Rect(
-            max(0, expectedResults.centerPosition.x - halfConditionWidth - VALID_CUSTOM_AREA_OFFSET),
-            max(0, expectedResults.centerPosition.y - halfConditionHeight - VALID_CUSTOM_AREA_OFFSET),
-            min(expectedResults.centerPosition.x + halfConditionWidth + VALID_CUSTOM_AREA_OFFSET, screen.size.x),
-            min(expectedResults.centerPosition.y + halfConditionHeight + VALID_CUSTOM_AREA_OFFSET, screen.size.y),
+            max(0, expectedArea.left - VALID_CUSTOM_AREA_OFFSET),
+            max(0, expectedArea.top - VALID_CUSTOM_AREA_OFFSET),
+            min(expectedArea.right + VALID_CUSTOM_AREA_OFFSET, screen.size.x),
+            min(expectedArea.bottom + VALID_CUSTOM_AREA_OFFSET, screen.size.y),
         )
     } ?: throw IllegalArgumentException("Screen $screen is not expected in $condition")
 

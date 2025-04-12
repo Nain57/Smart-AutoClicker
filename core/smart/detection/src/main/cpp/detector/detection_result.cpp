@@ -26,8 +26,6 @@ void DetectionResult::markResultAsDetected() {
 void DetectionResult::reset() {
     detected = false;
     confidence = 0.0;
-    centerX = 0;
-    centerY = 0;
     area.clear();
 }
 
@@ -42,13 +40,3 @@ double DetectionResult::getResultConfidence() const {
 ScalableRoi DetectionResult::getResultArea() const {
     return area;
 }
-
-int DetectionResult::getResultAreaCenterX() const {
-    return centerX;
-}
-
-int DetectionResult::getResultAreaCenterY() const {
-    return centerY;
-}
-
-

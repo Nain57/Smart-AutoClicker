@@ -102,13 +102,13 @@ internal class DebugEngine : ScenarioProcessingListener {
         if (generateReport) sessionRecorder.onProcessingStart()
     }
 
-    override suspend fun onImageEventsProcessingStarted() = mutex.withLock {
+    override suspend fun onScreenEventsProcessingStarted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingStart()
     }
 
-    override suspend fun onImageEventProcessingStarted(event: ScreenEvent) = mutex.withLock {
+    override suspend fun onScreenEventProcessingStarted(event: ScreenEvent) = mutex.withLock {
         if (!generateReport) return
 
         if (currProcEvtId != null)
@@ -149,7 +149,7 @@ internal class DebugEngine : ScenarioProcessingListener {
         currProcCondId = null
     }
 
-    override suspend fun onImageEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) = mutex.withLock {
+    override suspend fun onScreenEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) = mutex.withLock {
         if (generateReport) {
             if (currProcEvtId == null) {
                 Log.w(TAG, "onEventProcessingCompleted called before start")
@@ -166,25 +166,14 @@ internal class DebugEngine : ScenarioProcessingListener {
             return@withLock
         }
         if (instantData) {
-            val halfWidth = conditionResults.condition.captureArea.width() / 2
-            val halfHeight = conditionResults.condition.captureArea.height() / 2
-
-            val coordinates = if (conditionResults.position.x == 0 && conditionResults.position.y == 0) Rect()
-            else Rect(
-                conditionResults.position.x - halfWidth,
-                conditionResults.position.y - halfHeight,
-                conditionResults.position.x + halfWidth,
-                conditionResults.position.y + halfHeight
+            currentInfo.emit(
+                DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
+                    conditionResults.confidenceRate, conditionResults.position)
             )
-
-            val info = DebugInfo(event, conditionResults.condition, conditionResults.haveBeenDetected,
-                conditionResults.position, conditionResults.confidenceRate, coordinates)
-
-            currentInfo.emit(info)
         }
     }
 
-    override suspend fun onImageEventsProcessingCompleted() = mutex.withLock {
+    override suspend fun onScreenEventsProcessingCompleted() = mutex.withLock {
         if (!generateReport) return
 
         imageRecorder.onProcessingEnd()
@@ -207,7 +196,7 @@ internal class DebugEngine : ScenarioProcessingListener {
 
         var eventsTriggeredCount = 0L
         var conditionsDetectedCount = 0L
-        val conditions = mutableListOf<ImageCondition>()
+        val conditions = mutableListOf<ScreenCondition>()
 
         val eventsReport = currentEvents.map { event ->
             event.conditions.let { conditions.addAll(it) }
@@ -220,7 +209,7 @@ internal class DebugEngine : ScenarioProcessingListener {
             event to debugInfo
         }.sortedBy { it.first.priority }
 
-        val conditionReport = HashMap<Long, Pair<ImageCondition, ConditionProcessingDebugInfo>>()
+        val conditionReport = HashMap<Long, Pair<ScreenCondition, ConditionProcessingDebugInfo>>()
         conditions.forEach { condition ->
             val debugInfo = conditionsRecorderMap[condition.id.databaseId]?.let { processingRecorder ->
                 conditionsDetectedCount += processingRecorder.successCount
@@ -250,12 +239,12 @@ internal class DebugEngine : ScenarioProcessingListener {
         _isDebugging.value = false
     }
 
-    override suspend fun onImageEventProcessingCancelled() = mutex.withLock {
+    override suspend fun onScreenEventProcessingCancelled() = mutex.withLock {
         currProcEvtId = null
         currProcCondId = null
     }
 
-    override suspend fun onImageConditionProcessingCancelled() = mutex.withLock {
+    override suspend fun onScreenConditionProcessingCancelled() = mutex.withLock {
         currProcCondId = null
     }
 }

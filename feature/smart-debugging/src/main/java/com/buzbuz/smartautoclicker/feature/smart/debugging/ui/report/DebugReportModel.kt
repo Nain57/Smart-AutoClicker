@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.ConditionProcessingDebugInfo
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebugReport
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -113,7 +114,7 @@ class DebugReportModel @Inject constructor(
             conditionReports = conditionReports,
         )
 
-    private fun createConditionReports(conditions: List<ImageCondition>?, debugReport: DebugReport) = buildList {
+    private fun createConditionReports(conditions: List<ScreenCondition>?, debugReport: DebugReport) = buildList {
         conditions?.forEach { condition ->
             debugReport.conditionsProcessedInfo[condition.id.databaseId]?.let { (condition, condDebugInfo) ->
                 add(newConditionReport(condition.id.databaseId, condition, condDebugInfo))
@@ -121,7 +122,7 @@ class DebugReportModel @Inject constructor(
         }
     }
 
-    private fun newConditionReport(id: Long, condition: ImageCondition, debugInfo: ConditionProcessingDebugInfo) =
+    private fun newConditionReport(id: Long, condition: ScreenCondition, debugInfo: ConditionProcessingDebugInfo) =
         ConditionReport(
             id = id,
             condition = condition,
@@ -165,7 +166,7 @@ sealed class DebugReportItem {
 
 data class ConditionReport(
     val id: Long,
-    val condition: ImageCondition,
+    val condition: ScreenCondition,
     val matchCount: String,
     val processingCount: String,
     val avgProcessingDuration: String,

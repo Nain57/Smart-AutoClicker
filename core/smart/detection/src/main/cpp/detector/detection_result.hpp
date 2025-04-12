@@ -26,10 +26,8 @@ namespace smartautoclicker {
     class DetectionResult {
 
     protected:
-        bool detected;
-        double confidence;
-        int centerX;
-        int centerY;
+        bool detected = false;
+        double confidence = 0.0;
         ScalableRoi area;
 
     public:
@@ -39,8 +37,6 @@ namespace smartautoclicker {
         bool isDetected() const;
         double getResultConfidence() const;
         ScalableRoi getResultArea() const;
-        int getResultAreaCenterX() const;
-        int getResultAreaCenterY() const;
     };
 } // smartautoclicker
 
