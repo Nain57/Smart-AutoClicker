@@ -66,11 +66,9 @@ void TemplateMatcher::parseMatchingResult(cv::Mat* matchingResult, ScreenImage *
 
         // Mark previous results as invalid, if any
         if (!currentMatchingResult.getResultArea().getScaled().empty()) {
-            cv::rectangle(
-                    *matchingResult,
-                    currentMatchingResult.getResultArea().getScaled(),
-                    cv::Scalar(0),
-                    CV_FILLED);
+            currentMatchingResult.invalidateCurrentResult(
+                    matchingResult,
+                    condition->getScaledGrayMat());
         }
 
         // Look for new best match

@@ -41,6 +41,7 @@ namespace smartautoclicker {
                 cv::Mat *matchingResults,
                 double scaleRatio);
 
+
         void markResultAsDetected();
 
         void reset();
@@ -50,6 +51,8 @@ namespace smartautoclicker {
         ScalableRoi getResultArea() const;
         int getResultAreaCenterX() const;
         int getResultAreaCenterY() const;
+
+        void invalidateCurrentResult(cv::Mat *matchingResults, const cv::Mat* condition) const;
     };
 } // smartautoclicker
 
