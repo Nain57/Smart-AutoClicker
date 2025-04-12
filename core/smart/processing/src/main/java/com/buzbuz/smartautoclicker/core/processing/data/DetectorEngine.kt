@@ -235,7 +235,7 @@ class DetectorEngine @Inject constructor(
                 processingJob?.cancelAndJoin()
             }
 
-            detectionProgressListener?.onImageEventProcessingCancelled()
+            detectionProgressListener?.onScreenEventProcessingCancelled()
             displayRecorder.resizeDisplay(context, displayConfigManager.displayConfig.sizePx)
 
             if (_state.value == DetectorState.DETECTING) {

@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.detection
 
-import android.graphics.Point
+import android.graphics.Rect
 import androidx.annotation.Keep
 
 /**
@@ -27,7 +27,7 @@ import androidx.annotation.Keep
  */
 data class DetectionResult(
     var isDetected: Boolean = false,
-    val position: Point = Point(),
+    val position: Rect = Rect(),
     var confidenceRate: Double = 0.0
 ) {
 
@@ -36,9 +36,9 @@ data class DetectionResult(
      * Used by native code only.
      */
     @Keep
-    fun setResults(isDetected: Boolean, centerX: Int, centerY: Int, confidenceRate: Double) {
+    fun setResults(isDetected: Boolean, x: Int, y: Int, width: Int, height: Int, confidenceRate: Double) {
         this.isDetected = isDetected
-        position.set(centerX, centerY)
+        position.set(x, y, x + width, y + height)
         this.confidenceRate = confidenceRate
     }
 }

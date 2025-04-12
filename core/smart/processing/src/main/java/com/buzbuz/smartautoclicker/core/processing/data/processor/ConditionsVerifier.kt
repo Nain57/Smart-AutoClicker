@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
@@ -159,7 +160,7 @@ internal class ConditionsVerifier(
                 isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
                 haveBeenDetected = detectionResult.isDetected,
                 condition = condition,
-                position = Point(detectionResult.position.x, detectionResult.position.y),
+                position = Rect(detectionResult.position),
                 confidenceRate = detectionResult.confidenceRate,
             )
         } ?: NEGATIVE_RESULT
@@ -188,7 +189,7 @@ internal class ConditionsVerifier(
             isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
             haveBeenDetected = detectionResult.isDetected,
             condition = condition,
-            position = Point(detectionResult.position.x, detectionResult.position.y),
+            position = Rect(detectionResult.position),
             confidenceRate = detectionResult.confidenceRate,
         )
 

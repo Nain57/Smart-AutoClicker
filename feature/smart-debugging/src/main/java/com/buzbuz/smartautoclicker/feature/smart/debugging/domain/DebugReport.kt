@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.domain
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
@@ -27,5 +27,5 @@ data class DebugReport(
     val eventsTriggeredCount: Long,
     val eventsProcessedInfo: List<Pair<ScreenEvent, ProcessingDebugInfo>>,
     val conditionsDetectedCount: Long,
-    val conditionsProcessedInfo: Map<Long, Pair<ImageCondition, ConditionProcessingDebugInfo>>,
+    val conditionsProcessedInfo: Map<Long, Pair<ScreenCondition, ConditionProcessingDebugInfo>>,
 )

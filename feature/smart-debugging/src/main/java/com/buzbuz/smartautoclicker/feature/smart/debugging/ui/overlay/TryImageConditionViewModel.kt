@@ -117,19 +117,9 @@ class TryImageConditionViewModel @Inject constructor(
     fun getSelectedThreshold(): Int = userThreshold.value
 
     private fun ScreenConditionResult.toDetectionResultInfo(overriddenThreshold: Int): DetectionResultInfo {
-        val halfWidth = condition.captureArea.width() / 2
-        val halfHeight = condition.captureArea.height() / 2
-
         return DetectionResultInfo(
             positive = (1.0 - (overriddenThreshold / 100.0)) < confidenceRate,
-            coordinates =
-                if (position.x == 0 && position.y == 0) Rect()
-                else Rect(
-                    position.x - halfWidth,
-                    position.y - halfHeight,
-                    position.x + halfWidth,
-                    position.y + halfHeight,
-                ),
+            coordinates = position,
             confidenceRate = confidenceRate,
         )
     }

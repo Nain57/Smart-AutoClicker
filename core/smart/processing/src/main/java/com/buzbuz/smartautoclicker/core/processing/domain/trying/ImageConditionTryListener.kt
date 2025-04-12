@@ -28,7 +28,7 @@ internal class ImageConditionProcessingTryListener(
     private val clientListener: (ScreenConditionResult) -> Unit,
 ) : ScenarioProcessingListener {
 
-    override suspend fun onImageEventProcessingStarted(event: ScreenEvent) {
+    override suspend fun onScreenEventProcessingStarted(event: ScreenEvent) {
         Log.d(TAG, "onImageEventProcessingStarted: $event")
     }
 

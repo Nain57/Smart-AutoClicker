@@ -135,12 +135,7 @@ internal class ActionExecutor(
         }
 
         return Path().apply {
-            moveTo(
-                Point(
-                    result.position.x + (click.clickOffset?.x ?: 0),
-                    result.position.y + (click.clickOffset?.y ?: 0),
-                )
-            )
+            moveTo(Point(result.position.centerX(), result.position.centerY()))
         }
     }
 

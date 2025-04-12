@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
-import android.graphics.Point
+import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
@@ -66,7 +66,7 @@ internal data class ScreenResult(
     override val isFulfilled: Boolean,
     override val haveBeenDetected: Boolean,
     override val condition: ScreenCondition,
-    override val position: Point = Point(),
+    override val position: Rect,
     override var confidenceRate: Double = 0.0,
 ) : ScreenConditionResult
 

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.detection.data
 
 import android.graphics.Point
+import android.graphics.Rect
 import androidx.annotation.RawRes
 
 import com.buzbuz.smartautoclicker.core.detection.test.R
@@ -53,7 +54,7 @@ internal sealed class TestImage(@RawRes val fileRes: Int, val size: Point) {
             size = Point(198, 192),
             expectedResults = mapOf(
                 Screen.TutorialWithTarget to ExpectedDetectionResults(
-                    centerPosition = Point(672, 1696),
+                    area = Rect(573, 1600, 771, 1792),
                     resultsForQualities = getDefaultExpectedResultsForQualities(),
                 ),
             )
@@ -62,6 +63,6 @@ internal sealed class TestImage(@RawRes val fileRes: Int, val size: Point) {
 }
 
 internal data class ExpectedDetectionResults(
-    val centerPosition: Point,
+    val area: Rect,
     val resultsForQualities: Map<DetectionResolution, Double>,
 )

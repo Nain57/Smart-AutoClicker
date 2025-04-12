@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.detection
 
 import android.content.Context
-import android.graphics.Point
 import android.graphics.Rect
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -104,6 +103,7 @@ class DetectionTests {
         val conditionImage = TestImage.Condition.TutorialTargetBlue
         val exactArea = getDetectionExactArea(screenImage, conditionImage)
 
+        println("Detector: $exactArea")
         // When
         val results = testedDetector.executeImageDetectionTest(
             context = context,
@@ -194,8 +194,8 @@ class DetectionTests {
 
                 add(TestResults(
                     resolution = quality,
-                    expectedCenterPosition = expectedResults.centerPosition,
-                    actualCenterPosition = Point(results.position),
+                    expectedArea = expectedResults.area,
+                    actualArea = results.position,
                     expectedConfidence = expectedConfidence,
                     actualConfidence = results.confidenceRate,
                 ))
@@ -217,7 +217,7 @@ class DetectionTests {
 
     private fun TestResults.print() {
         println("$resolution(${resolution.value}): Confidence=$actualConfidence/$expectedConfidence; " +
-                "Position=$actualCenterPosition/$expectedCenterPosition}; isValid=${isValid()}")
+                "Position=$actualArea/$expectedArea}; isValid=${isValid()}")
 
     }
 }

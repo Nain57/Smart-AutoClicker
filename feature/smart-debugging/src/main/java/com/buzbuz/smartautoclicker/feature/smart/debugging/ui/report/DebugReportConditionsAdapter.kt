@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemDebugReportConditionBinding
 
@@ -77,15 +78,18 @@ class ConditionDebugInfoViewHolder(
                 conditionReport.processingCount,
             )
 
-            bitmapProvider(conditionReport.condition) { bitmap ->
-                if (bitmap != null) {
-                    conditionImage.setImageBitmap(bitmap)
-                } else {
-                    conditionImage.setImageDrawable(
-                        ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
-                            setTint(Color.RED)
-                        }
-                    )
+            //TODO: Handle TextCondition use case
+            if (conditionReport.condition is ImageCondition) {
+                bitmapProvider(conditionReport.condition) { bitmap ->
+                    if (bitmap != null) {
+                        conditionImage.setImageBitmap(bitmap)
+                    } else {
+                        conditionImage.setImageDrawable(
+                            ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
+                                setTint(Color.RED)
+                            }
+                        )
+                    }
                 }
             }
         }

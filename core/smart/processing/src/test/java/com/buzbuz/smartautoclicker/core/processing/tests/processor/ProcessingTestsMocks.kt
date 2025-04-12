@@ -85,7 +85,7 @@ internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
     val results = mutableListOf<Boolean>()
 
     events.forEach { event ->
-        `when`(onImageEventProcessingCompleted(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
+        `when`(onScreenEventProcessingCompleted(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
             results.add((invocationOnMock.arguments[1] as ConditionsResult).fulfilled == true)
             Unit
         }

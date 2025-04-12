@@ -25,7 +25,7 @@ internal class ImageEventProcessingTryListener(
     private val clientListener: (IConditionsResult) -> Unit,
 ) : ScenarioProcessingListener {
 
-    override suspend fun onImageEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) {
+    override suspend fun onScreenEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) {
         if (event.id != triedItem.event.id) return
         clientListener(results)
     }

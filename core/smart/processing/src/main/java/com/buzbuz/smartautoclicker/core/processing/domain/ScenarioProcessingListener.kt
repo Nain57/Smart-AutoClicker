@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
+
 interface ScenarioProcessingListener {
 
     suspend fun onSessionStarted(
@@ -35,18 +36,18 @@ interface ScenarioProcessingListener {
     suspend fun onTriggerEventProcessingStarted(event: TriggerEvent) = Unit
     suspend fun onTriggerEventProcessingCompleted(event: TriggerEvent, results: List<ConditionResult>) = Unit
 
-    suspend fun onImageEventsProcessingStarted() = Unit
+    suspend fun onScreenEventsProcessingStarted() = Unit
 
-    suspend fun onImageEventProcessingStarted(event: ScreenEvent) = Unit
+    suspend fun onScreenEventProcessingStarted(event: ScreenEvent) = Unit
 
     suspend fun onScreenConditionProcessingStarted(condition: ScreenCondition) = Unit
     suspend fun onScreenConditionProcessingCompleted(result: ConditionResult) = Unit
-    suspend fun onImageConditionProcessingCancelled() = Unit
+    suspend fun onScreenConditionProcessingCancelled() = Unit
 
-    suspend fun onImageEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) = Unit
-    suspend fun onImageEventProcessingCancelled() = Unit
+    suspend fun onScreenEventProcessingCompleted(event: ScreenEvent, results: IConditionsResult) = Unit
+    suspend fun onScreenEventProcessingCancelled() = Unit
 
-    suspend fun onImageEventsProcessingCompleted() = Unit
+    suspend fun onScreenEventsProcessingCompleted() = Unit
 
     suspend fun onSessionEnded() = Unit
 }

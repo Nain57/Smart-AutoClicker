@@ -110,13 +110,13 @@ internal class ScenarioProcessor(
         processingState.clearIterationState()
 
         // Handle the image detection
-        progressListener?.onImageEventsProcessingStarted()
+        progressListener?.onScreenEventsProcessingStarted()
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents()) { imageEvent, results ->
                 actionExecutor.executeActions(imageEvent, results)
             }
         }
-        progressListener?.onImageEventsProcessingCompleted()
+        progressListener?.onScreenEventsProcessingCompleted()
 
         // Loop is completed
         actionExecutor.onScenarioLoopFinished()
@@ -161,9 +161,9 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (imageEvent.conditions.isEmpty()) continue
 
-            progressListener?.onImageEventProcessingStarted(imageEvent)
+            progressListener?.onScreenEventProcessingStarted(imageEvent)
             val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
-            progressListener?.onImageEventProcessingCompleted(imageEvent, results)
+            progressListener?.onScreenEventProcessingCompleted(imageEvent, results)
 
             if (results.fulfilled == true) {
                 onFulfilled(imageEvent, results)
