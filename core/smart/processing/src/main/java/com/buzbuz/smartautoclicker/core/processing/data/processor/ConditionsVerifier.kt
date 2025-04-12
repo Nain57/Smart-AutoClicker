@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.graphics.Bitmap
 import android.graphics.Point
 
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
@@ -38,7 +39,7 @@ import kotlinx.coroutines.yield
 
 internal class ConditionsVerifier(
     private val state: ProcessingState,
-    private val imageDetector: ImageDetector,
+    private val screenDetector: ScreenDetector,
     private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
     private val progressListener: ScenarioProcessingListener? = null,
 ) {
@@ -84,6 +85,7 @@ internal class ConditionsVerifier(
     private suspend fun verifyCondition(condition: Condition): ConditionResult =
         when (condition) {
             is ImageCondition -> verifyImageCondition(condition)
+            is TextCondition -> verifyTextCondition(condition)
             is TriggerCondition -> if (verifyTriggerCondition(condition)) POSITIVE_RESULT else NEGATIVE_RESULT
         }
 
@@ -135,25 +137,25 @@ internal class ConditionsVerifier(
     }
 
     private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
-        progressListener?.onImageConditionProcessingStarted(condition)
+        progressListener?.onScreenConditionProcessingStarted(condition)
 
         val result = bitmapSupplier(condition)?.let { conditionBitmap ->
             val detectionResult = when (condition.detectionType) {
                 EXACT ->
-                    imageDetector.detectCondition(conditionBitmap, condition.captureArea, condition.threshold)
+                    screenDetector.detectCondition(conditionBitmap, condition.captureArea, condition.threshold)
 
                 WHOLE_SCREEN ->
-                    imageDetector.detectCondition(conditionBitmap, condition.threshold)
+                    screenDetector.detectCondition(conditionBitmap, condition.threshold)
 
                 IN_AREA ->
                     condition.detectionArea?.let { area ->
-                        imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
+                        screenDetector.detectCondition(conditionBitmap, area, condition.threshold)
                     } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
 
                 else -> throw IllegalArgumentException("Unexpected detection type")
             }
 
-            ImageResult(
+            ScreenResult(
                 isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
                 haveBeenDetected = detectionResult.isDetected,
                 condition = condition,
@@ -162,7 +164,35 @@ internal class ConditionsVerifier(
             )
         } ?: NEGATIVE_RESULT
 
-        progressListener?.onImageConditionProcessingCompleted(result)
+        progressListener?.onScreenConditionProcessingCompleted(result)
+        return result
+    }
+
+    private suspend fun verifyTextCondition(condition: TextCondition): ConditionResult {
+        progressListener?.onScreenConditionProcessingStarted(condition)
+
+        val detectionResult = when (condition.detectionType) {
+            EXACT,
+            WHOLE_SCREEN ->
+                screenDetector.detectText(condition.textToDetect, condition.threshold)
+
+            IN_AREA ->
+                condition.detectionArea?.let { area ->
+                    screenDetector.detectText(condition.textToDetect, area, condition.threshold)
+                } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
+
+            else -> throw IllegalArgumentException("Unexpected detection type")
+        }
+
+        val result = ScreenResult(
+            isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
+            haveBeenDetected = detectionResult.isDetected,
+            condition = condition,
+            position = Point(detectionResult.position.x, detectionResult.position.y),
+            confidenceRate = detectionResult.confidenceRate,
+        )
+
+        progressListener?.onScreenConditionProcessingCompleted(result)
         return result
     }
 }

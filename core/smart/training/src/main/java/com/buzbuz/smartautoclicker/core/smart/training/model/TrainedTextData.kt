@@ -16,9 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.training.model
 
-data class TrainedTextDataState(
+data class TrainedTextData(
     val dataFolder: String,
-    val languages: Map<TrainedTextLanguage, TrainedTextDataSyncState>,
+    val languagesCodes: String,
 )
 
 sealed class TrainedTextDataSyncState {

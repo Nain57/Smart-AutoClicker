@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":core:common:settings"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
+    implementation(project(":core:smart:training"))
 
     testImplementation(libs.kotlinx.coroutines.test)
 }

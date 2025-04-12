@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.tests.processor
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -42,8 +42,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 import org.robolectric.annotation.Config
 
 
@@ -67,7 +65,7 @@ class ProcessingTests {
     private val testsData: ProcessingTestData = ProcessingTestData
 
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
-    @Mock private lateinit var mockImageDetector: ImageDetector
+    @Mock private lateinit var mockScreenDetector: ScreenDetector
     @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
     @Mock private lateinit var mockProcessingListener: ScenarioProcessingListener
@@ -82,7 +80,7 @@ class ProcessingTests {
             randomize = testScenario.scenario.randomize,
             imageEvents = testScenario.imageEvents,
             triggerEvents = testScenario.triggerEvents,
-            imageDetector = mockImageDetector,
+            screenDetector = mockScreenDetector,
             androidExecutor = mockAndroidExecutor,
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             onStopRequested = mockEndListener::onStopRequested,
@@ -169,7 +167,7 @@ class ProcessingTests {
             mockBitmapProviding(testConditionEvt3)
         }
         // Mock that all bitmaps are matching
-        mockImageDetector.mockAllDetectionResult(
+        mockScreenDetector.mockAllDetectionResult(
             testConditions = listOf(testConditionEvt1, testConditionEvt2, testConditionEvt3),
             areAllDetected = true,
         )
@@ -262,7 +260,7 @@ class ProcessingTests {
             mockBitmapProviding(testConditionEvt3)
         }
         // Mock detection results for each condition.
-        mockImageDetector.apply {
+        mockScreenDetector.apply {
             mockDetectionResult(testConditionEvt1, true)
             mockDetectionResult(testConditionEvt2, true)
         }
@@ -277,7 +275,7 @@ class ProcessingTests {
             mockProcessingListener.verifyImageConditionProcessed(testConditionEvt1, true)
             mockProcessingListener.verifyImageConditionProcessed(testConditionEvt2, true)
         }
-        mockImageDetector.verifyConditionNeverProcessed(testConditionEvt3)
+        mockScreenDetector.verifyConditionNeverProcessed(testConditionEvt3)
     }
 
     /**
@@ -371,7 +369,7 @@ class ProcessingTests {
             mockBitmapProviding(testConditionEvt2)
         }
         // Mock detection results for each condition.
-        mockImageDetector.apply {
+        mockScreenDetector.apply {
             mockDetectionResult(testConditionEvt1, true)
             mockDetectionResult(testConditionEvt2, false)
         }

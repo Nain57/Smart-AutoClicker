@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
@@ -42,9 +43,11 @@ import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionT
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
+import com.buzbuz.smartautoclicker.core.smart.training.TrainingRepository
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextData
+
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -70,6 +73,7 @@ class DetectionRepository @Inject constructor(
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val scenarioRepository: IRepository,
     private val detectorEngine: DetectorEngine,
+    private val trainingDataRepository: TrainingRepository,
 ): Dumpable {
 
     private val coroutineScopeMain: CoroutineScope =
@@ -144,12 +148,14 @@ class DetectionRepository @Inject constructor(
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)
         val triggerEvents = scenarioRepository.getTriggerEvents(id)
+        val trainedTextData = events.getRequiredTrainedTextData() ?: return
 
         detectorEngine.startDetection(
             context = context,
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
+            trainedTextData = trainedTextData,
             bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = progressListener,
         )
@@ -194,7 +200,7 @@ class DetectionRepository @Inject constructor(
         context: Context,
         scenario: Scenario,
         condition: ImageCondition,
-        listener: (ImageConditionResult) -> Unit,
+        listener: (ScreenConditionResult) -> Unit,
     ) {
         val triedElement = ImageConditionTry(scenario, condition)
         tryElement(
@@ -214,11 +220,14 @@ class DetectionRepository @Inject constructor(
 
     private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
         Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
+        val trainedTextData = elementTry.imageEvents.getRequiredTrainedTextData() ?: return
+
         detectorEngine.startDetection(
             context = context,
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
+            trainedTextData = trainedTextData,
             bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = listener,
         )
@@ -236,6 +245,20 @@ class DetectionRepository @Inject constructor(
                 .append("detectionState=${detectionState.dumpWithTimeout() ?: DetectionState.INACTIVE}; ")
                 .println()
         }
+    }
+
+    private fun List<ImageEvent>.getRequiredTrainedTextData(): TrainedTextData? {
+        val requiredLanguages = buildSet {
+            this@getRequiredTrainedTextData.forEach { screenEvent ->
+                screenEvent.conditions.forEach { screenCondition ->
+                    if (screenCondition is TextCondition) {
+                        add(screenCondition.textLanguage)
+                    }
+                }
+            }
+        }
+
+        return trainingDataRepository.getTrainedTextDataForLanguages(requiredLanguages)
     }
 }
 

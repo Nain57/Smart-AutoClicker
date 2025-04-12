@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
-import com.buzbuz.smartautoclicker.core.processing.domain.ImageConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.formatConfidenceRate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -98,7 +98,7 @@ class TryElementViewModel @Inject constructor(
             triedElement.value?.let { element ->
                 detectionRepository.tryEvent(context, element.scenario, element.imageEvent) { results ->
                     tryResults.value = results.getAllResults().mapNotNull { result ->
-                        if (result is ImageConditionResult) result.toDetectionResultInfo()
+                        if (result is ScreenConditionResult) result.toDetectionResultInfo()
                         else null
                     }
                 }
@@ -114,7 +114,7 @@ class TryElementViewModel @Inject constructor(
         }
     }
 
-    private fun ImageConditionResult.toDetectionResultInfo(): DetectionResultInfo {
+    private fun ScreenConditionResult.toDetectionResultInfo(): DetectionResultInfo {
         val halfWidth = condition.captureArea.width() / 2
         val halfHeight = condition.captureArea.height() / 2
 

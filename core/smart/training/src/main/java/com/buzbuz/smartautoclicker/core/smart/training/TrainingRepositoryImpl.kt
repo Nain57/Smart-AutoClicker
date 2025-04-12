@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.smart.training.data.TextTrainingFileDown
 import com.buzbuz.smartautoclicker.core.smart.training.data.TextTrainingLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.training.data.TextTrainingRemoteDataSource
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextData
-import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataState
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataSyncState
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 
 import kotlinx.coroutines.flow.Flow
@@ -40,14 +40,26 @@ internal class TrainingRepositoryImpl @Inject constructor(
 ) : TrainingRepository {
 
 
-    override val trainedTextLanguages: Flow<TrainedTextData> = textTrainingLocalDataSrc.trainingDataFiles
-        .combine(textTrainingRemoteDataSrc.currentDownloadState) { languagesFiles, downloadState ->
-            TrainedTextData(
-                dataFolder = textTrainingLocalDataSrc.getDataDirectoryPath(),
-                languages = getLanguages(languagesFiles, downloadState),
-            )
+    override val trainedTextLanguagesSyncState: Flow<Map<TrainedTextLanguage, TrainedTextDataSyncState>> =
+        textTrainingLocalDataSrc.trainingDataFiles
+            .combine(textTrainingRemoteDataSrc.currentDownloadState) { languagesFiles, downloadState ->
+                getLanguages(languagesFiles, downloadState)
+            }
+
+
+    override fun getTrainedTextDataForLanguages(languages: Set<TrainedTextLanguage>): TrainedTextData? {
+        val missingTrainingData =
+            languages.find { language -> textTrainingLocalDataSrc.getLanguageFile(language) == null } != null
+        if (missingTrainingData) {
+            Log.e(TAG, "Can't get trained text data for languages $languages")
+            return null
         }
 
+        return TrainedTextData(
+            textTrainingLocalDataSrc.getDataDirectoryPath(),
+            languages.toTesseractLangCodes(),
+        )
+    }
 
     override fun downloadTextLanguageDataFile(language: TrainedTextLanguage) {
         val languageFile = textTrainingLocalDataSrc.getLanguageFile(language)
@@ -70,24 +82,33 @@ internal class TrainingRepositoryImpl @Inject constructor(
     private fun getLanguages(
         files: Map<TrainedTextLanguage, File>,
         dlState: TextTrainingFileDownload?,
-    ): Map<TrainedTextLanguage, TrainedTextDataState> =
+    ): Map<TrainedTextLanguage, TrainedTextDataSyncState> =
         buildMap {
             TrainedTextLanguage.entries.forEach { language ->
                 when {
                     files.contains(language) ->
-                        put(language, TrainedTextDataState.Downloaded)
+                        put(language, TrainedTextDataSyncState.Downloaded)
 
                     dlState != null && dlState is TextTrainingFileDownload.Downloading && dlState.language == language ->
-                        put(language, TrainedTextDataState.Downloading(dlState.progress))
+                        put(language, TrainedTextDataSyncState.Downloading(dlState.progress))
 
                     dlState != null && dlState is TextTrainingFileDownload.Error && dlState.language == language ->
-                        put(language, TrainedTextDataState.DownloadError)
+                        put(language, TrainedTextDataSyncState.DownloadError)
 
                     else ->
-                        put(language, TrainedTextDataState.Absent)
+                        put(language, TrainedTextDataSyncState.Absent)
                 }
             }
         }
+
+    /**
+     * Format the collection of languages into the tesseract language format.
+     * This will happen the ISO 639-1 language code with a + between them.
+     *
+     * Ex: [eng,fra,ita] = "eng+fra+ita"
+     */
+    private fun Collection<TrainedTextLanguage>.toTesseractLangCodes(): String =
+        joinToString(separator = "+")
 }
 
 private const val TAG = "TrainingRepositoryImpl"

@@ -20,7 +20,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.annotation.VisibleForTesting
 
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -33,7 +33,7 @@ import kotlinx.coroutines.yield
 /**
  * Process a screen image and tries to detect the list of [ImageEvent] on it.
  *
- * @param imageDetector the detector for images.
+ * @param screenDetector the detector for images.
  * @param detectionQuality the quality of the detection.
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
  * @param imageEvents the list of scenario events to be detected.
@@ -44,7 +44,7 @@ import kotlinx.coroutines.yield
  */
 internal class ScenarioProcessor(
     private val processingTag: String,
-    private val imageDetector: ImageDetector,
+    private val screenDetector: ScreenDetector,
     private val detectionQuality: Int,
     randomize: Boolean,
     imageEvents: List<ImageEvent>,
@@ -59,7 +59,7 @@ internal class ScenarioProcessor(
     /** Handle the processing state of the scenario. */
     @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
     /** Check conditions and tell if they are fulfilled. */
-    private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier, progressListener)
+    private val conditionsVerifier = ConditionsVerifier(processingState, screenDetector, bitmapSupplier, progressListener)
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(
         androidExecutor = androidExecutor,
@@ -151,10 +151,10 @@ internal class ScenarioProcessor(
     ) {
         // Set the current screen image
         if (invalidateScreenMetrics) {
-            imageDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())
+            screenDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())
             invalidateScreenMetrics = false
         }
-        imageDetector.setupDetection(screenFrame)
+        screenDetector.setupDetection(screenFrame)
 
         // Check all events
         for (imageEvent in events) {

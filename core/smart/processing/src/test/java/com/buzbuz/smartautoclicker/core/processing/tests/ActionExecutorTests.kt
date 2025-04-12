@@ -23,7 +23,6 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
@@ -37,7 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ScreenResult
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
 
@@ -92,7 +91,7 @@ class ActionExecutorTests {
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
-            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, "path", Rect(), 10, EXACT, true, null)
+            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, 10, true, EXACT, null,"path", Rect())
     }
 
     @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
@@ -154,7 +153,7 @@ class ActionExecutorTests {
         val results = ConditionsResult()
         results.addResult(
             condition.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = true, condition, Point(15, 15), 100.0)
+            ScreenResult(isFulfilled = true, haveBeenDetected = true, condition, Point(15, 15), 100.0)
         )
 
         actionExecutor.executeActions(event, results)
@@ -178,11 +177,11 @@ class ActionExecutorTests {
         val results = ConditionsResult()
         results.addResult(
             conditionValid.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = true, conditionValid, Point(15, 15), 100.0)
+            ScreenResult(isFulfilled = true, haveBeenDetected = true, conditionValid, Point(15, 15), 100.0)
         )
         results.addResult(
             conditionOther.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = false, conditionOther, Point(45, 45), 98.0)
+            ScreenResult(isFulfilled = true, haveBeenDetected = false, conditionOther, Point(45, 45), 98.0)
         )
 
         actionExecutor.executeActions(event, results)

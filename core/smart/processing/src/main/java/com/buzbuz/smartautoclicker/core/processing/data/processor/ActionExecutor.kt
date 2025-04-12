@@ -124,8 +124,8 @@ internal class ActionExecutor(
         if (event !is ImageEvent) return null
 
         val result = when {
-            event.conditionOperator == OR -> results?.getFirstImageDetectedResult()
-            click.clickOnConditionId != null -> results?.getImageConditionResult(click.clickOnConditionId!!.databaseId)
+            event.conditionOperator == OR -> results?.getFirstScreenDetectedResult()
+            click.clickOnConditionId != null -> results?.getScreenConditionResult(click.clickOnConditionId!!.databaseId)
             else -> null
         }
 
