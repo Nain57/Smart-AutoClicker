@@ -27,7 +27,7 @@ import androidx.annotation.Keep
  * Debug flavour of the library is build against build artifacts of OpenCv in the debug folder.
  * Release flavour of the library is build against the sources of the OpenCv project, downloaded from github.
  */
-class NativeDetector private constructor() : ImageDetector {
+class NativeDetector private constructor() : ScreenDetector {
 
     companion object {
         fun newInstance(): NativeDetector? = try {
@@ -60,10 +60,10 @@ class NativeDetector private constructor() : ImageDetector {
         deleteDetector()
     }
 
-    override fun setTextMatchingLanguages(langCodes: List<String>) {
+    override fun setTextMatchingLanguages(langCodes: String, trainingFilesPath: String) {
         if (isClosed) return
 
-        setLanguages(langCodes.toTypedArray())
+        setLanguages(langCodes, trainingFilesPath)
     }
 
     override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
@@ -125,7 +125,7 @@ class NativeDetector private constructor() : ImageDetector {
     private external fun deleteDetector()
 
     /** Set the languages supported by the text matching. */
-    private external fun setLanguages(langCodes: Array<String>)
+    private external fun setLanguages(langCodes: String, trainingFilesPath: String)
 
     /**
      * Native method for screen metrics setup.

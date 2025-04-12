@@ -34,7 +34,6 @@ using namespace smartautoclicker;
  * all our native methods wrappers to recover the object before invoking it's methods.
  */
 Detector *getDetectorFromJavaRef(JNIEnv *env, jobject self);
-std::vector<std::string> getStrings(JNIEnv* env, jobjectArray jStrArray);
 cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
 void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result);
 

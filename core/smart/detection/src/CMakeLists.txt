@@ -59,7 +59,6 @@ add_library( # Sets the name of the library.
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp
         main/cpp/jni/jni_detection_result.cpp
-        main/cpp/jni/jni_string_array.cpp
         main/cpp/logs/log.cpp
         main/cpp/logs/log.h
         main/cpp/scaling/scaling.hpp

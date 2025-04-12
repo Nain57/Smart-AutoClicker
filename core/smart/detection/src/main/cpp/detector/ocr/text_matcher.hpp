@@ -38,9 +38,10 @@ namespace smartautoclicker {
 
         /**
          * Set the languages supported for text detection.
-         * @param langCodes A list of ISO 639-1 language codes (e.g. "eng", "fra", "jpn").
+         * @param langCodes A list of ISO 639-1 language codes (e.g. "eng", "fra", "jpn"), separated by '+'
+         * @param dataPath the path to the training data.
          */
-        void setLanguages(const std::vector<std::string>& langCodes);
+        void setLanguages(const char *langCodes, const char *dataPath);
 
         /**
          * Performs OCR on the given grayscale image within the specified ROI using the provided list of languages.

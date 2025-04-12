@@ -37,9 +37,16 @@ extern "C" {
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setLanguages(
             JNIEnv *env,
             jobject self,
-            jobjectArray langCodes
+            jstring langCodes,
+            jstring trainingFilesPath
     ) {
-        getDetectorFromJavaRef(env, self)->setTextLanguages(getStrings(env, langCodes));
+        const char *charLangCodes = env->GetStringUTFChars(langCodes, 0);
+        const char *charFilesPath = env->GetStringUTFChars(trainingFilesPath, 0);
+
+        getDetectorFromJavaRef(env, self)->setTextLanguages(charLangCodes, charFilesPath);
+
+        env->ReleaseStringUTFChars(langCodes, charLangCodes);
+        env->ReleaseStringUTFChars(trainingFilesPath, charFilesPath);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_updateScreenMetrics(

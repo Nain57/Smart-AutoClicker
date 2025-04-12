@@ -16,14 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.training.model
 
-data class TrainedTextData(
+data class TrainedTextDataState(
     val dataFolder: String,
-    val languages: Map<TrainedTextLanguage, TrainedTextDataState>,
+    val languages: Map<TrainedTextLanguage, TrainedTextDataSyncState>,
 )
 
-sealed class TrainedTextDataState {
-    data object Absent : TrainedTextDataState()
-    data class Downloading(val progress: Int) : TrainedTextDataState()
-    data object Downloaded : TrainedTextDataState()
-    data object DownloadError : TrainedTextDataState()
+sealed class TrainedTextDataSyncState {
+    data object Absent : TrainedTextDataSyncState()
+    data class Downloading(val progress: Int) : TrainedTextDataSyncState()
+    data object Downloaded : TrainedTextDataSyncState()
+    data object DownloadError : TrainedTextDataSyncState()
 }

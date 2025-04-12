@@ -45,7 +45,7 @@ import org.junit.runner.RunWith
 class DetectionTests {
 
     private lateinit var context: Context
-    private lateinit var testedDetector: ImageDetector
+    private lateinit var testedDetector: ScreenDetector
 
     @Before
     fun setUp() {
@@ -173,7 +173,7 @@ class DetectionTests {
         results.verify()
     }
 
-    private fun ImageDetector.executeImageDetectionTest(
+    private fun ScreenDetector.executeImageDetectionTest(
         context: Context,
         screenImage: TestImage.Screen,
         conditionImage: TestImage.Condition,

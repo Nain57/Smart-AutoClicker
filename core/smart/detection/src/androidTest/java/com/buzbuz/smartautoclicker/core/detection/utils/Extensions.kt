@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.detection.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.ScreenDetector
 import com.buzbuz.smartautoclicker.core.detection.data.TestImage
 import java.nio.ByteBuffer
 import java.nio.channels.Channels
@@ -41,7 +41,7 @@ internal fun Context.loadTestBitmap(image: TestImage) : Bitmap {
     }
 }
 
-internal fun ImageDetector.setScreenMetrics(screenBitmap: Bitmap, quality: Double) {
+internal fun ScreenDetector.setScreenMetrics(screenBitmap: Bitmap, quality: Double) {
     setScreenMetrics(
         metricsKey = "testTag",
         screenBitmap = screenBitmap,
