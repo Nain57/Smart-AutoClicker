@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief
 
 import android.view.LayoutInflater
 import android.view.View
@@ -37,8 +37,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
@@ -179,7 +179,7 @@ class ImageConditionsBriefMenu(
     private fun showNewCaptureOverlay() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = CaptureMenu { capturedCondition ->
+            newOverlay = ImageConditionCaptureMenu { capturedCondition ->
                 showImageConditionConfigDialog(capturedCondition)
             },
             hideCurrent = true,

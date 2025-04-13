@@ -37,10 +37,10 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.To
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionAreaSelectorViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ImageConditionAreaSelectorViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ImageConditionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
@@ -64,7 +64,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun actionTypeSelectionViewModel(): ActionTypeSelectionViewModel
     fun activitySelectionViewModel(): ActivitySelectionModel
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel
-    fun captureViewModel(): CaptureViewModel
+    fun captureViewModel(): ImageConditionCaptureViewModel
     fun changeCounterViewModel(): ChangeCounterViewModel
     fun clickOffsetViewModel(): ClickOffsetViewModel
     fun clickViewModel(): ClickViewModel

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen
 
 import android.graphics.Rect
 import android.view.LayoutInflater
@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 
 import kotlinx.coroutines.launch
 
-class ImageConditionAreaSelectorMenu(
+class ScreenConditionAreaSelectorMenu(
     private val onAreaSelected: (Rect) -> Unit
 ) : OverlayMenu() {
 
