@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
  *
  * @param onConditionSelected listener upon confirmation of the area to be capture to create the event condition.
  */
-class CaptureMenu(
+class ImageConditionCaptureMenu(
     private val onConditionSelected: (ImageCondition) -> Unit
 ) : OverlayMenu() {
 
@@ -61,7 +61,7 @@ class CaptureMenu(
     }
 
     /** The view model for this menu. */
-    private val viewModel: CaptureViewModel by viewModels(
+    private val viewModel: ImageConditionCaptureViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { captureViewModel() },
     )

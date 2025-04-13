@@ -30,7 +30,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
@@ -58,7 +57,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -266,7 +265,7 @@ class ClickDialog(
     private fun showConditionSelector() =
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionSelectionDialog(
+            newOverlay = ScreenConditionSelectionDialog(
                 conditionList = viewModel.availableConditions.value,
                 bitmapProvider = viewModel::getConditionBitmap,
                 onConditionSelected = viewModel::setConditionToBeClicked,

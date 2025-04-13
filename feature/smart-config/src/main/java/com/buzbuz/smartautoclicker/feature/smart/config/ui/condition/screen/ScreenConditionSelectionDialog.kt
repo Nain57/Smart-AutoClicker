@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater
@@ -44,7 +44,7 @@ import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.Job
 
-class ImageConditionSelectionDialog(
+class ScreenConditionSelectionDialog(
     private val conditionList: List<UiImageCondition>,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ImageCondition) -> Unit,
