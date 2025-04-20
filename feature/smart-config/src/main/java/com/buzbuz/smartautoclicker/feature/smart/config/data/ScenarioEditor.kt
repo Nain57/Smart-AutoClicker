@@ -18,13 +18,13 @@ package com.buzbuz.smartautoclicker.feature.smart.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
-import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ScreenEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -55,13 +55,13 @@ internal class ScenarioEditor {
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
-    private val imageEventsEditor = ImageEventsEditor(::deleteAllReferencesToEvent, editedScenario)
+    private val screenEventsEditor = ScreenEventsEditor(::deleteAllReferencesToEvent, editedScenario)
     private val triggerEventsEditor = TriggerEventsEditor(::deleteAllReferencesToEvent, editedScenario)
 
     val currentEventEditor: StateFlow<EventsEditor<Event, Condition>?> = _currentEventEditor
 
     val allEditedEvents: Flow<List<Event>> =
-        combine(imageEventsEditor.allEditedItems, triggerEventsEditor.allEditedItems) { imageEvent, triggerEvents ->
+        combine(screenEventsEditor.allEditedItems, triggerEventsEditor.allEditedItems) { imageEvent, triggerEvents ->
             buildList {
                 addAll(imageEvent)
                 addAll(triggerEvents)
@@ -72,8 +72,8 @@ internal class ScenarioEditor {
         eventsEditor?.editedItem ?: emptyFlow()
     }
 
-    val editedScreenEventListState: Flow<EditedListState<ScreenEvent>> = imageEventsEditor.listState
-    val editedScreenEventState: Flow<EditedElementState<ScreenEvent>> = imageEventsEditor.editedItemState
+    val editedScreenEventListState: Flow<EditedListState<ScreenEvent>> = screenEventsEditor.listState
+    val editedScreenEventState: Flow<EditedElementState<ScreenEvent>> = screenEventsEditor.editedItemState
 
     val editedTriggerEventListState: Flow<EditedListState<TriggerEvent>> = triggerEventsEditor.listState
     val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> = triggerEventsEditor.editedItemState
@@ -82,14 +82,14 @@ internal class ScenarioEditor {
         referenceScenario.value = scenario
         _editedScenario.value = scenario
 
-        imageEventsEditor.startEdition(screenEvents)
+        screenEventsEditor.startEdition(screenEvents)
         triggerEventsEditor.startEdition(triggerEvents)
     }
 
     @Suppress("UNCHECKED_CAST")
     fun startEventEdition(event: Event) {
         _currentEventEditor.value = when (event) {
-            is ScreenEvent -> imageEventsEditor
+            is ScreenEvent -> screenEventsEditor
             is TriggerEvent -> triggerEventsEditor
         } as EventsEditor<Event, Condition>
 
@@ -102,8 +102,8 @@ internal class ScenarioEditor {
     fun updateActionsOrder(actions: List<Action>) =
         currentEventEditor.value?.actionsEditor?.updateList(actions)
 
-    fun updateImageConditionsOrder(imageConditions: List<ImageCondition>) =
-        currentEventEditor.value?.conditionsEditor?.updateList(imageConditions)
+    fun updateImageConditionsOrder(screenConditions: List<ScreenCondition>) =
+        currentEventEditor.value?.conditionsEditor?.updateList(screenConditions)
 
     fun upsertEditedEvent() =
         currentEventEditor.value?.upsertEditedItem()
@@ -117,7 +117,7 @@ internal class ScenarioEditor {
     }
 
     fun stopEdition() {
-        imageEventsEditor.stopEdition()
+        screenEventsEditor.stopEdition()
         triggerEventsEditor.stopEdition()
 
         referenceScenario.value = null
@@ -129,12 +129,12 @@ internal class ScenarioEditor {
         _editedScenario.value = item
     }
 
-    fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {
-        imageEventsEditor.updateList(newEvents)
+    fun updateScreenEventsOrder(newEvents: List<ScreenEvent>) {
+        screenEventsEditor.updateList(newEvents)
     }
 
     fun getAllEditedEvents(): List<Event> = buildList {
-        imageEventsEditor.editedList.value?.let { addAll(it) }
+        screenEventsEditor.editedList.value?.let { addAll(it) }
         triggerEventsEditor.editedList.value?.let { addAll(it) }
     }
 
@@ -142,10 +142,10 @@ internal class ScenarioEditor {
         currentEventEditor.value?.editedItem?.value
 
     fun getEditedImageEventsCount(): Int =
-        imageEventsEditor.editedList.value?.size ?: 0
+        screenEventsEditor.editedList.value?.size ?: 0
 
     private fun deleteAllReferencesToEvent(event: Event) {
-        imageEventsEditor.deleteAllEventToggleReferencing(event)
+        screenEventsEditor.deleteAllEventToggleReferencing(event)
         triggerEventsEditor.deleteAllEventToggleReferencing(event)
     }
 }

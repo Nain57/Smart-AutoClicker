@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,4 +53,10 @@ internal abstract class ItemBriefRenderer<Style>(
     @ColorInt
     private fun Int.setAlpha(alpha: Int): Int =
         Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
+}
+
+enum class ScreenConditionBriefRenderingType {
+    AREA,
+    EXACT,
+    WHOLE_SCREEN
 }

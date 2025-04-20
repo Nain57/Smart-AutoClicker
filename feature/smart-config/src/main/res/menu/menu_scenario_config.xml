@@ -19,7 +19,7 @@
     <item
         android:id="@+id/page_image_events"
         android:enabled="true"
-        android:icon="@drawable/ic_condition"
+        android:icon="@drawable/ic_image_condition"
         android:title="@string/menu_item_title_image_events"/>
     <item
         android:id="@+id/page_trigger_events"

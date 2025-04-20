@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage.Companion.getTrainedTextLanguage
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
@@ -150,7 +150,7 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    fun createNewTextCondition(context: Context, text: String, language: TrainedTextLanguage): TextCondition =
+    fun createNewTextCondition(context: Context): TextCondition =
         TextCondition(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
@@ -159,8 +159,8 @@ class EditedItemsBuilder internal constructor(
             detectionType = defaultValues.conditionDetectionType(),
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
             priority = 0,
-            textToDetect = text,
-            textLanguage = language,
+            textToDetect = "",
+            textLanguage = context.resources.configuration.getLocales().get(0).getTrainedTextLanguage(),
         )
 
     fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
+import android.graphics.Rect
 import androidx.annotation.CallSuper
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -35,12 +36,8 @@ sealed class Condition : Identifiable, Completable {
 
     abstract fun hashCodeNoIds(): Int
 
-    @Suppress("USELESS_CAST") // Yet it is required by Android Studio
-    fun copy(evtId: Identifier) = when (this) {
-        is TriggerCondition.OnBroadcastReceived -> (this as TriggerCondition.OnBroadcastReceived).copy(eventId = evtId)
-        is TriggerCondition.OnCounterCountReached -> (this as TriggerCondition.OnCounterCountReached).copy(eventId = evtId)
-        is TriggerCondition.OnTimerReached -> (this as TriggerCondition.OnTimerReached).copy(eventId = evtId)
-        is ImageCondition -> (this as ImageCondition).copy(eventId = evtId)
-        is TextCondition -> (this as TextCondition).copy(eventId = evtId)
+    fun withNewEventId(evtId: Identifier): Condition = when (this) {
+        is ScreenCondition -> copyBase(evtId = evtId)
+        is TriggerCondition -> copyBase(evtId = evtId)
     }
 }

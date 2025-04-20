@@ -22,6 +22,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnBroadcastReceived
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnTimerReached
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 
 
@@ -44,6 +47,20 @@ sealed class ScreenCondition : Condition(), Prioritizable {
     override fun hashCodeNoIds(): Int =
         name.hashCode() + threshold.hashCode() + detectionType.hashCode() + shouldBeDetected.hashCode() +
                 detectionArea.hashCode() + priority.hashCode()
+
+    fun copyBase(
+        evtId: Identifier = this.eventId,
+        name: String = this.name,
+        priority: Int = this.priority,
+        threshold: Int = this.threshold,
+        detectionType: Int = this.detectionType,
+        detectionArea: Rect? = this.detectionArea,
+    ): ScreenCondition = when (this) {
+        is ImageCondition -> copy(eventId = evtId, name = name, priority = priority, threshold = threshold,
+            detectionType = detectionType, detectionArea = detectionArea)
+        is TextCondition -> copy(eventId = evtId, name = name, priority = priority, threshold = threshold,
+            detectionType = detectionType, detectionArea = detectionArea)
+    }
 }
 
 
@@ -75,7 +92,7 @@ data class ImageCondition(
  * Text condition for a Event.
  *
  * @param textToDetect the text to be detected.
- * @param language the language of the text.
+ * @param textLanguage the language of the text.
  */
 data class TextCondition(
     override val id: Identifier,

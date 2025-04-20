@@ -33,7 +33,7 @@
         android:background="?attr/colorSurfaceVariant"
         android:scaleType="fitCenter"
         android:contentDescription="@string/content_desc_image_condition"
-        tools:src="@drawable/ic_condition" />
+        tools:src="@drawable/ic_image_condition" />
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"

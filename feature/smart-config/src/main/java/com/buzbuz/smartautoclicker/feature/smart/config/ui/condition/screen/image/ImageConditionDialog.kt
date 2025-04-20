@@ -60,6 +60,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCl
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionAreaSelectorMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.DetectionTypeState
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -288,4 +289,4 @@ class ImageConditionDialog(
         }
 }
 
-private const val TAG = "ConditionDialog"
+private const val TAG = "ImageConditionDialog"

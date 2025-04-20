@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -36,7 +36,7 @@ interface IEditionState {
     val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>>
     val scenarioState: Flow<EditedElementState<Scenario>>
 
-    // Edited Scenario child items (ImageEvents and TriggerEvents)
+    // Edited Scenario child items (ScreenEvents and TriggerEvents)
     val allEditedEvents: Flow<List<Event>>
     val editedScreenEventsState: Flow<EditedListState<ScreenEvent>>
     val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>>
@@ -48,8 +48,8 @@ interface IEditionState {
 
     // Edited Event child conditions
     val editedEventConditionsState: Flow<EditedListState<Condition>>
-    val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>>
-    val editedImageConditionState: Flow<EditedElementState<ImageCondition>>
+    val editedEventScreenConditionsState: Flow<EditedListState<ScreenCondition>>
+    val editedScreenConditionState: Flow<EditedElementState<ScreenCondition>>
     val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>>
     val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>>
 

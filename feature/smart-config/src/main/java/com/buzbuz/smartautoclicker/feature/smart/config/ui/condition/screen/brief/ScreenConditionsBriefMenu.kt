@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,25 +26,34 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefViewHolder
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTextCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.ScreenConditionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.allScreenConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
 
 
-class ImageConditionsBriefMenu(
+class ScreenConditionsBriefMenu(
     initialFocusedIndex: Int,
 ) : ItemBriefMenu(
     theme = R.style.AppTheme,
@@ -53,7 +62,7 @@ class ImageConditionsBriefMenu(
 ) {
 
     /** The view model for this dialog. */
-    private val viewModel: ImageConditionsBriefViewModel by viewModels(
+    private val viewModel: ScreenConditionsBriefViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { imageConditionsBriefViewModel() }
     )
@@ -77,8 +86,21 @@ class ImageConditionsBriefMenu(
         return viewBinding.root
     }
 
-    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ImageConditionBriefViewHolder =
-        ImageConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+    override fun getBriefItemViewType(position: Int): Int =
+        when (getItemBrief(position).data) {
+            is UiImageCondition -> R.layout.item_image_condition_brief_land
+            is UiTextCondition -> R.layout.item_text_condition_brief_land
+            else -> 0
+        }
+
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, viewType: Int, orientation: Int): ItemBriefViewHolder<*> =
+        when (viewType) {
+            R.layout.item_image_condition_brief_land ->
+                ImageConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+            R.layout.item_text_condition_brief_land ->
+                TextConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+            else -> throw IllegalArgumentException("Invalid view type $viewType")
+        }
 
     override fun onBriefItemViewBound(index: Int, itemView: View?) {
         if (index != 0) return
@@ -103,8 +125,8 @@ class ImageConditionsBriefMenu(
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_save -> back()
-            R.id.btn_add -> showNewCaptureOverlay()
-            R.id.btn_copy -> showImageConditionCopyDialog()
+            R.id.btn_add -> showScreenConditionTypeSelectionDialog()
+            R.id.btn_copy -> showScreenConditionCopyDialog()
         }
     }
 
@@ -118,7 +140,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog((item.data as UiImageCondition).condition)
+        showScreenConditionConfigDialog((item.data as UiScreenCondition).condition)
     }
 
     override fun onDeleteItemClicked(index: Int) {
@@ -162,17 +184,37 @@ class ImageConditionsBriefMenu(
         }
     }
 
-    private fun showImageConditionCopyDialog() {
+    private fun showScreenConditionCopyDialog() {
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->
-                    if (conditionSelected !is ImageCondition) return@ConditionCopyDialog
-                    showImageConditionConfigDialog(
-                        viewModel.createNewImageConditionFromCopy(conditionSelected),
+                    if (conditionSelected !is ScreenCondition) return@ConditionCopyDialog
+                    showScreenConditionConfigDialog(
+                        viewModel.createNewScreenConditionFromCopy(conditionSelected),
                     )
                 },
             ),
+        )
+    }
+
+    private fun showScreenConditionTypeSelectionDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = MultiChoiceDialog(
+                theme = R.style.AppTheme,
+                dialogTitleText = R.string.dialog_title_screen_condition_type,
+                choices = allScreenConditionChoices(),
+                onChoiceSelected = { choice ->
+                    when (choice) {
+                        ScreenConditionTypeChoice.OnImageDetected -> showNewCaptureOverlay()
+                        ScreenConditionTypeChoice.OnTextDetected -> showScreenConditionConfigDialog(
+                            viewModel.createNewTextCondition(context)
+                        )
+                    }
+                },
+            ),
+            hideCurrent = false,
         )
     }
 
@@ -180,13 +222,13 @@ class ImageConditionsBriefMenu(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ImageConditionCaptureMenu { capturedCondition ->
-                showImageConditionConfigDialog(capturedCondition)
+                showScreenConditionConfigDialog(capturedCondition)
             },
             hideCurrent = true,
         )
     }
 
-    private fun showImageConditionConfigDialog(condition: ImageCondition) {
+    private fun showScreenConditionConfigDialog(condition: ScreenCondition) {
         viewModel.startConditionEdition(condition)
 
         val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {
@@ -199,9 +241,14 @@ class ImageConditionsBriefMenu(
             }
         }
 
+        val overlay = when (condition) {
+            is ImageCondition -> ImageConditionDialog(conditionConfigDialogListener)
+            is TextCondition -> TextConditionDialog(conditionConfigDialogListener)
+        }
+
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionDialog(conditionConfigDialogListener),
+            newOverlay = overlay,
             hideCurrent = true,
         )
     }

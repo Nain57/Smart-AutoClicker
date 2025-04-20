@@ -106,7 +106,7 @@ class ConditionCopyModel @Inject constructor(
     private fun List<Condition>.toCopyItems(context: Context) = mapNotNull { condition ->
         when (condition) {
             is ImageCondition -> ConditionCopyItem.ConditionItem.Image(
-                condition.toUiImageCondition(context, shortThreshold = true, inError = !condition.isComplete())
+                condition.toUiImageCondition(context, inError = !condition.isComplete())
             )
             is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(
                 condition.toUiTriggerCondition(context, inError = !condition.isComplete())

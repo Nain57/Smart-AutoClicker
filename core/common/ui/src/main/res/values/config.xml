@@ -19,5 +19,8 @@
     <!-- The maximum size for all names. -->
     <integer name="name_max_length">60</integer>
 
+    <!-- The maximum size of detected text. More text means way more computation time.-->
+    <integer name="text_to_detect_max_length">50</integer>
+
     <item name="alpha_menu_item_disabled" type="dimen">40%</item>
 </resources>

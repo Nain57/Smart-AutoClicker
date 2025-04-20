@@ -36,7 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainTriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
@@ -67,7 +67,7 @@ internal class Repository @Inject internal constructor(
         dataSource.scenarios.mapList { it.toDomain() }
 
     override val allScreenEvents: Flow<List<ScreenEvent>> =
-        dataSource.allImageEvents.mapList { it.toDomainImageEvent() }
+        dataSource.allImageEvents.mapList { it.toDomainScreenEvent() }
 
     override val allTriggerEvents: Flow<List<TriggerEvent>> =
         dataSource.allTriggerEvents.mapList { it.toDomainTriggerEvent() }
@@ -85,18 +85,18 @@ internal class Repository @Inject internal constructor(
         dataSource.getScenarioFlow(scenarioId).map { it?.toDomain() }
 
     override fun getEventsFlow(scenarioId: Long): Flow<List<Event>> =
-        getImageEventsFlow(scenarioId).combine(getTriggerEventsFlow(scenarioId)) { imgEvts, trigEvts ->
+        getScreenEventsFlow(scenarioId).combine(getTriggerEventsFlow(scenarioId)) { imgEvts, trigEvts ->
             buildList {
                 addAll(imgEvts)
                 addAll(trigEvts)
             }
         }
 
-    override suspend fun getImageEvents(scenarioId: Long): List<ScreenEvent> =
-        dataSource.getImageEvents(scenarioId).map { it.toDomainImageEvent() }
+    override suspend fun getScreenEvents(scenarioId: Long): List<ScreenEvent> =
+        dataSource.getImageEvents(scenarioId).map { it.toDomainScreenEvent() }
 
-    override fun getImageEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>> =
-        dataSource.getImageEventsFlow(scenarioId).mapList { it.toDomainImageEvent() }
+    override fun getScreenEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>> =
+        dataSource.getImageEventsFlow(scenarioId).mapList { it.toDomainScreenEvent() }
 
     override suspend fun getTriggerEvents(scenarioId: Long): List<TriggerEvent> =
         dataSource.getTriggerEvents(scenarioId).map { it.toDomainTriggerEvent() }

@@ -143,7 +143,7 @@ class RepositoryTests {
                     conditions = mutableListOf(ConditionTestsData.getNewImageCondition(eventId = EventTestsData.EVENT_ID))
                 ),
             ),
-            repository.getImageEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
+            repository.getScreenEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
         )
     }
 

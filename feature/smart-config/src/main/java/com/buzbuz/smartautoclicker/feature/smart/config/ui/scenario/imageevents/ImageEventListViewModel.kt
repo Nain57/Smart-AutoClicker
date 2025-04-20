@@ -72,7 +72,7 @@ class ImageEventListViewModel @Inject constructor(
 
     /** Update the priority of the events in the scenario. */
     fun updateEventsPriority(uiEvents: List<UiImageEvent>) =
-        editionRepository.updateImageEventsOrder(
+        editionRepository.updateScreenEventsOrder(
             uiEvents.map { it.event }
         )
 

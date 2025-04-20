@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import androidx.core.content.res.use
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRendererStyle
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRendererStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.ScreenConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRendererStyle
 
@@ -36,7 +36,7 @@ internal class ItemBriefViewStyle(
     val clickStyle: ClickBriefRendererStyle,
     val swipeStyle: SwipeBriefRendererStyle,
     val pauseStyle: PauseBriefRendererStyle,
-    val imageConditionStyle: ImageConditionBriefRendererStyle,
+    val imageConditionStyle: ScreenConditionBriefRendererStyle,
     val defaultStyle: DefaultBriefRendererStyle,
 )
 
@@ -79,9 +79,10 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 outerRadiusPx = outerRadius,
                 innerRadiusPx = innerRadius,
             ),
-            imageConditionStyle = ImageConditionBriefRendererStyle(
+            imageConditionStyle = ScreenConditionBriefRendererStyle(
                 backgroundColor = backgroundColor,
                 selectorColor = colorOutlinePrimary,
+                iconSize = outerRadius,
                 thicknessPx = thickness.toInt(),
                 cornerRadiusPx = cornerRadius,
             ),

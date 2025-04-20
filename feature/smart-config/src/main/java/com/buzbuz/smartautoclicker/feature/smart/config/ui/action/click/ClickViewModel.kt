@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,14 +30,16 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putClickPressDurationConfig
@@ -102,13 +104,12 @@ class ClickViewModel @Inject constructor(
     val pressDurationError: Flow<Boolean> = configuredClick
         .map { (it.pressDuration ?: -1) <= 0 }
 
-    val availableConditions: StateFlow<List<UiImageCondition>> = editionRepository.editionState.editedEventImageConditionsState
+    val availableConditions: StateFlow<List<UiScreenCondition>> = editionRepository.editionState.editedEventScreenConditionsState
         .map { editedConditions ->
             editedConditions.value?.filter { it.shouldBeDetected }
                 ?.map {
-                    it.toUiImageCondition(
+                    it.toUiScreenCondition(
                         context = context,
-                        shortThreshold = true,
                         inError = !it.isComplete(),
                     )
                 }
@@ -195,7 +196,7 @@ class ClickViewModel @Inject constructor(
         getImageConditionBitmap(repository, condition, onBitmapLoaded)
 
     /** Set the condition to click on when the events conditions are fulfilled. */
-    fun setConditionToBeClicked(condition: ImageCondition) {
+    fun setConditionToBeClicked(condition: ScreenCondition) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
         }
@@ -252,11 +253,6 @@ class ClickViewModel @Inject constructor(
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ScreenEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
-        val conditionBitmap = conditionToClick?.let { condition ->
-            //TODO: handle text condition ui
-            if (condition is ImageCondition) repository.getConditionBitmap(condition)
-            else null
-        }
 
         return ClickPositionUiState(
             positionType = Click.PositionType.ON_DETECTED_CONDITION,
@@ -264,9 +260,9 @@ class ClickViewModel @Inject constructor(
             isSelectorEnabled = availableConditions.value.isNotEmpty(),
             selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
             selectorDescription =
-                if (conditionToClick == null || conditionBitmap == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
+                if (conditionToClick == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
                 else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
-            selectorBitmap = conditionBitmap,
+            selectorConditionState = conditionToClick.toScreenConditionUiState(),
             isClickOffsetVisible = true,
             isClickOffsetEnabled = true,
             clickOffsetDescription = getClickOffsetString(click),
@@ -281,6 +277,13 @@ class ClickViewModel @Inject constructor(
         return offset?.let { getString(R.string.field_click_offset_desc, it.x, it.y) }
             ?: getString(R.string.field_click_offset_desc_none)
     }
+
+    private suspend fun ScreenCondition?.toScreenConditionUiState() : ScreenConditionUiState =
+        when (this) {
+            is ImageCondition -> ScreenConditionUiState.Image(repository.getConditionBitmap(this))
+            is TextCondition -> ScreenConditionUiState.Text(textToDetect)
+            else -> throw IllegalArgumentException("Invalid screen condition")
+        }
 }
 
 data class ClickPositionUiState(
@@ -292,5 +295,11 @@ data class ClickPositionUiState(
     val isSelectorEnabled: Boolean,
     val selectorTitle: String,
     val selectorDescription: String?,
-    val selectorBitmap: Bitmap? = null,
+    val selectorConditionState: ScreenConditionUiState? = null,
 )
+
+sealed class ScreenConditionUiState {
+    data class Image(val bitmap: Bitmap? = null) : ScreenConditionUiState()
+    data class Text(val textToDetect: String) : ScreenConditionUiState()
+}
+

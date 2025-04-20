@@ -79,7 +79,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
         return viewBinding.root
     }
 
-    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): SmartActionBriefViewHolder =
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, viewType: Int, orientation: Int): SmartActionBriefViewHolder =
         SmartActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
     override fun onBriefItemViewBound(index: Int, itemView: View?) {

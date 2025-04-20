@@ -37,6 +37,12 @@
     <string name="item_image_condition_visible">Visible</string>
     <string name="item_image_condition_not_visible">Not visible</string>
 
+    <string name="item_image_detected_title">On image detected</string>
+    <string name="item_image_detected_desc">Verify if an image is displayed on the screen</string>
+
+    <string name="item_text_detected_title">On text detected</string>
+    <string name="item_text_detected_desc">Verify if a text is displayed on the screen</string>
+
     <string name="item_counter_reached_title">On counter reached</string>
     <string name="item_counter_reached_desc">Verify the value of a counter modified by an Action</string>
     <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
@@ -140,6 +146,7 @@
     <string name="dialog_title_trigger_event">Trigger</string>
     <string name="dialog_title_action_type">Action type</string>
     <string name="dialog_title_trigger_condition_type">Trigger type</string>
+    <string name="dialog_title_screen_condition_type">Screen condition type</string>
 
     <string name="field_condition_selector_desc">%1$d conditions</string>
     <string name="message_empty_screen_condition_list_title">No screen conditions !</string>
@@ -173,9 +180,12 @@
     <string name="brief_empty_image_conditions">No Screen Condition. You need at least one Condition to create a valid Event</string>
 
 
-    <!-- Dialog Condition Image ==================================================================================== -->
+    <!-- Dialogs Screen Condition ==================================================================================== -->
 
     <string name="dialog_title_condition_config">Condition</string>
+
+    <string name="field_condition_text_to_detect">Text to detect</string>
+    <string name="field_condition_text_language_title">Text language</string>
 
     <string name="field_condition_visibility_title">Visibility</string>
     <string name="field_condition_visibility_desc_present">The condition must be detected</string>

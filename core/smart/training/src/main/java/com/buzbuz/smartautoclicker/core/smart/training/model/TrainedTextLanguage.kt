@@ -61,7 +61,7 @@ enum class TrainedTextLanguage(internal val langCode: String) {
     companion object {
 
         /** Get the TrainedTextLanguage corresponding to the locale, if any. */
-        fun Locale.getTrainedTextLanguage(): TrainedTextLanguage? =
+        fun Locale.getTrainedTextLanguage(): TrainedTextLanguage =
             when (language) {
                 "af" -> AFRIKAANS
                 "ar" -> ARABIC
@@ -69,7 +69,7 @@ enum class TrainedTextLanguage(internal val langCode: String) {
                 "zh" -> when (script) {
                     "Hans" -> CHINESE_SIMPLIFIED
                     "Hant" -> CHINESE_TRADITIONAL
-                    else -> null // fallback in ambiguous case
+                    else -> CHINESE_SIMPLIFIED // fallback in ambiguous case
                 }
                 "hr" -> CROATIAN
                 "cs" -> CZECH
@@ -98,7 +98,7 @@ enum class TrainedTextLanguage(internal val langCode: String) {
                 "tr" -> TURKISH
                 "uk" -> UKRAINIAN
                 "vi" -> VIETNAMESE
-                else -> null
+                else -> ENGLISH
             }
     }
 }

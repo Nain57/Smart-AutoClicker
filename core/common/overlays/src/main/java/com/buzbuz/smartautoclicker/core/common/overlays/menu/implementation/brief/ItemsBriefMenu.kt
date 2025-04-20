@@ -58,7 +58,8 @@ abstract class ItemBriefMenu(
 
     protected open fun onOverlayViewCreated(binding: ItemsBriefOverlayViewBinding): Unit = Unit
 
-    protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ItemBriefViewHolder<*>
+    protected open fun getBriefItemViewType(position: Int): Int = 0
+    protected abstract fun onCreateBriefItemViewHolder(parent: ViewGroup, viewType: Int, orientation: Int): ItemBriefViewHolder<*>
     protected open fun onBriefItemViewBound(index: Int, itemView: View?): Unit = Unit
 
     protected open fun onItemBriefClicked(index: Int, item: ItemBrief): Unit = Unit
@@ -78,6 +79,7 @@ abstract class ItemBriefMenu(
 
         briefAdapter = ItemBriefAdapter(
             displayConfigManager = displayConfigManager,
+            viewHolderTypeProvider = ::getBriefItemViewType,
             viewHolderCreator = ::onCreateBriefItemViewHolder,
             itemBoundListener = ::onBriefItemViewBound,
             onItemClickedListener = { index, brief ->
@@ -172,16 +174,14 @@ abstract class ItemBriefMenu(
         briefPanelAnimationController.setAutoHideEnabled(isEnabled)
     }
 
-    protected fun hideMoveButtons() {
-        briefViewBinding.buttonMovePrevious.visibility = View.GONE
-        briefViewBinding.buttonMoveNext.visibility = View.GONE
-    }
-
     protected fun getFocusedItemIndex(): Int =
         itemListSnapHelper.snapPosition
 
     protected fun getFocusedItemBrief(): ItemBrief =
         briefAdapter.getItem(getFocusedItemIndex())
+
+    protected fun getItemBrief(position: Int): ItemBrief =
+        briefAdapter.getItem(position)
 
     protected fun hidePanel(): Unit =
         briefPanelAnimationController.hide()

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,10 +52,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventC
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.adapters.ScreenConditionsAdapter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ImageConditionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryEventOverlayMenu
 
@@ -156,7 +157,7 @@ class EventDialog(
     private fun DialogEventConfigBinding.setupConditionsCard() {
         if (viewModel.isConfiguringScreenEvent()) {
             fieldTriggerConditionsSelector.root.visibility = View.GONE
-            fieldImageConditionsSelector.apply {
+            fieldScreenConditionsSelector.apply {
                 root.visibility = View.VISIBLE
                 setTitle(
                     titleRes = R.string.menu_item_title_conditions,
@@ -165,8 +166,8 @@ class EventDialog(
                 setEmptyDescription(R.string.message_empty_screen_condition_list_desc)
 
                 setAdapter(
-                    EventImageConditionsAdapter(
-                        itemClickedListener = ::showImageConditionsBriefMenu,
+                    ScreenConditionsAdapter(
+                        itemClickedListener = { _, idx -> showImageConditionsBriefMenu(idx) },
                         bitmapProvider = viewModel::getConditionBitmap,
                     ),
                 )
@@ -174,7 +175,7 @@ class EventDialog(
                 setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
             }
         } else {
-            fieldImageConditionsSelector.root.visibility = View.GONE
+            fieldScreenConditionsSelector.root.visibility = View.GONE
             fieldTriggerConditionsSelector.apply {
                 root.visibility = View.VISIBLE
                 setTitle(
@@ -248,7 +249,7 @@ class EventDialog(
                 launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
 
                 if (viewModel.isConfiguringScreenEvent()) {
-                    launch { viewModel.imageConditions.collect(::updateImageConditionsField) }
+                    launch { viewModel.screenConditions.collect(::updateScreenConditionsField) }
                 } else {
                     launch { viewModel.triggerConditionsDescription.collect(viewBinding.fieldTriggerConditionsSelector::setItems) }
                 }
@@ -259,7 +260,7 @@ class EventDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorViews(
-            conditionsField = viewBinding.fieldImageConditionsSelector.root,
+            conditionsField = viewBinding.fieldScreenConditionsSelector.root,
             conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
             actionsField = viewBinding.fieldActionsSelector.root,
             saveButton = viewBinding.layoutTopBar.buttonSave,
@@ -295,8 +296,8 @@ class EventDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
-    private fun updateImageConditionsField(conditions: List<UiImageCondition>) {
-        viewBinding.fieldImageConditionsSelector.setItems(conditions)
+    private fun updateScreenConditionsField(conditions: List<UiScreenCondition>) {
+        viewBinding.fieldScreenConditionsSelector.setItems(conditions)
     }
 
     private fun updateConditionOperator(@ConditionOperator operator: Int) {
@@ -350,7 +351,7 @@ class EventDialog(
     private fun showImageConditionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionsBriefMenu(initialFocusedIndex),
+            newOverlay = ScreenConditionsBriefMenu(initialFocusedIndex),
             hideCurrent = true,
         )
     }

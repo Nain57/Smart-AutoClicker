@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppTheme.Widget.CardOutlined"
+    android:layout_width="@dimen/card_view_width_horizontal_list"
+    android:layout_height="@dimen/card_view_height_horizontal_list"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+    android:layout_marginTop="@dimen/margin_vertical_small"
+    android:layout_marginBottom="@dimen/margin_vertical_small"
+    android:elevation="@dimen/elevation_level_2">
+
+    <include layout="@layout/include_text_condition_card"
+        android:id="@+id/card_text_condition"/>
+
+</com.google.android.material.card.MaterialCardView>
