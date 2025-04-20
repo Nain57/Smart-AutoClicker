@@ -129,7 +129,7 @@ interface IRepository {
      * @param scenarioId the identifier of the scenario.
      * @return the list of image events.
      */
-    suspend fun getImageEvents(scenarioId: Long): List<ScreenEvent>
+    suspend fun getScreenEvents(scenarioId: Long): List<ScreenEvent>
 
     /**
      * Get the list of complete image events for a given scenario.
@@ -137,7 +137,7 @@ interface IRepository {
      * @param scenarioId the identifier of the scenario to ge the events from.
      * @return the list of image events, ordered by execution priority.
      */
-    fun getImageEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>>
+    fun getScreenEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>>
 
     /**
      * Get the list of trigger events for a given scenario.

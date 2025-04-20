@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
 
@@ -31,17 +32,25 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 internal class ItemBriefAdapter(
     private val displayConfigManager: DisplayConfigManager,
-    private val viewHolderCreator: (parent: ViewGroup, orientation: Int) -> ItemBriefViewHolder<*>,
+    private val viewHolderTypeProvider: (position: Int) -> Int,
+    private val viewHolderCreator: (parent: ViewGroup, viewType: Int, orientation: Int) -> ItemBriefViewHolder<*>,
     private val itemBoundListener: (index: Int, itemView: View?) -> Unit,
     private val onItemClickedListener: (Int, ItemBrief) -> Unit,
 ) : ListAdapter<ItemBrief, ItemBriefViewHolder<*>>(ItemBriefDiffUtilCallback) {
 
     private var orientation: Int = displayConfigManager.displayConfig.orientation
 
-    override fun getItemViewType(position: Int): Int = orientation
+    override fun getItemViewType(position: Int): Int {
+        val type = viewHolderTypeProvider(position)
+        return if (orientation == Configuration.ORIENTATION_LANDSCAPE) -type else type
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemBriefViewHolder<*> =
-        viewHolderCreator(parent, viewType)
+        viewHolderCreator(
+            parent,
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) -viewType else viewType,
+            orientation,
+        )
 
     override fun onBindViewHolder(holder: ItemBriefViewHolder<*>, position: Int) {
         holder.onBind(getItem(position), onItemClickedListener)

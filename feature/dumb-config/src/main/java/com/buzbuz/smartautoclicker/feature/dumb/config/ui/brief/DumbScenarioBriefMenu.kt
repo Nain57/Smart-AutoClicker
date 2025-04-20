@@ -102,7 +102,7 @@ class DumbScenarioBriefMenu(
         return menuViewBinding.root
     }
 
-    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): DumbActionBriefViewHolder =
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, viewType: Int, orientation: Int): DumbActionBriefViewHolder =
         DumbActionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
     override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {

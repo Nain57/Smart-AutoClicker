@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -90,7 +90,7 @@ class EditionRepository @Inject constructor(
 
         scenarioEditor.startEdition(
             scenario = scenario,
-            screenEvents = repository.getImageEvents(scenarioId),
+            screenEvents = repository.getScreenEvents(scenarioId),
             triggerEvents = repository.getTriggerEvents(scenarioId),
         )
         return true
@@ -126,8 +126,8 @@ class EditionRepository @Inject constructor(
     /** Update the currently edited scenario. */
     fun updateEditedScenario(scenario: Scenario): Unit = scenarioEditor.updateEditedScenario(scenario)
     /** Update the priority of the events in the scenario. */
-    fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {
-        scenarioEditor.updateImageEventsOrder(
+    fun updateScreenEventsOrder(newEvents: List<ScreenEvent>) {
+        scenarioEditor.updateScreenEventsOrder(
             newEvents.mapIndexed { index, event -> event.copy(priority = index) }
         )
     }
@@ -143,9 +143,11 @@ class EditionRepository @Inject constructor(
             actions.mapIndexed { index, action -> action.copyBase(priority = index) }
         )
     }
-    fun updateImageConditionsOrder(imageConditions: List<ImageCondition>) {
+    fun updateScreenConditionsOrder(screenConditions: List<ScreenCondition>) {
         scenarioEditor.updateImageConditionsOrder(
-            imageConditions.mapIndexed { index, imgCond -> imgCond.copy(priority = index) }
+            screenConditions.mapIndexed { index, screenCond ->
+                screenCond.copyBase(priority = index)
+            }
         )
     }
 

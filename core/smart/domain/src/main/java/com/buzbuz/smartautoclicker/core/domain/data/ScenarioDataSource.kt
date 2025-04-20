@@ -271,7 +271,7 @@ internal class ScenarioDataSource(
         updater.refreshUpdateValues(
             currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
             newItems = newConditions,
-            mappingClosure = { condition -> condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity() }
+            mappingClosure = { condition -> condition.withNewEventId(evtId = Identifier(databaseId = eventDbId)).toEntity() }
         )
         Log.d(TAG, "Conditions updater: $updater")
 

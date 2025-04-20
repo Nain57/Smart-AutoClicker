@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import kotlinx.coroutines.flow.Flow
@@ -48,9 +49,9 @@ class ClickOffsetViewModel @Inject constructor(
         .mapNotNull { event -> event.value }
         .filterIsInstance<ScreenEvent>()
 
-    /** The ImageConditions being edited by the user. */
-    private val editedImageConditions: Flow<List<ImageCondition>> =
-        editionRepository.editionState.editedEventImageConditionsState
+    /** The ScreenConditions being edited by the user. */
+    private val editedScreenConditions: Flow<List<ScreenCondition>> =
+        editionRepository.editionState.editedEventScreenConditionsState
             .mapNotNull { it.value }
 
     /** The Action currently configured by the user. */
@@ -58,10 +59,10 @@ class ClickOffsetViewModel @Inject constructor(
         .mapNotNull { action -> action.value }
         .filterIsInstance<Click>()
 
-    private val conditionToShow: Flow<ImageCondition?> =
-        combine(editedEvent, editedImageConditions, configuredClick) { event, imageConditions, click ->
+    private val conditionToShow: Flow<ScreenCondition?> =
+        combine(editedEvent, editedScreenConditions, configuredClick) { event, screenConditions, click ->
             if (!click.haveDeterminedCondition(event.conditionOperator)) null
-            else imageConditions.getImageConditionFromId(click.clickOnConditionId)
+            else screenConditions.getScreenConditionFromId(click.clickOnConditionId)
         }
 
     private val initialClickOffset: Flow<Point> = configuredClick
@@ -77,7 +78,12 @@ class ClickOffsetViewModel @Inject constructor(
     }
 
     val conditionImage: Flow<Bitmap?> = conditionToShow
-        .map { imageCondition -> imageCondition?.let { repository.getConditionBitmap(it) } }
+        .map { screenCondition ->
+            when (screenCondition) {
+                is ImageCondition -> screenCondition.let { repository.getConditionBitmap(it) }
+                else -> null
+            }
+        }
 
     fun getOffsetMaxBoundsX(): IntRange =
         displayConfigManager.displayConfig.let { displayConfig ->
@@ -121,8 +127,8 @@ class ClickOffsetViewModel @Inject constructor(
                 && conditionOperator == AND
                 && clickOnConditionId != null
 
-    private fun List<ImageCondition>.getImageConditionFromId(id: Identifier?): ImageCondition? =
-        id?.let { identifier -> find { imageCondition -> imageCondition.id == identifier } }
+    private fun List<ScreenCondition>.getScreenConditionFromId(id: Identifier?): ScreenCondition? =
+        id?.let { identifier -> find { screenCondition -> screenCondition.id == identifier } }
 }
 
 data class ClickOffsetState(

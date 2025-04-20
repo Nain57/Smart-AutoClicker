@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,9 +35,9 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -91,14 +91,13 @@ class EventDialogViewModel @Inject constructor(
     val eventNameError: Flow<Boolean> = configuredEvent
         .map { it.name.isEmpty() }
 
-    val imageConditions: Flow<List<UiImageCondition>> =
-        editionRepository.editionState.editedEventImageConditionsState
-            .mapNotNull { imageConditionsState ->
-                imageConditionsState.value?.map { imageCondition ->
-                    imageCondition.toUiImageCondition(
+    val screenConditions: Flow<List<UiScreenCondition>> =
+        editionRepository.editionState.editedEventScreenConditionsState
+            .mapNotNull { screenConditionsState ->
+                screenConditionsState.value?.map { screenCondition ->
+                    screenCondition.toUiScreenCondition(
                         context = context,
-                        shortThreshold = true,
-                        inError = !imageCondition.isComplete(),
+                        inError = !screenCondition.isComplete(),
                     )
                 }
             }

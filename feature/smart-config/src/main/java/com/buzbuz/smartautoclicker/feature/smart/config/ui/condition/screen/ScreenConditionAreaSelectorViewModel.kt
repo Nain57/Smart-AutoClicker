@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
@@ -34,8 +35,8 @@ class ImageConditionAreaSelectorViewModel @Inject constructor(
 
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedImageConditionState
-        .mapNotNull { it.value }
+    private val configuredCondition = editionRepository.editionState.editedScreenConditionState
+        .mapNotNull { it.value as? ImageCondition }
 
     /** The position at which the selector should be initialized. */
     val initialArea: Flow<SelectorUiState> = configuredCondition

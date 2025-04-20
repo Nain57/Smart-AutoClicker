@@ -40,7 +40,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.Condit
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ImageConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ImageConditionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
@@ -78,7 +79,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun extraConfigViewModel(): ExtraConfigModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel
     fun imageConditionAreaSelectorViewModel(): ImageConditionAreaSelectorViewModel
-    fun imageConditionsBriefViewModel(): ImageConditionsBriefViewModel
+    fun imageConditionsBriefViewModel(): ScreenConditionsBriefViewModel
     fun imageConditionViewModel(): ImageConditionViewModel
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel
@@ -91,6 +92,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun scenarioDialogViewModel(): ScenarioDialogViewModel
     fun smartActionsBriefViewModel(): SmartActionsBriefViewModel
     fun swipeViewModel(): SwipeViewModel
+    fun textConditionViewModel(): TextConditionDialogViewModel
     fun timerReachedConditionViewModel(): TimerReachedConditionViewModel
     fun toggleEventViewModel(): ToggleEventViewModel
     fun triggerConditionsViewModel(): TriggerConditionListViewModel

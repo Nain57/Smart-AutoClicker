@@ -52,7 +52,7 @@ class EventMapperTests {
 
         assertEquals(
             EventTestsData.getNewImageEvent(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0),
-            completeEvent.toDomainImageEvent()
+            completeEvent.toDomainScreenEvent()
         )
     }
 
@@ -62,7 +62,7 @@ class EventMapperTests {
             event = EventTestsData.getNewImageEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0),
             actions = listOf(ActionTestsData.getNewPauseEntity(eventId = EventTestsData.EVENT_ID)),
             conditions = listOf(ConditionTestsData.getNewImageConditionEntity(eventId = EventTestsData.EVENT_ID)),
-        ).toDomainImageEvent()
+        ).toDomainScreenEvent()
 
         assertEquals(
             EventTestsData.getNewImageEvent(

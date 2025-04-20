@@ -25,13 +25,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.DetectionTypeState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.getDetectionTypeState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.sanitizeAreaForCondition
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +49,6 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import javax.inject.Inject
-import kotlin.math.max
 
 @OptIn(FlowPreview::class)
 class ImageConditionViewModel @Inject constructor(
@@ -59,11 +59,11 @@ class ImageConditionViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedImageConditionState
-        .mapNotNull { it.value }
+    private val configuredCondition: Flow<ImageCondition> = editionRepository.editionState.editedScreenConditionState
+        .mapNotNull { it.value as? ImageCondition }
 
     private val editedConditionHasChanged: StateFlow<Boolean> =
-        editionRepository.editionState.editedImageConditionState
+        editionRepository.editionState.editedScreenConditionState
             .map { it.hasChanged }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
@@ -95,7 +95,7 @@ class ImageConditionViewModel @Inject constructor(
         repository.getConditionBitmap(condition)
     }.flowOn(Dispatchers.IO)
     /** Tells if the configured condition is valid and can be saved. */
-    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->
+    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedScreenConditionState.map { condition ->
         condition.canBeSaved
     }
 
@@ -131,7 +131,7 @@ class ImageConditionViewModel @Inject constructor(
     /** Set the area to detect in. */
     fun setDetectionArea(area: Rect) {
         updateEditedCondition { oldCondition ->
-            oldCondition.copy(detectionArea = sanitizeAreaForCondition(area, oldCondition.captureArea))
+            oldCondition.copy(detectionArea = area.sanitizeAreaForCondition(oldCondition.captureArea))
         }
     }
 
@@ -162,20 +162,6 @@ class ImageConditionViewModel @Inject constructor(
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN)
     }
 
-    private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {
-        val left = max(area.left, 0)
-        val top = max(area.top, 0)
-        val width = max(area.right - left, conditionArea.width())
-        val height = max(area.bottom - top, conditionArea.height())
-
-        return Rect(
-            left,
-            top,
-            left + width,
-            top + height,
-        )
-    }
-
     private fun updateEditedCondition(closure: (oldValue: ImageCondition) -> ImageCondition?) {
         editionRepository.editionState.getEditedCondition<ImageCondition>()?.let { condition ->
             closure(condition)?.let { newValue ->
@@ -183,17 +169,9 @@ class ImageConditionViewModel @Inject constructor(
             }
         }
     }
-
-    private fun Context.getDetectionTypeState(@DetectionType type: Int, area: Rect) = DetectionTypeState(
-        type = type,
-        areaText = getString(R.string.field_select_detection_area_desc, area.left, area.top, area.right, area.bottom)
-    )
 }
 
-data class DetectionTypeState(
-    @DetectionType val type: Int,
-    val areaText: String,
-)
+
 
 /** The maximum threshold value selectable by the user. */
 const val MAX_THRESHOLD = 20f

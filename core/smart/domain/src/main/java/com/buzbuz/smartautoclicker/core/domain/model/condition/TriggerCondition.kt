@@ -27,6 +27,15 @@ sealed class TriggerCondition: Condition(), Identifiable, Completable {
     override fun hashCodeNoIds(): Int =
         name.hashCode()
 
+    fun copyBase(
+        evtId: Identifier = this.eventId,
+        name: String = this.name,
+    ) = when (this) {
+        is OnBroadcastReceived -> copy(eventId = evtId, name = name)
+        is OnCounterCountReached -> copy(eventId = evtId, name = name)
+        is OnTimerReached -> copy(eventId = evtId, name = name)
+    }
+
     data class OnBroadcastReceived(
         override val id: Identifier,
         override val eventId: Identifier,

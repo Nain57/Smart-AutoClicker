@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,15 +34,19 @@ import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ScreenConditionBriefRenderingType
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.ScreenConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.TextConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -60,7 +64,7 @@ import java.util.Collections
 import javax.inject.Inject
 
 
-class ImageConditionsBriefViewModel @Inject constructor(
+class ScreenConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
@@ -69,20 +73,24 @@ class ImageConditionsBriefViewModel @Inject constructor(
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
-    private val editedConditions: Flow<EditedListState<ImageCondition>> =
-        editionRepository.editionState.editedEventImageConditionsState
+    private val editedConditions: Flow<EditedListState<ScreenCondition>> =
+        editionRepository.editionState.editedEventScreenConditionsState
 
     private val currentFocusItemIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val focusedCondition: StateFlow<Pair<ImageCondition, Bitmap?>?> =
+    private val focusedCondition: StateFlow<Pair<ScreenCondition, Bitmap?>?> =
         combine(currentFocusItemIndex, editedConditions) { focusedIndex, conditions ->
             val conditionList = conditions.value ?: return@combine null
             if (focusedIndex !in conditionList.indices) return@combine null
 
             val condition = conditionList[focusedIndex]
-            condition to repository.getConditionBitmap(condition)
+            val bitmap =
+                if (condition is ImageCondition) repository.getConditionBitmap(condition)
+                else null
+
+            condition to bitmap
         }.flowOn(ioDispatcher).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->
+    val conditionVisualization: Flow<ScreenConditionDescription?> = focusedCondition.map { focusedCondition ->
         focusedCondition?.first?.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
     }
 
@@ -91,7 +99,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
         conditionList.mapIndexed { index, condition ->
             ItemBrief(
                 condition.id,
-                condition.toUiImageCondition(context, shortThreshold = false, inError = !conditions.itemValidity[index]),
+                condition.toUiScreenCondition(context, inError = !conditions.itemValidity[index]),
             )
         }
     }
@@ -103,9 +111,11 @@ class ImageConditionsBriefViewModel @Inject constructor(
         currentFocusItemIndex.value = index
     }
 
-    //TODO: handle text condition
-    fun createNewImageConditionFromCopy(condition: ImageCondition): ImageCondition =
-        editionRepository.editedItemsBuilder.createNewScreenConditionFrom(condition) as ImageCondition
+    fun createNewTextCondition(context: Context): TextCondition =
+        editionRepository.editedItemsBuilder.createNewTextCondition(context)
+
+    fun createNewScreenConditionFromCopy(condition: ScreenCondition): ScreenCondition =
+        editionRepository.editedItemsBuilder.createNewScreenConditionFrom(condition)
 
     fun deleteImageCondition(index: Int, force: Boolean = false): Boolean {
         val conditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return false
@@ -133,7 +143,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
 
         editionRepository.apply {
             startConditionEdition(condition)
-            updateEditedCondition(condition.copy(threshold = newThreshold))
+            updateEditedCondition(condition.copyBase(threshold = newThreshold))
             upsertEditedCondition()
             stopConditionEdition()
         }
@@ -143,7 +153,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
         val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
         Collections.swap(imageConditions, i, j)
 
-        editionRepository.updateImageConditionsOrder(imageConditions)
+        editionRepository.updateScreenConditionsOrder(imageConditions)
     }
 
     fun moveConditions(from: Int, to: Int) {
@@ -151,7 +161,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
         val movedAction = imageConditions.removeAt(from)
         imageConditions.add(to, movedAction)
 
-        editionRepository.updateImageConditionsOrder(imageConditions)
+        editionRepository.updateScreenConditionsOrder(imageConditions)
     }
 
     fun monitorBriefFirstItemView(briefItemView: View) {
@@ -182,20 +192,38 @@ class ImageConditionsBriefViewModel @Inject constructor(
     }
 }
 
-private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
+private fun ScreenCondition.toItemDescription(screenArea: Point, bitmap: Bitmap? = null): ScreenConditionDescription =
+    when (this) {
+        is ImageCondition -> toImageItemDescription(screenArea, bitmap)
+        is TextCondition -> toTextItemDescription(screenArea)
+    }
+
+private fun ImageCondition.toImageItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(
-        conditionBitmap = bitmap,
-        conditionDetectionType = when (detectionType) {
-            EXACT -> ImageConditionBriefRenderingType.EXACT
-            IN_AREA -> ImageConditionBriefRenderingType.AREA
-            else -> ImageConditionBriefRenderingType.WHOLE_SCREEN
+        detectionAreaType = when (detectionType) {
+            EXACT -> ScreenConditionBriefRenderingType.EXACT
+            IN_AREA -> ScreenConditionBriefRenderingType.AREA
+            else -> ScreenConditionBriefRenderingType.WHOLE_SCREEN
         },
+        detectionArea = when (detectionType) {
+            EXACT -> captureArea
+            IN_AREA -> detectionArea
+            WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
+            else -> null
+        },
+        conditionBitmap = bitmap,
         conditionPosition = captureArea,
-        conditionDetectionArea =
-            when (detectionType) {
-                EXACT -> captureArea
-                IN_AREA -> detectionArea
-                WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
-                else -> null
-            },
+    )
+
+private fun TextCondition.toTextItemDescription(screenArea: Point): TextConditionDescription =
+    TextConditionDescription(
+        detectionAreaType = when (detectionType) {
+            IN_AREA -> ScreenConditionBriefRenderingType.AREA
+            else -> ScreenConditionBriefRenderingType.WHOLE_SCREEN
+        },
+        detectionArea = when (detectionType) {
+            IN_AREA -> detectionArea
+            WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
+            else -> null
+        },
     )

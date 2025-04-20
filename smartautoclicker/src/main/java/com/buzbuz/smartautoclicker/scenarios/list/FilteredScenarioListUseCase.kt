@@ -101,7 +101,7 @@ class FilteredScenarioListUseCase @Inject constructor(
         )
         else ScenarioListUiState.Item.ScenarioItem.Valid.Smart(
             scenario = this,
-            eventsItems = smartRepository.getImageEvents(id.databaseId).map { event ->
+            eventsItems = smartRepository.getScreenEvents(id.databaseId).map { event ->
                 ScenarioListUiState.Item.ScenarioItem.Valid.Smart.EventItem(
                     id = event.id.databaseId,
                     eventName = event.name,

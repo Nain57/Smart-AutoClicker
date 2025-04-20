@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,14 +26,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
-import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ScreenEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -101,22 +101,22 @@ internal class EditionState internal constructor(
             eventEditor?.conditionsEditor?.listState ?: emptyFlow()
         }
 
-    override val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>> =
+    override val editedEventScreenConditionsState: Flow<EditedListState<ScreenCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
 
-            if (editor is ImageEventsEditor)
+            if (editor is ScreenEventsEditor)
                 editor.conditionsEditor.listState
             else emptyFlow()
         }
 
-    override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
+    override val editedScreenConditionState: Flow<EditedElementState<ScreenCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
 
-            if (editor is ImageEventsEditor)
+            if (editor is ScreenEventsEditor)
                 editor.conditionsEditor.editedItemState
             else emptyFlow()
         }

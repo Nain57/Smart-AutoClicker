@@ -120,7 +120,7 @@ class ClickDialog(
                 )
                 setButtonConfig(
                     MultiStateButtonConfig(
-                        icons = listOf(R.drawable.ic_click_on_condition, R.drawable.ic_condition),
+                        icons = listOf(R.drawable.ic_click_on_condition, R.drawable.ic_image_condition),
                         singleSelection = true,
                         selectionRequired = true,
                     )
@@ -221,7 +221,10 @@ class ClickDialog(
             setTitle(state.selectorTitle)
             setDescription(state.selectorDescription)
             setEnabled(state.isSelectorEnabled)
-            setIconBitmap(state.selectorBitmap)
+            setIconBitmap(
+                if (state.selectorConditionState is ScreenConditionUiState.Image) state.selectorConditionState.bitmap
+                else null
+            )
 
             when (state.positionType) {
                 Click.PositionType.USER_SELECTED ->

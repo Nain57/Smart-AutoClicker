@@ -42,7 +42,7 @@
             android:background="?attr/colorSurfaceVariant"
             android:scaleType="fitCenter"
             android:contentDescription="@string/content_desc_image_condition"
-            tools:src="@drawable/ic_condition" />
+            tools:src="@drawable/ic_image_condition" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
@@ -97,7 +97,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_detect_exact"
             android:gravity="center"
-            app:drawableEndCompat="@drawable/ic_condition"
+            app:drawableEndCompat="@drawable/ic_image_condition"
             android:drawablePadding="@dimen/drawable_padding_small"
             tools:text="42" />
 

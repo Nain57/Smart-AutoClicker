@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,12 +31,14 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefR
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderer
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.ImageConditionBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.TextConditionBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions.TextConditionDescription
 import dagger.hilt.EntryPoints
 
 
@@ -80,6 +82,9 @@ class ItemBriefView @JvmOverloads constructor(
                 is SwipeDescription -> SwipeBriefRenderer(this, style.swipeStyle)
                 is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
                 is ImageConditionDescription -> ImageConditionBriefRenderer(
+                    this, style.imageConditionStyle, displayConfigManager,
+                )
+                is TextConditionDescription -> TextConditionBriefRenderer(
                     this, style.imageConditionStyle, displayConfigManager,
                 )
                 is DefaultDescription -> DefaultBriefRenderer(this, style.defaultStyle)

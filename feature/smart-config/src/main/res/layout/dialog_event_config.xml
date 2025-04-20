@@ -63,7 +63,7 @@
                     android:orientation="vertical">
 
                     <include layout="@layout/include_field_event_children"
-                        android:id="@+id/field_image_conditions_selector"
+                        android:id="@+id/field_screen_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone"

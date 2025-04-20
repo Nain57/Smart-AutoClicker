@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,3 +25,16 @@ import android.graphics.Rect
  * @return the size.
  */
 fun Rect.size(): Point = Point(width(), height())
+
+/** Get the position of this rectangle centered in the provided container. */
+fun Rect.centerIn(container: Rect): Rect {
+    val offsetX = (container.width() - width()) / 2
+    val offsetY = (container.height() - height()) / 2
+
+    return Rect(
+        container.left + offsetX,
+        container.top + offsetY,
+        container.right - offsetX,
+        container.bottom - offsetY,
+    )
+}

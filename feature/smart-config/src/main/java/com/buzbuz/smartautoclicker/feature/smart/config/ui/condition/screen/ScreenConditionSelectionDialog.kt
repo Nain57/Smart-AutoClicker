@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
@@ -35,9 +33,8 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionGridBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.adapters.ScreenConditionsAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.EntryPoints
@@ -45,9 +42,9 @@ import dagger.hilt.EntryPoints
 import kotlinx.coroutines.Job
 
 class ScreenConditionSelectionDialog(
-    private val conditionList: List<UiImageCondition>,
+    private val conditionList: List<UiScreenCondition>,
     bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
+    private val onConditionSelected: (ScreenCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** Monitors views for the tutorial. */
@@ -58,9 +55,9 @@ class ScreenConditionSelectionDialog(
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
     /** Adapter for the list of condition. */
-    private val conditionsAdapter = ImageConditionsAdapter(
+    private val conditionsAdapter = ScreenConditionsAdapter(
+        itemClickedListener = { condition, _ -> onConditionClicked(condition) },
         bitmapProvider = bitmapProvider,
-        onConditionSelected = ::onConditionClicked,
         itemViewBound = ::onConditionItemBound,
     )
 
@@ -92,8 +89,8 @@ class ScreenConditionSelectionDialog(
         conditionsAdapter.submitList(conditionList)
     }
 
-    private fun onConditionClicked(condition: ImageCondition) {
-        onConditionSelected(condition)
+    private fun onConditionClicked(condition: UiScreenCondition) {
+        onConditionSelected(condition.condition)
         back()
     }
 
@@ -105,74 +102,5 @@ class ScreenConditionSelectionDialog(
         } else {
             monitoredViewsManager.detach(MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST)
         }
-    }
-}
-
-/**
- * Adapter for the list of condition.
- * @param onConditionSelected listener on user click on a condition.
- */
-private class ImageConditionsAdapter(
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
-    private val itemViewBound: ((Int, View?) -> Unit),
-) : ListAdapter<UiImageCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
-        ImageConditionViewHolder(
-            ItemImageConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            bitmapProvider,
-            onConditionSelected,
-        )
-
-    override fun onBindViewHolder(holder: ImageConditionViewHolder, position: Int) {
-        holder.onBind(getItem(position))
-        itemViewBound(position, holder.viewBinding.cardImageCondition.root)
-    }
-
-    override fun onViewRecycled(holder: ImageConditionViewHolder) {
-        holder.onUnbind()
-        itemViewBound(holder.bindingAdapterPosition, null)
-        super.onViewRecycled(holder)
-    }
-}
-
-/** DiffUtil Callback comparing two items when updating the [ImageConditionsAdapter] list. */
-private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiImageCondition>() {
-    override fun areItemsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
-        oldItem.condition.id == newItem.condition.id
-    override fun areContentsTheSame(oldItem: UiImageCondition, newItem: UiImageCondition): Boolean =
-        oldItem == newItem
-}
-
-/**
- * ViewHolder for an Condition.
- *
- * @param viewBinding the view binding for this view holder views.
- * @param bitmapProvider provides the conditions bitmap.
- * @param onConditionSelected called when the user select a condition.
- */
-private class ImageConditionViewHolder(
-    val viewBinding: ItemImageConditionGridBinding,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
-): RecyclerView.ViewHolder(viewBinding.root) {
-
-    /** Job for the loading of the condition bitmap. Null until bound. */
-    private var bitmapLoadingJob: Job? = null
-
-    fun onBind(condition: UiImageCondition) {
-        bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.cardImageCondition.bind(
-            condition,
-            bitmapProvider,
-            onConditionSelected,
-        )
-    }
-
-    /** Unbind this view holder for a previously bound data model. */
-    fun onUnbind() {
-        bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = null
     }
 }

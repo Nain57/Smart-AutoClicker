@@ -59,12 +59,12 @@ private fun TriggerEvent.toEntity() : EventEntity =
 /** @return the complete event for this entity. */
 internal fun CompleteEventEntity.toDomain(cleanIds: Boolean = false): Event =
     when (event.type) {
-        EventType.IMAGE_EVENT -> toDomainImageEvent(cleanIds)
+        EventType.IMAGE_EVENT -> toDomainScreenEvent(cleanIds)
         EventType.TRIGGER_EVENT -> toDomainTriggerEvent(cleanIds)
     }
 
 /** @return the complete event for this entity. */
-internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): ScreenEvent =
+internal fun CompleteEventEntity.toDomainScreenEvent(cleanIds: Boolean = false): ScreenEvent =
     ScreenEvent(
         id = Identifier(id = event.id, asTemporary = cleanIds),
         scenarioId = Identifier(id = event.scenarioId, asTemporary = cleanIds),

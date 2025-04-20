@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 import kotlinx.coroutines.flow.StateFlow
 
-internal class ImageEventsEditor(
+internal class ScreenEventsEditor(
     onDeleteEvent: (ScreenEvent) -> Unit,
     parentItem: StateFlow<Scenario?>,
-) : EventsEditor<ScreenEvent, ImageCondition>(onDeleteEvent, canBeEmpty = true, parentItem) {
+) : EventsEditor<ScreenEvent, ScreenCondition>(onDeleteEvent, canBeEmpty = true, parentItem) {
 
-    override fun onEditedEventConditionsUpdated(conditions: List<ImageCondition>) {
+    override fun onEditedEventConditionsUpdated(conditions: List<ScreenCondition>) {
         val editedEvent = editedItem.value ?: return
 
         actionsEditor.editedList.value?.let { actions ->
@@ -64,7 +64,7 @@ internal class ImageEventsEditor(
 
     override fun copyEventWithNewChildren(
         event: ScreenEvent,
-        conditions: List<ImageCondition>,
+        conditions: List<ScreenCondition>,
         actions: List<Action>,
     ): ScreenEvent = event.copy(conditions = conditions, actions = actions)
 

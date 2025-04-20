@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
+package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.conditions
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
@@ -30,6 +29,7 @@ import androidx.core.graphics.toRectF
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ScreenConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DisplayBorderComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalidator
@@ -37,11 +37,11 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewInvalid
 import kotlin.math.max
 import kotlin.math.min
 
-internal class ImageConditionBriefRenderer(
+internal abstract class ScreenConditionBriefRenderer<T : ScreenConditionDescription>(
     briefView: View,
-    viewStyle: ImageConditionBriefRendererStyle,
+    viewStyle: ScreenConditionBriefRendererStyle,
     displayConfigManager: DisplayConfigManager,
-) : ItemBriefRenderer<ImageConditionBriefRendererStyle>(briefView, viewStyle) {
+) : ItemBriefRenderer<ScreenConditionBriefRendererStyle>(briefView, viewStyle) {
 
     private val selectorPaint = Paint().apply {
         isAntiAlias = true
@@ -66,37 +66,32 @@ internal class ImageConditionBriefRenderer(
         },
     )
 
-    private var imagePosition: Rect? = null
+
     private var detectionBorderRect: RectF? = null
     private val backgroundPath = Path().apply {
         fillType = Path.FillType.EVEN_ODD
     }
 
-    private var briefDescription: ImageConditionDescription? = null
+    protected var briefDescription: T? = null
 
+    @Suppress("UNCHECKED_CAST")
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
-        if (description !is ImageConditionDescription) return
-
-        briefDescription = description
+        briefDescription = description as T
     }
 
     override fun onInvalidate() {
-        imagePosition = null
         detectionBorderRect = null
         backgroundPath.reset()
         displayBorderComponent.onReset()
 
         // Nothing to display ? Exit early
-        val position = briefDescription?.conditionPosition
-        val detectionArea = briefDescription?.conditionDetectionArea
-        val detectionType = briefDescription?.conditionDetectionType
-        if (detectionArea == null || position == null || detectionType == null) {
-            return
-        }
+        val detectionArea = briefDescription?.detectionArea
+        val detectionType = briefDescription?.detectionAreaType ?: return
 
         when (detectionType) {
-            ImageConditionBriefRenderingType.AREA -> {
-                imagePosition = position.centerIn(detectionArea)
+            ScreenConditionBriefRenderingType.AREA -> {
+                detectionArea ?: return
+
                 backgroundPath.addRectangleWithHole(
                     RectF(0f, 0f, briefView.width.toFloat(), briefView.height.toFloat()),
                     detectionArea.toRectF(),
@@ -106,8 +101,9 @@ internal class ImageConditionBriefRenderer(
                 )
             }
 
-            ImageConditionBriefRenderingType.EXACT -> {
-                imagePosition = position
+            ScreenConditionBriefRenderingType.EXACT -> {
+                detectionArea ?: return
+
                 backgroundPath.addRectangleWithHole(
                     RectF(0f, 0f, briefView.width.toFloat(), briefView.height.toFloat()),
                     detectionArea.toRectF(),
@@ -117,20 +113,13 @@ internal class ImageConditionBriefRenderer(
                 )
             }
 
-            ImageConditionBriefRenderingType.WHOLE_SCREEN -> {
-                imagePosition = position.centerIn(detectionArea)
+            ScreenConditionBriefRenderingType.WHOLE_SCREEN -> {
                 displayBorderComponent.onInvalidate()
             }
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        imagePosition?.let { position ->
-            briefDescription?.conditionBitmap?.let { bitmap ->
-                canvas.drawBitmap(bitmap, null, position, null)
-            }
-        }
-
         if (detectionBorderRect != null) {
             canvas.drawPath(backgroundPath, backgroundPaint)
             detectionBorderRect?.let { borderRect ->
@@ -142,19 +131,6 @@ internal class ImageConditionBriefRenderer(
     }
 
     override fun onStop() = Unit
-
-    /** Get the position of this rectangle if it was centered in the provided container. */
-    private fun Rect.centerIn(container: Rect): Rect {
-        val offsetX = (container.width() - width()) / 2
-        val offsetY = (container.height() - height()) / 2
-
-        return Rect(
-            container.left + offsetX,
-            container.top + offsetY,
-            container.right - offsetX,
-            container.bottom - offsetY,
-        )
-    }
 
     /** Get the path to draw a rectangle containing a rectangle hole inside it.  */
     private fun Path.addRectangleWithHole(area: RectF, hole: RectF) {
@@ -179,22 +155,16 @@ internal class ImageConditionBriefRenderer(
     )
 }
 
-data class ImageConditionDescription(
-    val conditionBitmap: Bitmap?,
-    val conditionDetectionType: ImageConditionBriefRenderingType,
-    val conditionPosition: Rect,
-    val conditionDetectionArea: Rect?,
-) : ItemBriefDescription
 
-enum class ImageConditionBriefRenderingType {
-    AREA,
-    EXACT,
-    WHOLE_SCREEN
+sealed class ScreenConditionDescription : ItemBriefDescription {
+    abstract val detectionAreaType: ScreenConditionBriefRenderingType
+    abstract val detectionArea: Rect?
 }
 
-internal data class ImageConditionBriefRendererStyle(
+internal data class ScreenConditionBriefRendererStyle(
     @ColorInt val backgroundColor: Int,
     @ColorInt val selectorColor: Int,
+    val iconSize: Float,
     val thicknessPx: Int,
     val cornerRadiusPx: Float,
 )
