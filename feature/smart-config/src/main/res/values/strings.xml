@@ -186,6 +186,7 @@
 
     <string name="field_condition_text_to_detect">Text to detect</string>
     <string name="field_condition_text_language_title">Text language</string>
+    <string name="language_title">Languages</string>
 
     <string name="field_condition_visibility_title">Visibility</string>
     <string name="field_condition_visibility_desc_present">The condition must be detected</string>
@@ -376,6 +377,16 @@
 
     <string name="button_notification_config">Open settings</string>
     <string name="message_notification_config">Notification behaviour depends on your device OS. You can configure how notifications are handled in you device settings.</string>
+
+
+    <!-- Dialog language download ================================================================================== -->
+
+    <string name="dialog_title_language_download">Languages files</string>
+
+    <string name="item_languages_download_header">In order to use text detection in your scenario, you need to download the languages training data files.\n\nEach file can take up to 50MB, so you might want to use a WiFi connection before downloading.</string>
+
+    <string name="warning_dialog_message_stop_download">You have ongoing downloads, this will stop them. Are you sure ?</string>
+
 
     <!-- Dialogs warning/error ===================================================================================== -->
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.scenarios.list.model
 import androidx.annotation.IntRange
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM_INT
@@ -175,7 +175,7 @@ data class ScenarioListUiState(
                         val eventName: String,
                         val actionsCount: Int,
                         val conditionsCount: Int,
-                        val firstCondition: ImageCondition?,
+                        val firstCondition: ScreenCondition?,
                     )
                 }
             }

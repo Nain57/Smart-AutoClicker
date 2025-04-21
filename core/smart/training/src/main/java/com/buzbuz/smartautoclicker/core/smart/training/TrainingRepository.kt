@@ -28,6 +28,8 @@ interface TrainingRepository {
     val trainedTextLanguagesSyncState: Flow<Map<TrainedTextLanguage, TrainedTextDataSyncState>>
 
     fun getTrainedTextDataForLanguages(languages: Set<TrainedTextLanguage>): TrainedTextData?
-    fun downloadTextLanguageDataFile(language: TrainedTextLanguage)
     fun deleteTextLanguageDataFile(language: TrainedTextLanguage)
+
+    fun downloadTextLanguageDataFile(language: TrainedTextLanguage)
+    fun cancelTextLanguageDataFileDownload()
 }

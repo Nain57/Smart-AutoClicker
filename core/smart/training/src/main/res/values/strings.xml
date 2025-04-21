@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2025 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Languages names -->
+    <string name="language_name_afrikaans">Afrikaans</string>
+    <string name="language_name_arabic">Arabic</string>
+    <string name="language_name_bulgarian">Bulgarian</string>
+    <string name="language_name_chinese_simplified">Chinese Simplified</string>
+    <string name="language_name_chinese_traditional">Chinese Traditional</string>
+    <string name="language_name_croatian">Croatian</string>
+    <string name="language_name_czech">Czech</string>
+    <string name="language_name_danish">Danish</string>
+    <string name="language_name_dutch">Dutch</string>
+    <string name="language_name_english">English</string>
+    <string name="language_name_finnish">Finnish</string>
+    <string name="language_name_french">French</string>
+    <string name="language_name_german">German</string>
+    <string name="language_name_greek">Greek</string>
+    <string name="language_name_hebrew">Hebrew</string>
+    <string name="language_name_hindi">Hindi</string>
+    <string name="language_name_hungarian">Hungarian</string>
+    <string name="language_name_indonesian">Indonesian</string>
+    <string name="language_name_italian">Italian</string>
+    <string name="language_name_japanese">Japanese</string>
+    <string name="language_name_korean">Korean</string>
+    <string name="language_name_norwegian">Norwegian</string>
+    <string name="language_name_polish">Polish</string>
+    <string name="language_name_portuguese">Portuguese</string>
+    <string name="language_name_romanian">Romanian</string>
+    <string name="language_name_russian">Russian</string>
+    <string name="language_name_spanish">Spanish</string>
+    <string name="language_name_swedish">Swedish</string>
+    <string name="language_name_thai">Thai</string>
+    <string name="language_name_turkish">Turkish</string>
+    <string name="language_name_ukrainian">Ukrainian</string>
+    <string name="language_name_vietnamese">Vietnamese</string>
+</resources>

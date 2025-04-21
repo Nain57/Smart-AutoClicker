@@ -28,4 +28,4 @@ internal fun TrainedTextLanguage.getTrainedDataFileName(): String =
     "$langCode.$TRAINING_DATA_FILE_EXTENSION"
 
 internal const val TRAINING_DATA_FILE_EXTENSION = "traineddata"
-private const val TRAINING_DATA_URL_BASE = "https://github.com/tesseract-ocr/tessdata/blob/main/"
+private const val TRAINING_DATA_URL_BASE = "https://github.com/tesseract-ocr/tessdata/raw/refs/tags/4.1.0/"

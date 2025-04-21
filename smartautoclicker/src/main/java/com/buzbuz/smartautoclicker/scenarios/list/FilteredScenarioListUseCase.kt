@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.scenarios.list
 import android.content.Context
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -107,12 +106,7 @@ class FilteredScenarioListUseCase @Inject constructor(
                     eventName = event.name,
                     actionsCount = event.actions.size,
                     conditionsCount = event.conditions.size,
-                    firstCondition = if (event.conditions.isNotEmpty()) {
-                        //TODO: handle text condition
-                        val condition = event.conditions.first()
-                        if (condition is ImageCondition) condition
-                        else null
-                    } else null,
+                    firstCondition = event.conditions.firstOrNull(),
                 )
             },
             triggerEventCount = smartRepository.getTriggerEvents(id.databaseId).size,

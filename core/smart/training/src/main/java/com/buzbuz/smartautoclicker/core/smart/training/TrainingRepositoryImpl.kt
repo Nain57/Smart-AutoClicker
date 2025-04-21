@@ -71,8 +71,14 @@ internal class TrainingRepositoryImpl @Inject constructor(
         textTrainingRemoteDataSrc.downloadTrainingDataFile(
             language = language,
             outputFile = languageFile,
-            onSucces = { textTrainingLocalDataSrc.refreshTrainingDataFiles() },
+            onSuccess = { textTrainingLocalDataSrc.refreshTrainingDataFiles() },
         )
+    }
+
+    override fun cancelTextLanguageDataFileDownload() {
+        textTrainingRemoteDataSrc.cancelDownload { language ->
+            textTrainingLocalDataSrc.deleteTrainingData(language)
+        }
     }
 
     override fun deleteTextLanguageDataFile(language: TrainedTextLanguage) {

@@ -22,9 +22,15 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
+import com.buzbuz.smartautoclicker.core.smart.training.TrainingRepository
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataSyncState
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -35,12 +41,15 @@ import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -52,22 +61,29 @@ import javax.inject.Inject
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
+    private val smartRepository: IRepository,
     private val editionRepository: EditionRepository,
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debugRepository: DebuggingRepository,
+    trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
     private val scenarioDbId: StateFlow<Long?> = detectionRepository.scenarioId
         .map { it?.databaseId }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null,
-        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private var paywallResultJob: Job? = null
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val isLanguageFileDownloadRequired: StateFlow<Boolean> = scenarioDbId
+        .flatMapLatest { id -> id?.let(smartRepository::getEventsFlow) ?: emptyFlow() }
+        .map { events -> events.getAllTextLanguages() }
+        .combine(trainingRepository.trainedTextLanguagesSyncState) { scenarioLanguages, syncStates ->
+            scenarioLanguages.find { syncStates[it] !is TrainedTextDataSyncState.Downloaded } != null
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the paywall is currently displayed. */
     val paywallIsVisible: Flow<Boolean> =
@@ -77,11 +93,7 @@ class MainMenuModel @Inject constructor(
     val detectionState: StateFlow<UiState> = detectionRepository.detectionState
         .map { if (it == DetectionState.DETECTING) UiState.Detecting else UiState.Idle }
         .distinctUntilChanged()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            UiState.Idle,
-        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, UiState.Idle)
 
     val isMediaProjectionStarted: StateFlow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
@@ -100,6 +112,10 @@ class MainMenuModel @Inject constructor(
     val nativeLibError: Flow<Boolean> = detectionRepository.detectionState
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
+
+
+    fun getScenarioId(): Long? =
+        scenarioDbId.value
 
     /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
     fun loadAdIfNeeded(context: Context) {
@@ -194,6 +210,9 @@ class MainMenuModel @Inject constructor(
     fun shouldRestartMediaProjection(): Boolean =
         !isMediaProjectionStarted.value
 
+    fun shouldDownloadTextLanguageFiles(): Boolean =
+        isLanguageFileDownloadRequired.value
+
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
         detectionState.value == UiState.Idle && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
 
@@ -208,5 +227,14 @@ sealed class UiState {
     data object Detecting: UiState()
     data object Idle: UiState()
 }
+
+private fun List<Event>.getAllTextLanguages() : Set<TrainedTextLanguage> =
+    buildSet {
+        this@getAllTextLanguages.forEach { event ->
+            event.conditions.forEach { condition ->
+                if (condition is TextCondition) add(condition.textLanguage)
+            }
+        }
+    }
 
 private const val TAG = "MainMenuViewModel"

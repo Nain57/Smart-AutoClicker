@@ -56,50 +56,5 @@ enum class TrainedTextLanguage(internal val langCode: String) {
     TURKISH("tur"),
     UKRAINIAN("ukr"),
     VIETNAMESE("vie");
-
-
-    companion object {
-
-        /** Get the TrainedTextLanguage corresponding to the locale, if any. */
-        fun Locale.getTrainedTextLanguage(): TrainedTextLanguage =
-            when (language) {
-                "af" -> AFRIKAANS
-                "ar" -> ARABIC
-                "bg" -> BULGARIAN
-                "zh" -> when (script) {
-                    "Hans" -> CHINESE_SIMPLIFIED
-                    "Hant" -> CHINESE_TRADITIONAL
-                    else -> CHINESE_SIMPLIFIED // fallback in ambiguous case
-                }
-                "hr" -> CROATIAN
-                "cs" -> CZECH
-                "da" -> DANISH
-                "nl" -> DUTCH
-                "en" -> ENGLISH
-                "fi" -> FINNISH
-                "fr" -> FRENCH
-                "de" -> GERMAN
-                "el" -> GREEK
-                "he", "iw" -> HEBREW
-                "hi" -> HINDI
-                "hu" -> HUNGARIAN
-                "id", "in" -> INDONESIAN
-                "it" -> ITALIAN
-                "ja" -> JAPANESE
-                "ko" -> KOREAN
-                "no", "nb", "nn" -> NORWEGIAN
-                "pl" -> POLISH
-                "pt" -> PORTUGUESE
-                "ro" -> ROMANIAN
-                "ru" -> RUSSIAN
-                "es" -> SPANISH
-                "sv" -> SWEDISH
-                "th" -> THAI
-                "tr" -> TURKISH
-                "uk" -> UKRAINIAN
-                "vi" -> VIETNAMESE
-                else -> ENGLISH
-            }
-    }
 }
 

@@ -21,14 +21,18 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
+import kotlinx.coroutines.CancellationException
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 import java.io.File
 import java.io.FileOutputStream
@@ -48,14 +52,16 @@ internal class TextTrainingRemoteDataSource @Inject constructor(
     private val _currentDownloadState: MutableStateFlow<TextTrainingFileDownload?> = MutableStateFlow(null)
     val currentDownloadState: Flow<TextTrainingFileDownload?> = _currentDownloadState
 
-    fun downloadTrainingDataFile(language: TrainedTextLanguage, outputFile: File, onSucces: () -> Unit) {
-        coroutineScopeIo.launch {
-            val currentState = _currentDownloadState.value
-            if (currentState is TextTrainingFileDownload.Downloading) {
-                Log.w(TAG, "Can't download data for $language, other language file is downloading")
-                return@launch
-            }
+    private var downloadJob: Job? = null
 
+    fun downloadTrainingDataFile(language: TrainedTextLanguage, outputFile: File, onSuccess: () -> Unit) {
+        val currentState = _currentDownloadState.value
+        if (downloadJob != null || currentState is TextTrainingFileDownload.Downloading) {
+            Log.w(TAG, "Can't download data for $language, other language file is downloading")
+            return
+        }
+
+        downloadJob = coroutineScopeIo.launch {
             _currentDownloadState.update { TextTrainingFileDownload.Downloading(language, 0) }
 
             Log.i(TAG, "Downloading data for language $language")
@@ -65,12 +71,13 @@ internal class TextTrainingRemoteDataSource @Inject constructor(
             var output: FileOutputStream? = null
 
             try {
-                connection = language.getTrainedDataUrl().openConnection() as HttpURLConnection
+                val url = language.getTrainedDataUrl()
+                connection = url.openConnection() as HttpURLConnection
                 connection.connect()
 
                 val contentLength = connection.contentLength
                 if (connection.responseCode != HttpURLConnection.HTTP_OK || contentLength <= 0) {
-                    Log.e(TAG, "Error, while downloading language file $language")
+                    Log.e(TAG, "Error while downloading language file $language at $url: ${connection.responseCode}")
                     _currentDownloadState.update { TextTrainingFileDownload.Error(language) }
                     return@launch
                 }
@@ -81,29 +88,46 @@ internal class TextTrainingRemoteDataSource @Inject constructor(
                 val buffer = ByteArray(8 * 1024)
                 var totalBytesRead = 0L
                 var bytesRead: Int
+                var progress: Int
 
                 while (input.read(buffer).also { bytesRead = it } != -1) {
+                    yield()
+
                     output.write(buffer, 0, bytesRead)
                     totalBytesRead += bytesRead
+                    progress = (totalBytesRead * 100 / contentLength).toInt()
+
                     _currentDownloadState.update {
-                        TextTrainingFileDownload.Downloading(
-                            language = language,
-                            progress = (totalBytesRead * 100 / contentLength).toInt(),
-                        )
+                        TextTrainingFileDownload.Downloading(language, progress)
                     }
                 }
 
                 _currentDownloadState.update { TextTrainingFileDownload.Completed(language) }
+                onSuccess()
+            } catch (canEx: CancellationException) {
+                Log.e(TAG, "Download is cancelled")
+                _currentDownloadState.update { null }
             } catch (ex: Exception) {
-                Log.e(TAG, "Error, while downloading language file $language", ex)
+                Log.e(TAG, "Error while downloading language file $language", ex)
                 _currentDownloadState.update { TextTrainingFileDownload.Error(language) }
             } finally {
                 try {
                     input?.close()
                     output?.close()
                     connection?.disconnect()
+                    downloadJob = null
                 } catch (ignored: Exception) { }
             }
+        }
+    }
+
+    fun cancelDownload(onCancelled: (TrainedTextLanguage) -> Unit) {
+        val dlJob = downloadJob ?: return
+        val dlLanguage = _currentDownloadState.value?.language ?: return
+
+        coroutineScopeIo.launch {
+            dlJob.cancelAndJoin()
+            onCancelled(dlLanguage)
         }
     }
 }

@@ -42,7 +42,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage.Companion.getTrainedTextLanguage
+import com.buzbuz.smartautoclicker.core.smart.training.model.toTrainedTextLanguage
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
@@ -160,7 +160,7 @@ class EditedItemsBuilder internal constructor(
             shouldBeDetected = defaultValues.conditionShouldBeDetected(),
             priority = 0,
             textToDetect = "",
-            textLanguage = context.resources.configuration.getLocales().get(0).getTrainedTextLanguage(),
+            textLanguage = context.resources.configuration.getLocales().get(0).toTrainedTextLanguage(),
         )
 
     fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =
