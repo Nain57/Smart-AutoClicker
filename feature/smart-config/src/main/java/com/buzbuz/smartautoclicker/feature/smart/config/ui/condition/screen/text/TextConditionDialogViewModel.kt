@@ -21,10 +21,7 @@ import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.common.DetectionTypeState
@@ -73,7 +70,7 @@ class TextConditionDialogViewModel @Inject constructor(
     val textToDetect: Flow<String?> = configuredCondition.map { it.textToDetect }.take(1)
     val textToDetectError: Flow<Boolean> = configuredCondition.map { it.textToDetect.isEmpty() }
 
-    val textLanguage: Flow<TextLanguagesChoice> = configuredCondition.map { it.textLanguage.toTextLanguageChoice() }
+    val textLanguage: Flow<TextLanguagesChoice> = configuredCondition.map { TextLanguagesChoice(it.textLanguage) }
 
     /** Tells if the condition should be present or not on the screen. */
     val shouldBeDetected: Flow<Boolean> = configuredCondition

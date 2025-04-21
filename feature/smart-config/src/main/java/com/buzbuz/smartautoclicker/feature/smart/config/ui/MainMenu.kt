@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.languages.LanguageFilesDownloadDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRestartMediaProjectionStarterOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
@@ -208,6 +209,11 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             return
         }
 
+        if (viewModel.shouldDownloadTextLanguageFiles()) {
+            showDownloadTextLanguageFileDialog()
+            return
+        }
+
         if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
             showStopVolumeDownTutorialDialog()
             return
@@ -354,6 +360,19 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         overlayManager.navigateTo(
             context = context,
             newOverlay = newRestartMediaProjectionStarterOverlay(context),
+            hideCurrent = true,
+        )
+    }
+
+    private fun showDownloadTextLanguageFileDialog() {
+        val scenarioId = viewModel.getScenarioId() ?: return
+
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = LanguageFilesDownloadDialog(
+                scenarioDbId = scenarioId,
+                onDownloadsCompleted = ::onPlayPauseClicked,
+            ),
             hideCurrent = true,
         )
     }

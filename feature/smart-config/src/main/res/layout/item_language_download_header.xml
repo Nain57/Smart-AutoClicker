@@ -15,9 +15,14 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Needed to download training data for OCR. -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-</manifest>
+<com.google.android.material.textview.MaterialTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/language_header_text"
+    style="@style/AppTheme.TextAppearance.BodyLarge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+    android:layout_marginTop="32dp"
+    android:layout_marginBottom="32dp"
+    android:gravity="center"
+    android:text="@string/item_languages_download_header"/>

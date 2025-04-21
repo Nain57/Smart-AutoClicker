@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.scenarios.list.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
@@ -29,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState.Item.ScenarioItem.Valid.Smart.EventItem
 
 import kotlinx.coroutines.Job
@@ -69,6 +72,7 @@ class EventCardViewHolder(
     /** The job for the condition bitmap loading. */
     private var bitmapJob: Job? = null
 
+    @SuppressLint("SetTextI18n")
     fun onBind(item: EventItem) {
         viewBinding.apply {
             eventName.text = item.eventName
@@ -76,15 +80,27 @@ class EventCardViewHolder(
             eventConditionsCount.text = item.conditionsCount.toString()
 
             if (item.firstCondition == null) {
-                setErrorBitmap()
+                setError()
                 return
             }
 
-            bitmapJob = bitmapProvider(item.firstCondition) { bitmap ->
-                if (bitmap != null) {
-                    conditionImage.setImageBitmap(bitmap)
-                } else {
-                   setErrorBitmap()
+            when (item.firstCondition) {
+                is ImageCondition -> {
+                    conditionImage.visibility = View.VISIBLE
+                    conditionText.visibility = View.GONE
+                    bitmapJob = bitmapProvider(item.firstCondition) { bitmap ->
+                        if (bitmap != null) {
+                            conditionImage.setImageBitmap(bitmap)
+                        } else {
+                            setError()
+                        }
+                    }
+                }
+
+                is TextCondition -> {
+                    conditionImage.visibility = View.GONE
+                    conditionText.visibility = View.VISIBLE
+                    conditionText.text = item.firstCondition.textToDetect
                 }
             }
         }
@@ -95,11 +111,15 @@ class EventCardViewHolder(
         bitmapJob = null
     }
 
-    private fun setErrorBitmap() {
-        viewBinding.conditionImage.setImageDrawable(
-            ContextCompat.getDrawable(viewBinding.root.context, R.drawable.ic_cancel)?.apply {
-                setTint(Color.RED)
-            }
-        )
+    private fun setError() {
+        viewBinding.apply {
+            conditionText.visibility = View.GONE
+            conditionImage.visibility = View.VISIBLE
+            conditionImage.setImageDrawable(
+                ContextCompat.getDrawable(viewBinding.root.context, R.drawable.ic_cancel)?.apply {
+                    setTint(Color.RED)
+                }
+            )
+        }
     }
 }

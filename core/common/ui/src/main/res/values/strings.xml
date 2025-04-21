@@ -99,43 +99,6 @@
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from</string>
     <string name="toast_configure_swipe_to">Touch the position to end the swipe to</string>
 
-    <!-- Languages names -->
-    <string name="language_title">Languages</string>
-    <string name="language_name_afrikaans">Afrikaans</string>
-    <string name="language_name_arabic">Arabic</string>
-    <string name="language_name_bulgarian">Bulgarian</string>
-    <string name="language_name_chinese_simplified">Chinese Simplified</string>
-    <string name="language_name_chinese_traditional">Chinese Traditional</string>
-    <string name="language_name_croatian">Croatian</string>
-    <string name="language_name_czech">Czech</string>
-    <string name="language_name_danish">Danish</string>
-    <string name="language_name_dutch">Dutch</string>
-    <string name="language_name_english">English</string>
-    <string name="language_name_finnish">Finnish</string>
-    <string name="language_name_french">French</string>
-    <string name="language_name_german">German</string>
-    <string name="language_name_greek">Greek</string>
-    <string name="language_name_hebrew">Hebrew</string>
-    <string name="language_name_hindi">Hindi</string>
-    <string name="language_name_hungarian">Hungarian</string>
-    <string name="language_name_indonesian">Indonesian</string>
-    <string name="language_name_italian">Italian</string>
-    <string name="language_name_japanese">Japanese</string>
-    <string name="language_name_korean">Korean</string>
-    <string name="language_name_norwegian">Norwegian</string>
-    <string name="language_name_polish">Polish</string>
-    <string name="language_name_portuguese">Portuguese</string>
-    <string name="language_name_romanian">Romanian</string>
-    <string name="language_name_russian">Russian</string>
-    <string name="language_name_spanish">Spanish</string>
-    <string name="language_name_swedish">Swedish</string>
-    <string name="language_name_thai">Thai</string>
-    <string name="language_name_turkish">Turkish</string>
-    <string name="language_name_ukrainian">Ukrainian</string>
-    <string name="language_name_vietnamese">Vietnamese</string>
-
-
-
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.Ev
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.languages.LanguageFilesDownloadViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ImageConditionAreaSelectorViewModel
@@ -84,6 +85,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel
     fun intentViewModel(): IntentViewModel
+    fun languageFilesDownloadViewModel(): LanguageFilesDownloadViewModel
     fun mainMenuViewModel(): MainMenuModel
     fun moreViewModel(): MoreViewModel
     fun notificationViewModel(): NotificationViewModel
