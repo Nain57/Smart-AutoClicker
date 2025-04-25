@@ -43,8 +43,18 @@ internal fun Action.toEntity(): ActionEntity {
         is ToggleEvent -> toToggleEventEntity()
         is ChangeCounter -> toChangeCounterEntity()
         is Notification -> toNotificationEntity()
+        is PressBack -> toPressBackEntity()
     }
 }
+
+private fun PressBack.toPressBackEntity(): ActionEntity =
+    ActionEntity(
+        id = id.databaseId,
+        eventId = eventId.databaseId,
+        priority = priority,
+        name = name!!,
+        type = ActionType.PRESS_BACK,
+    )
 
 private fun Click.toClickEntity(): ActionEntity =
     ActionEntity(
@@ -147,11 +157,19 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.CLICK -> toDomainClick(cleanIds)
     ActionType.SWIPE -> toDomainSwipe(cleanIds)
     ActionType.PAUSE -> toDomainPause(cleanIds)
+    ActionType.PRESS_BACK -> toDomainPressBack(cleanIds)
     ActionType.INTENT -> toDomainIntent(cleanIds)
     ActionType.TOGGLE_EVENT -> toDomainToggleEvent(cleanIds)
     ActionType.CHANGE_COUNTER -> toDomainChangeCounter(cleanIds)
     ActionType.NOTIFICATION -> toDomainNotification(cleanIds)
 }
+
+private fun CompleteActionEntity.toDomainPressBack(cleanIds: Boolean = false) = PressBack(
+    id = Identifier(id = action.id, asTemporary = cleanIds),
+    eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
+    name = action.name,
+    priority = action.priority,
+)
 
 private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Click(
     id = Identifier(id = action.id, asTemporary = cleanIds),

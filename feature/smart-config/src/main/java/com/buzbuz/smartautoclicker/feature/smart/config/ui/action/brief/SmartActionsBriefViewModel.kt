@@ -123,6 +123,7 @@ class SmartActionsBriefViewModel @Inject constructor(
                 add(ActionTypeChoice.Click)
                 add(ActionTypeChoice.Swipe)
                 add(ActionTypeChoice.Pause)
+                add(ActionTypeChoice.PressBack)
                 add(ActionTypeChoice.ChangeCounter)
                 add(ActionTypeChoice.ToggleEvent)
                 add(ActionTypeChoice.Notification)
@@ -170,6 +171,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
         ActionTypeChoice.Notification -> editionRepository.editedItemsBuilder.createNewNotification(context)
         ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
+        ActionTypeChoice.PressBack -> editionRepository.editedItemsBuilder.createNewPressBack(context)
     }
 
     override fun createActionFrom(action: Action): Action =

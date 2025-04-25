@@ -33,6 +33,8 @@ interface SmartActionExecutor : AndroidExecutor {
 
     /** Request to reset any state related to action execution, most likely because a new session is starting. */
     fun clearState()
+    /** Perform a global back action. */
+    fun executePressBack()
 }
 
 data class NotificationRequest(

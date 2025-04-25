@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.action.PressBack
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -95,6 +96,7 @@ internal class ActionExecutor(
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
                 is Notification -> executeNotification(event, action)
+                is PressBack -> executePressBack(action)
             }
         }
     }
@@ -292,6 +294,12 @@ internal class ActionExecutor(
 
     private fun Random?.nextLongInOffsetIfNeeded(value: Long, offset: Long): Long =
         this?.nextLongInOffset(value, offset) ?: value
+    private suspend fun executePressBack(pressBack: PressBack) {
+        Log.d(TAG, "Executing PressBack action: ${pressBack.name}")
+        withContext(Dispatchers.Main) {
+            androidExecutor.executePressBack()
+        }
+    }
 }
 
 /** Tag for logs. */

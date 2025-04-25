@@ -27,11 +27,13 @@ internal fun DumbActionEntity.toDomain(asDomain: Boolean = false): DumbAction = 
     DumbActionType.CLICK -> toDomainClick(asDomain)
     DumbActionType.SWIPE -> toDomainSwipe(asDomain)
     DumbActionType.PAUSE -> toDomainPause(asDomain)
+    DumbActionType.PRESS_BACK -> toDomainPressBack(asDomain)
 }
 internal fun DumbAction.toEntity(scenarioDbId: Long = DATABASE_ID_INSERTION): DumbActionEntity = when (this) {
     is DumbAction.DumbClick -> toClickEntity(scenarioDbId)
     is DumbAction.DumbSwipe -> toSwipeEntity(scenarioDbId)
     is DumbAction.DumbPause -> toPauseEntity(scenarioDbId)
+    is DumbAction.DumbPressBack -> toPressBackEntity(scenarioDbId)
 }
 
 private fun DumbActionEntity.toDomainClick(asDomain: Boolean): DumbAction.DumbClick =
@@ -68,6 +70,14 @@ private fun DumbActionEntity.toDomainPause(asDomain: Boolean): DumbAction.DumbPa
         name = name,
         priority = priority,
         pauseDurationMs = pauseDuration!!,
+    )
+
+private fun DumbActionEntity.toDomainPressBack(asDomain: Boolean): DumbAction.DumbPressBack =
+    DumbAction.DumbPressBack(
+        id = Identifier(id = id, asTemporary = asDomain),
+        scenarioId = Identifier(id = dumbScenarioId, asTemporary = asDomain),
+        name = name,
+        priority = priority,
     )
 
 private fun DumbAction.DumbClick.toClickEntity(scenarioDbId: Long): DumbActionEntity {
@@ -118,5 +128,17 @@ private fun DumbAction.DumbPause.toPauseEntity(scenarioDbId: Long): DumbActionEn
         priority = priority,
         type = DumbActionType.PAUSE,
         pauseDuration = pauseDurationMs,
+    )
+}
+
+private fun DumbAction.DumbPressBack.toPressBackEntity(scenarioDbId: Long): DumbActionEntity {
+    if (!isValid()) throw IllegalStateException("Can't transform to entity, PressBack is incomplete.")
+
+    return DumbActionEntity(
+        id = id.databaseId,
+        dumbScenarioId = if (scenarioDbId != DATABASE_ID_INSERTION) scenarioDbId else scenarioId.databaseId,
+        name = name,
+        priority = priority,
+        type = DumbActionType.PRESS_BACK,
     )
 }

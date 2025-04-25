@@ -62,6 +62,12 @@ internal fun BaseOverlay.showActionTypeSelectionDialog(configurator: ActionConfi
                     showActionCopyDialog(configurator)
                     return@ActionTypeSelectionDialog
                 }
+                if (choiceClicked is ActionTypeChoice.PressBack) {
+                    val action = configurator.createAction(context, choiceClicked)
+                    configurator.startActionEdition(action)
+                    configurator.upsertEditedAction()
+                    return@ActionTypeSelectionDialog
+                }
 
                 showActionConfigDialog(configurator, configurator.createAction(context, choiceClicked))
             },

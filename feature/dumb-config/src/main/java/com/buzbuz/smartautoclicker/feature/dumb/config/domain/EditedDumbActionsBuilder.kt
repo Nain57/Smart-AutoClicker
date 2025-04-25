@@ -72,6 +72,13 @@ class EditedDumbActionsBuilder {
             pauseDurationMs = context.getDefaultDumbPauseDurationMs(),
         )
 
+    fun createNewDumbPressBack(context: Context): DumbAction.DumbPressBack =
+        DumbAction.DumbPressBack(
+            id = dumbActionsIdCreator.generateNewIdentifier(),
+            scenarioId = getEditedScenarioIdOrThrow(),
+            name = context.getString(com.buzbuz.smartautoclicker.feature.dumb.config.R.string.item_press_back_title),
+        )
+
     fun createNewDumbActionFrom(from: DumbAction): DumbAction =
         when (from) {
             is DumbAction.DumbClick -> from.copy(
@@ -83,6 +90,10 @@ class EditedDumbActionsBuilder {
                 scenarioId = getEditedScenarioIdOrThrow(),
             )
             is DumbAction.DumbPause -> from.copy(
+                id = dumbActionsIdCreator.generateNewIdentifier(),
+                scenarioId = getEditedScenarioIdOrThrow(),
+            )
+            is DumbAction.DumbPressBack -> from.copy(
                 id = dumbActionsIdCreator.generateNewIdentifier(),
                 scenarioId = getEditedScenarioIdOrThrow(),
             )

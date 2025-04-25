@@ -20,6 +20,7 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.extensions.buildSingleStroke
 import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
@@ -37,7 +38,7 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 internal class DumbActionExecutor(
-    private val androidExecutor: AndroidExecutor,
+    private val androidExecutor: SmartActionExecutor,
     unblockWorkaroundEnabled: Boolean,
 ) {
 
@@ -66,6 +67,7 @@ internal class DumbActionExecutor(
             is DumbAction.DumbClick -> executeDumbClick(action)
             is DumbAction.DumbSwipe -> executeDumbSwipe(action)
             is DumbAction.DumbPause -> executeDumbPause(action)
+            is DumbAction.DumbPressBack -> executePressBack(action)
         }
     }
 
@@ -94,6 +96,13 @@ internal class DumbActionExecutor(
         delay(dumbPause.pauseDurationMs.randomizeDurationIfNeeded())
     }
 
+    private suspend fun executePressBack(pressBack: DumbAction.DumbPressBack) {
+        Log.d(TAG, "Executing PressBack action: ${pressBack.name}")
+        withContext(Dispatchers.Main) {
+            androidExecutor.executePressBack()
+        }
+    }
+
     private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeatable) {
         repeatable.repeat {
             withContext(Dispatchers.Main) {
@@ -120,6 +129,7 @@ internal class DumbActionExecutor(
     private fun Long.randomizeDurationIfNeeded(): Long =
         if (randomize) random.nextLongInOffset(this, RANDOMIZATION_DURATION_MAX_OFFSET_MS)
         else this
+
 }
 
 

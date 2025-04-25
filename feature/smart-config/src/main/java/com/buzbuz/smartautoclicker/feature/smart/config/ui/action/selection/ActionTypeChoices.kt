@@ -88,4 +88,10 @@ sealed class ActionTypeChoice(
         R.string.item_notification_desc,
         getNotificationIconRes(),
     )
+    /** Press Back Action choice. */
+    data object PressBack : ActionTypeChoice(
+        R.string.item_press_back_title,
+        R.string.item_press_back_desc,
+        R.drawable.ic_press_back
+    )
 }

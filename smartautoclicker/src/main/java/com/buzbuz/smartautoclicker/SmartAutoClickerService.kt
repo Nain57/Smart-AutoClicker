@@ -202,6 +202,12 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         userNotificationsController.clearAll()
     }
 
+    override fun executePressBack() {
+        Log.d(TAG, "SmartAutoClickerService.executePressBack called, attempting performGlobalAction(GLOBAL_ACTION_BACK)")
+        Log.i(TAG, "Executing global action: Back")
+        performGlobalAction(GLOBAL_ACTION_BACK)
+    }
+
     /**
      * Dump the state of the service via adb.
      * adb shell "dumpsys activity service com.buzbuz.smartautoclicker"

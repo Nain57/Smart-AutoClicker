@@ -64,6 +64,9 @@
     <string name="item_pause_title">Wait</string>
     <string name="item_pause_desc">Pause the detection execution</string>
     <string name="item_pause_details">During %1$s</string>
+    <string name="item_press_back_title">Press Back</string>
+    <string name="item_press_back_desc">Simulate a press of the system back button</string>
+    <string name="item_press_back_desc_simple">Presses the system back button</string>
 
     <string name="item_change_counter_title">Change counter</string>
     <string name="item_change_counter_desc">Change a value to verify it later</string>

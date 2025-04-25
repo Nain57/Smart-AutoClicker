@@ -51,4 +51,7 @@ private fun DumbAction.toFiniteDumbAction(scenarioId: Identifier): DumbAction =
         is DumbPause -> copy(
             scenarioId = scenarioId
         )
+        is DumbAction.DumbPressBack -> copy(
+            scenarioId = scenarioId
+        )
     }

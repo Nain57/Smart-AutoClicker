@@ -89,6 +89,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
             createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
             createNewDumbSwipe = { from, to -> viewModel.createNewDumbSwipe(context, from, to) },
             createNewDumbPause = { viewModel.createNewDumbPause(context) },
+            createNewDumbPressBack = { viewModel.createNewDumbPressBack(context) },
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(

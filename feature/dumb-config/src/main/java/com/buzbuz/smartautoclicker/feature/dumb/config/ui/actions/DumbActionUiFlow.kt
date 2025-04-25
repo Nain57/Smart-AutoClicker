@@ -57,6 +57,10 @@ internal fun OverlayManager.startDumbActionCreationUiFlow(
                         creator.createNewDumbPause(),
                         listener
                     )
+                    DumbActionTypeChoice.PressBack -> {
+                        val newAction = creator.createNewDumbPressBack()
+                        listener.onDumbActionSaved(newAction)
+                    }
                 }
             },
             onCanceled = listener.onDumbActionCreationCancelled,
@@ -75,6 +79,10 @@ internal fun OverlayManager.startDumbActionEditionUiFlow(
         is DumbAction.DumbClick -> startDumbClickEditionUiFlow(context, dumbAction, listener)
         is DumbAction.DumbSwipe -> startDumbSwipeEditionFlow(context, dumbAction, listener)
         is DumbAction.DumbPause -> startDumbPauseEditionFlow(context, dumbAction, listener)
+        is DumbAction.DumbPressBack -> {
+            Log.i(TAG, "Edition UI for 'Press Back' action is not supported.")
+            listener.onDumbActionCreationCancelled()
+        }
     }
 }
 
@@ -241,6 +249,7 @@ internal class DumbActionCreator(
     val createNewDumbSwipe: (from: Point, to: Point) -> DumbAction.DumbSwipe,
     val createNewDumbPause: () -> DumbAction.DumbPause,
     val createDumbActionCopy: ((DumbAction) -> DumbAction)? = null,
+    val createNewDumbPressBack: () -> DumbAction.DumbPressBack,
 )
 
 

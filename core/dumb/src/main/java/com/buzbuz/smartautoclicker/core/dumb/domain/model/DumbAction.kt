@@ -36,6 +36,7 @@ sealed class DumbAction : Identifiable {
             is DumbClick -> copy(scenarioId = scenarioId)
             is DumbPause -> copy(scenarioId = scenarioId)
             is DumbSwipe -> copy(scenarioId = scenarioId)
+            is DumbPressBack -> copy(scenarioId = scenarioId)
         }
 
     data class DumbClick(
@@ -78,6 +79,14 @@ sealed class DumbAction : Identifiable {
         val pauseDurationMs: Long,
     ) : DumbAction() {
 
+        override fun isValid(): Boolean = name.isNotEmpty()
+    }
+    data class DumbPressBack(
+        override val id: Identifier,
+        override val scenarioId: Identifier,
+        override val name: String,
+        override val priority: Int = 0,
+    ) : DumbAction() {
         override fun isValid(): Boolean = name.isNotEmpty()
     }
 }

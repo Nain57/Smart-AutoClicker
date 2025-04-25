@@ -55,6 +55,10 @@
     <string name="item_title_dumb_action_copy">Copy</string>
     <string name="item_desc_dumb_action_copy">Copy an existing Action from any Scenarios</string>
 
+    <string name="item_press_back_title">Press Back</string>
+    <string name="item_press_back_desc">Simulate a press of the system back button</string>
+    <string name="item_press_back_desc_simple">Presses the system back button</string>
+
     <!--
       - Empty list messages.
       - Views handles any length here, but try to be concise.

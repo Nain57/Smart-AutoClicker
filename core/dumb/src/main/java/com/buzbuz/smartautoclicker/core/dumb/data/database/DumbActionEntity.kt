@@ -83,6 +83,8 @@ enum class DumbActionType {
     SWIPE,
     /** A pause, waiting before the next action. */
     PAUSE,
+    /** Simulate a press of the system back button. */
+    PRESS_BACK,
 }
 
 /** Type converter to read/write the [DumbActionType] into the database. */

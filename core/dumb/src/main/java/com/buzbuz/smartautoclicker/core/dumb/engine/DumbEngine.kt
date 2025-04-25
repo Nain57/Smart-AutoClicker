@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 
 import kotlinx.coroutines.CoroutineScope
+import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -73,7 +74,7 @@ class DumbEngine @Inject constructor(
     private val _isRunning: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isRunning: StateFlow<Boolean> = _isRunning
 
-    fun init(androidExecutor: AndroidExecutor, dumbScenario: DumbScenario) {
+    fun init(androidExecutor: SmartActionExecutor, dumbScenario: DumbScenario) {
         dumbActionExecutor = DumbActionExecutor(androidExecutor, settingsRepository.isInputBlockWorkaroundEnabled())
         dumbScenarioDbId.value = dumbScenario.id.databaseId
 

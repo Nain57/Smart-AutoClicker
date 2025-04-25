@@ -360,12 +360,27 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.CLICK -> deserializeActionClick(jsonAction, eventConditions, conditionsOperator)
             ActionType.SWIPE -> deserializeActionSwipe(jsonAction)
             ActionType.PAUSE -> deserializeActionPause(jsonAction)
+            ActionType.PRESS_BACK -> deserializeActionPressBack(jsonAction)
             ActionType.INTENT -> deserializeActionIntent(jsonAction)
             ActionType.TOGGLE_EVENT -> deserializeActionToggleEvent(jsonAction)
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
             null -> null
         }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionPressBack(jsonPressBack: JsonObject): ActionEntity? {
+        val id = jsonPressBack.getLong("id", true) ?: return null
+        val eventId = jsonPressBack.getLong("eventId", true) ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonPressBack.getString("name") ?: "",
+            priority = jsonPressBack.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.PRESS_BACK,
+        )
+    }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     open fun deserializeActionClick(

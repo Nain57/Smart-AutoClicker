@@ -55,6 +55,12 @@ sealed class DumbActionTypeChoice(
         R.string.item_desc_dumb_pause,
         R.drawable.ic_wait,
     )
+    /** Press Back Action choice. */
+    data object PressBack : DumbActionTypeChoice(
+        R.string.item_press_back_title,
+        R.string.item_press_back_desc,
+        R.drawable.ic_wait
+    )
 }
 
 fun allDumbActionChoices() = listOf(
@@ -62,4 +68,5 @@ fun allDumbActionChoices() = listOf(
     DumbActionTypeChoice.Click,
     DumbActionTypeChoice.Swipe,
     DumbActionTypeChoice.Pause,
+    DumbActionTypeChoice.PressBack,
 )

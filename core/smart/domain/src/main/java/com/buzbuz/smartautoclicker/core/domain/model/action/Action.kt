@@ -51,5 +51,6 @@ sealed class Action : Identifiable, Completable, Prioritizable {
             is Swipe -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is ToggleEvent -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Notification -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is PressBack -> copy(id = id, eventId = eventId, name = name, priority = priority)
         }
 }

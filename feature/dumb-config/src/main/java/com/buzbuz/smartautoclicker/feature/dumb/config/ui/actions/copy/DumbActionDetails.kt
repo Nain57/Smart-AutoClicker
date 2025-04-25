@@ -51,8 +51,22 @@ fun DumbAction.toDumbActionDetails(
         is DumbAction.DumbClick -> toClickDetails(context, withPositions, inError)
         is DumbAction.DumbSwipe -> toSwipeDetails(context, withPositions, inError)
         is DumbAction.DumbPause -> toPauseDetails(context, withPositions, inError)
+        is DumbAction.DumbPressBack -> toPressBackDetails(context, inError)
         else -> throw IllegalArgumentException("Not yet supported")
     }
+
+private fun DumbAction.DumbPressBack.toPressBackDetails(context: Context, inError: Boolean): DumbActionDetails =
+    DumbActionDetails(
+        icon = R.drawable.ic_wait,
+        name = name,
+        detailsText = when {
+            inError -> context.getString(R.string.item_error_action_invalid_generic)
+            else -> context.getString(R.string.item_press_back_desc_simple)
+        },
+        repeatCountText = null,
+        haveError = inError,
+        action = this,
+    )
 
 private fun DumbAction.DumbClick.toClickDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =
     DumbActionDetails(

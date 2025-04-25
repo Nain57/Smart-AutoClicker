@@ -41,6 +41,8 @@ enum class ActionType {
     SWIPE,
     /** A pause, waiting before the next action. */
     PAUSE,
+    /** Simulate a press of the system back button. */
+    PRESS_BACK,
     /** An Android Intent, allowing to interact with other applications. */
     INTENT,
     /** Toggle the enabled state of an event. */

@@ -147,6 +147,9 @@ class DumbScenarioBriefViewModel @Inject constructor(
     fun createNewDumbPause(context: Context, ): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(context)
 
+    fun createNewDumbPressBack(context: Context): DumbAction.DumbPressBack =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbPressBack(context)
+
     fun createDumbActionCopy(actionToCopy: DumbAction): DumbAction =
         dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
 
@@ -203,7 +206,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
             else -> null
         }
 
-    private fun DumbAction.toBriefDescription(): ItemBriefDescription =
+    private fun DumbAction.toBriefDescription(): ItemBriefDescription? =
         when (this) {
             is DumbAction.DumbClick -> ClickDescription(
                 position = position.toPointF(),
@@ -219,6 +222,8 @@ class DumbScenarioBriefViewModel @Inject constructor(
             is DumbAction.DumbPause -> PauseDescription(
                 pauseDurationMs = pauseDurationMs,
             )
+
+            is DumbAction.DumbPressBack -> null
         }
 }
 

@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.PressBack
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -303,6 +304,14 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
+    fun createNewPressBack(context: Context): PressBack =
+        PressBack(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = context.getString(com.buzbuz.smartautoclicker.feature.smart.config.R.string.item_press_back_title),
+            priority = 0,
+        )
+
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
         is Click -> createNewClickFrom(from, eventId)
         is Swipe -> createNewSwipeFrom(from, eventId)
@@ -311,6 +320,12 @@ class EditedItemsBuilder internal constructor(
         is ToggleEvent -> createNewToggleEventFrom(from, eventId)
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
         is Notification -> createNewNotificationFrom(from, eventId)
+        is PressBack -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+            priority = from.priority
+        )
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
