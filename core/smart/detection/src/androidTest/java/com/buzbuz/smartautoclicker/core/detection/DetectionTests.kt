@@ -25,6 +25,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.detection.data.TestResults
 import com.buzbuz.smartautoclicker.core.detection.data.TestImage
 import com.buzbuz.smartautoclicker.core.detection.data.getDetectionExactArea
+import com.buzbuz.smartautoclicker.core.detection.data.getBiggerThanScreenDetectionArea
+import com.buzbuz.smartautoclicker.core.detection.data.getInsideButTallerThanDetectionArea
+import com.buzbuz.smartautoclicker.core.detection.data.getInsideButWiderThanDetectionArea
 import com.buzbuz.smartautoclicker.core.detection.data.getValidCustomDetectionArea
 import com.buzbuz.smartautoclicker.core.detection.data.isValid
 import com.buzbuz.smartautoclicker.core.detection.utils.TEST_DETECTION_THRESHOLD_ALL
@@ -113,6 +116,62 @@ class DetectionTests {
         results.verify()
     }
 
+    @Test
+    fun detection_Detection_Area_Bigger_Than_Screen() {
+        // Given
+        val screenImage = TestImage.Screen.TutorialWithTarget
+        val conditionImage = TestImage.Condition.TutorialTargetBlue
+        val outOfScreenArea = getBiggerThanScreenDetectionArea(screenImage)
+
+        // When
+        val results = testedDetector.executeImageDetectionTest(
+            context = context,
+            screenImage = screenImage,
+            conditionImage = conditionImage,
+            area = outOfScreenArea,
+        )
+
+        // Then
+        results.verify()
+    }
+
+    @Test
+    fun detection_Detection_Area_Inside_But_Wider_Than_Screen() {
+        // Given
+        val screenImage = TestImage.Screen.TutorialWithTarget
+        val conditionImage = TestImage.Condition.TutorialTargetBlue
+        val outOfScreenArea = getInsideButWiderThanDetectionArea(screenImage)
+
+        // When
+        val results = testedDetector.executeImageDetectionTest(
+            context = context,
+            screenImage = screenImage,
+            conditionImage = conditionImage,
+            area = outOfScreenArea,
+        )
+
+        // Then
+        results.verify()
+    }
+
+    @Test
+    fun detection_Detection_Area_Inside_But_Taller_Than_Screen() {
+        // Given
+        val screenImage = TestImage.Screen.TutorialWithTarget
+        val conditionImage = TestImage.Condition.TutorialTargetBlue
+        val outOfScreenArea = getInsideButTallerThanDetectionArea(screenImage)
+
+        // When
+        val results = testedDetector.executeImageDetectionTest(
+            context = context,
+            screenImage = screenImage,
+            conditionImage = conditionImage,
+            area = outOfScreenArea,
+        )
+
+        // Then
+        results.verify()
+    }
 
     private fun ImageDetector.executeImageDetectionTest(
         context: Context,

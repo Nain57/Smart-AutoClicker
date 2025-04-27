@@ -57,13 +57,7 @@ TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, 
 
     // Compute the detection area
     ScalableRoi detectionArea = ScalableRoi();
-    detectionArea.setFullSize(x, y, width, height, scaleRatio);
-
-    // Check if the detection area fits the screen
-    if (!screenImage->getRoi().containsOrEquals(detectionArea)) {
-        LOGE("Detector", "Can't detectCondition, detection roi is outside the screen");
-        return templateMatcher->getMatchingResults();
-    }
+    detectionArea.setFullSize(x, y, width, height, scaleRatio,screenImage->getRoi());
 
     // Check if the condition fits in the detection area
     if (!detectionArea.isBiggerOrEquals(conditionImage.getRoi())) {
