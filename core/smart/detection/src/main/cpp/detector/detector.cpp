@@ -98,11 +98,7 @@ DetectionResult* Detector::detectText(const std::string& text, int x, int y, int
 
     // Compute the detection area
     ScalableRoi detectionArea = ScalableRoi();
-    detectionArea.setFullSize(x, y, width, height, scaleRatio);
-    if (!screenImage->getRoi().containsOrEquals(detectionArea)) {
-        LOGE("Detector", "Can't detectText, detection roi is outside the screen");
-        return templateMatcher->getMatchingResults();
-    }
+    detectionArea.setFullSize(x, y, width, height, scaleRatio, screenImage->getRoi());
 
     textMatcher->matchText(text, detectionArea, scaleRatio, threshold);
 
