@@ -116,14 +116,15 @@ class ScenarioConfigViewModel @Inject constructor(
     private fun Context.getUiDetectionQuality(displaySize: Point, resolution: Int): UiDetectionQuality {
         val maxVal = maxOf(displaySize.x, displaySize.y, 1).toFloat()
         val minVal = minOf(displaySize.x, displaySize.y).toFloat()
+        val quality = resolution.toFloat().coerceIn(DETECTION_QUALITY_MIN.toFloat(), maxVal)
 
         return UiDetectionQuality(
             displayText = getString(
                 R.string.field_scenario_quality_resolution,
-                resolution,
-                (minVal * (resolution / maxVal)).toInt(),
+                quality.toInt(),
+                (minVal * (quality / maxVal)).toInt(),
             ),
-            qualityValue = resolution.toFloat(),
+            qualityValue = quality,
             min = DETECTION_QUALITY_MIN.toFloat(),
             max = maxVal,
         )
