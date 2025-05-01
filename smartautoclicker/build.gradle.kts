@@ -52,8 +52,8 @@ android {
     defaultConfig {
         applicationId = getExtraActualApplicationId()
 
-        versionCode = 69
-        versionName = "3.3.1"
+        versionCode = 70
+        versionName = "3.3.2"
     }
 
     flavorDimensions += listOf("version")
