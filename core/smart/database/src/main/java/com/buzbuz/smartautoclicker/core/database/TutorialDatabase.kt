@@ -47,6 +47,8 @@ import javax.inject.Singleton
     autoMigrations = [
         AutoMigration (from = 11, to = 12),
         AutoMigration (from = 13, to = 14),
+        AutoMigration (from = 14, to = 15),
+        AutoMigration (from = 15, to = 16),
     ]
 )
 abstract class TutorialDatabase : ScenarioDatabase() {
