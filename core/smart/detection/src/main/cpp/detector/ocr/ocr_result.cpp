@@ -31,7 +31,8 @@ void OcrResult::updateResults(const tesseract::ResultIterator* tesseractResult, 
             detectionArea.getScaled().y + y1,
             x2 - x1,
             y2 - y1,
-            scaleRatio);
+            scaleRatio,
+            detectionArea);
 }
 
 void OcrResult::reset() {
