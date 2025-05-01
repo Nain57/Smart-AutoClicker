@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.base.extensions.doWhenMeasured
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
+import com.buzbuz.smartautoclicker.core.base.extensions.safeUpdateViewLayout
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlaysEntryPoint
@@ -143,7 +144,7 @@ abstract class OverlayMenu(
      */
     protected var screenOverlayView: View? = null
     /** The layout parameters of the overlay view. */
-    private var overlayLayoutParams:  WindowManager.LayoutParams? = null
+    private lateinit var overlayLayoutParams: WindowManager.LayoutParams
 
     private val onLockedPositionChangedListener: (Point?) -> Unit = ::onLockedPositionChanged
 
@@ -204,7 +205,7 @@ abstract class OverlayMenu(
 
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP or Gravity.START
-        overlayLayoutParams?.gravity = Gravity.TOP or Gravity.START
+        overlayLayoutParams.gravity = Gravity.TOP or Gravity.START
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayConfigManager.displayConfig.orientation)
         moveButton?.visibility = if (positionDataSource.isPositionLocked()) View.GONE else View.VISIBLE
@@ -355,7 +356,7 @@ abstract class OverlayMenu(
         loadMenuPosition(displayConfigManager.displayConfig.orientation)
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+            windowManager.safeUpdateViewLayout(menuLayout, menuLayoutParams)
 
             val overlayView = screenOverlayView ?: return
             if (recreateOverlayViewOnRotation) {
@@ -364,10 +365,10 @@ abstract class OverlayMenu(
             }
 
             displayConfigManager.displayConfig.sizePx.let { size ->
-                overlayLayoutParams?.width = size.x
-                overlayLayoutParams?.height = size.y
+                overlayLayoutParams.width = size.x
+                overlayLayoutParams.height = size.y
             }
-            windowManager.updateViewLayout(overlayView, overlayLayoutParams)
+            windowManager.safeUpdateViewLayout(overlayView, overlayLayoutParams)
         }
     }
 
@@ -486,7 +487,7 @@ abstract class OverlayMenu(
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             Log.d(TAG, "Updating menu window size: ${size.width}/${size.height}")
-            windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+            windowManager.safeUpdateViewLayout(menuLayout, menuLayoutParams)
         }
     }
 
@@ -547,7 +548,7 @@ abstract class OverlayMenu(
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             Log.d(TAG, "Updating menu window position: ${menuLayoutParams.x}/${menuLayoutParams.y}")
-            windowManager.updateViewLayout(menuLayout, menuLayoutParams)
+            windowManager.safeUpdateViewLayout(menuLayout, menuLayoutParams)
         }
     }
 

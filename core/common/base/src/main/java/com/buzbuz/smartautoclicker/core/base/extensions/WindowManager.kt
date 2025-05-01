@@ -36,6 +36,15 @@ fun WindowManager.safeAddView(view: View?, params: WindowManager.LayoutParams?):
     }
 }
 
+fun WindowManager.safeUpdateViewLayout(view: View, params: WindowManager.LayoutParams?): Boolean {
+    return try {
+        updateViewLayout(view, params)
+        true
+    } catch (ex: IllegalArgumentException) {
+        false
+    }
+}
+
 fun WindowManager.LayoutParams.disableMoveAnimations() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         setCanPlayMoveAnimation(false)
