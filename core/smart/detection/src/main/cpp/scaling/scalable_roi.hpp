@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ namespace smartautoclicker {
 
         void setFullSize(cv::Mat* fullSize, double scaleRatio);
         void setFullSize(int x, int y, int width, int height, double scaleRatio, const ScalableRoi& container);
-        void setScaled(int scaledX, int scaledY, int scaledWidth, int scaledHeight, double scaleRatio);
+        void setScaled(int scaledX, int scaledY, int scaledWidth, int scaledHeight, double scaleRatio, const ScalableRoi& container);
         void clear();
     };
 

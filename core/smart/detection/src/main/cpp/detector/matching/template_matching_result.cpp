@@ -30,7 +30,8 @@ void TemplateMatchingResult::updateResults(ScalableRoi* detectionArea, cv::Mat* 
     area.setScaled(
             detectionArea->getScaled().x + maxLoc.x,
             detectionArea->getScaled().y + maxLoc.y,
-            condition->cols, condition->rows, scaleRatio);
+            condition->cols, condition->rows, scaleRatio,
+            *detectionArea);
     centerX = area.getFullSize().x + ((int) (area.getFullSize().width / 2));
     centerY = area.getFullSize().y + ((int) (area.getFullSize().height / 2));
 }
