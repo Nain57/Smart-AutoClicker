@@ -97,6 +97,7 @@
                         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                         android:layout_marginVertical="@dimen/margin_vertical_small"
                         android:layout_gravity="center"
+                        android:textColor="?attr/colorOnSecondaryContainer"
                         tools:text="1920 x 1024"/>
 
                 </com.google.android.material.card.MaterialCardView>
