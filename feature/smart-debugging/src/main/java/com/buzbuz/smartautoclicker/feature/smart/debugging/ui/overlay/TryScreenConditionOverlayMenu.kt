@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryImageConditionMenuBinding
@@ -35,22 +35,22 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModel
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 
-class TryImageConditionOverlayMenu(
+class TryScreenConditionOverlayMenu(
     private val scenario: Scenario,
-    private val imageCondition: ImageCondition,
+    private val imageCondition: ScreenCondition,
     private val onNewThresholdSelected: (Int) -> Unit,
 ) : OverlayMenu() {
 
     /** The view model for this dialog. */
-    private val viewModel: TryImageConditionViewModel by viewModels(
+    private val viewModel: TryScreenConditionViewModel by viewModels(
         entryPoint = DebuggingViewModelsEntryPoint::class.java,
-        creator = { tryImageConditionViewModel() },
+        creator = { tryScreenConditionViewModel() },
     )
 
     private lateinit var viewBinding: OverlayTryImageConditionMenuBinding
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewModel.setImageConditionElement(scenario, imageCondition)
+        viewModel.setScreenConditionElement(scenario, imageCondition)
 
         viewBinding = OverlayTryImageConditionMenuBinding.inflate(LayoutInflater.from(context)).apply {
             sliderThreshold.apply {

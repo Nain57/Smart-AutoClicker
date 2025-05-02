@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -35,7 +35,7 @@ internal sealed class ScenarioTry {
 
 }
 
-internal class ImageEventTry(
+internal class ScreenEventTry(
     override val scenario: Scenario,
     val event: ScreenEvent,
 ) : ScenarioTry() {
@@ -44,15 +44,15 @@ internal class ImageEventTry(
     override val triggerEvents: List<TriggerEvent> = emptyList()
 }
 
-internal class ImageConditionTry(
+internal class ScreenConditionTry(
     override val scenario: Scenario,
-    val condition: ImageCondition,
+    val condition: ScreenCondition,
 ) : ScenarioTry() {
 
-    override val screenEvents: List<ScreenEvent> = listOf(getTestImageEvent())
+    override val screenEvents: List<ScreenEvent> = listOf(getTestScreenEvent())
     override val triggerEvents: List<TriggerEvent> = emptyList()
 
-    private fun getTestImageEvent(): ScreenEvent {
+    private fun getTestScreenEvent(): ScreenEvent {
         val tryEventId = Identifier(databaseId = 1L)
         return ScreenEvent(
             id = tryEventId,
@@ -61,7 +61,7 @@ internal class ImageConditionTry(
             conditionOperator = AND,
             enabledOnStart = true,
             priority = 0,
-            conditions = listOf(condition.copy(eventId = tryEventId)),
+            conditions = listOf(condition.copyBase(evtId = tryEventId)),
             actions = listOf(getTestPauseAction(tryEventId)),
             keepDetecting = false,
         )

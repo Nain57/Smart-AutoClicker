@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -38,10 +38,10 @@ import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTryListener
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionProcessingTryListener
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScreenConditionProcessingTryListener
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScreenConditionTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScreenEventTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
 import com.buzbuz.smartautoclicker.core.smart.training.TrainingRepository
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextData
@@ -188,7 +188,7 @@ class DetectionRepository @Inject constructor(
     }
 
     fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent, listener: (IConditionsResult) -> Unit) {
-        val triedElement = ImageEventTry(scenario, event)
+        val triedElement = ScreenEventTry(scenario, event)
         tryElement(
             context,
             triedElement,
@@ -196,17 +196,17 @@ class DetectionRepository @Inject constructor(
         )
     }
 
-    fun tryImageCondition(
+    fun tryScreenCondition(
         context: Context,
         scenario: Scenario,
-        condition: ImageCondition,
+        condition: ScreenCondition,
         listener: (ScreenConditionResult) -> Unit,
     ) {
-        val triedElement = ImageConditionTry(scenario, condition)
+        val triedElement = ScreenConditionTry(scenario, condition)
         tryElement(
             context = context,
             elementTry = triedElement,
-            listener = ImageConditionProcessingTryListener(triedElement, listener)
+            listener = ScreenConditionProcessingTryListener(triedElement, listener)
         )
     }
 

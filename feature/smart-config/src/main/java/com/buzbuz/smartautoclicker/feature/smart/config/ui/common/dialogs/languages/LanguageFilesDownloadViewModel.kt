@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.langu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.smart.training.TrainingRepository
@@ -27,15 +26,11 @@ import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataSync
 import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import com.buzbuz.smartautoclicker.core.smart.training.model.toDisplayStringRes
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -43,17 +38,13 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LanguageFilesDownloadViewModel @Inject constructor(
-    private val repository: IRepository,
     private val trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
-    private val scenarioDbId: MutableStateFlow<Long?> = MutableStateFlow(null)
+    private val languagesToDl: MutableStateFlow<List<TrainedTextLanguage>> = MutableStateFlow(emptyList())
 
-    private val scenarioLanguageItems: Flow<List<LanguageFilesUiItem.Language>> = scenarioDbId
-        .flatMapLatest { id -> id?.let(repository::getEventsFlow) ?: emptyFlow() }
-        .map { events -> events.getAllTextLanguages() }
+    private val scenarioLanguageItems: Flow<List<LanguageFilesUiItem.Language>> = languagesToDl
         .combine(trainingRepository.trainedTextLanguagesSyncState) { scenarioLanguages, syncStates ->
             scenarioLanguages.toUiItems(syncStates)
         }
@@ -74,8 +65,8 @@ class LanguageFilesDownloadViewModel @Inject constructor(
         }
 
 
-    fun setScenarioId(dbId: Long) {
-        scenarioDbId.update { dbId }
+    fun setLanguagesToDownload(languages: List<TrainedTextLanguage>) {
+        languagesToDl.update { languages }
     }
 
     fun downloadLanguageFile(item: LanguageFilesUiItem.Language) {
@@ -87,16 +78,7 @@ class LanguageFilesDownloadViewModel @Inject constructor(
     }
 }
 
-private fun List<Event>.getAllTextLanguages() : Set<TrainedTextLanguage> =
-    buildSet {
-        this@getAllTextLanguages.forEach { event ->
-            event.conditions.forEach { condition ->
-                if (condition is TextCondition) add(condition.textLanguage)
-            }
-        }
-    }
-
-private fun Set<TrainedTextLanguage>.toUiItems(
+private fun List<TrainedTextLanguage>.toUiItems(
     states: Map<TrainedTextLanguage, TrainedTextDataSyncState>,
 ): List<LanguageFilesUiItem.Language> =
     mapNotNull { language ->

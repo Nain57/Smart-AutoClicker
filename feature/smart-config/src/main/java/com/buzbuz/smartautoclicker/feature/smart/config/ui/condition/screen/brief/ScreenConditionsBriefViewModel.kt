@@ -37,6 +37,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TextCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.smart.training.TrainingRepository
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextDataSyncState
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
@@ -71,6 +74,7 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     private val repository: IRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
+    trainingRepository: TrainingRepository,
 ) : ViewModel() {
 
     private val editedConditions: Flow<EditedListState<ScreenCondition>> =
@@ -90,6 +94,19 @@ class ScreenConditionsBriefViewModel @Inject constructor(
             condition to bitmap
         }.flowOn(ioDispatcher).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    private val scenarioLanguages: StateFlow<List<TrainedTextLanguage>> = focusedCondition
+        .map { focusedCond ->
+            val condition = focusedCond?.first
+            if (condition is TextCondition) listOf(condition.textLanguage) else emptyList()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    private val isLanguageFileDownloadRequired: StateFlow<Boolean> =
+        combine(scenarioLanguages, trainingRepository.trainedTextLanguagesSyncState) { scenarioLanguages, syncStates ->
+            scenarioLanguages.find { syncStates[it] !is TrainedTextDataSyncState.Downloaded } != null
+        }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
     val conditionVisualization: Flow<ScreenConditionDescription?> = focusedCondition.map { focusedCondition ->
         focusedCondition?.first?.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
     }
@@ -107,9 +124,16 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     val isTutorialModeEnabled: Flow<Boolean> =
         repository.isTutorialModeEnabledFlow()
 
+
     fun setFocusedItemIndex(index: Int) {
         currentFocusItemIndex.value = index
     }
+
+    fun getScenarioTextLanguage(): List<TrainedTextLanguage> =
+        scenarioLanguages.value
+
+    fun shouldDownloadTextLanguageFiles(): Boolean =
+        isLanguageFileDownloadRequired.value
 
     fun createNewTextCondition(context: Context): TextCondition =
         editionRepository.editedItemsBuilder.createNewTextCondition(context)

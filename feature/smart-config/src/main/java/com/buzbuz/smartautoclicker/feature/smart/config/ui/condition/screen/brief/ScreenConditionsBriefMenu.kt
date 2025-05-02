@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.languages.LanguageFilesDownloadDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
@@ -48,7 +49,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.comm
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryImageConditionOverlayMenu
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.TryScreenConditionOverlayMenu
 
 import kotlinx.coroutines.launch
 
@@ -152,7 +153,8 @@ class ScreenConditionsBriefMenu(
     }
 
     override fun onPlayItemClicked(index: Int) {
-        showTryConditionOverlay()
+        if (viewModel.shouldDownloadTextLanguageFiles()) showDownloadTextLanguageFileDialog()
+        else showTryConditionOverlay()
     }
 
     override fun onFocusedItemChanged(index: Int) {
@@ -168,13 +170,24 @@ class ScreenConditionsBriefMenu(
         setBriefPanelAutoHide(!isTutorialEnabled)
     }
 
+    private fun showDownloadTextLanguageFileDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = LanguageFilesDownloadDialog(
+                languagesRequested = viewModel.getScenarioTextLanguage(),
+                onDownloadsCompleted = ::showTryConditionOverlay,
+            ),
+            hideCurrent = true,
+        )
+    }
+
     private fun showTryConditionOverlay() {
         val focusedItem = getFocusedItemBrief() ?: return
 
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = TryImageConditionOverlayMenu(
+                newOverlay = TryScreenConditionOverlayMenu(
                     scenario = scenario,
                     imageCondition = (focusedItem.data as UiImageCondition).condition,
                     onNewThresholdSelected = { threshold ->

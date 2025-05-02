@@ -77,10 +77,13 @@ class MainMenuModel @Inject constructor(
     private var paywallResultJob: Job? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val isLanguageFileDownloadRequired: StateFlow<Boolean> = scenarioDbId
+    private val scenarioLanguages: StateFlow<List<TrainedTextLanguage>> = scenarioDbId
         .flatMapLatest { id -> id?.let(smartRepository::getEventsFlow) ?: emptyFlow() }
         .map { events -> events.getAllTextLanguages() }
-        .combine(trainingRepository.trainedTextLanguagesSyncState) { scenarioLanguages, syncStates ->
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    private val isLanguageFileDownloadRequired: StateFlow<Boolean> =
+        combine(scenarioLanguages, trainingRepository.trainedTextLanguagesSyncState) { scenarioLanguages, syncStates ->
             scenarioLanguages.find { syncStates[it] !is TrainedTextDataSyncState.Downloaded } != null
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, false)
@@ -114,8 +117,8 @@ class MainMenuModel @Inject constructor(
         .distinctUntilChanged()
 
 
-    fun getScenarioId(): Long? =
-        scenarioDbId.value
+    fun getScenarioTextLanguage(): List<TrainedTextLanguage> =
+        scenarioLanguages.value
 
     /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
     fun loadAdIfNeeded(context: Context) {
@@ -228,8 +231,8 @@ sealed class UiState {
     data object Idle: UiState()
 }
 
-private fun List<Event>.getAllTextLanguages() : Set<TrainedTextLanguage> =
-    buildSet {
+private fun List<Event>.getAllTextLanguages() : List<TrainedTextLanguage> =
+    buildList {
         this@getAllTextLanguages.forEach { event ->
             event.conditions.forEach { condition ->
                 if (condition is TextCondition) add(condition.textLanguage)

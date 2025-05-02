@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.smart.training.model.TrainedTextLanguage
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 
 
 class LanguageFilesDownloadDialog(
-    private val scenarioDbId: Long,
+    private val languagesRequested: List<TrainedTextLanguage>,
     private val onDownloadsCompleted: () -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -53,7 +54,7 @@ class LanguageFilesDownloadDialog(
     )
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setScenarioId(scenarioDbId)
+        viewModel.setLanguagesToDownload(languagesRequested)
 
         viewBinding = DialogLanguageFilesDownloadBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
