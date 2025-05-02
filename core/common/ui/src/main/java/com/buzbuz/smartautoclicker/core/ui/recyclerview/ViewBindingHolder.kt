@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition
+package com.buzbuz.smartautoclicker.core.ui.recyclerview
 
-import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.viewbinding.ViewBinding
 
-
-sealed class UiConditionItem
-
-data class UiConditionHeader(
-    @StringRes val title: Int,
-) : UiConditionItem()
-
-sealed class UiCondition : UiConditionItem() {
-    abstract val condition: Condition
-    abstract val name: String
-    abstract val haveError: Boolean
-}
+/** Convenience class wrapping the view binding in a view holder. */
+abstract class ViewBindingHolder<T : ViewBinding>(val viewBinding: T): ViewHolder(viewBinding.root)
