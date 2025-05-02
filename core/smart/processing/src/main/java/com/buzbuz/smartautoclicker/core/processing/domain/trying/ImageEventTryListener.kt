@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.IConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 internal class ImageEventProcessingTryListener(
-    private val triedItem: ImageEventTry,
+    private val triedItem: ScreenEventTry,
     private val clientListener: (IConditionsResult) -> Unit,
 ) : ScenarioProcessingListener {
 

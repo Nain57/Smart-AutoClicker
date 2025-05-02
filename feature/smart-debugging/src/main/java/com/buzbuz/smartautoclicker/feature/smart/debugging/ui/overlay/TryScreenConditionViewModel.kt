@@ -17,12 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay
 
 import android.content.Context
-import android.graphics.Rect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
@@ -47,11 +46,11 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TryImageConditionViewModel @Inject constructor(
+class TryScreenConditionViewModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
 ) : ViewModel() {
 
-    private val triedImageCondition: MutableStateFlow<TriedImageCondition?> = MutableStateFlow(null)
+    private val triedScreenCondition: MutableStateFlow<TriedScreenCondition?> = MutableStateFlow(null)
     private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
     private val tryResults: MutableStateFlow<ScreenConditionResult?> = MutableStateFlow(null)
 
@@ -72,7 +71,7 @@ class TryImageConditionViewModel @Inject constructor(
         }
 
     val displayResults: Flow<ImageConditionResultsDisplay?> =
-        combine(triedImageCondition, detectionResults) { element, results ->
+        combine(triedScreenCondition, detectionResults) { element, results ->
             if (element == null) return@combine null
             val text = results.confidenceRate.formatConfidenceRate()
             ImageConditionResultsDisplay(text, results)
@@ -81,10 +80,10 @@ class TryImageConditionViewModel @Inject constructor(
     val thresholdText: Flow<String> =
         userThreshold.map { threshold -> (1 - (threshold / 100.0)).formatConfidenceRate() }
 
-    fun setImageConditionElement(scenario: Scenario, imageCondition: ImageCondition) {
+    fun setScreenConditionElement(scenario: Scenario, screenCondition: ScreenCondition) {
         viewModelScope.launch {
-            triedImageCondition.value = TriedImageCondition(scenario, imageCondition)
-            userThreshold.value = imageCondition.threshold
+            triedScreenCondition.value = TriedScreenCondition(scenario, screenCondition)
+            userThreshold.value = screenCondition.threshold
         }
     }
 
@@ -97,10 +96,10 @@ class TryImageConditionViewModel @Inject constructor(
     fun startTry(context: Context) {
         viewModelScope.launch {
             if (isPlaying.value) return@launch
-            val tryElement = triedImageCondition.value ?: return@launch
+            val tryElement = triedScreenCondition.value ?: return@launch
 
             delay(500)
-            detectionRepository.tryImageCondition(context, tryElement.scenario, tryElement.imageCondition) { result ->
+            detectionRepository.tryScreenCondition(context, tryElement.scenario, tryElement.screenCondition) { result ->
                 tryResults.value = result
             }
         }
@@ -130,9 +129,9 @@ data class ImageConditionResultsDisplay(
     val detectionResults: DetectionResultInfo,
 )
 
-private data class TriedImageCondition(
+private data class TriedScreenCondition(
     val scenario: Scenario,
-    val imageCondition: ImageCondition,
+    val screenCondition: ScreenCondition,
 )
 
 /** The minimum threshold value selectable by the user. */

@@ -365,12 +365,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     private fun showDownloadTextLanguageFileDialog() {
-        val scenarioId = viewModel.getScenarioId() ?: return
-
         overlayManager.navigateTo(
             context = context,
             newOverlay = LanguageFilesDownloadDialog(
-                scenarioDbId = scenarioId,
+                languagesRequested = viewModel.getScenarioTextLanguage(),
                 onDownloadsCompleted = ::onPlayPauseClicked,
             ),
             hideCurrent = true,

@@ -23,8 +23,8 @@ import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScreenConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
-internal class ImageConditionProcessingTryListener(
-    private val triedItem: ImageConditionTry,
+internal class ScreenConditionProcessingTryListener(
+    private val triedItem: ScreenConditionTry,
     private val clientListener: (ScreenConditionResult) -> Unit,
 ) : ScenarioProcessingListener {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.detection
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.util.Log
 import androidx.annotation.Keep
 
 /**
@@ -64,12 +65,14 @@ class NativeDetector private constructor() : ScreenDetector {
         if (isClosed) return
         if (langCodes.isBlank()) return
 
+        Log.d(LOG_TAG, "Set matching languages [$langCodes] with training data $trainingFilesPath")
         setLanguages(langCodes, trainingFilesPath)
     }
 
     override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
         if (isClosed) return
 
+        Log.d(LOG_TAG, "Set screen metrics [${screenBitmap.width}; ${screenBitmap.height}] with quality $detectionQuality")
         updateScreenMetrics(
             metricsKey,
             screenBitmap,
@@ -200,3 +203,5 @@ class NativeDetector private constructor() : ScreenDetector {
         result: DetectionResult
     )
 }
+
+private const val LOG_TAG = "NativeDetector"
