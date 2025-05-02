@@ -21,8 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import androidx.recyclerview.widget.GridLayoutManager
-
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -33,7 +31,8 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.adapters.ScreenConditionsAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.adapters.UiConditionGridAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiConditionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -43,7 +42,7 @@ import kotlinx.coroutines.Job
 
 class ScreenConditionSelectionDialog(
     private val conditionList: List<UiScreenCondition>,
-    bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ScreenCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -55,11 +54,7 @@ class ScreenConditionSelectionDialog(
     private lateinit var viewBinding: DialogBaseSelectionBinding
 
     /** Adapter for the list of condition. */
-    private val conditionsAdapter = ScreenConditionsAdapter(
-        itemClickedListener = { condition, _ -> onConditionClicked(condition) },
-        bitmapProvider = bitmapProvider,
-        itemViewBound = ::onConditionItemBound,
-    )
+    private lateinit var conditionsAdapter: UiConditionGridAdapter
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
@@ -70,15 +65,16 @@ class ScreenConditionSelectionDialog(
             }
         }
 
+        conditionsAdapter = UiConditionGridAdapter(
+            context = context,
+            onItemClicked = { condition, _ -> onConditionClicked(condition) },
+            bitmapProvider = bitmapProvider,
+            onItemViewBound = ::onConditionItemBound,
+        )
+
         viewBinding.layoutLoadableList.apply {
             setEmptyText(R.string.message_empty_screen_condition_list_title)
-            list.apply {
-                adapter = conditionsAdapter
-                layoutManager = GridLayoutManager(
-                    context,
-                    2,
-                )
-            }
+            list.adapter = conditionsAdapter
         }
 
         return viewBinding.root
@@ -89,7 +85,9 @@ class ScreenConditionSelectionDialog(
         conditionsAdapter.submitList(conditionList)
     }
 
-    private fun onConditionClicked(condition: UiScreenCondition) {
+    private fun onConditionClicked(condition: UiConditionItem) {
+        if (condition !is UiScreenCondition) return
+
         onConditionSelected(condition.condition)
         back()
     }

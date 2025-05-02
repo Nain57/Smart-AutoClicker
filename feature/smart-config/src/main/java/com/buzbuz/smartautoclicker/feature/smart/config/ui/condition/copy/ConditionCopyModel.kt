@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy
 import android.content.Context
 import android.graphics.Bitmap
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -30,9 +29,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiConditionHeader
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiConditionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTextCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTextCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,7 +56,7 @@ class ConditionCopyModel @Inject constructor(
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
 
-    private val allCopyItems: Flow<List<ConditionCopyItem>> =
+    private val allCopyItems: Flow<List<UiConditionItem>> =
         combine(
             editionRepository.editionState.editedEventState,
             editionRepository.editionState.conditionsForCopy,
@@ -69,24 +72,24 @@ class ConditionCopyModel @Inject constructor(
 
             buildList {
                 if (editedConditions.isNotEmpty()) {
-                    add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_this))
+                    add(UiConditionHeader(R.string.list_header_copy_conditions_this))
                     addAll(editedConditions.toCopyItems(context)
-                        .distinctByUiDisplay().sortedBy { it.uiCondition.name })
+                        .distinctByUiDisplay().sortedBy { it.name })
                 }
                 if (otherConditions.isNotEmpty()) {
-                    add(ConditionCopyItem.HeaderItem(R.string.list_header_copy_conditions_all))
+                    add(UiConditionHeader(R.string.list_header_copy_conditions_all))
                     addAll(otherConditions.toCopyItems(context)
-                        .distinctByUiDisplay().sortedBy { it.uiCondition.name })
+                        .distinctByUiDisplay().sortedBy { it.name })
                 }
             }
         }
 
     /** List of displayed condition items. */
-    val conditionList: Flow<List<ConditionCopyItem>?> = allCopyItems.combine(searchQuery) { allItems, query ->
+    val conditionList: Flow<List<UiConditionItem>?> = allCopyItems.combine(searchQuery) { allItems, query ->
         if (query.isNullOrEmpty()) allItems
         else allItems
-            .filterIsInstance<ConditionCopyItem.ConditionItem>()
-            .filter { item -> item.uiCondition.name.contains(query, true) }
+            .filterIsInstance<UiCondition>()
+            .filter { item -> item.name.contains(query, true) }
     }
 
     fun updateSearchQuery(query: String?) {
@@ -105,67 +108,36 @@ class ConditionCopyModel @Inject constructor(
 
     private fun List<Condition>.toCopyItems(context: Context) = mapNotNull { condition ->
         when (condition) {
-            is ImageCondition -> ConditionCopyItem.ConditionItem.Image(
-                condition.toUiImageCondition(context, inError = !condition.isComplete())
-            )
-            is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(
-                condition.toUiTriggerCondition(context, inError = !condition.isComplete())
-            )
-
-            // TODO: handle text condition
-            is TextCondition -> null
+            is ImageCondition -> condition.toUiImageCondition(context, inError = !condition.isComplete())
+            is TextCondition -> condition.toUiTextCondition(context, inError = !condition.isComplete())
+            is TriggerCondition -> condition.toUiTriggerCondition(context, inError = !condition.isComplete())
         }
     }
 
-    private fun List<ConditionCopyItem.ConditionItem>.distinctByUiDisplay() =
+    private fun List<UiCondition>.distinctByUiDisplay() =
         distinctBy { item ->
             when (item) {
-                is ConditionCopyItem.ConditionItem.Image ->
-                    item.uiCondition.condition.hashCodeNoIds()
+                is UiImageCondition ->
+                    item.condition.hashCodeNoIds()
 
-                is ConditionCopyItem.ConditionItem.Trigger ->
-                    when (item.uiCondition.condition) {
-                        is TriggerCondition.OnBroadcastReceived -> item.uiCondition.condition.name.hashCode() +
-                                item.uiCondition.condition.intentAction.hashCode()
+                is UiTextCondition ->
+                    item.condition.hashCodeNoIds()
 
-                        is TriggerCondition.OnCounterCountReached -> item.uiCondition.condition.name.hashCode() +
-                                item.uiCondition.condition.counterName.hashCode() +
-                                item.uiCondition.condition.counterValue.hashCode() +
-                                item.uiCondition.condition.comparisonOperation.hashCode()
+                is UiTriggerCondition ->
+                    when (item.condition) {
+                        is TriggerCondition.OnBroadcastReceived -> item.condition.name.hashCode() +
+                                item.condition.intentAction.hashCode()
 
-                        is TriggerCondition.OnTimerReached -> item.uiCondition.condition.name.hashCode() +
-                                item.uiCondition.condition.durationMs
+                        is TriggerCondition.OnCounterCountReached -> item.condition.name.hashCode() +
+                                item.condition.counterName.hashCode() +
+                                item.condition.counterValue.hashCode() +
+                                item.condition.comparisonOperation.hashCode()
+
+                        is TriggerCondition.OnTimerReached -> item.condition.name.hashCode() +
+                                item.condition.durationMs
 
                         else -> 0
                     }
             }
         }
-
-    /** Types of items in the condition copy list. */
-    sealed class ConditionCopyItem {
-
-        /**
-         * Header item, delimiting sections.
-         * @param title the title for the header.
-         */
-        data class HeaderItem(@StringRes val title: Int) : ConditionCopyItem()
-
-        sealed class ConditionItem : ConditionCopyItem() {
-
-            abstract val uiCondition: UiCondition
-
-            /**
-             * Image Condition item.
-             * @param uiCondition the details for the condition.
-             */
-            data class Image(override val uiCondition: UiImageCondition) : ConditionItem()
-
-            /**
-             * Trigger Condition item.
-             * @param uiCondition the details for the condition.
-             */
-            data class Trigger(override val uiCondition: UiTriggerCondition) : ConditionItem()
-
-        }
-    }
 }

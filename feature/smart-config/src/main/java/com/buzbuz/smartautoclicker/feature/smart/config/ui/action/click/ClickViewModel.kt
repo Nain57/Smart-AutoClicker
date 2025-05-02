@@ -278,11 +278,11 @@ class ClickViewModel @Inject constructor(
             ?: getString(R.string.field_click_offset_desc_none)
     }
 
-    private suspend fun ScreenCondition?.toScreenConditionUiState() : ScreenConditionUiState =
+    private suspend fun ScreenCondition?.toScreenConditionUiState() : ScreenConditionUiState? =
         when (this) {
             is ImageCondition -> ScreenConditionUiState.Image(repository.getConditionBitmap(this))
             is TextCondition -> ScreenConditionUiState.Text(textToDetect)
-            else -> throw IllegalArgumentException("Invalid screen condition")
+            else -> null
         }
 }
 

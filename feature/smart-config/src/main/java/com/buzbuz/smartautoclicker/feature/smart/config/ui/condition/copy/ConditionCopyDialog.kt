@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
@@ -27,6 +26,8 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.adapters.UiConditionGridAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiConditionItem
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -48,30 +49,25 @@ class ConditionCopyDialog(
     )
 
     /** Adapter displaying the list of conditions. */
-    private lateinit var conditionAdapter: ConditionCopyAdapter
+    private lateinit var conditionAdapter: UiConditionGridAdapter
 
     override val titleRes: Int = R.string.dialog_overlay_title_copy_from
     override val searchHintRes: Int = R.string.search_view_hint_condition_copy
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        conditionAdapter = ConditionCopyAdapter(
-            conditionClickedListener = { selectedCondition ->
+        conditionAdapter = UiConditionGridAdapter(
+            context = context,
+            onItemClicked = { selectedCondition, _ ->
                 back()
-                onConditionSelected(selectedCondition)
+                onConditionSelected(selectedCondition.condition)
             },
             bitmapProvider = { bitmap, onLoaded ->
                 viewModel.getConditionBitmap(bitmap, onLoaded)
             },
         )
 
-        viewBinding.layoutLoadableList.list.apply {
-            adapter = conditionAdapter
-
-            layoutManager = GridLayoutManager(context, 2).apply {
-                spanSizeLookup = conditionAdapter.spanSizeLookup
-            }
-        }
+        viewBinding.layoutLoadableList.list.adapter = conditionAdapter
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -84,7 +80,7 @@ class ConditionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun updateConditionList(newItems: List<ConditionCopyModel.ConditionCopyItem>?) {
+    private fun updateConditionList(newItems: List<UiConditionItem>?) {
         viewBinding.layoutLoadableList.updateState(newItems)
         conditionAdapter.submitList(if (newItems == null) ArrayList() else ArrayList(newItems))
     }

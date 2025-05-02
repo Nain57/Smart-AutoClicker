@@ -52,7 +52,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventC
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.adapters.ScreenConditionsAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.adapters.UiConditionListAdapter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
@@ -166,8 +166,8 @@ class EventDialog(
                 setEmptyDescription(R.string.message_empty_screen_condition_list_desc)
 
                 setAdapter(
-                    ScreenConditionsAdapter(
-                        itemClickedListener = { _, idx -> showImageConditionsBriefMenu(idx) },
+                    UiConditionListAdapter(
+                        onItemClicked = { _, idx -> showImageConditionsBriefMenu(idx) },
                         bitmapProvider = viewModel::getConditionBitmap,
                     ),
                 )

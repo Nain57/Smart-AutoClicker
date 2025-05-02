@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogTriggerConditionsBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.adapters.UiConditionListAdapter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
@@ -49,7 +50,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 
-class TriggerConditionListDialog() : OverlayDialog(R.style.ScenarioConfigTheme) {
+class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private val viewModel: TriggerConditionListViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
@@ -78,7 +79,11 @@ class TriggerConditionListDialog() : OverlayDialog(R.style.ScenarioConfigTheme) 
                 )
 
                 list.apply {
-                    adapter = TriggerConditionAdapter(::showTriggerConditionDialog)
+                    adapter = UiConditionListAdapter(
+                        onItemClicked = { item, _ ->
+                            (item as? UiTriggerCondition)?.condition?.let(::showTriggerConditionDialog)
+                        },
+                    )
                     layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 }
             }
