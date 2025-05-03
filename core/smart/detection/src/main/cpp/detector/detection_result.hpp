@@ -37,6 +37,7 @@ namespace smartautoclicker {
         bool isDetected() const;
         double getResultConfidence() const;
         ScalableRoi getResultArea() const;
+        bool isConfidenceValid(int threshold) const;
     };
 } // smartautoclicker
 

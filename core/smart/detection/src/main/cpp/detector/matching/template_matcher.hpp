@@ -40,7 +40,6 @@ namespace smartautoclicker {
                 double scaleRatio,
                 int threshold);
 
-        static bool isConfidenceValid(double confidence, int threshold);
         static double getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans);
 
     public:
