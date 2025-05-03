@@ -40,3 +40,7 @@ double DetectionResult::getResultConfidence() const {
 ScalableRoi DetectionResult::getResultArea() const {
     return area;
 }
+
+bool DetectionResult::isConfidenceValid(int threshold) const {
+    return confidence > ((100.0 - threshold) / 100.0);
+}

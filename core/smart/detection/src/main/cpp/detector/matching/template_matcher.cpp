@@ -79,7 +79,7 @@ void TemplateMatcher::parseMatchingResult(cv::Mat* matchingResult, ScreenImage *
                 scaleRatio);
 
         // Check if the highest result is above threshold. If not, we will never find.
-        if (!isConfidenceValid(currentMatchingResult.getResultConfidence(), threshold)) break;
+        if (!currentMatchingResult.isConfidenceValid(threshold)) break;
 
         // Check if result area is valid. If not, check next possible match
         if (!screenImage->getRoi().containsOrEquals(currentMatchingResult.getResultArea())) continue;
@@ -91,10 +91,6 @@ void TemplateMatcher::parseMatchingResult(cv::Mat* matchingResult, ScreenImage *
         // If the colors are OK, the result is valid
         if (colorDiff < threshold) currentMatchingResult.markResultAsDetected();
     }
-}
-
-bool TemplateMatcher::isConfidenceValid(double confidence, int threshold) {
-    return confidence > ((100.0 - threshold) / 100.0);
 }
 
 double TemplateMatcher::getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans) {

@@ -76,7 +76,7 @@ bool TextMatcher::matchText(const std::string& text, const ScalableRoi& area, do
         if (text == word) {
             // Check if bounding box is in area, and if confidence matched what we want
             currentResult.updateResults(resultIterator, &level, area, scaleRatio);
-            if (currentResult.getResultConfidence() >= threshold && area.containsOrEquals(currentResult.getResultArea())) {
+            if (currentResult.isConfidenceValid(threshold)) {
                 currentResult.markResultAsDetected();
                 isFound = true;
             }
