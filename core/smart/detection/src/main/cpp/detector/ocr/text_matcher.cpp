@@ -32,9 +32,13 @@ DetectionResult* TextMatcher::getMatchingResults() {
     return &currentResult;
 }
 
-void TextMatcher::setLanguages(const char *langCodes, const char *datapath) {
-    // Set the languages
-    tesseract->Init(datapath, langCodes);
+void TextMatcher::setLanguages(const char *langCodes, const char *dataPath) {
+    if (tesseract->Init(dataPath, langCodes) != 0) {
+        LOGE("TextMatcher", "Tesseract init failed: langCodes='%s', dataPath='%s'", langCodes, dataPath);
+        areLanguagesSet = false;
+        return;
+    }
+
     areLanguagesSet = true;
 }
 

@@ -114,7 +114,7 @@ internal class TrainingRepositoryImpl @Inject constructor(
      * Ex: [eng,fra,ita] = "eng+fra+ita"
      */
     private fun Collection<TrainedTextLanguage>.toTesseractLangCodes(): String =
-        joinToString(separator = "+")
+        joinToString(separator = "+") { lang -> lang.langCode }
 }
 
 private const val TAG = "TrainingRepositoryImpl"
