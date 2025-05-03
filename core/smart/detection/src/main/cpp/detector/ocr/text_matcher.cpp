@@ -51,7 +51,7 @@ void TextMatcher::setScreenImage(const ScreenImage& screenImage) {
             processed,
             0,
             255,
-            cv::THRESH_BINARY | cv::THRESH_OTSU);
+            cv::THRESH_TOZERO | cv::THRESH_OTSU);
 
     tesseract->SetImage(
             processed.data,
@@ -63,18 +63,32 @@ void TextMatcher::setScreenImage(const ScreenImage& screenImage) {
 
 
 bool TextMatcher::matchText(const std::string& text, const ScalableRoi& area, double scaleRatio, int threshold) {
-    tesseract->Recognize(nullptr);
+    if (!areLanguagesSet) return false;
+
+    tesseract->SetRectangle(
+            area.getScaled().x,
+            area.getScaled().y,
+            area.getScaled().width,
+            area.getScaled().height);
+
+    if (tesseract->Recognize(nullptr) != 0) {
+        LOGD("TextMatcher", "Tesseract recognize failed");
+        return false;
+    }
+
     tesseract::ResultIterator* resultIterator = tesseract->GetIterator();
+    if (resultIterator == nullptr) {
+        LOGD("TextMatcher", "Tesseract ResultIterator creation failed");
+        return false;
+    }
+
     tesseract::PageIteratorLevel level = tesseract::RIL_WORD;
     bool isFound = false;
+    while (!resultIterator->Empty(level) && !isFound) {
 
-    if (resultIterator == nullptr) return false;
-    do {
         const char* word = resultIterator->GetUTF8Text(level);
-
-        // That's the text we're looking for
         if (text == word) {
-            // Check if bounding box is in area, and if confidence matched what we want
+
             currentResult.updateResults(resultIterator, &level, area, scaleRatio);
             if (currentResult.isConfidenceValid(threshold)) {
                 currentResult.markResultAsDetected();
@@ -83,9 +97,9 @@ bool TextMatcher::matchText(const std::string& text, const ScalableRoi& area, do
         }
 
         delete[] word;
-    } while (!isFound && resultIterator->Next(level));
+        resultIterator->Next(level);
+    }
 
     delete resultIterator;
     return isFound;
 }
-
