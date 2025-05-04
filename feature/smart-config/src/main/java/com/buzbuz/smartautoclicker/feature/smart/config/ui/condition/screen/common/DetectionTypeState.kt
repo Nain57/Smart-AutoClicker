@@ -19,15 +19,20 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.com
 import android.content.Context
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
 data class DetectionTypeState(
     @DetectionType val type: Int,
     val areaText: String,
+    val inError: Boolean,
 )
 
-internal fun Context.getDetectionTypeState(@DetectionType type: Int, area: Rect) = DetectionTypeState(
+internal fun Context.getDetectionTypeState(@DetectionType type: Int, area: Rect?) = DetectionTypeState(
     type = type,
-    areaText = getString(R.string.field_select_detection_area_desc, area.left, area.top, area.right, area.bottom)
+    areaText =
+        if (area == null) getString(R.string.field_select_detection_area_desc_empty)
+        else getString(R.string.field_select_detection_area_desc, area.left, area.top, area.right, area.bottom),
+    inError = type == IN_AREA && area == null,
 )

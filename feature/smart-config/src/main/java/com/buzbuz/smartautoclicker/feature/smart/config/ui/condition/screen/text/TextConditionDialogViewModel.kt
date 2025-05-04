@@ -79,9 +79,10 @@ class TextConditionDialogViewModel @Inject constructor(
     /** The type of detection currently selected by the user. */
     val detectionType: Flow<DetectionTypeState> = configuredCondition
         .map { condition ->
-            condition.detectionArea?.let { area ->
-                context.getDetectionTypeState(condition.detectionType, area)
-            }
+            context.getDetectionTypeState(
+                type = condition.detectionType,
+                area = condition.detectionArea,
+            )
         }
         .filterNotNull()
 

@@ -24,11 +24,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledStat
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescriptionTextColor
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
@@ -248,6 +249,9 @@ class TextConditionDialog(
         viewBinding.fieldSelectArea.apply {
             setEnabled(detectionTypeState.type == IN_AREA)
             setDescription(detectionTypeState.areaText)
+            setDescriptionTextColor(
+                context.getThemeColor(if (detectionTypeState.inError) R.attr.colorError else R.attr.colorOnSurface),
+            )
         }
     }
 

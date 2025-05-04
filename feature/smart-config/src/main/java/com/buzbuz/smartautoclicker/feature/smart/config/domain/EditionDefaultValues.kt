@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
+import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -44,10 +45,12 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun conditionThreshold(context: Context): Int =
         if (isTutorialModeEnabled()) 15
         else context.resources.getInteger(R.integer.default_condition_threshold)
-    fun conditionDetectionType(): Int =
-        EXACT
     fun conditionShouldBeDetected(): Boolean =
         true
+    fun imageConditionDetectionType(): Int =
+        EXACT
+    fun textConditionDetectionType(): Int =
+        IN_AREA
 
     fun clickName(context: Context): String =
         context.getString(R.string.default_click_name)

@@ -199,6 +199,7 @@
 
     <string name="field_select_detection_area_title">Detection Area</string>
     <string name="field_select_detection_area_desc">In [%1$d, %2$d, %3$d, %4$d]</string>
+    <string name="field_select_detection_area_desc_empty">Select the area to detect on</string>
 
     <string name="field_title_condition_threshold">Tolerated difference</string>
 

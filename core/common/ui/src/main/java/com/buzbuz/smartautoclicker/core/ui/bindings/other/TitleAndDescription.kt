@@ -22,6 +22,7 @@ import android.text.TextDirectionHeuristic
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 
@@ -31,6 +32,10 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeTitleAndDescriptio
 
 internal fun IncludeTitleAndDescriptionBinding.setTitle(titleText: String) {
     title.setTextOrGone(titleText)
+}
+
+internal fun IncludeTitleAndDescriptionBinding.setDescriptionTextColor(@ColorInt textColor: Int) {
+    description.setTextColor(textColor)
 }
 
 internal fun IncludeTitleAndDescriptionBinding.setupDescriptions(descriptions: List<String>) {

@@ -19,10 +19,12 @@ package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescriptionTextColor
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldSelectorBinding
@@ -30,6 +32,10 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldSelectorBindi
 
 fun IncludeFieldSelectorBinding.setTitle(titleText: String) {
     titleAndDescription.setTitle(titleText)
+}
+
+fun IncludeFieldSelectorBinding.setDescriptionTextColor(@ColorInt textColor: Int) {
+    titleAndDescription.setDescriptionTextColor(textColor)
 }
 
 fun IncludeFieldSelectorBinding.setupDescriptions(descriptions: List<String>) {

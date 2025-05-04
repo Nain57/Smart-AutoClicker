@@ -17,6 +17,7 @@
 -->
 <resources>
     <dimen name="overlay_debug_text_width">150dp</dimen>
+    <dimen name="overlay_debug_view_condition_rectangle_margin">20dp</dimen>
     <dimen name="dialog_debug_condition_icons_height">30dp</dimen>
     <dimen name="dialog_debug_condition_bitmap_size">100dp</dimen>
 </resources>

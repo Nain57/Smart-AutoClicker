@@ -22,6 +22,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
+import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 
 /**
  * Displays a rectangle at the selected position to represents the detection.
@@ -41,7 +42,9 @@ class DebugOverlayView(context: Context) : View(context) {
     }
 
     /** The margin between the actual condition position and the displayed borders. */
-    private val conditionBordersMargin = 10
+    private val conditionBordersMargin = context.resources.getDimensionPixelSize(
+        R.dimen.overlay_debug_view_condition_rectangle_margin,
+    )
 
     private val results: MutableList<DetectionResultInfo> = mutableListOf()
     private val displayedResults: MutableList<Pair<Paint, Rect>> = mutableListOf()
