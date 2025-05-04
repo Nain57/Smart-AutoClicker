@@ -57,7 +57,7 @@ namespace smartautoclicker {
          * @param threshold Minimum confidence value (0–100).
          * @return True if the text was detected with sufficient confidence.
          */
-        bool matchText(const std::string& text, const ScalableRoi& area, double scaleRatio, int threshold);
+        bool matchText(const std::string& text, const ScalableRoi& screenArea, const ScalableRoi& area, double scaleRatio, int threshold);
 
         DetectionResult* getMatchingResults();
     };

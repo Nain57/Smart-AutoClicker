@@ -62,14 +62,16 @@ void TextMatcher::setScreenImage(const ScreenImage& screenImage) {
 }
 
 
-bool TextMatcher::matchText(const std::string& text, const ScalableRoi& area, double scaleRatio, int threshold) {
+bool TextMatcher::matchText(const std::string& text, const ScalableRoi& screenArea, const ScalableRoi& detectionArea,
+                            double scaleRatio, int threshold) {
+
     if (!areLanguagesSet) return false;
 
     tesseract->SetRectangle(
-            area.getScaled().x,
-            area.getScaled().y,
-            area.getScaled().width,
-            area.getScaled().height);
+            detectionArea.getScaled().x,
+            detectionArea.getScaled().y,
+            detectionArea.getScaled().width,
+            detectionArea.getScaled().height);
 
     if (tesseract->Recognize(nullptr) != 0) {
         LOGD("TextMatcher", "Tesseract recognize failed");
@@ -89,7 +91,7 @@ bool TextMatcher::matchText(const std::string& text, const ScalableRoi& area, do
         const char* word = resultIterator->GetUTF8Text(level);
         if (text == word) {
 
-            currentResult.updateResults(resultIterator, &level, area, scaleRatio);
+            currentResult.updateResults(resultIterator, &level, screenArea, scaleRatio);
             if (currentResult.isConfidenceValid(threshold)) {
                 currentResult.markResultAsDetected();
                 isFound = true;

@@ -21,18 +21,19 @@ using namespace smartautoclicker;
 
 
 void OcrResult::updateResults(const tesseract::ResultIterator* tesseractResult, const tesseract::PageIteratorLevel* level,
-                              const ScalableRoi& detectionArea, double scaleRatio) {
+                              const ScalableRoi& screenArea, double scaleRatio) {
 
     confidence = tesseractResult->Confidence(*level) / 100;
 
     tesseractResult->BoundingBox(*level, &x1, &y1, &x2, &y2);
+
     area.setScaled(
-            detectionArea.getScaled().x +  x1,
-            detectionArea.getScaled().y + y1,
+            x1,
+            y1,
             x2 - x1,
             y2 - y1,
             scaleRatio,
-            detectionArea);
+            screenArea);
 }
 
 void OcrResult::reset() {
