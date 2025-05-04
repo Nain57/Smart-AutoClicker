@@ -51,6 +51,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
+import com.buzbuz.smartautoclicker.core.ui.utils.CharacterInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTextBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -111,8 +112,9 @@ class TextConditionDialog(
             fieldEditConditionText.apply {
                 setLabel(R.string.field_condition_text_to_detect)
                 setOnTextChangedListener { viewModel.setTextToDetect(it.toString()) }
-                textField.filters = arrayOf<InputFilter>(
-                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.text_to_detect_max_length))
+                textField.filters = arrayOf(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.text_to_detect_max_length)),
+                    CharacterInputFilter(setOf(' '))
                 )
             }
             hideSoftInputOnFocusLoss(fieldEditConditionText.textField)

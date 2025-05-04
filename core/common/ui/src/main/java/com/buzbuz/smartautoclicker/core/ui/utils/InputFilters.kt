@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.core.ui.utils
 
 import android.text.InputFilter
 import android.text.Spanned
-
 import kotlin.reflect.KClass
+
 
 /** Input filter for a number. Ensure the value is within bounds. */
 class NumberInputFilter<T : Number>(private val type: KClass<T>): InputFilter {
@@ -81,4 +81,25 @@ class MinMaxInputFilter(
         return ""
     }
 
+}
+
+/** Input filter that blocks the input of certain characters. */
+class CharacterInputFilter(private val filteredCharacters: Set<Char>) : InputFilter {
+
+    override fun filter(
+        source: CharSequence?,
+        start: Int,
+        end: Int,
+        dest: Spanned?,
+        dstart: Int,
+        dend: Int
+    ): CharSequence? {
+        for (i in start until end) {
+            if (source?.get(i).isFiltered()) return ""
+        }
+        return null
+    }
+
+    private fun Char?.isFiltered(): Boolean =
+        this != null && filteredCharacters.contains(this)
 }

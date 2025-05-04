@@ -103,7 +103,8 @@ class TextConditionDialogViewModel @Inject constructor(
     }
 
     fun setTextToDetect(textToDetect: String) {
-        updateEditedCondition { it.copy(textToDetect = textToDetect) }
+        val noSpaceText = textToDetect.split(" ").firstOrNull() ?: return
+        updateEditedCondition { it.copy(textToDetect = noSpaceText) }
     }
 
     fun setTextLanguage(textLanguagesChoice: TextLanguagesChoice) {
