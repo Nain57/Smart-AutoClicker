@@ -100,7 +100,7 @@ DetectionResult* Detector::detectText(const std::string& text, int x, int y, int
     ScalableRoi detectionArea = ScalableRoi();
     detectionArea.setFullSize(x, y, width, height, scaleRatio, screenImage->getRoi());
 
-    textMatcher->matchText(text, detectionArea, scaleRatio, threshold);
+    textMatcher->matchText(text, screenImage->getRoi(), detectionArea, scaleRatio, threshold);
 
     return textMatcher->getMatchingResults();
 }

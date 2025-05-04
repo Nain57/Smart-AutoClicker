@@ -35,7 +35,7 @@ namespace smartautoclicker {
         void updateResults(
                 const tesseract::ResultIterator* tesseractResult,
                 const tesseract::PageIteratorLevel* level,
-                const ScalableRoi& detectionArea,
+                const ScalableRoi& screenArea,
                 double scaleRatio);
 
         void reset() override;
