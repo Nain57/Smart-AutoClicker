@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">Создание копии</string>
+    <string name="dialog_title_delete_scenario">Удаление сценария</string>
+    <string name="dialog_title_import_backup">Загрузка копии</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">Выбрать место сохрания</string>
+    <string name="item_title_backup_import_select_file">Выбрать резервную копию</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Создание резервной копии: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Резервное копирование завершилось успешно</string>
+    <string name="message_backup_create_error">Произошла ошибка, резервное копирование было отменено</string>
+    <string name="message_backup_import_progress">Импорт резервной копии: %1$d</string>
+    <string name="message_backup_import_verification">Проверка данных</string>
+    <string name="message_backup_import_completed">Импорт завершился успешно\nСценариев загружено: %1$d\nОшибок возникло: %2$d</string>
+    <string name="message_backup_import_completed_with_error">Импорт завершился успешно\nСценариев загружено: %1$d\nОшибок возникло: %2$d</string>
+    <string name="message_backup_import_error">Произошла ошибка, загрузка резервной копии была отменена</string>
+    <string name="message_backup_import_compatibility">Некоторые из загруженных сценариев были созданы на устройстве с другими характеристиками 
+        экрана, и это может вызвать проблемы с обнаружениями и координатами действия.\n\nЧтобы избежать этих проблем, вам нужно сделать новые 
+        скриншоты для ваших условий и подправить позиции нажатий и смахиваний.</string>
+    <string name="message_backup_error_no_zip_app">На устройстве не было найдено приложения для управления сохранением/загрузкой ZIP-файлов.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are used as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">Состояние резервной копии</string>
+
+</resources>
