@@ -33,7 +33,7 @@ androidxVectorDrawable = "1.2.0"
 airbnbLottie = "6.1.0"
 googleMaterial = "1.12.0"
 kotlinSerializationJson = "1.6.3"
-openCv = "4.9.0"
+openCv = "4.11.0"
 googleDaggerHilt = "2.55"
 
 # PlayStore only
