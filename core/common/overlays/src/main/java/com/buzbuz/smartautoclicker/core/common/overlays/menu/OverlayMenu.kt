@@ -543,8 +543,11 @@ abstract class OverlayMenu(
 
     /** Safe setter for the position of the overlay menu ensuring it will not be displayed outside the screen. */
     private fun updateMenuPosition(position: Point) {
-        menuLayoutParams.x = position.x.coerceIn(0, displayConfigManager.displayConfig.sizePx.x - menuLayout.width)
-        menuLayoutParams.y = position.y.coerceIn(0, displayConfigManager.displayConfig.sizePx.y - menuLayout.height)
+        val displaySize = displayConfigManager.displayConfig.sizePx
+        if (displaySize.x < menuLayout.width || displaySize.y < menuLayout.height) return
+
+        menuLayoutParams.x = position.x.coerceIn(0, displaySize.x - menuLayout.width)
+        menuLayoutParams.y = position.y.coerceIn(0, displaySize.y - menuLayout.height)
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             Log.d(TAG, "Updating menu window position: ${menuLayoutParams.x}/${menuLayoutParams.y}")
