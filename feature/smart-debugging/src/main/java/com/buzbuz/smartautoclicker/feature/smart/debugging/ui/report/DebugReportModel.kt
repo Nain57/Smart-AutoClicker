@@ -177,7 +177,8 @@ data class ConditionReport(
 )
 
 /** Format this value as a displayable confidence rate. */
-fun Double.formatConfidenceRate(): String = "${String.format("%.2f", this * 100)} % "
+fun Double.formatConfidenceRate(): String =
+    "${String.format("%.2f", (this * 100).coerceIn(0.0, 100.0))} % "
 
 private fun Long.formatDuration(): String =
     if (this < 1) "< 1ms"
