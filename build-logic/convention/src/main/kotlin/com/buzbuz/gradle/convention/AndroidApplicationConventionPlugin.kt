@@ -18,7 +18,6 @@ package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.core.libs.getLibs
 import com.buzbuz.gradle.core.androidApp
-import com.buzbuz.gradle.core.kotlinOptions
 import com.buzbuz.gradle.core.plugins
 
 import org.gradle.api.Plugin
@@ -45,10 +44,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             compileOptions.apply {
                 sourceCompatibility = libs.versions.java
                 targetCompatibility = libs.versions.java
-            }
-
-            kotlinOptions {
-                jvmTarget = libs.versions.jvmTarget
             }
 
             buildTypes {
