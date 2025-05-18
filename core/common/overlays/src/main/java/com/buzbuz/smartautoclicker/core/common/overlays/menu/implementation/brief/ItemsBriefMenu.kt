@@ -172,16 +172,13 @@ abstract class ItemBriefMenu(
         briefPanelAnimationController.setAutoHideEnabled(isEnabled)
     }
 
-    protected fun hideMoveButtons() {
-        briefViewBinding.buttonMovePrevious.visibility = View.GONE
-        briefViewBinding.buttonMoveNext.visibility = View.GONE
-    }
-
     protected fun getFocusedItemIndex(): Int =
         itemListSnapHelper.snapPosition
 
-    protected fun getFocusedItemBrief(): ItemBrief =
-        briefAdapter.getItem(getFocusedItemIndex())
+    protected fun getFocusedItemBrief(): ItemBrief? {
+        if (briefAdapter.itemCount == 0) return null
+        return briefAdapter.getItem(getFocusedItemIndex().coerceIn(0, briefAdapter.itemCount - 1))
+    }
 
     protected fun hidePanel(): Unit =
         briefPanelAnimationController.hide()

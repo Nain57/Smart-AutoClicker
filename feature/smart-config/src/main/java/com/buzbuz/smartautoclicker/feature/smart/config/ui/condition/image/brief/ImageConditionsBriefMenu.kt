@@ -147,12 +147,14 @@ class ImageConditionsBriefMenu(
     }
 
     private fun showTryConditionOverlay() {
+        val focusedItem = getFocusedItemBrief() ?: return
+
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = TryImageConditionOverlayMenu(
                     scenario = scenario,
-                    imageCondition = (getFocusedItemBrief().data as UiImageCondition).condition,
+                    imageCondition = (focusedItem.data as UiImageCondition).condition,
                     onNewThresholdSelected = { threshold ->
                         viewModel.updateConditionThreshold(threshold)
                     }

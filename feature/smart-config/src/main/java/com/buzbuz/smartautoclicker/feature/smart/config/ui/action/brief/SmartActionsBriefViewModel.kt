@@ -212,14 +212,21 @@ class SmartActionsBriefViewModel @Inject constructor(
     }
 
     fun swapActions(i: Int, j: Int) {
-        val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return
-        Collections.swap(actions, i, j)
+        if (i == j) return
 
+        val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return
+        if (actions.size <= 1 || i !in actions.indices || j !in actions.indices) return
+
+        Collections.swap(actions, i, j)
         editionRepository.updateActionsOrder(actions)
     }
 
     fun moveAction(from: Int, to: Int) {
+        if (from == to) return
+
         val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return
+        if (actions.size <= 1 || from !in actions.indices || to !in actions.indices) return
+
         val movedAction = actions.removeAt(from)
         actions.add(to, movedAction)
 
