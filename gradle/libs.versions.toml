@@ -18,30 +18,30 @@ androidxAnnotation = "1.9.1"
 androidxAppCompat = "1.7.0"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.2.1"
-androidxCoreKtx = "1.15.0"
-androidxDatastore = "1.1.4"
+androidxCoreKtx = "1.16.0"
+androidxDatastore = "1.1.4"             # 1.1.6 causes random crashes at runtime in release builds only
 androidxFragmentKtx = "1.8.6"
-androidxLifecycle = "2.8.7"
+androidxLifecycle = "2.8.7"             # Missing lint rules in 2.9.0 release
 androidxLifecycleExtension = "2.2.0"
-androidxNavigation = "2.8.9"
+androidxNavigation = "2.9.0"
 androidxRecyclerView = "1.4.0"
-androidxRoom = "2.6.1"
+androidxRoom = "2.7.1"
 androidxSplashScreen = "1.0.1"
 androidxVectorDrawable = "1.2.0"
 
 # Other
 airbnbLottie = "6.1.0"
 googleMaterial = "1.12.0"
-kotlinSerializationJson = "1.6.3"
+kotlinSerializationJson = "1.7.3"
 openCv = "4.11.0"
 googleDaggerHilt = "2.55"
 
 # PlayStore only
 androidBillingClient = "7.1.1"
-googleFirebaseBom = "33.11.0"
-googleFirebaseCrashlytics = "19.4.2"
+googleFirebaseBom = "33.13.0"
+googleFirebaseCrashlytics = "19.4.3"
 googleUserMessaging = "3.2.0"
-googleGmsAds = "24.1.0"
+googleGmsAds = "24.2.0"
 googlePlayReview = "2.0.2"
 
 # Tests only
