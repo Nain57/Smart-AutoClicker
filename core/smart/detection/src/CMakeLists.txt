@@ -16,6 +16,8 @@
 # Sets the minimum version of CMake required to build the native library.
 cmake_minimum_required(VERSION 3.22.1)
 
+add_link_options("LINKER:--build-id=none")
+
 # Declares and names the project.
 project("smartautoclicker")
 
