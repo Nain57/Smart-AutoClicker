@@ -49,6 +49,8 @@ enum class ActionType {
     CHANGE_COUNTER,
     /** Send a notification. */
     NOTIFICATION,
+    /** Press the Android back button using accessibility services. */
+    BACK_BUTTON,
 }
 
 

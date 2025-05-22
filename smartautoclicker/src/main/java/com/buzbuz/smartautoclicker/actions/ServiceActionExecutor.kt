@@ -66,6 +66,14 @@ class ServiceActionExecutor(private val service: AccessibilityService) : Dumpabl
         }
     }
 
+    fun safePerformGlobalBack() {
+        try {
+            service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
+        } catch (ex: Exception) {
+            Log.w(TAG, "Can't execute back button action", ex)
+        }
+    }
+
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         gestureExecutor.dump(writer, prefix)
     }

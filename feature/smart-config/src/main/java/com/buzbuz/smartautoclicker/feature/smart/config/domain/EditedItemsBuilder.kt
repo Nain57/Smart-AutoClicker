@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2024 Kevin Buzeau
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.BackButton
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
@@ -303,6 +304,14 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
+    fun createNewBackButton(context: Context): BackButton =
+        BackButton(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.backButtonName(context),
+            priority = 0,
+        )
+
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
         is Click -> createNewClickFrom(from, eventId)
         is Swipe -> createNewSwipeFrom(from, eventId)
@@ -311,6 +320,7 @@ class EditedItemsBuilder internal constructor(
         is ToggleEvent -> createNewToggleEventFrom(from, eventId)
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
         is Notification -> createNewNotificationFrom(from, eventId)
+        is BackButton -> createNewBackButtonFrom(from, eventId)
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
@@ -326,6 +336,13 @@ class EditedItemsBuilder internal constructor(
             clickOnConditionId = conditionId,
         )
     }
+
+    private fun createNewBackButtonFrom(from: BackButton, eventId: Identifier): BackButton =
+        from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+        )
 
     private fun createNewSwipeFrom(from: Swipe, eventId: Identifier): Swipe =
         from.copy(

@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.BackButton
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -55,7 +56,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is ToggleEvent -> getToggleEventIconRes()
     is ChangeCounter -> getChangeCounterIconRes()
     is Notification -> getNotificationIconRes()
-    else -> throw IllegalArgumentException("Not yet supported")
+    is BackButton -> getBackButtonIconRes()
 }
 
 internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
@@ -66,5 +67,5 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is ToggleEvent -> getDescription(context, inError)
     is ChangeCounter -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
-    else -> throw IllegalArgumentException("Not yet supported")
+    is BackButton -> context.getString(com.buzbuz.smartautoclicker.feature.smart.config.R.string.item_back_button_details)
 }
