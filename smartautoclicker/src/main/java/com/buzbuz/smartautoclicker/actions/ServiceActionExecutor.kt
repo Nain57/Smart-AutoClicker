@@ -67,10 +67,8 @@ class ServiceActionExecutor(private val service: AccessibilityService) : Dumpabl
     }
 
     fun safePerformGlobalBack() {
-        try {
-            service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
-        } catch (ex: Exception) {
-            Log.w(TAG, "Can't execute back button action", ex)
+        if (!service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)) {
+            Log.w(TAG, "Failed to execute back action")
         }
     }
 
