@@ -67,5 +67,5 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is ToggleEvent -> getDescription(context, inError)
     is ChangeCounter -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
-    is BackButton -> context.getString(com.buzbuz.smartautoclicker.feature.smart.config.R.string.item_back_button_details)
+    is BackButton -> getDescription(context)
 }

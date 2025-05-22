@@ -16,9 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 
+import android.content.Context
 import androidx.annotation.DrawableRes
-
+import com.buzbuz.smartautoclicker.core.domain.model.action.BackButton
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+
 
 @DrawableRes
 internal fun getBackButtonIconRes(): Int = R.drawable.ic_back
+
+internal fun BackButton.getDescription(context: Context): String =
+    context.getString(R.string.item_back_button_details)
