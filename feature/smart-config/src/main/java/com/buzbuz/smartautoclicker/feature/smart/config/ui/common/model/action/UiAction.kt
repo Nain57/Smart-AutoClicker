@@ -57,6 +57,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is ChangeCounter -> getChangeCounterIconRes()
     is Notification -> getNotificationIconRes()
     is BackButton -> getBackButtonIconRes()
+    else -> throw IllegalArgumentException("Not yet supported")
 }
 
 internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
@@ -68,4 +69,5 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is ChangeCounter -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
     is BackButton -> getDescription(context)
+    else -> throw IllegalArgumentException("Not yet supported")
 }
