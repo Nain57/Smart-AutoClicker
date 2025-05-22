@@ -105,6 +105,7 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
         }
         is BackButton -> {
             configurator.upsertEditedAction()
+            return
         }
         else -> throw IllegalArgumentException("Unsupported action type")
     }
