@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="billing_pro_mode_dialog_title" translatable="false">Smart AutoClicker Pro</string>
+
+    <string name="billing_pro_mode_description">&#8226; Sin límite de duración de detección\n&#8226; Sin limitaciones de conteo de creación de escenarios, eventos, condiciones y acciones\n&#8226; Exportar/Importar escenarios como archivos zip\n&#8226; Comunicarse con otra aplicación a través de Intents\n&#8226; Activar/Desactivar un evento y cambiar su estado durante la ejecución del escenario\n&#8226; Controlar el umbral de detección para cada condición.\n&#8226; Detener automáticamente la detección cuando se cumplan ciertas condiciones finales\n&#8226; Aleatorice los valores de su escenario para evitar la detección por parte de otras aplicaciones\n&#8226; Ajustar el algoritmo de detección para mejorar su velocidad o su corrección</string>
+    <string name="billing_pro_mode_success">¡ Gracias por comprar\nSmart AutoClicker Pro !</string>
+
+    <string name="billing_reason_action_count">Comprar Smart AutoClicker Pro para crear más de %1$d acciones</string>
+    <string name="billing_reason_action_type_intent">Comprar Smart AutoClicker Pro para enviar intents</string>
+    <string name="billing_reason_action_type_toggle_event">Comprar Smart AutoClicker Pro para cambiar el estado activo a eventos</string>
+    <string name="billing_reason_backup_export">Comprar Smart AutoClicker Pro para guardar un escenario como un archivo zip</string>
+    <string name="billing_reason_backup_import">Comprar Smart AutoClicker Pro para importar un escenario desde un archivo zip</string>
+    <string name="billing_reason_condition_count">Comprar Smart AutoClicker Pro para crear más de %1$d condiciones</string>
+    <string name="billing_reason_detection_duration_limit">Compre Smart AutoClicker Pro para ejecutar sesiones de detección que duren más de %1$d minutos</string>
+    <string name="billing_reason_event_count">Comprar Smart AutoClicker Pro para crear más de %1$d eventos</string>
+    <string name="billing_reason_event_state">Comprar Smart AutoClicker Pro para cambiar el estado de un evento</string>
+    <string name="billing_reason_scenario_anti_detection">Comprar Smart AutoClicker Pro para activar la anti-detección por parte de aplicaciones de terceros</string>
+    <string name="billing_reason_scenario_count">Comprar Smart AutoClicker Pro para crear más de %1$d escenarios</string>
+    <string name="billing_reason_scenario_detection_quality">Comprar Smart AutoClicker Pro para cambiar la calidad de detección del algoritmo</string>
+    <string name="billing_reason_scenario_end_conditions">Comprar Smart AutoClicker Pro para crear condiciones de detección automática de finalización</string>
+</resources>
