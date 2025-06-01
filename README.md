@@ -32,3 +32,9 @@
 * **Regular Mode**: Enjoy a straightforward auto-clicking experience with our Regular Mode, designed for easy configuration and ideal for simpler, repetitive tasks.
 * **Tutorials**: Learn to master Klick'r with our interactive game tutorials, which provide step-by-step instructions to help you automate tasks and beat the game using Klick'r's powerful features.
 * **Open Source**: As an open-source project, Klick'r is continuously improved by a dedicated community.
+
+
+## Links:
+* A question ? Read the Wiki first: https://github.com/Nain57/Smart-AutoClicker/wiki
+* Found a bug? Open an issue here: https://github.com/Nain57/Smart-AutoClicker/issues/new?template=bug_report.yml
+* You think an application is blocking Klick'r? Try the obfuscated version: https://github.com/Nain57/Smart-AutoClicker/releases/tag/obfuscation-start
