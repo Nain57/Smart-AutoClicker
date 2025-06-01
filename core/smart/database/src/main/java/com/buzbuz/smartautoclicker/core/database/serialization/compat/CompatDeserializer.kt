@@ -364,8 +364,23 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.TOGGLE_EVENT -> deserializeActionToggleEvent(jsonAction)
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
+            ActionType.BACK_BUTTON -> deserializeActionBackButton(jsonAction)
             null -> null
         }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionBackButton(jsonBackButton: JsonObject): ActionEntity? {
+        val id = jsonBackButton.getLong("id", true) ?: return null
+        val eventId = jsonBackButton.getLong("eventId", true) ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonBackButton.getString("name") ?: "",
+            priority = jsonBackButton.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.BACK_BUTTON,
+        )
+    }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     open fun deserializeActionClick(
