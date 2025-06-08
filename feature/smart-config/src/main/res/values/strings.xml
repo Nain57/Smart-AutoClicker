@@ -89,6 +89,10 @@
     <string name="item_notification_details_text">Send \"%1$s\"</string>
     <string name="item_notification_details_counter">Send %1$s value</string>
 
+    <string name="item_back_button_title">Back Button</string>
+    <string name="item_back_button_desc">Press the Android back button</string>
+    <string name="item_back_button_details">Press back button</string>
+
     <!-- Dialog Copy =============================================================================================== -->
 
     <string name="search_view_hint_event_copy">Search by event name</string>
