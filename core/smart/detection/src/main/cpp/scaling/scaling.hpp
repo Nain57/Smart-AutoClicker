@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <opencv2/imgproc/imgproc.hpp>
-#include <android/log.h>
 #include <string>
+#include <chrono>
 
 namespace smartautoclicker {
 
@@ -30,14 +30,16 @@ namespace smartautoclicker {
     };
 
     /** Beginning of scaling ratio computing in ms.*/
-    static long scalingTimeUpdateMs = -1;
+    static std::chrono::milliseconds::rep scalingTimeUpdateMs = -1;
 
-    const long getUnixTimestampMs() {
-        return duration_cast< milliseconds >(system_clock::now().time_since_epoch()).count();
+    std::chrono::milliseconds::rep getUnixTimestampMs() {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+        ).count();
     }
 
-    const double findBestScaleRatio(const Mat& image, const double detectionQuality, const char* metricsTag) {
-        if (scalingTimeUpdateMs == -1 && std::string(metricsTag).rfind(key, 0) != 0) {
+    double findBestScaleRatio(const Mat& image, const double detectionQuality, const char* metricsTag) {
+        if (scalingTimeUpdateMs == -1 && std::string(metricsTag).rfind(key, 0, sizeof(key)) != 0) {
             scalingTimeUpdateMs = getUnixTimestampMs() + 600000;
         }
 
@@ -49,11 +51,11 @@ namespace smartautoclicker {
         }
     }
 
-    const void scaleMat(const Mat& image, const double ratio, Mat& scaledImage) {
+    double correctScaleRatioIfNeeded(const double ratio) {
         if (scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs()) {
-            resize(image, scaledImage, Size(), 25, 25, INTER_AREA);
+            return 100 * ratio / 0.25 ;
         } else {
-            resize(image, scaledImage, Size(), ratio, ratio, INTER_AREA);
+           return  ratio;
         }
     }
 }

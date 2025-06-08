@@ -41,7 +41,7 @@ extern "C" {
             jobject screenBitmap,
             jdouble detectionQuality
     ) {
-        const char *tag = env->GetStringUTFChars(metricsTag, 0);
+        const char *tag = env->GetStringUTFChars(metricsTag, nullptr);
 
         getDetectorFromJavaRef(env, self)->setScreenMetrics(
                 loadMatFromRGBA8888Bitmap(env, screenBitmap),

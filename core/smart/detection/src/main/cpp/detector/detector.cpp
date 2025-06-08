@@ -36,6 +36,7 @@ void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, con
 }
 
 void Detector::setScreenImage(cv::Mat* screenMat) {
+    scaleRatio = correctScaleRatioIfNeeded(scaleRatio);
     screenImage->processFullSizeBitmap(screenMat, scaleRatio);
 }
 
