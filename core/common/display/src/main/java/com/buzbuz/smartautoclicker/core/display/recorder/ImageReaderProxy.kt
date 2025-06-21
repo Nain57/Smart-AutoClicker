@@ -64,11 +64,9 @@ internal class ImageReaderProxy @Inject constructor(
 
     private fun Image.toBitmap(): Bitmap {
         val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
-        val bitmap = bitmapRepository.getDisplayRecorderBitmap(imageWidth, height).apply {
+        return bitmapRepository.getDisplayRecorderBitmap(imageWidth, height).apply {
             copyPixelsFromBuffer(planes[0].buffer)
         }
-
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height)
     }
 }
 

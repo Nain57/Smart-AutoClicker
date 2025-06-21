@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.bitmaps
 
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.core.graphics.createBitmap
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
@@ -73,7 +74,7 @@ internal class ConditionBitmapsDataSource @Inject constructor(
                 buffer.position(0)
 
                 try {
-                    Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).apply {
+                    createBitmap(width, height).apply {
                         copyPixelsFromBuffer(buffer)
                     }
                 } catch (rEx: RuntimeException) {

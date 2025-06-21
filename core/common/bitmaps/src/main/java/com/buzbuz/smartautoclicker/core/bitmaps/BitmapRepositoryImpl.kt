@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.bitmaps
 
 import android.graphics.Bitmap
+import androidx.core.graphics.createBitmap
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import kotlinx.coroutines.runBlocking
 import java.io.PrintWriter
@@ -40,7 +41,7 @@ internal class BitmapRepositoryImpl @Inject constructor(
 
     override fun getDisplayRecorderBitmap(width: Int, height: Int): Bitmap =
         bitmapLRUCache.getOrDefault(getDisplayRecorderKey(width, height)) {
-            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            createBitmap(width, height)
         } ?: throw IllegalStateException("Can't create display recorder bitmap with size $width/$height")
 
     override suspend fun deleteImageConditionBitmaps(paths: List<String>) {
