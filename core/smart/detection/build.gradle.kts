@@ -1,4 +1,5 @@
 @file:Suppress("UnstableApiUsage")
+
 /*
 * Copyright (C) 2024 Kevin Buzeau
 *
@@ -16,9 +17,15 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_F_DROID
+import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_PLAY_STORE
+import com.buzbuz.gradle.convention.fDroid
+import com.buzbuz.gradle.convention.playStore
+
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidLocalTest)
+    alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.sourceDownload)
 }
 
@@ -50,8 +57,9 @@ android {
         getByName("debug") {
             externalNativeBuild {
                 cmake {
-                    cppFlags("-Wl,--build-id")
-                    arguments("-DCMAKE_BUILD_TYPE=Debug")
+                    arguments.addAll(
+                        listOf("-DCMAKE_BUILD_TYPE=Debug")
+                    )
                 }
             }
         }
@@ -59,8 +67,8 @@ android {
         getByName("release") {
             externalNativeBuild {
                 cmake {
-                    cppFlags("-Wl,--build-id")
-                    arguments(
+                    arguments.addAll(
+                        listOf(
                             "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
                             "-DCMAKE_BUILD_TYPE=Release",
                             "-DOPENCV_ENABLE_NONFREE=OFF",
@@ -103,20 +111,29 @@ android {
                             "-DBUILD_ANDROID_EXAMPLES=OFF",
                             "-DBUILD_ANDROID_PROJECTS=OFF",
                             "-DBUILD_SHARED_LIBS=ON"
+                        )
                     )
                 }
             }
         }
     }
+
     externalNativeBuild {
         cmake {
             path = File("src/CMakeLists.txt")
             version = "3.22.1"
         }
     }
+
+    productFlavors {
+        fDroid {
+            externalNativeBuild.cmake.arguments.addAll(
+                listOf("-DWITH_BUILD_ID=OFF")
+            )
+        }
+    }
 }
 
 dependencies {
     implementation(libs.androidx.annotation)
-
 }
