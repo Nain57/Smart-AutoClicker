@@ -88,6 +88,11 @@ gradlePlugin {
             implementationClass = "com.buzbuz.gradle.convention.CrashlyticsConventionPlugin"
         }
 
+        register("flavour") {
+            id = "com.buzbuz.gradle.android.flavour"
+            implementationClass = "com.buzbuz.gradle.convention.FlavourConventionPlugin"
+        }
+
         register("androidHilt") {
             id = "com.buzbuz.gradle.android.hilt"
             implementationClass = "com.buzbuz.gradle.convention.HiltConventionPlugin"

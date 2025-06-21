@@ -14,9 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+import com.buzbuz.gradle.convention.playStore
+
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidUnitTest)
+    alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
@@ -24,15 +28,8 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.feature.revenue"
 
-    // Specifies one flavor dimension.
-    flavorDimensions += "version"
     productFlavors {
-
-        create("fDroid") {
-            dimension = "version"
-        }
-
-        create("playStore") {
+        playStore {
             dimension = "version"
 
             buildFeatures {
@@ -58,7 +55,7 @@ android {
 
             /** The identifier for the application for the AdMob SDK */
             buildParameters["adsApplicationId"].apply {
-                asManifestPlaceHolder(this@create)
+                asManifestPlaceHolder(this@playStore)
             }
             /**
              * The advertisement block id for the AdMob SDK.
@@ -75,7 +72,7 @@ android {
                 val defaultAdsUnitId =
                     if (buildParameters.isBuildForVariant("release")) null
                     else "ca-app-pub-3940256099942544/8691691433"
-                asStringBuildConfigField(this@create, default = defaultAdsUnitId)
+                asStringBuildConfigField(this@playStore, default = defaultAdsUnitId)
             }
 
             /**

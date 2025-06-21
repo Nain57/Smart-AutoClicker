@@ -1,5 +1,3 @@
-import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
-
 /*
  * Copyright (C) 2025 Kevin Buzeau
  *
@@ -17,8 +15,11 @@ import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
+
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
+    alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.obfuscation)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
@@ -54,16 +55,6 @@ android {
 
         versionCode = 72
         versionName = "3.3.4"
-    }
-
-    flavorDimensions += listOf("version")
-    productFlavors {
-        create("fDroid") {
-            dimension = "version"
-        }
-        create("playStore") {
-            dimension = "version"
-        }
     }
 
     if (buildParameters.isBuildForVariant("fDroidDebug")) {
