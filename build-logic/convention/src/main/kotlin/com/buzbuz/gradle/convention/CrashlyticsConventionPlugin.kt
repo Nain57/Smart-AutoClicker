@@ -17,9 +17,9 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.core.libs.getLibs
-import com.buzbuz.gradle.core.playStoreImplementation
-import com.buzbuz.gradle.core.android
-import com.buzbuz.gradle.core.plugins
+import com.buzbuz.gradle.core.extensions.playStoreImplementation
+import com.buzbuz.gradle.core.extensions.android
+import com.buzbuz.gradle.core.extensions.plugins
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 

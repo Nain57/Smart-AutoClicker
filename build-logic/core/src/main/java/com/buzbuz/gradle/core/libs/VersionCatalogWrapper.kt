@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.buzbuz.gradle.core.libs
 
 import org.gradle.api.Project
@@ -23,10 +22,6 @@ import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
-
-
-fun Project.getLibs(): VersionCatalogWrapper =
-    VersionCatalogWrapper(extensions.getByType<VersionCatalogsExtension>().named("libs"))
 
 
 class VersionCatalogWrapper internal constructor(private val libs: VersionCatalog) {
@@ -39,12 +34,5 @@ class VersionCatalogWrapper internal constructor(private val libs: VersionCatalo
 }
 
 
-
-
-
-
-
-
-
-
-
+fun Project.getLibs(): VersionCatalogWrapper =
+    VersionCatalogWrapper(extensions.getByType<VersionCatalogsExtension>().named("libs"))

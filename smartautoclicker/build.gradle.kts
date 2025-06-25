@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import com.buzbuz.gradle.core.model.KlickrBuildType
+import com.buzbuz.gradle.core.model.KlickrFlavour
+import com.buzbuz.gradle.core.extensions.isBuildForVariant
 import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
 
 plugins {
@@ -38,7 +41,7 @@ obfuscationConfig {
         applicationId = "com.buzbuz.smartautoclicker",
         appNameResId = "@string/app_name",
         shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
-                buildParameters.isBuildForVariant("fDroid"),
+                project.isBuildForVariant(KlickrFlavour.F_DROID),
     )
 }
 
@@ -57,7 +60,7 @@ android {
         versionName = "3.3.10"
     }
 
-    if (buildParameters.isBuildForVariant("fDroidDebug")) {
+    if (project.isBuildForVariant(KlickrFlavour.F_DROID, KlickrBuildType.DEBUG)) {
         buildTypes {
             debug {
                 applicationIdSuffix = ".debug"
@@ -66,7 +69,7 @@ android {
     }
 
     signingConfigs {
-        create("release") {
+        create(KlickrBuildType.RELEASE.buildTypeName) {
             storeFile = file("./smartautoclicker.jks")
             storePassword = buildParameters["signingStorePassword"].asString()
             keyAlias = buildParameters["signingKeyAlias"].asString()
@@ -79,7 +82,7 @@ android {
 apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
 
 // Only apply gms/firebase plugins if we are building for the play store
-if (buildParameters.isBuildForVariant("playStoreRelease")) {
+if (project.isBuildForVariant(KlickrFlavour.PLAY_STORE, KlickrBuildType.RELEASE)) {
     apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
 }
 

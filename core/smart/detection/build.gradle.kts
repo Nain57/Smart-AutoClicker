@@ -17,10 +17,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_F_DROID
-import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_PLAY_STORE
-import com.buzbuz.gradle.convention.fDroid
-import com.buzbuz.gradle.convention.playStore
+import com.buzbuz.gradle.core.extensions.fDroid
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
@@ -54,7 +51,7 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
+        debug {
             externalNativeBuild {
                 cmake {
                     arguments.addAll(
@@ -64,7 +61,7 @@ android {
             }
         }
 
-        getByName("release") {
+        release {
             externalNativeBuild {
                 cmake {
                     arguments.addAll(

@@ -17,7 +17,7 @@
 package com.buzbuz.gradle.parameters
 
 import com.android.build.api.dsl.LibraryProductFlavor
-import com.buzbuz.gradle.core.isBuildForVariant
+import com.buzbuz.gradle.core.extensions.isBuildForVariant
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
