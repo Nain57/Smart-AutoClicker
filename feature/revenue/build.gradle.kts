@@ -101,18 +101,18 @@ dependencies {
     implementation(project(":core:common:quality"))
     implementation(project(":core:common:ui"))
 
-    "playStoreImplementation"(libs.androidx.appCompat)
-    "playStoreImplementation"(libs.androidx.core.ktx)
-    "playStoreImplementation"(libs.androidx.fragment.ktx)
-    "playStoreImplementation"(libs.androidx.lifecycle.viewmodel.ktx)
+    playStoreImplementation(libs.androidx.appCompat)
+    playStoreImplementation(libs.androidx.core.ktx)
+    playStoreImplementation(libs.androidx.fragment.ktx)
+    playStoreImplementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    "playStoreImplementation"(libs.android.billingClient)
-    "playStoreImplementation"(libs.android.billingClient.ktx)
+    playStoreImplementation(libs.android.billingClient)
+    playStoreImplementation(libs.android.billingClient.ktx)
 
-    "playStoreImplementation"(libs.google.userMessaging)
-    "playStoreImplementation"(libs.google.gms.ads)
+    playStoreImplementation(libs.google.userMessaging)
+    playStoreImplementation(libs.google.gms.ads)
 
-    "playStoreImplementation"(libs.google.material)
+    playStoreImplementation(libs.google.material)
 
-    "testPlayStoreImplementation"(libs.kotlinx.coroutines.test)
+    testPlayStoreImplementation(libs.kotlinx.coroutines.test)
 }
