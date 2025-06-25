@@ -1,6 +1,3 @@
-
-#include "screen_image.hpp"
-
 /*
  * Copyright (C) 2025 Kevin Buzeau
  *
