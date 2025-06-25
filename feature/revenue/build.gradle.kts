@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.buzbuz.gradle.convention.playStore
+import com.buzbuz.gradle.core.model.KlickrBuildType
+import com.buzbuz.gradle.core.extensions.isBuildForVariant
+import com.buzbuz.gradle.core.extensions.playStore
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
@@ -70,7 +72,7 @@ android {
              */
             buildParameters["adsUnitId"].apply {
                 val defaultAdsUnitId =
-                    if (buildParameters.isBuildForVariant("release")) null
+                    if (project.isBuildForVariant(buildType = KlickrBuildType.RELEASE)) null
                     else "ca-app-pub-3940256099942544/8691691433"
                 asStringBuildConfigField(this@playStore, default = defaultAdsUnitId)
             }
