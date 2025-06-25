@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.convention
 
-import com.buzbuz.gradle.core.androidApp
+import com.buzbuz.gradle.core.extensions.androidApp
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

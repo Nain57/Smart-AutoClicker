@@ -16,7 +16,6 @@
  */
 package com.buzbuz.gradle.parameters
 
-import com.buzbuz.gradle.core.isBuildForVariant
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 
@@ -50,9 +49,6 @@ abstract class BuildParametersPluginExtension {
 
         return BuildParameter(rootProject, parameterName, parameterValue as? String)
     }
-
-    fun isBuildForVariant(variantName: String): Boolean =
-        rootProject.isBuildForVariant(variantName)
 
     private companion object {
         const val LOCAL_PROPERTIES_FILE = "local.properties"

@@ -17,8 +17,8 @@
 package com.buzbuz.gradle.convention
 
 import com.buzbuz.gradle.core.libs.getLibs
-import com.buzbuz.gradle.core.androidLib
-import com.buzbuz.gradle.core.plugins
+import com.buzbuz.gradle.core.extensions.androidLib
+import com.buzbuz.gradle.core.extensions.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

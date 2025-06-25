@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.gradle.core
+package com.buzbuz.gradle.core.extensions
 
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.buzbuz.gradle.core.model.KlickrBuildType
+import com.buzbuz.gradle.core.model.KlickrFlavour
 
 import org.gradle.api.Project
 import org.gradle.api.plugins.PluginManager
@@ -29,13 +31,17 @@ import org.gradle.kotlin.dsl.support.uppercaseFirstChar
  * Check if the current build is for the provided variant.
  * This method will check if the variant name is contained in the command that executed the build.
  */
-fun Project.isBuildForVariant(variantName: String): Boolean {
+fun Project.isBuildForVariant(variantName: String?): Boolean {
+    if (variantName == null) return false
     val normalizedName = variantName.uppercaseFirstChar()
 
     return project.gradle.startParameter.taskRequests.find { taskExecRequest ->
         taskExecRequest.args.find { taskName -> taskName.contains(normalizedName) } != null
     } != null
 }
+
+fun Project.isBuildForVariant(flavour: KlickrFlavour? = null, buildType: KlickrBuildType? = null): Boolean =
+    isBuildForVariant(getVariantName(flavour, buildType))
 
 
 inline fun Project.plugins(closure: PluginManager.() -> Unit) =
