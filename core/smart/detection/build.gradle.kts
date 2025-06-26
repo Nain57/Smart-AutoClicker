@@ -17,7 +17,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import com.buzbuz.gradle.core.extensions.fDroid
+import com.buzbuz.gradle.convention.extensions.fDroid
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)

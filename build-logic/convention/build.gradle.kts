@@ -41,7 +41,6 @@ dependencies {
     compileOnly(libs.androidx.room.gradlePlugin)
     compileOnly(libs.google.firebase.crashlytics.gradlePlugin)
     compileOnly(libs.google.gms.gradlePlugin)
-    implementation(project(":core"))
 }
 
 tasks {
@@ -53,54 +52,59 @@ tasks {
 
 gradlePlugin {
     plugins {
+        register("buildParameters") {
+            id = "com.buzbuz.gradle.build.parameters"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.BuildParametersPlugin"
+        }
+
         register("androidApplication") {
             id = "com.buzbuz.gradle.android.application"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidApplicationConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidApplicationConventionPlugin"
         }
 
         register("androidLibrary") {
             id = "com.buzbuz.gradle.android.library"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidLibraryConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidLibraryConventionPlugin"
         }
 
         register("androidRoom") {
             id = "com.buzbuz.gradle.android.room"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidRoomConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidRoomConventionPlugin"
         }
 
         register("androidUnitTest") {
             id = "com.buzbuz.gradle.android.unittest"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidUnitTestConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidUnitTestConventionPlugin"
         }
 
         register("androidLocalTest") {
             id = "com.buzbuz.gradle.android.localtest"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidLocalTestConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidLocalTestConventionPlugin"
         }
 
         register("androidSigning") {
             id = "com.buzbuz.gradle.android.signing"
-            implementationClass = "com.buzbuz.gradle.convention.AndroidSigningConvention"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.AndroidSigningConvention"
         }
 
         register("crashlytics") {
             id = "com.buzbuz.gradle.crashlytics"
-            implementationClass = "com.buzbuz.gradle.convention.CrashlyticsConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.CrashlyticsConventionPlugin"
         }
 
         register("flavour") {
             id = "com.buzbuz.gradle.android.flavour"
-            implementationClass = "com.buzbuz.gradle.convention.FlavourConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.FlavourConventionPlugin"
         }
 
         register("androidHilt") {
             id = "com.buzbuz.gradle.android.hilt"
-            implementationClass = "com.buzbuz.gradle.convention.HiltConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.HiltConventionPlugin"
         }
 
         register("kotlinSerialization") {
             id = "com.buzbuz.gradle.android.kotlin.serialization"
-            implementationClass = "com.buzbuz.gradle.convention.KotlinSerializationConventionPlugin"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.KotlinSerializationConventionPlugin"
         }
     }
 }

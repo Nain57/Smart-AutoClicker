@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.buzbuz.gradle.core.model.KlickrBuildType
-import com.buzbuz.gradle.core.model.KlickrFlavour
-import com.buzbuz.gradle.core.extensions.isBuildForVariant
+import com.buzbuz.gradle.convention.model.KlickrBuildType
+import com.buzbuz.gradle.convention.model.KlickrFlavour
+import com.buzbuz.gradle.convention.extensions.isBuildForVariant
 import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
 
 plugins {
