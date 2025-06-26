@@ -38,6 +38,8 @@ import kotlinx.serialization.Serializable
  *                         quality, while higher values means better and slower detection.
  * @param randomize if true, the action values such as timers, positions will be shifted by a small random value in
  *                  order to avoid behaving like a bot.
+ * @param keepScreenOn if true, a wakelock will be taken while the scenario is running, preventing the screen to
+ *                     turn off.
  */
 @Entity(tableName = SCENARIO_TABLE)
 @Serializable
@@ -46,6 +48,7 @@ data class ScenarioEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "detection_quality") val detectionQuality: Int,
     @ColumnInfo(name = "randomize", defaultValue="0") val randomize: Boolean = false,
+    @ColumnInfo(name = "keep_screen_on", defaultValue="0") val keepScreenOn: Boolean = false,
 ) : EntityWithId
 
 /**

@@ -118,6 +118,10 @@
     <string name="menu_item_title_trigger_events">Triggers</string>
     <string name="menu_item_title_more">More</string>
 
+    <string name="field_scenario_keep_screen_on_title">Keep screen on</string>
+    <string name="field_scenario_keep_screen_on_enabled">Keep the device screen on while detecting.</string>
+    <string name="field_scenario_keep_screen_on_disabled">Use the normal device screen behaviour.</string>
+
     <string name="field_scenario_quality_title">Detection resolution</string>
     <string name="field_scenario_quality_description">To achieve faster detection, Klick\'r is downscaling the images before detecting.\n\nIf you increase the resolution, the detection will be slower, but more accurate. If you decrease the resolution, the detection will be faster, but less accurate. Find the good ratio between the detection resolution and the conditions thresholds to get the best of your scenarios!</string>
     <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>

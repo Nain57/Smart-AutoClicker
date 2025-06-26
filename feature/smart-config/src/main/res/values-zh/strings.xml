@@ -271,6 +271,10 @@
     <string name="dropdown_counter_operation_label">运行</string>
     <string name="field_detection_type_desc_area">检测选定区域</string>
 
+    <string name="field_scenario_keep_screen_on_title">保持屏幕开启</string>
+    <string name="field_scenario_keep_screen_on_enabled">检测时保持设备屏幕打开。</string>
+    <string name="field_scenario_keep_screen_on_disabled">使用正常的设备屏幕行为。</string>
+
 
     <!-- Scenario Items ============================================================================================ -->
 

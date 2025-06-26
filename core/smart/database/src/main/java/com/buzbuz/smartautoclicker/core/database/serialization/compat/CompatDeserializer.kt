@@ -194,6 +194,7 @@ internal open class CompatDeserializer : Deserializer {
             name = jsonScenario.getString("name") ?: "",
             detectionQuality = detectionQuality,
             randomize = jsonScenario.getBoolean("randomize") ?: false,
+            keepScreenOn = jsonScenario.getBoolean("keepScreenOn") ?: false,
         )
     }
 

@@ -60,6 +60,10 @@ class ScenarioConfigViewModel @Inject constructor(
     val randomization: Flow<Boolean> = configuredScenario
         .map { it.randomize }
 
+    /** Tells if we should keep the screen awake while running the scenario */
+    val keepScreenOn: Flow<Boolean> = configuredScenario
+        .map { it.keepScreenOn }
+
     /** The detection resolution */
     val detectionQuality: Flow<UiDetectionQuality> = configuredScenario
         .map { scenario ->
@@ -80,6 +84,15 @@ class ScenarioConfigViewModel @Inject constructor(
         editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(scenario.copy(randomize = !scenario.randomize))
+            }
+        }
+    }
+
+    /** Toggle the randomization value. */
+    fun toggleKeepScreenOn() {
+        editionRepository.editionState.getScenario()?.let { scenario ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(scenario.copy(keepScreenOn = !scenario.keepScreenOn))
             }
         }
     }

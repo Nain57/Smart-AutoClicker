@@ -31,6 +31,7 @@ internal fun Scenario.toEntity() = ScenarioEntity(
     name = name,
     detectionQuality = detectionQuality,
     randomize = randomize,
+    keepScreenOn = keepScreenOn,
 )
 
 /** @return the scenario for this entity. */
@@ -39,6 +40,7 @@ internal fun ScenarioWithEvents.toDomain(asDomain: Boolean = false) = Scenario(
     name = scenario.name,
     detectionQuality = scenario.detectionQuality,
     randomize = scenario.randomize,
+    keepScreenOn = scenario.keepScreenOn,
     eventCount = events.size,
     stats = stats.toDomain(),
 )
@@ -56,6 +58,7 @@ private fun ScenarioEntity.toDomain(cleanIds: Boolean = false) = Scenario(
     name = name,
     detectionQuality = detectionQuality,
     randomize = randomize,
+    keepScreenOn = keepScreenOn,
 )
 
 private fun ScenarioStatsEntity?.toDomain() =
