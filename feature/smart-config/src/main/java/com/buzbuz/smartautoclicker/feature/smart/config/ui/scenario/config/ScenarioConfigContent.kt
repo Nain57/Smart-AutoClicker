@@ -76,6 +76,17 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 setOnClickListener(viewModel::toggleRandomization)
             }
 
+            fieldKeepScreenOn.apply {
+                setTitle(context.resources.getString(R.string.field_scenario_keep_screen_on_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_scenario_keep_screen_on_disabled),
+                        context.getString(R.string.field_scenario_keep_screen_on_enabled),
+                    )
+                )
+                setOnClickListener(viewModel::toggleKeepScreenOn)
+            }
+
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
             seekbarResolution.addOnChangeListener { _, value, fromUser ->
@@ -92,6 +103,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { viewModel.scenarioName.collect(::updateScenarioName) }
                 launch { viewModel.scenarioNameError.collect(viewBinding.fieldScenarioName::setError) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
+                launch { viewModel.keepScreenOn.collect(::updateKeepScreenOn) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
             }
         }
@@ -103,6 +115,13 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
 
     private fun updateRandomization(isEnabled: Boolean) {
         viewBinding.fieldAntiDetection.apply {
+            setChecked(isEnabled)
+            setDescription(if (isEnabled) 1 else 0)
+        }
+    }
+
+    private fun updateKeepScreenOn(isEnabled: Boolean) {
+        viewBinding.fieldKeepScreenOn.apply {
             setChecked(isEnabled)
             setDescription(if (isEnabled) 1 else 0)
         }
