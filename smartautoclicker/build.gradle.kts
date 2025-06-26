@@ -40,7 +40,7 @@ obfuscationConfig {
     setup(
         applicationId = "com.buzbuz.smartautoclicker",
         appNameResId = "@string/app_name",
-        shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
+        shouldRandomize = buildParameters.randomizeAppId.typedValue &&
                 project.isBuildForVariant(KlickrFlavour.F_DROID),
     )
 }
@@ -71,9 +71,9 @@ android {
     signingConfigs {
         create(KlickrBuildType.RELEASE.buildTypeName) {
             storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"].asString()
-            keyAlias = buildParameters["signingKeyAlias"].asString()
-            keyPassword = buildParameters["signingKeyPassword"].asString()
+            storePassword = buildParameters.signingStorePassword.typedValue
+            keyAlias = buildParameters.signingKeyAlias.typedValue
+            keyPassword = buildParameters.signingKeyPassword.typedValue
         }
     }
 }
