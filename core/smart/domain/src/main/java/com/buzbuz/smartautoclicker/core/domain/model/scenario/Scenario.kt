@@ -35,6 +35,7 @@ data class Scenario(
     val name: String,
     val detectionQuality: Int,
     val randomize: Boolean = false,
+    val keepScreenOn: Boolean = false,
     val eventCount: Int = 0,
     val stats: ScenarioStats? = null,
 ): Identifiable
