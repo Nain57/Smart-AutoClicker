@@ -14,20 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.convention.plugins
 
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+import com.buzbuz.gradle.convention.extensions.getLibs
+import com.buzbuz.gradle.convention.extensions.implementation
+import com.buzbuz.gradle.convention.extensions.plugins
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
+
+class KotlinSerializationConventionPlugin : Plugin<Project> {
+
+    override fun apply(target: Project): Unit = with(target) {
+        val libs = getLibs()
+
+        plugins {
+            apply(libs.plugins.jetBrains.kotlin.serialization)
+        }
+
+        dependencies {
+            implementation(libs.getLibrary("kotlinx.serialization.json"))
         }
     }
 }
-
-rootProject.name = "build-logic"
-include(":obfuscation")
-include(":convention")
-include(":source-download")
