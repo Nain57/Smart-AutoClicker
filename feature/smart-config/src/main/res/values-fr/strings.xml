@@ -276,6 +276,10 @@
     <string name="field_detection_type_desc_area">Détection sur une zone sélectionnée</string>
 
 
+    <string name="field_scenario_keep_screen_on_title">Garder l\'écran allumé</string>
+    <string name="field_scenario_keep_screen_on_enabled">L\'écran de votre appareil restera allumé pendant la détéction.</string>
+    <string name="field_scenario_keep_screen_on_disabled">Utiliser le comportement normal de l\'écran de l\'appareil.</string>
+
     <!-- Scenario Items ============================================================================================ -->
 
     <string name="item_notification_title">Notification</string>

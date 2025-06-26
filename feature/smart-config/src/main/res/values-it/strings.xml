@@ -273,6 +273,9 @@
     <string name="dropdown_counter_operation_label">Operazione</string>
     <string name="field_detection_type_desc_area">Rilevamento su un\'area selezionata</string>
 
+    <string name="field_scenario_keep_screen_on_title">Mantenere lo schermo acceso</string>
+    <string name="field_scenario_keep_screen_on_enabled">Mantenere lo schermo del dispositivo acceso durante il rilevamento.</string>
+    <string name="field_scenario_keep_screen_on_disabled">Utilizzare il normale comportamento dello schermo del dispositivo.</string>
 
     <!-- Scenario Items ============================================================================================ -->
 
