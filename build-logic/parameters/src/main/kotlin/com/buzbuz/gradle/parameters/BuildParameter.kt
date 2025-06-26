@@ -16,75 +16,41 @@
  */
 package com.buzbuz.gradle.parameters
 
-import com.android.build.api.dsl.LibraryProductFlavor
-import com.buzbuz.gradle.core.extensions.isBuildForVariant
-import org.gradle.api.GradleException
 import org.gradle.api.Project
+import java.io.FileInputStream
+import java.util.Properties
 
 
-class BuildParameter(private val project: Project, private val name: String, private val value: String?) {
+class BuildParameter<T : Any>(
+    internal val rootProject: Project,
+    internal val name: String,
+    defaultValue: T,
+) {
+    val stringValue: String =
+        rootProject.getPropertyStringValue(name, defaultValue)
 
-    fun asString(): String? {
-        if (value == null) project.logger.info("INFO: Build property $name not found.")
-        return value
-    }
-
-    fun asBoolean(): Boolean {
-        return value == "true" || value == "TRUE"
-    }
-
-    fun asIntBuildConfigField(variant: LibraryProductFlavor, default: Int? = null) {
-        if (!project.isBuildForVariant(variant.name)) return
-
-        if (value == null && default == null)
-            throw GradleException("ERROR: Build property $name not found, cannot set BuildConfig field.")
-
-        variant.buildConfigField(
-            type = "int",
-            name = name.asBuildConfigFieldName(),
-            value = value ?: default.toString(),
-        )
-    }
-
-    fun asStringBuildConfigField(variant: LibraryProductFlavor, default: String? = null) {
-        if (!project.isBuildForVariant(variant.name)) return
-
-        if (value == null && default == null)
-            throw GradleException("ERROR: Build property $name not found, cannot set BuildConfig field.")
-
-        val fieldValue = value ?: default!!
-        variant.buildConfigField(
-            type = "String",
-            name = name.asBuildConfigFieldName(),
-            value = "\"$fieldValue\"",
-        )
-    }
-
-    fun asStringArrayBuildConfigField(variant: LibraryProductFlavor) {
-        if (!project.isBuildForVariant(variant.name)) return
-
-        variant.buildConfigField(
-            type = "String[]",
-            name = name.asBuildConfigFieldName(),
-            value = value ?: "{}",
-        )
-    }
-
-    fun asManifestPlaceHolder(variant: LibraryProductFlavor, default: String? = null) {
-        if (!project.isBuildForVariant(variant.name)) return
-
-        if (value == null && default == null)
-            throw GradleException("ERROR: Build property $name not found, cannot set manifest placeholder.")
-
-        variant.manifestPlaceholders[name] = value ?: default!!
-    }
-
-    private fun String.asBuildConfigFieldName(): String =
-        buildString {
-            this@asBuildConfigFieldName.forEach { char ->
-                if (char.isUpperCase()) append('_').append(char)
-                else append(char.uppercaseChar())
-            }
-        }
+    val typedValue: T =
+        stringValue.toTypedValue(defaultValue::class)
 }
 
+/**
+ * Get the build parameter value from the following sources, in order (retrieves the first found):
+ * - Gradle command line arguments (-PargumentName=value).
+ * - [LOCAL_PROPERTIES_FILE], with the regular gradle properties syntax.
+ * - The [defaultValue] provided as this method parameter.
+ */
+private fun <T : Any> Project.getPropertyStringValue(parameterName: String, defaultValue: T): String =
+    if (rootProject.hasProperty(parameterName)) {
+        // Check in gradle command line arguments
+        val gradleArg = rootProject.properties[parameterName] as? String
+        gradleArg?.sanitizeGradleCommandLineArgument() ?: gradleArg
+    } else {
+        // Check in local properties file
+        val localPropertiesFile = rootProject.file(LOCAL_PROPERTIES_FILE)
+        if (localPropertiesFile.exists()) {
+            val localProperties = Properties().apply { load(FileInputStream(localPropertiesFile)) }
+            localProperties[parameterName] as? String
+        } else null
+    }  ?: defaultValue.toStringValue()
+
+private const val LOCAL_PROPERTIES_FILE = "local.properties"
