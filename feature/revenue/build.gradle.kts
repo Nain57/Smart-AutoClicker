@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.buzbuz.gradle.core.extensions.playStore
-import com.buzbuz.gradle.parameters.buildConfigField
-import com.buzbuz.gradle.parameters.manifestPlaceholders
+import com.buzbuz.gradle.convention.extensions.playStore
+import com.buzbuz.gradle.convention.extensions.buildConfigField
+import com.buzbuz.gradle.convention.extensions.manifestPlaceholders
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)

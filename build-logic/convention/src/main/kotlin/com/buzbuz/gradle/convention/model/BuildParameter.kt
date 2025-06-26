@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.gradle.convention.model
 
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
-    }
+import com.buzbuz.gradle.convention.plugins.getPropertyStringValue
+import com.buzbuz.gradle.convention.plugins.toTypedValue
+import org.gradle.api.Project
+
+class BuildParameter<T : Any>(
+    internal val rootProject: Project,
+    internal val name: String,
+    defaultValue: T,
+) {
+    val stringValue: String =
+        rootProject.getPropertyStringValue(name, defaultValue)
+
+    val typedValue: T =
+        stringValue.toTypedValue(defaultValue::class)
 }
-
-rootProject.name = "build-logic"
-include(":obfuscation")
-include(":convention")
-include(":source-download")
