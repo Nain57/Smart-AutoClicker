@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ class BuildParametersPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         extensions.create<BuildParametersPluginExtension>(PLUGIN_EXTENSION_NAME).apply {
-            project.set(target)
+            rootProject.set(target.rootProject)
         }
     }
 
@@ -33,3 +33,4 @@ class BuildParametersPlugin : Plugin<Project> {
         const val PLUGIN_EXTENSION_NAME = "buildParameters"
     }
 }
+
