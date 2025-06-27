@@ -1,55 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
+
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">Сценарій: %1$s</string>
+    <string name="notification_message">Натисніть, щоб змінити сценарій</string>
+    <string name="notification_button_play_and_hide">Запустити й сховати</string>
+    <string name="notification_button_pause_and_show">Призупинити й показати</string>
+    <string name="notification_button_toggle_menu">Показати/Сховати</string>
+    <string name="notification_button_stop">Зупинити</string>
+
+
+    <string name="activity_scenario_title">Сценарії</string>
+    <string name="accessibility_service_description">Ця програма потребує цю службу для впровадження натискань, які ви
+        створили, в інші програми після виявлення умов.\n\nЗ цієї програми не буде зібрано жодних даних. Не соромтеся відвідати наш github, код має відкрите джерело!</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Новий сценарій</string>
     <string name="dialog_title_copy_scenario">Копіювати сценарій</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
     <string name="menu_item_title_export">Експорт</string>
     <string name="menu_item_title_import">Імпорт</string>
     <string name="menu_item_title_select_all">Вибрати все</string>
     <string name="menu_item_title_cancel">Скасувати</string>
     <string name="menu_item_title_search">Пошук</string>
     <string name="menu_item_title_settings">Налаштування</string>
-    <string name="message_empty_image_events_scenario_list">Подій із зображеннями немає</string>
-    <string name="activity_settings_title">Налаштування</string>
-    <string name="accessibility_service_description">Ця програма потребує цієї служби, щоб вводити створені вами кліки в інші додатки після виявлення умов. Жодні дані не будуть збиратися з цієї програми. Не соромтеся відвідати наш GitHub, код є відкритим!</string>
-    <string name="dialog_title_add_scenario">Новий сценарій</string>
-    <string name="item_scenario_filter_by_name">Ім’я</string>
-    <string name="notification_title">Сценарій: %1$s</string>
-    <string name="field_input_block_workaround_desc">На пристроях Pixel з Android 15 використання автоклікера може заблокувати сенсорний екран.\\nЩоб його розблокувати, потрібно одночасно торкнутися екрана кількома пальцями. Це налаштування намагається імітувати таку дію кожні 10 секунд.</string>
-    <string name="field_privacy">Налаштування приватності</string>
-    <string name="toast_denied_foreground_permission">Дозвіл на роботу служби переднього плану було відхилено користувачем</string>
-    <string name="button_text_create_scenario">Створити сценарій</string>
-    <string name="content_desc_add_scenario">Створити новий сценарій</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">Ваш пристрій не надає стандартне діалогове вікно дозволу на захоплення екрана Android. Klick\'r не зможе працювати на ньому.</string>
-    <string name="section_title_scenario_type_title">Тип сценарію</string>
-    <string name="notification_message">Натисніть, щоб змінити сценарій</string>
-    <string name="notification_button_play_and_hide">Відтворити та приховати</string>
-    <string name="notification_button_pause_and_show">Призупинити й показати</string>
-    <string name="notification_button_toggle_menu">Показати/Сховати</string>
-    <string name="notification_button_stop">Стоп</string>
-    <string name="item_scenario_filter_by_recent">Недавнє</string>
-    <string name="item_scenario_filter_by_favorite">Улюблене</string>
-    <string name="item_desc_dumb_scenario_max_duration_infinite">Немає максимальної тривалості</string>
+
+    <string name="item_scenario_filter_by_name">Назва</string>
+    <string name="item_scenario_filter_by_recent">Останні</string>
+    <string name="item_scenario_filter_by_favorite">Улюблені</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">Звичайний досвід автоклікера.\nПросто розміщуйте натискання та свайпи на екрані.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Зупинити через %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Без максимальної тривалості</string>
     <string name="item_desc_dumb_scenario_repeat_count">Повторити %1$d разів</string>
-    <string name="activity_scenario_title">Сценарії</string>
-    <string name="field_remove_ads">Видалити рекламу</string>
-    <string name="field_force_entire_screen_title">Примусово на весь екран</string>
-    <string name="field_force_entire_screen_desc">Примусово встановити вибір захоплення екрану на \"Весь екран\". Можливо, не працюватиме залежно від вашого пристрою.</string>
-    <string name="field_input_block_workaround_title">Розблокувати сенсорний екран</string>
-    <string name="field_legacy_notification_ui_title">Застарілий інтерфейс сповіщень</string>
-    <string name="field_legacy_notification_ui_desc">Використовуйте системні кнопки замість кнопок-іконок у сповіщенні.</string>
-    <string name="field_troubleshooting">Усунення несправностей</string>
-    <string name="default_scenario_name">Ім’я за замовчуванням</string>
-    <string name="item_desc_dumb_scenario">Звичайний досвід автоклікера. Просто розміщуйте кліки та свайпи на екрані.</string>
-    <string name="item_desc_dumb_scenario_max_duration">"Зуинитись після %1$s "</string>
-    <string name="item_desc_smart_scenario_pro_mode">Потрібно подивитися рекламу або купити Pro-версію</string>
-    <string name="item_title_dumb_scenario">Просто</string>
-    <string name="item_title_smart_scenario">Розумно</string>
     <string name="item_desc_dumb_scenario_repeat_infinite">Нескінченне повторення</string>
-    <string name="field_show_scenario_filters_ui_title">Показати фільтри сценаріїв</string>
-    <string name="field_legacy_action_ui_title">Застарілий інтерфейс дій</string>
-    <string name="field_legacy_action_ui_desc">Змінити відображення дії на список. Корисно для складних сценаріїв.</string>
-    <string name="item_desc_smart_scenario">Використовуйте розпізнавання зображень для створення складних сценаріїв використання.</string>
+    <string name="item_desc_smart_scenario">Використовуйте виявлення зображень для створення складних випадків використання.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Потрібно переглянути рекламу або купити про-режим</string>
+    <string name="item_title_dumb_scenario">Простий</string>
+    <string name="item_title_smart_scenario">Розумний</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
     <string name="message_empty_scenario_list">Створіть свій перший сценарій і почніть автоматизувати завдання на своєму телефоні</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
     <string name="message_delete_scenario">Це видалить %1$s. Ви впевнені?</string>
-    <string name="toast_denied_screen_sharing_permission">Дозвіл на показ екрану відхилено користувачем</string>
-    <string name="field_show_scenario_filters_ui_desc">Показати або приховати фільтри на екрані списку сценаріїв.</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Ваш пристрій не надає стандартного
+        діалогового вікна дозволу на захоплення екрана Android. Klick\'r не зможе працювати на ньому.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">Тип сценарію</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">Користувач відхилив дозвіл на спільне використання екрана</string>
+    <string name="toast_denied_foreground_permission">Користувач відхилив дозвіл на службу переднього плану</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Створити сценарій</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Створити новий сценарій</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">Назва за замовчуванням</string>
+    <string name="message_empty_image_events_scenario_list">Немає подій зображень</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">Налаштування</string>
+
+    <string name="field_show_scenario_filters_ui_title">Показувати фільтри сценаріїв</string>
+    <string name="field_show_scenario_filters_ui_desc">Відображати або приховувати фільтри на екрані списку сценаріїв.</string>
+
+    <string name="field_legacy_action_ui_title">Застарілий інтерфейс дій</string>
+    <string name="field_legacy_action_ui_desc">Змінити відображення дії списком. Корисно для складних сценаріїв.</string>
+
+    <string name="field_legacy_notification_ui_title">Застарілий інтерфейс сповіщень</string>
+    <string name="field_legacy_notification_ui_desc">Використовувати системні кнопки замість іконних кнопок у сповіщенні.</string>
+
+    <string name="field_force_entire_screen_title">Примусово весь екран</string>
+    <string name="field_force_entire_screen_desc">Примусити селектор захоплення екрана до \"Весь екран\". Може не працювати в залежності від вашого пристрою</string>
+
+    <string name="field_input_block_workaround_title">Розблокувати сенсорний екран</string>
+    <string name="field_input_block_workaround_desc">На пристроях Pixel з Android 15 використання автоклікера може заблокувати сенсорний екран.\nЩоб розблокувати його, потрібно доторкнутися до екрана кількома пальцями одночасно. Це налаштування намагається імітувати це кожні 10 секунд.</string>
+
+    <string name="field_privacy">Налаштування приватності</string>
+    <string name="field_remove_ads">Видалити рекламу</string>
+    <string name="field_troubleshooting">Усунення несправностей</string>
+
 </resources>
