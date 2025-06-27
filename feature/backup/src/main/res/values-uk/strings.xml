@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">Створити резервну копію</string>
+    <string name="dialog_title_delete_scenario">Видалити сценарій</string>
+    <string name="dialog_title_import_backup">Імпортувати резервну копію</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">Виберіть вихідний файл</string>
+    <string name="item_title_backup_import_select_file">Виберіть файл резервної копії</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Створення резервної копії: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Резервне копіювання завершено</string>
+    <string name="message_backup_create_error">Сталася помилка, і експорт резервної копії було скасовано</string>
+    <string name="message_backup_import_progress">Імпорт резервної копії: %1$d</string>
+    <string name="message_backup_import_verification">Перевірка даних</string>
+    <string name="message_backup_import_completed">Імпорт завершено, імпортовано %1$d сценарій</string>
+    <string name="message_backup_import_completed_with_error">Імпорт завершено, імпортовано %1$d сценаріїв, %2$d помилок</string>
+    <string name="message_backup_import_error">Сталася помилка, і імпорт резервної копії було скасовано</string>
+    <string name="message_backup_import_compatibility">Деякі з імпортованих сценаріїв були створені на пристрої з іншим екраном, і це може спричинити проблеми з координатами виявлення та дій.\n\nЩоб виправити це, вам потрібно зробити нові знімки екрана для ваших умов і оновити позиції натискань/свайпів.</string>
+    <string name="message_backup_error_no_zip_app">На пристрої не знайдено програми для обробки збереження/завантаження zip-файлу.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">Стан резервної копії</string>
+
+</resources>
