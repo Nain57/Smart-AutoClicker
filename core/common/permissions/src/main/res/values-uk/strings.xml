@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">Accessibility service</string>
+    <string name="dialog_title_permission_notification">Сповіщення</string>
+    <string name="dialog_title_permission_mandatory_denied">Дозвіл відхилено</string>
+    <string name="dialog_title_permission_overlay">Накладка</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">Дозвіл на накладання необхідний для відображення
+        інтерфейсу Klick\'r поверх програм, які ви хочете автоматизувати, що дозволяє вам налаштовувати ваш
+        сценарій без зупинки іншої програми.</string>
+    <string name="message_permission_desc_accessibility">Дозвіл служби доступності дозволяє Klick\'r
+        виконувати жести на екрані вашого пристрою. Цей дозвіл необхідний для виконання натискань та
+        свайпів, які ви створите у ваших сценаріях автоматизації.\n\nKlick\'r не збирає ніяких даних\n\nЩоб
+        надати дозвіл служби доступності, натисніть кнопку нижче.</string>
+    <string name="message_permission_desc_notification">Опційно: Показує сповіщення під час роботи програми,
+        щоб легко повернутися до екрану вибору сценарію.</string>
+    <string name="message_permission_mandatory_denied">Цей дозвіл є обов\'язковим для Klick\'r.
+        Програма не зможе працювати правильно без нього.</string>
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">Запросити дозвіл</string>
+    <string name="button_deny">Відхилити</string>
+
+</resources>

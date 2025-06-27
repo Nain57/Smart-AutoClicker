@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_dumb_action_type">Вид дії</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">Сценарій</string>
+
+    <!--
+      - Menu item titles.
+      - These should be short and descriptive.
+      -->
+    <string name="menu_item_title_dumb_actions">Дії</string>
+    <string name="menu_item_title_dumb_config">Налаштування</string>
+
+    <!--
+      - Descriptions for dumb actions.
+      - Use %1$s, %2$d, etc. as placeholders for dynamic values.
+      -->
+    <string name="item_desc_dumb_action_duration">Протягом %1$s</string>
+    <string name="item_desc_dumb_click">Клікніть десь на екрані</string>
+    <string name="item_desc_dumb_click_details">Протягом %1$s в [%2$d, %3$d]</string>
+    <string name="item_desc_dumb_click_on_position">Натисніть у точці %1$d, %2$d</string>
+    <string name="item_desc_dumb_pause">Призупинити виконання</string>
+    <string name="item_desc_dumb_pause_details">Протягом %1$s</string>
+    <string name="item_desc_dumb_swipe_details">Протягом %1$s з [%2$d, %3$d] до [%4$d, %5$d]</string>
+    <string name="item_desc_dumb_swipe_positions">Свайпніть з %1$d, %2$d до %3$d, %4$d</string>
+
+    <!--
+      - Titles for dumb actions.
+      - Keep these consistent and intuitive.
+      -->
+    <string name="item_title_dumb_click">Клік</string>
+    <string name="item_title_dumb_pause">Очікувати</string>
+    <string name="item_title_dumb_swipe">Свайп</string>
+    <string name="item_title_no_dumb_actions">Немає дій</string>
+    <string name="item_title_dumb_action_copy">Скопіювати</string>
+
+    <!--
+      - Descriptions for specific actions like copy.
+      - Make it clear what the action does.
+      -->
+    <string name="item_desc_dumb_action_copy">Скопіювати існуючу дію з будь-якого сценарію</string>
+
+    <!--
+      - Messages for empty action lists.
+      - Shown when there are no actions to display.
+      -->
+    <string name="message_empty_dumb_action_list">Дії не створено!</string>
+    <string name="message_dumb_brief_empty_action_list">Для виконання сценарію потрібна хоча б одна дія</string>
+
+    <!--
+      - Headers for lists showing actions.
+      - Differentiate between actions from this scenario and all scenarios.
+      -->
+    <string name="list_header_copy_dumb_action_this">Дії з цього сценарію</string>
+    <string name="list_header_copy_dumb_action_all">Дії з усіх сценаріїв</string>
+
+    <!--
+      - Hint for the search view when copying actions.
+      - Guide users to search by action name.
+      -->
+    <string name="search_view_hint_dumb_action_copy">Пошук за назвою дії</string>
+
+    <!--
+      - Labels for input fields regarding action properties.
+      - Clarify what each field represents.
+      -->
+    <string name="input_field_label_maximum_duration">Максимальна тривалість (хвилини)</string>
+    <string name="input_field_label_repeat_count">Кількість повторень</string>
+    <string name="input_field_label_repeat_delay">Затримка повторення (мс)</string>
+
+    <!--
+      - Descriptions for repeat actions.
+      - Indicate the number of repetitions or if it's infinite.
+      -->
+    <string name="item_desc_dumb_repeat_count">Повторити %1$d разів</string>
+    <string name="item_desc_dumb_repeat_infinite">Нескінченне повторення</string>
+
+    <!--
+      - General description for swipe action.
+      - Explain the gesture involved.
+      -->
+    <string name="item_desc_dumb_swipe">Свайпніть пальцем з одного місця на екрані в інше</string>
+
+    <!--
+      - Content descriptions for accessibility.
+      - Describe the purpose of various UI elements.
+      -->
+    <string name="content_desc_add_action">Додати нову дію до сценарію</string>
+    <string name="content_desc_show_actions">Показати або приховати створені дії</string>
+    <string name="content_desc_open_action_list">Відкрити список дій</string>
+
+    <!--
+      - Message for when a secondary action list is empty.
+      - Prompt the user to add an action.
+      -->
+    <string name="message_empty_secondary_dumb_action_list">Вам потрібна хоча б одна дія для запуску сценарію</string>
+</resources>
