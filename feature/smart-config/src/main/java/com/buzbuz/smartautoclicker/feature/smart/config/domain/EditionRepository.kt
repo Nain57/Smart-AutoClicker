@@ -109,7 +109,6 @@ class EditionRepository @Inject constructor(
         if (!updateResult) return false
 
         scenarioEditor.stopEdition()
-        repository.cleanupUnusedBitmaps(editedItemsBuilder.newImageConditionsPaths)
         editedItemsBuilder.resetBuilder()
 
         return true

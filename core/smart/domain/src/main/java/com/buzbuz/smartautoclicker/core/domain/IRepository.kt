@@ -48,6 +48,9 @@ interface IRepository {
     /** All actions from all events. */
     val allActions: Flow<List<Action>>
 
+    /** Tells if there is image conditions that uses the legacy image format. */
+    val legacyConditionsCount: Flow<Int>
+
     /**
      * Add a new scenario.
      *
@@ -177,6 +180,8 @@ interface IRepository {
     suspend fun getConditionBitmap(condition: ImageCondition): Bitmap?
 
     suspend fun cleanupUnusedBitmaps(removedPath: List<String>)
+
+    suspend fun migrateLegacyImageConditions(): Boolean
 
     fun startTutorialMode()
 
