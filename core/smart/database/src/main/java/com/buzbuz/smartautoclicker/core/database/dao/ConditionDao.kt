@@ -25,6 +25,7 @@ import androidx.room.Update
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 
 import kotlinx.coroutines.flow.Flow
 
@@ -50,6 +51,20 @@ abstract class ConditionDao {
     abstract suspend fun getConditions(eventId: Long): List<ConditionEntity>
 
     /**
+     * Get the list of image conditions that uses the legacy image format
+     * @return the list of legacy conditions.
+     */
+    @Query("SELECT * FROM $CONDITION_TABLE WHERE type='ON_IMAGE_DETECTED' AND path IS NOT NULL AND path NOT LIKE '%.png'")
+    abstract fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>>
+
+    /**
+     * Get the list of image conditions that uses the legacy image format
+     * @return the list of legacy conditions.
+     */
+    @Query("SELECT * FROM $CONDITION_TABLE WHERE type='ON_IMAGE_DETECTED' AND path IS NOT NULL AND path NOT LIKE '%.png'")
+    abstract suspend fun getLegacyImageConditions(): List<ConditionEntity>
+
+    /**
      * Get the list of conditions path for a given event.
      *
      * @param eventId the identifier of the event to get the conditions path from.
@@ -73,6 +88,13 @@ abstract class ConditionDao {
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun addConditions(conditions: List<ConditionEntity>): List<Long>
+
+    /**
+     * Update a condition in the database.
+     * @param condition the condition to be updated.
+     */
+    @Update
+    abstract suspend fun updateCondition(condition: ConditionEntity)
 
     /**
      * Update a condition in the database.

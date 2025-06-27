@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.bitmaps
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.core.graphics.createBitmap
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import kotlinx.coroutines.runBlocking
@@ -48,6 +49,15 @@ internal class BitmapRepositoryImpl @Inject constructor(
         conditionBitmapsDataSource.deleteBitmaps(paths)
     }
 
+    override suspend fun migrateImageConditionBitmap(path: String, width: Int, height: Int): String? {
+        Log.d(TAG, "Migrating legacy bitmap $path")
+
+        val legacyBitmap = conditionBitmapsDataSource.loadLegacyBitmap(path, width, height) ?: return null
+        conditionBitmapsDataSource.deleteBitmaps(listOf(path))
+
+        return conditionBitmapsDataSource.saveBitmap(legacyBitmap, CONDITION_FILE_PREFIX)
+    }
+
     override fun releaseCache() {
         bitmapLRUCache.evictAll()
     }
@@ -67,3 +77,5 @@ internal class BitmapRepositoryImpl @Inject constructor(
     private fun getDisplayRecorderKey(width: Int, height: Int): String =
         "key:DISPLAY_RECORDER:$width:$height"
 }
+
+private const val TAG = "BitmapRepository"

@@ -141,4 +141,18 @@
     <string name="field_remove_ads">Remove ads</string>
     <string name="field_troubleshooting">Troubleshooting</string>
 
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">Migration</string>
+
+    <string name="message_condition_migration_desc">Klick\'r images format have changed and your scenario needs to be updated.
+        This can take a few minutes depending on the number of conditions to migrate.</string>
+    <string name="message_condition_migration_count">%1$d Image Conditions to migrate.</string>
+    <string name="message_condition_migration_success">All Image Conditions migrated.</string>
+    <string name="message_condition_migration_error">Some conditions could not be migrated. Please check your scenarios.</string>
+
+    <string name="button_condition_migration_start">Migrate</string>
+    <string name="button_condition_migration_running">Migrating</string>
+    <string name="button_condition_migration_finished">OK</string>
+
 </resources>

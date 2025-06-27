@@ -38,10 +38,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -81,6 +83,9 @@ class ScenarioListViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5_000),
         null,
     )
+
+    val needsConditionMigration: Flow<Boolean> =
+        smartRepository.legacyConditionsCount.map { it != 0 }
 
     /**
      * Change the ui state type.
@@ -123,6 +128,12 @@ class ScenarioListViewModel @Inject constructor(
     fun updateSmartVisible(show: Boolean) {
         viewModelScope.launch {
             sortConfigRepository.setShowSmart(show)
+        }
+    }
+
+    fun refreshScenarioList() {
+        viewModelScope.launch {
+            filteredScenarioListUseCase.refresh()
         }
     }
 

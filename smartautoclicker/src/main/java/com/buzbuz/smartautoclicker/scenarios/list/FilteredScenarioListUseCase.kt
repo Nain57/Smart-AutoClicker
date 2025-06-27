@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -49,9 +50,11 @@ class FilteredScenarioListUseCase @Inject constructor(
     /** The currently searched action name. Null if no is. */
     private val searchQuery = MutableStateFlow<String?>(null)
 
+    private val refresh: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 1)
+
     /** Dumb & Smart scenario together. */
     private val allScenarios: Flow<List<ScenarioListUiState.Item.ScenarioItem>> =
-        combine(dumbRepository.dumbScenarios, smartRepository.scenarios) { dumbList, smartList ->
+        combine(refresh, dumbRepository.dumbScenarios, smartRepository.scenarios) { _, dumbList, smartList ->
             mutableListOf<ScenarioListUiState.Item.ScenarioItem>().apply {
                 addAll(dumbList.map { it.toItem(context) })
                 addAll(smartList.map { it.toItem() })
@@ -88,8 +91,16 @@ class FilteredScenarioListUseCase @Inject constructor(
             }
         }
 
+    init {
+        refresh.tryEmit(Unit)
+    }
+
     fun updateSearchQuery(query: String?) {
         searchQuery.value = query
+    }
+
+    suspend fun refresh() {
+        refresh.emit(Unit)
     }
 
     private suspend fun Scenario.toItem(): ScenarioListUiState.Item.ScenarioItem =

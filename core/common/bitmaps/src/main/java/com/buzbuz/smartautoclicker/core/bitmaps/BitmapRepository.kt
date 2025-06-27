@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,17 @@ interface BitmapRepository : Dumpable {
      * @param paths the paths of the bitmaps to be deleted.
      */
     suspend fun deleteImageConditionBitmaps(paths: List<String>)
+
+    /**
+     * Migrate the provided legacy bitmap into the new format.
+     *
+     * @param path the path of the bitmap to be migrated.
+     * @param width the width of the bitmap.
+     * @param height the height of the bitmap.
+     *
+     * @return true if the migration was successful, false otherwise.
+     */
+    suspend fun migrateImageConditionBitmap(path: String, width: Int, height: Int): String?
 
     /** Release the cache of bitmaps. */
     fun releaseCache()
