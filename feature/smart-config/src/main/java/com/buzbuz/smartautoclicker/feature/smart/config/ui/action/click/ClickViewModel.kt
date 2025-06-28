@@ -24,8 +24,10 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -59,11 +61,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import androidx.core.content.edit
 
 @OptIn(FlowPreview::class)
 class ClickViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -192,7 +195,7 @@ class ClickViewModel @Inject constructor(
      * @param onBitmapLoaded the callback notified upon completion.
      */
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(repository, condition, onBitmapLoaded)
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     /** Set the condition to click on when the events conditions are fulfilled. */
     fun setConditionToBeClicked(condition: ImageCondition) {
@@ -204,7 +207,7 @@ class ClickViewModel @Inject constructor(
     /** Save the configured values to restore them at next creation. */
     fun saveLastConfig() {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
-            sharedPreferences.edit().putClickPressDurationConfig(click.pressDuration ?: 0).apply()
+            sharedPreferences.edit { putClickPressDurationConfig(click.pressDuration ?: 0) }
         }
     }
 
@@ -252,7 +255,7 @@ class ClickViewModel @Inject constructor(
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
-        val conditionBitmap = conditionToClick?.let { condition -> repository.getConditionBitmap(condition) }
+        val conditionBitmap = conditionToClick?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
 
         return ClickPositionUiState(
             positionType = Click.PositionType.ON_DETECTED_CONDITION,

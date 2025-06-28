@@ -21,6 +21,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.ConditionProcessingDebugInfo
@@ -41,7 +42,7 @@ import kotlin.time.Duration.Companion.milliseconds
 /** ViewModel for the [DebugReportDialog]. */
 class DebugReportModel @Inject constructor(
     debuggingRepository: DebuggingRepository,
-    private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
 ) : ViewModel() {
 
     /** The debug report of the last detection session. */
@@ -80,7 +81,12 @@ class DebugReportModel @Inject constructor(
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             try {
-                val bitmap = repository.getConditionBitmap(condition)
+                val bitmap = bitmapRepository.getImageConditionBitmap(
+                    path = condition.path,
+                    width = condition.area.width(),
+                    height = condition.area.height(),
+                )
+
                 withContext(Dispatchers.Main) {
                     onBitmapLoaded.invoke(bitmap)
                 }

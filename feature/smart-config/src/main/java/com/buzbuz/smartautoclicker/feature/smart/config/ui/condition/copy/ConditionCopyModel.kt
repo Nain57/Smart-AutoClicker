@@ -21,9 +21,9 @@ import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -45,7 +45,7 @@ import javax.inject.Inject
 /** View model for the [ConditionCopyDialog]. */
 class ConditionCopyModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -100,7 +100,7 @@ class ConditionCopyModel @Inject constructor(
      * @param onBitmapLoaded the callback notified upon completion.
      */
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(repository, condition, onBitmapLoaded)
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     /** */
     private fun List<Condition>.toCopyItems(context: Context) = map { condition ->

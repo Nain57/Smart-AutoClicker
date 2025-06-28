@@ -16,13 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import android.graphics.Bitmap
-
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -157,29 +154,6 @@ interface IRepository {
      * @return the list of trigger events.
      */
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
-
-
-    /**
-     * Save the provided bitmap into the persistent memory.
-     * If the bitmap is already saved, does nothing.
-     *
-     * @param bitmap the bitmap to be saved on the persistent memory.
-     *
-     * @return the path of the bitmap.
-     */
-    suspend fun saveConditionBitmap(bitmap: Bitmap): String
-
-    /**
-     * Get the bitmap for the given image condition.
-     * Bitmaps are automatically cached by the bitmap manager.
-     *
-     * @param condition the condition to get the bitmap from.
-     *
-     * @return the bitmap, or null if the path can't be found.
-     */
-    suspend fun getConditionBitmap(condition: ImageCondition): Bitmap?
-
-    suspend fun cleanupUnusedBitmaps(removedPath: List<String>)
 
     suspend fun migrateLegacyImageConditions(): Boolean
 

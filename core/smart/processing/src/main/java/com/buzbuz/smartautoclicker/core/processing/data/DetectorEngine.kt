@@ -26,6 +26,7 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
@@ -68,6 +69,7 @@ import javax.inject.Singleton
 class DetectorEngine @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
+    private val bitmapRepository: BitmapRepository,
     private val scalingManager: ScaleRatioManager,
     private val displayRecorder: DisplayRecorder,
     private val settingsRepository: SettingsRepository,
@@ -160,7 +162,6 @@ class DetectorEngine @Inject constructor(
      * callback.
      * [state] should be RECORDING to capture. Detection can be stopped with [stopDetection] or [stopScreenRecord].
      *
-     * @param bitmapSupplier provides the conditions bitmaps.
      * @param progressListener object to notify upon start/completion of detections steps.
      */
     internal fun startDetection(
@@ -168,7 +169,6 @@ class DetectorEngine @Inject constructor(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
         progressListener: ScenarioProcessingListener? = null,
     ) {
         val executor = androidExecutor
@@ -190,6 +190,7 @@ class DetectorEngine @Inject constructor(
 
         processingScope?.launch {
             scalingManager.setDetectionQuality(scenario.detectionQuality.toDouble())
+            bitmapRepository.clearCache()
             refreshDisplayRecorderResolution()
 
             processingScope?.launchProcessingJob {
@@ -206,7 +207,7 @@ class DetectorEngine @Inject constructor(
                     randomize = scenario.randomize,
                     imageEvents = imageEvents,
                     triggerEvents = triggerEvents,
-                    bitmapSupplier = bitmapSupplier,
+                    bitmapSupplier = ::getConditionBitmap,
                     androidExecutor = executor,
                     unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
                     onStopRequested = { stopDetection() },
@@ -328,7 +329,17 @@ class DetectorEngine @Inject constructor(
         )
     }
 
-            /** Process the latest images provided by the [DisplayRecorder]. */
+    private suspend fun getConditionBitmap(imageCondition: ImageCondition): Bitmap? {
+        val scaledSize = imageCondition.area.scale(scalingManager.downscaleRatio)
+
+        return bitmapRepository.getImageConditionBitmap(
+            path = imageCondition.path,
+            width = scaledSize.width(),
+            height = scaledSize.height(),
+        )
+    }
+
+    /** Process the latest images provided by the [DisplayRecorder]. */
     private suspend fun processScreenImages() {
         _state.emit(DetectorState.DETECTING)
 

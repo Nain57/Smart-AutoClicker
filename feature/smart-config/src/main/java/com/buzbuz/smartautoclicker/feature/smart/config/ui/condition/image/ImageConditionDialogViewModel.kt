@@ -23,8 +23,9 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
-import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -53,7 +54,7 @@ import kotlin.math.max
 @OptIn(FlowPreview::class)
 class ImageConditionViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -92,7 +93,7 @@ class ImageConditionViewModel @Inject constructor(
     val threshold: Flow<Int> = configuredCondition.mapNotNull { it.threshold }
     /** The bitmap for the configured condition. */
     val conditionBitmap: Flow<Bitmap?> = configuredCondition.map { condition ->
-        repository.getConditionBitmap(condition)
+        bitmapRepository.getConditionBitmap(condition)
     }.flowOn(Dispatchers.IO)
     /** Tells if the configured condition is valid and can be saved. */
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->

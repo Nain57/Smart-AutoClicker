@@ -150,7 +150,6 @@ class DetectionRepository @Inject constructor(
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
-            bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = progressListener,
         )
 
@@ -219,7 +218,6 @@ class DetectionRepository @Inject constructor(
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
-            bitmapSupplier = scenarioRepository::getConditionBitmap,
             progressListener = listener,
         )
     }

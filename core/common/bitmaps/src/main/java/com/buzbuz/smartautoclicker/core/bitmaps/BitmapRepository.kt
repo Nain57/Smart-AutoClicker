@@ -30,7 +30,7 @@ interface BitmapRepository : Dumpable {
      *
      * @return the path of the bitmap.
      */
-    suspend fun saveImageConditionBitmap(bitmap: Bitmap, prefix: String = CONDITION_FILE_PREFIX) : String
+    suspend fun saveImageConditionBitmap(bitmap: Bitmap, prefix: String) : String
 
     /**
      * Load a bitmap.
@@ -73,8 +73,8 @@ interface BitmapRepository : Dumpable {
      */
     suspend fun migrateImageConditionBitmap(path: String, width: Int, height: Int): String?
 
-    /** Release the cache of bitmaps. */
-    fun releaseCache()
+    /** Clear the cache of bitmaps. */
+    fun clearCache()
 }
 
 /** The prefix appended to all bitmap file names. */
