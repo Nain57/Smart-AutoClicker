@@ -39,9 +39,9 @@ class RestartMediaProjectionViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    fun restartScreenRecord(context: Context, resultCode: Int, data: Intent) {
+    fun restartScreenRecord(resultCode: Int, data: Intent) {
         viewModelScope.launch(ioDispatcher) {
-            detectionRepository.startScreenRecord(context, resultCode, data)
+            detectionRepository.startScreenRecord(resultCode, data)
         }
     }
 

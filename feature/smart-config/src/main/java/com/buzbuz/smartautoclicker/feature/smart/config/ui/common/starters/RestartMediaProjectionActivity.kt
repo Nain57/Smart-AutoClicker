@@ -67,7 +67,7 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
                 }
 
                 Log.i(TAG, "Media projection permission granted, restart recording")
-                viewModel.restartScreenRecord(this, result.resultCode, data)
+                viewModel.restartScreenRecord(result.resultCode, data)
 
                 finishActivity()
             }

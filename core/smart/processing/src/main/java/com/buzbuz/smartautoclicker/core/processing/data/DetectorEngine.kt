@@ -37,6 +37,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScaleRatioManager
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.QUALITY_MAX
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.scale
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -65,13 +68,14 @@ import javax.inject.Singleton
 class DetectorEngine @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
+    private val scalingManager: ScaleRatioManager,
     private val displayRecorder: DisplayRecorder,
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
 ) {
 
     /** Listener upon orientation changes. */
-    private val orientationListener = ::onOrientationChanged
+    private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
 
     /** Process the events conditions to detect them on the screen. */
     private var scenarioProcessor: ScenarioProcessor? = null
@@ -108,7 +112,6 @@ class DetectorEngine @Inject constructor(
      *
      * Once started, you can use [startDetection]. Once your are done, call [stopScreenRecord].
      *
-     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
@@ -118,7 +121,6 @@ class DetectorEngine @Inject constructor(
      * projection should be done.
      */
     internal fun startScreenRecord(
-        context: Context,
         resultCode: Int,
         data: Intent,
         androidExecutor: SmartActionExecutor,
@@ -138,12 +140,12 @@ class DetectorEngine @Inject constructor(
 
         processingScope?.launch {
             displayRecorder.apply {
-                startProjection(context, resultCode, data) {
+                startProjection(resultCode, data) {
                     Log.w(TAG, "projection lost")
                     this@DetectorEngine.stopScreenRecord()
                     onRecordingStopped?.invoke()
                 }
-                startScreenRecord(context, displayConfigManager.displayConfig.sizePx)
+                startScreenRecord(displayConfigManager.displayConfig.sizePx)
             }
 
             _state.emit(DetectorState.RECORDING)
@@ -186,39 +188,42 @@ class DetectorEngine @Inject constructor(
 
         Log.i(TAG, "startDetection")
 
-        processingScope?.launchProcessingJob {
-            imageDetector = detector
-            detector.init()
+        processingScope?.launch {
+            scalingManager.setDetectionQuality(scenario.detectionQuality.toDouble())
+            refreshDisplayRecorderResolution()
 
-            detectionProgressListener = progressListener
-            progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
+            processingScope?.launchProcessingJob {
+                imageDetector = detector
+                detector.init()
 
-            scenarioProcessor = ScenarioProcessor(
-                processingTag = appComponentsProvider.originalAppId,
-                imageDetector = detector,
-                detectionQuality = scenario.detectionQuality,
-                randomize = scenario.randomize,
-                imageEvents = imageEvents,
-                triggerEvents = triggerEvents,
-                bitmapSupplier = bitmapSupplier,
-                androidExecutor = executor,
-                unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
-                onStopRequested = { stopDetection() },
-                progressListener  = progressListener,
-            )
-            scenarioProcessor?.onScenarioStart(context)
+                detectionProgressListener = progressListener
+                progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
 
-            processScreenImages()
+                scenarioProcessor = ScenarioProcessor(
+                    processingTag = appComponentsProvider.originalAppId,
+                    imageDetector = detector,
+                    detectionQuality = scenario.detectionQuality,
+                    randomize = scenario.randomize,
+                    imageEvents = imageEvents,
+                    triggerEvents = triggerEvents,
+                    bitmapSupplier = bitmapSupplier,
+                    androidExecutor = executor,
+                    unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
+                    onStopRequested = { stopDetection() },
+                    progressListener  = progressListener,
+                )
+                scenarioProcessor?.onScenarioStart(context)
+
+                processScreenImages()
+            }
         }
     }
 
     /**
      * Called when the orientation of the screen changes.
      * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
-     *
-     * @param context the Android context.
      */
-    private fun onOrientationChanged(context: Context) {
+    private fun onOrientationChanged() {
         if (_state.value != DetectorState.DETECTING && _state.value != DetectorState.RECORDING) return
 
         Log.d(TAG, "onOrientationChanged")
@@ -229,7 +234,7 @@ class DetectorEngine @Inject constructor(
             }
 
             detectionProgressListener?.onImageEventProcessingCancelled()
-            displayRecorder.resizeDisplay(context, displayConfigManager.displayConfig.sizePx)
+            refreshDisplayRecorderResolution()
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -264,6 +269,9 @@ class DetectorEngine @Inject constructor(
             scenarioProcessor = null
             detectionProgressListener?.onSessionEnded()
             detectionProgressListener = null
+
+            scalingManager.setDetectionQuality(QUALITY_MAX)
+            refreshDisplayRecorderResolution()
 
             _state.emit(DetectorState.RECORDING)
             processingShutdownJob = null
@@ -302,18 +310,6 @@ class DetectorEngine @Inject constructor(
         }
     }
 
-    /** Process the latest images provided by the [DisplayRecorder]. */
-    private suspend fun processScreenImages() {
-        _state.emit(DetectorState.DETECTING)
-
-        scenarioProcessor?.invalidateScreenMetrics()
-        while (processingJob?.isActive == true) {
-            displayRecorder.acquireLatestBitmap()?.let { screenFrame ->
-                scenarioProcessor?.process(screenFrame)
-            } ?: delay(NO_IMAGE_DELAY_MS)
-        }
-    }
-
     /** Clear this engine. It can't be used after this call. */
     internal fun clear() {
         if (_state.value != DetectorState.CREATED) {
@@ -323,8 +319,25 @@ class DetectorEngine @Inject constructor(
 
         Log.i(TAG, "clear")
 
-
         _state.value != DetectorState.DESTROYED
+    }
+
+    private suspend fun refreshDisplayRecorderResolution() {
+        displayRecorder.resizeDisplay(
+            displayConfigManager.displayConfig.sizePx.scale(scalingManager.downscaleRatio),
+        )
+    }
+
+            /** Process the latest images provided by the [DisplayRecorder]. */
+    private suspend fun processScreenImages() {
+        _state.emit(DetectorState.DETECTING)
+
+        scenarioProcessor?.invalidateScreenMetrics()
+        while (processingJob?.isActive == true) {
+            displayRecorder.acquireLatestBitmap()?.let { screenFrame ->
+                scenarioProcessor?.process(screenFrame)
+            } ?: delay(NO_IMAGE_DELAY_MS)
+        }
     }
 
     /**
