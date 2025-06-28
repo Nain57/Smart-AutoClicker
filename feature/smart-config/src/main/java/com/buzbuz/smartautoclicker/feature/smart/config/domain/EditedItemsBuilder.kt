@@ -23,6 +23,9 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
+import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
+import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -44,6 +47,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
 class EditedItemsBuilder internal constructor(
     private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     private val editor: ScenarioEditor,
 ) {
 
@@ -131,7 +135,10 @@ class EditedItemsBuilder internal constructor(
 
     suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition {
         val id = conditionsIdCreator.generateNewIdentifier()
-        val newPath = repository.saveConditionBitmap(bitmap)
+        val newPath = bitmapRepository.saveImageConditionBitmap(
+            bitmap = bitmap,
+            prefix = if (repository.isTutorialModeEnabled()) TUTORIAL_CONDITION_FILE_PREFIX else CONDITION_FILE_PREFIX,
+        )
         _newImageConditionsPaths.add(newPath)
 
         return ImageCondition(

@@ -68,8 +68,6 @@ internal class ConditionBitmapsDataSource @Inject constructor(
             return null
         }
 
-        Log.d(TAG, "Loading $path")
-
         return withContext(ioDispatcher) {
             try {
                 val options = BitmapFactory.Options().apply {
@@ -77,13 +75,20 @@ internal class ConditionBitmapsDataSource @Inject constructor(
                 }
                 BitmapFactory.decodeFile(file.absolutePath, options)
 
+                val fileWidth = options.outWidth
+                val fileHeight = options.outHeight
                 options.apply {
-                    inSampleSize = calculateInSampleSize(options, targetWidth, targetHeight)
+                    inSampleSize = calculateInSampleSize(fileWidth, fileHeight, targetWidth, targetHeight)
                     inJustDecodeBounds = false
                     inPreferredConfig = Bitmap.Config.ARGB_8888
                 }
 
                 val loadedBitmap = BitmapFactory.decodeFile(file.absolutePath, options)
+
+                Log.d(TAG, "Bitmap loaded: onDisk=[$fileWidth/$fileHeight], " +
+                        "requested=[$targetWidth/$targetHeight], " +
+                        "actual=[${loadedBitmap.width}/${loadedBitmap.height}]")
+
                 loadedBitmap
 
             } catch (e: Exception) {
@@ -143,18 +148,18 @@ internal class ConditionBitmapsDataSource @Inject constructor(
      * matching, and we will need a second scaling pass (during openCv pre processing) to scale to the actual target
      * size.
      *
-     * Why scaling twice ? Because this avoids loading the full size bitmap into the java heap, saving lot
+     * Why scaling twice ? Because this avoids loading the full size bitmap into the java heap, saving lot of RAM.
+     * Why not doing it at once in native code ? Open CV doesn't offers an API for reading at a scale and requires a
+     * custom implementation.
      */
-    private fun calculateInSampleSize(options: BitmapFactory.Options, targetWidth: Int, targetHeight: Int): Int {
+    private fun calculateInSampleSize(fileWidth: Int, fileHeight: Int, targetWidth: Int, targetHeight: Int): Int {
         if (targetWidth == 0 || targetHeight == 0) return 1 // No target size, load full
 
-        val height = options.outHeight
-        val width = options.outWidth
         var inSampleSize = 1
 
-        if (height > targetHeight || width > targetWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
+        if (fileHeight > targetHeight || fileWidth > targetWidth) {
+            val halfHeight: Int = fileHeight / 2
+            val halfWidth: Int = fileWidth / 2
 
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.

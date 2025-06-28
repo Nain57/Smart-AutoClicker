@@ -176,7 +176,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         stopForeground(STOP_FOREGROUND_REMOVE)
 
         displayConfigManager.stopMonitoring()
-        bitmapManager.releaseCache()
+        bitmapManager.clearCache()
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean =

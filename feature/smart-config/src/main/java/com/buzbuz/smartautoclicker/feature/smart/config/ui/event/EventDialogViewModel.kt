@@ -21,8 +21,8 @@ import android.graphics.Bitmap
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -61,7 +61,7 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 class EventDialogViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val settingsRepository: SettingsRepository,
@@ -144,7 +144,7 @@ class EventDialogViewModel @Inject constructor(
     }
 
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(repository, condition, onBitmapLoaded)
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     fun isEventHaveRelatedActions(): Boolean =
         editionRepository.editionState.isEditedEventReferencedByAction()

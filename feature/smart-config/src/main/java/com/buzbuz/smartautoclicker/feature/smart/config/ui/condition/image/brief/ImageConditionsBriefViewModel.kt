@@ -26,8 +26,10 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -64,7 +66,8 @@ class ImageConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
-    private val repository: IRepository,
+    repository: IRepository,
+    bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -79,7 +82,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
             if (focusedIndex !in conditionList.indices) return@combine null
 
             val condition = conditionList[focusedIndex]
-            condition to repository.getConditionBitmap(condition)
+            condition to bitmapRepository.getConditionBitmap(condition)
         }.flowOn(ioDispatcher).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->

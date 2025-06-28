@@ -27,8 +27,10 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -75,6 +77,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val detectionRepository: DetectionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
@@ -319,7 +322,7 @@ class SmartActionsBriefViewModel @Inject constructor(
 
         return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
             ?.find { it.id == clickOnConditionId }
-            ?.let { repository.getConditionBitmap(it) }
+            ?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
     }
 }
 

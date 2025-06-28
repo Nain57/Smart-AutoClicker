@@ -19,6 +19,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -44,13 +45,14 @@ import javax.inject.Singleton
 @Singleton
 class EditionRepository @Inject constructor(
     private val repository: IRepository,
+    private val bitmapRepository: BitmapRepository,
 ) {
 
     /** Keep tracks of all changes in the currently edited scenario. */
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
     /** Provides creators for all elements in an edited scenario. */
-    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, scenarioEditor)
+    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, bitmapRepository, scenarioEditor)
     /** Provides the states of all elements in the edited scenario. */
     val editionState: IEditionState = EditionState(repository, scenarioEditor)
 
@@ -118,7 +120,7 @@ class EditionRepository @Inject constructor(
     suspend fun stopEdition() {
         Log.d(TAG, "Stop edition")
         scenarioEditor.stopEdition()
-        repository.cleanupUnusedBitmaps(editedItemsBuilder.newImageConditionsPaths)
+        bitmapRepository.deleteImageConditionBitmaps(editedItemsBuilder.newImageConditionsPaths)
         editedItemsBuilder.resetBuilder()
     }
 

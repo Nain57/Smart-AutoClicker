@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.scenarios.list
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioBackupSelection
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
@@ -53,6 +54,7 @@ import javax.inject.Inject
 class ScenarioListViewModel @Inject constructor(
     private val filteredScenarioListUseCase: FilteredScenarioListUseCase,
     private val sortConfigRepository: ScenarioSortConfigRepository,
+    private val bitmapRepository: BitmapRepository,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
@@ -210,7 +212,7 @@ class ScenarioListViewModel @Inject constructor(
      * @param onBitmapLoaded the callback notified upon completion.
      */
     fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(smartRepository, condition, onBitmapLoaded)
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,

@@ -16,15 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.domain
 
-import android.graphics.Bitmap
 import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.FILE_EXTENSION_PNG
 
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
-import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
-import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
@@ -32,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -136,21 +132,6 @@ internal class Repository @Inject internal constructor(
 
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
         dataSource.updateScenario(scenario, events, ::clearRemovedConditionsBitmaps)
-
-    override suspend fun saveConditionBitmap(bitmap: Bitmap): String {
-        return bitmapRepository.saveImageConditionBitmap(
-            bitmap,
-            if (dataSource.currentDatabase.value == tutorialDatabase) TUTORIAL_CONDITION_FILE_PREFIX
-            else CONDITION_FILE_PREFIX,
-        )
-    }
-
-    override suspend fun getConditionBitmap(condition: ImageCondition): Bitmap? =
-        bitmapRepository.getImageConditionBitmap(condition.path, condition.area.width(), condition.area.height())
-
-    override suspend fun cleanupUnusedBitmaps(removedPath: List<String>) {
-        clearRemovedConditionsBitmaps(removedPath)
-    }
 
     override suspend fun migrateLegacyImageConditions(): Boolean {
         val legacyConditions = dataSource.getLegacyImageConditions()
