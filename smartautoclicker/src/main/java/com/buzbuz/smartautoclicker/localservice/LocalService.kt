@@ -170,7 +170,6 @@ class LocalService(
             )
 
             detectionRepository.startScreenRecord(
-                context = context,
                 resultCode = resultCode,
                 data = data,
             )

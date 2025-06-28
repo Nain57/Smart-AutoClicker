@@ -131,9 +131,9 @@ class DetectionRepository @Inject constructor(
     fun isRunning(): Boolean =
         detectorEngine.state.value == DetectorState.DETECTING
 
-    fun startScreenRecord(context: Context, resultCode: Int, data: Intent) {
+    fun startScreenRecord(resultCode: Int, data: Intent) {
         actionExecutor?.let { executor ->
-            detectorEngine.startScreenRecord(context, resultCode, data, executor) {
+            detectorEngine.startScreenRecord(resultCode, data, executor) {
                 coroutineScopeMain.launch { projectionErrorHandler?.invoke() }
             }
         }

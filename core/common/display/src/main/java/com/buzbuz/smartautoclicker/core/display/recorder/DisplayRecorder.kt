@@ -28,6 +28,7 @@ import android.media.projection.MediaProjectionManager
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -51,6 +52,7 @@ import javax.inject.Singleton
 @MainThread
 @Singleton
 class DisplayRecorder @Inject internal constructor(
+    @ApplicationContext private val context: Context,
     private val mediaProjectionProxy: MediaProjectionProxy,
     private val imageReaderProxy: ImageReaderProxy,
 ) {
@@ -77,14 +79,13 @@ class DisplayRecorder @Inject internal constructor(
      *
      * If the screen record was already started, this method will have no effect.
      *
-     * @param context the Android context.
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param data the data intent provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
      * @param stoppedListener listener called when the projection have been stopped unexpectedly.
      */
-    suspend fun startProjection(context: Context, resultCode: Int, data: Intent, stoppedListener: () -> Unit) = mutex.withLock {
+    suspend fun startProjection(resultCode: Int, data: Intent, stoppedListener: () -> Unit) = mutex.withLock {
         if (mediaProjectionProxy.isMediaProjectionStarted()) {
             Log.w(TAG, "Attempting to start media projection while already started.")
             return@withLock
@@ -102,16 +103,15 @@ class DisplayRecorder @Inject internal constructor(
      * Start the screen record.
      * This method should not be called from the main thread, but the processing thread.
      *
-     * @param context the Android context.
      * @param displaySize the size of the display, in pixels.
      */
-    suspend fun startScreenRecord(context: Context, displaySize: Point): Unit = mutex.withLock {
+    suspend fun startScreenRecord(displaySize: Point): Unit = mutex.withLock {
         if (!mediaProjectionProxy.isMediaProjectionStarted() || virtualDisplay != null) {
             Log.w(TAG, "Attempting to start screen record while already started.")
             return
         }
 
-        Log.d(TAG, "Start screen record with display size $displaySize")
+        Log.i(TAG, "Start screen record with display size $displaySize")
 
         imageReaderProxy.resize(displaySize)
         virtualDisplay = mediaProjectionProxy.createVirtualDisplay(
@@ -121,10 +121,10 @@ class DisplayRecorder @Inject internal constructor(
         )
     }
 
-    suspend fun resizeDisplay(context: Context, displaySize: Point): Unit = mutex.withLock {
+    suspend fun resizeDisplay(displaySize: Point): Unit = mutex.withLock {
         val vDisplay = virtualDisplay ?: return
 
-        Log.d(TAG, "Resizing virtual display to $displaySize")
+        Log.i(TAG, "Resizing virtual display to $displaySize")
 
         imageReaderProxy.resize(displaySize)
         vDisplay.surface = imageReaderProxy.surface
