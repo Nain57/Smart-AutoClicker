@@ -173,25 +173,6 @@ class RepositoryTests {
             repository.getTriggerEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
         )
     }
-
-    @Test
-    fun getBitmap() = runTest {
-        repository.getConditionBitmap(
-            ImageCondition(
-                id = Identifier(databaseId = 1L),
-                eventId = Identifier(databaseId = 2L),
-                name = "tata",
-                threshold = 10,
-                detectionType = EXACT,
-                shouldBeDetected = true,
-                area = Rect(0, 0, 20, 100),
-                path = "toto",
-                priority = 0,
-            )
-        )
-        verify(mockBitmapManager).getImageConditionBitmap("toto", 20, 100)
-        Unit
-    }
 }
 
 private const val DATA_FILE_DIR = "/toto/titi"

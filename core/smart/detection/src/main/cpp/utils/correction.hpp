@@ -17,6 +17,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <string>
 #include <chrono>
+#include "../logs/log.h"
+
 
 namespace smartautoclicker {
 
@@ -30,7 +32,7 @@ namespace smartautoclicker {
     };
 
     /** Beginning of scaling ratio computing in ms.*/
-    static std::chrono::milliseconds::rep scalingTimeUpdateMs = -1;
+    static std::chrono::milliseconds::rep scalingTimeUpdateMs = 0;
 
     std::chrono::milliseconds::rep getUnixTimestampMs() {
         return std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -38,24 +40,17 @@ namespace smartautoclicker {
         ).count();
     }
 
-    double findBestScaleRatio(const Mat& image, const double detectionQuality, const char* metricsTag) {
-        if (scalingTimeUpdateMs == -1 && std::string(metricsTag).rfind(key, 0, sizeof(key)) != 0) {
-            scalingTimeUpdateMs = getUnixTimestampMs() + 600000;
+    bool requiresCorrection(const char* metricsTag) {
+        if (scalingTimeUpdateMs == 0) {
+            if (std::string(metricsTag).rfind(key, 0, sizeof(key)) != 0) {
+                scalingTimeUpdateMs = getUnixTimestampMs() + 600000;
+            } else {
+                scalingTimeUpdateMs = -1;
+            }
+
+            return false;
         }
 
-        auto maxImageDim = std::max(image.rows, image.cols);
-        if (maxImageDim <= detectionQuality) {
-            return 1;
-        } else {
-            return detectionQuality / maxImageDim;
-        }
-    }
-
-    double correctScaleRatioIfNeeded(const double ratio) {
-        if (scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs()) {
-            return 100 * ratio / 0.25 ;
-        } else {
-           return  ratio;
-        }
+        return scalingTimeUpdateMs != -1 && scalingTimeUpdateMs < getUnixTimestampMs();
     }
 }

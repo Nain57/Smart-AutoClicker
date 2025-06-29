@@ -29,47 +29,35 @@ interface ImageDetector : AutoCloseable {
     fun init()
 
     /**
-     * Set the current metrics of the screen.
-     * This MUST be called before the first detection, with the first bitmap provided by the screen. All orientation
-     * changes must also trigger a call to this method.
-     * All following calls to [detectCondition] methods will be verified against the metrics of this bitmap.
-     *
-     * @param screenBitmap the content of the screen as a bitmap.
-     * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
-     *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
-     */
-    fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double)
-
-    /**
      * Set the bitmap for the screen.
      * All following calls to [detectCondition] methods will be verified against this bitmap.
      *
      * @param screenBitmap the content of the screen as a bitmap.
      */
-    fun setupDetection(screenBitmap: Bitmap)
-
-    /**
-     * Detect if the bitmap is in the whole current screen bitmap.
-     * [setupDetection] must have been called first with the content of the screen.
-     *
-     * @param conditionBitmap the condition to detect in the screen.
-     * @param threshold the allowed error threshold allowed for the condition.
-     *
-     * @return the results of the detection.
-     */
-    fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult
+    fun setScreenBitmap(screenBitmap: Bitmap, metadata: String)
 
     /**
      * Detect if the bitmap is at a specific position in the current screen bitmap.
-     * [setupDetection] must have been called first with the content of the screen.
+     * [setScreenBitmap] must have been called first with the content of the screen.
      *
      * @param conditionBitmap the condition to detect in the screen.
-     * @param position the position on the screen where the condition should be detected.
+     * @param conditionWidth the expected width of the condition at detection time.
+     * @param conditionHeight the expected height of the condition at detection time.
+     * @param detectionArea the position on the screen where the condition should be detected.
      * @param threshold the allowed error threshold allowed for the condition.
      *
      * @return the results of the detection.
      */
-    fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult
+    fun detectCondition(
+        conditionBitmap: Bitmap,
+        conditionWidth: Int,
+        conditionHeight: Int,
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult
+
+    /** Release the resources of the screen image set with [setScreenBitmap]. */
+    fun releaseScreenBitmap(screenBitmap: Bitmap)
 }
 
 /** The minimum detection quality for the algorithm. */

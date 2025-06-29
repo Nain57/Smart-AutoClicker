@@ -54,7 +54,7 @@ internal sealed class TestImage(@RawRes val fileRes: Int, val size: Point) {
             expectedResults = mapOf(
                 Screen.TutorialWithTarget to ExpectedDetectionResults(
                     centerPosition = Point(672, 1696),
-                    resultsForQualities = getDefaultExpectedResultsForQualities(),
+                    quality = 0.9750,
                 ),
             )
         )
@@ -63,5 +63,5 @@ internal sealed class TestImage(@RawRes val fileRes: Int, val size: Point) {
 
 internal data class ExpectedDetectionResults(
     val centerPosition: Point,
-    val resultsForQualities: Map<DetectionResolution, Double>,
+    val quality: Double,
 )

@@ -23,10 +23,11 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -41,9 +42,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.doAnswer
 import org.robolectric.annotation.Config
 
 
@@ -60,12 +61,13 @@ class ProcessingTests {
 
     /** Interface to be mocked in order to verify the calls to the bitmap supplier. */
     internal interface BitmapSupplier {
-        suspend fun getBitmap(condition: ImageCondition): Bitmap
+        suspend fun getBitmap(path: String, width: Int, height: Int): Bitmap
     }
 
     /** Provides the tests scenarios.  */
     private val testsData: ProcessingTestData = ProcessingTestData
 
+    @Mock private lateinit var mockScalingManager: ScalingManager
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
@@ -78,6 +80,7 @@ class ProcessingTests {
     private fun createScenarioProcessor(testScenario: TestScenario) =
         ScenarioProcessor(
             processingTag = "tests",
+            scalingManager = mockScalingManager,
             detectionQuality = testScenario.scenario.detectionQuality,
             randomize = testScenario.scenario.randomize,
             imageEvents = testScenario.imageEvents,
@@ -93,6 +96,9 @@ class ProcessingTests {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         Dispatchers.setMain(StandardTestDispatcher())
+
+        `when`(mockScalingManager.scaleUpDetectionResult(anyNotNull()))
+            .doAnswer { invocation -> invocation.getArgument(0) }
     }
 
     @After
@@ -167,6 +173,12 @@ class ProcessingTests {
             mockBitmapProviding(testConditionEvt1)
             mockBitmapProviding(testConditionEvt2)
             mockBitmapProviding(testConditionEvt3)
+        }
+        // Mock the scale size for each image conditions
+        mockScalingManager.apply {
+            mockScaling(testConditionEvt1)
+            mockScaling(testConditionEvt2)
+            mockScaling(testConditionEvt3)
         }
         // Mock that all bitmaps are matching
         mockImageDetector.mockAllDetectionResult(
@@ -260,6 +272,12 @@ class ProcessingTests {
             mockBitmapProviding(testConditionEvt1)
             mockBitmapProviding(testConditionEvt2)
             mockBitmapProviding(testConditionEvt3)
+        }
+        // Mock the scale size for each image conditions
+        mockScalingManager.apply {
+            mockScaling(testConditionEvt1)
+            mockScaling(testConditionEvt2)
+            mockScaling(testConditionEvt3)
         }
         // Mock detection results for each condition.
         mockImageDetector.apply {
@@ -369,6 +387,11 @@ class ProcessingTests {
         mockBitmapSupplier.apply {
             mockBitmapProviding(testConditionEvt1)
             mockBitmapProviding(testConditionEvt2)
+        }
+        // Mock the scale size for each image conditions
+        mockScalingManager.apply {
+            mockScaling(testConditionEvt1)
+            mockScaling(testConditionEvt2)
         }
         // Mock detection results for each condition.
         mockImageDetector.apply {

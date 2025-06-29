@@ -19,7 +19,6 @@
 #define KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
 
 #include <opencv2/core/types.hpp>
-#include "../../scaling/scalable_roi.hpp"
 
 namespace smartautoclicker {
 
@@ -32,27 +31,23 @@ namespace smartautoclicker {
         cv::Point maxLoc;
         int centerX;
         int centerY;
-        ScalableRoi area;
+        cv::Rect area;
 
     public:
         void updateResults(
-                ScalableRoi *detectionArea,
-                cv::Mat *condition,
-                cv::Mat *matchingResults,
-                double scaleRatio);
-
-
+                const cv::Rect& detectionArea,
+                const cv::Mat& condition,
+                cv::Mat& matchingResults);
         void markResultAsDetected();
-
         void reset();
 
-        bool isDetected() const;
-        double getResultConfidence() const;
-        ScalableRoi getResultArea() const;
-        int getResultAreaCenterX() const;
-        int getResultAreaCenterY() const;
+        [[nodiscard]] bool isDetected() const;
+        [[nodiscard]] double getResultConfidence() const;
+        [[nodiscard]] cv::Rect getResultArea() const;
+        [[nodiscard]] int getResultAreaCenterX() const;
+        [[nodiscard]] int getResultAreaCenterY() const;
 
-        void invalidateCurrentResult(cv::Mat *matchingResults, const cv::Mat* condition) const;
+        void invalidateCurrentResult(const cv::Mat& condition, cv::Mat& results) const;
     };
 } // smartautoclicker
 

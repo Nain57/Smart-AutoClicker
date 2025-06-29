@@ -20,6 +20,7 @@
 
 #include "template_matcher.hpp"
 #include "../../logs/log.h"
+#include "../../utils/roi.h"
 
 
 using namespace smartautoclicker;
@@ -33,60 +34,65 @@ TemplateMatchingResult *TemplateMatcher::getMatchingResults() {
     return &currentMatchingResult;
 }
 
-void TemplateMatcher::matchTemplate(ScreenImage *screenImage, ConditionImage *condition,
-                                    ScalableRoi *detectionArea, double scaleRatio, int threshold) {
+void TemplateMatcher::matchTemplate(
+        const ScreenImage& screenImage,
+        const ConditionImage& condition,
+        const cv::Rect& detectionArea,
+        int threshold
+) {
 
-    // Crop the scaled gray screen image to get only the detection area
-    cv::Mat screenCroppedScaledGrayMat = screenImage->cropScaledGray(detectionArea->getScaled());
+    // Crop the gray screen image to get only the detection area
+    cv::Mat screenCroppedGrayMat = screenImage.cropGray(detectionArea);
 
     // Initialize result mat
-    auto newResultsMat = new cv::Mat(
-            std::max(screenCroppedScaledGrayMat.rows - condition->getScaledGrayMat()->rows + 1, 0),
-            std::max(screenCroppedScaledGrayMat.cols - condition->getScaledGrayMat()->cols + 1, 0),
+    cv::Mat newResultsMat = cv::Mat(
+            std::max(screenCroppedGrayMat.rows - condition.getGrayMat()->rows + 1, 0),
+            std::max(screenCroppedGrayMat.cols - condition.getGrayMat()->cols + 1, 0),
             CV_32F);
 
     // Run OpenCv template matching
     cv::matchTemplate(
-            screenCroppedScaledGrayMat,
-            *condition->getScaledGrayMat(),
-            *newResultsMat,
+            screenCroppedGrayMat,
+            *condition.getGrayMat(),
+            newResultsMat,
             cv::TM_CCOEFF_NORMED);
 
     // Parse result Mat to check for matching
-    parseMatchingResult(newResultsMat, screenImage, condition, detectionArea, scaleRatio, threshold);
-
-    delete newResultsMat;
+    parseMatchingResult(screenImage, condition, detectionArea, threshold, newResultsMat);
 }
 
-void TemplateMatcher::parseMatchingResult(cv::Mat* matchingResult, ScreenImage *screenImage,
-                                          ConditionImage *condition, ScalableRoi *detectionArea,
-                                          double scaleRatio, int threshold) {
+void TemplateMatcher::parseMatchingResult(
+        const ScreenImage& screenImage,
+        const ConditionImage& condition,
+        const cv::Rect& detectionArea,
+        int threshold,
+        cv::Mat& matchingResult
+) {
 
     while (!currentMatchingResult.isDetected()) {
 
         // Mark previous results as invalid, if any
-        if (!currentMatchingResult.getResultArea().getScaled().empty()) {
+        if (!currentMatchingResult.getResultArea().empty()) {
             currentMatchingResult.invalidateCurrentResult(
-                    matchingResult,
-                    condition->getScaledGrayMat());
+                    *condition.getGrayMat(),
+                    matchingResult);
         }
 
         // Look for new best match
         currentMatchingResult.updateResults(
                 detectionArea,
-                condition->getScaledGrayMat(),
-                matchingResult,
-                scaleRatio);
+                *condition.getGrayMat(),
+                matchingResult);
 
         // Check if the highest result is above threshold. If not, we will never find.
         if (!isConfidenceValid(currentMatchingResult.getResultConfidence(), threshold)) break;
 
         // Check if result area is valid. If not, check next possible match
-        if (!screenImage->getRoi().containsOrEquals(currentMatchingResult.getResultArea())) continue;
+        if (!isRoiBiggerOrEquals(screenImage.getRoi(), currentMatchingResult.getResultArea())) continue;
 
         // Check if the colors are matching in the candidate area.
-        cv::Mat fullSizeColorCroppedCurrentImage = screenImage->cropFullSizeColor(currentMatchingResult.getResultArea().getFullSize());
-        double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage,condition->getFullSizeColorMean());
+        cv::Mat fullSizeColorCroppedCurrentImage = screenImage.cropColor(currentMatchingResult.getResultArea());
+        double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage,condition.getColorMean());
 
         // If the colors are OK, the result is valid
         if (colorDiff < threshold) currentMatchingResult.markResultAsDetected();

@@ -53,9 +53,8 @@ add_library( # Sets the name of the library.
         main/cpp/jni/jni_detection_result.cpp
         main/cpp/logs/log.cpp
         main/cpp/logs/log.h
-        main/cpp/scaling/scaling.hpp
-        main/cpp/scaling/scalable_roi.cpp
-        main/cpp/scaling/scalable_roi.hpp)
+        main/cpp/utils/correction.hpp
+        main/cpp/utils/roi.h)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

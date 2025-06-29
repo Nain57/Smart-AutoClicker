@@ -14,21 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.smartautoclicker.core.processing.data.scaling
 
-#include <opencv2/imgproc/imgproc.hpp>
-#include "detection_image.hpp"
+import android.graphics.Rect
 
-using namespace smartautoclicker;
-
-
-const cv::Mat* DetectionImage::getColorMat() const {
-    return colorMat.get();
-}
-
-const cv::Mat* DetectionImage::getGrayMat() const {
-    return grayMat.get();
-}
-
-cv::Rect DetectionImage::getRoi() const {
-    return {0, 0, colorMat->cols, colorMat->rows};
-}
+internal data class ImageConditionScalingInfo(
+    val imageArea: Rect,
+    val detectionArea: Rect,
+)

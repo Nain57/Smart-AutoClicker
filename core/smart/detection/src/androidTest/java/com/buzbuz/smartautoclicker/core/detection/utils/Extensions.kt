@@ -40,12 +40,3 @@ internal fun Context.loadTestBitmap(image: TestImage) : Bitmap {
         }
     }
 }
-
-internal fun ImageDetector.setScreenMetrics(screenBitmap: Bitmap, quality: Double) {
-    setScreenMetrics(
-        metricsKey = "testTag",
-        screenBitmap = screenBitmap,
-        detectionQuality = quality,
-    )
-}
-

@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.core.detection.data
 import android.graphics.Point
 
 internal data class TestResults(
-    val resolution: DetectionResolution,
     val expectedCenterPosition: Point,
     val actualCenterPosition: Point,
     val expectedConfidence: Double,
@@ -32,7 +31,7 @@ internal fun TestResults.isValid(): Boolean =
             isCenterPositionValid(
                 expected = expectedCenterPosition,
                 actual = actualCenterPosition,
-                delta = getToleratedRoundingErrorPixels(),
+                delta = 5,
             )
 
 private fun isCenterPositionValid(expected: Point, actual: Point, delta: Int): Boolean =
@@ -40,19 +39,3 @@ private fun isCenterPositionValid(expected: Point, actual: Point, delta: Int): B
 
 private fun isCenterPositionValid(expected: Int, actual: Int, delta: Int) : Boolean =
     actual in (expected - delta)..(expected + delta)
-
-private fun TestResults.getToleratedRoundingErrorPixels(): Int =
-    when (resolution) {
-        DetectionResolution.MAX -> 0
-
-        DetectionResolution.VERY_HIGH,
-        DetectionResolution.HIGH,
-        DetectionResolution.ABOVE_AVERAGE -> 1
-
-        DetectionResolution.AVERAGE,
-        DetectionResolution.BELOW_AVERAGE,
-        DetectionResolution.LOW -> 3
-
-        DetectionResolution.VERY_LOW,
-        DetectionResolution.MIN -> 5
-    }

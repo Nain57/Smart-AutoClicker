@@ -25,15 +25,10 @@ namespace smartautoclicker {
 
     class ConditionImage : public DetectionImage {
 
-    private:
-        cv::Scalar fullSizeColorMean;
-        std::unique_ptr<cv::Mat> scaledGrayMat = nullptr;
-
-        void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) override;
-
     public:
-        cv::Scalar getFullSizeColorMean() const;
-        cv::Mat* getScaledGrayMat() const;
+        void processNewData(std::unique_ptr<cv::Mat> newData, int targetWidth, int targetHeight);
+
+        [[nodiscard]] cv::Scalar getColorMean() const;
     };
 }
 
