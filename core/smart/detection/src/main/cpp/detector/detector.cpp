@@ -19,63 +19,72 @@
 #include <memory>
 #include <opencv2/imgproc/imgproc_c.h>
 
-#include "../scaling/scaling.hpp"
 #include "../logs/log.h"
+#include "../utils/roi.h"
 #include "detector.hpp"
 
 using namespace cv;
 using namespace smartautoclicker;
 
 
-void Detector::setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag) {
-    // Select the scale ratio depending on the screen size.
-    // We reduce the size to improve the processing time, but we don't want it to be too small because it will impact
-    // the performance of the detection.
-    scaleRatio = findBestScaleRatio(*screenMat, detectionQuality, metricsTag);
-    delete screenMat;
+void Detector::setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag) {
+    screenImage->processNewData(std::move(screenColorMat), metricsTag);
 }
 
-void Detector::setScreenImage(cv::Mat* screenMat) {
-    scaleRatio = correctScaleRatioIfNeeded(scaleRatio);
-    screenImage->processFullSizeBitmap(screenMat, scaleRatio);
-}
-
-TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int threshold) {
-    return detectCondition(
-            conditionMat,
-            0, 0,
-            screenImage->getRoi().getFullSize().width,
-            screenImage->getRoi().getFullSize().height,
-            threshold);
-}
-
-TemplateMatchingResult* Detector::detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold) {
+TemplateMatchingResult* Detector::detectCondition(
+        std::unique_ptr<cv::Mat> conditionMat,
+        int targetConditionWidth,
+        int targetConditionHeight,
+        const cv::Rect& roi,
+        int threshold
+) {
     templateMatcher->reset();
 
     // Load condition and check if the condition fits in the detection area
-    ConditionImage conditionImage = ConditionImage();
-    conditionImage.processFullSizeBitmap(conditionMat, scaleRatio);
-
-    // Compute the detection area
-    ScalableRoi detectionArea = ScalableRoi();
-    detectionArea.setFullSize(x, y, width, height, scaleRatio,screenImage->getRoi());
+    conditionImage->processNewData(
+            std::move(conditionMat),
+            targetConditionWidth,
+            targetConditionHeight);
 
     // Check if the condition fits in the detection area
-    if (!detectionArea.isBiggerOrEquals(conditionImage.getRoi())) {
-        LOGE("Detector", "Can't detectCondition, detection roi is smaller than the condition");
+    if (!isRoiValidForDetection(roi)) {
         return templateMatcher->getMatchingResults();
     }
 
-    // Crop the scaled gray current image to only get the detection area
-    cv::Mat screenCroppedScaledGrayMat = screenImage->cropScaledGray(detectionArea.getScaled());
-
     // Apply template matching and get global results
     templateMatcher->matchTemplate(
-            screenImage.get(),
-            &conditionImage,
-            &detectionArea,
-            scaleRatio,
+            *screenImage,
+            *conditionImage,
+            roi,
             threshold);
 
     return templateMatcher->getMatchingResults();
+}
+
+bool Detector::isRoiValidForDetection(const cv::Rect& roi) const {
+    cv::Rect screenRoi = screenImage->getRoi();
+    cv::Rect conditionRoi = conditionImage->getRoi();
+
+    if (!isRoiBiggerOrEquals(screenRoi, conditionRoi)) {
+        LOGW("Detector", "Can't detectCondition, condition area (%d, %d, %d, %d) is bigger than screen area (%d, %d, %d, %d)",
+             conditionRoi.x, conditionRoi.y, conditionRoi.x + conditionRoi.width, conditionRoi.y + conditionRoi.height,
+             screenRoi.x, screenRoi.y, screenRoi.x + screenRoi.width, screenRoi.y + screenRoi.height);
+        return false;
+    }
+
+    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+        LOGW("Detector", "Can't detectCondition, detection area (%d, %d, %d, %d) is not contained in screen area (%d, %d, %d, %d)",
+             roi.x, roi.y, roi.x + roi.width, roi.y + roi.height,
+             screenRoi.x, screenRoi.y, screenRoi.x + screenRoi.width, screenRoi.y + screenRoi.height);
+        return false;
+    }
+
+    if (!isRoiBiggerOrEquals(roi, conditionRoi)) {
+        LOGW("Detector", "Can't detectCondition, detection area (%d, %d, %d, %d) is bigger than conditionRoi area (%d, %d, %d, %d)",
+             roi.x, roi.y, roi.x + roi.width, roi.y + roi.height,
+             conditionRoi.x, conditionRoi.y, conditionRoi.x + conditionRoi.width, conditionRoi.y + conditionRoi.height);
+        return false;
+    }
+
+    return true;
 }

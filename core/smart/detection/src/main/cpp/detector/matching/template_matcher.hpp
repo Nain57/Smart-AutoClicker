@@ -22,7 +22,6 @@
 
 #include "../images/condition_image.hpp"
 #include "../images/screen_image.hpp"
-#include "../../scaling/scalable_roi.hpp"
 #include "template_matching_result.hpp"
 
 namespace smartautoclicker {
@@ -33,12 +32,11 @@ namespace smartautoclicker {
         TemplateMatchingResult currentMatchingResult;
 
         void parseMatchingResult(
-                cv::Mat* matchingResult,
-                ScreenImage* screenImage,
-                ConditionImage* condition,
-                ScalableRoi* detectionArea,
-                double scaleRatio,
-                int threshold);
+                const ScreenImage& screenImage,
+                const ConditionImage& condition,
+                const cv::Rect& detectionArea,
+                int threshold,
+                cv::Mat& matchingResult);
 
         static bool isConfidenceValid(double confidence, int threshold);
         static double getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans);
@@ -46,10 +44,9 @@ namespace smartautoclicker {
     public:
         void reset();
         void matchTemplate(
-                ScreenImage* screenImage,
-                ConditionImage* condition,
-                ScalableRoi* detectionArea,
-                double scalingRatio,
+                const ScreenImage& screenImage,
+                const ConditionImage& condition,
+                const cv::Rect& detectionArea,
                 int threshold);
 
         TemplateMatchingResult* getMatchingResults();

@@ -45,8 +45,6 @@ class NativeDetector private constructor() : ImageDetector {
     @Keep
     private var nativePtr: Long = -1
 
-    private val detectionQualityMin: Double = DETECTION_QUALITY_MIN.toDouble()
-
     private var isClosed: Boolean = false
 
     override fun init() {
@@ -61,34 +59,29 @@ class NativeDetector private constructor() : ImageDetector {
         deleteDetector()
     }
 
-    override fun setScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double) {
+    override fun setScreenBitmap(screenBitmap: Bitmap, metricsTag: String) {
         if (isClosed) return
 
-        updateScreenMetrics(
-            metricsKey,
-            screenBitmap,
-            detectionQuality.coerceIn(detectionQualityMin, 10000.0),
-        )
+        setScreenImage(screenBitmap, metricsTag)
     }
 
-    override fun setupDetection(screenBitmap: Bitmap) {
-        if (isClosed) return
-
-        setScreenImage(screenBitmap)
-    }
-
-    override fun detectCondition(conditionBitmap: Bitmap, threshold: Int): DetectionResult {
+    override fun detectCondition(
+        conditionBitmap: Bitmap,
+        conditionWidth: Int,
+        conditionHeight: Int,
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult {
         if (isClosed) return detectionResult.copy()
 
-        detect(conditionBitmap, threshold, detectionResult)
+        detect(conditionBitmap, conditionWidth, conditionHeight, detectionArea.left, detectionArea.top,
+            detectionArea.width(), detectionArea.height(), threshold, detectionResult)
         return detectionResult.copy()
     }
 
-    override fun detectCondition(conditionBitmap: Bitmap, position: Rect, threshold: Int): DetectionResult {
-        if (isClosed) return detectionResult.copy()
-
-        detectAt(conditionBitmap, position.left, position.top, position.width(), position.height(), threshold, detectionResult)
-        return detectionResult.copy()
+    override fun releaseScreenBitmap(screenBitmap: Bitmap) {
+        if (isClosed) return
+        releaseScreenImage(screenBitmap)
     }
 
     /**
@@ -106,46 +99,36 @@ class NativeDetector private constructor() : ImageDetector {
     private external fun deleteDetector()
 
     /**
-     * Native method for screen metrics setup.
-     *
-     * @param screenBitmap the content of the screen as a bitmap.
-     * @param detectionQuality the quality of the detection. The higher the preciser, the lower the faster. Must be
-     *                         contained in [DETECTION_QUALITY_MIN] and [DETECTION_QUALITY_MAX].
-     */
-    private external fun updateScreenMetrics(metricsKey: String, screenBitmap: Bitmap, detectionQuality: Double)
-
-    /**
      * Native method for detection setup.
      *
      * @param screenBitmap the content of the screen as a bitmap.
      */
-    private external fun setScreenImage(screenBitmap: Bitmap)
-
-    /**
-     * Native method for detecting if the bitmap is in the whole current screen bitmap.
-     *
-     * @param conditionBitmap the condition to detect in the screen.
-     * @param threshold the allowed error threshold allowed for the condition.
-     */
-    private external fun detect(conditionBitmap: Bitmap, threshold: Int, result: DetectionResult)
+    private external fun setScreenImage(screenBitmap: Bitmap, metricsTag: String)
 
     /**
      * Native method for detecting if the bitmap is at a specific position in the current screen bitmap.
      *
      * @param conditionBitmap the condition to detect in the screen.
+     * @param conditionWidth the expected width of the condition at detection time.
+     * @param conditionHeight the expected height of the condition at detection time.
      * @param x the horizontal position of the condition.
      * @param y the vertical position of the condition.
      * @param width the width of the condition.
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      */
-    private external fun detectAt(
+    private external fun detect(
         conditionBitmap: Bitmap,
+        conditionWidth: Int,
+        conditionHeight: Int,
         x: Int,
         y: Int,
         width: Int,
         height: Int,
         threshold: Int,
-        result: DetectionResult
+        result: DetectionResult,
     )
+
+    /** Native method for releasing the screen image resources set with [setScreenImage]. */
+    private external fun releaseScreenImage(screenBitmap: Bitmap)
 }

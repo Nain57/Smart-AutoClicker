@@ -20,19 +20,18 @@
 
 #include <opencv2/core/types.hpp>
 
-#include "../../scaling/scalable_roi.hpp"
-
 namespace smartautoclicker {
 
     class DetectionImage {
 
     protected:
-        ScalableRoi roi;
-        virtual void onNewImageLoaded(std::unique_ptr<cv::Mat> fullSizeColor, std::unique_ptr<cv::Mat> scaledGray) = 0;
+        std::unique_ptr<cv::Mat> colorMat = std::make_unique<cv::Mat>();
+        std::unique_ptr<cv::Mat> grayMat = std::make_unique<cv::Mat>();
 
     public:
-        void processFullSizeBitmap(cv::Mat* screenMat, double scaleRatio);
-        ScalableRoi getRoi() const;
+        [[nodiscard]] const cv::Mat* getColorMat() const;
+        [[nodiscard]] const cv::Mat* getGrayMat() const;
+        [[nodiscard]] cv::Rect getRoi() const;
     };
 }
 

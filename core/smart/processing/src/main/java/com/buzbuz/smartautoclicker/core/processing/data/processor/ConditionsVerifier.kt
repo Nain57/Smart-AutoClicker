@@ -17,20 +17,17 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Bitmap
-import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
@@ -39,7 +36,8 @@ import kotlinx.coroutines.yield
 internal class ConditionsVerifier(
     private val state: ProcessingState,
     private val imageDetector: ImageDetector,
-    private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
+    private val scalingManager: ScalingManager,
+    private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     private val progressListener: ScenarioProcessingListener? = null,
 ) {
 
@@ -137,27 +135,29 @@ internal class ConditionsVerifier(
     private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
         progressListener?.onImageConditionProcessingStarted(condition)
 
-        val result = bitmapSupplier(condition)?.let { conditionBitmap ->
-            val detectionResult = when (condition.detectionType) {
-                EXACT ->
-                    imageDetector.detectCondition(conditionBitmap, condition.area, condition.threshold)
+        val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition.id.databaseId)
+            ?: throw IllegalArgumentException("Can't find scaling info for condition ${condition.id}")
 
-                WHOLE_SCREEN ->
-                    imageDetector.detectCondition(conditionBitmap, condition.threshold)
+        val bitmap = bitmapSupplier(
+            condition.path,
+            scaledConditionArea.imageArea.width(),
+            scaledConditionArea.imageArea.height(),
+        )
 
-                IN_AREA ->
-                    condition.detectionArea?.let { area ->
-                        imageDetector.detectCondition(conditionBitmap, area, condition.threshold)
-                    } ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
-
-                else -> throw IllegalArgumentException("Unexpected detection type")
-            }
+        val result = bitmap?.let { conditionBitmap ->
+            val detectionResult = imageDetector.detectCondition(
+                conditionBitmap = conditionBitmap,
+                conditionWidth = scaledConditionArea.imageArea.width(),
+                conditionHeight = scaledConditionArea.imageArea.height(),
+                detectionArea = scaledConditionArea.detectionArea,
+                threshold = condition.threshold,
+            )
 
             ImageResult(
                 isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
                 haveBeenDetected = detectionResult.isDetected,
                 condition = condition,
-                position = Point(detectionResult.position.x, detectionResult.position.y),
+                position = scalingManager.scaleUpDetectionResult(detectionResult.position),
                 confidenceRate = detectionResult.confidenceRate,
             )
         } ?: NEGATIVE_RESULT
@@ -166,3 +166,5 @@ internal class ConditionsVerifier(
         return result
     }
 }
+
+private const val TAG = "ConditionsVerifier"

@@ -14,28 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.buzbuz.smartautoclicker.core.processing.data.scaling
 
 import android.graphics.Point
 import android.graphics.Rect
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
-
-internal fun Double.inverseScalingRatio(): Double =
-    1.0 / this
+internal fun Point.toArea(): Rect =
+    Rect(0, 0, x, y)
 
 internal fun Point.scale(scalingRatio: Double): Point =
     if (scalingRatio == 1.0) this
     else Point(
         (x * scalingRatio).roundToInt(),
-        (y * scalingRatio).roundToInt(),
+        (y * scalingRatio).roundToInt()
     )
 
 internal fun Rect.scale(scalingRatio: Double): Rect =
     if (scalingRatio == 1.0) this
-    else Rect(
-        (left * scalingRatio).roundToInt(),
-        (top * scalingRatio).roundToInt(),
-        (right * scalingRatio).roundToInt(),
-        (bottom * scalingRatio).roundToInt(),
+    else {
+        val x = (left * scalingRatio).roundToInt()
+        val y = (top * scalingRatio).roundToInt()
+        Rect(
+            x,
+            y,
+            x + (width() * scalingRatio).roundToInt(),
+            y + (height() * scalingRatio).roundToInt()
+        )
+    }
+
+internal fun Rect.grow(bounds: Rect, growValue: Int = 1): Rect =
+    Rect(
+        max((left - growValue), bounds.left),
+        max((top - growValue), bounds.top),
+        min((right + growValue), bounds.right),
+        min((bottom + growValue), bounds.bottom),
     )

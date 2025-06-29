@@ -30,20 +30,24 @@ namespace smartautoclicker {
     class Detector {
 
     private:
-        double scaleRatio = 1;
-
         std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
+        std::unique_ptr<ConditionImage> conditionImage = std::make_unique<ConditionImage>();
         std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
+
+        [[nodiscard]] bool isRoiValidForDetection(const cv::Rect& roi) const;
 
     public:
 
         Detector() = default;
 
-        void setScreenMetrics(cv::Mat* screenMat, double detectionQuality, const char *metricsTag);
-        void setScreenImage(cv::Mat* screenMat);
+        void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
-        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int threshold);
-        TemplateMatchingResult* detectCondition(cv::Mat* conditionMat, int x, int y, int width, int height, int threshold);
+        TemplateMatchingResult* detectCondition(
+                std::unique_ptr<cv::Mat> conditionMat,
+                int targetConditionWidth,
+                int targetConditionHeight,
+                const cv::Rect& roi,
+                int threshold);
     };
 }
 

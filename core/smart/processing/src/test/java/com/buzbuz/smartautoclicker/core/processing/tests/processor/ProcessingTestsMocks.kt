@@ -16,27 +16,41 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.tests.processor
 
+import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 
 
+internal fun ScalingManager.mockScaling(testCondition: TestImageCondition, detectionArea: Rect? = null) {
+    `when`(getImageConditionScalingInfo(testCondition.imageCondition.id.databaseId)).thenReturn(
+        ImageConditionScalingInfo(
+            imageArea = testCondition.imageCondition.area,
+            detectionArea = detectionArea ?: testCondition.imageCondition.area,
+        )
+    )
+}
+
 internal suspend fun BitmapSupplier.mockBitmapProviding(testCondition: TestImageCondition) {
-    `when`(getBitmap(testCondition.imageCondition)).thenReturn(testCondition.mockedBitmap)
+    `when`(getBitmap(
+        testCondition.imageCondition.path,
+        testCondition.imageCondition.area.width(),
+        testCondition.imageCondition.area.height())
+    ).thenReturn(testCondition.mockedBitmap)
 }
 
 internal fun ImageDetector.mockAllDetectionResult(testConditions: List<TestImageCondition>, areAllDetected: Boolean) {
@@ -45,31 +59,27 @@ internal fun ImageDetector.mockAllDetectionResult(testConditions: List<TestImage
     }
 }
 
-internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean) {
-    when (testCondition.imageCondition.detectionType) {
-        EXACT -> `when`(
-            detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.area,
-                testCondition.imageCondition.threshold,
-            )
-        ).thenReturn(DetectionResult(isDetected))
+internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean, detectionArea: Rect? = null) {
+    `when`(
+        detectCondition(
+            conditionBitmap = testCondition.mockedBitmap,
+            conditionWidth = testCondition.imageCondition.area.width(),
+            conditionHeight = testCondition.imageCondition.area.height(),
+            detectionArea = detectionArea ?: testCondition.imageCondition.area,
+            threshold = testCondition.imageCondition.threshold,
+        )
+    ).thenReturn(DetectionResult(isDetected))
+}
 
-        WHOLE_SCREEN -> `when`(
-            detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.threshold,
-            )
-        ).thenReturn(DetectionResult(isDetected))
-
-        IN_AREA -> `when`(
-            detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.detectionArea!!,
-                testCondition.imageCondition.threshold,
-            )
-        ).thenReturn(DetectionResult(isDetected))
-    }
+internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
+    verify(this, never())
+        .detectCondition(
+            conditionBitmap = eq(testCondition.mockedBitmap),
+            conditionWidth = eq(testCondition.imageCondition.area.width()),
+            conditionHeight = eq(testCondition.imageCondition.area.height()),
+            detectionArea = any(),
+            threshold = eq(testCondition.imageCondition.threshold),
+        )
 }
 
 internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
@@ -92,30 +102,6 @@ internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
     }
 
     return results
-}
-
-internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
-    when (testCondition.imageCondition.detectionType) {
-        EXACT -> verify(this, never())
-            .detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.area,
-                testCondition.imageCondition.threshold,
-            )
-
-        WHOLE_SCREEN -> verify(this, never())
-            .detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.threshold,
-            )
-
-        IN_AREA -> verify(this, never())
-            .detectCondition(
-                testCondition.mockedBitmap,
-                testCondition.imageCondition.detectionArea!!,
-                testCondition.imageCondition.threshold,
-            )
-    }
 }
 
 internal suspend fun ScenarioProcessingListener.verifyTriggerEventProcessed(

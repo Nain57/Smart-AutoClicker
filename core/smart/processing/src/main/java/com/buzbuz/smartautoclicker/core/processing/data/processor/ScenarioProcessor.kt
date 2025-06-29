@@ -22,10 +22,10 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 
 import kotlinx.coroutines.yield
@@ -45,11 +45,12 @@ import kotlinx.coroutines.yield
 internal class ScenarioProcessor(
     private val processingTag: String,
     private val imageDetector: ImageDetector,
+    scalingManager: ScalingManager,
     private val detectionQuality: Int,
     randomize: Boolean,
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,
-    private val bitmapSupplier: suspend (ImageCondition) -> Bitmap?,
+    private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: SmartActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
@@ -59,7 +60,13 @@ internal class ScenarioProcessor(
     /** Handle the processing state of the scenario. */
     @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
     /** Check conditions and tell if they are fulfilled. */
-    private val conditionsVerifier = ConditionsVerifier(processingState, imageDetector, bitmapSupplier, progressListener)
+    private val conditionsVerifier = ConditionsVerifier(
+        state = processingState,
+        imageDetector = imageDetector,
+        scalingManager = scalingManager,
+        bitmapSupplier = bitmapSupplier,
+        progressListener = progressListener,
+    )
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(
         androidExecutor = androidExecutor,
@@ -68,20 +75,12 @@ internal class ScenarioProcessor(
         unblockWorkaroundEnabled = unblockWorkaroundEnabled,
     )
 
-    /** Tells if the screen metrics have been invalidated and should be updated. */
-    private var invalidateScreenMetrics = true
-
     fun onScenarioStart(context: Context) {
         processingState.onProcessingStarted(context)
     }
 
     fun onScenarioEnd() {
         processingState.onProcessingStopped()
-    }
-
-    /** Drop all current cache related to screen metrics. */
-    fun invalidateScreenMetrics() {
-        invalidateScreenMetrics = true
     }
 
     /**
@@ -150,28 +149,29 @@ internal class ScenarioProcessor(
         onFulfilled: suspend (ImageEvent, ConditionsResult) -> Unit,
     ) {
         // Set the current screen image
-        if (invalidateScreenMetrics) {
-            imageDetector.setScreenMetrics(processingTag, screenFrame, detectionQuality.toDouble())
-            invalidateScreenMetrics = false
-        }
-        imageDetector.setupDetection(screenFrame)
+        imageDetector.setScreenBitmap(screenFrame, processingTag)
 
-        // Check all events
-        for (imageEvent in events) {
-            // No conditions ? This should not happen, skip this event
-            if (imageEvent.conditions.isEmpty()) continue
+        try {
+            // Check all events
+            for (imageEvent in events) {
+                // No conditions ? This should not happen, skip this event
+                if (imageEvent.conditions.isEmpty()) continue
 
-            progressListener?.onImageEventProcessingStarted(imageEvent)
-            val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
-            progressListener?.onImageEventProcessingCompleted(imageEvent, results)
+                progressListener?.onImageEventProcessingStarted(imageEvent)
+                val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
+                progressListener?.onImageEventProcessingCompleted(imageEvent, results)
 
-            if (results.fulfilled == true) {
-                onFulfilled(imageEvent, results)
-                if (!imageEvent.keepDetecting) return
+                if (results.fulfilled == true) {
+                    onFulfilled(imageEvent, results)
+                    if (!imageEvent.keepDetecting) break
+                }
+
+                // Stop processing if requested
+                yield()
             }
-
-            // Stop processing if requested
-            yield()
+        } finally {
+            // We are done processing this frame, release it
+            imageDetector.releaseScreenBitmap(screenFrame)
         }
     }
 }

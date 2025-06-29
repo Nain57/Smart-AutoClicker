@@ -20,7 +20,7 @@
 
 using namespace smartautoclicker;
 
-cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap) {
+std::unique_ptr<cv::Mat> loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap) {
     try {
         AndroidBitmapInfo info;
         void *pixels = nullptr;
@@ -29,10 +29,7 @@ cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap) {
         CV_Assert(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
         CV_Assert(AndroidBitmap_lockPixels(env, bitmap, &pixels) >= 0);
 
-        auto fullSizeMat = new cv::Mat((int) info.height,(int) info.width,CV_8UC4,pixels);
-        AndroidBitmap_unlockPixels(env, bitmap);
-
-        return fullSizeMat;
+        return std::make_unique<cv::Mat>(info.height,info.width,CV_8UC4,pixels);
     } catch (...) {
         AndroidBitmap_unlockPixels(env, bitmap);
 
@@ -42,4 +39,8 @@ cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap) {
 
         return nullptr;
     }
+}
+
+void releaseBitmapLock(JNIEnv *env, jobject bitmap) {
+    AndroidBitmap_unlockPixels(env, bitmap);
 }

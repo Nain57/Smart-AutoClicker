@@ -27,6 +27,7 @@
 using namespace smartautoclicker;
 
 extern "C" {
+
     JNIEXPORT jlong JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_newDetector(
             JNIEnv *env,
             jobject self
@@ -34,47 +35,31 @@ extern "C" {
         return reinterpret_cast<jlong>(new Detector());
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_updateScreenMetrics(
-            JNIEnv *env,
-            jobject self,
-            jstring metricsTag,
-            jobject screenBitmap,
-            jdouble detectionQuality
-    ) {
-        const char *tag = env->GetStringUTFChars(metricsTag, nullptr);
-
-        getDetectorFromJavaRef(env, self)->setScreenMetrics(
-                loadMatFromRGBA8888Bitmap(env, screenBitmap),
-                detectionQuality,
-                tag);
-
-        env->ReleaseStringUTFChars(metricsTag, tag);
-    }
-
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setScreenImage(
             JNIEnv *env,
             jobject self,
-            jobject screenBitmap
+            jobject screenBitmap,
+            jstring metricsTag
     ) {
-        getDetectorFromJavaRef(env, self)->setScreenImage(
-                loadMatFromRGBA8888Bitmap(env, screenBitmap));
+        const char* nativeMetricsTag = env->GetStringUTFChars(metricsTag, nullptr);
+        if (nativeMetricsTag == nullptr) return;
+
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return;
+
+        std::unique_ptr<cv::Mat> screenMat = loadMatFromRGBA8888Bitmap(env, screenBitmap);
+        if (!screenMat) return;
+
+        detector->setScreenImage(std::move(screenMat), nativeMetricsTag);
+        env->ReleaseStringUTFChars(metricsTag, nativeMetricsTag);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detect(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
-            jint threshold,
-            jobject result
-    ) {
-        setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectCondition(
-                loadMatFromRGBA8888Bitmap(env, conditionBitmap), threshold));
-    }
-
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectAt(
-            JNIEnv *env,
-            jobject self,
-            jobject conditionBitmap,
+            jint conditionWidth,
+            jint conditionHeight,
             jint x,
             jint y,
             jint width,
@@ -82,14 +67,37 @@ extern "C" {
             jint threshold,
             jobject result
     ) {
-        setDetectionResult(env, result, getDetectorFromJavaRef(env, self)->detectCondition(
-                loadMatFromRGBA8888Bitmap(env, conditionBitmap), x, y, width, height, threshold));
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return;
+
+        std::unique_ptr<cv::Mat> conditionMat = loadMatFromRGBA8888Bitmap(env, conditionBitmap);
+        if (!conditionMat) return;
+
+        setDetectionResult(env,result,detector->detectCondition(
+                std::move(conditionMat),
+                conditionWidth,
+                conditionHeight,
+                cv::Rect(x, y, width, height),
+                threshold));
+
+        releaseBitmapLock(env, conditionBitmap);
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_releaseScreenImage(
+            JNIEnv *env,
+            jobject self,
+            jobject screenBitmap
+    ) {
+        releaseBitmapLock(env, screenBitmap);
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_deleteDetector(
             JNIEnv *env,
             jobject self
     ) {
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return;
+
         delete getDetectorFromJavaRef(env, self);
     }
 }

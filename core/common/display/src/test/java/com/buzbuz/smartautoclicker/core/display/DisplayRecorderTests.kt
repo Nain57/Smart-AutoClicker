@@ -123,7 +123,7 @@ class DisplayRecorderTests {
             null)
         ).thenReturn(mockVirtualDisplay)
 
-        displayRecorder = DisplayRecorder(MediaProjectionProxy(), ImageReaderProxy(mockBitmapRepository))
+        displayRecorder = DisplayRecorder(mockContext, MediaProjectionProxy(), ImageReaderProxy(mockBitmapRepository))
     }
 
     @After
@@ -133,7 +133,7 @@ class DisplayRecorderTests {
 
     @Test
     fun startProjection() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
 
         verify(mockMediaProjection).registerCallback(anyNotNull(), anyNotNull())
@@ -141,9 +141,9 @@ class DisplayRecorderTests {
 
     @Test
     fun startProjection_alreadyStarted() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
 
         verify(mockMediaProjection, times(1)).registerCallback(anyNotNull(), anyNotNull())
@@ -151,28 +151,28 @@ class DisplayRecorderTests {
 
     @Test
     fun startScreenRecord() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        displayRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
+        displayRecorder.startScreenRecord(TEST_DATA_DISPLAY_SIZE)
 
         assertEquals(1, ShadowImageReader.getInstanceCreationCount())
     }
 
     @Test
     fun startScreenRecord_alreadyStarted() = runBlocking  {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        displayRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
-        displayRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
+        displayRecorder.startScreenRecord(TEST_DATA_DISPLAY_SIZE)
+        displayRecorder.startScreenRecord(TEST_DATA_DISPLAY_SIZE)
 
         assertEquals(1, ShadowImageReader.getInstanceCreationCount())
     }
 
     @Test
     fun stopProjection() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        displayRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
+        displayRecorder.startScreenRecord(TEST_DATA_DISPLAY_SIZE)
 
         displayRecorder.stopProjection()
 
@@ -198,9 +198,9 @@ class DisplayRecorderTests {
 
     @Test
     fun stopScreenRecord() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
-        displayRecorder.startScreenRecord(mockContext, TEST_DATA_DISPLAY_SIZE)
+        displayRecorder.startScreenRecord(TEST_DATA_DISPLAY_SIZE)
 
         displayRecorder.stopScreenRecord()
 
@@ -222,7 +222,7 @@ class DisplayRecorderTests {
 
     @Test
     fun onStoppedCallback() = runBlocking {
-        displayRecorder.startProjection(mockContext, TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
+        displayRecorder.startProjection(TEST_DATA_RESULT_CODE, TEST_DATA_PROJECTION_DATA_INTENT,
             mockStoppedListener::onStopped)
 
         val projectionCbCaptor = ArgumentCaptor.forClass(MediaProjection.Callback::class.java)

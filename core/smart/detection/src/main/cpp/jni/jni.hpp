@@ -33,8 +33,11 @@ using namespace smartautoclicker;
  * The "nativePtr" is reached from this code, casted to Detector's pointer and returned. This will be used in
  * all our native methods wrappers to recover the object before invoking it's methods.
  */
-Detector *getDetectorFromJavaRef(JNIEnv *env, jobject self);
-cv::Mat* loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
+Detector* getDetectorFromJavaRef(JNIEnv *env, jobject self);
+
+std::unique_ptr<cv::Mat> loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
+void releaseBitmapLock(JNIEnv *env, jobject bitmap);
+
 void setDetectionResult(JNIEnv *env, jobject self, TemplateMatchingResult* result);
 
 #endif //KLICK_R_JNI_HPP

@@ -22,28 +22,29 @@
 using namespace smartautoclicker;
 
 
-void TemplateMatchingResult::updateResults(ScalableRoi* detectionArea, cv::Mat* condition,
-                                           cv::Mat* matchingResults, double scaleRatio) {
+void TemplateMatchingResult::updateResults(
+        const cv::Rect& detectionArea,
+        const cv::Mat& condition,
+        cv::Mat& matchingResults
+) {
+    cv::minMaxLoc(matchingResults, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());
 
-    cv::minMaxLoc(*matchingResults, &minVal, &maxVal, &minLoc, &maxLoc, cv::Mat());
-
-    area.setScaled(
-            detectionArea->getScaled().x + maxLoc.x,
-            detectionArea->getScaled().y + maxLoc.y,
-            condition->cols, condition->rows, scaleRatio,
-            *detectionArea);
-    centerX = area.getFullSize().x + ((int) (area.getFullSize().width / 2));
-    centerY = area.getFullSize().y + ((int) (area.getFullSize().height / 2));
+    area.x = detectionArea.x + maxLoc.x;
+    area.y = detectionArea.y + maxLoc.y;
+    area.width = condition.cols;
+    area.height = condition.rows;
+    centerX = area.x + ((int) (area.width / 2));
+    centerY = area.y + ((int) (area.height / 2));
 }
 
 void TemplateMatchingResult::markResultAsDetected() {
     detected = true;
 }
 
-void TemplateMatchingResult::invalidateCurrentResult(cv::Mat *matchingResults, const cv::Mat* condition) const {
+void TemplateMatchingResult::invalidateCurrentResult(const cv::Mat& condition, cv::Mat& matchingResults) const {
     cv::rectangle(
-            *matchingResults,
-            cv::Rect(maxLoc.x, maxLoc.y,  condition->cols,condition->rows),
+            matchingResults,
+            cv::Rect(maxLoc.x, maxLoc.y,  condition.cols,condition.rows),
             cv::Scalar(0),
             CV_FILLED);
 }
@@ -58,7 +59,10 @@ void TemplateMatchingResult::reset() {
     minLoc.y = 0;
     maxLoc.x = 0;
     maxLoc.y = 0;
-    area.clear();
+    area.x = 0;
+    area.y = 0;
+    area.width = 0;
+    area.height = 0;
 }
 
 bool TemplateMatchingResult::isDetected() const {
@@ -69,7 +73,7 @@ double TemplateMatchingResult::getResultConfidence() const {
     return maxVal;
 }
 
-ScalableRoi TemplateMatchingResult::getResultArea() const {
+cv::Rect TemplateMatchingResult::getResultArea() const {
     return area;
 }
 
