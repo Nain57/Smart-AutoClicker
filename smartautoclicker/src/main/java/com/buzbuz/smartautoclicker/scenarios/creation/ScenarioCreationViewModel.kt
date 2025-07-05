@@ -24,10 +24,12 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 
@@ -42,6 +44,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.floor
+import kotlin.math.max
 
 @HiltViewModel
 class ScenarioCreationViewModel @Inject constructor(
@@ -49,6 +53,7 @@ class ScenarioCreationViewModel @Inject constructor(
     revenueRepository: IRevenueRepository,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
+    private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
 
     private val _name: MutableStateFlow<String?> =
@@ -88,14 +93,14 @@ class ScenarioCreationViewModel @Inject constructor(
         _selectedType.value = type
     }
 
-    fun createScenario(context: Context) {
+    fun createScenario() {
         if (isInvalidForCreation() || _creationState.value != CreationState.CONFIGURING) return
 
         _creationState.value = CreationState.CREATING
         viewModelScope.launch(Dispatchers.IO) {
             when (_selectedType.value) {
                 ScenarioTypeSelection.DUMB -> createDumbScenario()
-                ScenarioTypeSelection.SMART -> createSmartScenario(context)
+                ScenarioTypeSelection.SMART -> createSmartScenario()
             }
             _creationState.value = CreationState.SAVED
         }
@@ -116,14 +121,24 @@ class ScenarioCreationViewModel @Inject constructor(
         )
     }
 
-    private suspend fun createSmartScenario(context: Context) {
+    private suspend fun createSmartScenario() {
         smartRepository.addScenario(
             Scenario(
                 id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
                 name = _name.value!!,
-                detectionQuality = context.resources.getInteger(R.integer.default_detection_quality),
+                detectionQuality = getDefaultDetectionQuality(),
                 randomize = false,
             )
+        )
+    }
+
+    private fun getDefaultDetectionQuality(): Int {
+        val displaySize = displayConfigManager.displayConfig.sizePx
+        val biggestScreenSideSize: Int = max(displaySize.x, displaySize.y)
+
+        return max(
+            DETECTION_QUALITY_MIN.toInt(),
+            floor(biggestScreenSideSize / DEFAULT_DETECTION_QUALITY_RATIO).toInt(),
         )
     }
 
@@ -163,3 +178,5 @@ enum class CreationState {
     CREATING,
     SAVED,
 }
+
+private const val DEFAULT_DETECTION_QUALITY_RATIO = 2.05

@@ -111,7 +111,7 @@ class ScenarioCreationDialog : DialogFragment() {
         }
         buttonSave.apply {
             visibility = View.VISIBLE
-            setOnClickListener { viewModel.createScenario(requireContext()) }
+            setOnClickListener { viewModel.createScenario() }
         }
         buttonDelete.visibility = View.GONE
     }
