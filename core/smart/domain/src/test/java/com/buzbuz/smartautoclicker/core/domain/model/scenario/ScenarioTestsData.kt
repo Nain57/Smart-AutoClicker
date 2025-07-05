@@ -41,10 +41,9 @@ internal object ScenarioTestsData {
         name: String = SCENARIO_NAME,
         detectionQuality: Int = SCENARIO_DETECTION_QUALITY,
         randomize: Boolean = SCENARIO_RANDOMIZE,
-        keepScreenOn: Boolean = false,
         eventCount: Int = 0,
         stats: ScenarioStats? = null,
-    ) = Scenario(id.asIdentifier(), name, detectionQuality, randomize, keepScreenOn, eventCount, stats)
+    ) = Scenario(id.asIdentifier(), name, detectionQuality, randomize, eventCount, stats)
 
     fun defaultStats(): ScenarioStats =
         ScenarioStats(lastStartTimestampMs=0, startCount=0)
