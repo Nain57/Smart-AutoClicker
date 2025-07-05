@@ -17,10 +17,9 @@
 package com.buzbuz.smartautoclicker.core.domain.di
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
-import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.Repository
+import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 
 import dagger.Module
 import dagger.Provides
@@ -35,9 +34,8 @@ object RepositoryHiltModule {
 
     @Provides
     @Singleton
-    fun providesRepository(
-        clickDatabase: ClickDatabase,
-        tutorialDatabase: TutorialDatabase,
+    internal fun providesRepository(
+        dataSource: ScenarioDataSource,
         bitmapManager: BitmapRepository,
-    ): IRepository = Repository(clickDatabase, tutorialDatabase, bitmapManager)
+    ): IRepository = Repository(dataSource, bitmapManager)
 }
