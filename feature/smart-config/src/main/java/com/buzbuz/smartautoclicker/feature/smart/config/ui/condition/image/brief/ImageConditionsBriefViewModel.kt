@@ -100,7 +100,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
     }
 
     val isTutorialModeEnabled: Flow<Boolean> =
-        repository.isTutorialModeEnabledFlow()
+        repository.isTutorialModeEnabled
 
     fun setFocusedItemIndex(index: Int) {
         currentFocusItemIndex.value = index

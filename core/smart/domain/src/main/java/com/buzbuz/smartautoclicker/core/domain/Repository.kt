@@ -22,8 +22,6 @@ import com.buzbuz.smartautoclicker.core.base.FILE_EXTENSION_PNG
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
-import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.data.ScenarioDataSource
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -49,18 +47,14 @@ import kotlin.math.max
  * Repository for the database and bitmap manager.
  * Provide the access to the scenario, events, actions and conditions from the database and the conditions bitmap from
  * the application data folder.
- *
- * @param database the database containing the list of scenario.
- * @param bitmapRepository save and loads the bitmap for the conditions.
  */
 internal class Repository @Inject internal constructor(
-    private val database: ClickDatabase,
-    private val tutorialDatabase: TutorialDatabase,
+    private val dataSource: ScenarioDataSource,
     private val bitmapRepository: BitmapRepository,
 ): IRepository {
 
-    private val dataSource: ScenarioDataSource = ScenarioDataSource(database)
-
+    override val isTutorialModeEnabled: Flow<Boolean> =
+        dataSource.isTutorialModeEnabled
 
     override val scenarios: Flow<List<Scenario>> =
         dataSource.scenarios.mapList { it.toDomain() }
@@ -133,8 +127,25 @@ internal class Repository @Inject internal constructor(
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
         dataSource.updateScenario(scenario, events, ::clearRemovedConditionsBitmaps)
 
+    override fun startTutorialMode() {
+        Log.d(TAG, "Start tutorial mode, use tutorial database")
+        dataSource.useTutorialDatabase()
+    }
+
+    override fun stopTutorialMode() {
+        Log.d(TAG, "Stop tutorial mode, use regular database")
+        dataSource.useNormalDatabase()
+    }
+
+    override fun isTutorialModeEnabled(): Boolean =
+        dataSource.isUsingTutorialDatabase()
+
     override suspend fun migrateLegacyImageConditions(): Boolean {
-        val legacyConditions = dataSource.getLegacyImageConditions()
+        return migrateLegacyImageConditions(false) && migrateLegacyImageConditions(true)
+    }
+
+    private suspend fun migrateLegacyImageConditions(forTutorial: Boolean): Boolean {
+        val legacyConditions = dataSource.getLegacyImageConditions(forTutorial)
         Log.i(TAG, "Migrating ${legacyConditions.size} image conditions...")
 
         var success = true
@@ -159,30 +170,15 @@ internal class Repository @Inject internal constructor(
             }
 
             removedPaths[oldPath] = newPath
-            dataSource.updateCondition(
-                condition = conditionEntity.copy(path = newPath)
+            dataSource.updateLegacyImageCondition(
+                condition = conditionEntity,
+                newPath = newPath,
+                forTutorial = forTutorial,
             )
         }
 
         return success
     }
-
-    override fun startTutorialMode() {
-        Log.d(TAG, "Start tutorial mode, use tutorial database")
-        dataSource.currentDatabase.value = tutorialDatabase
-    }
-
-    override fun stopTutorialMode() {
-        Log.d(TAG, "Stop tutorial mode, use regular database")
-        dataSource.currentDatabase.value = database
-    }
-
-    override fun isTutorialModeEnabled(): Boolean =
-        dataSource.currentDatabase.value == tutorialDatabase
-
-    override fun isTutorialModeEnabledFlow(): Flow<Boolean> =
-        dataSource.currentDatabase.map { it == tutorialDatabase }
-
 
     /**
      * Remove bitmaps from the application data folder.

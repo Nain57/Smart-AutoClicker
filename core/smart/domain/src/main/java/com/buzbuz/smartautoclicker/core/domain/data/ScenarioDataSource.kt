@@ -23,7 +23,9 @@ import com.buzbuz.smartautoclicker.core.base.DatabaseListUpdater
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
+import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
+import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
@@ -59,16 +61,23 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 import java.lang.Exception
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class ScenarioDataSource(defaultDatabase: ScenarioDatabase) {
+@Singleton
+internal class ScenarioDataSource @Inject constructor(
+    private val normalDatabase: ClickDatabase,
+    private val tutorialDatabase: TutorialDatabase,
+) {
 
     /** The database currently in use. */
-    var currentDatabase: MutableStateFlow<ScenarioDatabase> = MutableStateFlow(defaultDatabase)
+    private val currentDatabase: MutableStateFlow<ScenarioDatabase> = MutableStateFlow(normalDatabase)
 
     /** The Dao for accessing the scenario. */
     private val scenarioDaoFlow: Flow<ScenarioDao> = currentDatabase.map { it.scenarioDao() }
@@ -82,6 +91,9 @@ internal class ScenarioDataSource(defaultDatabase: ScenarioDatabase) {
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
 
+    val isTutorialModeEnabled: Flow<Boolean> =
+        currentDatabase.map { it == tutorialDatabase }
+
     val scenarios: Flow<List<ScenarioWithEvents>> =
         scenarioDaoFlow.flatMapLatest { it.getScenariosWithEvents() }
 
@@ -90,6 +102,19 @@ internal class ScenarioDataSource(defaultDatabase: ScenarioDatabase) {
 
     val allImageEvents: Flow<List<CompleteEventEntity>> =
         eventDaoFlow.flatMapLatest { it.getAllImageEventsFlow() }
+
+
+    fun useTutorialDatabase() {
+        currentDatabase.value = tutorialDatabase
+    }
+
+    fun useNormalDatabase() {
+        currentDatabase.value = normalDatabase
+    }
+
+    fun isUsingTutorialDatabase(): Boolean =
+        currentDatabase.value == tutorialDatabase
+
 
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)
@@ -120,12 +145,6 @@ internal class ScenarioDataSource(defaultDatabase: ScenarioDatabase) {
 
     suspend fun getImageConditionPathUsageCount(path: String): Int =
         currentDatabase.value.conditionDao().getValidPathCount(path)
-
-    suspend fun getLegacyImageConditions(): List<ConditionEntity> =
-        currentDatabase.value.conditionDao().getLegacyImageConditions()
-
-    fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>> =
-        currentDatabase.value.conditionDao().getLegacyImageConditionsFlow()
 
     suspend fun addScenario(scenario: Scenario): Long {
         Log.d(TAG, "Add scenario to the database: ${scenario.id}")
@@ -227,8 +246,21 @@ internal class ScenarioDataSource(defaultDatabase: ScenarioDatabase) {
         }
     }
 
-    suspend fun updateCondition(condition: ConditionEntity) {
-        currentDatabase.value.conditionDao().updateCondition(condition)
+    suspend fun getLegacyImageConditions(forTutorial: Boolean): List<ConditionEntity> =
+        if (forTutorial) tutorialDatabase.conditionDao().getLegacyImageConditions()
+        else normalDatabase.conditionDao().getLegacyImageConditions()
+
+    fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>> =
+        combine(
+            normalDatabase.conditionDao().getLegacyImageConditionsFlow(),
+            tutorialDatabase.conditionDao().getLegacyImageConditionsFlow(),
+        ) { normalLegacy, tutorialLegacy -> normalLegacy + tutorialLegacy }
+
+    suspend fun updateLegacyImageCondition(condition: ConditionEntity, newPath: String, forTutorial: Boolean) {
+        val updatedCondition = condition.copy(path = newPath)
+
+        if (forTutorial) tutorialDatabase.conditionDao().updateCondition(updatedCondition)
+        else normalDatabase.conditionDao().updateCondition(updatedCondition)
     }
 
     private suspend fun updateEvents(
