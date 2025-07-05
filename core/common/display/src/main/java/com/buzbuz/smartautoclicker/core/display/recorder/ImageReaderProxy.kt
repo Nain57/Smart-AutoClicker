@@ -37,10 +37,17 @@ internal class ImageReaderProxy @Inject constructor(
     /** The last frame received from the active [imageReader]. */
     private var lastFrame: Bitmap? = null
 
+    /**
+     * A pixels row in an image.
+     * Kept to avoid instantiating a new array at each image. It is reset at each [resize] call.
+     */
+    private var copyImageRow: IntArray? = null
+
     val surface: Surface
         get() = imageReader!!.surface
 
     fun resize(size: Point) {
+        copyImageRow = IntArray(size.x)
         imageReader?.close()
         imageReader = ImageReader.newInstance(size.x, size.y, PixelFormat.RGBA_8888, 2)
     }
@@ -49,6 +56,7 @@ internal class ImageReaderProxy @Inject constructor(
         imageReader?.close()
         imageReader = null
         lastFrame = null
+        copyImageRow = null
     }
 
     fun getLastFrame(): Bitmap? {
@@ -63,9 +71,49 @@ internal class ImageReaderProxy @Inject constructor(
     }
 
     private fun Image.toBitmap(): Bitmap {
-        val imageWidth = width + (planes[0].rowStride - planes[0].pixelStride * width) / planes[0].pixelStride
-        return bitmapRepository.getDisplayRecorderBitmap(imageWidth, height).apply {
-            copyPixelsFromBuffer(planes[0].buffer)
+        val bitmap = bitmapRepository.getDisplayRecorderBitmap(width, height)
+
+        // If the image provided by the device doesn't have padding, use direct pixels copy
+        if (!haveRowPadding() && haveSameSize(bitmap)) {
+            if (directPixelsCopyTo(bitmap)) return bitmap
+        }
+
+        // Copy manually
+        pixelsCopyTo(bitmap)
+
+        return bitmap
+    }
+
+    private fun Image.haveRowPadding(): Boolean =
+        planes[0].rowStride != (width * planes[0].pixelStride)
+
+    private fun Image.haveSameSize(bitmap: Bitmap): Boolean =
+        bitmap.width == width && bitmap.height == height
+
+    private fun Image.directPixelsCopyTo(bitmap: Bitmap): Boolean =
+        try {
+            bitmap.copyPixelsFromBuffer(planes[0].buffer.asReadOnlyBuffer().rewind())
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to direct copy pixels from buffer", e)
+            false
+        }
+
+    private fun Image.pixelsCopyTo(bitmap: Bitmap) {
+        val imageRow = copyImageRow ?: return
+        val srcByteBuffer = planes[0].buffer.asIntBuffer()
+
+        for (y in 0 until height) {
+            srcByteBuffer.position((y * planes[0].rowStride) / 4)
+            srcByteBuffer.get(imageRow)
+
+            // ABGR -> ARGB (swap R & B)
+            for (i in imageRow.indices) {
+                imageRow[i] = (imageRow[i] and 0xFF00FF00.toInt()) or
+                        ((imageRow[i] and 0x00FF0000) ushr 16) or
+                        ((imageRow[i] and 0x000000FF) shl 16)
+            }
+            bitmap.setPixels(imageRow, 0, width, 0, y, width, 1)
         }
     }
 }
