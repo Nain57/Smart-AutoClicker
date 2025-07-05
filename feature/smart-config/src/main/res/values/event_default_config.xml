@@ -16,8 +16,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <integer name="default_detection_quality">1200</integer>
-
     <string name="default_event_name">Default event</string>
 
     <string name="default_click_name">Click</string>
