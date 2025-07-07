@@ -53,8 +53,8 @@ android {
     defaultConfig {
         applicationId = getExtraActualApplicationId()
 
-        versionCode = 74
-        versionName = "3.3.6"
+        versionCode = 75
+        versionName = "3.3.7"
     }
 
     if (buildParameters.isBuildForVariant("fDroidDebug")) {
