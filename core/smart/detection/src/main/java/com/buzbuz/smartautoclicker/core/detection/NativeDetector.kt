@@ -59,10 +59,10 @@ class NativeDetector private constructor() : ImageDetector {
         deleteDetector()
     }
 
-    override fun setScreenBitmap(screenBitmap: Bitmap, metricsTag: String) {
+    override fun setScreenBitmap(screenBitmap: Bitmap, metadata: String) {
         if (isClosed) return
 
-        setScreenImage(screenBitmap, metricsTag)
+        setScreenImage(screenBitmap, metadata)
     }
 
     override fun detectCondition(

@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.scaling
 import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
+import android.util.Log
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -32,7 +33,7 @@ class ScalingManager @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
 ) {
 
-    private val screenOrientationListener: (Context) -> Unit = { refreshScalingMetrics() }
+    private val screenOrientationListener: (Context) -> Unit = { onOrientationChanged() }
     private val conditionScalingInfo: MutableMap<Long, ImageConditionScalingInfo> = mutableMapOf()
 
     private var detectionQuality: Double = QUALITY_MAX
@@ -45,21 +46,26 @@ class ScalingManager @Inject constructor(
 
     internal fun init(onDisplaySizeChanged: (Point) -> Unit) {
         displaySizeListener = onDisplaySizeChanged
-        refreshScalingMetrics(notify = false)
+        refreshScalingMetrics()
 
         displayConfigManager.addOrientationListener(screenOrientationListener)
     }
 
     internal fun startScaling(quality: Double, screenEvents: List<ImageEvent>) {
         detectionQuality = quality
+
         refreshScalingMetrics()
         refreshScalingData(screenEvents.fold(listOf()) { acc, event -> acc + event.conditions })
+
+        displaySizeListener?.invoke(scaledScreenSize)
     }
 
     internal fun stopScaling() {
         detectionQuality = QUALITY_MAX
+
         refreshScalingMetrics()
         conditionScalingInfo.clear()
+        displaySizeListener?.invoke(scaledScreenSize)
     }
 
     internal fun stop() {
@@ -75,8 +81,16 @@ class ScalingManager @Inject constructor(
     internal fun scaleUpDetectionResult(result: Point): Point =
         result.scaleUp()
 
-    private fun refreshScalingMetrics(notify: Boolean = true) {
+    private fun onOrientationChanged() {
         val oldScreenSize = scaledScreenSize
+
+        refreshScalingMetrics()
+        refreshScalingData(conditionScalingInfo.values.map { it.imageCondition })
+
+        if (oldScreenSize != scaledScreenSize) displaySizeListener?.invoke(scaledScreenSize)
+    }
+
+    private fun refreshScalingMetrics() {
         val displaySize: Point = displayConfigManager.displayConfig.sizePx
         val biggestScreenSideSize: Int = max(displaySize.x, displaySize.y)
 
@@ -85,16 +99,19 @@ class ScalingManager @Inject constructor(
             else detectionQuality / biggestScreenSideSize
 
         scaledScreenSize = displaySize.scaleDown()
-        if (notify && oldScreenSize != scaledScreenSize) displaySizeListener?.invoke(scaledScreenSize)
+
+        Log.i(TAG, "Scaling metrics refreshed: ratio=$scalingRatio, screenSize=$displaySize, " +
+                "scaledScreenSize=$scaledScreenSize")
     }
 
     private fun refreshScalingData(imageConditions: List<ImageCondition>) {
         conditionScalingInfo.clear()
-        imageConditions.forEach { imageCondition ->
 
+        imageConditions.forEach { imageCondition ->
             val scaledImageArea = imageCondition.area.scaleDown()
             conditionScalingInfo[imageCondition.id.databaseId] =
                 ImageConditionScalingInfo(
+                    imageCondition = imageCondition,
                     imageArea = scaledImageArea,
                     detectionArea = imageCondition.getDetectionArea(
                         scaledImageArea = scaledImageArea,
@@ -102,6 +119,8 @@ class ScalingManager @Inject constructor(
                     ),
                 )
         }
+
+        Log.i(TAG, "Scaling data refresh for ${imageConditions.size} conditions")
     }
 
     private fun ImageCondition.getDetectionArea(scaledImageArea: Rect, bounds: Rect): Rect =
@@ -113,6 +132,7 @@ class ScalingManager @Inject constructor(
             else -> throw IllegalArgumentException("Unexpected detection type")
         }
 
+
     private fun Point.scaleDown(): Point = scale(scalingRatio)
     private fun Point.scaleUp(): Point = scale(scalingRatio.inverseScalingRatio())
     private fun Rect.scaleDown(): Rect = scale(scalingRatio)
@@ -120,3 +140,4 @@ class ScalingManager @Inject constructor(
 }
 
 private const val QUALITY_MAX = 10000.0
+private const val TAG = "ScalingManager"

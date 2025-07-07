@@ -43,6 +43,10 @@ void TemplateMatcher::matchTemplate(
 
     // Crop the gray screen image to get only the detection area
     cv::Mat screenCroppedGrayMat = screenImage.cropGray(detectionArea);
+    if (screenCroppedGrayMat.empty()) {
+        LOGE("TemplateMatcher", "screenCroppedGrayMat is empty after cropping.");
+        return;
+    }
 
     // Initialize result mat
     cv::Mat newResultsMat = cv::Mat(

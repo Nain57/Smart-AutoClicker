@@ -66,23 +66,21 @@ bool Detector::isRoiValidForDetection(const cv::Rect& roi) const {
     cv::Rect conditionRoi = conditionImage->getRoi();
 
     if (!isRoiBiggerOrEquals(screenRoi, conditionRoi)) {
-        LOGW("Detector", "Can't detectCondition, condition area (%d, %d, %d, %d) is bigger than screen area (%d, %d, %d, %d)",
-             conditionRoi.x, conditionRoi.y, conditionRoi.x + conditionRoi.width, conditionRoi.y + conditionRoi.height,
-             screenRoi.x, screenRoi.y, screenRoi.x + screenRoi.width, screenRoi.y + screenRoi.height);
+        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than screen (w=%d, h=%d)",
+             conditionRoi.width, conditionRoi.height, screenRoi.width, screenRoi.height);
         return false;
     }
 
     if (!isRoiContainsOrEquals(screenRoi, roi)) {
-        LOGW("Detector", "Can't detectCondition, detection area (%d, %d, %d, %d) is not contained in screen area (%d, %d, %d, %d)",
-             roi.x, roi.y, roi.x + roi.width, roi.y + roi.height,
-             screenRoi.x, screenRoi.y, screenRoi.x + screenRoi.width, screenRoi.y + screenRoi.height);
+        LOGD("Detector", "Can't detectCondition, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
+             roi.x, roi.y, roi.width, roi.height,
+             screenRoi.width, screenRoi.height);
         return false;
     }
 
     if (!isRoiBiggerOrEquals(roi, conditionRoi)) {
-        LOGW("Detector", "Can't detectCondition, detection area (%d, %d, %d, %d) is bigger than conditionRoi area (%d, %d, %d, %d)",
-             roi.x, roi.y, roi.x + roi.width, roi.y + roi.height,
-             conditionRoi.x, conditionRoi.y, conditionRoi.x + conditionRoi.width, conditionRoi.y + conditionRoi.height);
+        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than detection area (x=%d, y=%d, w=%d, h=%d)",
+             conditionRoi.width, conditionRoi.height, roi.x, roi.y, roi.width, roi.height);
         return false;
     }
 
