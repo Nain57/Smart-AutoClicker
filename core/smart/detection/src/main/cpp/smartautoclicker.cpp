@@ -73,12 +73,18 @@ extern "C" {
         std::unique_ptr<cv::Mat> conditionMat = loadMatFromRGBA8888Bitmap(env, conditionBitmap);
         if (!conditionMat) return;
 
-        setDetectionResult(env,result,detector->detectCondition(
-                std::move(conditionMat),
-                conditionWidth,
-                conditionHeight,
-                cv::Rect(x, y, width, height),
-                threshold));
+        try {
+            setDetectionResult(env,result,detector->detectCondition(
+                    std::move(conditionMat),
+                    conditionWidth,
+                    conditionHeight,
+                    cv::Rect(x, y, width, height),
+                    threshold));
+        } catch (...) {
+            releaseBitmapLock(env, conditionBitmap);
+            env->ThrowNew(env->FindClass("java/lang/RuntimeException"), "Invalid detection arguments");
+            return;
+        }
 
         releaseBitmapLock(env, conditionBitmap);
     }

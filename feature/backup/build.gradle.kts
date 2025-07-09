@@ -17,6 +17,7 @@
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.kotlinSerialization)
     alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.hilt)

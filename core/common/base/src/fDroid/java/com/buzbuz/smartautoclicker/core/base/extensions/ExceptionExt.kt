@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,26 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidRoom)
-    alias(libs.plugins.buzbuz.flavour)
-    alias(libs.plugins.buzbuz.kotlinSerialization)
-    alias(libs.plugins.buzbuz.hilt)
-}
+package com.buzbuz.smartautoclicker.core.base.extensions
 
-android {
-    namespace = "com.smartautoclicker.core.dumb"
+import android.util.Log
 
-    sourceSets {
-        getByName("test") {
-            // Adds exported schema location as test app assets.
-            assets.srcDirs("$projectDir/schemas")
-        }
+
+fun Exception.throwWithKeys(keys: Map<String, String>) {
+    keys.entries.forEach { (key, value) ->
+        Log.e("Exception", "Crash key $key = $value")
     }
-}
-
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:common:settings"))
+    throw this
 }

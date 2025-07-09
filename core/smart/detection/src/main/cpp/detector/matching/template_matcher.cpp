@@ -54,12 +54,23 @@ void TemplateMatcher::matchTemplate(
             std::max(screenCroppedGrayMat.cols - condition.getGrayMat()->cols + 1, 0),
             CV_32F);
 
-    // Run OpenCv template matching
-    cv::matchTemplate(
-            screenCroppedGrayMat,
-            *condition.getGrayMat(),
-            newResultsMat,
-            cv::TM_CCOEFF_NORMED);
+    try {
+        // Run OpenCv template matching
+        cv::matchTemplate(
+                screenCroppedGrayMat,
+                *condition.getGrayMat(),
+                newResultsMat,
+                cv::TM_CCOEFF_NORMED);
+    } catch (const cv::Exception& e) {
+        LOGE("TemplateMatcher", "OpenCV Exception caught: %s", e.what());
+        throw;
+    } catch (const std::exception& e) {
+        LOGE("TemplateMatcher", "Standard Exception caught: %s", e.what());
+        throw; // Rethrow
+    } catch (...) {
+        LOGE("TemplateMatcher", "Unknown exception caught!");
+        throw std::runtime_error("Unknown exception in TemplateMatcher");
+    } // Rethrow the Exceptions to be caught by the JNI wrapper
 
     // Parse result Mat to check for matching
     parseMatchingResult(screenImage, condition, detectionArea, threshold, newResultsMat);
