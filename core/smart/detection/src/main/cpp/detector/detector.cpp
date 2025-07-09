@@ -40,7 +40,7 @@ TemplateMatchingResult* Detector::detectCondition(
 ) {
     templateMatcher->reset();
 
-    // Load condition and check if the condition fits in the detection area
+    // Load condition and resize to requested size
     conditionImage->processNewData(
             std::move(conditionMat),
             targetConditionWidth,

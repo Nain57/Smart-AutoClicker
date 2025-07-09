@@ -19,7 +19,10 @@ namespace smartautoclicker {
      * Unlike isRoiBiggerOrEquals, this will also check the position.
      */
     inline bool isRoiContainsOrEquals(const cv::Rect& roi, const cv::Rect& other) {
-        return roi.x <= other.x && roi.y <= other.y && isRoiBiggerOrEquals(roi, other);
+        return roi.x <= other.x &&
+            roi.y <= other.y &&
+            roi.x + roi.width >= other.x + other.width &&
+            roi.y + roi.height >= other.y + other.height;
     }
 }
 
