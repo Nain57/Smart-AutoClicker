@@ -1,5 +1,3 @@
-import com.buzbuz.gradle.core.playStoreImplementation
-
 /*
  * Copyright (C) 2024 Kevin Buzeau
  *
