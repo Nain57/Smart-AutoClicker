@@ -533,9 +533,9 @@ internal open class CompatDeserializer : Deserializer {
     open fun deserializeActionNotification(jsonNotification: JsonObject): ActionEntity? {
         val id = jsonNotification.getLong("id", true) ?: return null
         val eventId = jsonNotification.getLong("eventId", true) ?: return null
-        val channelImportance = jsonNotification.getInt("notification_importance") ?: return null
+        val channelImportance = jsonNotification.getInt("notificationImportance") ?: return null
         val notificationMessageType = jsonNotification
-            .getEnum<NotificationMessageType>("notification_message_type") ?: return null
+            .getEnum<NotificationMessageType>("notificationMessageType") ?: return null
 
         return ActionEntity(
             id = id,
@@ -545,8 +545,8 @@ internal open class CompatDeserializer : Deserializer {
             type = ActionType.NOTIFICATION,
             notificationImportance = channelImportance,
             notificationMessageType = notificationMessageType,
-            notificationMessageText = jsonNotification.getString("notification_message_text") ?: "",
-            notificationMessageCounterName = jsonNotification.getString("notification_message_counter_name") ?: "",
+            notificationMessageText = jsonNotification.getString("notificationMessageText") ?: "",
+            notificationMessageCounterName = jsonNotification.getString("notificationMessageCounterName") ?: "",
         )
     }
 
