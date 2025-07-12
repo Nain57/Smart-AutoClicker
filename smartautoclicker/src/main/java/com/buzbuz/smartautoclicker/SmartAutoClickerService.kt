@@ -186,6 +186,10 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         serviceActionExecutor?.safeDispatchGesture(gestureDescription)
     }
 
+    override fun executeGlobalAction(globalAction: Int) {
+        serviceActionExecutor?.safePerformGlobalAction(globalAction)
+    }
+
     override fun executeStartActivity(intent: Intent) {
         serviceActionExecutor?.safeStartActivity(intent)
     }
