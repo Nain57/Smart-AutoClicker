@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
-import com.buzbuz.smartautoclicker.core.domain.model.action.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
