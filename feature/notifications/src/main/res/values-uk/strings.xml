@@ -17,7 +17,6 @@
 -->
 <resources>
 
-    <string name="notification_service_channel_name" translatable="false">Klick\'r</string>
     <string name="notification_scenario_channel_group_name">Сценарії Klick\'r</string>
     <string name="notification_scenario_channel_low_name">Низький</string>
     <string name="notification_scenario_channel_default_name">Звичайний</string>
