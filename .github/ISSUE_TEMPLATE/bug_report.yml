@@ -64,7 +64,7 @@ body:
         Describe precise steps to reproduce the issue. You can also attach screenshots/video showing how to reproduce it. \
         If your issue is about the behaviour of a condition/action/event, attach a scenario backup zip file with the minimal \
         elements to reproduce the bug. Do not provide your full scenario with all your events, I won't be able to \
-        understand what is wrong.
+        understand what is wrong. If your issue is about backup, always provide the complete problematic backup zip file with the bug.
       placeholder: Tell us what's wrong!
     validations:
       required: true
