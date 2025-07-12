@@ -175,6 +175,4 @@ internal abstract class ScenarioBackupDataSource<Backup, BackupScenario>(private
     }
 }
 
-
-const val SCENARIO_BACKUP_EXTENSION = ".json"
 private const val TAG = "ScenarioBackupEngine"

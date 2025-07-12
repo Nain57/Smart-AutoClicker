@@ -21,9 +21,11 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DUMB_DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
-import com.buzbuz.smartautoclicker.feature.backup.data.base.SCENARIO_BACKUP_EXTENSION
+import com.buzbuz.smartautoclicker.feature.backup.data.base.DUMB_SCENARIO_BACKUP_MATCH_REGEX
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupDataSource
 import com.buzbuz.smartautoclicker.feature.backup.data.base.ScenarioBackupSerializer
+import com.buzbuz.smartautoclicker.feature.backup.data.base.backupFolderName
+import com.buzbuz.smartautoclicker.feature.backup.data.base.scenarioBackupFileName
 
 import java.io.File
 
@@ -31,14 +33,8 @@ internal class DumbBackupDataSource(
     appDataDir: File,
 ): ScenarioBackupDataSource<DumbScenarioBackup, DumbScenarioWithActions>(appDataDir) {
 
-    /**
-     * Regex matching a condition file into its folder in a backup archive.
-     * Will match any file like "scenarioId/Condition_randomNumber".
-     *
-     * You can try it out here: https://regex101.com
-     */
-    private val scenarioUnzipMatchRegex = """dumb-[0-9]+/[0-9]+$SCENARIO_BACKUP_EXTENSION"""
-        .toRegex()
+    /** Regex matching a condition file into its folder in a backup archive. */
+    private val scenarioUnzipMatchRegex = DUMB_SCENARIO_BACKUP_MATCH_REGEX.toRegex()
 
     override val serializer: ScenarioBackupSerializer<DumbScenarioBackup> = DumbScenarioSerializer()
 
@@ -49,10 +45,10 @@ internal class DumbBackupDataSource(
         false
 
     override fun getBackupZipFolderName(scenario: DumbScenarioWithActions): String =
-        "dumb-${scenario.scenario.id}"
+        scenario.backupFolderName()
 
     override fun getBackupFileName(scenario: DumbScenarioWithActions): String =
-        "${scenario.scenario.id}$SCENARIO_BACKUP_EXTENSION"
+        scenario.scenarioBackupFileName()
 
     override fun createBackupFromScenario(scenario: DumbScenarioWithActions, screenSize: Point): DumbScenarioBackup =
         DumbScenarioBackup(

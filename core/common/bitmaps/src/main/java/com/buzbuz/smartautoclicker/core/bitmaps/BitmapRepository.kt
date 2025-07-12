@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.bitmaps
 
 import android.graphics.Bitmap
 import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.base.FILE_EXTENSION_PNG
 
 /** Manages the bitmaps for the application. */
 interface BitmapRepository : Dumpable {
@@ -81,3 +82,5 @@ interface BitmapRepository : Dumpable {
 const val CONDITION_FILE_PREFIX = "Condition_"
 /** The prefix appended to all bitmap file names. */
 const val TUTORIAL_CONDITION_FILE_PREFIX = "Tutorial_Condition_"
+/** File extension for all image conditions */
+const val CONDITION_FILE_EXTENSION = FILE_EXTENSION_PNG
