@@ -182,7 +182,7 @@ class DetectionTests {
          val screenBitmap = context.loadTestBitmap(screenImage)
             val conditionBitmap = context.loadTestBitmap(conditionImage)
 
-            setScreenBitmap(screenBitmap)
+            setScreenBitmap(screenBitmap, "")
 
             val results = detectCondition(
                 conditionBitmap = conditionBitmap,
