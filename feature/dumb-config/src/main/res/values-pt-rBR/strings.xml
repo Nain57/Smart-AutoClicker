@@ -97,10 +97,4 @@
     <string name="content_desc_add_action">Adicionar uma nova ação ao cenário</string>
     <string name="content_desc_show_actions">Mostrar ou ocultar as ações criadas</string>
     <string name="content_desc_open_action_list">Abrir a lista de ações</string>
-
-    <!--
-      - The following strings should be kept the same in all languages.
-      - DO NOT TRANSLATE.
-      -->
-    <string name="title_action_count" translatable="false">%1$d/%2$d</string>
 </resources>

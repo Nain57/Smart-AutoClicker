@@ -121,8 +121,6 @@
 
     <string name="field_scenario_quality_title">Роздільна здатність виявлення</string>
     <string name="field_scenario_quality_description">Для швидшого виявлення Klick\'r зменшує масштаб зображень перед виявленням.\n\nЯкщо ви збільшите роздільну здатність, виявлення буде повільнішим, але точнішим. Якщо ви зменшите роздільну здатність, виявлення буде швидшим, але менш точним. Знайдіть хороше співвідношення між роздільною здатністю виявлення та порогами умов, щоб отримати найкраще з ваших сценаріїв!</string>
-    <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>
-
 
     <string name="field_show_debug_view_title">Показати режим налагодження</string>
     <string name="item_title_debug_generate_report">Створити звіт</string>
@@ -162,8 +160,6 @@
     <string name="field_event_keep_detecting_desc_disabled">Коли ця подія спрацьовує, перезапустити виконання з першої події в списку</string>
 
     <string name="field_operator_title">Оператор</string>
-    <string name="field_operator_button_and" translatable="false">І</string>
-    <string name="field_operator_button_or" translatable="false">АБО</string>
     <string name="field_operator_desc_or">Лише одна умова повинна бути виконана для запуску дій</string>
     <string name="field_operator_desc_and">Всі умови повинні бути виконані для запуску дій</string>
 
@@ -202,11 +198,6 @@
     <string name="field_counter_comparison_value_label">Значення</string>
 
     <string name="dropdown_comparison_operator_label">Оператор</string>
-    <string name="dropdown_comparison_operator_item_greater_or_equals" translatable="false">≥</string>
-    <string name="dropdown_comparison_operator_item_greater" translatable="false"><![CDATA[>]]></string>
-    <string name="dropdown_comparison_operator_item_equals" translatable="false">=</string>
-    <string name="dropdown_comparison_operator_item_lower_or_equals" translatable="false">≤</string>
-    <string name="dropdown_comparison_operator_item_lower" translatable="false"><![CDATA[<]]></string>
 
 
     <!-- Dialog Condition Timer Reached ============================================================================ -->
@@ -245,9 +236,6 @@
 
     <string name="field_click_offset_title">Зміщення кліка</string>
     <string name="field_click_offset_desc_none">Немає</string>
-    <string name="field_click_offset_desc" translatable="false">X=%1$d Y=%2$d</string>
-    <string name="field_click_offset_x" translatable="false">X</string>
-    <string name="field_click_offset_y" translatable="false">Y</string>
 
 
     <!-- Dialog Action Swipe ======================================================================================= -->
@@ -265,10 +253,6 @@
 
     <!-- Dialog Action Intent ====================================================================================== -->
 
-    <string name="dialog_title_intent" translatable="false">Намір</string>
-    <string name="dialog_title_intent_flags" translatable="false">Прапорці</string>
-    <string name="dialog_title_intent_actions" translatable="false">Дії наміру</string>
-    <string name="dialog_title_intent_component_name" translatable="false">Назва компонента</string>
     <string name="dialog_title_application_selection">Оберіть додаток</string>
 
     <string name="menu_item_title_advanced">Розширені</string>
@@ -278,36 +262,14 @@
     <string name="field_application_selection_desc">Запустити додаток при виконанні цієї дії</string>
 
     <string name="dropdown_intent_sending_type_label">Тип</string>
-    <string name="dropdown_intent_sending_type_item_activity" translatable="false">Запустити активність</string>
-    <string name="dropdown_intent_sending_type_item_broadcast" translatable="false">Надіслати сигнал</string>
-
-    <string name="field_intent_action_label" translatable="false">Дія</string>
-    <string name="field_intent_broadcast_action_label" translatable="false">Дія сигналу</string>
-    <string name="field_intent_flags_label" translatable="false">Прапорці</string>
-    <string name="field_intent_component_name_label" translatable="false">Назва компонента</string>
-
-    <string name="field_intent_extra_title" translatable="false">Додаткові дані</string>
 
 
     <!-- Dialogs Intent Extras ===================================================================================== -->
-
-    <string name="dialog_intent_extra_title" translatable="false">Додаткові дані</string>
 
     <string name="field_intent_extra_key_label">Ключ</string>
     <string name="field_intent_extra_value_title">Значення</string>
 
     <string name="dropdown_intent_extra_type_title">Тип значення</string>
-    <string name="dropdown_intent_extra_type_item_boolean" translatable="false">Логічне</string>
-    <string name="dropdown_intent_extra_type_item_byte" translatable="false">Байт</string>
-    <string name="dropdown_intent_extra_type_item_char" translatable="false">Символ</string>
-    <string name="dropdown_intent_extra_type_item_double" translatable="false">Подвійне</string>
-    <string name="dropdown_intent_extra_type_item_int" translatable="false">Ціле число</string>
-    <string name="dropdown_intent_extra_type_item_float" translatable="false">Дробове</string>
-    <string name="dropdown_intent_extra_type_item_short" translatable="false">Коротке</string>
-    <string name="dropdown_intent_extra_type_item_string" translatable="false">Рядок</string>
-
-    <string name="dropdown_extra_boolean_item_true" translatable="false">Так</string>
-    <string name="dropdown_extra_boolean_item_false" translatable="false">Ні</string>
 
 
     <!-- Dialog Action Change Counter ============================================================================== -->
@@ -320,9 +282,6 @@
     <string name="field_counter_operation_value_label">Значення</string>
 
     <string name="dropdown_counter_operation_label">Операція</string>
-    <string name="dropdown_counter_operation_item_add" translatable="false">+</string>
-    <string name="dropdown_counter_operation_item_set" translatable="false">=</string>
-    <string name="dropdown_counter_operation_item_minus" translatable="false">-</string>
 
 
     <!-- Dialogs Action ToggleEvent ================================================================================ -->
