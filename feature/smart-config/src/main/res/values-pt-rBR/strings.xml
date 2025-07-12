@@ -157,8 +157,6 @@
     <string name="field_event_keep_detecting_desc_disabled">Quando esse evento for acionado, reinicie a execução a partir do primeiro evento da lista</string>
 
     <string name="field_operator_title">Operador</string>
-    <string name="field_operator_button_and" translatable="false">AND</string>
-    <string name="field_operator_button_or" translatable="false">"OR"</string>
     <string name="field_operator_desc_or">Apenas uma condição precisa ser atendida para acionar as ações</string>
     <string name="field_operator_desc_and">Todas as condições precisam ser atendidas para acionar as ações</string>
 
@@ -197,11 +195,6 @@
     <string name="field_counter_comparison_value_label">Valor</string>
 
     <string name="dropdown_comparison_operator_label">Operador</string>
-    <string name="dropdown_comparison_operator_item_greater_or_equals" translatable="false">≥</string>
-    <string name="dropdown_comparison_operator_item_greater" translatable="false"><![CDATA[>]]></string>
-    <string name="dropdown_comparison_operator_item_equals" translatable="false">=</string>
-    <string name="dropdown_comparison_operator_item_lower_or_equals" translatable="false">≤</string>
-    <string name="dropdown_comparison_operator_item_lower" translatable="false"><![CDATA[<]]></string>
 
 
     <!-- Dialog Condition Timer Reached ============================================================================ -->
@@ -256,10 +249,6 @@
 
     <!-- Dialog Action Intent ====================================================================================== -->
 
-    <string name="dialog_title_intent" translatable="false">Intent</string>
-    <string name="dialog_title_intent_flags" translatable="false">Flags</string>
-    <string name="dialog_title_intent_actions" translatable="false">Intent Action</string>
-    <string name="dialog_title_intent_component_name" translatable="false">Component name</string>
     <string name="dialog_title_application_selection">Selecione uma aplicação</string>
 
     <string name="menu_item_title_advanced">Avançado</string>
@@ -269,36 +258,13 @@
     <string name="field_application_selection_desc">Inicie uma aplicação quando essa ação for executada</string>
 
     <string name="dropdown_intent_sending_type_label">Tipo</string>
-    <string name="dropdown_intent_sending_type_item_activity" translatable="false">Start Activity</string>
-    <string name="dropdown_intent_sending_type_item_broadcast" translatable="false">Send Broadcast</string>
-
-    <string name="field_intent_action_label" translatable="false">Action</string>
-    <string name="field_intent_broadcast_action_label" translatable="false">Broadcast Action</string>
-    <string name="field_intent_flags_label" translatable="false">Flags</string>
-    <string name="field_intent_component_name_label" translatable="false">Component name</string>
-
-    <string name="field_intent_extra_title" translatable="false">Extras</string>
-
 
     <!-- Dialogs Intent Extras ===================================================================================== -->
-
-    <string name="dialog_intent_extra_title" translatable="false">Extra</string>
 
     <string name="field_intent_extra_key_label">Chave</string>
     <string name="field_intent_extra_value_title">Valor</string>
 
     <string name="dropdown_intent_extra_type_title">Tipo de valor</string>
-    <string name="dropdown_intent_extra_type_item_boolean" translatable="false">Bool</string>
-    <string name="dropdown_intent_extra_type_item_byte" translatable="false">Byte</string>
-    <string name="dropdown_intent_extra_type_item_char" translatable="false">Char</string>
-    <string name="dropdown_intent_extra_type_item_double" translatable="false">Double</string>
-    <string name="dropdown_intent_extra_type_item_int" translatable="false">Integer</string>
-    <string name="dropdown_intent_extra_type_item_float" translatable="false">Float</string>
-    <string name="dropdown_intent_extra_type_item_short" translatable="false">Short</string>
-    <string name="dropdown_intent_extra_type_item_string" translatable="false">String</string>
-
-    <string name="dropdown_extra_boolean_item_true" translatable="false">True</string>
-    <string name="dropdown_extra_boolean_item_false" translatable="false">False</string>
 
 
     <!-- Dialog Action Change Counter ============================================================================== -->
@@ -311,9 +277,6 @@
     <string name="field_counter_operation_value_label">Valor</string>
 
     <string name="dropdown_counter_operation_label">Operação</string>
-    <string name="dropdown_counter_operation_item_add" translatable="false">+</string>
-    <string name="dropdown_counter_operation_item_set" translatable="false">=</string>
-    <string name="dropdown_counter_operation_item_minus" translatable="false">-</string>
 
 
     <!-- Dialogs Action ToggleEvent ================================================================================ -->

@@ -17,9 +17,6 @@
 -->
 <resources>
 
-    <string name="app_name" translatable="false">Klick\'r</string>
-    <string name="notification_channel_name" translatable="false">Klick\'r</string>
-
     <!-- Application wide texts. -->
     <string name="notification_title">Сценарій: %1$s</string>
     <string name="notification_message">Натисніть, щоб змінити сценарій</string>
