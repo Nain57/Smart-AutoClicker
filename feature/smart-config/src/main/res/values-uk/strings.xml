@@ -389,6 +389,5 @@
     <string name="content_desc_image_condition">Зображення для виявлення</string>
     <string name="content_desc_open_event_list">Відкрити список подій</string>
     <string name="content_desc_application_icon">Іконка додатка для запуску.</string>
-    <string name="default_event_name">hhh</string>
 
 </resources>
