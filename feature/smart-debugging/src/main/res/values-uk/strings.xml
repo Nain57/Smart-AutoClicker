@@ -52,10 +52,4 @@
     <string name="overlay_title_results">Результати</string>
     <string name="overlay_title_threshold">Поріг</string>
 
-    <!--
-      - The following strings should be kept the same in all languages.
-      - DO NOT TRANSLATE.
-      -->
-    <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
-
 </resources>
