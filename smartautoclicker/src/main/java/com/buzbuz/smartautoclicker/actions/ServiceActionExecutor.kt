@@ -42,6 +42,14 @@ class ServiceActionExecutor(private val service: AccessibilityService) : Dumpabl
         }
     }
 
+    fun safePerformGlobalAction(globalAction: Int) {
+        try {
+            service.performGlobalAction(globalAction)
+        } catch (ex: Exception) {
+            Log.w(TAG, "Can't execute global action.")
+        }
+    }
+
     fun safeStartActivity(intent: Intent) {
         try {
             service.startActivity(intent)

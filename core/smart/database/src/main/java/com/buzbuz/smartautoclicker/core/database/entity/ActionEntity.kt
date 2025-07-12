@@ -86,7 +86,9 @@ import kotlinx.serialization.Serializable
  *  is [NotificationMessageType.TEXT].
  * @param notificationMessageCounterName [ActionType.NOTIFICATION] only: the counter value will be used as notification
  *  message when [notificationMessageType] is [NotificationMessageType.COUNTER_VALUE].
- * @param notificationImportance [ActionType.NOTIFICATION] only:
+ * @param notificationImportance [ActionType.NOTIFICATION] only: how the notification will behave.
+ *
+ * @param systemActionType [ActionType.SYSTEM] only: the type of system action to execute.
  */
 @Entity(
     tableName = ACTION_TABLE,
@@ -156,6 +158,9 @@ data class ActionEntity(
     @ColumnInfo(name = "notification_message_text") val notificationMessageText: String? = null,
     @ColumnInfo(name = "notification_message_counter_name") val notificationMessageCounterName: String? = null,
     @ColumnInfo(name = "notification_importance") var notificationImportance: Int? = null,
+
+    // ActionType.SYSTEM
+    @ColumnInfo(name = "system_action_type") val systemActionType: SystemActionType? = null,
 ) : EntityWithId
 
 /**

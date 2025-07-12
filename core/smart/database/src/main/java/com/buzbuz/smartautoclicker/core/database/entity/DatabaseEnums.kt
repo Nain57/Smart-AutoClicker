@@ -49,6 +49,8 @@ enum class ActionType {
     CHANGE_COUNTER,
     /** Send a notification. */
     NOTIFICATION,
+    /** Interact with the system. */
+    SYSTEM,
 }
 
 
@@ -156,4 +158,16 @@ enum class IntentExtraType {
     FLOAT,
     SHORT,
     STRING
+}
+
+/** The list of supported system actions. */
+enum class SystemActionType {
+    /** Execute the Android back action. */
+    BACK,
+    /** Return to home launcher. */
+    HOME,
+    /** Open recent apps screen. */
+    RECENT_APPS,
+    /** Open the notification tray. */
+    OPEN_NOTIFICATIONS,
 }

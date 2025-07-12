@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toEntity
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

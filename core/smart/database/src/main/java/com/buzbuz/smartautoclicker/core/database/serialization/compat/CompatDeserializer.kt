@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
 import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
+import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.database.serialization.Deserializer
 
 import kotlinx.serialization.json.JsonArray
@@ -365,6 +366,7 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.TOGGLE_EVENT -> deserializeActionToggleEvent(jsonAction)
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
+            ActionType.SYSTEM -> deserializeActionSystem(jsonAction)
             null -> null
         }
 
@@ -548,6 +550,22 @@ internal open class CompatDeserializer : Deserializer {
             notificationMessageType = notificationMessageType,
             notificationMessageText = jsonNotification.getString("notificationMessageText") ?: "",
             notificationMessageCounterName = jsonNotification.getString("notificationMessageCounterName") ?: "",
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionSystem(jsonSystem: JsonObject): ActionEntity? {
+        val id = jsonSystem.getLong("id", true) ?: return null
+        val eventId = jsonSystem.getLong("eventId", true) ?: return null
+        val type = jsonSystem.getEnum<SystemActionType>("systemActionType") ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonSystem.getString("name") ?: "",
+            priority = jsonSystem.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.SYSTEM,
+            systemActionType = type,
         )
     }
 

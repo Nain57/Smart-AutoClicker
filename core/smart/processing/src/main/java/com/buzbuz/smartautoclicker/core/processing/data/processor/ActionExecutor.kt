@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
+import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.content.Intent as AndroidIntent
 import android.graphics.Path
@@ -44,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
+import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -95,6 +97,7 @@ internal class ActionExecutor(
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
                 is Notification -> executeNotification(event, action)
+                is SystemAction -> executeSystemAction(action)
             }
         }
     }
@@ -264,6 +267,19 @@ internal class ActionExecutor(
                 importance = notification.channelImportance,
             )
         )
+    }
+
+    private suspend fun executeSystemAction(action: SystemAction) {
+        val globalAction = when (action.type) {
+            SystemAction.Type.BACK -> AccessibilityService.GLOBAL_ACTION_BACK
+            SystemAction.Type.HOME -> AccessibilityService.GLOBAL_ACTION_HOME
+            SystemAction.Type.RECENT_APPS -> AccessibilityService.GLOBAL_ACTION_RECENTS
+            SystemAction.Type.OPEN_NOTIFICATIONS -> AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS
+        }
+
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeGlobalAction(globalAction)
+        }
     }
 
 
