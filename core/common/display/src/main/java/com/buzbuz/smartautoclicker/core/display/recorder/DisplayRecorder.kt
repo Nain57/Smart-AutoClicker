@@ -52,7 +52,7 @@ import javax.inject.Singleton
 @MainThread
 @Singleton
 class DisplayRecorder @Inject internal constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val mediaProjectionProxy: MediaProjectionProxy,
     private val imageReaderProxy: ImageReaderProxy,
 ) {

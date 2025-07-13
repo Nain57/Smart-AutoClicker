@@ -36,8 +36,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScenarioCopyViewModel @Inject constructor(
-    @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val smartRepository: IRepository,
     private val dumbRepository: DumbRepository,
 ) : ViewModel() {

@@ -70,7 +70,7 @@ class TutorialRepository @Inject constructor(
     private val dataSource: TutorialDataSource,
     private val stateDataSource: TutorialStateDataSource,
     private val tutorialEngine: TutorialEngine,
-    @Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
+    @param:Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
 ) {
 
     private val coroutineScopeMain: CoroutineScope =
