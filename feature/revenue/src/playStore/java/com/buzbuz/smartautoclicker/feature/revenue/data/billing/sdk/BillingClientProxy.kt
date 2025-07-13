@@ -33,7 +33,6 @@ import com.android.billingclient.api.QueryPurchasesParams
 import com.android.billingclient.api.acknowledgePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.android.billingclient.api.queryPurchasesAsync
-import com.android.billingclient.api.querySkuDetails
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -98,7 +97,6 @@ internal class BillingClientProxy(
             activity,
             when (product) {
                 is InAppProduct.Modern -> billingFlowQueryParams(product.productDetails)
-                is InAppProduct.Legacy -> legacyBillingFlowQueryParams(product.productDetails)
                 else -> throw IllegalStateException("Can't start flow for debug values")
             },
         )
@@ -194,11 +192,8 @@ internal class BillingClientProxy(
             }
 
             BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
-                Log.d(TAG, "Product Details feature not supported, using legacy sku methods")
-
-                @Suppress("DEPRECATION")
-                val result = client.querySkuDetails(legacyInAppProductDetailsQueryParams(productId))
-                result.billingResult to result.skuDetailsList?.findLegacyProduct(productId)
+                Log.d(TAG, "Product Details feature not supported")
+                null
             }
 
             else -> {

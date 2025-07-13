@@ -37,7 +37,7 @@ openCv = "4.11.0"
 googleDaggerHilt = "2.56.2"
 
 # PlayStore only
-androidBillingClient = "7.1.1"
+androidBillingClient = "8.0.0"
 googleFirebaseBom = "33.16.0"
 googleFirebaseCrashlytics = "19.4.4"
 googleUserMessaging = "3.2.0"

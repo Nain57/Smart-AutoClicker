@@ -19,7 +19,6 @@
 package com.buzbuz.smartautoclicker.feature.revenue.data.billing.sdk
 
 import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.SkuDetails
 
 
 internal sealed class InAppProduct {
@@ -36,12 +35,6 @@ internal sealed class InAppProduct {
         override val price: String= productDetails.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
     }
 
-    data class Legacy(override val productDetails: SkuDetails): InAppProduct() {
-        override val title: String = productDetails.title
-        override val description = productDetails.description
-        override val price: String= productDetails.price
-    }
-
     data class Debug(
         override val productDetails: Any = Unit,
         override val title: String = "Test Product",
@@ -52,6 +45,3 @@ internal sealed class InAppProduct {
 
 internal fun ProductDetails.toInAppProduct(): InAppProduct =
     InAppProduct.Modern(this)
-
-internal fun SkuDetails.toInAppProduct(): InAppProduct =
-    InAppProduct.Legacy(this)
