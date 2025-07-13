@@ -41,6 +41,7 @@ sourceDownload {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
+    ndkVersion = libs.versions.androidNdk.get()
 
     defaultConfig {
         externalNativeBuild {
@@ -68,6 +69,7 @@ android {
                         listOf(
                             "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
                             "-DCMAKE_BUILD_TYPE=Release",
+                            "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
                             "-DOPENCV_ENABLE_NONFREE=OFF",
                             "-DBUILD_opencv_ittnotify=OFF",
                             "-DBUILD_ITT=OFF",
