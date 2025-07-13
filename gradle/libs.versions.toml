@@ -3,6 +3,7 @@
 # Android SDK
 androidCompileSdk = "35"
 androidMinSdk = "24"
+androidNdk = "28.2.13676358"
 
 # Build script
 googleFirebaseCrashlyticsGradle = "3.0.4"
@@ -33,7 +34,7 @@ androidxVectorDrawable = "1.2.0"
 airbnbLottie = "6.6.7"
 googleMaterial = "1.12.0"
 kotlinSerializationJson = "1.9.0"
-openCv = "4.11.0"
+openCv = "4.12.0"
 googleDaggerHilt = "2.56.2"
 
 # PlayStore only
