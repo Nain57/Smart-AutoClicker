@@ -43,7 +43,7 @@ data class ImageCondition(
     val path: String,
     val area: Rect,
     val threshold: Int,
-    @DetectionType val detectionType: Int,
+    @param:DetectionType val detectionType: Int,
     val shouldBeDetected: Boolean,
     val detectionArea: Rect? = null,
 ): Condition(), Prioritizable {

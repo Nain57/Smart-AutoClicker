@@ -58,7 +58,7 @@ import javax.inject.Singleton
 @Singleton
 class QSTileRepository @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val dumbRepository: DumbRepository,
     private val dumbEngine: DumbEngine,
     private val smartRepository: IRepository,

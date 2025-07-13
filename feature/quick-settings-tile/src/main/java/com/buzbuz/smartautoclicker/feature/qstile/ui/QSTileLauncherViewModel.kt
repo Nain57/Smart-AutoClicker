@@ -41,7 +41,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QSTileLauncherViewModel @Inject constructor(
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val qsTileRepository: QSTileRepository,
     private val permissionController: PermissionsController,
     private val smartRepository: IRepository,

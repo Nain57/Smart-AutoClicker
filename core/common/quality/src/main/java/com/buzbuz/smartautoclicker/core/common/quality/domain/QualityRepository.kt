@@ -60,7 +60,7 @@ class QualityRepository @Inject constructor(
     @ApplicationContext context: Context,
     private val qualityMetricsMonitor: QualityMetricsMonitor,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
-    @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
 ) : Dumpable {
 
     private companion object {

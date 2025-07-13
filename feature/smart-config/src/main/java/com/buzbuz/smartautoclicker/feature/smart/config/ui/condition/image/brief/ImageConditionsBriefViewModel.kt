@@ -64,7 +64,7 @@ import javax.inject.Inject
 
 class ImageConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     repository: IRepository,
     bitmapRepository: BitmapRepository,
