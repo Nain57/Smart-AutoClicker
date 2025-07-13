@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.g
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getPauseIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSwipeIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSystemActionIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
 
 
@@ -87,5 +88,12 @@ sealed class ActionTypeChoice(
         R.string.item_notification_title,
         R.string.item_notification_desc,
         getNotificationIconRes(),
+    )
+
+    /** System Action choice (back, home...). */
+    data object System : ActionTypeChoice(
+        R.string.item_system_action_title,
+        R.string.item_system_action_desc,
+        getSystemActionIconRes(),
     )
 }

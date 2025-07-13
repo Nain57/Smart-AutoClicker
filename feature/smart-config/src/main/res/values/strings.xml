@@ -89,6 +89,10 @@
     <string name="item_notification_details_text">Send \"%1$s\"</string>
     <string name="item_notification_details_counter">Send %1$s value</string>
 
+    <string name="item_system_action_title">System action</string>
+    <string name="item_system_action_desc">Use an Android system action (back, home or recent apps)</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
     <!-- Dialog Copy =============================================================================================== -->
 
     <string name="search_view_hint_event_copy">Search by event name</string>
@@ -370,6 +374,17 @@
 
     <string name="button_notification_config">Open settings</string>
     <string name="message_notification_config">Notification behaviour depends on your device OS. You can configure how notifications are handled in you device settings.</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">System action</string>
+
+    <string name="field_dropdown_system_action_type_title">Type</string>
+    <string name="field_dropdown_system_action_type_back">Back</string>
+    <string name="field_dropdown_system_action_type_home">Home</string>
+    <string name="field_dropdown_system_action_type_recent_apps">Recent apps</string>
+
 
     <!-- Dialogs warning/error ===================================================================================== -->
 
