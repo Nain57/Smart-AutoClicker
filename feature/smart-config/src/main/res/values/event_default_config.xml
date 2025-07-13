@@ -38,4 +38,6 @@
     <string name="default_change_counter_name">Change counter</string>
 
     <string name="default_notification_name">Notification</string>
+
+    <string name="default_system_action_name">System action</string>
 </resources>

@@ -38,9 +38,7 @@ data class SystemAction(
         /** Return to home launcher. */
         HOME,
         /** Open recent apps screen. */
-        RECENT_APPS,
-        /** Open the notification tray. */
-        OPEN_NOTIFICATIONS;
+        RECENT_APPS;
 
         fun toEntity(): SystemActionType = SystemActionType.valueOf(name)
     }

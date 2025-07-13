@@ -168,6 +168,4 @@ enum class SystemActionType {
     HOME,
     /** Open recent apps screen. */
     RECENT_APPS,
-    /** Open the notification tray. */
-    OPEN_NOTIFICATIONS,
 }
