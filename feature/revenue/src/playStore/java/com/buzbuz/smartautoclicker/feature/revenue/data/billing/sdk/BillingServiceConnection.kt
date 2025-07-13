@@ -39,7 +39,7 @@ import javax.inject.Inject
 import kotlin.math.min
 
 internal class BillingServiceConnection @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     @Dispatcher(Main) dispatcherMain: CoroutineDispatcher,
 ) {
 

@@ -35,7 +35,7 @@ import java.nio.ByteBuffer
 import javax.inject.Inject
 
 internal class ConditionBitmapsDataSource @Inject constructor(
-    @Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val appDataDir: File,
 ) {
 

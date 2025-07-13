@@ -44,7 +44,7 @@ import javax.inject.Singleton
 class TutorialEngine @Inject constructor(
     private val overlayManager: OverlayManager,
     private val monitoredViewsManager: MonitoredViewsManager,
-    @Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
+    @param:Dispatcher(Main) private val dispatcherMain: CoroutineDispatcher,
 ) {
 
     private val coroutineScopeMain: CoroutineScope =

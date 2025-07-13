@@ -75,7 +75,7 @@ import javax.inject.Inject
 
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     repository: IRepository,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,

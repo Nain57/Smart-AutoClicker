@@ -70,8 +70,8 @@ sealed class SQLiteColumn<T : Any> {
         override val isNotNull: kotlin.Boolean = true,
         val referencedTable: String,
         val referencedColumn: String,
-        @androidx.room.ForeignKey.Action val updateAction: kotlin.Int = androidx.room.ForeignKey.NO_ACTION,
-        @androidx.room.ForeignKey.Action val deleteAction: kotlin.Int = androidx.room.ForeignKey.NO_ACTION,
+        @param:androidx.room.ForeignKey.Action val updateAction: kotlin.Int = androidx.room.ForeignKey.NO_ACTION,
+        @param:androidx.room.ForeignKey.Action val deleteAction: kotlin.Int = androidx.room.ForeignKey.NO_ACTION,
     ) : SQLiteColumn<kotlin.Long>() {
 
         override val typeSQLLite: String = "INTEGER"

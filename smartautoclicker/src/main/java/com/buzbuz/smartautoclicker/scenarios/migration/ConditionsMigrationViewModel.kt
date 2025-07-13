@@ -39,7 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ConditionsMigrationViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val smartRepository: IRepository,
 ) : ViewModel() {
 

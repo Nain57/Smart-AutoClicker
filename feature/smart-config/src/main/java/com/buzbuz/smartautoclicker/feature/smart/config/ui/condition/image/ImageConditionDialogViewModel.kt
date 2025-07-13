@@ -192,7 +192,7 @@ class ImageConditionViewModel @Inject constructor(
 }
 
 data class DetectionTypeState(
-    @DetectionType val type: Int,
+    @param:DetectionType val type: Int,
     val areaText: String,
 )
 

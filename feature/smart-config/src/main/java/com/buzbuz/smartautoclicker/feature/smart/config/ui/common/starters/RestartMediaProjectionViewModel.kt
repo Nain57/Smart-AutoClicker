@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RestartMediaProjectionViewModel @Inject constructor(
-    @Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(HiltCoroutineDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val detectionRepository: DetectionRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
