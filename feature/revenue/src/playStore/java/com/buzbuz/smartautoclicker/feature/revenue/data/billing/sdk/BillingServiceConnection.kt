@@ -78,7 +78,7 @@ internal class BillingServiceConnection @Inject constructor(
         try {
             clientProxy?.client?.endConnection()
         } catch (ex: Exception) {
-            Log.e(TAG, "Can't end connection with current client.")
+            Log.e(TAG, "Can't end connection with current client.", ex)
         }
 
         clientProxy = BillingClientProxy(context, productId, clientListener)
