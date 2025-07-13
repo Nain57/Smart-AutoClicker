@@ -274,7 +274,6 @@ internal class ActionExecutor(
             SystemAction.Type.BACK -> AccessibilityService.GLOBAL_ACTION_BACK
             SystemAction.Type.HOME -> AccessibilityService.GLOBAL_ACTION_HOME
             SystemAction.Type.RECENT_APPS -> AccessibilityService.GLOBAL_ACTION_RECENTS
-            SystemAction.Type.OPEN_NOTIFICATIONS -> AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS
         }
 
         withContext(Dispatchers.Main) {

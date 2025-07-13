@@ -315,7 +315,7 @@ class EditedItemsBuilder internal constructor(
         SystemAction(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = defaultValues.notificationName(context),
+            name = defaultValues.systemActionName(context),
             type = SystemAction.Type.BACK,
             priority = 0,
         )

@@ -83,6 +83,9 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun notificationName(context: Context): String =
         context.getString(R.string.default_notification_name)
 
+    fun systemActionName(context: Context): String =
+        context.getString(R.string.default_system_action_name)
+
     fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
         TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 
