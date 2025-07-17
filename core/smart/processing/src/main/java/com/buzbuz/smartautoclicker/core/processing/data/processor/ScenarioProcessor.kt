@@ -46,7 +46,6 @@ internal class ScenarioProcessor(
     private val processingTag: String,
     private val imageDetector: ImageDetector,
     scalingManager: ScalingManager,
-    private val detectionQuality: Int,
     randomize: Boolean,
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,

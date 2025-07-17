@@ -135,8 +135,8 @@ internal class ConditionsVerifier(
     private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
         progressListener?.onImageConditionProcessingStarted(condition)
 
-        val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition.id.databaseId)
-            ?: throw IllegalArgumentException("Can't find scaling info for condition ${condition.id}")
+        val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition)
+            ?: return NEGATIVE_RESULT
 
         val bitmap = bitmapSupplier(
             condition.path,
@@ -166,5 +166,3 @@ internal class ConditionsVerifier(
         return result
     }
 }
-
-private const val TAG = "ConditionsVerifier"

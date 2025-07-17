@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.scaling
 
-import android.content.Context
 import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
@@ -33,22 +32,17 @@ class ScalingManager @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
 ) {
 
-    private val screenOrientationListener: (Context) -> Unit = { onOrientationChanged() }
     private val conditionScalingInfo: MutableMap<Long, ImageConditionScalingInfo> = mutableMapOf()
 
     private var detectionQuality: Double = QUALITY_MAX
     private var scalingRatio: Double = 1.0
-    private var displaySizeListener: ((Point) -> Unit)? = null
 
     var scaledScreenSize: Point = Point()
         private set
 
 
-    internal fun init(onDisplaySizeChanged: (Point) -> Unit) {
-        displaySizeListener = onDisplaySizeChanged
+    internal fun init() {
         refreshScalingMetrics()
-
-        displayConfigManager.addOrientationListener(screenOrientationListener)
     }
 
     internal fun startScaling(quality: Double, screenEvents: List<ImageEvent>) {
@@ -56,8 +50,15 @@ class ScalingManager @Inject constructor(
 
         refreshScalingMetrics()
         refreshScalingData(screenEvents.fold(listOf()) { acc, event -> acc + event.conditions })
+    }
 
-        displaySizeListener?.invoke(scaledScreenSize)
+    internal fun refreshScaling(): Boolean {
+        val oldScreenSize = scaledScreenSize
+
+        refreshScalingMetrics()
+        refreshScalingData(conditionScalingInfo.values.map { it.imageCondition })
+
+        return oldScreenSize != scaledScreenSize
     }
 
     internal fun stopScaling() {
@@ -65,30 +66,20 @@ class ScalingManager @Inject constructor(
 
         refreshScalingMetrics()
         conditionScalingInfo.clear()
-        displaySizeListener?.invoke(scaledScreenSize)
     }
 
     internal fun stop() {
-        displayConfigManager.removeOrientationListener(screenOrientationListener)
         detectionQuality = QUALITY_MAX
         scalingRatio = 1.0
-        displaySizeListener = null
+        scaledScreenSize.x = 0
+        scaledScreenSize.y = 0
     }
 
-    internal fun getImageConditionScalingInfo(imageConditionId: Long): ImageConditionScalingInfo? =
-        conditionScalingInfo[imageConditionId]
+    internal fun getImageConditionScalingInfo(imageCondition: ImageCondition): ImageConditionScalingInfo? =
+        conditionScalingInfo[imageCondition.id.databaseId]
 
     internal fun scaleUpDetectionResult(result: Point): Point =
         result.scaleUp()
-
-    private fun onOrientationChanged() {
-        val oldScreenSize = scaledScreenSize
-
-        refreshScalingMetrics()
-        refreshScalingData(conditionScalingInfo.values.map { it.imageCondition })
-
-        if (oldScreenSize != scaledScreenSize) displaySizeListener?.invoke(scaledScreenSize)
-    }
 
     private fun refreshScalingMetrics() {
         val displaySize: Point = displayConfigManager.displayConfig.sizePx

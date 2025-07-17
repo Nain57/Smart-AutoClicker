@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.processing.data
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
@@ -30,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -64,6 +64,7 @@ import javax.inject.Singleton
 @Singleton
 class DetectorEngine @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    private val displayConfigManager: DisplayConfigManager,
     private val bitmapRepository: BitmapRepository,
     private val scalingManager: ScalingManager,
     private val displayRecorder: DisplayRecorder,
@@ -84,6 +85,8 @@ class DetectorEngine @Inject constructor(
     private var processingJob: Job? = null
     /** Coroutine job for the cleaning of the detection once stopped. */
     private var processingShutdownJob: Job? = null
+
+    private val screenOrientationListener: (Context) -> Unit = { onScreenOrientationChanged() }
 
     /** Backing property for [state].*/
     private val _state = MutableStateFlow(DetectorState.CREATED)
@@ -130,7 +133,9 @@ class DetectorEngine @Inject constructor(
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(ioDispatcher)
-        scalingManager.init(onDisplaySizeChanged = ::onDeviceScreenSizeChanged)
+        scalingManager.init()
+
+        displayConfigManager.addOrientationListener(screenOrientationListener)
 
         processingScope?.launch {
             displayRecorder.apply {
@@ -204,7 +209,6 @@ class DetectorEngine @Inject constructor(
                 processingTag = appComponentsProvider.originalAppId,
                 imageDetector = detector,
                 scalingManager = scalingManager,
-                detectionQuality = scenario.detectionQuality,
                 randomize = scenario.randomize,
                 imageEvents = imageEvents,
                 triggerEvents = triggerEvents,
@@ -224,7 +228,7 @@ class DetectorEngine @Inject constructor(
      * Called when the orientation of the screen changes.
      * As we now have different screen metrics, we need to stop and start the virtual display with the correct one.
      */
-    private fun onDeviceScreenSizeChanged(newSize: Point) {
+    private fun onScreenOrientationChanged() {
         if (_state.value != DetectorState.DETECTING && _state.value != DetectorState.RECORDING) return
 
         Log.d(TAG, "onOrientationChanged")
@@ -232,10 +236,12 @@ class DetectorEngine @Inject constructor(
         processingScope?.launch {
             if (_state.value == DetectorState.DETECTING) {
                 processingJob?.cancelAndJoin()
+                detectionProgressListener?.onImageEventProcessingCancelled()
             }
 
-            detectionProgressListener?.onImageEventProcessingCancelled()
-            displayRecorder.resizeDisplay(newSize)
+            if (scalingManager.refreshScaling()) {
+                displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
+            }
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -301,7 +307,8 @@ class DetectorEngine @Inject constructor(
         processingScope?.launch {
             processingShutdownJob?.join()
 
-            scalingManager.stopScaling()
+            displayConfigManager.removeOrientationListener(screenOrientationListener)
+            scalingManager.stop()
             displayRecorder.stopProjection()
             androidExecutor = null
             _state.emit(DetectorState.CREATED)

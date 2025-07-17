@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.core.processing.data.scaling
 
 import android.graphics.Point
 import android.graphics.Rect
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 internal fun Point.toArea(): Rect =

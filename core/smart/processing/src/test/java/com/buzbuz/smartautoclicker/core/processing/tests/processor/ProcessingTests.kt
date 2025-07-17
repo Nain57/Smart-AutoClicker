@@ -81,7 +81,6 @@ class ProcessingTests {
         ScenarioProcessor(
             processingTag = "tests",
             scalingManager = mockScalingManager,
-            detectionQuality = testScenario.scenario.detectionQuality,
             randomize = testScenario.scenario.randomize,
             imageEvents = testScenario.imageEvents,
             triggerEvents = testScenario.triggerEvents,

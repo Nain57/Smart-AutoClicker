@@ -144,7 +144,7 @@ class ScenarioProcessorTests {
 
         val pass = if (isDetected) TEST_DETECTION_OK else TEST_DETECTION_KO
         mockWhen(mockImageDetector.detectCondition(eq(conditionBitmap), anyInt(),anyInt(), anyNotNull(), anyInt())).thenReturn(pass)
-        mockWhen(mockScalingManager.getImageConditionScalingInfo(condition.id.databaseId))
+        mockWhen(mockScalingManager.getImageConditionScalingInfo(condition))
             .thenReturn(ImageConditionScalingInfo(condition, area, area))
 
         condition
@@ -171,7 +171,6 @@ class ScenarioProcessorTests {
         val processor = ScenarioProcessor(
             processingTag = "",
             imageDetector = mockImageDetector,
-            detectionQuality = TEST_DATA_DETECTION_QUALITY.toInt(),
             scalingManager = mockScalingManager,
             randomize = false,
             imageEvents = events,
