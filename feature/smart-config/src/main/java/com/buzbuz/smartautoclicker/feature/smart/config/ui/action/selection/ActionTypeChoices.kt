@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getBackButtonIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getClickIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
@@ -87,5 +88,12 @@ sealed class ActionTypeChoice(
         R.string.item_notification_title,
         R.string.item_notification_desc,
         getNotificationIconRes(),
+    )
+
+    /** Back Button Action choice. */
+    data object BackButton : ActionTypeChoice(
+        R.string.item_back_button_title,
+        R.string.item_back_button_desc,
+        getBackButtonIconRes(),
     )
 }

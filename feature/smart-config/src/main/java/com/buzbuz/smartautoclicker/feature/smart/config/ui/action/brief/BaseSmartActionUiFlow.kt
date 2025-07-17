@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.RequestNotificationPermissionActivity
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.BackButton
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -102,7 +103,11 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
             if (PermissionPostNotification().checkIfGranted(context)) NotificationDialog(actionConfigDialogListener)
             else newNotificationPermissionStarterOverlay(context)
         }
-        else -> throw IllegalArgumentException("Not yet supported")
+        is BackButton -> {
+            configurator.upsertEditedAction()
+            return
+        }
+        else -> throw IllegalArgumentException("Unsupported action type")
     }
 
 

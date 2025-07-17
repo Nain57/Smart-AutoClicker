@@ -31,6 +31,9 @@ interface SmartActionExecutor : AndroidExecutor {
     /** Send a notification defined by the provided NotificationRequest. */
     fun executeNotification(notification: NotificationRequest)
 
+    /** Press the Android back button using accessibility services. */
+    fun executeBackButton()
+
     /** Request to reset any state related to action execution, most likely because a new session is starting. */
     fun clearState()
 }
