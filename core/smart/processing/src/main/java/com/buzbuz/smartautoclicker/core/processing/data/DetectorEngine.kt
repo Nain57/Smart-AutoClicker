@@ -63,7 +63,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class DetectorEngine @Inject constructor(
-    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val bitmapRepository: BitmapRepository,
     private val scalingManager: ScalingManager,
@@ -133,7 +133,6 @@ class DetectorEngine @Inject constructor(
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(ioDispatcher)
-        scalingManager.init()
 
         displayConfigManager.addOrientationListener(screenOrientationListener)
 
@@ -239,9 +238,8 @@ class DetectorEngine @Inject constructor(
                 detectionProgressListener?.onImageEventProcessingCancelled()
             }
 
-            if (scalingManager.refreshScaling()) {
-                displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
-            }
+            scalingManager.refreshScaling()
+            displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -308,7 +306,6 @@ class DetectorEngine @Inject constructor(
             processingShutdownJob?.join()
 
             displayConfigManager.removeOrientationListener(screenOrientationListener)
-            scalingManager.stop()
             displayRecorder.stopProjection()
             androidExecutor = null
             _state.emit(DetectorState.CREATED)
