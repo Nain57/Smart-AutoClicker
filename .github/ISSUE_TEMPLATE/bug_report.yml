@@ -83,7 +83,7 @@ body:
       label: Is it a duplicate?
       description: |
         I have checked if this bug was not already requested in another ticket. \
-        [List of all features requests](https://github.com/Nain57/Smart-AutoClicker/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
+        [List of all opened bugs](https://github.com/Nain57/Smart-AutoClicker/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
         
       options:
         - label: There is no duplicates
