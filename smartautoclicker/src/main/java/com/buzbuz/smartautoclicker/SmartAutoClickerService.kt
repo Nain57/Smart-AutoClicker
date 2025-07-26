@@ -198,6 +198,10 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         userNotificationsController.showNotification(this, notification)
     }
 
+    override fun executeBackButton() {
+        serviceActionExecutor?.safePerformGlobalBack()
+    }
+
     override fun clearState() {
         userNotificationsController.clearAll()
     }

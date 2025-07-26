@@ -83,6 +83,9 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun notificationName(context: Context): String =
         context.getString(R.string.default_notification_name)
 
+    fun backButtonName(context: Context): String =
+        context.getString(R.string.item_back_button_title)
+
     fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
         TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 

@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.BackButton
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -95,6 +96,7 @@ internal class ActionExecutor(
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
                 is Notification -> executeNotification(event, action)
+                is BackButton -> withContext(Dispatchers.Main) { androidExecutor.executeBackButton() }
             }
         }
     }

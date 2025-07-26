@@ -130,6 +130,7 @@ class SmartActionsBriefViewModel @Inject constructor(
                 add(ActionTypeChoice.ToggleEvent)
                 add(ActionTypeChoice.Notification)
                 add(ActionTypeChoice.Intent)
+                add(ActionTypeChoice.BackButton)
             }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -172,6 +173,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
         ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
         ActionTypeChoice.Notification -> editionRepository.editedItemsBuilder.createNewNotification(context)
+        ActionTypeChoice.BackButton -> editionRepository.editedItemsBuilder.createNewBackButton(context)
         ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
     }
 
