@@ -127,6 +127,13 @@ class DetectorEngine @Inject constructor(
             Log.w(TAG, "startScreenRecord: Screen record is already started")
             return
         }
+
+        val displaySize = displayConfigManager.displayConfig.sizePx
+        if (displaySize.x <= 0 || displaySize.y <= 0) {
+            Log.w(TAG, "startScreenRecord: Invalid display size $displaySize")
+            return
+        }
+
         _state.value = DetectorState.TRANSITIONING
 
         Log.i(TAG, "startScreenRecord")
@@ -143,7 +150,7 @@ class DetectorEngine @Inject constructor(
                     this@DetectorEngine.stopScreenRecord()
                     onRecordingStopped?.invoke()
                 }
-                startScreenRecord(displayConfigManager.displayConfig.sizePx)
+                startScreenRecord(displaySize)
             }
 
             _state.emit(DetectorState.RECORDING)
