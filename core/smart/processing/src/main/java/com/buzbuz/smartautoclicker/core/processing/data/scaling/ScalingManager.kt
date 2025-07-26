@@ -37,42 +37,28 @@ class ScalingManager @Inject constructor(
     private var detectionQuality: Double = QUALITY_MAX
     private var scalingRatio: Double = 1.0
 
-    var scaledScreenSize: Point = Point()
-        private set
 
-
-    internal fun init() {
-        refreshScalingMetrics()
-    }
-
-    internal fun startScaling(quality: Double, screenEvents: List<ImageEvent>) {
+    internal fun startScaling(quality: Double, screenEvents: List<ImageEvent>): Point {
         detectionQuality = quality
 
-        refreshScalingMetrics()
-        refreshScalingData(screenEvents.fold(listOf()) { acc, event -> acc + event.conditions })
+        val scaledScreenSize = refreshScalingMetrics()
+        refreshScalingData(scaledScreenSize, screenEvents.toConditionsList())
+
+        return scaledScreenSize
     }
 
-    internal fun refreshScaling(): Boolean {
-        val oldScreenSize = scaledScreenSize
+    internal fun refreshScaling(): Point {
+        val scaledScreenSize = refreshScalingMetrics()
+        refreshScalingData(scaledScreenSize, conditionScalingInfo.values.map { it.imageCondition })
 
-        refreshScalingMetrics()
-        refreshScalingData(conditionScalingInfo.values.map { it.imageCondition })
-
-        return oldScreenSize != scaledScreenSize
+        return scaledScreenSize
     }
 
     internal fun stopScaling() {
         detectionQuality = QUALITY_MAX
 
-        refreshScalingMetrics()
-        conditionScalingInfo.clear()
-    }
-
-    internal fun stop() {
-        detectionQuality = QUALITY_MAX
-        scalingRatio = 1.0
-        scaledScreenSize.x = 0
-        scaledScreenSize.y = 0
+        val scaledScreenSize = refreshScalingMetrics()
+        refreshScalingData(scaledScreenSize, emptyList())
     }
 
     internal fun getImageConditionScalingInfo(imageCondition: ImageCondition): ImageConditionScalingInfo? =
@@ -81,7 +67,8 @@ class ScalingManager @Inject constructor(
     internal fun scaleUpDetectionResult(result: Point): Point =
         result.scaleUp()
 
-    private fun refreshScalingMetrics() {
+
+    private fun refreshScalingMetrics(): Point {
         val displaySize: Point = displayConfigManager.displayConfig.sizePx
         val biggestScreenSideSize: Int = max(displaySize.x, displaySize.y)
 
@@ -89,13 +76,15 @@ class ScalingManager @Inject constructor(
             if (biggestScreenSideSize <= detectionQuality) 1.0
             else detectionQuality / biggestScreenSideSize
 
-        scaledScreenSize = displaySize.scaleDown()
+        val scaledScreenSize = displaySize.scaleDown()
 
         Log.i(TAG, "Scaling metrics refreshed: ratio=$scalingRatio, screenSize=$displaySize, " +
                 "scaledScreenSize=$scaledScreenSize")
+
+        return scaledScreenSize
     }
 
-    private fun refreshScalingData(imageConditions: List<ImageCondition>) {
+    private fun refreshScalingData(scaledScreenSize: Point, imageConditions: List<ImageCondition>) {
         conditionScalingInfo.clear()
 
         imageConditions.forEach { imageCondition ->
@@ -123,6 +112,8 @@ class ScalingManager @Inject constructor(
             else -> throw IllegalArgumentException("Unexpected detection type")
         }
 
+    private fun List<ImageEvent>.toConditionsList(): List<ImageCondition> =
+        fold(listOf()) { acc, event -> acc + event.conditions }
 
     private fun Point.scaleDown(): Point = scale(scalingRatio)
     private fun Point.scaleUp(): Point = scale(scalingRatio.inverseScalingRatio())

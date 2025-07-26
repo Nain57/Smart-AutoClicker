@@ -133,7 +133,6 @@ class DetectorEngine @Inject constructor(
 
         this.androidExecutor = androidExecutor
         processingScope = CoroutineScope(ioDispatcher)
-        scalingManager.init()
 
         displayConfigManager.addOrientationListener(screenOrientationListener)
 
@@ -144,7 +143,7 @@ class DetectorEngine @Inject constructor(
                     this@DetectorEngine.stopScreenRecord()
                     onRecordingStopped?.invoke()
                 }
-                startScreenRecord(scalingManager.scaledScreenSize)
+                startScreenRecord(displayConfigManager.displayConfig.sizePx)
             }
 
             _state.emit(DetectorState.RECORDING)
@@ -188,13 +187,15 @@ class DetectorEngine @Inject constructor(
         processingScope?.launchProcessingJob {
             // Clear image cache and compute scaling info for detection
             bitmapRepository.clearCache()
-            scalingManager.startScaling(
-                quality = scenario.detectionQuality.toDouble(),
-                screenEvents = imageEvents,
-            )
+
 
             // Set the display projection to the scaled size
-            displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
+            displayRecorder.resizeDisplay(
+                displaySize = scalingManager.startScaling(
+                    quality = scenario.detectionQuality.toDouble(),
+                    screenEvents = imageEvents,
+                )
+            )
 
             // Setup native detector
             imageDetector = detector
@@ -239,9 +240,10 @@ class DetectorEngine @Inject constructor(
                 detectionProgressListener?.onImageEventProcessingCancelled()
             }
 
-            if (scalingManager.refreshScaling()) {
-                displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
-            }
+
+            displayRecorder.resizeDisplay(
+                displaySize = scalingManager.refreshScaling(),
+            )
 
             if (_state.value == DetectorState.DETECTING) {
                 processingScope?.launchProcessingJob {
@@ -278,7 +280,7 @@ class DetectorEngine @Inject constructor(
             detectionProgressListener = null
 
             scalingManager.stopScaling()
-            displayRecorder.resizeDisplay(scalingManager.scaledScreenSize)
+            displayRecorder.resizeDisplay(displayConfigManager.displayConfig.sizePx)
 
             _state.emit(DetectorState.RECORDING)
             processingShutdownJob = null
@@ -308,7 +310,6 @@ class DetectorEngine @Inject constructor(
             processingShutdownJob?.join()
 
             displayConfigManager.removeOrientationListener(screenOrientationListener)
-            scalingManager.stop()
             displayRecorder.stopProjection()
             androidExecutor = null
             _state.emit(DetectorState.CREATED)
