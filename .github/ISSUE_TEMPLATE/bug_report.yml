@@ -61,10 +61,9 @@ body:
     attributes:
       label: Describe what happened?
       description: |
-        Describe precise steps to reproduce the issue. You can also attach screenshots/video showing how to reproduce it. \
+        Describe precise steps to reproduce the issue with bullet points. You must also attach screenshots/video showing how to reproduce it. \
         If your issue is about the behaviour of a condition/action/event, attach a scenario backup zip file with the minimal \
-        elements to reproduce the bug. Do not provide your full scenario with all your events, I won't be able to \
-        understand what is wrong. If your issue is about backup, always provide the complete problematic backup zip file with the bug.
+        elements to reproduce the bug.
       placeholder: Tell us what's wrong!
     validations:
       required: true
@@ -77,3 +76,29 @@ body:
       placeholder: Tell us own you think the application should have reacted
     validations:
       required: true
+
+  - type: checkboxes
+    id: duplicate
+    attributes:
+      label: Is it a duplicate?
+      description: |
+        I have checked if this bug was not already requested in another ticket. \
+        [List of all features requests](https://github.com/Nain57/Smart-AutoClicker/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
+        
+      options:
+        - label: There is no duplicates
+          required: true
+
+  - type: checkboxes
+    id: attachements
+    attributes:
+      label: Did you provide enough information?
+      description: |
+        In order for the developpers to find the issue, must provide as much data as possible., and always attach screenshots/video of the bug. \
+        If you think there is a bug in the scenario execution, you must always provide a minimal scenario to reproduce it, not your complete 100 events 1K conditions scenario. \
+        If you think there is a bug with a scenario backup import, you must always provide the problematic scenario zip file. \
+        Any ticket with not enough information will be automatically closed.
+        
+      options:
+        - label: I have attached the required files
+          required: true
