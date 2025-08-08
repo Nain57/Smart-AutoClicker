@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2024 Kevin Buzeau
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.buzbuz.smartautoclicker.feature.smart.config.ui
 
 import android.content.Context
@@ -25,13 +10,11 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,7 +35,6 @@ import javax.inject.Inject
 class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
-    private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debugRepository: DebuggingRepository,
 ) : ViewModel() {
@@ -66,10 +48,6 @@ class MainMenuModel @Inject constructor(
         )
 
     private var paywallResultJob: Job? = null
-
-    /** Tells if the paywall is currently displayed. */
-    val paywallIsVisible: Flow<Boolean> =
-        revenueRepository.isBillingFlowInProgress
 
     /** The current of the detection. */
     val detectionState: StateFlow<UiState> = detectionRepository.detectionState
@@ -99,18 +77,12 @@ class MainMenuModel @Inject constructor(
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
 
-    /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
-    fun loadAdIfNeeded(context: Context) {
-        revenueRepository.loadAdIfNeeded(context)
-    }
-
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context) {
         when (detectionState.value) {
             UiState.Detecting -> stopDetection()
             UiState.Idle -> {
-                if (revenueRepository.userBillingState.value.isAdRequested()) startPaywall(context)
-                else startDetection(context)
+                startDetection(context)
             }
         }
     }
@@ -123,26 +95,11 @@ class MainMenuModel @Inject constructor(
         return true
     }
 
-    private fun startPaywall(context: Context) {
-        revenueRepository.startPaywallUiFlow(context)
-
-        paywallResultJob = combine(revenueRepository.isBillingFlowInProgress, revenueRepository.userBillingState) { inProgress, state ->
-            if (inProgress) return@combine
-
-            Log.d(TAG, "onPaywall finished")
-
-            if (!state.isAdRequested()) startDetection(context)
-            paywallResultJob?.cancel()
-            paywallResultJob = null
-        }.launchIn(viewModelScope)
-    }
-
     private fun startDetection(context: Context) {
         viewModelScope.launch {
             detectionRepository.startDetection(
                 context,
                 debugRepository.getDebugDetectionListenerIfNeeded(context),
-                revenueRepository.consumeTrial(),
             )
         }
     }
@@ -192,8 +149,6 @@ class MainMenuModel @Inject constructor(
     fun shouldRestartMediaProjection(): Boolean =
         !isMediaProjectionStarted.value
 
-    private fun UserBillingState.isAdRequested(): Boolean =
-        this == UserBillingState.AD_REQUESTED
 }
 
 sealed class UiState {

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2024 Kevin Buzeau
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.buzbuz.smartautoclicker.scenarios.viewmodel
 
 import android.Manifest
@@ -38,8 +23,6 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAcces
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.localservice.ILocalService
 import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
 
@@ -54,7 +37,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val revenueRepository: IRevenueRepository,
     private val qualityRepository: QualityRepository,
     private val permissionController: PermissionsController,
     private val settingsRepository: SettingsRepository,
@@ -74,9 +56,6 @@ class ScenarioViewModel @Inject constructor(
     /** The Android notification manager. Initialized only if needed.*/
     private val notificationManager: NotificationManager?
 
-    val userConsentState: StateFlow<UserConsentState> = revenueRepository.userConsentState
-        .stateIn(viewModelScope, SharingStarted.Eagerly, UserConsentState.UNKNOWN)
-
     init {
         LocalServiceProvider.getLocalService(serviceConnection)
 
@@ -93,15 +72,6 @@ class ScenarioViewModel @Inject constructor(
 
     fun isEntireScreenCaptureForced(): Boolean =
         settingsRepository.isEntireScreenCaptureForced()
-
-    fun requestUserConsentIfNeeded(activity: Activity) {
-        revenueRepository.refreshPurchases()
-        revenueRepository.startUserConsentRequestUiFlowIfNeeded(activity)
-    }
-
-    fun refreshPurchaseState() {
-        revenueRepository.refreshPurchases()
-    }
 
     fun startPermissionFlowIfNeeded(activity: AppCompatActivity, onAllGranted: () -> Unit) {
         permissionController.startPermissionsUiFlow(

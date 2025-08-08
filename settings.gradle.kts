@@ -23,7 +23,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Klick'r"
+rootProject.name = "Auto Cliker"
 
 include(":core:common:android")
 include(":core:common:base")
@@ -39,13 +39,10 @@ include(":core:smart:database")
 include(":core:smart:detection")
 include(":core:smart:domain")
 include(":core:smart:processing")
-
 include(":feature:backup")
 include(":feature:dumb-config")
 include(":feature:notifications")
 include(":feature:quick-settings-tile")
-include(":feature:revenue")
-include(":feature:review")
 include(":feature:smart-config")
 include(":feature:smart-debugging")
 

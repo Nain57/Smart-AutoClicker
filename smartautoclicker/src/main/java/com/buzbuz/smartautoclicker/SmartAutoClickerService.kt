@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2024 Kevin Buzeau
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
@@ -45,8 +30,6 @@ import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.localservice.LocalService
 import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
@@ -86,11 +69,9 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var qualityRepository: QualityRepository
     @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
     @Inject lateinit var settingsRepository: SettingsRepository
-    @Inject lateinit var revenueRepository: IRevenueRepository
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
     @Inject lateinit var userNotificationsController: UserNotificationsController
-    @Inject lateinit var reviewRepository: ReviewRepository
     @Inject lateinit var appComponentsProvider: AppComponentsProvider
 
     private var serviceActionExecutor: ServiceActionExecutor? = null
@@ -124,7 +105,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
                 detectionRepository = detectionRepository,
                 dumbEngine = dumbEngine,
                 debugRepository = debugRepository,
-                revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
                 androidExecutor = this,
                 onStart = ::onLocalServiceStarted,
@@ -146,7 +126,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     }
 
     private fun onLocalServiceStarted(scenarioId: Long, isSmart: Boolean, serviceNotification: Notification?) {
-        reviewRepository.onUserSessionStarted()
         qualityMetricsMonitor.onServiceForegroundStart()
         serviceActionExecutor?.reset()
 
@@ -161,16 +140,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
     private fun onLocalServiceStopped() {
         qualityMetricsMonitor.onServiceForegroundEnd()
-        reviewRepository.onUserSessionStopped()
-
-        if (reviewRepository.isUserCandidateForReview()) {
-            Log.i(TAG, "User is candidate for review, ")
-
-            reviewRepository.getReviewActivityIntent(this)?.let { intent ->
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-            }
-        }
 
         requestFilterKeyEvents(false)
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -221,9 +190,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         dumbEngine.dump(writer)
         serviceActionExecutor?.dump(writer)
         qualityRepository.dump(writer)
-
-        revenueRepository.dump(writer)
-        reviewRepository.dump(writer)
     }
 
     override fun onInterrupt() { /* Unused */ }

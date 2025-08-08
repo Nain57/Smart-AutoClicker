@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2024 Kevin Buzeau
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.buzbuz.smartautoclicker.settings
 
 import android.os.Bundle
@@ -81,16 +66,6 @@ class SettingsFragment : Fragment() {
             setOnClickListener(viewModel::toggleInputBlockWorkaround)
         }
 
-        viewBinding.fieldPrivacySettings.apply {
-            setTitle(requireContext().getString(R.string.field_privacy))
-            setOnClickListener { viewModel.showPrivacySettings(requireActivity()) }
-        }
-
-        viewBinding.fieldRemoveAds.apply {
-            setTitle(requireContext().getString(R.string.field_remove_ads))
-            setOnClickListener { viewModel.showPurchaseActivity(requireActivity()) }
-        }
-
         viewBinding.fieldTroubleshooting.apply {
             setTitle(requireContext().getString(R.string.field_troubleshooting))
             setOnClickListener { viewModel.showTroubleshootingDialog(requireActivity()) }
@@ -105,8 +80,6 @@ class SettingsFragment : Fragment() {
                 launch { viewModel.isInputWorkaroundEnabled.collect(viewBinding.fieldInputBlockWorkaround::setChecked) }
                 launch { viewModel.shouldShowInputBlockWorkaround.collect(::updateInputBlockWorkaroundVisibility) }
                 launch { viewModel.shouldShowEntireScreenCapture.collect(::updateForceEntireScreenVisibility) }
-                launch { viewModel.shouldShowPrivacySettings.collect(::updatePrivacySettingsVisibility) }
-                launch { viewModel.shouldShowPurchase.collect(::updateRemoveAdsVisibility) }
             }
         }
     }

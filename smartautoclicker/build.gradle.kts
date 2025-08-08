@@ -114,12 +114,9 @@ dependencies {
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
-
     implementation(project(":feature:backup"))
     implementation(project(":feature:notifications"))
     implementation(project(":feature:quick-settings-tile"))
-    implementation(project(":feature:revenue"))
-    implementation(project(":feature:review"))
     implementation(project(":feature:smart-config"))
     implementation(project(":feature:smart-debugging"))
     implementation(project(":feature:dumb-config"))

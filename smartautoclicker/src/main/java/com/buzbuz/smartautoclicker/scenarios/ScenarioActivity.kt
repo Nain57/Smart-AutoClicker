@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.scenarios.viewmodel.ScenarioViewModel
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -65,7 +64,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         setContentView(R.layout.activity_scenario)
 
         scenarioViewModel.stopScenario()
-        scenarioViewModel.requestUserConsentIfNeeded(this)
 
         projectionActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode != RESULT_OK) {
@@ -76,16 +74,10 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
                 }
             }
         }
-
-        // Splash screen is dismissed on first frame drawn, delay it until we have a user consent status
-        findViewById<View>(android.R.id.content).delayDrawUntil {
-            scenarioViewModel.userConsentState.value != UserConsentState.UNKNOWN
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        scenarioViewModel.refreshPurchaseState()
     }
 
     override fun startScenario(item: ScenarioListUiState.Item.ScenarioItem) {
