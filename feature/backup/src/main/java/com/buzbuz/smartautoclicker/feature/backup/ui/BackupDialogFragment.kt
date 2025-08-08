@@ -38,29 +38,22 @@ class BackupDialogFragment : DialogFragment() {
         private const val FRAGMENT_ARG_KEY_IS_IMPORT = ":backup:fragment_args_key_is_import"
         /** Key for this fragment argument. Contains the list of scenario identifier to export (LongArray). */
         private const val FRAGMENT_ARG_KEY_SCENARIO_LIST = ":backup:fragment_args_key_scenario_list"
-        /** Key for this fragment argument. Contains the list of dumb scenario identifier to export (LongArray). */
-        private const val FRAGMENT_ARG_KEY_DUMB_SCENARIO_LIST = ":backup:fragment_args_key_dumb_scenario_list"
 
         /**
          * Creates a new instance of this fragment.
          * @param isImport true for an import, false for an export.
          * @param exportSmartScenarios the list of scenario identifier to be exported. Ignored for import.
-         * @param exportDumbScenarios the list of dumb scenario identifier to be exported. Ignored for import.
          * @return the new fragment.
          */
         fun newInstance(
             isImport: Boolean,
             exportSmartScenarios: Collection<Long>? = null,
-            exportDumbScenarios: Collection<Long>? = null,
         ) : BackupDialogFragment {
             return BackupDialogFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(FRAGMENT_ARG_KEY_IS_IMPORT, isImport)
                     exportSmartScenarios?.let {
                         putLongArray(FRAGMENT_ARG_KEY_SCENARIO_LIST, it.toLongArray())
-                    }
-                    exportDumbScenarios?.let {
-                        putLongArray(FRAGMENT_ARG_KEY_DUMB_SCENARIO_LIST, it.toLongArray())
                     }
                 }
             }
@@ -80,10 +73,6 @@ class BackupDialogFragment : DialogFragment() {
     private val exportSmartScenarios: List<Long> by lazy {
         arguments?.getLongArray(FRAGMENT_ARG_KEY_SCENARIO_LIST)?.toList() ?: emptyList()
     }
-    /** Fragment argument, export only. The list of dumb scenario identifier to be exported. */
-    private val exportDumbScenarios: List<Long> by lazy {
-        arguments?.getLongArray(FRAGMENT_ARG_KEY_DUMB_SCENARIO_LIST)?.toList() ?: emptyList()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +82,7 @@ class BackupDialogFragment : DialogFragment() {
         backupActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 result.data?.data?.also { uri ->
-                    backupViewModel.startBackup(requireContext(), uri, isImport, exportDumbScenarios, exportSmartScenarios)
+                    backupViewModel.startBackup(requireContext(), uri, isImport, exportSmartScenarios)
                 }
             }
         }

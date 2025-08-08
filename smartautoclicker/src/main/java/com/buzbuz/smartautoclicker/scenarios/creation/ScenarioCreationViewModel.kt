@@ -12,8 +12,6 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +35,6 @@ import kotlin.math.max
 class ScenarioCreationViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val smartRepository: IRepository,
-    private val dumbRepository: IDumbRepository,
     private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
 
@@ -55,7 +52,6 @@ class ScenarioCreationViewModel @Inject constructor(
         _selectedType
             .map { selected ->
                 ScenarioTypeSelectionState(
-                    dumbItem = ScenarioTypeItem.Dumb,
                     smartItem = ScenarioTypeItem.Smart,
                     selectedItem = selected,
                 )
@@ -64,7 +60,6 @@ class ScenarioCreationViewModel @Inject constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = ScenarioTypeSelectionState(
-                    dumbItem = ScenarioTypeItem.Dumb,
                     smartItem = ScenarioTypeItem.Smart,
                     selectedItem = _selectedType.value
                 )
@@ -92,27 +87,9 @@ class ScenarioCreationViewModel @Inject constructor(
 
         _creationState.value = CreationState.CREATING
         viewModelScope.launch(Dispatchers.IO) {
-            when (_selectedType.value) {
-                ScenarioTypeSelection.DUMB -> createDumbScenario()
-                ScenarioTypeSelection.SMART -> createSmartScenario()
-            }
+            createSmartScenario()
             _creationState.value = CreationState.SAVED
         }
-    }
-
-    private suspend fun createDumbScenario() {
-        dumbRepository.addDumbScenario(
-            DumbScenario(
-                id = Identifier(databaseId = DATABASE_ID_INSERTION, tempId = 0L),
-                name = _name.value!!,
-                dumbActions = emptyList(),
-                repeatCount = 1,
-                isRepeatInfinite = false,
-                maxDurationMin = 1,
-                isDurationInfinite = true,
-                randomize = false,
-            )
-        )
     }
 
     private suspend fun createSmartScenario() {
@@ -141,18 +118,11 @@ class ScenarioCreationViewModel @Inject constructor(
 
 
 data class ScenarioTypeSelectionState(
-    val dumbItem: ScenarioTypeItem.Dumb,
     val smartItem: ScenarioTypeItem.Smart,
     val selectedItem: ScenarioTypeSelection,
 )
 
 sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descriptionText: Int) {
-
-    data object Dumb: ScenarioTypeItem(
-        titleRes = R.string.item_title_dumb_scenario,
-        iconRes = R.drawable.ic_dumb,
-        descriptionText = R.string.item_desc_dumb_scenario,
-    )
 
     data object Smart: ScenarioTypeItem(
         titleRes = R.string.item_title_smart_scenario,
@@ -161,7 +131,6 @@ sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descripti
     )
 }
 enum class ScenarioTypeSelection {
-    DUMB,
     SMART,
 }
 

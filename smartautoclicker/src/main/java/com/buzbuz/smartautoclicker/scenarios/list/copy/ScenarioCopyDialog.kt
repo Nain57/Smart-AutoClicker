@@ -33,7 +33,7 @@ class ScenarioCopyDialog : DialogFragment() {
         const val FRAGMENT_TAG_COPY_DIALOG = "ScenarioCopyDialog"
         /** Key for this fragment argument. Tells the database identifier of the scenario to copy (Long). */
         private const val FRAGMENT_ARG_KEY_SCENARIO_ID = ":copy:fragment_args_key_scenario_id"
-        /** Key for this fragment argument. Tells if this is a smart scenario or a dumb one. (Boolean). */
+        /** Key for this fragment argument. Tells if this is a smart scenario. (Boolean). */
         private const val FRAGMENT_ARG_KEY_IS_SMART = ":copy:fragment_args_key_is_smart"
         /** Key for this fragment argument. Contains the default name for the copy. (String). */
         private const val FRAGMENT_ARG_KEY_DEFAULT_COPY_NAME = ":copy:fragment_args_key_default_copy_name"
@@ -41,7 +41,7 @@ class ScenarioCopyDialog : DialogFragment() {
         /**
          * Creates a new instance of this fragment.
          * @param scenarioId database identifier for the scenario to copy.
-         * @param isSmart tells if this is a smart scenario or a dumb one
+         * @param isSmart tells if this is a smart scenario
          * @param defaultName name for the copy, can be null.
          * @return the new fragment.
          */

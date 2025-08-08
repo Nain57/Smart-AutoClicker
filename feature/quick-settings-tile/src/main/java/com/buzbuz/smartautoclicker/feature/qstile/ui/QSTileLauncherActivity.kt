@@ -50,20 +50,7 @@ class QSTileLauncherActivity : AppCompatActivity() {
         }
 
         Log.i(TAG, "Start scenario from tile...")
-        if (isSmartScenario) onCreateSmartScenarioLauncher(scenarioId)
-        else onCreateDumbScenarioLauncher(scenarioId)
-    }
-
-    private fun onCreateDumbScenarioLauncher(scenarioId: Long) {
-        viewModel.startPermissionFlowIfNeeded(
-            activity = this,
-            onMandatoryDenied = ::finish,
-            onAllGranted = {
-                Log.i(TAG, "All permissions are granted, start scenario")
-                viewModel.startDumbScenario(scenarioId)
-                finish()
-            }
-        )
+        onCreateSmartScenarioLauncher(scenarioId)
     }
 
     private fun onCreateSmartScenarioLauncher(scenarioId: Long) {

@@ -14,8 +14,6 @@ import com.buzbuz.smartautoclicker.scenarios.list.model.toggleScenarioSelectionF
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortConfigRepository
 import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
@@ -41,7 +39,6 @@ class ScenarioListViewModel @Inject constructor(
     private val sortConfigRepository: ScenarioSortConfigRepository,
     private val bitmapRepository: BitmapRepository,
     private val smartRepository: IRepository,
-    private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
 
     /** Current state type of the ui. */
@@ -81,7 +78,6 @@ class ScenarioListViewModel @Inject constructor(
     fun setUiState(state: ScenarioListUiState.Type) {
         uiStateType.value = state
         selectedForBackup.value = selectedForBackup.value.copy(
-            dumbSelection = emptySet(),
             smartSelection = emptySet(),
         )
     }
@@ -106,12 +102,6 @@ class ScenarioListViewModel @Inject constructor(
         }
     }
 
-    fun updateDumbVisible(show: Boolean) {
-        viewModelScope.launch {
-            sortConfigRepository.setShowDumb(show)
-        }
-    }
-
     fun updateSmartVisible(show: Boolean) {
         viewModelScope.launch {
             sortConfigRepository.setShowSmart(show)
@@ -123,10 +113,6 @@ class ScenarioListViewModel @Inject constructor(
             filteredScenarioListUseCase.refresh()
         }
     }
-
-    /** @return the list of selected dumb scenario identifiers. */
-    fun getDumbScenariosSelectedForBackup(): Collection<Long> =
-        selectedForBackup.value.dumbSelection.toList()
 
     /** @return the list of selected smart scenario identifiers. */
     fun getSmartScenariosSelectedForBackup(): Collection<Long> =
@@ -161,14 +147,6 @@ class ScenarioListViewModel @Inject constructor(
                             .toggleExpandedSelection(item.getScenarioId())
                     )
                 }
-
-                is ScenarioListUiState.Item.ScenarioItem.Valid.Dumb -> {
-                    oldSelection.copy(
-                        dumbSelection = oldSelection.dumbSelection
-                            .toMutableSet()
-                            .toggleExpandedSelection(item.getScenarioId())
-                    )
-                }
             }
         }
     }
@@ -183,7 +161,6 @@ class ScenarioListViewModel @Inject constructor(
     fun deleteScenario(item: ScenarioListUiState.Item.ScenarioItem) {
         viewModelScope.launch(Dispatchers.IO) {
             when (val scenario = item.scenario) {
-                is DumbScenario -> dumbRepository.deleteDumbScenario(scenario)
                 is Scenario -> smartRepository.deleteScenario(scenario.id)
             }
         }
@@ -218,10 +195,6 @@ class ScenarioListViewModel @Inject constructor(
     ) : List<ScenarioListUiState.Item> = mapNotNull { item ->
         when (item) {
             is ScenarioListUiState.Item.SortItem -> item
-            is ScenarioListUiState.Item.ScenarioItem.Valid.Dumb -> item.copy(
-                showExportCheckbox = true,
-                checkedForExport = backupSelection.dumbSelection.contains(item.scenario.id.databaseId)
-            )
             is ScenarioListUiState.Item.ScenarioItem.Valid.Smart -> item.copy(
                 showExportCheckbox = true,
                 checkedForExport = backupSelection.smartSelection.contains(item.scenario.id.databaseId)
@@ -234,8 +207,6 @@ class ScenarioListViewModel @Inject constructor(
         expanded: ScenarioExpandedSelection,
     ) : List<ScenarioListUiState.Item> = map { item ->
         when (item) {
-            is ScenarioListUiState.Item.ScenarioItem.Valid.Dumb ->
-                item.copy(expanded = expanded.dumbSelection.contains(item.getScenarioId()))
             is ScenarioListUiState.Item.ScenarioItem.Valid.Smart ->
                 item.copy(expanded = expanded.smartSelection.contains(item.getScenarioId()))
             else -> item
@@ -251,6 +222,5 @@ class ScenarioListViewModel @Inject constructor(
 }
 
 data class ScenarioExpandedSelection(
-    val dumbSelection: Set<Long> = mutableSetOf(),
     val smartSelection: Set<Long> = mutableSetOf(),
 )

@@ -11,13 +11,10 @@ import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
 import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationListener
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -27,9 +24,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -39,7 +36,6 @@ class LocalService(
     private val appComponentsProvider: AppComponentsProvider,
     private val settingsRepository: SettingsRepository,
     private val detectionRepository: DetectionRepository,
-    private val dumbEngine: DumbEngine,
     private val debugRepository: DebuggingRepository,
     private val androidExecutor: SmartActionExecutor,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
@@ -76,34 +72,19 @@ class LocalService(
         get() = state.isStarted
 
     init {
-        combine(dumbEngine.isRunning, detectionRepository.detectionState) { dumbIsRunning, smartState ->
-            dumbIsRunning || smartState == DetectionState.DETECTING
-        }.onEach { isRunning ->
-            notificationController.updateNotification(context, isRunning, !overlayManager.isStackHidden())
-        }.launchIn(serviceScope)
+        detectionRepository.detectionState
+            .map { it == DetectionState.DETECTING }   // running ⇔ detecting
+            .distinctUntilChanged()                    // avoid redundant notification updates
+            .onEach { isRunning ->
+                notificationController.updateNotification(context, isRunning, !overlayManager.isStackHidden())
+            }
+            .launchIn(serviceScope)
 
         overlayManager.onVisibilityChangedListener = {
             notificationController.updateNotification(
                 context,
-                dumbEngine.isRunning.value || detectionRepository.isRunning(),
+                detectionRepository.isRunning(),
                 !overlayManager.isStackHidden()
-            )
-        }
-    }
-
-    override fun startDumbScenario(dumbScenario: DumbScenario) {
-        if (state.isStarted) return
-        state = LocalServiceState(isStarted = true, isSmartLoaded = false)
-        onStart(dumbScenario.id.databaseId, false, null)
-
-        startJob = serviceScope.launch {
-            delay(500)
-
-            dumbEngine.init(androidExecutor, dumbScenario)
-
-            overlayManager.navigateTo(
-                context = context,
-                newOverlay = DumbMainMenu(dumbScenario.id) { stop() },
             )
         }
     }
@@ -166,7 +147,6 @@ class LocalService(
             startJob?.join()
             startJob = null
 
-            dumbEngine.release()
             overlayManager.closeAll(context)
             detectionRepository.stopScreenRecord()
 
@@ -188,8 +168,6 @@ class LocalService(
         serviceScope.launch {
             if (state.isSmartLoaded && !detectionRepository.isRunning()) {
                 startSmartScenario()
-            } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {
-                dumbEngine.startDumbScenario()
             }
         }
     }
@@ -197,7 +175,6 @@ class LocalService(
     private fun pause() {
         serviceScope.launch {
             when {
-                dumbEngine.isRunning.value -> dumbEngine.stopDumbScenario()
                 detectionRepository.isRunning() -> detectionRepository.stopDetection()
             }
         }

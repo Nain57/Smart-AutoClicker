@@ -21,8 +21,6 @@ import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
@@ -64,7 +62,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
     @Inject lateinit var detectionRepository: DetectionRepository
-    @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: BitmapRepository
     @Inject lateinit var qualityRepository: QualityRepository
     @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
@@ -85,9 +82,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {
                 override fun isRunning(): Boolean = localServiceProvider.isServiceStarted()
-                override fun startDumbScenario(dumbScenario: DumbScenario) {
-                    localServiceProvider.localServiceInstance?.startDumbScenario(dumbScenario)
-                }
                 override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
                     localServiceProvider.localServiceInstance?.startSmartScenario(resultCode, data, scenario)
                 }
@@ -103,7 +97,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
                 overlayManager = overlayManager,
                 appComponentsProvider = appComponentsProvider,
                 detectionRepository = detectionRepository,
-                dumbEngine = dumbEngine,
                 debugRepository = debugRepository,
                 settingsRepository = settingsRepository,
                 androidExecutor = this,
@@ -187,7 +180,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         bitmapManager.dump(writer)
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
-        dumbEngine.dump(writer)
         serviceActionExecutor?.dump(writer)
         qualityRepository.dump(writer)
     }

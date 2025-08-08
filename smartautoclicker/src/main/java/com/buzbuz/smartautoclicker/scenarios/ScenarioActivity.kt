@@ -32,10 +32,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.scenarios.viewmodel.ScenarioViewModel
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -92,7 +90,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     private fun onMandatoryPermissionsGranted() {
         scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
             when (val scenario = requestedItem?.scenario) {
-                is DumbScenario -> startDumbScenario(scenario)
                 is Scenario -> projectionActivityResult.showMediaProjectionWarning(
                     context = this,
                     forceEntireScreen = scenarioViewModel.isEntireScreenCaptureForced(),
@@ -116,13 +113,6 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
             .setNegativeButton(android.R.string.cancel, null)
             .create()
             .show()
-    }
-
-    private fun startDumbScenario(scenario: DumbScenario) {
-        handleScenarioStartResult(scenarioViewModel.loadDumbScenario(
-            context = this,
-            scenario = scenario,
-        ))
     }
 
     private fun startSmartScenario(result: ActivityResult, scenario: Scenario) {

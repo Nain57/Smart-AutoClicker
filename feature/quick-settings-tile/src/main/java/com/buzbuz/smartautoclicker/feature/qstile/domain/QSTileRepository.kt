@@ -9,9 +9,6 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.feature.qstile.R
 import com.buzbuz.smartautoclicker.feature.qstile.data.QSTileScenarioInfo
@@ -44,8 +41,6 @@ import javax.inject.Singleton
 class QSTileRepository @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val dumbRepository: DumbRepository,
-    private val dumbEngine: DumbEngine,
     private val smartRepository: IRepository,
     private val smartEngine: DetectionRepository,
     private val qsTileConfigDataSource: QsTileConfigDataSource,
@@ -60,7 +55,6 @@ class QSTileRepository @Inject constructor(
         .flatMapLatest { scenarioInfo ->
             scenarioInfo ?: return@flatMapLatest flowOf(context.getTileDisplayInfo(false, null, null, null))
 
-            if (scenarioInfo.isSmart) {
                 combine(smartRepository.getScenarioFlow(scenarioInfo.id), smartEngine.scenarioId) { scenario, runningId ->
                     context.getTileDisplayInfo(
                         isSmart = true,
@@ -69,16 +63,6 @@ class QSTileRepository @Inject constructor(
                         scenarioName = scenario?.name,
                     )
                 }
-            } else {
-                combine(dumbRepository.getDumbScenarioFlow(scenarioInfo.id), dumbEngine.dumbScenario) { scenario, runningScenario ->
-                    context.getTileDisplayInfo(
-                        isSmart = false,
-                        runningId = runningScenario?.getDatabaseId(),
-                        scenarioId = scenario?.id?.databaseId,
-                        scenarioName = scenario?.name,
-                    )
-                }
-            }
         }
 
     internal val qsTileDisplayInfo: StateFlow<QSTileDisplayInfo?> = tileDisplayInfo
@@ -106,9 +90,6 @@ class QSTileRepository @Inject constructor(
 
     internal fun isAccessibilityServiceStarted(): Boolean =
         qsTileActionHandler?.isRunning() ?: false
-
-    internal fun startDumbScenario(scenario: DumbScenario) =
-        qsTileActionHandler?.startDumbScenario(scenario)
 
     internal fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) =
         qsTileActionHandler?.startSmartScenario(resultCode, data, scenario)

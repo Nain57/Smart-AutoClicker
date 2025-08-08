@@ -10,7 +10,6 @@ import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
@@ -30,7 +29,6 @@ class QSTileLauncherViewModel @Inject constructor(
     private val qsTileRepository: QSTileRepository,
     private val permissionController: PermissionsController,
     private val smartRepository: IRepository,
-    private val dumbRepository: DumbRepository,
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
 ) : ViewModel() {
@@ -56,13 +54,6 @@ class QSTileLauncherViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             val scenario = smartRepository.getScenario(scenarioId) ?: return@launch
             qsTileRepository.startSmartScenario(resultCode, data, scenario)
-        }
-    }
-
-    fun startDumbScenario(scenarioId: Long) {
-        viewModelScope.launch(ioDispatcher) {
-            val scenario = dumbRepository.getDumbScenario(scenarioId) ?: return@launch
-            qsTileRepository.startDumbScenario(scenario)
         }
     }
 

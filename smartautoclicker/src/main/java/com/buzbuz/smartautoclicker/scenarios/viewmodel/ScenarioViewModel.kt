@@ -17,7 +17,6 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
@@ -114,16 +113,6 @@ class ScenarioViewModel @Inject constructor(
         }
 
         clickerService?.startSmartScenario(resultCode, data, scenario)
-        return true
-    }
-
-    fun loadDumbScenario(context: Context, scenario: DumbScenario): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val foregroundPermission = PermissionChecker.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE)
-            if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
-        }
-
-        clickerService?.startDumbScenario(scenario)
         return true
     }
 

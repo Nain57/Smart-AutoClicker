@@ -80,7 +80,6 @@ class ScenarioCreationDialog : DialogFragment() {
         viewBinding = DialogScenarioCreationBinding.inflate(layoutInflater).apply {
             layoutTopBar.initTopBar()
             scenarioNameInputLayout.initScenarioNameField()
-            scenarioTypeDumb.initScenarioTypeCard(ScenarioTypeSelection.DUMB)
             scenarioTypeSmart.initScenarioTypeCard(ScenarioTypeSelection.SMART)
         }
 
@@ -126,10 +125,6 @@ class ScenarioCreationDialog : DialogFragment() {
 
     private fun IncludeScenarioTypeViewBinding.initScenarioTypeCard(type: ScenarioTypeSelection) {
         when (type) {
-            ScenarioTypeSelection.DUMB -> {
-                titleScenarioType.setText(R.string.item_title_dumb_scenario)
-                imageScenarioType.setImageResource(R.drawable.ic_dumb)
-            }
             ScenarioTypeSelection.SMART -> {
                 titleScenarioType.setText(R.string.item_title_smart_scenario)
                 imageScenarioType.setImageResource(R.drawable.ic_smart)
@@ -145,14 +140,9 @@ class ScenarioCreationDialog : DialogFragment() {
 
     private fun updateTypeSelection(state: ScenarioTypeSelectionState) {
         viewBinding.apply {
-            scenarioTypeDumb.setState(state.dumbItem, state.selectedItem, ScenarioTypeSelection.DUMB)
             scenarioTypeSmart.setState(state.smartItem, state.selectedItem, ScenarioTypeSelection.SMART)
 
             when (state.selectedItem) {
-                ScenarioTypeSelection.DUMB -> {
-                    scenarioTypeDescription.setText(state.dumbItem.descriptionText)
-                    scenarioTypeDescriptionNotPurchased.visibility = View.GONE
-                }
                 ScenarioTypeSelection.SMART -> {
                     scenarioTypeDescription.setText(state.smartItem.descriptionText)
                     scenarioTypeDescriptionNotPurchased.visibility =  View.GONE

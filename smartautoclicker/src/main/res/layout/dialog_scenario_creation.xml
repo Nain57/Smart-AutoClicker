@@ -41,29 +41,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/scenario_type_dumb"
+                app:layout_constraintBottom_toTopOf="@+id/scenario_type_smart"
                 android:text="@string/section_title_scenario_type_title" />
 
             <include layout="@layout/include_scenario_type_view"
-                android:id="@+id/scenario_type_dumb"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_small"
-                android:layout_marginBottom="@dimen/margin_vertical_large"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                app:layout_constraintTop_toBottomOf="@id/scenario_type_title"
-                app:layout_constraintBottom_toTopOf="@id/scenario_type_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/scenario_type_smart"/>
-
-            <include layout="@layout/include_scenario_type_view"
                 android:id="@+id/scenario_type_smart"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                app:layout_constraintTop_toTopOf="@id/scenario_type_dumb"
-                app:layout_constraintBottom_toBottomOf="@id/scenario_type_dumb"
-                app:layout_constraintStart_toEndOf="@id/scenario_type_dumb"
+                app:layout_constraintBottom_toTopOf="@id/scenario_type_description"
+                app:layout_constraintTop_toBottomOf="@id/scenario_type_title"
+                app:layout_constraintStart_toEndOf="@id/scenario_type_smart"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -76,7 +64,7 @@
                 android:layout_marginTop="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/scenario_type_dumb"
+                app:layout_constraintTop_toBottomOf="@id/scenario_type_smart"
                 app:layout_constraintBottom_toTopOf="@id/scenario_type_description_not_purchased"
                 android:text="@string/item_desc_smart_scenario"/>
 

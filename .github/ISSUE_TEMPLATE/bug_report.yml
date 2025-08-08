@@ -49,7 +49,6 @@ body:
       description: What kind of bug have you encountered ?
       options:
         - Smart scenario
-        - Dumb scenario
         - Backup
         - Other
       default: 0

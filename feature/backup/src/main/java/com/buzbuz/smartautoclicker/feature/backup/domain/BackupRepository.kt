@@ -22,8 +22,6 @@ import android.net.Uri
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
-import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupEngine
 import com.buzbuz.smartautoclicker.feature.backup.data.BackupProgress
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,8 +34,6 @@ import javax.inject.Singleton
 @Singleton
 class BackupRepository @Inject constructor(
     @ApplicationContext context: Context,
-    private val dumbDatabase: DumbDatabase,
-    private val dumbRepository: IDumbRepository,
     private val smartDatabase: ClickDatabase,
     private val smartRepository: IRepository,
 ) {
@@ -51,7 +47,6 @@ class BackupRepository @Inject constructor(
      * Create a backup of the provided scenario into the provided file.
      *
      * @param zipFileUri the uri of the file to write the backup into. Must be retrieved using the DocumentProvider.
-     * @param dumbScenarios the dumb scenarios to backup.
      * @param smartScenarios the smart scenarios to backup.
      * @param screenSize the size of this device screen.
      *
@@ -59,16 +54,12 @@ class BackupRepository @Inject constructor(
      */
     fun createScenarioBackup(
         zipFileUri: Uri,
-        dumbScenarios: List<Long>,
         smartScenarios: List<Long>,
         screenSize: Point,
     ) = channelFlow {
         launch {
             backupEngine.createBackup(
                 zipFileUri = zipFileUri,
-                dumbScenarios = dumbScenarios.mapNotNull {
-                    dumbDatabase.dumbScenarioDao().getDumbScenariosWithAction(it)
-                },
                 smartScenarios = smartScenarios.mapNotNull {
                     smartDatabase.scenarioDao().getCompleteScenario(it)
                 },
@@ -76,9 +67,9 @@ class BackupRepository @Inject constructor(
                 progress = BackupProgress(
                     onError = { send(Backup.Error) },
                     onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
-                    onCompleted = { dumbs, smarts, failureCount, compatWarning ->
+                    onCompleted = { smarts, failureCount, compatWarning ->
                         send(Backup.Completed(
-                            successCount = dumbs.size + smarts.size,
+                            successCount = smarts.size,
                             failureCount = failureCount,
                             compatWarning = compatWarning,
                         ))
@@ -105,16 +96,8 @@ class BackupRepository @Inject constructor(
                     onError = { send(Backup.Error) },
                     onProgressChanged = { current, max -> send(Backup.Loading(current, max)) },
                     onVerification = { send(Backup.Verification) },
-                    onCompleted = { dumbs, smarts, failureCount, compatWarning ->
+                    onCompleted = { smarts, failureCount, compatWarning ->
                         var totalFailures = failureCount
-
-                        val dumbsSuccess = dumbs.toMutableList()
-                        dumbs.forEach { completeScenario ->
-                            if (dumbRepository.addDumbScenarioCopy(completeScenario) == null) {
-                                dumbsSuccess.remove(completeScenario)
-                                totalFailures++
-                            }
-                        }
 
                         val smartsSuccess = smarts.toMutableList()
                         smarts.forEach { completeScenario ->
@@ -125,7 +108,7 @@ class BackupRepository @Inject constructor(
                         }
 
                         send(Backup.Completed(
-                            successCount = dumbsSuccess.size + smartsSuccess.size,
+                            successCount = smartsSuccess.size,
                             failureCount = totalFailures,
                             compatWarning = compatWarning,
                         ))

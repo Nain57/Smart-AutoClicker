@@ -82,7 +82,6 @@ class ScenarioListFragment : Fragment() {
             expandCollapseListener = scenarioListViewModel::expandCollapseItem,
             onSortTypeClicked = scenarioListViewModel::updateSortType,
             onSmartChipClicked = scenarioListViewModel::updateSmartVisible,
-            onDumbChipClicked = scenarioListViewModel::updateDumbVisible,
             onSortOrderClicked = scenarioListViewModel::updateSortOrder,
         )
     }
@@ -126,7 +125,6 @@ class ScenarioListFragment : Fragment() {
                 uiState.type == ScenarioListUiState.Type.EXPORT -> showBackupDialog(
                     isImport = false,
                     smartScenariosToBackup = scenarioListViewModel.getSmartScenariosSelectedForBackup(),
-                    dumbScenariosToBackup = scenarioListViewModel.getDumbScenariosSelectedForBackup(),
                 )
                 else -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.EXPORT)
             }
@@ -291,16 +289,14 @@ class ScenarioListFragment : Fragment() {
      *
      * @param isImport true to display in import mode, false for export.
      * @param smartScenariosToBackup the list of identifiers for the smart scenarios to export. Null if isImport = true.
-     * @param dumbScenariosToBackup the list of identifiers for the dumb scenarios to export. Null if isImport = true.
      *
      */
     private fun showBackupDialog(
         isImport: Boolean,
         smartScenariosToBackup: Collection<Long>? = null,
-        dumbScenariosToBackup: Collection<Long>? = null,
     ) {
         BackupDialogFragment
-            .newInstance(isImport, smartScenariosToBackup, dumbScenariosToBackup)
+            .newInstance(isImport, smartScenariosToBackup)
             .show(requireActivity().supportFragmentManager, FRAGMENT_TAG_BACKUP_DIALOG)
         scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
     }
