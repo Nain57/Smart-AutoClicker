@@ -25,7 +25,6 @@
       -->
     <string name="dialog_overlay_title_warning">Warning</string>
     <string name="dialog_overlay_title_copy_from">Copy from</string>
-    <string name="dialog_title_tutorial">Tutorial</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -48,9 +47,6 @@
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_tutorial_volume_down_stop">If your scenario is clicking too quickly, it can
-        block you from using Klick\'r menu to stop it.\n\nIn that case, you can press the
-        physical \"Volume Down\" button of your device to stop the running scenario.</string>
     <string name="message_dont_show_again">Don\'t show this message again</string>
 
 

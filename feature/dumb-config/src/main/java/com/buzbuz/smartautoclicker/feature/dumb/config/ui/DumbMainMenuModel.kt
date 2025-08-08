@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +34,6 @@ import javax.inject.Inject
 class DumbMainMenuModel @Inject constructor(
     private val dumbEditionRepository: DumbEditionRepository,
     private val dumbEngine: DumbEngine,
-    private val tutorialRepository: TutorialRepository,
 ) : ViewModel() {
 
     val canPlay: Flow<Boolean> =
@@ -82,10 +80,4 @@ class DumbMainMenuModel @Inject constructor(
         }
         return true
     }
-
-    fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        !isPlaying.value && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
-
-    fun setStopWithVolumeDownDontShowAgain(): Unit =
-        tutorialRepository.setStopWithVolumeDownDontShowAgain()
 }

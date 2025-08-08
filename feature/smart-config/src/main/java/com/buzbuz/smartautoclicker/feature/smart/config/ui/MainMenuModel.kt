@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -53,7 +52,6 @@ import javax.inject.Inject
 class MainMenuModel @Inject constructor(
     private val detectionRepository: DetectionRepository,
     private val editionRepository: EditionRepository,
-    private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debugRepository: DebuggingRepository,
@@ -193,12 +191,6 @@ class MainMenuModel @Inject constructor(
 
     fun shouldRestartMediaProjection(): Boolean =
         !isMediaProjectionStarted.value
-
-    fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        detectionState.value == UiState.Idle && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
-
-    fun setStopWithVolumeDownDontShowAgain(): Unit =
-        tutorialRepository.setStopWithVolumeDownDontShowAgain()
 
     private fun UserBillingState.isAdRequested(): Boolean =
         this == UserBillingState.AD_REQUESTED

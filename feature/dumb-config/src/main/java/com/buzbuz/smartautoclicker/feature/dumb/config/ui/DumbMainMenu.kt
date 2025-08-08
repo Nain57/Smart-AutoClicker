@@ -35,7 +35,6 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMa
 import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioDialog
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
 import kotlinx.coroutines.launch
 
@@ -160,11 +159,6 @@ class DumbMainMenu(
     }
 
     private fun onPlayPauseClicked() {
-        if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
-            showStopVolumeDownTutorialDialog()
-            return
-        }
-
         viewModel.toggleScenarioPlay()
     }
 
@@ -191,15 +185,5 @@ class DumbMainMenu(
                 hideCurrent = true,
             )
         }
-    }
-
-    private fun showStopVolumeDownTutorialDialog() {
-        context.createStopWithVolumeDownTutorialDialog(
-            theme = R.style.AppTheme,
-            onDismissed = { showAgain ->
-                if (!showAgain) viewModel.setStopWithVolumeDownDontShowAgain()
-                viewModel.toggleScenarioPlay()
-            }
-        ).showAsOverlay()
     }
 }

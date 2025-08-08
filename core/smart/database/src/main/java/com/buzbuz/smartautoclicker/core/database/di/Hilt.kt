@@ -20,7 +20,6 @@ import android.content.Context
 import androidx.room.Room
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration10to11
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration12to13
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration1to2
@@ -58,20 +57,6 @@ internal object SmartDatabaseModule {
             Migration5to6,
             Migration6to7,
             Migration9to10,
-            Migration10to11,
-            Migration12to13,
-        ).build()
-
-    @Provides
-    @Singleton
-    fun providesTutorialDatabase(
-        @ApplicationContext context: Context,
-    ): TutorialDatabase =
-        Room.databaseBuilder(
-            context.applicationContext,
-            TutorialDatabase::class.java,
-            "tutorial_database",
-        ).addMigrations(
             Migration10to11,
             Migration12to13,
         ).build()

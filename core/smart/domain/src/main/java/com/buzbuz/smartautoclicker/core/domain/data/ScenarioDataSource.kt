@@ -25,7 +25,6 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
@@ -73,7 +72,6 @@ import javax.inject.Singleton
 @Singleton
 internal class ScenarioDataSource @Inject constructor(
     private val normalDatabase: ClickDatabase,
-    private val tutorialDatabase: TutorialDatabase,
 ) {
 
     /** The database currently in use. */
@@ -91,9 +89,6 @@ internal class ScenarioDataSource @Inject constructor(
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
 
-    val isTutorialModeEnabled: Flow<Boolean> =
-        currentDatabase.map { it == tutorialDatabase }
-
     val scenarios: Flow<List<ScenarioWithEvents>> =
         scenarioDaoFlow.flatMapLatest { it.getScenariosWithEvents() }
 
@@ -103,18 +98,9 @@ internal class ScenarioDataSource @Inject constructor(
     val allImageEvents: Flow<List<CompleteEventEntity>> =
         eventDaoFlow.flatMapLatest { it.getAllImageEventsFlow() }
 
-
-    fun useTutorialDatabase() {
-        currentDatabase.value = tutorialDatabase
-    }
-
     fun useNormalDatabase() {
         currentDatabase.value = normalDatabase
     }
-
-    fun isUsingTutorialDatabase(): Boolean =
-        currentDatabase.value == tutorialDatabase
-
 
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
         currentDatabase.value.scenarioDao().getScenario(scenarioId)
@@ -246,21 +232,18 @@ internal class ScenarioDataSource @Inject constructor(
         }
     }
 
-    suspend fun getLegacyImageConditions(forTutorial: Boolean): List<ConditionEntity> =
-        if (forTutorial) tutorialDatabase.conditionDao().getLegacyImageConditions()
-        else normalDatabase.conditionDao().getLegacyImageConditions()
+    suspend fun getLegacyImageConditions(): List<ConditionEntity> =
+        normalDatabase.conditionDao().getLegacyImageConditions()
 
     fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>> =
-        combine(
-            normalDatabase.conditionDao().getLegacyImageConditionsFlow(),
-            tutorialDatabase.conditionDao().getLegacyImageConditionsFlow(),
-        ) { normalLegacy, tutorialLegacy -> normalLegacy + tutorialLegacy }
+        normalDatabase
+            .conditionDao()
+            .getLegacyImageConditionsFlow()
 
-    suspend fun updateLegacyImageCondition(condition: ConditionEntity, newPath: String, forTutorial: Boolean) {
+    suspend fun updateLegacyImageCondition(condition: ConditionEntity, newPath: String) {
         val updatedCondition = condition.copy(path = newPath)
 
-        if (forTutorial) tutorialDatabase.conditionDao().updateCondition(updatedCondition)
-        else normalDatabase.conditionDao().updateCondition(updatedCondition)
+        normalDatabase.conditionDao().updateCondition(updatedCondition)
     }
 
     private suspend fun updateEvents(

@@ -34,9 +34,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface IRepository {
 
-    /** Tells if we are using the tutorial data or not. */
-    val isTutorialModeEnabled: Flow<Boolean>
-
     /** The list of scenarios. */
     val scenarios: Flow<List<Scenario>>
     /** All image events from all scenarios.  */
@@ -158,11 +155,4 @@ interface IRepository {
      */
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
 
-    fun startTutorialMode()
-
-    fun stopTutorialMode()
-
-    fun isTutorialModeEnabled(): Boolean
-
-    suspend fun migrateLegacyImageConditions(): Boolean
 }

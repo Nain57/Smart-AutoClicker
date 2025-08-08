@@ -40,7 +40,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.DebugModel
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -208,11 +207,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             return
         }
 
-        if (viewModel.shouldShowStopVolumeDownTutorialDialog()) {
-            showStopVolumeDownTutorialDialog()
-            return
-        }
-
         viewModel.toggleDetection(context)
     }
 
@@ -325,16 +319,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
             .create()
             .showAsOverlay()
-    }
-
-    private fun showStopVolumeDownTutorialDialog() {
-        context.createStopWithVolumeDownTutorialDialog(
-            theme = R.style.AppTheme,
-            onDismissed = { showAgain ->
-                if (!showAgain) viewModel.setStopWithVolumeDownDontShowAgain()
-                viewModel.toggleDetection(context)
-            }
-        ).showAsOverlay()
     }
 
     private fun showNativeLibErrorDialogIfNeeded(haveError: Boolean) {

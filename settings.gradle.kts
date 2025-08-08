@@ -48,6 +48,5 @@ include(":feature:revenue")
 include(":feature:review")
 include(":feature:smart-config")
 include(":feature:smart-debugging")
-include(":feature:tutorial")
 
 include(":smartautoclicker")

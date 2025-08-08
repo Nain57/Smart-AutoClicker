@@ -170,7 +170,6 @@
     <string name="warning_dialog_message_condition_delete_associated_action">此条件有一个或多个引用它的操作。删除此条件也会删除关联的操作。\n您确定吗？</string>
     <string name="warning_dialog_message_close_without_saving">您有未保存的修改，您想放弃它们吗？</string>
 
-    <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
     <string name="error_dialog_message_scenario_saving">由于内部错误，您的方案无法保存。您要修改还是取消所有修改？</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r 安装错误，无法启动检测。\n\n如果您是从合法的应用程序商店安装的，请在 GitHub 上联系我们，这将有助于我们修复此问题。</string>
 
@@ -181,7 +180,6 @@
     <string name="field_title_condition_threshold">容差</string>
     <string name="field_scenario_quality_title">检测分辨率</string>
     <string name="field_intent_extra_value_title">参数值</string>
-    <string name="field_tutorial_title">教程</string>
 
     <!--
       - List header.

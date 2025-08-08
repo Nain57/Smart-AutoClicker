@@ -67,7 +67,6 @@ class ImageConditionsBriefMenu(
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.conditionBriefList.collect(::updateItemList) }
                 launch { viewModel.conditionVisualization.collect(::updateActionVisualisation) }
-                launch { viewModel.isTutorialModeEnabled.collect(::updateTutorialModeState) }
             }
         }
     }
@@ -140,10 +139,6 @@ class ImageConditionsBriefMenu(
 
     private fun updateActionVisualisation(visualization: ItemBriefDescription?) {
         briefViewBinding.viewBrief.setDescription(visualization, true)
-    }
-
-    private fun updateTutorialModeState(isTutorialEnabled: Boolean) {
-        setBriefPanelAutoHide(!isTutorialEnabled)
     }
 
     private fun showTryConditionOverlay() {

@@ -25,7 +25,6 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
-import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -137,7 +136,7 @@ class EditedItemsBuilder internal constructor(
         val id = conditionsIdCreator.generateNewIdentifier()
         val newPath = bitmapRepository.saveImageConditionBitmap(
             bitmap = bitmap,
-            prefix = if (repository.isTutorialModeEnabled()) TUTORIAL_CONDITION_FILE_PREFIX else CONDITION_FILE_PREFIX,
+            prefix = CONDITION_FILE_PREFIX,
         )
         _newImageConditionsPaths.add(newPath)
 

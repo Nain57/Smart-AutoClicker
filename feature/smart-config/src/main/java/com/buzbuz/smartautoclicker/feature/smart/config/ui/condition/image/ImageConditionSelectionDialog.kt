@@ -50,7 +50,6 @@ class ImageConditionSelectionDialog(
     private val onConditionSelected: (ImageCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
-    /** Monitors views for the tutorial. */
     private val monitoredViewsManager: MonitoredViewsManager by lazy {
         EntryPoints.get(context.applicationContext, UiEntryPoint::class.java).monitoredViewManager()
     }

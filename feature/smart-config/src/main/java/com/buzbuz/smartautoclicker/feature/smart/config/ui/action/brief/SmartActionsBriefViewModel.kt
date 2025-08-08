@@ -133,9 +133,6 @@ class SmartActionsBriefViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    val isTutorialModeEnabled: Flow<Boolean> =
-        repository.isTutorialModeEnabled
-
     fun startGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value
             .copy(gestureCaptureStarted = true)

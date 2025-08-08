@@ -42,8 +42,7 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun conditionName(context: Context): String =
         context.getString(R.string.default_condition_name)
     fun conditionThreshold(context: Context): Int =
-        if (isTutorialModeEnabled()) 15
-        else context.resources.getInteger(R.integer.default_condition_threshold)
+        context.resources.getInteger(R.integer.default_condition_threshold)
     fun conditionDetectionType(): Int =
         EXACT
     fun conditionShouldBeDetected(): Boolean =
@@ -52,8 +51,7 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun clickName(context: Context): String =
         context.getString(R.string.default_click_name)
     fun clickPressDuration(context: Context): Long =
-        if (isTutorialModeEnabled()) 1
-        else context.getEventConfigPreferences().getClickPressDurationConfig(context)
+        context.getEventConfigPreferences().getClickPressDurationConfig(context)
     fun clickPositionType(): Click.PositionType =
         Click.PositionType.USER_SELECTED
 
@@ -86,6 +84,4 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
         TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 
-    private fun isTutorialModeEnabled(): Boolean =
-        scenarioRepository.isTutorialModeEnabled()
 }

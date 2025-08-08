@@ -53,9 +53,6 @@ internal class Repository @Inject internal constructor(
     private val bitmapRepository: BitmapRepository,
 ): IRepository {
 
-    override val isTutorialModeEnabled: Flow<Boolean> =
-        dataSource.isTutorialModeEnabled
-
     override val scenarios: Flow<List<Scenario>> =
         dataSource.scenarios.mapList { it.toDomain() }
 
@@ -126,59 +123,6 @@ internal class Repository @Inject internal constructor(
 
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
         dataSource.updateScenario(scenario, events, ::clearRemovedConditionsBitmaps)
-
-    override fun startTutorialMode() {
-        Log.d(TAG, "Start tutorial mode, use tutorial database")
-        dataSource.useTutorialDatabase()
-    }
-
-    override fun stopTutorialMode() {
-        Log.d(TAG, "Stop tutorial mode, use regular database")
-        dataSource.useNormalDatabase()
-    }
-
-    override fun isTutorialModeEnabled(): Boolean =
-        dataSource.isUsingTutorialDatabase()
-
-    override suspend fun migrateLegacyImageConditions(): Boolean {
-        return migrateLegacyImageConditions(false) && migrateLegacyImageConditions(true)
-    }
-
-    private suspend fun migrateLegacyImageConditions(forTutorial: Boolean): Boolean {
-        val legacyConditions = dataSource.getLegacyImageConditions(forTutorial)
-        Log.i(TAG, "Migrating ${legacyConditions.size} image conditions...")
-
-        var success = true
-        val removedPaths = mutableMapOf<String, String>()
-
-        legacyConditions.forEach { conditionEntity ->
-            val oldPath = conditionEntity.path ?: return@forEach
-            if (oldPath.endsWith(FILE_EXTENSION_PNG)) return@forEach
-
-            val newPath =
-                if (removedPaths.containsKey(oldPath)) removedPaths[oldPath]
-                else bitmapRepository.migrateImageConditionBitmap(
-                    path = oldPath,
-                    width = max(0, (conditionEntity.areaRight ?: 0) - (conditionEntity.areaLeft ?: 0)),
-                    height = max(0, (conditionEntity.areaBottom ?: 0) - (conditionEntity.areaTop ?: 0)),
-                )
-
-            if (newPath == null) {
-                success = false
-                Log.w(TAG, "Can't migrate legacy condition ${conditionEntity.id}:${conditionEntity.name}")
-                return@forEach
-            }
-
-            removedPaths[oldPath] = newPath
-            dataSource.updateLegacyImageCondition(
-                condition = conditionEntity,
-                newPath = newPath,
-                forTutorial = forTutorial,
-            )
-        }
-
-        return success
-    }
 
     /**
      * Remove bitmaps from the application data folder.

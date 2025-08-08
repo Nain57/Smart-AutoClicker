@@ -26,7 +26,6 @@ interface AppComponentsProvider {
 
     val klickrServiceComponentName: ComponentName
     val scenarioActivityComponentName: ComponentName
-    val tutorialActivityComponentName: ComponentName
 }
 
 
@@ -44,12 +43,6 @@ class AppComponentsManager @Inject constructor() : AppComponentsProvider {
     private lateinit var _scenarioActivityComponentName: ComponentName
     override val scenarioActivityComponentName: ComponentName
         get() = _scenarioActivityComponentName
-
-    override val tutorialActivityComponentName: ComponentName
-        get() = ComponentName(
-            "com.buzbuz.smartautoclicker",
-            "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity",
-        )
 
     fun registerOriginalAppId(appId: String) {
         _originalAppId = appId

@@ -80,7 +80,5 @@ interface BitmapRepository : Dumpable {
 
 /** The prefix appended to all bitmap file names. */
 const val CONDITION_FILE_PREFIX = "Condition_"
-/** The prefix appended to all bitmap file names. */
-const val TUTORIAL_CONDITION_FILE_PREFIX = "Tutorial_Condition_"
 /** File extension for all image conditions */
 const val CONDITION_FILE_EXTENSION = FILE_EXTENSION_PNG

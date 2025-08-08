@@ -25,7 +25,6 @@
       -->
     <string name="dialog_overlay_title_copy_from">Copier depuis</string>
     <string name="dialog_overlay_title_warning">Avertissement</string>
-    <string name="dialog_title_tutorial">Tutoriel</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -48,9 +47,6 @@
       - Messages.
       - Views handles any length here, so no limitations.
       -->
-    <string name="message_tutorial_volume_down_stop">Si votre scénario clique trop vite, cela peut
-        bloquer l\'écran tactile.\n\nSi cela arrive, vous pouvez appuyer sur le boutton physique
-        \"Volume Moins\" de votre appareil afin d\'arrêter le scenario.</string>
     <string name="message_dont_show_again">Ne plus afficher ce message</string>
 
 

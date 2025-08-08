@@ -60,6 +60,4 @@ class MoreViewModel @Inject constructor(
         debuggingRepository.setDebuggingConfig(_isDebugViewEnabled.value, _isDebugReportEnabled.value)
     }
 
-    fun getTutorialActivityComponent(): ComponentName =
-        appComponentsProvider.tutorialActivityComponentName
 }

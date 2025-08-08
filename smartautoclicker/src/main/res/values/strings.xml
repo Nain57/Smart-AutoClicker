@@ -17,8 +17,8 @@
 -->
 <resources>
 
-    <string name="app_name" translatable="false">Klick\'r</string>
-    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+    <string name="app_name" translatable="false">Auto Click</string>
+    <string name="notification_channel_name" translatable="false">Auto Click</string>
 
     <!-- Application wide texts. -->
     <string name="notification_title">Scenario: %1$s</string>

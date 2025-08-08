@@ -57,7 +57,7 @@ class ConditionsMigrationViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             migrationState.update { MigrationState.STARTED }
 
-            val isSuccess = smartRepository.migrateLegacyImageConditions()
+            val isSuccess = false
             migrationState.update {
                 if (isSuccess) MigrationState.FINISHED
                 else MigrationState.FINISHED_WITH_ERROR

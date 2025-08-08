@@ -130,9 +130,6 @@
     <string name="field_show_debug_report_desc_available">Debug report is available</string>
     <string name="field_show_debug_report_desc_not_available">No debug report available</string>
 
-    <string name="field_tutorial_title">Tutorial</string>
-    <string name="field_tutorial_desc">Learn how to use Klick\'r</string>
-
 
     <!-- Dialog Event ============================================================================================== -->
 
