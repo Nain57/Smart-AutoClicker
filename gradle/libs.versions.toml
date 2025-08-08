@@ -55,6 +55,7 @@ mockk = "1.13.10"
 robolectric = "4.11.1"
 espressoCore = "3.6.1"
 
+mlkit-text = "16.0.0"
 
 [libraries]
 
@@ -64,7 +65,6 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 androidx-room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
 google-firebase-crashlytics-gradlePlugin = { group = "com.google.firebase.crashlytics", name = "com.google.firebase.crashlytics.gradle.plugin", version.ref = "googleFirebaseCrashlyticsGradle" }
 google-gms-gradlePlugin = { group = "com.google.gms.google-services", name = "com.google.gms.google-services.gradle.plugin", version.ref = "googleServices" }
-
 
 # Dependencies used in build-logic. Might seem unused but check in files if that is the case
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -154,3 +154,5 @@ buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecif
 buzbuz-hilt = { id = "com.buzbuz.gradle.android.hilt", version = "unspecified" }
 buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
 buzbuz-sourceDownload = { id = "com.buzbuz.gradle.build.sourcedl", version = "unspecified" }
+
+mlkit-text = { id = "com.google.mlkit:text-recognition", version.ref = "mlkit-text" }

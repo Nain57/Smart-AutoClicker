@@ -60,7 +60,7 @@ android {
     }
 }
 
-// Apply signature convention after declaring the signingConfigs
+// Apply signature convention after declaring the signinxfgConfigs
 apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
 
 // Only apply gms/firebase plugins if we are building for the play store
