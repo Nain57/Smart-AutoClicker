@@ -81,6 +81,13 @@ internal open class CompatDeserializer : Deserializer {
         /** Default pause duration in ms on compat deserialization. */
         const val DEFAULT_PAUSE_DURATION = 50L
 
+        /** Default long-press duration in ms on compat deserialization. */
+        const val DEFAULT_LONG_PRESS_DURATION = 600L
+        /** Default scroll duration in ms on compat deserialization. */
+        const val DEFAULT_SCROLL_DURATION = 350L
+        /** Default scroll distance percent on compat deserialization. */
+        const val DEFAULT_SCROLL_DISTANCE_PERCENT = 0.60f
+
         /** Tag for logs */
         private const val TAG = "DeserializerCompat"
     }
@@ -349,6 +356,22 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.TOGGLE_EVENT -> deserializeActionToggleEvent(jsonAction)
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
+
+            ActionType.LONG_PRESS -> deserializeActionLongPress(jsonAction, eventConditions, conditionsOperator)
+            ActionType.SCROLL -> deserializeActionScroll(jsonAction)
+
+            ActionType.BACK -> deserializeActionSimple(jsonAction, ActionType.BACK)
+            ActionType.HOME -> deserializeActionSimple(jsonAction, ActionType.HOME)
+            ActionType.RECENTS -> deserializeActionSimple(jsonAction, ActionType.RECENTS)
+            ActionType.OPEN_NOTIFICATIONS -> deserializeActionSimple(jsonAction, ActionType.OPEN_NOTIFICATIONS)
+            ActionType.OPEN_QUICK_SETTINGS -> deserializeActionSimple(jsonAction, ActionType.OPEN_QUICK_SETTINGS)
+
+            ActionType.SCREENSHOT -> deserializeActionScreenshot(jsonAction)
+            ActionType.HIDE_KEYBOARD -> deserializeActionHideKeyboard(jsonAction)
+            ActionType.SHOW_KEYBOARD -> deserializeActionShowKeyboard(jsonAction, eventConditions, conditionsOperator)
+            ActionType.TYPE_TEXT -> deserializeActionTypeText(jsonAction)
+            ActionType.KEY_EVENT -> deserializeActionKeyEvent(jsonAction)
+
             null -> null
         }
 
@@ -572,5 +595,244 @@ internal open class CompatDeserializer : Deserializer {
         }
 
         return EventToggleEntity(id, actionId, type, toggleEventId)
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionLongPress(
+        jsonLongPress: JsonObject,
+        eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
+    ): ActionEntity? {
+        val id = jsonLongPress.getLong("id", true) ?: return null
+        val eventId = jsonLongPress.getLong("eventId", true) ?: return null
+
+        val clickPositionType = jsonLongPress.getEnum<ClickPositionType>("clickPositionType", true) ?: return null
+        val isAndConditionsOperator = conditionsOperator == 1
+
+        val (x, y, clickOnConditionId, clickOffsetX, clickOffsetY) =
+            when (clickPositionType) {
+                ClickPositionType.ON_DETECTED_CONDITION -> {
+                    val condId = jsonLongPress.getLong("clickOnConditionId", isAndConditionsOperator)
+                    if (isAndConditionsOperator && (condId == null || !eventConditions.containsId(condId))) {
+                        Log.w(TAG, "Can't deserialize long press, clickOnConditionId is not valid.")
+                        return null
+                    }
+                    val offX = jsonLongPress.getInt("clickOffsetX")
+                    val offY = jsonLongPress.getInt("clickOffsetY")
+                    arrayOf(null, null, condId, offX, offY)
+                }
+                ClickPositionType.USER_SELECTED -> {
+                    val px = jsonLongPress.getInt("x", true) ?: return null
+                    val py = jsonLongPress.getInt("y", true) ?: return null
+                    arrayOf(px, py, null, null, null)
+                }
+            }
+
+        val holdDuration = (jsonLongPress.getLong("holdDuration")
+            ?: jsonLongPress.getLong("pressDuration")  // compat with Click-style field name
+            ?: DEFAULT_LONG_PRESS_DURATION)
+            .coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonLongPress.getString("name") ?: "",
+            priority = jsonLongPress.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.LONG_PRESS,
+            // reuse CLICK columns:
+            clickPositionType = clickPositionType,
+            x = x as Int?,
+            y = y as Int?,
+            clickOnConditionId = clickOnConditionId as Long?,
+            pressDuration = holdDuration,
+            clickOffsetX = clickOffsetX as Int?,
+            clickOffsetY = clickOffsetY as Int?,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionScroll(jsonScroll: JsonObject): ActionEntity? {
+        val id = jsonScroll.getLong("id", true) ?: return null
+        val eventId = jsonScroll.getLong("eventId", true) ?: return null
+
+        val axis = jsonScroll.getString("axis", true)?.uppercase() ?: "DOWN"
+        val distance = jsonScroll.getInt("distancePercent")?.let { it / 100f }
+            ?: jsonScroll.getString("distancePercent")?.toFloatOrNull()
+            ?: DEFAULT_SCROLL_DISTANCE_PERCENT
+        val duration = jsonScroll.getLong("duration")
+            ?.coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
+            ?: DEFAULT_SCROLL_DURATION
+        val stutter = jsonScroll.getBoolean("stutter") ?: true
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonScroll.getString("name") ?: "",
+            priority = jsonScroll.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.SCROLL,
+            scrollAxis = axis,
+            scrollDistancePercent = distance,
+            scrollDuration = duration,
+            scrollStutter = stutter,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionSimple(json: JsonObject, type: ActionType): ActionEntity? {
+        val id = json.getLong("id", true) ?: return null
+        val eventId = json.getLong("eventId", true) ?: return null
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = json.getString("name") ?: "",
+            priority = json.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = type,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionScreenshot(jsonShot: JsonObject): ActionEntity? {
+        val id = jsonShot.getLong("id", true) ?: return null
+        val eventId = jsonShot.getLong("eventId", true) ?: return null
+
+        // Accept either dedicated fields or a generic ROI rect (areaLeft/Top/Right/Bottom)
+        val left = jsonShot.getInt("screenshotLeft")
+            ?: jsonShot.getInt("roiLeft")
+            ?: jsonShot.getInt("areaLeft")
+        val top = jsonShot.getInt("screenshotTop")
+            ?: jsonShot.getInt("roiTop")
+            ?: jsonShot.getInt("areaTop")
+
+        val width: Int?
+        val height: Int?
+
+        val w = jsonShot.getInt("screenshotWidth")
+        val h = jsonShot.getInt("screenshotHeight")
+        if (w != null && h != null) {
+            width = w; height = h
+        } else {
+            // if right/bottom present, compute width/height
+            val right = jsonShot.getInt("screenshotRight") ?: jsonShot.getInt("areaRight")
+            val bottom = jsonShot.getInt("screenshotBottom") ?: jsonShot.getInt("areaBottom")
+            width = if (left != null && right != null) (right - left) else null
+            height = if (top != null && bottom != null) (bottom - top) else null
+        }
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonShot.getString("name") ?: "",
+            priority = jsonShot.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.SCREENSHOT,
+            screenshotLeft = left,
+            screenshotTop = top,
+            screenshotWidth = width,
+            screenshotHeight = height,
+            screenshotPath = jsonShot.getString("screenshotPath"),
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionHideKeyboard(jsonHide: JsonObject): ActionEntity? {
+        val id = jsonHide.getLong("id", true) ?: return null
+        val eventId = jsonHide.getLong("eventId", true) ?: return null
+        val method = (jsonHide.getString("method") ?: "BACK_THEN_TAP_OUTSIDE").uppercase()
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonHide.getString("name") ?: "",
+            priority = jsonHide.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.HIDE_KEYBOARD,
+            hideKeyboardMethod = method,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionShowKeyboard(
+        jsonShow: JsonObject,
+        eventConditions: List<ConditionEntity>,
+        conditionsOperator: Int,
+    ): ActionEntity? {
+        val id = jsonShow.getLong("id", true) ?: return null
+        val eventId = jsonShow.getLong("eventId", true) ?: return null
+
+        val clickPositionType = jsonShow.getEnum<ClickPositionType>("clickPositionType", true) ?: return null
+        val isAndConditionsOperator = conditionsOperator == 1
+
+        val (x, y, clickOnConditionId, clickOffsetX, clickOffsetY) =
+            when (clickPositionType) {
+                ClickPositionType.ON_DETECTED_CONDITION -> {
+                    val condId = jsonShow.getLong("clickOnConditionId", isAndConditionsOperator)
+                    if (isAndConditionsOperator && (condId == null || !eventConditions.containsId(condId))) {
+                        Log.w(TAG, "Can't deserialize show keyboard, clickOnConditionId is not valid.")
+                        return null
+                    }
+                    val offX = jsonShow.getInt("clickOffsetX")
+                    val offY = jsonShow.getInt("clickOffsetY")
+                    arrayOf(null, null, condId, offX, offY)
+                }
+                ClickPositionType.USER_SELECTED -> {
+                    val px = jsonShow.getInt("x", true) ?: return null
+                    val py = jsonShow.getInt("y", true) ?: return null
+                    arrayOf(px, py, null, null, null)
+                }
+            }
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonShow.getString("name") ?: "",
+            priority = jsonShow.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.SHOW_KEYBOARD,
+            // reuse CLICK columns for the focus target:
+            clickPositionType = clickPositionType,
+            x = x as Int?,
+            y = y as Int?,
+            clickOnConditionId = clickOnConditionId as Long?,
+            clickOffsetX = clickOffsetX as Int?,
+            clickOffsetY = clickOffsetY as Int?,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionTypeText(jsonType: JsonObject): ActionEntity? {
+        val id = jsonType.getLong("id", true) ?: return null
+        val eventId = jsonType.getLong("eventId", true) ?: return null
+        val text = jsonType.getString("text", true) ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonType.getString("name") ?: "",
+            priority = jsonType.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.TYPE_TEXT,
+            typeText = text,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionKeyEvent(jsonKeys: JsonObject): ActionEntity? {
+        val id = jsonKeys.getLong("id", true) ?: return null
+        val eventId = jsonKeys.getLong("eventId", true) ?: return null
+
+        // Expect a CSV string, e.g. "66,67,67". (Easiest for compat.)
+        val csv = jsonKeys.getString("keyCodesCsv", true)
+            ?: jsonKeys.getString("keyCodes")            // allow "keyCodes" as raw CSV too
+            ?: return null
+
+        val interval = jsonKeys.getLong("intervalMs")
+            ?: jsonKeys.getLong("keyIntervalMs")
+            ?: 50L
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonKeys.getString("name") ?: "",
+            priority = jsonKeys.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.KEY_EVENT,
+            keyCodesCsv = csv,
+            keyIntervalMs = interval,
+        )
     }
 }

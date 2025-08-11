@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 16,
-    "identityHash": "843811772ec512ec9bf1a2c2a71776fa",
+    "identityHash": "c32cc9b384fd88fe6550860b0e857500",
     "entities": [
       {
         "tableName": "action_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` INTEGER, `counter_operation_counter_name` TEXT, `notification_message_type` TEXT, `notification_message_text` TEXT, `notification_message_counter_name` TEXT, `notification_importance` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` INTEGER, `counter_operation_counter_name` TEXT, `notification_message_type` TEXT, `notification_message_text` TEXT, `notification_message_counter_name` TEXT, `notification_importance` INTEGER, `scroll_axis` TEXT, `scroll_distance_percent` REAL, `scroll_duration` INTEGER, `scroll_stutter` INTEGER, `screenshot_left` INTEGER, `screenshot_top` INTEGER, `screenshot_width` INTEGER, `screenshot_height` INTEGER, `screenshot_path` TEXT, `hide_keyboard_method` TEXT, `type_text` TEXT, `key_codes_csv` TEXT, `key_interval_ms` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -41,176 +41,212 @@
           {
             "fieldPath": "clickPositionType",
             "columnName": "clickPositionType",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "x",
             "columnName": "x",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "y",
             "columnName": "y",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "clickOnConditionId",
             "columnName": "clickOnConditionId",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "pressDuration",
             "columnName": "pressDuration",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "clickOffsetX",
             "columnName": "clickOffsetX",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "clickOffsetY",
             "columnName": "clickOffsetY",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "fromX",
             "columnName": "fromX",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "fromY",
             "columnName": "fromY",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "toX",
             "columnName": "toX",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "toY",
             "columnName": "toY",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "swipeDuration",
             "columnName": "swipeDuration",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "pauseDuration",
             "columnName": "pauseDuration",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isAdvanced",
             "columnName": "isAdvanced",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isBroadcast",
             "columnName": "isBroadcast",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "intentAction",
             "columnName": "intent_action",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "componentName",
             "columnName": "component_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "flags",
             "columnName": "flags",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "toggleAll",
             "columnName": "toggle_all",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "toggleAllType",
             "columnName": "toggle_all_type",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterName",
             "columnName": "counter_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterOperation",
             "columnName": "counter_operation",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterOperationValueType",
             "columnName": "counter_operation_value_type",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterOperationValue",
             "columnName": "counter_operation_value",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "counterOperationCounterName",
             "columnName": "counter_operation_counter_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notificationMessageType",
             "columnName": "notification_message_type",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notificationMessageText",
             "columnName": "notification_message_text",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notificationMessageCounterName",
             "columnName": "notification_message_counter_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notificationImportance",
             "columnName": "notification_importance",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "scrollAxis",
+            "columnName": "scroll_axis",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "scrollDistancePercent",
+            "columnName": "scroll_distance_percent",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "scrollDuration",
+            "columnName": "scroll_duration",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "scrollStutter",
+            "columnName": "scroll_stutter",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenshotLeft",
+            "columnName": "screenshot_left",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenshotTop",
+            "columnName": "screenshot_top",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenshotWidth",
+            "columnName": "screenshot_width",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenshotHeight",
+            "columnName": "screenshot_height",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenshotPath",
+            "columnName": "screenshot_path",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hideKeyboardMethod",
+            "columnName": "hide_keyboard_method",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "typeText",
+            "columnName": "type_text",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "keyCodesCsv",
+            "columnName": "key_codes_csv",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "keyIntervalMs",
+            "columnName": "key_interval_ms",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -314,8 +350,7 @@
           {
             "fieldPath": "keepDetecting",
             "columnName": "keep_detecting",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -384,9 +419,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "condition_table",
@@ -426,122 +459,102 @@
           {
             "fieldPath": "path",
             "columnName": "path",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "areaLeft",
             "columnName": "area_left",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "areaTop",
             "columnName": "area_top",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "areaRight",
             "columnName": "area_right",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "areaBottom",
             "columnName": "area_bottom",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "threshold",
             "columnName": "threshold",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "detectionType",
             "columnName": "detection_type",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "shouldBeDetected",
             "columnName": "shouldBeDetected",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "detectionAreaLeft",
             "columnName": "detection_area_left",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "detectionAreaTop",
             "columnName": "detection_area_top",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "detectionAreaRight",
             "columnName": "detection_area_right",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "detectionAreaBottom",
             "columnName": "detection_area_bottom",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "broadcastAction",
             "columnName": "broadcast_action",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterName",
             "columnName": "counter_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterComparisonOperation",
             "columnName": "counter_comparison_operation",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterOperationValueType",
             "columnName": "counter_operation_value_type",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "counterValue",
             "columnName": "counter_value",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "counterOperationCounterName",
             "columnName": "counter_value_counter_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "timerValueMs",
             "columnName": "timer_value_ms",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "restartWhenReached",
             "columnName": "timer_restart_when_reached",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -782,10 +795,9 @@
         ]
       }
     ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '843811772ec512ec9bf1a2c2a71776fa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c32cc9b384fd88fe6550860b0e857500')"
     ]
   }
 }

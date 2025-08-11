@@ -133,4 +133,30 @@
     <string name="button_condition_migration_running">Migrating</string>
     <string name="button_condition_migration_finished">OK</string>
 
+    <!-- New action names -->
+    <string name="action_long_press">Long press</string>
+    <string name="action_scroll">Scroll</string>
+    <string name="action_screenshot">Screenshot</string>
+    <string name="action_hide_keyboard">Hide keyboard</string>
+    <string name="action_show_keyboard">Show keyboard</string>
+    <string name="action_type_text">Type text</string>
+
+    <!-- Editor labels -->
+    <string name="label_hold_ms">Hold (ms)</string>
+    <string name="label_axis">Axis</string>
+    <string name="label_distance_percent">Distance (%)</string>
+    <string name="label_duration_ms">Duration (ms)</string>
+    <string name="label_stutter">Human stutter</string>
+    <string name="label_roi_left">ROI left</string>
+    <string name="label_roi_top">ROI top</string>
+    <string name="label_roi_width">ROI width</string>
+    <string name="label_roi_height">ROI height</string>
+    <string name="label_save_path">Save path</string>
+    <string name="label_method">Method</string>
+    <string name="label_text">Text</string>
+    <string name="label_pick_target">Pick target</string>
+    <string name="label_position_type">Position type</string>
+    <string name="label_on_detected_condition">On detected condition</string>
+    <string name="label_user_selected">User selected</string>
+
 </resources>

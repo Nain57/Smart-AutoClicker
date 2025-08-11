@@ -21,7 +21,7 @@
         tools:ignore="DataExtractionRules">
 
         <activity
-            android:name="${scenarioActivity}"
+            android:name="com.buzbuz.smartautoclicker.scenarios.ScenarioActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

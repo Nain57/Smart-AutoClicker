@@ -1,0 +1,12 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <include layout="@layout/include_field_text_input"
+        android:id="@+id/field_name" />
+
+    <include layout="@layout/include_field_selector"
+        android:id="@+id/field_position_type" />
+
+    <include layout="@layout/include_field_selector"
+        android:id="@+id/field_target_condition" />
+</LinearLayout>

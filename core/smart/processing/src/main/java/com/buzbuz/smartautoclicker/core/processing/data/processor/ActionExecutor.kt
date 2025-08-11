@@ -35,6 +35,38 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
+import android.graphics.Rect
+import android.os.Build
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Axis
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Back
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.HideKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.HideMethod
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Home
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.KeyEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.LongPress
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.OpenNotifications
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.OpenQuickSettings
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Recents
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Screenshot
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Scroll
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ShowKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.TypeText
+
+//import com.buzbuz.smartautoclicker.core.domain.model.action.LongPress
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Scroll
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Back
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Home
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Recents
+//import com.buzbuz.smartautoclicker.core.domain.model.action.OpenNotifications
+//import com.buzbuz.smartautoclicker.core.domain.model.action.OpenQuickSettings
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Screenshot
+//import com.buzbuz.smartautoclicker.core.domain.model.action.HideKeyboard
+//import com.buzbuz.smartautoclicker.core.domain.model.action.ShowKeyboard
+//import com.buzbuz.smartautoclicker.core.domain.model.action.TypeText
+//import com.buzbuz.smartautoclicker.core.domain.model.action.KeyEvent
+//import com.buzbuz.smartautoclicker.core.domain.model.action.Axis
+//import com.buzbuz.smartautoclicker.core.domain.model.action.HideMethod
+
 /**
  * Execute the actions of an event.
  *
@@ -80,6 +112,19 @@ internal class ActionExecutor(
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
                 is Notification -> executeNotification(event, action)
+
+                is LongPress -> executeLongPress(event, action, results)
+                is Scroll -> executeScroll(action)
+                is Back -> executeBack()
+                is Home -> executeHome()
+                is Recents -> executeRecents()
+                is OpenNotifications -> executeOpenNotifications()
+                is OpenQuickSettings -> executeOpenQuickSettings()
+                is Screenshot -> executeScreenshot(action)
+                is HideKeyboard -> executeHideKeyboard(action)
+                is ShowKeyboard -> executeShowKeyboard(event, action, results)
+                is TypeText -> executeTypeText(action)
+                is KeyEvent -> executeKeyEvent(action)
             }
         }
     }
@@ -275,6 +320,129 @@ internal class ActionExecutor(
         )
     }
 
+    private suspend fun executeLongPress(event: Event, lp: LongPress, results: ConditionsResult?) {
+        val path = when (lp.positionType) {
+            Click.PositionType.USER_SELECTED -> lp.position?.let { Path().apply { moveTo(it) } }
+            Click.PositionType.ON_DETECTED_CONDITION -> getOnConditionClickPathForLongPress(event, lp, results)
+        } ?: return
+
+        val press = random.nextLongInOffsetIfNeeded(lp.holdDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS)
+        val gesture = GestureDescription.Builder().buildSingleStroke(path, press)
+
+        withContext(Dispatchers.Main) { androidExecutor.executeGesture(gesture) }
+    }
+
+    private fun getOnConditionClickPathForLongPress(event: Event, lp: LongPress, results: ConditionsResult?): Path? {
+        if (event !is ImageEvent) return null
+        val result = when {
+            event.conditionOperator == OR -> results?.getFirstImageDetectedResult()
+            lp.onConditionId != null -> results?.getImageConditionResult(lp.onConditionId!!.databaseId)
+            else -> null
+        } ?: return null
+
+        return Path().apply {
+            moveTo(Point(
+                result.position.x + (lp.offset?.x ?: 0),
+                result.position.y + (lp.offset?.y ?: 0),
+            ))
+        }
+    }
+
+    private suspend fun executeScroll(scroll: Scroll) {
+        val bounds: Rect = androidExecutor.getScreenBounds() ?: Rect(0, 0, 1080, 1920) // << add in SmartActionExecutor
+        val (from, to) = computeScrollPoints(bounds, scroll.axis!!, scroll.distancePercent!!)
+        val path = Path().apply { line(from, to) }
+        val duration = random.nextLongInOffsetIfNeeded(scroll.duration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS)
+        val gesture = GestureDescription.Builder().buildSingleStroke(path, duration)
+
+        withContext(Dispatchers.Main) { androidExecutor.executeGesture(gesture) }
+        if (scroll.stutter) delay((120..220).random().toLong())
+    }
+
+    private fun computeScrollPoints(screen: Rect, axis: Axis, distancePercent: Float): Pair<Point, Point> {
+        val w = screen.width().toFloat()
+        val h = screen.height().toFloat()
+        val cx = screen.left + (w * 0.5f)
+        val cy = screen.top + (h * 0.6f) // below center reads more human
+
+        val dist = (when (axis) {
+            Axis.UP, Axis.DOWN -> h
+            Axis.LEFT, Axis.RIGHT -> w
+        } * distancePercent.coerceIn(0.1f, 0.9f)).toInt()
+
+        return when (axis) {
+            Axis.UP    -> Point(cx.toInt(), cy.toInt()) to Point(cx.toInt(), (cy - dist).toInt())
+            Axis.DOWN  -> Point(cx.toInt(), cy.toInt()) to Point(cx.toInt(), (cy + dist).toInt())
+            Axis.LEFT  -> Point(cx.toInt(), cy.toInt()) to Point((cx - dist).toInt(), cy.toInt())
+            Axis.RIGHT -> Point(cx.toInt(), cy.toInt()) to Point((cx + dist).toInt(), cy.toInt())
+        }
+    }
+
+    private suspend fun executeBack()            { withContext(Dispatchers.Main) { androidExecutor.executeGlobalBack() } }
+    private suspend fun executeHome()            { withContext(Dispatchers.Main) { androidExecutor.executeGlobalHome() } }
+    private suspend fun executeRecents()         { withContext(Dispatchers.Main) { androidExecutor.executeGlobalRecents() } }
+    private suspend fun executeOpenNotifications(){ withContext(Dispatchers.Main) { androidExecutor.executeGlobalNotifications() } }
+    private suspend fun executeOpenQuickSettings(){ withContext(Dispatchers.Main) { androidExecutor.executeGlobalQuickSettings() } }
+
+    private suspend fun executeScreenshot(shot: Screenshot) {
+        if (Build.VERSION.SDK_INT < 30) return
+        val roi = shot.roi?.let { Rect(it.left, it.top, it.left + it.width, it.top + it.height) }
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeScreenshot(roi, shot.savePath) // add in SmartActionExecutor
+        }
+    }
+
+    private suspend fun executeHideKeyboard(hk: HideKeyboard) {
+        withContext(Dispatchers.Main) {
+            when (hk.method) {
+                HideMethod.BACK -> androidExecutor.executeGlobalBack()
+                HideMethod.TAP_OUTSIDE -> androidExecutor.tapSafeArea() // add small helper: tap near (40,80)
+                HideMethod.BACK_THEN_TAP_OUTSIDE -> {
+                    androidExecutor.executeGlobalBack()
+                    delay(100)
+                    androidExecutor.tapSafeArea()
+                }
+            }
+        }
+    }
+
+    private suspend fun executeShowKeyboard(event: Event, sk: ShowKeyboard, results: ConditionsResult?) {
+        // It’s just a tap on a focusable field; reuse click targeting and a short press.
+        val path = when (sk.positionType) {
+            Click.PositionType.USER_SELECTED -> sk.position?.let { Path().apply { moveTo(it) } }
+            Click.PositionType.ON_DETECTED_CONDITION -> {
+                if (event !is ImageEvent) null else {
+                    val result = when {
+                        event.conditionOperator == OR -> results?.getFirstImageDetectedResult()
+                        sk.onConditionId != null -> results?.getImageConditionResult(sk.onConditionId!!.databaseId)
+                        else -> null
+                    } ?: return
+                    Path().apply { moveTo(Point(
+                        result.position.x + (sk.offset?.x ?: 0),
+                        result.position.y + (sk.offset?.y ?: 0),
+                    )) }
+                }
+            }
+        } ?: return
+
+        val gesture = GestureDescription.Builder().buildSingleStroke(path, 60L)
+        withContext(Dispatchers.Main) { androidExecutor.executeGesture(gesture) }
+    }
+
+    private suspend fun executeTypeText(tt: TypeText) {
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeSetText(tt.text!!) // add in SmartActionExecutor; uses ACTION_SET_TEXT on focused node
+        }
+    }
+
+    private suspend fun executeKeyEvent(ke: KeyEvent) {
+        withContext(Dispatchers.Main) {
+            androidExecutor.executeImeKeySequence(ke.codes!!, ke.intervalMs ?: 50L) // add in SmartActionExecutor
+        }
+    }
+
+
+
     private fun Random?.nextLongInOffsetIfNeeded(value: Long, offset: Long): Long =
         this?.nextLongInOffset(value, offset) ?: value
 }
@@ -288,3 +456,6 @@ private const val INTENT_BROADCAST_DELAY = 100L
 
 private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
 private const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L
+
+private const val DEFAULT_LONG_PRESS_MS = 600L
+private const val DEFAULT_SCROLL_DURATION_MS = 350L

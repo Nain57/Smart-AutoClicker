@@ -17,6 +17,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.LongPress
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
@@ -108,14 +109,24 @@ class SmartActionsBriefViewModel @Inject constructor(
         combine(canCopyActions, isLegacyUiEnabled) { canCopy, legacyEnabled ->
             buildList {
                 if (!legacyEnabled && canCopy) add(ActionTypeChoice.Copy)
+                // Pointer & system interactions
                 add(ActionTypeChoice.Click)
+                add(ActionTypeChoice.LongPress)
                 add(ActionTypeChoice.Swipe)
+                add(ActionTypeChoice.Scroll)
+
+                // System / device
+                add(ActionTypeChoice.Screenshot)
+                add(ActionTypeChoice.HideKeyboard)
+                add(ActionTypeChoice.ShowKeyboard)
+                add(ActionTypeChoice.TypeText)
+
+                // Existing
                 add(ActionTypeChoice.Pause)
                 add(ActionTypeChoice.ChangeCounter)
                 add(ActionTypeChoice.ToggleEvent)
                 add(ActionTypeChoice.Notification)
-                add(ActionTypeChoice.Intent)
-            }
+                add(ActionTypeChoice.Intent)            }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     fun startGestureCaptureState() {
@@ -148,7 +159,13 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     override fun createAction(context: Context, choice: ActionTypeChoice): Action = when (choice) {
         ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
+        ActionTypeChoice.LongPress -> editionRepository.editedItemsBuilder.createNewLongPress(context)
         ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
+        ActionTypeChoice.Scroll -> editionRepository.editedItemsBuilder.createNewScroll(context)
+        ActionTypeChoice.Screenshot -> editionRepository.editedItemsBuilder.createNewScreenshot(context)
+        ActionTypeChoice.HideKeyboard -> editionRepository.editedItemsBuilder.createNewHideKeyboard(context)
+        ActionTypeChoice.ShowKeyboard -> editionRepository.editedItemsBuilder.createNewShowKeyboard(context)
+        ActionTypeChoice.TypeText -> editionRepository.editedItemsBuilder.createNewTypeText(context)
         ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
         ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
@@ -284,6 +301,13 @@ class SmartActionsBriefViewModel @Inject constructor(
             imageConditionBitmap = findClickOnConditionBitmap(),
         )
 
+        is LongPress -> ClickDescription(
+            // Show the marker where the long press will happen; if it’s “on detected condition”, we show the condition image.
+            position = position?.toPointF(),
+            pressDurationMs = holdDuration ?: 600L,
+            imageConditionBitmap = findLongPressConditionBitmap(),
+        )
+
         is Swipe -> SwipeDescription(
             from = from?.toPointF(),
             to = to?.toPointF(),
@@ -304,6 +328,14 @@ class SmartActionsBriefViewModel @Inject constructor(
 
         return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
             ?.find { it.id == clickOnConditionId }
+            ?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
+    }
+
+    private suspend fun LongPress.findLongPressConditionBitmap(): Bitmap? {
+        if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return null
+
+        return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
+            ?.find { it.id == onConditionId }
             ?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
     }
 }

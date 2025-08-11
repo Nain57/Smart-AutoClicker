@@ -5,11 +5,17 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.Di
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getClickIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getHideKeyboardIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getLongPressIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getPauseIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getScreenshotIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getScrollIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getShowKeyboardIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSwipeIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getTypeTextIconRes
 
 
 /** Choices for the action type selection dialog. */
@@ -72,5 +78,47 @@ sealed class ActionTypeChoice(
         R.string.item_notification_title,
         R.string.item_notification_desc,
         getNotificationIconRes(),
+    )
+
+    /** Long press Action choice. */
+    data object LongPress : ActionTypeChoice(
+        R.string.item_long_press_title,
+        R.string.item_long_press_desc,
+        getLongPressIconRes(),
+    )
+
+    /** Scroll Action choice. */
+    data object Scroll : ActionTypeChoice(
+        R.string.item_scroll_title,
+        R.string.item_scroll_desc,
+        getScrollIconRes(),
+    )
+
+    /** Screenshot Action choice. */
+    data object Screenshot : ActionTypeChoice(
+        R.string.item_screenshot_title,
+        R.string.item_screenshot_desc,
+        getScreenshotIconRes(),
+    )
+
+    /** Hide keyboard Action choice. */
+    data object HideKeyboard : ActionTypeChoice(
+        R.string.item_hide_keyboard_title,
+        R.string.item_hide_keyboard_desc,
+        getHideKeyboardIconRes(),
+    )
+
+    /** Show keyboard Action choice. */
+    data object ShowKeyboard : ActionTypeChoice(
+        R.string.item_show_keyboard_title,
+        R.string.item_show_keyboard_desc,
+        getShowKeyboardIconRes(),
+    )
+
+    /** Type text Action choice. */
+    data object TypeText : ActionTypeChoice(
+        R.string.item_type_text_title,
+        R.string.item_type_text_desc,
+        getTypeTextIconRes(),
     )
 }

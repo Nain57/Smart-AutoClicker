@@ -14,11 +14,17 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activit
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.extras.ExtraConfigModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.flags.FlagsSelectionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.keyboard.HideKeyboardViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.keyboard.ShowKeyboardViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.longpress.LongPressViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.NotificationViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.screenshot.ScreenshotViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.scroll.ScrollViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.type.TypeTextViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
@@ -80,4 +86,11 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun toggleEventViewModel(): ToggleEventViewModel
     fun triggerConditionsViewModel(): TriggerConditionListViewModel
     fun triggerEventListViewModel(): TriggerEventListViewModel
+
+    fun longPressViewModel(): LongPressViewModel
+    fun scrollViewModel(): ScrollViewModel
+    fun screenshotViewModel(): ScreenshotViewModel
+    fun hideKeyboardViewModel(): HideKeyboardViewModel
+    fun showKeyboardViewModel(): ShowKeyboardViewModel
+    fun typeTextViewModel(): TypeTextViewModel
 }

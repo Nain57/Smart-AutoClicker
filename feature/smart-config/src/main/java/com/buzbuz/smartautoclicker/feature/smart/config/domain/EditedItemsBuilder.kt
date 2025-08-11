@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2024 Kevin Buzeau
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import android.app.NotificationManager
@@ -43,6 +28,22 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
+
+import android.os.Build
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Axis
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Back
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.HideKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.HideMethod
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Home
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.KeyEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.LongPress
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.OpenNotifications
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.OpenQuickSettings
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Recents
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Screenshot
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Scroll
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ShowKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.TypeText
 
 class EditedItemsBuilder internal constructor(
     private val repository: IRepository,
@@ -317,6 +318,36 @@ class EditedItemsBuilder internal constructor(
         is ToggleEvent -> createNewToggleEventFrom(from, eventId)
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
         is Notification -> createNewNotificationFrom(from, eventId)
+
+        is LongPress -> createNewLongPressFrom(from, eventId)
+        is Scroll -> createNewScrollFrom(from, eventId)
+        is Back -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is Home -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is Recents -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is OpenNotifications -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is OpenQuickSettings -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is Screenshot -> createNewScreenshotFrom(from, eventId)
+        is HideKeyboard -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name
+        )
+        is ShowKeyboard -> createNewShowKeyboardFrom(from, eventId)
+        is TypeText -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name, text = "" + from.text
+        )
+        is KeyEvent -> from.copy(
+            id = actionsIdCreator.generateNewIdentifier(), eventId = eventId, name = "" + from.name,
+            codes = from.codes?.toList() ?: emptyList(), intervalMs = from.intervalMs
+        )
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
@@ -415,6 +446,157 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
+    fun createNewLongPress(context: Context): LongPress =
+        LongPress(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Long press",
+            holdDuration = 600L, // human-like default
+            positionType = defaultValues.clickPositionType(), // reuse Click targeting semantics
+            priority = 0,
+        )
+
+    fun createNewScroll(context: Context): Scroll =
+        Scroll(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Scroll",
+            axis = Axis.DOWN,
+            distancePercent = 0.60f,
+            duration = 350L,
+            stutter = true,
+            priority = 0,
+        )
+
+    fun createNewBack(context: Context): Back =
+        Back(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Back",
+            priority = 0,
+        )
+
+    fun createNewHome(context: Context): Home =
+        Home(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Home",
+            priority = 0,
+        )
+
+    fun createNewRecents(context: Context): Recents =
+        Recents(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Recents",
+            priority = 0,
+        )
+
+    fun createNewOpenNotifications(context: Context): OpenNotifications =
+        OpenNotifications(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Open notifications",
+            priority = 0,
+        )
+
+    fun createNewOpenQuickSettings(context: Context): OpenQuickSettings =
+        OpenQuickSettings(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Open quick settings",
+            priority = 0,
+        )
+
+    fun createNewScreenshot(context: Context): Screenshot =
+        Screenshot(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Screenshot",
+            roi = null,          // set in editor
+            savePath = null,     // set in editor
+            priority = 0,
+        )
+
+    fun createNewHideKeyboard(context: Context): HideKeyboard =
+        HideKeyboard(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Hide keyboard",
+            method = HideMethod.BACK_THEN_TAP_OUTSIDE,
+            priority = 0,
+        )
+
+    fun createNewShowKeyboard(context: Context): ShowKeyboard =
+        ShowKeyboard(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Show keyboard",
+            positionType = defaultValues.clickPositionType(), // tap a field or a detected condition
+            priority = 0,
+        )
+
+    fun createNewTypeText(context: Context): TypeText =
+        TypeText(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Type",
+            text = "", // editable in UI; non-null to pass isComplete()
+            priority = 0,
+        )
+
+    fun createNewKeyEvent(context: Context): KeyEvent =
+        KeyEvent(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = "Key event",
+            codes = emptyList(), // set in editor
+            intervalMs = 50L,
+            priority = 0,
+        )
+
+    private fun createNewLongPressFrom(from: LongPress, eventId: Identifier): LongPress {
+        val mappedConditionId =
+            if (from.positionType == PositionType.ON_DETECTED_CONDITION && from.onConditionId != null)
+                eventCopyConditionIdMap[from.onConditionId]
+            else null
+
+        return from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+            onConditionId = mappedConditionId,
+        )
+    }
+
+    private fun createNewScrollFrom(from: Scroll, eventId: Identifier): Scroll =
+        from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+        )
+
+    private fun createNewScreenshotFrom(from: Screenshot, eventId: Identifier): Screenshot =
+        from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+            // keep roi & savePath as-is so duplicates behave identically
+        )
+
+    private fun createNewShowKeyboardFrom(from: ShowKeyboard, eventId: Identifier): ShowKeyboard {
+        val mappedConditionId =
+            if (from.positionType == PositionType.ON_DETECTED_CONDITION && from.onConditionId != null)
+                eventCopyConditionIdMap[from.onConditionId]
+            else null
+
+        return from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+            onConditionId = mappedConditionId,
+        )
+    }
     private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
         editor.getAllEditedEvents().find { eventId == it.id } != null
 

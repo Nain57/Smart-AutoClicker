@@ -34,6 +34,28 @@ enum class ActionType {
     CHANGE_COUNTER,
     /** Send a notification. */
     NOTIFICATION,
+    /** A long tap on the screen */
+    LONG_PRESS,
+    /** A scroll on the screen, horizontally or vertically */
+    SCROLL,
+    /** Go back action */
+    BACK,
+    /** Go Home action */
+    HOME,
+    /** Go to recent opened applications */
+    RECENTS,
+    /**  */
+    OPEN_NOTIFICATIONS,
+    /**  */
+    OPEN_QUICK_SETTINGS,
+    /** Take a screenshot & save in the storage */
+    SCREENSHOT,
+    /** Hide keyboard when open */
+    HIDE_KEYBOARD, SHOW_KEYBOARD,
+    /**  */
+    TYPE_TEXT,
+    /**  */
+    KEY_EVENT
 }
 
 

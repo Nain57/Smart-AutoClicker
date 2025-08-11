@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <include layout="@layout/include_field_text_input"
+        android:id="@+id/field_name" />
+
+    <include layout="@layout/include_field_number_input"
+        android:id="@+id/field_roi_left" />
+    <include layout="@layout/include_field_number_input"
+        android:id="@+id/field_roi_top" />
+    <include layout="@layout/include_field_number_input"
+        android:id="@+id/field_roi_width" />
+    <include layout="@layout/include_field_number_input"
+        android:id="@+id/field_roi_height" />
+
+    <include layout="@layout/include_field_text_input"
+        android:id="@+id/field_save_path" />
+</LinearLayout>

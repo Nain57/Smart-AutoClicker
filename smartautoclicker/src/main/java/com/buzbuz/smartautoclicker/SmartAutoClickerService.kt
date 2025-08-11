@@ -1,10 +1,11 @@
-
 package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.app.Notification
 import android.content.Intent
+import android.graphics.Rect
+import android.os.Build
 import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
@@ -31,11 +32,20 @@ import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.localservice.LocalService
 import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
-
+import android.view.Display
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import javax.inject.Inject
+
+import android.graphics.*
+import android.os.*
+import android.view.accessibility.AccessibilityNodeInfo
+import java.io.File
+import java.io.FileOutputStream
+
 
 /**
  * AccessibilityService implementation for the SmartAutoClicker.
@@ -51,6 +61,7 @@ import javax.inject.Inject
  * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
  * been detected.
  */
+
 @AndroidEntryPoint
 class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
@@ -162,6 +173,154 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
 
     override fun clearState() {
         userNotificationsController.clearAll()
+    }
+
+    /** Return screen bounds from the active root node; fallback to display metrics. */
+    override fun getScreenBounds(): Rect? {
+        val root = rootInActiveWindow
+        if (root != null) {
+            val out = Rect()
+            root.getBoundsInScreen(out)
+            if (out.width() > 0 && out.height() > 0) return out
+        }
+        val dm = resources.displayMetrics
+        return Rect(0, 0, dm.widthPixels, dm.heightPixels)
+    }
+
+    override fun executeGlobalBack(): Boolean =
+        performGlobalAction(GLOBAL_ACTION_BACK)
+
+    override fun executeGlobalHome(): Boolean =
+        performGlobalAction(GLOBAL_ACTION_HOME)
+
+    override fun executeGlobalRecents(): Boolean =
+        performGlobalAction(GLOBAL_ACTION_RECENTS)
+
+    override fun executeGlobalNotifications(): Boolean =
+        performGlobalAction(GLOBAL_ACTION_NOTIFICATIONS)
+
+    override fun executeGlobalQuickSettings(): Boolean =
+        performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
+
+    override fun executeScreenshot(roi: Rect?, savePath: String?): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+
+        var ok = false
+        val latch = CountDownLatch(1)
+
+        // API 30 signature: takeScreenshot(displayId, executor, TakeScreenshotCallback)
+        takeScreenshot(Display.DEFAULT_DISPLAY, mainExecutor,
+            object : AccessibilityService.TakeScreenshotCallback {
+                override fun onSuccess(result: AccessibilityService.ScreenshotResult) {
+                    try {
+                        val hb = result.hardwareBuffer     // API 30
+                        val cs = result.colorSpace         // API 30
+                        if (hb != null && cs != null) {
+                            val src = Bitmap.wrapHardwareBuffer(hb, cs)
+                            if (src != null) {
+                                val bmp = if (roi != null) {
+                                    val safe = clipRoiTo(src.width, src.height, roi)
+                                    Bitmap.createBitmap(
+                                        src, safe.left, safe.top, safe.width(), safe.height()
+                                    )
+                                } else {
+                                    src.copy(Bitmap.Config.ARGB_8888, false)
+                                }
+                                if (savePath != null) savePng(bmp, savePath)
+                                ok = true
+                            }
+                            // HardwareBuffer must be closed
+                            hb.close()
+                        }
+                    } catch (_: Throwable) {
+                        // keep ok = false
+                    } finally {
+                        // ScreenshotResult doesn't need explicit close() call here
+                        latch.countDown()
+                    }
+                }
+
+                override fun onFailure(errorCode: Int) {
+                    latch.countDown()
+                }
+            }
+        )
+
+        // Wait briefly so callers can get a synchronous boolean
+        latch.await(750, TimeUnit.MILLISECONDS)
+        return ok
+    }
+
+    override fun executeSetText(text: String): Boolean {
+        val target = rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT) ?: return false
+        val args = Bundle().apply {
+            putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, text)
+        }
+        return target.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+    }
+
+    /** Best-effort IME key sequence. ENTER is supported; others are no-ops today. */
+    override fun executeImeKeySequence(codes: List<Int>, intervalMs: Long): Boolean {
+        val node = rootInActiveWindow?.findFocus(AccessibilityNodeInfo.FOCUS_INPUT) ?: return false
+
+        fun setText(newText: String): Boolean {
+            val args = Bundle().apply {
+                putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, newText)
+            }
+            return node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
+        }
+
+        var any = false
+        var current = node.text?.toString() ?: ""
+
+        for (code in codes) {
+            val changed = when (code) {
+                KeyEvent.KEYCODE_ENTER -> {
+                    current += "\n"; true
+                }
+                KeyEvent.KEYCODE_DEL -> {
+                    if (current.isNotEmpty()) { current = current.dropLast(1); true } else false
+                }
+                else -> false // expand later if needed
+            }
+            if (changed) {
+                any = setText(current) || any
+                if (intervalMs > 0) SystemClock.sleep(intervalMs)
+            }
+        }
+        return any
+    }
+
+    /** Short human-like tap in a safe area to dismiss keyboard/dialogs. */
+    override fun tapSafeArea(): Boolean {
+        val path = Path().apply {
+            val x = 40f
+            val y = 80f
+            moveTo(x, y)
+            lineTo(x, y)
+        }
+        val stroke = GestureDescription.StrokeDescription(path, 0, 60)
+        val gesture = GestureDescription.Builder().addStroke(stroke).build()
+        return dispatchGesture(gesture, null, null)
+    }
+
+    // ---------- utils ----------
+
+    private fun clipRoiTo(w: Int, h: Int, r: Rect): Rect =
+        Rect(
+            r.left.coerceIn(0, w),
+            r.top.coerceIn(0, h),
+            r.right.coerceIn(0, w),
+            r.bottom.coerceIn(0, h),
+        ).also {
+            if (it.right <= it.left) it.right = (it.left + 1).coerceAtMost(w)
+            if (it.bottom <= it.top) it.bottom = (it.top + 1).coerceAtMost(h)
+        }
+
+    private fun savePng(bmp: Bitmap, path: String) {
+        val file = if (path.startsWith("/")) File(path) else File(filesDir, path)
+        file.parentFile?.mkdirs()
+        FileOutputStream(file).use { out -> bmp.compress(Bitmap.CompressFormat.PNG, 100, out) }
     }
 
     /**

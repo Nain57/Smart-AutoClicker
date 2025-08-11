@@ -1,4 +1,3 @@
-
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause
 
 import android.text.InputFilter

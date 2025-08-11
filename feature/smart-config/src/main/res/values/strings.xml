@@ -386,4 +386,51 @@
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
 
+    <!-- Action selection items: titles & descriptions -->
+    <string name="item_long_press_title">Long press</string>
+    <string name="item_long_press_desc">Press and hold at a position or a detected condition</string>
+
+    <string name="item_scroll_title">Scroll</string>
+    <string name="item_scroll_desc">Scroll the screen with human-like stutter</string>
+
+    <string name="item_screenshot_title">Screenshot</string>
+    <string name="item_screenshot_desc">Capture the screen (optionally crop to a region)</string>
+
+    <string name="item_hide_keyboard_title">Hide keyboard</string>
+    <string name="item_hide_keyboard_desc">Dismiss the soft keyboard via Back or tap outside</string>
+
+    <string name="item_show_keyboard_title">Show keyboard</string>
+    <string name="item_show_keyboard_desc">Focus a field to show the keyboard</string>
+
+    <string name="item_type_text_title">Type text</string>
+    <string name="item_type_text_desc">Enter text in the currently focused field</string>
+
+    <!-- Existing error reused -->
+    <!-- <string name="item_error_action_invalid_generic">This action is invalid</string> -->
+
+    <!-- Axis labels -->
+    <string name="axis_up">Up</string>
+    <string name="axis_down">Down</string>
+    <string name="axis_left">Left</string>
+    <string name="axis_right">Right</string>
+
+    <!-- Hide method labels -->
+    <string name="method_back">Back</string>
+    <string name="method_tap_outside">Tap outside</string>
+    <string name="method_back_then_tap_outside">Back then tap outside</string>
+
+    <!-- Action detail lines -->
+    <string name="item_long_press_details_on_condition">Hold %1$s on %2$s</string>
+    <string name="item_long_press_details_at_position">Hold %1$s at position</string>
+
+    <string name="item_scroll_details">%1$s • %2$d%% • %3$s</string>
+
+    <string name="item_screenshot_details_full">Capture screen</string>
+    <string name="item_screenshot_details_roi">ROI %1$dx%2$d @ (%3$d,%4$d)</string>
+
+    <string name="item_hide_keyboard_details">Method: %1$s</string>
+    <string name="item_show_keyboard_details_on_condition">Focus on %1$s</string>
+    <string name="item_show_keyboard_details_at_position">Focus at position</string>
+
+    <string name="item_type_text_details">“%1$s”</string>
 </resources>

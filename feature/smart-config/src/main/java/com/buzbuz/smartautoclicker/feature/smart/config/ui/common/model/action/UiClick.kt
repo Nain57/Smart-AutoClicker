@@ -8,7 +8,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
-
 @DrawableRes
 internal fun getClickIconRes(): Int =
     R.drawable.ic_click

@@ -4,6 +4,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.HideKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.LongPress
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Screenshot
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.Scroll
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.ShowKeyboard
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action.TypeText
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -40,6 +46,14 @@ internal fun Action.getIconRes(): Int = when (this) {
     is ToggleEvent -> getToggleEventIconRes()
     is ChangeCounter -> getChangeCounterIconRes()
     is Notification -> getNotificationIconRes()
+
+    is LongPress -> getLongPressIconRes()
+    is Scroll -> getScrollIconRes()
+    is Screenshot -> getScreenshotIconRes()
+    is HideKeyboard -> getHideKeyboardIconRes()
+    is ShowKeyboard -> getShowKeyboardIconRes()
+    is TypeText -> getTypeTextIconRes()
+    
     else -> throw IllegalArgumentException("Not yet supported")
 }
 
@@ -51,5 +65,14 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is ToggleEvent -> getDescription(context, inError)
     is ChangeCounter -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
+
+    is LongPress -> getDescription(context, parent, inError)
+    is Scroll -> getDescription(context, parent, inError)
+    is Screenshot -> getDescription(context, parent, inError)
+    is HideKeyboard -> getDescription(context, parent, inError)
+    is ShowKeyboard -> getDescription(context, parent, inError)
+    is TypeText -> getDescription(context, parent, inError)
+
+
     else -> throw IllegalArgumentException("Not yet supported")
 }

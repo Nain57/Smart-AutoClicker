@@ -141,6 +141,44 @@ data class ActionEntity(
     @ColumnInfo(name = "notification_message_text") val notificationMessageText: String? = null,
     @ColumnInfo(name = "notification_message_counter_name") val notificationMessageCounterName: String? = null,
     @ColumnInfo(name = "notification_importance") var notificationImportance: Int? = null,
+
+    // ---- ActionType.LONG_PRESS ----
+    // Reuse CLICK fields:
+    // - pressDuration            -> holdDuration
+    // - clickPositionType, x, y -> target point (when USER_SELECTED)
+    // - clickOnConditionId       -> target condition (when ON_DETECTED_CONDITION)
+    // - clickOffsetX/Y           -> offset from detected center
+    // (No new columns needed)
+
+    // ---- ActionType.SCROLL ----
+    @ColumnInfo(name = "scroll_axis") val scrollAxis: String? = null,                 // Axis enum name: UP/DOWN/LEFT/RIGHT
+    @ColumnInfo(name = "scroll_distance_percent") val scrollDistancePercent: Float? = null,
+    @ColumnInfo(name = "scroll_duration") val scrollDuration: Long? = null,
+    @ColumnInfo(name = "scroll_stutter") val scrollStutter: Boolean? = null,
+
+    // ---- ActionType.BACK / HOME / RECENTS / OPEN_NOTIFICATIONS / OPEN_QUICK_SETTINGS ----
+    // No extra fields (type alone is enough)
+
+    // ---- ActionType.SCREENSHOT ----
+    @ColumnInfo(name = "screenshot_left") val screenshotLeft: Int? = null,
+    @ColumnInfo(name = "screenshot_top") val screenshotTop: Int? = null,
+    @ColumnInfo(name = "screenshot_width") val screenshotWidth: Int? = null,
+    @ColumnInfo(name = "screenshot_height") val screenshotHeight: Int? = null,
+    @ColumnInfo(name = "screenshot_path") val screenshotPath: String? = null,
+
+    // ---- ActionType.HIDE_KEYBOARD ----
+    @ColumnInfo(name = "hide_keyboard_method") val hideKeyboardMethod: String? = null, // HideMethod enum name: BACK/TAP_OUTSIDE/BACK_THEN_TAP_OUTSIDE
+
+    // ---- ActionType.SHOW_KEYBOARD ----
+    // Reuse CLICK fields for focus target (positionType/x/y or clickOnConditionId/offset)
+    // (No new columns needed)
+
+    // ---- ActionType.TYPE_TEXT ----
+    @ColumnInfo(name = "type_text") val typeText: String? = null,
+
+    // ---- ActionType.KEY_EVENT ----
+    @ColumnInfo(name = "key_codes_csv") val keyCodesCsv: String? = null,               // e.g., "66,67,67"
+    @ColumnInfo(name = "key_interval_ms") val keyIntervalMs: Long? = null,
 ) : EntityWithId
 
 /**
