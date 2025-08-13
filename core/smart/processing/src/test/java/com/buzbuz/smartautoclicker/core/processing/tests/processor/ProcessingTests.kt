@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.core.processing.tests.processor
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
@@ -70,7 +70,7 @@ class ProcessingTests {
     @Mock private lateinit var mockScalingManager: ScalingManager
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
     @Mock private lateinit var mockImageDetector: ImageDetector
-    @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
+    @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
     @Mock private lateinit var mockProcessingListener: ScenarioProcessingListener
 

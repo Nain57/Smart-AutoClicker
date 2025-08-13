@@ -68,11 +68,6 @@ class ScalingManagerTests {
     }
 
     @Test
-    fun `initial screen size is display size`() {
-        Assert.assertEquals(TEST_DEFAULT_SCREEN_SIZE, scalingManager.scaledScreenSize)
-    }
-
-    @Test
     fun `quality above max should result in scaledScreenSize unchanged`() {
         // Given
         val event1Id = 1L
@@ -88,11 +83,11 @@ class ScalingManagerTests {
 
         // When
         mockDisplayConfigManager.mockDisplayConfig(screenSize)
-        scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1))
+        val scaledScreenSize = scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1))
 
         // Then
         Assert.assertEquals("scaledScreenSize should be original screen size",
-            screenSize, scalingManager.scaledScreenSize)
+            screenSize, scaledScreenSize)
     }
 
     @Test
@@ -112,10 +107,10 @@ class ScalingManagerTests {
 
         // When
         mockDisplayConfigManager.mockDisplayConfig(screenSize)
-        scalingManager.startScaling(quality, listOf(event1))
+        val scaledScreenSize = scalingManager.startScaling(quality, listOf(event1))
 
         // Then
-        Assert.assertEquals(Point(500, 1000), scalingManager.scaledScreenSize)
+        Assert.assertEquals(Point(500, 1000), scaledScreenSize)
     }
 
     @Test
@@ -138,34 +133,10 @@ class ScalingManagerTests {
         scalingManager.startScaling(quality, listOf(event1))
 
         mockDisplayConfigManager.mockDisplayConfig(screenSize)
-        scalingManager.refreshScaling()
+        val refreshedScreenSize = scalingManager.refreshScaling()
 
         // Then
-        Assert.assertEquals(Point(500, 1000), scalingManager.scaledScreenSize)
-    }
-
-    @Test
-    fun `scaledScreenSize should be reset upon stopScaling call`() {
-        // Given
-        val event1Id = 1L
-        val screenSize = Point(1000, 2000)
-        val quality = 1000.0
-        val condition1Area = Rect(100, 100, 200, 200)
-        val condition1 = createTestCondition(
-            id = 1L,
-            evtId = event1Id,
-            area = condition1Area,
-            type = EXACT,
-        )
-        val event1 = createTestEvent(event1Id, listOf(condition1))
-
-        // When
-        mockDisplayConfigManager.mockDisplayConfig(screenSize)
-        scalingManager.startScaling(quality, listOf(event1))
-        scalingManager.stopScaling()
-
-        // Then
-        Assert.assertEquals(screenSize, scalingManager.scaledScreenSize)
+        Assert.assertEquals(Point(500, 1000), refreshedScreenSize)
     }
 
     @Test

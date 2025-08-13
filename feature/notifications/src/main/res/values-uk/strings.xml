@@ -17,12 +17,6 @@
 -->
 <resources>
 
-    <string name="notification_scenario_channel_group_name">Сценарії Klick\'r</string>
-    <string name="notification_scenario_channel_low_name">Низький</string>
-    <string name="notification_scenario_channel_default_name">Звичайний</string>
-    <string name="notification_scenario_channel_high_name">Високий</string>
-
-
     <string name="notification_title">Сценарій: %1$s</string>
     <string name="notification_message">Натисніть щоб змінити сценарій</string>
     <string name="notification_button_play">Відтворити</string>

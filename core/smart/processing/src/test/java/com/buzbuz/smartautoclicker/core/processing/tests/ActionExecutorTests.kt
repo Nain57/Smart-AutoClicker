@@ -23,12 +23,11 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -95,7 +94,7 @@ class ActionExecutorTests {
             ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, "path", Rect(), 10, EXACT, true, null)
     }
 
-    @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
+    @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockProcessingState: ProcessingState
 
     private lateinit var actionExecutor: ActionExecutor
@@ -125,7 +124,7 @@ class ActionExecutorTests {
     fun noActions() = runTest {
         val event = getNewDefaultEvent()
         actionExecutor.executeActions(event, ConditionsResult())
-        verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
     }
 
     @Test
@@ -136,7 +135,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(event, ConditionsResult())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -160,7 +159,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(event, results)
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -188,7 +187,7 @@ class ActionExecutorTests {
         actionExecutor.executeActions(event, results)
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -202,7 +201,7 @@ class ActionExecutorTests {
         )
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -217,7 +216,7 @@ class ActionExecutorTests {
         )
 
         // Only a pause, there should be no gestures
-        verify(mockAndroidExecutor, never()).executeGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
     }
 
     @Test
@@ -234,7 +233,7 @@ class ActionExecutorTests {
         )
 
         // Verify the gestures executions
-        verify(mockAndroidExecutor, times(2)).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor, times(2)).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.firstValue)
         assertActionGesture(gestureCaptor.lastValue)
     }
@@ -243,7 +242,7 @@ class ActionExecutorTests {
     fun execute_click_delay() = runTest {
         val executionDurationMs = 10L
         var isCompleted = false
-        mockWhen(mockAndroidExecutor.executeGesture(anyNotNull())).doAnswer {
+        mockWhen(mockAndroidExecutor.dispatchGesture(anyNotNull())).doAnswer {
             runBlocking {
                 // The execution is set to 10ms, but we simulate an input lag for a worst case scenario
                 delay(executionDurationMs * 10)

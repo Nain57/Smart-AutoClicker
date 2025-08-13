@@ -27,6 +27,7 @@ rootProject.name = "Klick'r"
 
 includeBuild("build-logic")
 
+include(":core:common:actions")
 include(":core:common:android")
 include(":core:common:base")
 include(":core:common:bitmaps")
