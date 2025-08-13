@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.annotation.VisibleForTesting
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -34,7 +34,6 @@ import kotlinx.coroutines.yield
  * Process a screen image and tries to detect the list of [ImageEvent] on it.
  *
  * @param imageDetector the detector for images.
- * @param detectionQuality the quality of the detection.
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
  * @param imageEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
@@ -50,7 +49,7 @@ internal class ScenarioProcessor(
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
-    androidExecutor: SmartActionExecutor,
+    androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
     private val progressListener: ScenarioProcessingListener? = null,

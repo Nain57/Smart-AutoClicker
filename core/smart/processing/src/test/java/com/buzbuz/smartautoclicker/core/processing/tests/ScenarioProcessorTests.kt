@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
@@ -60,7 +60,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.any
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -79,8 +78,6 @@ import org.mockito.Mockito.`when` as mockWhen
 class ScenarioProcessorTests {
 
     private companion object {
-        private const val TEST_DATA_DETECTION_QUALITY = 600.0
-
         private const val TEST_DATA_SCREEN_IMAGE_WIDTH = 800
         private const val TEST_DATA_SCREEN_IMAGE_HEIGHT = 600
 
@@ -120,7 +117,7 @@ class ScenarioProcessorTests {
     @Mock private lateinit var mockScalingManager: ScalingManager
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
-    @Mock private lateinit var mockAndroidExecutor: SmartActionExecutor
+    @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
 
     @Mock private lateinit var mockScreenBitmap: Bitmap
@@ -153,7 +150,7 @@ class ScenarioProcessorTests {
     /** */
     private suspend fun assertActionGesture(expectedDuration: Long) {
         val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).executeGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         val gesture = gestureCaptor.lastValue
 
         Assert.assertEquals("Gesture should contains only one stroke", 1, gesture.strokeCount)

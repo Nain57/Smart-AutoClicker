@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.airbnb.lottie)
     implementation(libs.google.material)
 
+    implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:display"))

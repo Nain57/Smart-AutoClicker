@@ -17,14 +17,12 @@
 package com.buzbuz.smartautoclicker
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
 import android.app.Notification
 import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 
-import com.buzbuz.smartautoclicker.actions.ServiceActionExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
@@ -34,15 +32,13 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.notifications.common.NotificationIds
-import com.buzbuz.smartautoclicker.feature.notifications.user.UserNotificationsController
+import com.buzbuz.smartautoclicker.core.base.notifications.NotificationIds
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -71,7 +67,7 @@ import javax.inject.Inject
  * been detected.
  */
 @AndroidEntryPoint
-class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
+class SmartAutoClickerService : AccessibilityService() {
 
     private val localServiceProvider = LocalServiceProvider
 
@@ -89,17 +85,15 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     @Inject lateinit var revenueRepository: IRevenueRepository
     @Inject lateinit var tileRepository: QSTileRepository
     @Inject lateinit var debugRepository: DebuggingRepository
-    @Inject lateinit var userNotificationsController: UserNotificationsController
     @Inject lateinit var reviewRepository: ReviewRepository
     @Inject lateinit var appComponentsProvider: AppComponentsProvider
-
-    private var serviceActionExecutor: ServiceActionExecutor? = null
+    @Inject lateinit var actionExecutor: AndroidActionExecutor
 
     override fun onServiceConnected() {
         super.onServiceConnected()
 
         qualityMetricsMonitor.onServiceConnected()
-        serviceActionExecutor = ServiceActionExecutor(this)
+        actionExecutor.init(this)
 
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {
@@ -126,7 +120,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
                 debugRepository = debugRepository,
                 revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
-                androidExecutor = this,
                 onStart = ::onLocalServiceStarted,
                 onStop = ::onLocalServiceStopped,
             )
@@ -141,14 +134,13 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         localServiceProvider.setLocalService(null)
 
         qualityMetricsMonitor.onServiceUnbind()
-        serviceActionExecutor = null
+        actionExecutor.clear()
         return super.onUnbind(intent)
     }
 
     private fun onLocalServiceStarted(scenarioId: Long, isSmart: Boolean, serviceNotification: Notification?) {
         reviewRepository.onUserSessionStarted()
         qualityMetricsMonitor.onServiceForegroundStart()
-        serviceActionExecutor?.reset()
 
         serviceNotification?.let {
             startForegroundMediaProjectionServiceCompat(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, it)
@@ -162,6 +154,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     private fun onLocalServiceStopped() {
         qualityMetricsMonitor.onServiceForegroundEnd()
         reviewRepository.onUserSessionStopped()
+        actionExecutor.resetState()
 
         if (reviewRepository.isUserCandidateForReview()) {
             Log.i(TAG, "User is candidate for review, ")
@@ -182,30 +175,6 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
     override fun onKeyEvent(event: KeyEvent?): Boolean =
         localService?.onKeyEvent(event) ?: super.onKeyEvent(event)
 
-    override suspend fun executeGesture(gestureDescription: GestureDescription) {
-        serviceActionExecutor?.safeDispatchGesture(gestureDescription)
-    }
-
-    override fun executeGlobalAction(globalAction: Int) {
-        serviceActionExecutor?.safePerformGlobalAction(globalAction)
-    }
-
-    override fun executeStartActivity(intent: Intent) {
-        serviceActionExecutor?.safeStartActivity(intent)
-    }
-
-    override fun executeSendBroadcast(intent: Intent) {
-        serviceActionExecutor?.safeSendBroadcast(intent)
-    }
-
-    override fun executeNotification(notification: NotificationRequest) {
-        userNotificationsController.showNotification(this, notification)
-    }
-
-    override fun clearState() {
-        userNotificationsController.clearAll()
-    }
-
     /**
      * Dump the state of the service via adb.
      * adb shell "dumpsys activity service com.buzbuz.smartautoclicker"
@@ -223,7 +192,7 @@ class SmartAutoClickerService : AccessibilityService(), SmartActionExecutor {
         overlayManager.dump(writer)
         detectionRepository.dump(writer)
         dumbEngine.dump(writer)
-        serviceActionExecutor?.dump(writer)
+        actionExecutor.dump(writer)
         qualityRepository.dump(writer)
 
         revenueRepository.dump(writer)

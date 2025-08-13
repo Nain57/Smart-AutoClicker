@@ -20,7 +20,6 @@ import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.extensions.buildSingleStroke
 import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
@@ -28,32 +27,40 @@ import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.random.Random
 
-internal class DumbActionExecutor(
-    private val androidExecutor: AndroidExecutor,
-    unblockWorkaroundEnabled: Boolean,
+@Singleton
+class DumbActionExecutor @Inject constructor(
+    private val androidExecutor: AndroidActionExecutor,
 ) {
 
     private val random: Random = Random(System.currentTimeMillis())
     private var randomize: Boolean = false
 
+    private var unblockWorkaroundEnabled: Boolean = false
+
     private val unblockGestureScheduler: UnblockGestureScheduler? =
         if (unblockWorkaroundEnabled) UnblockGestureScheduler()
         else null
 
+    fun setUnblockWorkaround(isEnabled: Boolean) {
+        unblockWorkaroundEnabled = isEnabled
+    }
 
     suspend fun onScenarioLoopFinished() {
         if (unblockGestureScheduler?.shouldTrigger() == true) {
             withContext(Dispatchers.Main) {
                 Log.i(TAG, "Injecting unblock gesture")
-                androidExecutor.executeGesture(
+                androidExecutor.dispatchGesture(
                     GestureDescription.Builder().buildUnblockGesture()
                 )
             }
@@ -97,7 +104,7 @@ internal class DumbActionExecutor(
     private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeatable) {
         repeatable.repeat {
             withContext(Dispatchers.Main) {
-                androidExecutor.executeGesture(gesture)
+                androidExecutor.dispatchGesture(gesture)
             }
         }
     }

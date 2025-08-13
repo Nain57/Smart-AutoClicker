@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.dumb.engine
 
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
@@ -48,11 +47,9 @@ import javax.inject.Singleton
 @Singleton
 class DumbEngine @Inject constructor(
     private val dumbRepository: IDumbRepository,
-    private val settingsRepository: SettingsRepository,
+    private val dumbActionExecutor: DumbActionExecutor,
+    private val settingsRepository: SettingsRepository
 ): Dumpable {
-
-    /** Execute the dumb actions. */
-    private var dumbActionExecutor: DumbActionExecutor? = null
 
     /** Coroutine scope for the dumb scenario processing. */
     private var processingScope: CoroutineScope? = null
@@ -66,15 +63,15 @@ class DumbEngine @Inject constructor(
     private val dumbScenarioDbId: MutableStateFlow<Long?> = MutableStateFlow(null)
     val dumbScenario: Flow<DumbScenario?> =
         dumbScenarioDbId.flatMapLatest { dbId ->
-            if (dbId == null) return@flatMapLatest flowOf(null)
-            dumbRepository.getDumbScenarioFlow(dbId)
+            if (dbId == null) flowOf(null)
+            else dumbRepository.getDumbScenarioFlow(dbId)
         }
 
     private val _isRunning: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isRunning: StateFlow<Boolean> = _isRunning
 
-    fun init(androidExecutor: AndroidExecutor, dumbScenario: DumbScenario) {
-        dumbActionExecutor = DumbActionExecutor(androidExecutor, settingsRepository.isInputBlockWorkaroundEnabled())
+    fun init(dumbScenario: DumbScenario) {
+        dumbActionExecutor.setUnblockWorkaround(settingsRepository.isInputBlockWorkaroundEnabled())
         dumbScenarioDbId.value = dumbScenario.id.databaseId
 
         processingScope = CoroutineScope(Dispatchers.IO)
@@ -122,8 +119,6 @@ class DumbEngine @Inject constructor(
         dumbScenarioDbId.value = null
         processingScope?.cancel()
         processingScope = null
-
-        dumbActionExecutor = null
     }
 
     private fun startEngine(scenario: DumbScenario) {
@@ -148,10 +143,10 @@ class DumbEngine @Inject constructor(
         processingScope?.launch {
             dumbScenario.repeat {
                 dumbScenario.dumbActions.forEach { dumbAction ->
-                    dumbActionExecutor?.executeDumbAction(dumbAction, dumbScenario.randomize)
+                    dumbActionExecutor.executeDumbAction(dumbAction, dumbScenario.randomize)
                 }
 
-                dumbActionExecutor?.onScenarioLoopFinished()
+                dumbActionExecutor.onScenarioLoopFinished()
             }
 
             processingScope?.launch { stopDumbScenario() }

@@ -30,9 +30,10 @@ import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -44,7 +45,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtr
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
-import com.buzbuz.smartautoclicker.core.domain.model.NotificationRequest
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 
 import kotlinx.coroutines.Dispatchers
@@ -60,13 +60,13 @@ import kotlin.random.Random
  * @param randomize true to randomize the actions values a bit (positions, timers...), false to be precise.
  */
 internal class ActionExecutor(
-    private val androidExecutor: SmartActionExecutor,
+    private val androidExecutor: AndroidActionExecutor,
     private val processingState: ProcessingState,
     randomize: Boolean,
     unblockWorkaroundEnabled: Boolean = false,
 ) {
 
-    init { androidExecutor.clearState() }
+    init { androidExecutor.resetState() }
 
     private val random: Random? =
         if (randomize) Random(System.currentTimeMillis()) else null
@@ -80,7 +80,7 @@ internal class ActionExecutor(
         if (unblockGestureScheduler?.shouldTrigger() == true) {
             withContext(Dispatchers.Main) {
                 Log.i(TAG, "Injecting unblock gesture")
-                androidExecutor.executeGesture(
+                androidExecutor.dispatchGesture(
                     GestureDescription.Builder().buildUnblockGesture()
                 )
             }
@@ -119,7 +119,7 @@ internal class ActionExecutor(
         )
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(clickGesture)
+            androidExecutor.dispatchGesture(clickGesture)
         }
     }
 
@@ -160,7 +160,7 @@ internal class ActionExecutor(
         )
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGesture(swipeGesture)
+            androidExecutor.dispatchGesture(swipeGesture)
         }
     }
 
@@ -190,12 +190,12 @@ internal class ActionExecutor(
 
         if (intent.isBroadcast) {
             withContext(Dispatchers.Main) {
-                androidExecutor.executeSendBroadcast(androidIntent)
+                androidExecutor.sendBroadcast(androidIntent)
             }
             delay(INTENT_BROADCAST_DELAY)
         } else {
             withContext(Dispatchers.Main) {
-                androidExecutor.executeStartActivity(androidIntent)
+                androidExecutor.startActivity(androidIntent)
             }
             delay(INTENT_START_ACTIVITY_DELAY)
         }
@@ -257,8 +257,8 @@ internal class ActionExecutor(
             }
         }
 
-        androidExecutor.executeNotification(
-            NotificationRequest(
+        androidExecutor.postNotification(
+            ActionNotificationRequest(
                 actionId = notification.id.databaseId,
                 title = notification.name ?: "Klick'r",
                 message = message,
@@ -277,7 +277,7 @@ internal class ActionExecutor(
         }
 
         withContext(Dispatchers.Main) {
-            androidExecutor.executeGlobalAction(globalAction)
+            androidExecutor.performGlobalAction(globalAction)
         }
     }
 

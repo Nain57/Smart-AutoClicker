@@ -30,7 +30,6 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -93,9 +92,6 @@ class DetectionRepository @Inject constructor(
             }
         }
 
-    /** Interacts with the OS to execute the actions */
-    private var actionExecutor: SmartActionExecutor? = null
-
     private var projectionErrorHandler: (() -> Unit)? = null
 
     /** Stop the detection automatically after selected delay */
@@ -148,10 +144,6 @@ class DetectionRepository @Inject constructor(
         }
     }
 
-    fun setExecutor(androidExecutor: SmartActionExecutor) {
-        actionExecutor = androidExecutor
-    }
-
     fun setProjectionErrorHandler(handler: () -> Unit) {
         projectionErrorHandler = handler
     }
@@ -162,10 +154,8 @@ class DetectionRepository @Inject constructor(
         detectorEngine.state.value == DetectorState.DETECTING
 
     fun startScreenRecord(resultCode: Int, data: Intent) {
-        actionExecutor?.let { executor ->
-            detectorEngine.startScreenRecord(resultCode, data, executor) {
-                coroutineScopeMain.launch { projectionErrorHandler?.invoke() }
-            }
+        detectorEngine.startScreenRecord(resultCode, data) {
+            coroutineScopeMain.launch { projectionErrorHandler?.invoke() }
         }
     }
 
@@ -206,7 +196,6 @@ class DetectionRepository @Inject constructor(
             clear()
         }
 
-        actionExecutor = null
         _scenarioId.value = null
     }
 

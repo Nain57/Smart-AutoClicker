@@ -24,7 +24,6 @@ import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.domain.model.SmartActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -33,8 +32,8 @@ import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
-import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationController
-import com.buzbuz.smartautoclicker.feature.notifications.service.ServiceNotificationListener
+import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationController
+import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationListener
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
@@ -59,7 +58,6 @@ class LocalService(
     private val dumbEngine: DumbEngine,
     private val revenueRepository: IRevenueRepository,
     private val debugRepository: DebuggingRepository,
-    private val androidExecutor: SmartActionExecutor,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
     private val onStop: () -> Unit,
 ) : ILocalService {
@@ -117,7 +115,7 @@ class LocalService(
         startJob = serviceScope.launch {
             delay(500)
 
-            dumbEngine.init(androidExecutor, dumbScenario)
+            dumbEngine.init(dumbScenario)
 
             overlayManager.navigateTo(
                 context = context,
@@ -160,7 +158,6 @@ class LocalService(
 
             detectionRepository.apply {
                 setScenarioId(scenario.id, markAsUsed = true)
-                setExecutor(androidExecutor)
                 setProjectionErrorHandler { mainMenu.onMediaProjectionLost() }
             }
 
