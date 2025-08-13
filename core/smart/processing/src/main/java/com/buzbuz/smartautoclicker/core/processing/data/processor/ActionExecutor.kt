@@ -23,15 +23,14 @@ import android.graphics.Path
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.extensions.buildSingleStroke
-import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
-import com.buzbuz.smartautoclicker.core.base.extensions.nextLongInOffset
-import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
-import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
 import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.line
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
+import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -106,7 +105,7 @@ internal class ActionExecutor(
         val clickPath = when (click.positionType) {
             Click.PositionType.USER_SELECTED -> {
                 click.position?.let { position ->
-                    Path().apply { moveTo(position) }
+                    Path().apply { moveTo(position, random) }
                 }
             }
 
@@ -115,7 +114,9 @@ internal class ActionExecutor(
         } ?: return
 
         val clickGesture = GestureDescription.Builder().buildSingleStroke(
-            clickPath, random.nextLongInOffsetIfNeeded(click.pressDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS)
+            path = clickPath,
+            durationMs = click.pressDuration!!,
+            random = random,
         )
 
         withContext(Dispatchers.Main) {
@@ -139,10 +140,11 @@ internal class ActionExecutor(
 
         return Path().apply {
             moveTo(
-                Point(
+                position = Point(
                     result.position.x + (click.clickOffset?.x ?: 0),
                     result.position.y + (click.clickOffset?.y ?: 0),
-                )
+                ),
+                random = random,
             )
         }
     }
@@ -155,8 +157,9 @@ internal class ActionExecutor(
         val swipeGesture = GestureDescription.Builder().buildSingleStroke(
             path =
                 if (swipe.from == null || swipe.to == null) return
-                else Path().apply { line(swipe.from, swipe.to) },
-            durationMs = random.nextLongInOffsetIfNeeded(swipe.swipeDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS),
+                else Path().apply { line(swipe.from, swipe.to, random) },
+            durationMs = swipe.swipeDuration!!,
+            random = random,
         )
 
         withContext(Dispatchers.Main) {
@@ -169,7 +172,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(random.nextLongInOffsetIfNeeded(pause.pauseDuration!!, RANDOMIZATION_DURATION_MAX_OFFSET_MS))
+        delay(pause.pauseDuration!!.getPauseDurationMs(random))
     }
 
     /**
@@ -280,33 +283,6 @@ internal class ActionExecutor(
             androidExecutor.performGlobalAction(globalAction)
         }
     }
-
-
-    private fun Path.moveTo(position: Point) {
-        if (random == null) safeMoveTo(position.x, position.y)
-        else safeMoveTo(
-            random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-            random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-        )
-    }
-
-    private fun Path.line(from: Point?, to: Point?) {
-        if (from == null || to == null) return
-
-        moveTo(from)
-        lineTo(to)
-    }
-
-    private fun Path.lineTo(position: Point) {
-        if (random == null) safeLineTo(position.x, position.y)
-        else safeLineTo(
-            random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-            random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-        )
-    }
-
-    private fun Random?.nextLongInOffsetIfNeeded(value: Long, offset: Long): Long =
-        this?.nextLongInOffset(value, offset) ?: value
 }
 
 /** Tag for logs. */
