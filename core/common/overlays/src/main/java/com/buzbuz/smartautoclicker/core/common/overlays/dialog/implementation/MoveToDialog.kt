@@ -75,6 +75,10 @@ class MoveToDialog(
             }
             .setPositiveButton(android.R.string.ok) { _, _ -> validateCurrentValueAndClose() }
             .setNegativeButton(android.R.string.cancel) { _, _ -> back() }
+            .setOnDismissListener {
+                dialog = null
+                destroy()
+            }
             .create()
 
         dialog?.window?.setType(OverlayManager.OVERLAY_WINDOW_TYPE)
