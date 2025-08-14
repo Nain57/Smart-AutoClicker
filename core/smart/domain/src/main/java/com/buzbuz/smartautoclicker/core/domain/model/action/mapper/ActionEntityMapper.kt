@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -43,6 +44,7 @@ internal fun Action.toEntity(): ActionEntity {
         is ChangeCounter -> toChangeCounterEntity()
         is Notification -> toNotificationEntity()
         is SystemAction -> toSystemActionEntity()
+        is SetText -> toSetTextEntity()
     }
 }
 
@@ -151,5 +153,13 @@ private fun SystemAction.toSystemActionEntity(): ActionEntity =
         systemActionType = type.toEntity(),
     )
 
-
-
+private fun SetText.toSetTextEntity(): ActionEntity =
+    ActionEntity(
+        id = id.databaseId,
+        eventId = eventId.databaseId,
+        priority = priority,
+        name = name!!,
+        type = ActionType.TEXT,
+        textValue = text,
+        textValidateInput = validateInput,
+    )

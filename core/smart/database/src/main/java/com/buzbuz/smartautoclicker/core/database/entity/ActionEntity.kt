@@ -89,6 +89,9 @@ import kotlinx.serialization.Serializable
  * @param notificationImportance [ActionType.NOTIFICATION] only: how the notification will behave.
  *
  * @param systemActionType [ActionType.SYSTEM] only: the type of system action to execute.
+ *
+ * @param textValue [ActionType.TEXT] only: the text to type in the focused view
+ * @param textValidateInput [ActionType.TEXT] only: the type of system action to execute.
  */
 @Entity(
     tableName = ACTION_TABLE,
@@ -161,6 +164,10 @@ data class ActionEntity(
 
     // ActionType.SYSTEM
     @ColumnInfo(name = "system_action_type") val systemActionType: SystemActionType? = null,
+
+    // ActionType.TEXT
+    @ColumnInfo(name = "text_value") val textValue: String? = null,
+    @ColumnInfo(name = "text_validate_input") val textValidateInput: Boolean? = null,
 ) : EntityWithId
 
 /**

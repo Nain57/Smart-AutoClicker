@@ -126,9 +126,10 @@ class SmartActionsBriefViewModel @Inject constructor(
                 add(ActionTypeChoice.Click)
                 add(ActionTypeChoice.Swipe)
                 add(ActionTypeChoice.Pause)
+                add(ActionTypeChoice.SetText)
+                add(ActionTypeChoice.System)
                 add(ActionTypeChoice.ChangeCounter)
                 add(ActionTypeChoice.ToggleEvent)
-                add(ActionTypeChoice.System)
                 add(ActionTypeChoice.Notification)
                 add(ActionTypeChoice.Intent)
             }
@@ -174,6 +175,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
         ActionTypeChoice.Notification -> editionRepository.editedItemsBuilder.createNewNotification(context)
         ActionTypeChoice.System -> editionRepository.editedItemsBuilder.createNewSystemAction(context)
+        ActionTypeChoice.SetText -> editionRepository.editedItemsBuilder.createNewSetText(context)
         ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
     }
 

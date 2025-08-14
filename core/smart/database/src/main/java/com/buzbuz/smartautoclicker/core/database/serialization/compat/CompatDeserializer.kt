@@ -367,6 +367,7 @@ internal open class CompatDeserializer : Deserializer {
             ActionType.CHANGE_COUNTER -> deserializeActionChangeCounter(jsonAction)
             ActionType.NOTIFICATION -> deserializeActionNotification(jsonAction)
             ActionType.SYSTEM -> deserializeActionSystem(jsonAction)
+            ActionType.TEXT -> deserializeActionSetText(jsonAction)
             null -> null
         }
 
@@ -566,6 +567,22 @@ internal open class CompatDeserializer : Deserializer {
             priority = jsonSystem.getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.SYSTEM,
             systemActionType = type,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeActionSetText(jsonSetText: JsonObject): ActionEntity? {
+        val id = jsonSetText.getLong("id", true) ?: return null
+        val eventId = jsonSetText.getLong("eventId", true) ?: return null
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonSetText.getString("name") ?: "",
+            priority = jsonSetText.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.TEXT,
+            textValue = jsonSetText.getString("textValue") ?: "",
+            textValidateInput = jsonSetText.getBoolean("textValidateInput") ?: false,
         )
     }
 

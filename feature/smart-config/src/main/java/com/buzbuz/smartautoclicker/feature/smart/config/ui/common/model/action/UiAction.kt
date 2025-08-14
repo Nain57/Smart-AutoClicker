@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -31,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 
 
 data class UiAction(
-    @DrawableRes val icon: Int,
+    @param:DrawableRes val icon: Int,
     val name: String,
     val description: String,
     val action: Action,
@@ -57,7 +58,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is ChangeCounter -> getChangeCounterIconRes()
     is Notification -> getNotificationIconRes()
     is SystemAction -> getSystemActionIconRes()
-    else -> throw IllegalArgumentException("Not yet supported")
+    is SetText -> getSetTextIconRes()
 }
 
 internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
@@ -69,5 +70,5 @@ internal fun Action.getActionDescription(context: Context, parent: Event, inErro
     is ChangeCounter -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
     is SystemAction -> getDescription(context, inError)
-    else -> throw IllegalArgumentException("Not yet supported")
+    is SetText -> getDescription(context, inError)
 }
