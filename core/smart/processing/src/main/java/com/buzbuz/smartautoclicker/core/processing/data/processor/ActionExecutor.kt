@@ -30,6 +30,8 @@ import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.line
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
+import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
+import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -40,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -97,6 +100,7 @@ internal class ActionExecutor(
                 is ChangeCounter -> executeChangeCounter(action)
                 is Notification -> executeNotification(event, action)
                 is SystemAction -> executeSystemAction(action)
+                is SetText -> executeSetText(action)
             }
         }
     }
@@ -283,6 +287,23 @@ internal class ActionExecutor(
             androidExecutor.performGlobalAction(globalAction)
         }
     }
+
+    private suspend fun executeSetText(action: SetText) {
+        val counters = buildMap {
+            action.text.findCounterReferences().forEach { counterName ->
+                processingState.getCounterValue(counterName)?.let { counterValue ->
+                    put(counterName, counterValue)
+                }
+            }
+        }
+
+        withContext(Dispatchers.Main) {
+            androidExecutor.writeTextOnFocusedItem(
+                text = action.text.replaceCounterReferences(counters),
+                validate = action.validateInput,
+            )
+        }
+    }
 }
 
 /** Tag for logs. */
@@ -291,6 +312,3 @@ private const val TAG = "ActionExecutor"
 private const val INTENT_START_ACTIVITY_DELAY = 1000L
 /** Waiting delay after a broadcast to avoid overflowing the system. */
 private const val INTENT_BROADCAST_DELAY = 100L
-
-private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
-private const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L

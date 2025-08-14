@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -320,6 +321,16 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
+    fun createNewSetText(context: Context): SetText =
+        SetText(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.setTextName(context),
+            text = "",
+            validateInput = false,
+            priority = 0,
+        )
+
     fun createNewActionFrom(from: Action, eventId: Identifier = getEditedEventIdOrThrow()): Action = when (from) {
         is Click -> createNewClickFrom(from, eventId)
         is Swipe -> createNewSwipeFrom(from, eventId)
@@ -329,6 +340,7 @@ class EditedItemsBuilder internal constructor(
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
         is Notification -> createNewNotificationFrom(from, eventId)
         is SystemAction -> createNewSystemActionFrom(from, eventId)
+        is SetText -> createNewSetTextFrom(from, eventId)
     }
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
@@ -435,6 +447,18 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + from.name,
             type = from.type,
+        )
+    }
+
+    private fun createNewSetTextFrom(from: SetText, eventId: Identifier): SetText {
+        val actionId = actionsIdCreator.generateNewIdentifier()
+
+        return from.copy(
+            id = actionId,
+            eventId = eventId,
+            name = "" + from.name,
+            text = from.text,
+            validateInput = from.validateInput,
         )
     }
 

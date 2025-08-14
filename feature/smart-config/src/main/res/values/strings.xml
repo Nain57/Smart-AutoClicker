@@ -93,6 +93,11 @@
     <string name="item_system_action_desc">Use an Android system action (back, home or recent apps)</string>
     <string name="item_system_action_details_text">%1$s</string>
 
+    <string name="item_set_text_title">Set text</string>
+    <string name="item_set_text_desc">Write a text in the currently focused view</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">Clear text</string>
+
     <!-- Dialog Copy =============================================================================================== -->
 
     <string name="search_view_hint_event_copy">Search by event name</string>
@@ -384,6 +389,20 @@
     <string name="field_dropdown_system_action_type_back">Back</string>
     <string name="field_dropdown_system_action_type_home">Home</string>
     <string name="field_dropdown_system_action_type_recent_apps">Recent apps</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">Write text</string>
+
+    <string name="field_input_set_text_text_to_write_title">Text</string>
+    <string name="field_set_text_validate_title">Validate text</string>
+    <string name="field_set_text_validate_desc_enabled">Press "Enter" after writing the text</string>
+    <string name="field_set_text_validate_desc_disabled">Just write the text</string>
+    <string name="message_set_text_focus">To write the text in the wanted place, you need to focus the text field first
+        by clicking on it.\n\nPlease note that depending on the application, you might need to wait a little bit after
+        clicking, or the text will be written too early.\n\nThis might also not be working applications that
+        don\'t support standard text writing, so always test your action first!</string>
 
 
     <!-- Dialogs warning/error ===================================================================================== -->

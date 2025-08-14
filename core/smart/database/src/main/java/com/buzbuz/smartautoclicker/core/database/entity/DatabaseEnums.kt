@@ -51,6 +51,8 @@ enum class ActionType {
     NOTIFICATION,
     /** Interact with the system. */
     SYSTEM,
+    /** Set the text of a focused view on the screen. */
+    TEXT,
 }
 
 

@@ -75,6 +75,14 @@ interface AndroidActionExecutor: Dumpable {
     fun performGlobalAction(globalAction: Int)
 
     /**
+     * Action that sets the text of the currently focused item on the screen.
+     *
+     * Performing the action with an empty text will clear the text in the view. This action will also put the
+     * cursor at the end of text.
+     */
+    fun writeTextOnFocusedItem(text: String, validate: Boolean)
+
+    /**
      * Launch a new activity.
      *
      * As the intent is built by the user, nothing ensures it will be correctly dispatched and not cause exceptions from

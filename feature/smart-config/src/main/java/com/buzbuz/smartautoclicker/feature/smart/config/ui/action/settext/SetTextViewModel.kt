@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.system
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.settext
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.FlowPreview
@@ -37,14 +38,14 @@ import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
 
-class SystemActionViewModel @Inject constructor(
+class SetTextViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
 ) : ViewModel()  {
 
     /** The action being configured by the user. */
-    private val configuredSystemAction = editionRepository.editionState.editedActionState
+    private val configuredSetTextAction = editionRepository.editionState.editedActionState
         .mapNotNull { action -> action.value }
-        .filterIsInstance<SystemAction>()
+        .filterIsInstance<SetText>()
 
     private val editedActionHasChanged: StateFlow<Boolean> =
         editionRepository.editionState.editedActionState
@@ -58,15 +59,20 @@ class SystemActionViewModel @Inject constructor(
         .debounce(1000)
 
     /** The name of the system action. */
-    val name: Flow<String?> = configuredSystemAction
+    val name: Flow<String?> = configuredSetTextAction
         .map { it.name }
         .take(1)
     /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredSystemAction.map { it.name?.isEmpty() ?: true }
+    val nameError: Flow<Boolean> = configuredSetTextAction.map { it.name?.isEmpty() ?: true }
 
-    /** The type of system action. */
-    val typeItem: Flow<SystemActionTypeItem> = configuredSystemAction
-        .map { it.type.toTypeItem() }
+    /** The text to be written by the action. */
+    val textToWrite: Flow<String> = configuredSetTextAction
+        .map { it.text }
+        .take(1)
+
+    /** Tells if the input should be validated or not. */
+    val validateInput: Flow<Boolean> = configuredSetTextAction
+        .map { it.validateInput }
 
     /** Tells if the configured system action is valid and can be saved. */
     val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
@@ -76,15 +82,31 @@ class SystemActionViewModel @Inject constructor(
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
 
-    fun setName(name: String) {
-        editionRepository.editionState.getEditedAction<SystemAction>()?.let { systemAction ->
-            editionRepository.updateEditedAction(systemAction.copy(name = "" + name))
+    fun setName(newName: String) {
+        editionRepository.editionState.getEditedAction<SetText>()?.let { setTextAction ->
+            editionRepository.updateEditedAction(setTextAction.copy(name = "" + newName))
         }
     }
 
-    fun setType(typeItem: SystemActionTypeItem) {
-        editionRepository.editionState.getEditedAction<SystemAction>()?.let { systemAction ->
-            editionRepository.updateEditedAction(systemAction.copy(type = typeItem.toSystemActionType()))
+    fun setTextToWrite(newText: String) {
+        editionRepository.editionState.getEditedAction<SetText>()?.let { setTextAction ->
+            editionRepository.updateEditedAction(setTextAction.copy(text = "" + newText))
+        }
+    }
+
+    fun appendCounterReferenceToTextToWrite(counterName: String) {
+        editionRepository.editionState.getEditedAction<SetText>()?.let { setTextAction ->
+            editionRepository.updateEditedAction(
+                setTextAction.copy(text = "" + setTextAction.text.appendCounterReference(counterName))
+            )
+        }
+    }
+
+    fun toggleValidateInput() {
+        editionRepository.editionState.getEditedAction<SetText>()?.let { setTextAction ->
+            editionRepository.updateEditedAction(
+                setTextAction.copy(validateInput = !setTextAction.validateInput)
+            )
         }
     }
 }

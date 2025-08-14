@@ -17,6 +17,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -33,6 +34,7 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.CHANGE_COUNTER -> toDomainChangeCounter(cleanIds)
     ActionType.NOTIFICATION -> toDomainNotification(cleanIds)
     ActionType.SYSTEM -> toDomainSystem(cleanIds)
+    ActionType.TEXT -> toDomainSetText(cleanIds)
 }
 
 private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false) = Click(
@@ -121,6 +123,15 @@ private fun CompleteActionEntity.toDomainSystem(cleanIds: Boolean = false) = Sys
     name = action.name,
     priority = action.priority,
     type = action.systemActionType?.toDomain()!!,
+)
+
+private fun CompleteActionEntity.toDomainSetText(cleanIds: Boolean = false) = SetText(
+    id = Identifier(id = action.id, asTemporary = cleanIds),
+    eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
+    name = action.name,
+    priority = action.priority,
+    text = action.textValue ?: "",
+    validateInput = action.textValidateInput ?: false,
 )
 
 private fun ClickPositionType.toDomain(): Click.PositionType =

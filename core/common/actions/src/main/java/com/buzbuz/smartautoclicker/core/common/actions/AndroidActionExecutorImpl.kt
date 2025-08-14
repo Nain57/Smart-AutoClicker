@@ -26,6 +26,7 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.notification.NotificationRequestExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.text.TextExecutor
 
 import kotlinx.coroutines.delay
 import java.io.PrintWriter
@@ -38,6 +39,7 @@ import javax.inject.Singleton
 internal class AndroidActionExecutorImpl @Inject constructor(
     private val gestureExecutor: GestureExecutor,
     private val notificationRequestExecutor: NotificationRequestExecutor,
+    private val textExecutor: TextExecutor,
 ) : AndroidActionExecutor {
 
     /** Keep the service in a week reference to avoid potential leak. */
@@ -86,6 +88,12 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         } catch (ex: Exception) {
             Log.w(TAG, "Can't execute global action.", ex)
         }
+    }
+
+    override fun writeTextOnFocusedItem(text: String, validate: Boolean) {
+        val service = accessibilityService ?: return
+
+        textExecutor.writeText(service, text, validate)
     }
 
     override fun startActivity(intent: Intent) {

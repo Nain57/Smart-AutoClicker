@@ -40,4 +40,6 @@
     <string name="default_notification_name">Notification</string>
 
     <string name="default_system_action_name">System action</string>
+
+    <string name="default_set_text_name">Write text</string>
 </resources>
