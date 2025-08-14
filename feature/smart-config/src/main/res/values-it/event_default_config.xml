@@ -25,5 +25,7 @@
     <string name="default_change_counter_name">Modificare contatore</string>
     <string name="default_condition_name">Condizione</string>
     <string name="default_notification_name">Notifica</string>
+    <string name="default_system_action_name">Azione del sistema</string>
+    <string name="default_set_text_name">Scrivi testo</string>
 
 </resources>

@@ -134,4 +134,17 @@
     <string name="field_remove_ads">删除广告</string>
     <string name="field_troubleshooting">故障排除</string>
 
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">迁移</string>
+
+    <string name="message_condition_migration_desc">Klick\'r 图片格式已更改，您的场景需要进行更新。具体所需时间将根据需要迁移的条件数量而定，可能需要几分钟。</string>
+    <string name="message_condition_migration_count">%1$d 待迁移的图像条件。</string>
+    <string name="message_condition_migration_success">所有图像条件已迁移。</string>
+    <string name="message_condition_migration_error">某些条件无法迁移。请检查您的场景。</string>
+
+    <string name="button_condition_migration_start">迁移</string>
+    <string name="button_condition_migration_running">迁移</string>
+    <string name="button_condition_migration_finished">好的</string>
+
 </resources>

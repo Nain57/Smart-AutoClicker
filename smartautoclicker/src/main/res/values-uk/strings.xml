@@ -137,4 +137,17 @@
     <string name="field_remove_ads">Видалити рекламу</string>
     <string name="field_troubleshooting">Усунення несправностей</string>
 
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">Міграція</string>
+
+    <string name="message_condition_migration_desc">Формат зображень Klick\'r змінився, і ваш сценарій потрібно оновити. Це може зайняти кілька хвилин, залежно від кількості умов, які потрібно перенести.</string>
+    <string name="message_condition_migration_count">%1$d Умови зображення для міграції.</string>
+    <string name="message_condition_migration_success">Всі умови зображення перенесені.</string>
+    <string name="message_condition_migration_error">Деякі умови не вдалося перенести. Перевірте свої сценарії.</string>
+
+    <string name="button_condition_migration_start">Мігрувати</string>
+    <string name="button_condition_migration_running">Міграція</string>
+    <string name="button_condition_migration_finished">Добре</string>
+
 </resources>

@@ -90,6 +90,15 @@
     <string name="item_notification_details_text">Надіслати \"%1$s\"</string>
     <string name="item_notification_details_counter">Надіслати значення %1$s</string>
 
+    <string name="item_system_action_title">Дія системи</string>
+    <string name="item_system_action_desc">Використовуйте дії системи Android (назад, головна сторінка або останні програми)</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">Написати текст</string>
+    <string name="item_set_text_desc">Написати текст у вибраному вікні</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">Clear text</string>
+
     <!-- Dialog Copy =============================================================================================== -->
 
     <string name="search_view_hint_event_copy">Пошук за назвою події</string>
@@ -118,6 +127,10 @@
     <string name="menu_item_title_image_events">Екран</string>
     <string name="menu_item_title_trigger_events">Тригери</string>
     <string name="menu_item_title_more">Більше</string>
+
+    <string name="field_scenario_keep_screen_on_title">Тримати екран увімкненим</string>
+    <string name="field_scenario_keep_screen_on_enabled">Під час виявлення залиште екран пристрою увімкненим.</string>
+    <string name="field_scenario_keep_screen_on_disabled">Використовуйте звичайну поведінку екрану пристрою.</string>
 
     <string name="field_scenario_quality_title">Роздільна здатність виявлення</string>
     <string name="field_scenario_quality_description">Для швидшого виявлення Klick\'r зменшує масштаб зображень перед виявленням.\n\nЯкщо ви збільшите роздільну здатність, виявлення буде повільнішим, але точнішим. Якщо ви зменшите роздільну здатність, виявлення буде швидшим, але менш точним. Знайдіть хороше співвідношення між роздільною здатністю виявлення та порогами умов, щоб отримати найкраще з ваших сценаріїв!</string>
@@ -326,6 +339,28 @@
 
     <string name="button_notification_config">Відкрити налаштування</string>
     <string name="message_notification_config">Поведінка сповіщень залежить від ОС вашого пристрою. Ви можете налаштувати обробку сповіщень у налаштуваннях пристрою.</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">Дія системи</string>
+
+    <string name="field_dropdown_system_action_type_title">Тип</string>
+    <string name="field_dropdown_system_action_type_back">Назад</string>
+    <string name="field_dropdown_system_action_type_home">Головна</string>
+    <string name="field_dropdown_system_action_type_recent_apps">Недавні програми</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">Написати текст</string>
+
+    <string name="field_input_set_text_text_to_write_title">Текст</string>
+    <string name="field_set_text_validate_title">Перевірити текст</string>
+    <string name="field_set_text_validate_desc_enabled">Натисніть Enter після введення тексту</string>
+    <string name="field_set_text_validate_desc_disabled">Just write the text</string>
+    <string name="message_set_text_focus">Щоб написати текст у потрібному місці, спочатку потрібно виділити текстове поле, натиснувши на нього. Зверніть увагу, що залежно від програми, після натискання може знадобитися трохи почекати, інакше текст буде написаний занадто рано. Також це може не працювати в програмах, які не підтримують стандартне написання тексту, тому завжди спочатку перевіряйте свою дію!</string>
+
 
     <!-- Dialogs warning/error ===================================================================================== -->
 

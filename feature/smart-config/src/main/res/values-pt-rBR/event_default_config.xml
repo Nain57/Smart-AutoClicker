@@ -25,4 +25,6 @@
     <string name="default_condition_name">Condição</string>
     <string name="default_change_counter_name">Contador de mudanças</string>
     <string name="default_notification_name">Notificação</string>
+    <string name="default_system_action_name">Ação do sistema</string>
+    <string name="default_set_text_name">Escreva o texto</string>
 </resources>
