@@ -137,4 +137,17 @@
     <string name="field_remove_ads">Rimuovere gli annunci</string>
     <string name="field_troubleshooting">Risoluzione dei problemi</string>
 
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">Migrazione</string>
+
+    <string name="message_condition_migration_desc">Il formato delle immagini Klick\'r è cambiato e il tuo scenario deve essere aggiornato. L\'operazione potrebbe richiedere alcuni minuti a seconda del numero di condizioni da migrare.</string>
+    <string name="message_condition_migration_count">%1$d Condizioni dell\'immagine da migrare.</string>
+    <string name="message_condition_migration_success">Tutte le condizioni delle immagini sono state migrate.</string>
+    <string name="message_condition_migration_error">Alcune condizioni non è stato possibile migrare. Controlla i tuoi scenari.</string>
+
+    <string name="button_condition_migration_start">Migrare</string>
+    <string name="button_condition_migration_running">Migrazione</string>
+    <string name="button_condition_migration_finished">OK</string>
+
 </resources>

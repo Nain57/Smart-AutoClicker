@@ -311,6 +311,38 @@
     <string name="button_notification_config">Ouvrir les paramètres</string>
     <string name="message_notification_config">Le comportement des notifications dépend du système d\'exploitation de votre appareil. Vous pouvez configurer le traitement des notifications dans les paramètres de votre appareil.</string>
 
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_system_action_title">Action système</string>
+    <string name="item_system_action_desc">Utilisez une action du système Android (retour, accueil ou applications récentes).</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">Écrire du texte</string>
+    <string name="item_set_text_desc">Écrire un texte dans la vue actuellement sélectionnée</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">Clear text</string>
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">Action du système</string>
+
+    <string name="field_dropdown_system_action_type_title">Type</string>
+    <string name="field_dropdown_system_action_type_back">Retour</string>
+    <string name="field_dropdown_system_action_type_home">Accueil</string>
+    <string name="field_dropdown_system_action_type_recent_apps">Applications récentes</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">Écrire du texte</string>
+
+    <string name="field_input_set_text_text_to_write_title">Texte</string>
+    <string name="field_set_text_validate_title">Valider le texte</string>
+    <string name="field_set_text_validate_desc_enabled">Appuyer sur Entrée après avoir saisi le texte.</string>
+    <string name="field_set_text_validate_desc_disabled">Écrire simplement le texte</string>
+    <string name="message_set_text_focus">Pour écrire le texte à l\'endroit souhaité, vous devez d\'abord sélectionner le champ de texte en cliquant dessus. Veuillez noter que, selon l\'application, vous devrez peut-être attendre un peu après avoir cliqué, sinon le texte sera écrit trop tôt. Cela peut également ne pas fonctionner avec les applications qui ne prennent pas en charge l\'écriture de texte standard, alors testez toujours votre action au préalable !</string>
+
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
@@ -325,5 +357,6 @@
 
     <string name="brief_empty_actions">Aucune Action. Vous avez besoin d\'au moins une Action valide pour créer un évènement</string>
     <string name="brief_empty_image_conditions">Aucune condition d\'écran. Vous avez besoin d\'au moins une Condition valide pour créer un évènement</string>
+
 
 </resources>

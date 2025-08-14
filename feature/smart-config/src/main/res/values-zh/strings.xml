@@ -307,6 +307,38 @@
     <string name="button_notification_config">打开设置</string>
     <string name="message_notification_config">通知行为取决于设备操作系统。您可以在设备设置中配置如何处理通知。</string>
 
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_system_action_title">系统操作</string>
+    <string name="item_system_action_desc">使用 Android 系统操作（返回、主页或最近应用）</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">撰写文本</string>
+    <string name="item_set_text_desc">在当前选中的视图中输入文本。</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">Clear text</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">系统操作</string>
+
+    <string name="field_dropdown_system_action_type_title">类型</string>
+    <string name="field_dropdown_system_action_type_back">返回</string>
+    <string name="field_dropdown_system_action_type_home">首页</string>
+    <string name="field_dropdown_system_action_type_recent_apps">最近使用的应用程序</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">撰写文本</string>
+
+    <string name="field_input_set_text_text_to_write_title">文本</string>
+    <string name="field_set_text_validate_title">验证文本</string>
+    <string name="field_set_text_validate_desc_enabled">输入文本后按回车键</string>
+    <string name="field_set_text_validate_desc_disabled">只需输入文本</string>
+    <string name="message_set_text_focus">要在指定位置输入文本，首先需要通过点击该位置来聚焦文本输入框。         请注意，根据应用程序的不同，点击后可能需要稍等片刻，         否则文本可能会过早输入。         此外，部分不支持标准文本输入的应用程序可能无法正常工作，         因此请务必先测试操作效果！</string>
+
     <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.

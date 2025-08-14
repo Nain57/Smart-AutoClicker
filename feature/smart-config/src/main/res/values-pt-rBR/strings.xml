@@ -88,6 +88,15 @@
     <string name="item_notification_details_text">Enviar \"%1$s\"</string>
     <string name="item_notification_details_counter">Enviar valor %1$s</string>
 
+    <string name="item_system_action_title">Ação do sistema</string>
+    <string name="item_system_action_desc">Use uma ação do sistema Android (voltar, página inicial ou aplicativos recentes)</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">Escreva o texto</string>
+    <string name="item_set_text_desc">Escreva um texto na visualização atualmente em foco</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">Clear text</string>
+
 
     <!-- Dialog Copy =============================================================================================== -->
 
@@ -327,6 +336,27 @@
     <string name="message_notification_config">O comportamento das notificações depende do sistema operacional do seu dispositivo.
         Você pode definir como as notificações são tratadas nas configurações do dispositivo.</string>
 
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">Ação do sistema</string>
+
+    <string name="field_dropdown_system_action_type_title">Tipo</string>
+    <string name="field_dropdown_system_action_type_back">Voltar</string>
+    <string name="field_dropdown_system_action_type_home">Página inicial</string>
+    <string name="field_dropdown_system_action_type_recent_apps">Aplicativos recentes</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">Escreva o texto</string>
+
+    <string name="field_input_set_text_text_to_write_title">Texto</string>
+    <string name="field_set_text_validate_title">Validar texto</string>
+    <string name="field_set_text_validate_desc_enabled">Pressione Enter após escrever o texto.</string>
+    <string name="field_set_text_validate_desc_disabled">Just write the text</string>
+    <string name="message_set_text_focus">Para escrever o texto no local desejado, você precisa primeiro selecionar o campo de texto clicando nele. Observe que, dependendo do aplicativo, talvez seja necessário esperar um pouco após clicar, ou o texto será escrito muito cedo. Isso também pode não funcionar em aplicativos que não suportam a escrita de texto padrão, portanto, sempre teste sua ação primeiro!</string>
+
+
     <!-- Dialogs warning/error ===================================================================================== -->
 
     <string name="warning_dialog_message_toggle_action_from_another_scenario">Este evento tem uma ou mais ações de alternância de evento que se referem a um evento de outro cenário.\nVocê precisará atualizar os eventos alvo antes de salvar seu cenário.</string>
@@ -336,7 +366,6 @@
 
     <string name="error_dialog_message_scenario_saving">Seu cenário não pode ser salvo devido a um erro interno.\nVocê deseja modificar ou cancelar todas as suas alterações?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r está instalado incorretamente e não pode iniciar a detecção.\n\nSe você instalou de uma loja de aplicativos legítima, por favor, contate-nos no GitHub, pois isso ajudará a resolver esse problema.</string>
-
 
     <!-- Content description ======================================================================================= -->
     <!--They are use as accessibility texts for visually impaired people. They will not be displayed but spoken. -->

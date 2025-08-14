@@ -38,4 +38,6 @@
     <string name="default_change_counter_name">Змінити лічильник</string>
 
     <string name="default_notification_name">Сповіщення</string>
+    <string name="default_system_action_name">Дія системи</string>
+    <string name="default_set_text_name">Написати текст</string>
 </resources>

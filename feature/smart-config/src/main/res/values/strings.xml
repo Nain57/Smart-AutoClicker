@@ -93,7 +93,7 @@
     <string name="item_system_action_desc">Use an Android system action (back, home or recent apps)</string>
     <string name="item_system_action_details_text">%1$s</string>
 
-    <string name="item_set_text_title">Set text</string>
+    <string name="item_set_text_title">Write text</string>
     <string name="item_set_text_desc">Write a text in the currently focused view</string>
     <string name="item_set_text_details_text">%1$s</string>
     <string name="item_set_text_details_text_empty">Clear text</string>
