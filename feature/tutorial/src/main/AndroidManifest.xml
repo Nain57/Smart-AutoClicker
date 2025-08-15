@@ -24,8 +24,7 @@
             android:theme="@style/AppTheme"
             android:exported="false"
             android:noHistory="true"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"/>
+            android:excludeFromRecents="true"/>
 
     </application>
 
