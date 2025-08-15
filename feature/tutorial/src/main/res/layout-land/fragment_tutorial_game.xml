@@ -31,10 +31,8 @@
         android:layout_marginTop="@dimen/margin_vertical_large"
         android:layout_marginBottom="@dimen/margin_vertical_large"
         android:layout_marginStart="@dimen/margin_horizontal_default"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/game_area"
-        app:layout_constraintEnd_toStartOf="@id/card_instructions"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_instructions"
@@ -42,10 +40,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/space_overlay_menu"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/card_score">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/space_overlay_menu"
+        app:layout_constraintBottom_toTopOf="@id/game_area">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_instructions"
@@ -62,14 +60,12 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_score"
         style="@style/AppTheme.Widget.Card"
-        android:layout_width="0dp"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_large"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
-        app:layout_constraintEnd_toStartOf="@id/card_high_score"
-        app:layout_constraintStart_toStartOf="@id/card_instructions"
+        app:layout_constraintEnd_toEndOf="@id/card_instructions"
         app:layout_constraintTop_toBottomOf="@id/card_instructions"
-        app:layout_constraintBottom_toTopOf="@id/game_area">
+        app:layout_constraintBottom_toTopOf="@id/card_high_score">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_score"
@@ -87,13 +83,12 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_high_score"
         style="@style/AppTheme.Widget.Card"
-        android:layout_width="0dp"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical_large"
-        app:layout_constraintEnd_toEndOf="@id/card_instructions"
-        app:layout_constraintStart_toEndOf="@id/card_score"
-        app:layout_constraintTop_toBottomOf="@id/card_instructions"
-        app:layout_constraintBottom_toTopOf="@id/game_area">
+        app:layout_constraintStart_toStartOf="@id/card_score"
+        app:layout_constraintEnd_toEndOf="@id/card_score"
+        app:layout_constraintTop_toBottomOf="@id/card_score">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_high_score"
@@ -108,16 +103,28 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <include layout="@layout/include_tutorial_game_footer"
+        android:id="@+id/footer"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        app:layout_constraintStart_toStartOf="@id/card_score"
+        app:layout_constraintEnd_toEndOf="@id/card_score"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/game_area"
         style="@style/AppTheme.Widget.CardOutlined"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        app:layout_constraintBottom_toTopOf="@+id/footer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_high_score">
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_default"
+        app:layout_constraintStart_toEndOf="@id/space_overlay_menu"
+        app:layout_constraintEnd_toStartOf="@id/card_high_score"
+        app:layout_constraintTop_toBottomOf="@id/card_instructions"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/blue_target"
@@ -141,25 +148,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/game_area"
+        app:layout_constraintEnd_toEndOf="@id/game_area"
+        app:layout_constraintTop_toTopOf="@id/game_area"
+        app:layout_constraintBottom_toBottomOf="@id/game_area"
         app:icon="@drawable/ic_play_arrow"
         android:visibility="gone"
         android:text="@string/button_text_tutorial_start_game"
         tools:visibility="visible"/>
-
-    <include layout="@layout/include_tutorial_game_footer"
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical_large"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        android:layout_marginBottom="@dimen/margin_vertical_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/game_area"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
