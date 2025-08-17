@@ -34,7 +34,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        ./gradlew \
+        ./gradlew --info \
           -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" \
           -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
           -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
