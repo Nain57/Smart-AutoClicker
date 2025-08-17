@@ -17,13 +17,6 @@ jobs:
         distribution: 'zulu'
         java-version: '21'
 
-    - name: set up Android NDK
-      uses: nttld/setup-ndk@v1
-      id: setup-ndk
-      with:
-        ndk-version: r28c
-        link-to-sdk: true
-
     - name: Restore keystore
       run: |
         echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
