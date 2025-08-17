@@ -41,7 +41,6 @@ sourceDownload {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
-    ndkVersion = libs.versions.androidNdk.get()
 
     defaultConfig {
         externalNativeBuild {

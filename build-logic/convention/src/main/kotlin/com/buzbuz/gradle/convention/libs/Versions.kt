@@ -28,6 +28,8 @@ class Versions internal constructor(private val libs: VersionCatalog) {
             get() = libs.getVersion("androidCompileSdk")
         val minSdk: Int
             get() = libs.getVersion("androidMinSdk")
+        val ndk: String
+            get() = libs.getStringVersion("androidNdk")
     }
 
     val java: JavaVersion

@@ -24,6 +24,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
+
     override fun apply(target: Project): Unit = with(target) {
         val libs = getLibs()
 
@@ -39,6 +40,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 targetSdk = libs.versions.android.compileSdk
                 minSdk = libs.versions.android.minSdk
             }
+
+            ndkVersion = libs.versions.android.ndk
 
             compileOptions.apply {
                 sourceCompatibility = libs.versions.java
