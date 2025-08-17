@@ -19,6 +19,14 @@ jobs:
         distribution: 'zulu'
         java-version: '21'
 
+    - name: set NDK
+      shell: bash
+      run: |
+        set -x
+        echo "ANDROID_NDK=$ANDROID_NDK_LATEST_HOME" >> $GITHUB_ENV
+        echo "ANDROID_NDK_HOME=$ANDROID_NDK_LATEST_HOME" >> $GITHUB_ENV
+        echo "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME" >> $GITHUB_ENV
+
     - name: Restore keystore
       run: |
         echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
