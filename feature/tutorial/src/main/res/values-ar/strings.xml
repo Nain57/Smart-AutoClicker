@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY أو FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="activity_tutorial_name">الدليل</string>
+
+    <string name="message_score">اللاعب: %1$d</string>
+    <string name="message_high_score">أفضل: %1$d</string>
+    <string name="message_time_left">الوقت المتبقي: %1$d</string>
+
+    <string name="button_text_tutorial_start_game">ابدأ اللعبة</string>
+    <string name="button_text_tutorial_next">التالي</string>
+
+    <!--
+      - Tutorials definition
+      - Each tutorial must contains the following strings:
+      -
+      - * "item_title_tutorial_n": The name of the tutorial n in the tutorial list. Must be short.
+      - * "item_desc_tutorial_n": The secondary text of the tutorial n in the tutorial list. Can contains more details,
+      - is displayed on two lines if needed.
+      - * "message_tutorial_n_game_instructions": The instructions for the game associated with the tutorial n.
+      - * The following strings for each steps:
+      -   * message_tutorial_n_step_i": The text displayed in the tutorial step i to guide the user during tutorial n.
+      -   * message_tutorial_n_step_secondary_i": The text displayed below the tutorial step i image, if any, during
+      - the tutorial n. This string is not mandatory for each step.
+      -
+      - Note: not all steps are displaying text, this is why there is not necessarily all step indexes defined here.
+    -->
+
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_1">اضغط على هدف ثابت</string>
+    <string name="item_desc_tutorial_1">تعلم كيفية إنشاء أول حدث لك من أجل النقر على هدف ثابت</string>
+    <string name="message_tutorial_1_game_instructions">انقر على الزر الأزرق بأسرع ما يمكن</string>
+
+    <string name="message_tutorial_1_step_1">مرحبًا بك في أول دليل لك!\n\nهنا، ستسعى لتجاوز أعلى نتيجة
+        في اللعبة بمساعدة Klick'r.\n\nأولاً، ابدأ اللعبة وحاول الفوز بمفردك.</string>
+
+    <string name="message_tutorial_1_step_3">صعب، أليس كذلك؟\nدعنا نستخدم Klick'r لتجاوزه!\n\n
+        انقر على أيقونة إعداد السيناريو لبدء تحرير سيناريوك الجديد.</string>
+
+    <string name="message_tutorial_1_step_4">السيناريو هو الهيكل الجذري لأتمتة Klick'r.\n\n
+        يحتوي على إعدادات الكشف العامة وقائمة من الأحداث التي تصف ما سيتم تنفيذه عند تشغيل
+        السيناريو الخاص بك.\n\nانقر على زر إنشاء حدث لإنشاء أول حدث لك.</string>
+
+    <string name="message_tutorial_1_step_5">يصف الحدث ما هي الإجراءات (النقر، السحب…) التي سيتم تنفيذها عندما تتحقق شروط معينة.\n\nيجب عليك إنشاء شرط واحد على الأقل وإجراء واحد لإنشاء حدث صالح واستخدامه في السيناريو الخاص بك.\n\nانقر على حقل الشروط لعرض قائمة الشروط.</string>
+
+    <string name="message_tutorial_1_step_6">الشرط هو جزء من لقطة شاشة سيتم مقارنتها بكل إطار شاشة لجهازك.\n\nللفوز في اللعبة، نريد النقر على الشخصية الزرقاء عندما تكون مرئية، لذا نحتاج إلى شرط يتحقق عندما تظهر الشخصية على شاشة جهازك.\n\nانقر على زر إنشاء شرط لإنشاء أول شرط لك.</string>
+
+    <string name="message_tutorial_1_step_7">الخطوة الأولى في إنشاء شرط هي أخذ لقطة شاشة له.\n\n
+        حيث نريد النقر عندما تكون الشخصية الزرقاء مرئية، يجب أن تحتوي لقطة الشاشة عليها. ابدأ اللعبة مرة أخرى
+        لعرضها، ثم التقط لقطة الشاشة.</string>
+    <string name="message_tutorial_1_step_secondary_7">استخدم زر الالتقاط في القائمة العائمة لأخذ لقطة الشاشة.</string>
+
+    <string name="message_tutorial_1_step_8">بمجرد أخذ لقطة الشاشة، يمكنك قصها للحصول على الجزء
+        الذي يهم الكشف فقط.</string>
+    <string name="message_tutorial_1_step_secondary_8">إذا كانت لقطة الشاشة الخاصة بك لا تحتوي على الشخصية الزرقاء، يمكنك
+        الضغط على هذا الزر لأخذ واحدة جديدة.</string>
+
+    <string name="message_tutorial_1_step_9">بالنسبة لهذه اللعبة، الجزء المهم هو الشخصية الزرقاء، لذا قص لقطة الشاشة الخاصة بك للحصول عليها فقط.\n\nيمكنك تكبير لقطة الشاشة بالقرص عليها للحصول على دقة أفضل لمحدد القص.</string>
+    <string name="message_tutorial_1_step_secondary_9">تأكد من أن الشخصية كاملة في المحدد. حاول أيضًا
+        قصها بالقرب منها قدر الإمكان لتسهيل الكشف عن الصورة.</string>
+
+    <string name="message_tutorial_1_step_10">صورتك الشرطية مسجلة الآن!\n\nيمكن الآن إجراء العديد من التعديلات
+        عليها، ولكن الإعدادات الافتراضية تناسب حالة الاستخدام الأساسية لدينا. حيث أن هدفنا لا يتحرك، فسوف
+        يكتشف فقط عند موضع الالتقاط، وهو أسرع من الكشف على الشاشة بأكملها.\n\nانقر على زر الحفظ لتسجيلها والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_1_step_11">أغلق قائمة الشروط للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_1_step_12">مع هذا الشرط، يعرف السيناريو متى يتم تشغيل الإجراءات.\n\n
+        تحتاج الآن إلى تحديد الإجراءات التي يجب تشغيلها، لذا بالنسبة لهذه اللعبة، نقرة على الشخصية الزرقاء.\n\nانقر على حقل الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_1_step_13">الإجراء هو شيء يتم تنفيذه بمجرد تحقق شروط حدثه.\n\nيمكن أن يكون نقرة، سحب، فترة توقف، نية (تفاعل مع تطبيق آخر) أو تغيير في تنفيذ السيناريو، ويمكن تعريف إجراءات متعددة لنفس الحدث.\n\nانقر على زر إنشاء إجراء لإنشاء أول إجراء لك.</string>
+
+    <string name="message_tutorial_1_step_14">أولاً، نحتاج إلى اختيار نوع لإجراءك.\n\nبالنسبة لهذه اللعبة، نحتاج ببساطة
+        إلى النقر على الشخصية الزرقاء، لذا اختر "نقرة" لإنشاء إجراء نقرة جديد.</string>
+
+    <string name="message_tutorial_1_step_15">يتم تعريف إجراء النقرة بواسطة موضع ومدة الضغط.\n\nحيث أننا
+        نريد النقر بأسرع ما يمكن، يمكننا الاحتفاظ بمدة الضغط الافتراضية 1 مللي ثانية، وهي أقل قيمة ممكنة. لذا نحتاج فقط إلى تحديد موضع.\n\nانقر على زر اختيار الموضع لتحديد موضع إجراء النقرة.</string>
+
+    <string name="message_tutorial_1_step_16">تحتاج إلى تحديد الموضع الدقيق الذي سيتم النقر عليه، لذا يجب عليك بدء
+        اللعبة مرة أخرى لعرض الشخصية الزرقاء، ثم تحديد موضعها.\n\nبمجرد أن يكون الموضع صحيحًا، انقر على زر التحقق لحفظه.</string>
+    <string name="message_tutorial_1_step_secondary_16">لا يمكنك التفاعل مع اللعبة بينما محدد الموضع مرئي، ولكن يمكنك استخدام هذا الزر لإظهاره وإخفائه، مما يسمح لك بإزالة هذا القيد حسب الرغبة.</string>
+
+    <string name="message_tutorial_1_step_17">تم تكوين النقر بشكل صحيح الآن!\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_1_step_18">أغلق قائمة الإجراءات للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_1_step_19">الآن لديك حدث مع شرط وإجراء، مما يعني أنه يعرف ما يجب تنفيذه ومتى يجب تنفيذه.\n\nانقر على زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_1_step_20">المتطلب الوحيد للسيناريو هو أن يحتوي على حدث واحد على الأقل.\n
+        حيث أن حدثنا يغطي بالفعل كيفية الفوز في اللعبة، فلا نحتاج إلى أي شيء آخر.\n\nانقر على زر الحفظ لحفظ السيناريو في قاعدة البيانات وأغلق مربعات الحوار الخاصة بالإعدادات.</string>
+
+    <string name="message_tutorial_1_step_21">كما ترى، زر التشغيل متاح الآن، مما يعني أن السيناريو الخاص بك
+        صالح ويمكن استخدامه للكشف\n\nانقر عليه لبدء الكشف.</string>
+
+    <string name="message_tutorial_1_step_22">إنه يعمل ولكن لا يحدث شيء؟\n\nهذا طبيعي، سوف ينقر فقط
+        عندما تكون الشخصية الزرقاء مرئية، تذكر؟ بينما تستمر السيناريو، اضغط على زر بدء اللعبة
+        فقط شاهد كيف سيتجاوز Klick'r ذلك نيابة عنك!</string>
+
+    <string name="message_tutorial_1_step_23">تهانينا!\n\nالآن تعرف أساسيات Klick'r، ولكن ليس كل حالات الاستخدام ستكون بسيطة مثل هذه اللعبة.\nألقِ نظرة على الدليل التالي لتتعلم كيفية تتبع هدف متحرك.</string>
+
+
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_2">اضغط على هدف متحرك</string>
+    <string name="item_desc_tutorial_2">غير حدثك للنقر على هدف متحرك عشوائيًا</string>
+    <string name="message_tutorial_2_game_instructions">انقر على الزر الأزرق المتحرك بأسرع ما يمكن</string>
+
+    <string name="message_tutorial_2_step_1">دعنا نعقد اللعبة قليلاً. الآن، الهدف يتحرك عشوائيًا.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كنت تستطيع الفوز بمفردك.</string>
+
+    <string name="message_tutorial_2_step_3">مرة أخرى، يبدو أنه من المستحيل الفوز يدويًا، لذا دعنا نستخدم Smart AutoClicker.\n\nتم الاحتفاظ بالسيناريو الخاص بك للدليل السابق وتم تحميله لهذا الدليل، ولكننا سنحتاج إلى تغيير بعض المعلمات للفوز بهذه اللعبة الجديدة.\n\nانقر على أيقونة إعداد السيناريو لبدء تحديث سيناريوك الجديد.</string>
+
+    <string name="message_tutorial_2_step_4">لا نزال نريد النقر على الشخصية الزرقاء، مما يعني أننا لا نزال بحاجة إلى شرط واحد وإجراء واحد، لذا فقط حدث واحد.\n\nنظرًا لأن حالة الاستخدام مشابهة جدًا للعبة السابقة، سنحتفظ بحدثنا ونقوم بتحديثه فقط.\n\nانقر على الحدث الذي أنشأته سابقًا لتحريره.</string>
+
+    <string name="message_tutorial_2_step_5">في البداية، سنقوم بتحديث الشرط الذي يكشف عن الشخصية الزرقاء.\n\nانقر على حقل الشروط لعرض قائمة الشروط.</string>
+
+    <string name="message_tutorial_2_step_6">كما في الدليل السابق، نحتاج إلى الكشف عن الشخصية الزرقاء، ولكن الآن
+        إنها تتحرك.\n\nشرطنا السابق يكشف بالفعل عن الشخصية الزرقاء، ولكن فقط في موضع واحد. لذلك لا تحتاج إلى أخذ لقطة شاشة جديدة، حيث أن شرطك السابق يحتوي بالفعل عليها، نحتاج فقط إلى تغيير معاييره.\n\nانقر على شرطك لبدء تحريره.</string>
+
+    <string name="message_tutorial_2_step_7">حاليًا، نوع كشف الشرط مضبوط على "دقيق"، مما يعني أنه سيتم التحقق منه فقط عند موضع الالتقاط الخاص به.\n\nللفوز في هذه اللعبة، نحتاج إلى التحقق من نفس الشرط، ولكن على الشاشة بأكملها.\n\nاختر نوع "الشاشة الكاملة" للكشف عن الشخصية الزرقاء في أي مكان على
+        الشاشة.</string>
+    <string name="message_tutorial_2_step_secondary_7">الكشف على الشاشة الكاملة يستغرق وقتًا أطول من الموضع الدقيق، تذكر ذلك عندما يكون توقيت تنفيذ السيناريو الخاص بك مهمًا.</string>
+
+    <string name="message_tutorial_2_step_8">هذا كل شيء!\nلقد احتجنا فقط إلى تغيير نوع الكشف لجعل شرطك يناسب احتياجاتنا.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_2_step_9">أغلق قائمة الشروط للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_2_step_10">صورتك الشرطية محدثة الآن!\n\nفي هذه الحالة، سينفذ السيناريو الآن نقرة في كل مرة تكون فيها الشخصية الزرقاء مرئية في أي مكان على الشاشة، ولكن ستظل هذه النقرة في نفس الموضع، الموضع الذي تم تحديده خلال الدليل السابق. لذا، نحتاج إلى تحديث إجراءنا.\n\n
+        انقر على حقل الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_2_step_11">لا نزال نريد تنفيذ نقرة واحدة، ولكن هذه المرة، نريد النقر على الشرط وليس موضعًا ثابتًا.\n\nنظرًا لأن هذا لا يزال نقرة واحدة، لا نزال بحاجة إلى إجراء واحد فقط، لذا دعنا نحرر نقرتك السابقة.\n\nانقر على إجراءك لبدء تحريره.</string>
+
+    <string name="message_tutorial_2_step_12">حاليًا، تم ضبط إجراء النقرة "انقر على" على "موضع محدد"، مما يعني أنه يجب عليك تعيين الموضع الذي سيتم النقر عليه يدويًا. الخيار الآخر هو "شرط"، مما يعني أن الإجراء سينقر على إحداثيات الشرط المكتشف.\n\nهذا هو بالضبط ما نحتاجه للفوز في اللعبة. في كل مرة يتم الكشف عن الشخصية الزرقاء، سينقر هذا الإجراء عليها.\n\nاختره لاستخدامه في إجراءك.</string>
+
+    <string name="message_tutorial_2_step_13">انقر على خيار محدد الشرط لاختيار أي شرط تم الكشف عنه للنقر عليه.\nنحتاج إلى تحديده لأن لدينا شروط متعددة في حدثنا.</string>
+
+    <string name="message_tutorial_2_step_14">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، الشخصية الزرقاء.\n\nاختره للنقر على هذا الشرط عندما يتم الكشف عنه على شاشتك.</string>
+
+    <string name="message_tutorial_2_step_15">هذا كل شيء!\nإجراء نقرك الآن مكون بشكل صحيح للفوز في اللعبة.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_2_step_16">أغلق قائمة الإجراءات للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_2_step_17">لقد قمت بتحديث الشرط وإجراءك، لا يوجد شيء آخر للقيام به.\n\nانقر على زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_2_step_18">حفظ أخير لتسجيل تغييراتك الجديدة في قاعدة البيانات وإغلاق مربعات الحوار الخاصة بالإعدادات.</string>
+
+    <string name="message_tutorial_2_step_19">الآن تم تكوين السيناريو الخاص بك للفوز بهذا الدليل الجديد.\n\nابدأ الكشف باستخدام زر التشغيل في القائمة العائمة ثم، ابدأ اللعبة.</string>
+
+    <string name="message_tutorial_2_step_20">تهانينا!\n\nالآن تعرف كيفية تتبع هدف ثابت أو متحرك، ولكن هناك الكثير لتتعلمه!.</string>
+
+
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_3">دمج شروط متعددة</string>
+    <string name="item_desc_tutorial_3">إنشاء ودمج شروط متعددة لحدثك</string>
+    <string name="message_tutorial_3_game_instructions">انقر على الزر الأزرق فقط عندما يكون الزر الأحمر مرئيًا</string>
+
+    <string name="message_tutorial_3_step_1">دعنا نغير قواعد اللعبة مرة أخرى. الهدف الأزرق قد توقف عن الحركة،
+        ولكن الآن يجب النقر عليه فقط عندما يكون الهدف الأحمر مرئيًا.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كنت تستطيع الفوز
+        بمفردك.</string>
+
+    <string name="message_tutorial_3_step_3">مرة أخرى، يبدو أنه من المستحيل الفوز يدويًا، لذا دعنا نستخدم Smart
+        AutoClicker.\n\nتم الاحتفاظ بالسيناريو الخاص بك للدليل السابق وتم تحميله لهذا الدليل، ولكننا سنحتاج إلى تغيير بعض المعلمات للفوز بهذه اللعبة الجديدة.\n\nانقر على أيقونة إعداد السيناريو لبدء تحديث سيناريوك الجديد.</string>
+
+    <string name="message_tutorial_3_step_4">لا نزال نريد النقر على الهدف الأزرق، ولكن فقط عندما يكون الأحمر مرئيًا.\n
+        لذا نحتاج إلى إضافة شرط لهذا الهدف الأحمر في حدثنا.\n\nانقر على الحدث الذي أنشأ
