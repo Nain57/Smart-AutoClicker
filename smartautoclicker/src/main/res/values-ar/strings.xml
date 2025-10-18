@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">السيناريو: %1$s</string>
+    <string name="notification_message">اضغط لتغيير السيناريو</string>
+    <string name="notification_button_play_and_hide">تشغيل وإخفاء</string>
+    <string name="notification_button_pause_and_show">إيقاف مؤقت وعرض</string>
+    <string name="notification_button_toggle_menu">عرض/إخفاء</string>
+    <string name="notification_button_stop">إيقاف</string>
+
+
+    <string name="activity_scenario_title">السيناريوهات</string>
+    <string name="accessibility_service_description">تحتاج هذه التطبيق إلى هذه الخدمة لإدخال النقرات التي قمت بإنشائها في التطبيقات الأخرى بمجرد اكتشاف الشروط.\n\nلن يتم جمع أي بيانات من هذا التطبيق. لا تتردد في زيارة حسابنا على GitHub، الشيفرة مفتوحة المصدر!</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">سيناريو جديد</string>
+    <string name="dialog_title_copy_scenario">نسخ السيناريو</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">تصدير</string>
+    <string name="menu_item_title_import">استيراد</string>
+    <string name="menu_item_title_select_all">تحديد الكل</string>
+    <string name="menu_item_title_cancel">إلغاء</string>
+    <string name="menu_item_title_search">بحث</string>
+    <string name="menu_item_title_settings">الإعدادات</string>
+
+    <string name="item_scenario_filter_by_name">الاسم</string>
+    <string name="item_scenario_filter_by_recent">الأحدث</string>
+    <string name="item_scenario_filter_by_favorite">المفضلة</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">تجربة النقر التلقائي العادية.\nقم ببساطة بوضع النقرات والسحبات على الشاشة.</string>
+    <string name="item_desc_dumb_scenario_max_duration">توقف بعد %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">لا توجد مدة قصوى</string>
+    <string name="item_desc_dumb_scenario_repeat_count">كرر %1$d مرات</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">تكرار غير محدود</string>
+    <string name="item_desc_smart_scenario">استخدم اكتشاف الصور لإنشاء سيناريوهات معقدة.</string>
+    <string name="item_desc_smart_scenario_pro_mode">يتطلب مشاهدة إعلان أو شراء وضع Pro</string>
+    <string name="item_title_dumb_scenario">بسيط</string>
+    <string name="item_title_smart_scenario">ذكي</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">أنشئ أول سيناريو لك وابدأ بأتمتة المهام على هاتفك</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">سيتم حذف %1$s. هل أنت متأكد؟</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">جهازك لا يوفر مربع حوار إذن التقاط الشاشة القياسي لنظام Android. لن يتمكن Klick\'r من العمل عليه.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">نوع السيناريو</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">رفض المستخدم إذن مشاركة الشاشة</string>
+    <string name="toast_denied_foreground_permission">رفض المستخدم إذن خدمة المقدمة في الواجهة</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">إنشاء سيناريو</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">إنشاء سيناريو جديد</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">الاسم الافتراضي</string>
+    <string name="message_empty_image_events_scenario_list">لا توجد أحداث صور</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">الإعدادات</string>
+
+    <string name="field_show_scenario_filters_ui_title">عرض فلاتر السيناريو</string>
+    <string name="field_show_scenario_filters_ui_desc">عرض أو إخفاء الفلاتر في شاشة قائمة السيناريوهات.</string>
+
+    <string name="field_legacy_action_ui_title">واجهة الإجراءات القديمة</string>
+    <string name="field_legacy_action_ui_desc">تغيير عرض الإجراءات إلى قائمة. مفيد للسيناريوهات المعقدة.</string>
+
+    <string name="field_legacy_notification_ui_title">واجهة الإشعارات القديمة</string>
+    <string name="field_legacy_notification_ui_desc">استخدم أزرار النظام بدلاً من أزرار الأيقونات في الإشعار.</string>
+
+    <string name="field_force_entire_screen_title">فرض الشاشة بأكملها</string>
+    <string name="field_force_entire_screen_desc">فرض محدد التقاط الشاشة على "الشاشة بأكملها". قد لا يعمل حسب جهازك</string>
+
+    <string name="field_input_block_workaround_title">إلغاء حظر الشاشة باللمس</string>
+    <string name="field_input_block_workaround_desc">في أجهزة Pixel مع Android 15، استخدام النقر التلقائي يمكن أن يحجب الشاشة باللمس.\nلفك الحظر، تحتاج إلى لمس الشاشة بعدة أصابع في نفس الوقت. تحاول هذه الإعدادات محاكاة ذلك كل 10 ثوانٍ.</string>
+
+    <string name="field_privacy">إعدادات الخصوصية</string>
+    <string name="field_remove_ads">إزالة الإعلانات</string>
+    <string name="field_troubleshooting">استكشاف الأخطاء وإصلاحها</string>
+
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">الترحيل</string>
+
+    <string name="message_condition_migration_desc">تغير تنسيق صور Klick\'r ويحتاج السيناريو الخاص بك إلى تحديث. قد يستغرق هذا بضع دقائق حسب عدد الشروط المراد ترحيلها.</string>
+    <string name="message_condition_migration_count">%1$d شروط صور للترحيل.</string>
+    <string name="message_condition_migration_success">تم ترحيل جميع شروط الصور.</string>
+    <string name="message_condition_migration_error">لم يتم ترحيل بعض الشروط. يرجى التحقق من السيناريوهات الخاصة بك.</string>
+
+    <string name="button_condition_migration_start">ترحيل</string>
+    <string name="button_condition_migration_running">جارٍ الترحيل</string>
+    <string name="button_condition_migration_finished">حسناً</string>
+
+</resources>
