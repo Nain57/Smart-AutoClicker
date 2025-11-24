@@ -11,17 +11,17 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
-        android:name="${smartAutoClickerApplication}"
+        android:name=".application.SmartAutoClickerApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_smart_auto_clicker"
-        android:label="${appName}"
+        android:label="Auto Clicker"
         android:roundIcon="@mipmap/ic_smart_auto_clicker_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="DataExtractionRules">
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.scenarios.ScenarioActivity"
+            android:name=".scenarios.ScenarioActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,11 +30,11 @@
         </activity>
 
         <activity
-            android:name="com.buzbuz.smartautoclicker.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false" />
 
         <service
-            android:name="${smartAutoClickerService}"
+            android:name=".SmartAutoClickerService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:foregroundServiceType="mediaProjection"
             android:exported="true">

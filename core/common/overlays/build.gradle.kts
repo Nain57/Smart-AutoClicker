@@ -1,5 +1,3 @@
-
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidUnitTest)
@@ -10,6 +8,15 @@ plugins {
 android {
     namespace = "com.buzbuz.smartautoclicker.core.common.overlays"
     buildFeatures.viewBinding = true
+    compileSdk = 35
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {

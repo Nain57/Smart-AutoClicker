@@ -1,7 +1,3 @@
-import com.buzbuz.gradle.core.playStoreImplementation
-
-
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidUnitTest)
@@ -12,6 +8,15 @@ plugins {
 
 android {
     namespace = "com.buzbuz.smartautoclicker.core.extensions"
+    compileSdk = 35
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
@@ -25,7 +30,8 @@ dependencies {
 
     implementation(libs.google.material)
 
-    testImplementation(libs.kotlinx.coroutines.test)
-
+    playStoreImplementation(platform(libs.google.firebase.bom))
     playStoreImplementation(libs.google.firebase.crashlytics.ktx)
+
+    testImplementation(libs.kotlinx.coroutines.test)
 }

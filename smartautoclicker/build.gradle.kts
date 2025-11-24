@@ -1,34 +1,13 @@
-
-
-import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
-
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
     alias(libs.plugins.buzbuz.flavour)
-    alias(libs.plugins.buzbuz.obfuscation)
     alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.hilt)
 }
 
-obfuscationConfig {
-    obfuscatedApplication {
-        create("com.buzbuz.smartautoclicker.application.SmartAutoClickerApplication")
-    }
-    obfuscatedComponents {
-        create("com.buzbuz.smartautoclicker.scenarios.ScenarioActivity")
-        create("com.buzbuz.smartautoclicker.SmartAutoClickerService")
-    }
-
-    setup(
-        applicationId = "com.buzbuz.smartautoclicker",
-        appNameResId = "@string/app_name",
-        shouldRandomize = buildParameters["randomizeAppId"].asBoolean() &&
-                buildParameters.isBuildForVariant("fDroid"),
-    )
-}
-
 android {
     namespace = "com.buzbuz.smartautoclicker"
+    compileSdk = 36
 
     buildFeatures {
         viewBinding = true
@@ -36,36 +15,38 @@ android {
     }
 
     defaultConfig {
-        applicationId = getExtraActualApplicationId()
-
+        applicationId = "com.buzbuz.smartautoclicker"
         versionCode = 78
         versionName = "3.3.10"
+        minSdk = 24
+        targetSdk = 34
+        vectorDrawables { useSupportLibrary = true }
     }
 
-    if (buildParameters.isBuildForVariant("fDroidDebug")) {
-        buildTypes {
-            debug {
-                applicationIdSuffix = ".debug"
-            }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
+        release {
+            // keep false while fixing things; re-enable later with proper proguard files
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // If you want to enable minify later, add:
+            // proguardFiles(
+            //     getDefaultProguardFile("proguard-android-optimize.txt"),
+            //     "proguard-rules.pro"
+            // )
         }
     }
-
-    signingConfigs {
-        create("release") {
-            storeFile = file("./smartautoclicker.jks")
-            storePassword = buildParameters["signingStorePassword"].asString()
-            keyAlias = buildParameters["signingKeyAlias"].asString()
-            keyPassword = buildParameters["signingKeyPassword"].asString()
-        }
-    }
-}
-
-// Apply signature convention after declaring the signinxfgConfigs
-apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
-
-// Only apply gms/firebase plugins if we are building for the play store
-if (buildParameters.isBuildForVariant("playStoreRelease")) {
-    apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
 }
 
 dependencies {

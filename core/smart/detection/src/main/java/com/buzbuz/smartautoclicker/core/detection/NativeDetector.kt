@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
 import androidx.annotation.Keep
-import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
+//import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
 
 /**
  * Native implementation of the image detector.
@@ -68,15 +68,15 @@ class NativeDetector private constructor() : ImageDetector {
             detect(conditionBitmap, conditionWidth, conditionHeight, detectionArea.left, detectionArea.top,
                 detectionArea.width(), detectionArea.height(), threshold, detectionResult)
         } catch (ex: Exception) {
-            ex.throwWithKeys(
-                keys = mapOf(
-                    "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
-                    "originalConditionSize" to "${conditionBitmap.width}x${conditionBitmap.height}",
-                    "conditionSize" to "${conditionWidth}x$conditionHeight",
-                    "detectionArea" to detectionArea.toString(),
-                    "threshold" to threshold.toString(),
-                ),
-            )
+//            ex.throwWithKeys(
+//                keys = mapOf(
+//                    "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
+//                    "originalConditionSize" to "${conditionBitmap.width}x${conditionBitmap.height}",
+//                    "conditionSize" to "${conditionWidth}x$conditionHeight",
+//                    "detectionArea" to detectionArea.toString(),
+//                    "threshold" to threshold.toString(),
+//                ),
+//            )
         }
 
         return detectionResult.copy()

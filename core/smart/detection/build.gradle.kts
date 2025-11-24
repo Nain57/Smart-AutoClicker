@@ -1,27 +1,4 @@
 @file:Suppress("UnstableApiUsage")
-
-/*
-* Copyright (C) 2024 Kevin Buzeau
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_F_DROID
-import com.buzbuz.gradle.convention.KLICKR_VERSION_FLAVOUR_PLAY_STORE
-import com.buzbuz.gradle.convention.fDroid
-import com.buzbuz.gradle.convention.playStore
-
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidLocalTest)
@@ -29,28 +6,29 @@ plugins {
     alias(libs.plugins.buzbuz.sourceDownload)
 }
 
-sourceDownload {
-    projects {
-        register("openCv") {
-            projectAccount = "opencv"
-            projectName = "opencv"
-            projectVersion = libs.versions.openCv.get()
-
-            unzipPath = File("src/release/opencv")
-            requiredForTask = "configureCMakeRelease"
-        }
-    }
-}
-
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
+    compileSdk = 35
+
+    val openCvDir = File(project.projectDir, "src/release/opencv/OpenCV-android-sdk/sdk/native/jni")
 
     defaultConfig {
+        minSdk = 21
         externalNativeBuild {
             cmake {
-
+                // Point CMake to your local OpenCV package
+                arguments += listOf(
+                    "-DOpenCV_DIR=${openCvDir.absolutePath}")
             }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     buildTypes {
@@ -122,14 +100,6 @@ android {
         cmake {
             path = File("src/CMakeLists.txt")
             version = "3.22.1"
-        }
-    }
-
-    productFlavors {
-        fDroid {
-            externalNativeBuild.cmake.arguments.addAll(
-                listOf("-DWITH_BUILD_ID=OFF")
-            )
         }
     }
 }

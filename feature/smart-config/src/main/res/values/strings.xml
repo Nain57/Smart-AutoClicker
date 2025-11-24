@@ -433,4 +433,12 @@
     <string name="item_show_keyboard_details_at_position">Focus at position</string>
 
     <string name="item_type_text_details">“%1$s”</string>
+
+    <string name="dialog_title_scroll">Scroll</string>
+    <string name="dialog_title_longpress">Long Click</string>
+    <string name="dialog_title_screenshot">Screenshot</string>
+    <string name="dialog_title_hidekeyboard">Hide Keyboard</string>
+    <string name="dialog_title_showkeyboard">show Keyboard</string>
+    <string name="dialog_title_typetext">Type Text</string>
+
 </resources>

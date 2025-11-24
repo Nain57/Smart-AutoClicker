@@ -3,45 +3,46 @@
 # Android SDK
 androidCompileSdk = "35"
 androidMinSdk = "24"
+androidNdk = "28.2.13676358"
 
 # Build script
-googleFirebaseCrashlyticsGradle = "3.0.3"
-googleServices = "4.4.2"
-androidGradlePlugin = "8.10.0"
+googleFirebaseCrashlyticsGradle = "3.0.4"
+googleServices = "4.4.3"
+androidGradlePlugin = "8.10.1"
 java = "21"
-kotlin = "2.1.0"
-kotlinxCoroutines = "1.10.0"
-ksp = "2.1.0-1.0.29"
+kotlin = "2.2.0"
+kotlinxCoroutines = "1.10.2"
+ksp = "2.2.0-2.0.2"
 
 # Androidx
 androidxAnnotation = "1.9.1"
-androidxAppCompat = "1.7.0"
+androidxAppCompat = "1.7.1"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.2.1"
 androidxCoreKtx = "1.16.0"
-androidxDatastore = "1.1.4"             # 1.1.6 causes random crashes at runtime in release builds only
-androidxFragmentKtx = "1.8.6"
-androidxLifecycle = "2.8.7"             # Missing lint rules in 2.9.0 release
+androidxDatastore = "1.1.7"
+androidxFragmentKtx = "1.8.8"
+androidxLifecycle = "2.9.1"
 androidxLifecycleExtension = "2.2.0"
-androidxNavigation = "2.9.0"
+androidxNavigation = "2.9.1"
 androidxRecyclerView = "1.4.0"
-androidxRoom = "2.7.1"
+androidxRoom = "2.7.2"
 androidxSplashScreen = "1.0.1"
 androidxVectorDrawable = "1.2.0"
 
 # Other
-airbnbLottie = "6.1.0"
+airbnbLottie = "6.6.7"
 googleMaterial = "1.12.0"
-kotlinSerializationJson = "1.7.3"
-openCv = "4.11.0"
-googleDaggerHilt = "2.55"
+kotlinSerializationJson = "1.9.0"
+openCv = "4.12.0"
+googleDaggerHilt = "2.56.2"
 
 # PlayStore only
-androidBillingClient = "7.1.1"
-googleFirebaseBom = "33.13.0"
-googleFirebaseCrashlytics = "19.4.3"
+androidBillingClient = "8.0.0"
+googleFirebaseBom = "33.16.0"
+googleFirebaseCrashlytics = "19.4.4"
 googleUserMessaging = "3.2.0"
-googleGmsAds = "24.2.0"
+googleGmsAds = "24.4.0"
 googlePlayReview = "2.0.2"
 
 # Tests only
@@ -49,13 +50,12 @@ androidxArchCoreTesting = "2.2.0"
 androidxTestCore = "1.6.1"
 androidxTestExtJunit = "1.2.1"
 junit = "4.13.2"
-mockitoCore = "5.6.0"
-mockitoKotlin = "5.1.0"
-mockk = "1.13.10"
-robolectric = "4.11.1"
+mockitoCore = "5.18.0"
+mockitoKotlin = "5.4.0"
+mockk = "1.14.4"
+robolectric = "4.15.1"
 espressoCore = "3.6.1"
 
-mlkit-text = "16.0.0"
 
 [libraries]
 
@@ -65,6 +65,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 androidx-room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
 google-firebase-crashlytics-gradlePlugin = { group = "com.google.firebase.crashlytics", name = "com.google.firebase.crashlytics.gradle.plugin", version.ref = "googleFirebaseCrashlyticsGradle" }
 google-gms-gradlePlugin = { group = "com.google.gms.google-services", name = "com.google.gms.google-services.gradle.plugin", version.ref = "googleServices" }
+
 
 # Dependencies used in build-logic. Might seem unused but check in files if that is the case
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -154,5 +155,3 @@ buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecif
 buzbuz-hilt = { id = "com.buzbuz.gradle.android.hilt", version = "unspecified" }
 buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
 buzbuz-sourceDownload = { id = "com.buzbuz.gradle.build.sourcedl", version = "unspecified" }
-
-mlkit-text = { id = "com.google.mlkit:text-recognition", version.ref = "mlkit-text" }
