@@ -38,6 +38,9 @@ class Versions internal constructor(private val libs: VersionCatalog) {
     val jvmTarget: String
         get() = libs.getStringVersion("java")
 
+    val protobuf: String
+        get() = libs.getStringVersion("googleProtobufRuntime")
+
 
     private fun VersionCatalog.getVersion(alias: String): Int =
         getStringVersion(alias).toInt()

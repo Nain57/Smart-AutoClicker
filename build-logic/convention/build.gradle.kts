@@ -41,6 +41,7 @@ dependencies {
     compileOnly(libs.androidx.room.gradlePlugin)
     compileOnly(libs.google.firebase.crashlytics.gradlePlugin)
     compileOnly(libs.google.gms.gradlePlugin)
+    compileOnly(libs.google.protobuf.gradlePlugin)
 }
 
 tasks {
@@ -90,6 +91,11 @@ gradlePlugin {
         register("crashlytics") {
             id = "com.buzbuz.gradle.crashlytics"
             implementationClass = "com.buzbuz.gradle.convention.plugins.CrashlyticsConventionPlugin"
+        }
+
+        register("protobuf") {
+            id = "com.buzbuz.gradle.protobuf"
+            implementationClass = "com.buzbuz.gradle.convention.plugins.ProtobufConventionPlugin"
         }
 
         register("flavour") {
