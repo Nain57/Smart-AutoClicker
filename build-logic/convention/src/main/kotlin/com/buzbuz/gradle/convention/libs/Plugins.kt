@@ -59,6 +59,8 @@ internal class Plugins internal constructor(private val libs: VersionCatalog) {
             get() = libs.getPluginId("googleCrashlytics")
         val gms: String
             get() = libs.getPluginId("googleGms")
+        val protobuf: String
+            get() = libs.getPluginId("googleProtobufGradle")
     }
 
     private fun VersionCatalog.getPluginId(alias: String): String =

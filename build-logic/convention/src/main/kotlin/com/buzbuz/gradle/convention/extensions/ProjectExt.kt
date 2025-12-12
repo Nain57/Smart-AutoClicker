@@ -20,9 +20,9 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.buzbuz.gradle.convention.libs.VersionCatalogWrapper
-
 import com.buzbuz.gradle.convention.model.KlickrBuildType
 import com.buzbuz.gradle.convention.model.KlickrFlavour
+import com.google.protobuf.gradle.ProtobufExtension
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
@@ -62,3 +62,6 @@ internal inline fun Project.androidLib(crossinline closure: LibraryExtension.() 
 
 internal inline fun Project.android(crossinline closure: BaseExtension.() -> Unit) =
     extensions.configure<BaseExtension> { closure() }
+
+internal inline fun Project.protobuf(crossinline closure: ProtobufExtension.() -> Unit) =
+    extensions.configure<ProtobufExtension> { closure() }

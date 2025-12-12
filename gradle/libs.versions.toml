@@ -7,6 +7,7 @@ androidNdk = "28.2.13676358"
 
 # Build script
 googleFirebaseCrashlyticsGradle = "3.0.4"
+googleProtobufGradlePlugin = "0.9.5"
 googleServices = "4.4.3"
 androidGradlePlugin = "8.11.1"
 java = "21"
@@ -36,6 +37,7 @@ googleMaterial = "1.12.0"
 kotlinSerializationJson = "1.9.0"
 openCv = "4.12.0"
 googleDaggerHilt = "2.56.2"
+googleProtobufRuntime = "3.25.0"
 
 # PlayStore only
 androidBillingClient = "8.0.0"
@@ -65,7 +67,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 androidx-room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
 google-firebase-crashlytics-gradlePlugin = { group = "com.google.firebase.crashlytics", name = "com.google.firebase.crashlytics.gradle.plugin", version.ref = "googleFirebaseCrashlyticsGradle" }
 google-gms-gradlePlugin = { group = "com.google.gms.google-services", name = "com.google.gms.google-services.gradle.plugin", version.ref = "googleServices" }
-
+google-protobuf-gradlePlugin = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "googleProtobufGradlePlugin" }
 
 # Dependencies used in build-logic. Might seem unused but check in files if that is the case
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -108,6 +110,9 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
 google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "googleDaggerHilt" }
+google-protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "googleProtobufRuntime" }
+google-protobuf-kotlin = { group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "googleProtobufRuntime" }
+
 
 # PlayStore only. Might seem unused but check in files if that is the case
 android-billingClient = { group = "com.android.billingclient", name = "billing", version.ref = "androidBillingClient" }
@@ -138,6 +143,7 @@ googleDaggerHiltAndroid = { id = "com.google.dagger.hilt.android", version.ref =
 googleKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 googleGms = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 googleCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlyticsGradle" }
+googleProtobufGradle = { id = "com.google.protobuf", version.ref = "googleProtobufGradlePlugin" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrainsKotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
@@ -154,4 +160,5 @@ buzbuz-buildParameters = { id = "com.buzbuz.gradle.build.parameters", version = 
 buzbuz-crashlytics = { id = "com.buzbuz.gradle.crashlytics", version = "unspecified" }
 buzbuz-hilt = { id = "com.buzbuz.gradle.android.hilt", version = "unspecified" }
 buzbuz-kotlinSerialization = { id = "com.buzbuz.gradle.android.kotlin.serialization", version = "unspecified" }
+buzbuz-protobuf = { id = "com.buzbuz.gradle.protobuf", version = "unspecified" }
 buzbuz-sourceDownload = { id = "com.buzbuz.gradle.build.sourcedl", version = "unspecified" }
