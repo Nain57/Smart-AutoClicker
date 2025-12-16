@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 2025 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.buzbuz.smartautoclicker.core.smart.debugging;
+
+/** Details about an ImageEvent that has been triggered during a detection session. */
+message ImageEventMessage {
+
+    /** The unique identifier of the ImageEvent that has been detected. */
+    int64 eventId = 1;
+
+    /** The duration of the detection for this frame in milliseconds. */
+    int64 durationMs = 2;
+
+    /** The frame number in the current detection session. */
+    int64 frameNumber = 3;
+
+    /** The list of results for the conditions verified for this event. */
+    repeated ImageConditionResult results = 4;
+
+
+    /** The results for an ImageCondition that has been checked during event validation. */
+    message ImageConditionResult {
+
+        /** The unique identifier of the ImageCondition. */
+        int64 conditionId = 1;
+
+        /** The duration of the detection for this condition in milliseconds. */
+        int64 durationMs = 2;
+
+        /** The confidence rate in percent (0-100) of the detection for this condition. */
+        double confidenceRate = 3;
+
+        /** Tells if the condition have been considered as detected or not. */
+        bool isFulfilled = 4;
+    }
+}
