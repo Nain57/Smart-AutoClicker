@@ -21,12 +21,11 @@ import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -83,21 +82,22 @@ internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImag
         )
 }
 
-internal suspend fun ScenarioProcessingListener.verifyImageConditionProcessed(
+internal fun DebuggingListener.verifyImageConditionProcessed(
     condition: TestImageCondition,
     detected: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
     .onImageConditionProcessingCompleted(condition.expectedResult(detected))
 
-internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
+internal fun DebuggingListener.monitorImageEventProcessing(
     events: List<ImageEvent>,
-): List<Boolean> {
-    val results = mutableListOf<Boolean>()
+): Map<Long, Boolean> {
 
+    val results = mutableMapOf<Long, Boolean>()
     events.forEach { event ->
-        `when`(onImageEventProcessingCompleted(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
-            results.add((invocationOnMock.arguments[1] as ConditionsResult).fulfilled == true)
+        results.put(event.id.databaseId, false)
+        `when`(onImageEventFulfilled(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
+            results.put(event.id.databaseId, true)
             Unit
         }
     }
@@ -105,14 +105,14 @@ internal suspend fun ScenarioProcessingListener.monitorImageEventProcessing(
     return results
 }
 
-internal suspend fun ScenarioProcessingListener.verifyTriggerEventProcessed(
+internal fun DebuggingListener.verifyTriggerEventProcessed(
     event: TriggerEvent,
     expectedResult: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
     .onTriggerEventProcessingCompleted(event, event.expectedResult(expectedResult))
 
-internal suspend fun ScenarioProcessingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
+internal fun DebuggingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
     verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(true))
     verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(false))
 }

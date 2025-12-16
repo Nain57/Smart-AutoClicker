@@ -17,36 +17,45 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
 import android.content.ComponentName
-import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 
-import com.buzbuz.smartautoclicker.feature.smart.debugging.domain.DebuggingRepository
-
-import dagger.hilt.android.qualifiers.ApplicationContext
-
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 class MoreViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val appComponentsProvider: AppComponentsProvider,
     private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
 
     /** Tells if the debug view is enabled or not. */
-    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled(context))
+    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled())
     val isDebugViewEnabled: Flow<Boolean> = _isDebugViewEnabled
 
     /** Tells if the debug report is enabled or not. */
-    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled(context))
+    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled())
     val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
 
     /** Tells if a debug report is available. */
-    val debugReportAvailability: Flow<Boolean> = debuggingRepository.debugReport
-        .map { it != null }
+    private val _isDebugReportAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isDebugReportAvailable: Flow<Boolean> = _isDebugReportAvailable
+
+    init {
+        viewModelScope.launch(ioDispatcher) {
+            _isDebugReportAvailable.update { debuggingRepository.isDebugReportAvailable() }
+        }
+    }
 
     fun toggleIsDebugViewEnabled() {
         _isDebugViewEnabled.value = !_isDebugViewEnabled.value

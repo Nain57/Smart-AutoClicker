@@ -43,11 +43,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
-import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -89,7 +89,7 @@ internal class ActionExecutor(
         }
     }
 
-    suspend fun executeActions(event: Event, results: ConditionsResult? = null) {
+    suspend fun executeActions(event: Event, results: ConditionsResults? = null) {
         event.actions.forEach { action ->
             when (action) {
                 is Click -> executeClick(event, action, results)
@@ -105,7 +105,7 @@ internal class ActionExecutor(
         }
     }
 
-    private suspend fun executeClick(event: Event, click: Click, results: ConditionsResult?) {
+    private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
         val clickPath = when (click.positionType) {
             Click.PositionType.USER_SELECTED -> {
                 click.position?.let { position ->
@@ -128,7 +128,7 @@ internal class ActionExecutor(
         }
     }
 
-    private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResult?): Path? {
+    private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResults?): Path? {
         if (event !is ImageEvent) return null
 
         val result = when {
@@ -145,8 +145,8 @@ internal class ActionExecutor(
         return Path().apply {
             moveTo(
                 position = Point(
-                    result.position.x + (click.clickOffset?.x ?: 0),
-                    result.position.y + (click.clickOffset?.y ?: 0),
+                    (result.position?.x ?: 0) + (click.clickOffset?.x ?: 0),
+                    (result.position?.y ?: 0) + (click.clickOffset?.y ?: 0),
                 ),
                 random = random,
             )

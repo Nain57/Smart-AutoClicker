@@ -14,75 +14,64 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.eventtry
 
 import android.util.Size
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
-import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryImageConditionMenuBinding
+import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryEventMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.google.android.material.slider.Slider
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.DebugOverlayView
+import com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.ImageEventResultUiState
+
 import kotlinx.coroutines.launch
 
-class TryImageConditionOverlayMenu(
+class TryEventOverlayMenu(
     private val scenario: Scenario,
-    private val imageCondition: ImageCondition,
-    private val onNewThresholdSelected: (Int) -> Unit,
+    private val triedElement: ImageEvent,
 ) : OverlayMenu() {
 
     /** The view model for this dialog. */
-    private val viewModel: TryImageConditionViewModel by viewModels(
+    private val viewModel: TryElementViewModel by viewModels(
         entryPoint = DebuggingViewModelsEntryPoint::class.java,
-        creator = { tryImageConditionViewModel() },
+        creator = { tryElementViewModel() },
     )
 
-    private lateinit var viewBinding: OverlayTryImageConditionMenuBinding
+    private lateinit var viewBinding: OverlayTryEventMenuBinding
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewModel.setImageConditionElement(scenario, imageCondition)
-
-        viewBinding = OverlayTryImageConditionMenuBinding.inflate(LayoutInflater.from(context)).apply {
-            sliderThreshold.apply {
-                valueFrom = MIN_THRESHOLD
-                valueTo = MAX_THRESHOLD
-                value = imageCondition.threshold.toFloat()
-
-                addOnChangeListener(Slider.OnChangeListener { _, sliderValue, fromUser ->
-                    if (fromUser) viewModel.setThreshold(sliderValue.toInt())
-                })
-            }
-        }
+        viewBinding = OverlayTryEventMenuBinding.inflate(LayoutInflater.from(context))
 
         return viewBinding.root
     }
 
-    override fun onCreateOverlayView(): DebugOverlayView = DebugOverlayView(context)
+    override fun onCreateOverlayView(): View = DebugOverlayView(context)
 
     override fun onStart() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.displayResults.collect(::updateDetectionResults) }
-                launch { viewModel.thresholdText.collect(viewBinding.valueThreshold::setText) }
             }
         }
 
-        viewModel.startTry(context)
+        viewModel.startTry(context, scenario, triedElement)
     }
 
     override fun onStop() {
         viewModel.stopTry()
-        onNewThresholdSelected(viewModel.getSelectedThreshold())
     }
 
     override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
@@ -113,8 +102,8 @@ class TryImageConditionOverlayMenu(
         return true
     }
 
-    private fun updateDetectionResults(results: ImageConditionResultsDisplay?) {
-        (screenOverlayView as? DebugOverlayView)?.setResults(results?.let { listOf(it.detectionResults) } ?: emptyList())
-        viewBinding.valueResult.text = results?.resultText
+    private fun updateDetectionResults(results: ImageEventResultUiState?) {
+        (screenOverlayView as? DebugOverlayView)?.setResults(results?.detectionResults ?: emptyList())
+        viewBinding.textResult.text = results?.eventText
     }
 }

@@ -25,10 +25,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
-import com.buzbuz.smartautoclicker.core.processing.data.processor.DefaultResult
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
-import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
 
 
 internal data class TestScenario(
@@ -47,7 +45,7 @@ internal data class TestEventToggle(
     val toggleType: ToggleEvent.ToggleType,
 )
 
-internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(
+internal fun TestImageCondition.expectedResult(detected: Boolean) = ProcessedConditionResult.Image(
     isFulfilled = detected == imageCondition.shouldBeDetected,
     haveBeenDetected = detected,
     condition = imageCondition,
@@ -55,6 +53,9 @@ internal fun TestImageCondition.expectedResult(detected: Boolean) = ImageResult(
     confidenceRate = 0.0,
 )
 
-internal fun TriggerEvent.expectedResult(detected: Boolean): List<ConditionResult> = ConditionsResult().apply {
-    addResult(conditionId = id.databaseId, DefaultResult(isFulfilled = detected))
-}.getAllResults()
+internal fun TriggerEvent.expectedResult(detected: Boolean): List<ProcessedConditionResult.Trigger> =
+    ConditionsResults().apply {
+        addResult(
+            conditionId = id.databaseId,
+            result = ProcessedConditionResult.Trigger(isFulfilled = detected, condition = conditions.first()))
+    }.getAllTriggerConditionsResults()

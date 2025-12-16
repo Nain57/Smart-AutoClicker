@@ -35,10 +35,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResult
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ImageResult
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
@@ -123,7 +123,7 @@ class ActionExecutorTests {
     @Test
     fun noActions() = runTest {
         val event = getNewDefaultEvent()
-        actionExecutor.executeActions(event, ConditionsResult())
+        actionExecutor.executeActions(event, ConditionsResults())
         verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
     }
 
@@ -132,7 +132,7 @@ class ActionExecutorTests {
         val clickAction = getNewDefaultClickUserPos(1)
         val event = getNewDefaultEvent(actions = listOf(clickAction))
 
-        actionExecutor.executeActions(event, ConditionsResult())
+        actionExecutor.executeActions(event, ConditionsResults())
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
@@ -150,10 +150,16 @@ class ActionExecutorTests {
             actions = listOf(clickAction),
         )
 
-        val results = ConditionsResult()
+        val results = ConditionsResults()
         results.addResult(
-            condition.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = true, condition, Point(15, 15), 100.0)
+            conditionId = condition.getDatabaseId(),
+            result = ProcessedConditionResult.Image(
+                isFulfilled = true,
+                haveBeenDetected = true,
+                condition = condition,
+                position = Point(15, 15),
+                confidenceRate = 100.0
+            )
         )
 
         actionExecutor.executeActions(event, results)
@@ -174,14 +180,26 @@ class ActionExecutorTests {
             conditions = listOf(conditionValid, conditionOther),
             actions = listOf(clickAction),
         )
-        val results = ConditionsResult()
+        val results = ConditionsResults()
         results.addResult(
-            conditionValid.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = true, conditionValid, Point(15, 15), 100.0)
+            conditionId = conditionValid.getDatabaseId(),
+            result = ProcessedConditionResult.Image(
+                isFulfilled = true,
+                haveBeenDetected = true,
+                condition = conditionValid,
+                position = Point(15, 15),
+                confidenceRate = 100.0
+            )
         )
         results.addResult(
-            conditionOther.getDatabaseId(),
-            ImageResult(isFulfilled = true, haveBeenDetected = false, conditionOther, Point(45, 45), 98.0)
+            conditionId = conditionOther.getDatabaseId(),
+            result = ProcessedConditionResult.Image(
+                isFulfilled = true,
+                haveBeenDetected = false,
+                condition = conditionOther,
+                position = Point(45, 45),
+                confidenceRate = 98.0
+            )
         )
 
         actionExecutor.executeActions(event, results)
@@ -196,8 +214,8 @@ class ActionExecutorTests {
         val swipeAction = getNewDefaultSwipe(1)
 
         actionExecutor.executeActions(
-            getNewDefaultEvent(actions = listOf(swipeAction)),
-            ConditionsResult(),
+            event = getNewDefaultEvent(actions = listOf(swipeAction)),
+            results = ConditionsResults(),
         )
 
         val gestureCaptor = argumentCaptor<GestureDescription>()
@@ -211,8 +229,8 @@ class ActionExecutorTests {
 
         // Execute the pause. As the handler is waiting to the finish the pause, we should stays in EXECUTING
         actionExecutor.executeActions(
-            getNewDefaultEvent(actions = listOf(pause)),
-            ConditionsResult(),
+            event = getNewDefaultEvent(actions = listOf(pause)),
+            results = ConditionsResults(),
         )
 
         // Only a pause, there should be no gestures
@@ -228,8 +246,8 @@ class ActionExecutorTests {
 
         // Execute the actions.
         actionExecutor.executeActions(
-            getNewDefaultEvent(actions = listOf(click, pause, swipe)),
-            ConditionsResult(),
+            event = getNewDefaultEvent(actions = listOf(click, pause, swipe)),
+            results = ConditionsResults(),
         )
 
         // Verify the gestures executions
@@ -252,8 +270,8 @@ class ActionExecutorTests {
 
         launch(Dispatchers.IO) {
             actionExecutor.executeActions(
-                getNewDefaultEvent(actions = listOf(getNewDefaultClickUserPos(1, executionDurationMs))),
-                ConditionsResult(),
+                event = getNewDefaultEvent(actions = listOf(getNewDefaultClickUserPos(1, executionDurationMs))),
+                results = ConditionsResults(),
             )
 
             assertTrue("Action execution have not completed yet", isCompleted)

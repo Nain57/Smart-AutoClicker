@@ -38,8 +38,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuB
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRestartMediaProjectionStarterOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay.DebugModel
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -63,11 +61,6 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private val viewModel: MainMenuModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { mainMenuViewModel() },
-    )
-    /** The view model for the debugging features. */
-    private val debuggingViewModel: DebugModel by viewModels(
-        entryPoint = DebuggingViewModelsEntryPoint::class.java,
-        creator = { debugModel() },
     )
 
     private var isHiddenForPaywall: Boolean = false
@@ -119,7 +112,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
-                launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
+                launch { viewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
             }
         }
     }
@@ -294,9 +287,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun observeDebugValues() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                debuggingViewModel.debugLastPositive.collect { debugInfo ->
-                    viewBinding.debugEventName.text = debugInfo.eventName
-                    viewBinding.debugConditionName.text = debugInfo.conditionName
+                viewModel.debugLastPositive.collect { debugInfo ->
+                    viewBinding.debugEventName.text = debugInfo.eventText
+                    viewBinding.debugConditionName.text = debugInfo.conditionText
                     viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
                 }
             }

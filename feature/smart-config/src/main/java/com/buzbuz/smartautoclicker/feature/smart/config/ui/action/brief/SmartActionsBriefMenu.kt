@@ -20,7 +20,6 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -70,6 +69,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
                 launch { viewModel.actionBriefList.collect(::updateItemList) }
                 launch { viewModel.actionVisualization.collect(::updateActionVisualisation) }
                 launch { viewModel.isTutorialModeEnabled.collect(::updateTutorialModeState) }
+                launch { viewModel.isTestingAction.collect(::updateReplayingState) }
             }
         }
     }
@@ -113,7 +113,6 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
             KeyEvent.ACTION_DOWN -> {
                 if (viewModel.stopAction()) {
                     keyDownHandled = true
-                    updateReplayingState(false)
                     return true
                 }
             }
@@ -151,10 +150,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     }
 
     override fun onPlayItemClicked(index: Int) {
-        updateReplayingState(true)
-        viewModel.playAction(context, index) {
-            updateReplayingState(false)
-        }
+        viewModel.playAction(context, index)
     }
 
     override fun onItemPositionCardClicked(index: Int, itemCount: Int) {

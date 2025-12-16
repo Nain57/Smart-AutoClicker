@@ -34,12 +34,12 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import kotlinx.coroutines.CoroutineDispatcher
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
@@ -71,6 +71,7 @@ class DetectorEngine @Inject constructor(
     private val actionExecutor: AndroidActionExecutor,
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
+    private val debuggingListener: DebuggingListener,
 ) {
 
     /** Process the events conditions to detect them on the screen. */
@@ -91,12 +92,6 @@ class DetectorEngine @Inject constructor(
     private val _state = MutableStateFlow(DetectorState.CREATED)
     /** Current state of the detector. */
     internal val state: StateFlow<DetectorState> = _state
-
-    /**
-     * Object to notify upon start/completion of detections steps.
-     * Defined at detection start, reset to null at detection end.
-     */
-    private var detectionProgressListener: ScenarioProcessingListener? = null
 
     /**
      * Start the screen detection.
@@ -160,15 +155,12 @@ class DetectorEngine @Inject constructor(
      * fulfillment. For each image, the first event in the list that is detected will be notified through the provided
      * callback.
      * [state] should be RECORDING to capture. Detection can be stopped with [stopDetection] or [stopScreenRecord].
-     *
-     * @param progressListener object to notify upon start/completion of detections steps.
      */
     internal fun startDetection(
         context: Context,
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        progressListener: ScenarioProcessingListener? = null,
     ) {
         if (_state.value != DetectorState.RECORDING) {
             Log.w(TAG, "startDetection: Screen record is not started.")
@@ -204,8 +196,7 @@ class DetectorEngine @Inject constructor(
             detector.init()
 
             // Setup listeners
-            detectionProgressListener = progressListener
-            progressListener?.onSessionStarted(context, scenario, imageEvents, triggerEvents)
+            debuggingListener.onSessionStarted(scenario)
 
             // Instantiate the processor and initialize its detection state.
             scenarioProcessor = ScenarioProcessor(
@@ -219,7 +210,7 @@ class DetectorEngine @Inject constructor(
                 androidExecutor = actionExecutor,
                 unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
                 onStopRequested = { stopDetection() },
-                progressListener  = progressListener,
+                progressListener  = debuggingListener,
             )
             scenarioProcessor?.onScenarioStart(context)
 
@@ -239,7 +230,7 @@ class DetectorEngine @Inject constructor(
         processingScope?.launch {
             if (_state.value == DetectorState.DETECTING) {
                 processingJob?.cancelAndJoin()
-                detectionProgressListener?.onImageEventProcessingCancelled()
+                debuggingListener.onImageEventsProcessingCancelled()
             }
 
 
@@ -278,8 +269,7 @@ class DetectorEngine @Inject constructor(
             imageDetector = null
             scenarioProcessor?.onScenarioEnd()
             scenarioProcessor = null
-            detectionProgressListener?.onSessionEnded()
-            detectionProgressListener = null
+            debuggingListener.onSessionEnded()
 
             scalingManager.stopScaling()
             displayRecorder.resizeDisplay(displayConfigManager.displayConfig.sizePx)

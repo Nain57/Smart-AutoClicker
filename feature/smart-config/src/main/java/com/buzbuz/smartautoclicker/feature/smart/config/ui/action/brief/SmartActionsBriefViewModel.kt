@@ -25,8 +25,6 @@ import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -38,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -75,7 +74,6 @@ import javax.inject.Inject
 
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     repository: IRepository,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
@@ -103,6 +101,9 @@ class SmartActionsBriefViewModel @Inject constructor(
                 ItemBrief(action.id, action.toUiAction(context, event, inError = !actions.itemValidity[index]) )
             }
         }
+
+    val isTestingAction: Flow<Boolean> = detectionRepository.detectionState
+        .map { state -> state == DetectionState.DETECTING }
 
     private val focusedAction: Flow<Pair<Action?, Boolean>> =
         combine(briefVisualizationState, editedActions) { visualizationState, actions ->
@@ -198,16 +199,14 @@ class SmartActionsBriefViewModel @Inject constructor(
         editionRepository.stopActionEdition()
     }
 
-    fun playAction(context: Context, index: Int, onCompleted: () -> Unit) {
+    fun playAction(context: Context, index: Int) {
         val scenario = editionRepository.editionState.getScenario()
         val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList()
         if (scenario == null || actions == null || index !in actions.indices) return
 
         viewModelScope.launch {
             delay(500)
-            detectionRepository.tryAction(context, scenario, actions[index]) {
-                viewModelScope.launch(mainDispatcher) { onCompleted() }
-            }
+            detectionRepository.tryAction(context, scenario, actions[index])
         }
     }
 

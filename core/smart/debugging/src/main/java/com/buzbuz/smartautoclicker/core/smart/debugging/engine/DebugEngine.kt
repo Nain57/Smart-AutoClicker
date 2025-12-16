@@ -126,7 +126,7 @@ internal class DebugEngine @Inject constructor(
                     event = event,
                     imageConditionsResults = results.map { result ->
                         DebugLiveImageConditionResult(
-                            conditionId = result.condition.id.databaseId,
+                            condition = result.condition,
                             isFulfilled = result.isFulfilled,
                             isDetected = result.haveBeenDetected,
                             confidenceRate = result.confidenceRate,
