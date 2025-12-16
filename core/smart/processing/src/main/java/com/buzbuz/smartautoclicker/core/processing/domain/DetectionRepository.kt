@@ -36,11 +36,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
+import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
+import com.buzbuz.smartautoclicker.core.processing.domain.model.toDetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTry
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTryListener
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventProcessingTryListener
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
 
@@ -159,7 +158,7 @@ class DetectionRepository @Inject constructor(
         }
     }
 
-    suspend fun startDetection(context: Context, progressListener: ScenarioProcessingListener?, autoStopDuration: Duration? = null) {
+    suspend fun startDetection(context: Context, autoStopDuration: Duration? = null) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)
@@ -170,7 +169,6 @@ class DetectionRepository @Inject constructor(
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
-            progressListener = progressListener,
         )
 
         autoStopDuration?.let { duration ->
@@ -199,45 +197,36 @@ class DetectionRepository @Inject constructor(
         _scenarioId.value = null
     }
 
-    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent, listener: (IConditionsResult) -> Unit) {
+    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent) {
         val triedElement = ImageEventTry(scenario, event)
         tryElement(
             context,
             triedElement,
-            ImageEventProcessingTryListener(triedElement, listener)
         )
     }
 
-    fun tryImageCondition(
-        context: Context,
-        scenario: Scenario,
-        condition: ImageCondition,
-        listener: (ImageConditionResult) -> Unit,
-    ) {
+    fun tryImageCondition(context: Context, scenario: Scenario, condition: ImageCondition) {
         val triedElement = ImageConditionTry(scenario, condition)
         tryElement(
             context = context,
             elementTry = triedElement,
-            listener = ImageConditionProcessingTryListener(triedElement, listener)
         )
     }
 
-    fun tryAction(context: Context,  scenario: Scenario, action: Action, listener: () -> Unit) {
+    fun tryAction(context: Context,  scenario: Scenario, action: Action) {
         tryElement(
             context = context,
             elementTry = ActionTry(scenario, action),
-            listener = ActionTryListener(listener),
         )
     }
 
-    private fun tryElement(context: Context, elementTry: ScenarioTry, listener: ScenarioProcessingListener) {
+    private fun tryElement(context: Context, elementTry: ScenarioTry) {
         Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
         detectorEngine.startDetection(
             context = context,
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
-            progressListener = listener,
         )
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:overlays"))
     implementation(project(":core:common:ui"))
+    implementation(project(":core:smart:debugging"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))

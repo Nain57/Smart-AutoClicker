@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +72,7 @@ class ProcessingTests {
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
-    @Mock private lateinit var mockProcessingListener: ScenarioProcessingListener
+    @Mock private lateinit var mockProcessingListener: DebuggingListener
 
     /** The object under test. */
     private lateinit var scenarioProcessor: ScenarioProcessor
@@ -412,8 +412,8 @@ class ProcessingTests {
             mockProcessingListener.verifyImageConditionProcessed(testConditionEvt2, false)
         }
         // Event1 not be triggered, Event2 should
-        assertFalse(eventsFulfilled[0])
-        assertTrue(eventsFulfilled[1])
+        assertTrue(eventsFulfilled[eventId1.databaseId] == false)
+        assertTrue(eventsFulfilled[eventId2.databaseId] == true)
     }
 
     /**

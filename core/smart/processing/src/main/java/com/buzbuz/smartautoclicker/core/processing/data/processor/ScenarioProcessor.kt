@@ -19,14 +19,14 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.annotation.VisibleForTesting
-import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 
+import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
 
 import kotlinx.coroutines.yield
 
@@ -52,7 +52,7 @@ internal class ScenarioProcessor(
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
-    private val progressListener: ScenarioProcessingListener? = null,
+    private val progressListener: DebuggingListener? = null,
 ) {
 
     /** Handle the processing state of the scenario. */
@@ -123,7 +123,7 @@ internal class ScenarioProcessor(
 
     private suspend fun processTriggerEvents(
         events: Collection<TriggerEvent>,
-        onFulfilled: suspend (TriggerEvent, ConditionsResult) -> Unit,
+        onFulfilled: suspend (TriggerEvent, ConditionsResults) -> Unit,
     ) {
         for (triggerEvent in events) {
             // Enabled state of the event might have changed during the loop
@@ -132,19 +132,23 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
-            progressListener?.onTriggerEventProcessingStarted(triggerEvent)
+            val results = conditionsVerifier.verifyConditions(
+                operator = triggerEvent.conditionOperator,
+                conditions = triggerEvent.conditions,
+            )
+            if (results.fulfilled  == true) onFulfilled(triggerEvent, results)
 
-            val results = conditionsVerifier.verifyConditions(triggerEvent.conditionOperator, triggerEvent.conditions)
-            if (results.fulfilled == true) onFulfilled(triggerEvent, results)
-
-            progressListener?.onTriggerEventProcessingCompleted(triggerEvent, results.getAllResults())
+            progressListener?.onTriggerEventProcessingCompleted(
+                event = triggerEvent,
+                results = results.getAllTriggerConditionsResults(),
+            )
         }
     }
 
     private suspend fun processImageEvents(
         screenFrame: Bitmap,
         events: Collection<ImageEvent>,
-        onFulfilled: suspend (ImageEvent, ConditionsResult) -> Unit,
+        onFulfilled: suspend (ImageEvent, ConditionsResults) -> Unit,
     ) {
         // Set the current screen image
         imageDetector.setScreenBitmap(screenFrame, processingTag)
@@ -155,11 +159,18 @@ internal class ScenarioProcessor(
                 // No conditions ? This should not happen, skip this event
                 if (imageEvent.conditions.isEmpty()) continue
 
-                progressListener?.onImageEventProcessingStarted(imageEvent)
-                val results = conditionsVerifier.verifyConditions(imageEvent.conditionOperator, imageEvent.conditions)
-                progressListener?.onImageEventProcessingCompleted(imageEvent, results)
+                progressListener?.onImageEventProcessingStarted()
+                val results = conditionsVerifier.verifyConditions(
+                    operator = imageEvent.conditionOperator,
+                    conditions = imageEvent.conditions,
+                )
 
                 if (results.fulfilled == true) {
+                    progressListener?.onImageEventFulfilled(
+                        event = imageEvent,
+                        results = results.getAllImageConditionsResults(),
+                    )
+
                     onFulfilled(imageEvent, results)
                     if (!imageEvent.keepDetecting) break
                 }

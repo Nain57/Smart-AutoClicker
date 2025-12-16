@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionState
+import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
 

@@ -28,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.processing.domain.ConditionResult
-import com.buzbuz.smartautoclicker.core.processing.domain.ScenarioProcessingListener
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
 
 import kotlinx.coroutines.yield
 
@@ -38,27 +38,23 @@ internal class ConditionsVerifier(
     private val imageDetector: ImageDetector,
     private val scalingManager: ScalingManager,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
-    private val progressListener: ScenarioProcessingListener? = null,
+    private val progressListener: DebuggingListener? = null,
 ) {
 
-    private companion object {
-        val POSITIVE_RESULT: DefaultResult = DefaultResult(true)
-        val NEGATIVE_RESULT: DefaultResult = DefaultResult(false)
-    }
+    /** List of results for the last call to verifyConditions. */
+    private val verificationResults: ConditionsResults = ConditionsResults()
 
-    private val verificationResults: ConditionsResult = ConditionsResult()
     /**
      * Set only during a [verifyConditions], it contains the system time at verification start.
      * This allows to use the same reference time for all conditions during the same verification loop.
      */
     private var currentVerificationTsMs: Long? = null
 
-    suspend fun verifyConditions(@ConditionOperator operator: Int, conditions: List<Condition>): ConditionsResult {
+    suspend fun verifyConditions(@ConditionOperator operator: Int, conditions: List<Condition>): ConditionsResults {
         verificationResults.reset()
         currentVerificationTsMs = System.currentTimeMillis()
 
-        var verificationResult: ConditionResult
-
+        var verificationResult: ProcessedConditionResult
         for (condition in conditions) {
             verificationResult = verifyCondition(condition)
             verificationResults.addResult(condition.getValidId(), verificationResult)
@@ -79,10 +75,10 @@ internal class ConditionsVerifier(
         return verificationResults
     }
 
-    private suspend fun verifyCondition(condition: Condition): ConditionResult =
+    private suspend fun verifyCondition(condition: Condition): ProcessedConditionResult =
         when (condition) {
             is ImageCondition -> verifyImageCondition(condition)
-            is TriggerCondition -> if (verifyTriggerCondition(condition)) POSITIVE_RESULT else NEGATIVE_RESULT
+            is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
         }
 
     private fun verifyTriggerCondition(condition: TriggerCondition): Boolean =
@@ -132,11 +128,11 @@ internal class ConditionsVerifier(
         } else false
     }
 
-    private suspend fun verifyImageCondition(condition: ImageCondition): ConditionResult {
-        progressListener?.onImageConditionProcessingStarted(condition)
+    private suspend fun verifyImageCondition(condition: ImageCondition): ProcessedConditionResult.Image {
+        progressListener?.onImageConditionProcessingStarted()
 
         val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition)
-            ?: return NEGATIVE_RESULT
+            ?: return condition.toInvalidConditionResult()
 
         val bitmap = bitmapSupplier(
             condition.path,
@@ -153,16 +149,31 @@ internal class ConditionsVerifier(
                 threshold = condition.threshold,
             )
 
-            ImageResult(
+            ProcessedConditionResult.Image(
                 isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
                 haveBeenDetected = detectionResult.isDetected,
                 condition = condition,
                 position = scalingManager.scaleUpDetectionResult(detectionResult.position),
                 confidenceRate = detectionResult.confidenceRate,
             )
-        } ?: NEGATIVE_RESULT
+        } ?: condition.toInvalidConditionResult()
 
         progressListener?.onImageConditionProcessingCompleted(result)
         return result
     }
+
+    private fun ImageCondition.toInvalidConditionResult(): ProcessedConditionResult.Image =
+        ProcessedConditionResult.Image(
+            isFulfilled = false,
+            haveBeenDetected = false,
+            condition = this,
+            confidenceRate = 0.0,
+            position = null,
+        )
+
+    private fun TriggerCondition.toConditionResult(positive: Boolean): ProcessedConditionResult.Trigger =
+        ProcessedConditionResult.Trigger(
+            isFulfilled = positive,
+            condition = this,
+        )
 }

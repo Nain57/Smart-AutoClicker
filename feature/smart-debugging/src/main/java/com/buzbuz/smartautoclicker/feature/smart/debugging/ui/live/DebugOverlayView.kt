@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.overlay
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live
 
 import android.content.Context
 import android.graphics.Canvas
@@ -22,12 +22,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
+import com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.ImageConditionResultUiState
 
 /**
  * Displays a rectangle at the selected position to represents the detection.
  * @param context the Android context.
  */
-class DebugOverlayView(context: Context) : View(context) {
+internal class DebugOverlayView(context: Context) : View(context) {
 
     private val positiveResultPaint = Paint().apply {
         color = Color.GREEN
@@ -43,10 +44,10 @@ class DebugOverlayView(context: Context) : View(context) {
     /** The margin between the actual condition position and the displayed borders. */
     private val conditionBordersMargin = 10
 
-    private val results: MutableList<DetectionResultInfo> = mutableListOf()
+    private val results: MutableList<ImageConditionResultUiState> = mutableListOf()
     private val displayedResults: MutableList<Pair<Paint, Rect>> = mutableListOf()
 
-    fun setResults(newResults: List<DetectionResultInfo>) {
+    fun setResults(newResults: List<ImageConditionResultUiState>) {
         updateResults(newResults)
         postInvalidate()
     }
@@ -69,7 +70,7 @@ class DebugOverlayView(context: Context) : View(context) {
         }
     }
 
-    private fun updateResults(newResults: List<DetectionResultInfo>) {
+    private fun updateResults(newResults: List<ImageConditionResultUiState>) {
         if (results != newResults) {
             results.clear()
             results.addAll(newResults)
@@ -84,7 +85,7 @@ class DebugOverlayView(context: Context) : View(context) {
         results.forEach { result -> displayedResults.add(result.toDisplayResult()) }
     }
 
-    private fun DetectionResultInfo.toDisplayResult(): Pair<Paint, Rect> = Pair(
+    private fun ImageConditionResultUiState.toDisplayResult(): Pair<Paint, Rect> = Pair(
         if (positive) positiveResultPaint else negativeResultPaint,
         Rect(
             coordinates.left - conditionBordersMargin,
@@ -94,9 +95,3 @@ class DebugOverlayView(context: Context) : View(context) {
         )
     )
 }
-
-data class DetectionResultInfo(
-    val positive: Boolean,
-    val coordinates: Rect,
-    val confidenceRate: Double,
-)

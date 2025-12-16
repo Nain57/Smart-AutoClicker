@@ -17,18 +17,19 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live
 
 import android.graphics.Rect
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 
 /**
  * Condition detection results during a live debugging session.
  *
- * @param conditionId the unique identifier of the condition that triggered this result.
+ * @param condition the condition that triggered this result.
  * @param isFulfilled tells if the condition have been fulfilled or not.
  * @param isDetected tells if the image of this condition have been detected or not.
  * @param confidenceRate the confidence rate of the detection algorithm on this result. Between [0 - 100].
  * @param detectionArea the area of the image that have been detected. Null if not detected.
  */
 data class DebugLiveImageConditionResult(
-    val conditionId: Long,
+    val condition: ImageCondition,
     val isFulfilled: Boolean,
     val isDetected: Boolean,
     val confidenceRate: Double,

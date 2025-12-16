@@ -91,7 +91,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isDebugViewEnabled.collect(viewBinding.fieldDebugOverlay::setChecked) }
                 launch { viewModel.isDebugReportEnabled.collect(viewBinding.fieldDebugReport::setChecked) }
-                launch { viewModel.debugReportAvailability.collect(::updateDebugReportAvailability) }
+                launch { viewModel.isDebugReportAvailable.collect(::updateDebugReportAvailability) }
             }
         }
     }
