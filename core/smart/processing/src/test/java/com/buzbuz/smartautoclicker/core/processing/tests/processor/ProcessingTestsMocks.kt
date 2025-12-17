@@ -110,9 +110,9 @@ internal fun DebuggingListener.verifyTriggerEventProcessed(
     expectedResult: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
-    .onTriggerEventProcessingCompleted(event, event.expectedResult(expectedResult))
+    .onTriggerEventFulfilled(event, event.expectedResult(expectedResult))
 
 internal fun DebuggingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
-    verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(true))
-    verify(this, never()).onTriggerEventProcessingCompleted(event, event.expectedResult(false))
+    verify(this, never()).onTriggerEventFulfilled(event, event.expectedResult(true))
+    verify(this, never()).onTriggerEventFulfilled(event, event.expectedResult(false))
 }

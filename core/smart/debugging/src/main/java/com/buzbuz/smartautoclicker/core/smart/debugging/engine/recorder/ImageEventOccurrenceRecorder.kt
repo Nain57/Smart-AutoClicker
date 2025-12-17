@@ -22,19 +22,14 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.Proc
 
 internal class ImageEventOccurrenceRecorder {
 
-    private val eventDurationRecorder: DurationRecorder = DurationRecorder()
     private val conditionDurationRecorder: DurationRecorder = DurationRecorder()
 
     private val _imageConditionResults: MutableList<DebugReportConditionResult.ImageCondition> = mutableListOf()
     val imageConditionResults: List<DebugReportConditionResult.ImageCondition> = _imageConditionResults
 
-    val eventDurationMs: Long
-        get() = eventDurationRecorder.durationMs()
-
 
     fun onImageEventProcessingStarted() {
         reset()
-        eventDurationRecorder.start()
     }
 
     fun onImageConditionProcessingStarted() {
@@ -55,7 +50,6 @@ internal class ImageEventOccurrenceRecorder {
     }
 
     fun reset() {
-        eventDurationRecorder.reset()
         conditionDurationRecorder.reset()
         _imageConditionResults.clear()
     }

@@ -29,10 +29,10 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_title_report_avg_image_processing_duration">平均处理时间</string>
-    <string name="item_title_report_detection_count">检测到条件数量</string>
-    <string name="item_title_report_image_processed">处理图片数</string>
+    <string name="item_title_report_trigger_event_fulfilled">检测到条件数量</string>
+    <string name="item_title_report_frame_processed">处理图片数</string>
     <string name="item_title_report_total_duration">总用时</string>
-    <string name="item_title_report_total_event_trigger_count">触发场景数</string>
+    <string name="item_title_report_image_event_fulfilled">触发场景数</string>
 
     <!--
       - Section titles.

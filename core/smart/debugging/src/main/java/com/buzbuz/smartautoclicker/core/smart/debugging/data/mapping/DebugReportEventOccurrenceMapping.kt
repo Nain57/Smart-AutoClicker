@@ -43,6 +43,7 @@ internal fun DebugReportEventOccurrence.toProtobuf(): ProtoDebugReportMessage =
 private fun DebugReportEventOccurrence.ImageEvent.toImageEventProtobuf(): ProtoImageEventMessage =
     imageEventMessage {
         eventId = this@toImageEventProtobuf.eventId
+        frameNumber = this@toImageEventProtobuf.frameNumber
         results.addAll(
             values = this@toImageEventProtobuf.conditionsResults.map { result ->
                 imageConditionResult {
@@ -84,6 +85,7 @@ internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
 private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.ImageEvent =
     DebugReportEventOccurrence.ImageEvent(
         eventId = eventId,
+        frameNumber = frameNumber,
         relativeTimestampMs = relativeTimestamp,
         conditionsResults = resultsList.map { result ->
             DebugReportConditionResult.ImageCondition(

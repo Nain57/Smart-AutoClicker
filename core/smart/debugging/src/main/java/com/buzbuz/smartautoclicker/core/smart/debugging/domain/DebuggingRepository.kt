@@ -44,8 +44,8 @@ interface DebuggingRepository {
     fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean)
 
     /** Read the last detection session report overview, if any. */
-    suspend fun getLastReportOverview(): DebugReportOverview?
+    fun getLastReportOverview(): Flow<DebugReportOverview?>
 
     /** Read the last detection session events occurrences. List will be empty no rapport is available. */
-    suspend fun getLastReportEventsOccurrences(): List<DebugReportEventOccurrence>
+    fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?>
 }

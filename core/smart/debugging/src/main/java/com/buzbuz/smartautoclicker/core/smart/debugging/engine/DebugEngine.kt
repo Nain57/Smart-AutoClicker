@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.engine
 
 import android.graphics.Rect
+
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -137,9 +138,11 @@ internal class DebugEngine @Inject constructor(
             }
 
             if (isReportEnabled) {
+                overviewRecorder.onEventFulfilled(event)
                 debugReportLocalDataSource.writeEventOccurrenceToReport(
                     occurrence = DebugReportEventOccurrence.ImageEvent(
                         eventId = event.id.databaseId,
+                        frameNumber = overviewRecorder.frameCount,
                         relativeTimestampMs = overviewRecorder.sessionDurationMs,
                         conditionsResults = imgEventOccurrenceRecorder.imageConditionResults.toList(),
                     )
@@ -167,10 +170,11 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
-    override fun onTriggerEventProcessingCompleted(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
+    override fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
         coroutineScopeIo.launch {
             if (!isReportEnabled) return@launch
 
+            overviewRecorder.onEventFulfilled(event)
             debugReportLocalDataSource.writeEventOccurrenceToReport(
                 occurrence = DebugReportEventOccurrence.TriggerEvent(
                     eventId = event.id.databaseId,

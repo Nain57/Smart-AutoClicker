@@ -38,5 +38,6 @@ sealed class DebugReportEventOccurrence {
         override val eventId: Long,
         override val relativeTimestampMs: Long,
         override val conditionsResults: List<DebugReportConditionResult.ImageCondition>,
+        val frameNumber: Long,
     ) : DebugReportEventOccurrence()
 }
