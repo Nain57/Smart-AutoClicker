@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2025 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report
-
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.overview
 
 import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import javax.inject.Inject
 
-
-/** ViewModel for the [DebugReportDialog]. */
-class DebugReportModel @Inject constructor(
+class DebugReportOverviewViewModel @Inject constructor(
     debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
-
 
 }

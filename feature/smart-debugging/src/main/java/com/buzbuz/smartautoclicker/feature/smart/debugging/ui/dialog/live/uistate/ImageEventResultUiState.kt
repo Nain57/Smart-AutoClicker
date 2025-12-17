@@ -14,13 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.uistate
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate
 
-import android.graphics.Rect
-
-data class ImageConditionResultUiState(
-    val positive: Boolean,
-    val coordinates: Rect,
-    val confidenceRate: Double,
-    val resultText: String? = null,
+data class ImageEventResultUiState(
+    val eventText: String,
+    val conditionsText: String,
+    val detectionResults: List<ImageConditionResultUiState>,
 )

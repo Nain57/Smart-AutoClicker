@@ -17,9 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.di
 
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.eventtry.TryElementViewModel
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.conditiontry.TryImageConditionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.DebugReportModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryElementViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.overview.DebugReportOverviewViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineViewModel
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -27,7 +29,9 @@ import dagger.hilt.InstallIn
 @EntryPoint
 @InstallIn(OverlayComponent::class)
 interface DebuggingViewModelsEntryPoint {
-    fun debugReportModel(): DebugReportModel
+    fun debugReportViewModel(): DebugReportViewModel
+    fun debugReportOverviewViewModel(): DebugReportOverviewViewModel
+    fun debugReportTimelineViewModel(): DebugReportTimelineViewModel
     fun tryElementViewModel(): TryElementViewModel
     fun tryImageConditionViewModel(): TryImageConditionViewModel
 }

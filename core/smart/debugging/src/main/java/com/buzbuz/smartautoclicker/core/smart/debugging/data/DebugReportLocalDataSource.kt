@@ -19,7 +19,10 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data
 import android.content.Context
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.extensions.safeBufferedOutputStream
+import com.buzbuz.smartautoclicker.core.base.extensions.safeExists
 import com.buzbuz.smartautoclicker.core.base.extensions.safeInputStream
 import com.buzbuz.smartautoclicker.core.base.extensions.safeRecreate
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toDomain
@@ -29,6 +32,13 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.google.protobuf.MessageLite
 
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
@@ -57,6 +67,9 @@ internal class DebugReportLocalDataSource @Inject constructor(
     private val isWritingReport: Boolean
         get() = messagesOutputStream != null
 
+    private val _isReportAvailable: MutableStateFlow<Boolean> = MutableStateFlow(overviewFile.safeExists())
+    val isReportAvailable: StateFlow<Boolean> = _isReportAvailable
+
     /**
      * Start the report writing process.
      * Required in order to use [writeEventOccurrenceToReport], can be stopped using [stopReportWrite].
@@ -72,6 +85,9 @@ internal class DebugReportLocalDataSource @Inject constructor(
                 messagesOutputStream?.close()
                 messagesOutputStream = null
             }
+
+            // We are starting a writing, report is not available
+            _isReportAvailable.update { false }
 
             // Removes any previous report files and recreate them
             messagesFile.safeRecreate()
@@ -112,6 +128,8 @@ internal class DebugReportLocalDataSource @Inject constructor(
             // We no longer will be receiving any messages for this detection session, close the output stream
             messagesOutputStream?.safeClose()
             messagesOutputStream = null
+
+            _isReportAvailable.update { true }
         }
     }
 

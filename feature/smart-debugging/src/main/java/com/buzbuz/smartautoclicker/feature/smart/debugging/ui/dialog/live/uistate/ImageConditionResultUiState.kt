@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.mapping
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
-import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatConditionResultsDisplayText
-import com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.ImageEventResultUiState
+import android.graphics.Rect
 
-internal fun DebugLiveImageEventOccurrence.toUiState(): ImageEventResultUiState =
-    ImageEventResultUiState(
-        eventText = event.name,
-        conditionsText = formatConditionResultsDisplayText(),
-        detectionResults = toConditionResultsUiState(),
-    )
+data class ImageConditionResultUiState(
+    val positive: Boolean,
+    val coordinates: Rect,
+    val confidenceRate: Double,
+    val resultText: String? = null,
+)

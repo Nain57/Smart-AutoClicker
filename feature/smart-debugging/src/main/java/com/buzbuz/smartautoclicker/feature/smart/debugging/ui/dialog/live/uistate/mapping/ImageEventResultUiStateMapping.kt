@@ -14,10 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.uistate
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping
 
-data class ImageEventResultUiState(
-    val eventText: String,
-    val conditionsText: String,
-    val detectionResults: List<ImageConditionResultUiState>,
-)
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatConditionResultsDisplayText
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageEventResultUiState
+
+internal fun DebugLiveImageEventOccurrence.toUiState(): ImageEventResultUiState =
+    ImageEventResultUiState(
+        eventText = event.name,
+        conditionsText = formatConditionResultsDisplayText(),
+        detectionResults = toConditionResultsUiState(),
+    )

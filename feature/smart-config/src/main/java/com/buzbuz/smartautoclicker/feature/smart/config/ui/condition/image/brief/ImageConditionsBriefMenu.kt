@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.conditiontry.TryImageConditionOverlayMenu
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
 

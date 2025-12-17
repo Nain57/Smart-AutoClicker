@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 
 interface DebuggingRepository {
@@ -30,6 +31,8 @@ interface DebuggingRepository {
     /** The last event that has been matched, with all interpreted conditions results. */
     val lastImageEventFulfilled: Flow<DebugLiveImageEventOccurrence?>
 
+    /** Tells if a debug report is available. */
+    val isDebugReportAvailable: StateFlow<Boolean>
 
     /** Tells if the debugging overlay should be enabled while detecting. */
     fun isDebugViewEnabled(): Boolean
@@ -45,7 +48,4 @@ interface DebuggingRepository {
 
     /** Read the last detection session events occurrences. List will be empty no rapport is available. */
     suspend fun getLastReportEventsOccurrences(): List<DebugReportEventOccurrence>
-
-    /** Tells if a debug report is available. */
-    suspend fun isDebugReportAvailable(): Boolean
 }
