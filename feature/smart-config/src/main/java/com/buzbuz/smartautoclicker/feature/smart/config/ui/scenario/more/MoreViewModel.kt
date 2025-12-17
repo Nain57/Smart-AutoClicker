@@ -18,23 +18,16 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
 import android.content.ComponentName
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
-import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class MoreViewModel @Inject constructor(
-    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val appComponentsProvider: AppComponentsProvider,
     private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
@@ -48,14 +41,8 @@ class MoreViewModel @Inject constructor(
     val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
 
     /** Tells if a debug report is available. */
-    private val _isDebugReportAvailable: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isDebugReportAvailable: Flow<Boolean> = _isDebugReportAvailable
+    val isDebugReportAvailable: Flow<Boolean> = debuggingRepository.isDebugReportAvailable
 
-    init {
-        viewModelScope.launch(ioDispatcher) {
-            _isDebugReportAvailable.update { debuggingRepository.isDebugReportAvailable() }
-        }
-    }
 
     fun toggleIsDebugViewEnabled() {
         _isDebugViewEnabled.value = !_isDebugViewEnabled.value

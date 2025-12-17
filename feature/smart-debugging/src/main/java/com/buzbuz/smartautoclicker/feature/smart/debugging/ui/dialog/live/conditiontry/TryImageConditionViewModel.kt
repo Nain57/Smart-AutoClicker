@@ -14,33 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.live.eventtry
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry
 
 import android.content.Context
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebugDetectionResultUseCase
-import com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.ImageEventResultUiState
-import com.buzbuz.smartautoclicker.feature.smart.debugging.uistate.mapping.toUiState
+import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toUiState
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
-class TryElementViewModel @Inject constructor(
+class TryImageConditionViewModel @Inject constructor(
     detectionResultUseCase: DebugDetectionResultUseCase,
     private val detectionRepository: DetectionRepository,
 ) : ViewModel() {
@@ -49,14 +51,36 @@ class TryElementViewModel @Inject constructor(
         .map { state -> state == DetectionState.DETECTING }
         .distinctUntilChanged()
 
-    val displayResults: Flow<ImageEventResultUiState?> = detectionResultUseCase()
-        .combine(isPlaying) { results, playing -> if (playing) results else null }
-        .map { results -> results?.toUiState() }
+    private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
 
-    fun startTry(context: Context, scenario: Scenario, imageEvent: ImageEvent) {
+    private val detectionResult: Flow<ImageConditionResultUiState?> = detectionResultUseCase()
+        .combine(isPlaying) { results, playing -> if (playing) results else null }
+        .map { results ->
+            if (results == null || results.imageConditionsResults.isEmpty()) null
+            else results.imageConditionsResults.first().toUiState()
+        }
+
+    val displayResults: Flow<ImageConditionResultUiState?> =
+        combine(userThreshold, detectionResult) { userThreshold, result ->
+            result?.copy(positive = (1.0 - (userThreshold / 100.0)) < result.confidenceRate)
+        }
+
+    val thresholdText: Flow<String> =
+        userThreshold.map { threshold -> (1 - (threshold / 100.0)).formatDebugConfidenceRate() }
+
+
+    fun setThreshold(newThreshold: Int) {
         viewModelScope.launch {
+            userThreshold.value = newThreshold
+        }
+    }
+
+    fun startTry(context: Context, scenario: Scenario, imageCondition: ImageCondition) {
+        viewModelScope.launch {
+            userThreshold.value = imageCondition.threshold
+
             delay(500)
-            detectionRepository.tryEvent(context, scenario, imageEvent)
+            detectionRepository.tryImageCondition(context, scenario, imageCondition)
         }
     }
 
@@ -65,4 +89,11 @@ class TryElementViewModel @Inject constructor(
             detectionRepository.stopDetection()
         }
     }
+
+    fun getSelectedThreshold(): Int = userThreshold.value
 }
+
+/** The minimum threshold value selectable by the user. */
+internal const val MIN_THRESHOLD = 0f
+/** The maximum threshold value selectable by the user. */
+internal const val MAX_THRESHOLD = 20f

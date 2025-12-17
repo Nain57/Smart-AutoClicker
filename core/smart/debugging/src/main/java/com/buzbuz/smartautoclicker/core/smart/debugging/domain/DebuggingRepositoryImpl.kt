@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +45,9 @@ internal class DebuggingRepositoryImpl @Inject constructor(
     override val lastImageEventFulfilled: Flow<DebugLiveImageEventOccurrence?> =
         debugEngine.lastImageEventFulfilled
 
+    override val isDebugReportAvailable: StateFlow<Boolean> =
+        debugReportDataSource.isReportAvailable
+
 
     override fun isDebugViewEnabled(): Boolean =
         debugConfigurationDataSource.isDebugViewEnabled()
@@ -62,7 +66,4 @@ internal class DebuggingRepositoryImpl @Inject constructor(
 
     override suspend fun getLastReportEventsOccurrences(): List<DebugReportEventOccurrence> =
         debugReportDataSource.readMessages()
-
-    override suspend fun isDebugReportAvailable(): Boolean =
-        debugReportDataSource.readOverview() != null
 }

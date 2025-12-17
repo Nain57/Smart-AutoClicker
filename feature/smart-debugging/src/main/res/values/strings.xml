@@ -21,6 +21,8 @@
       - Allowed characters can be small due to save/delete/close buttons.
       -->
     <string name="dialog_overlay_title_debug_report">Debug report</string>
+    <string name="menu_item_debug_report_overview">Overview</string>
+    <string name="menu_item_debug_report_timeline">Timeline</string>
 
     <!--
       - Text for items in a list or vertical layout.
@@ -57,5 +59,7 @@
       - DO NOT TRANSLATE.
       -->
     <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
+
+
 
 </resources>

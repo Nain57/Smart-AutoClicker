@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.report.DebugReportDialog
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportDialog
 
 import kotlinx.coroutines.launch
 
