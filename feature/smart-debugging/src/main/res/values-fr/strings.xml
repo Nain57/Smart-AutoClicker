@@ -30,10 +30,10 @@
       -  * Desc can have more space to describe the title
       -->
     <string name="item_title_report_total_duration">Durée totale</string>
-    <string name="item_title_report_image_processed">Images analysées</string>
+    <string name="item_title_report_frame_processed">Images analysées</string>
     <string name="item_title_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
-    <string name="item_title_report_total_event_trigger_count">Évènements activés</string>
-    <string name="item_title_report_detection_count">Conditions détectés</string>
+    <string name="item_title_report_image_event_fulfilled">Évènements activés</string>
+    <string name="item_title_report_trigger_event_fulfilled">Conditions détectés</string>
 
     <!--
       - Section titles.

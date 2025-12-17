@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.Proc
 interface DebuggingListener {
     fun onSessionStarted(scenario: Scenario) = Unit
 
-    fun onTriggerEventProcessingCompleted(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) = Unit
+    fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) = Unit
 
     fun onImageEventsProcessingStarted() = Unit
     fun onImageEventProcessingStarted() = Unit

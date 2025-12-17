@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
@@ -23,8 +25,11 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,6 +37,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class DebuggingRepositoryImpl @Inject constructor(
+    @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     debugEngine: DebugEngine,
     private val debugConfigurationDataSource: DebugConfigurationLocalDataSource,
     private val debugReportDataSource: DebugReportLocalDataSource,
@@ -61,9 +67,14 @@ internal class DebuggingRepositoryImpl @Inject constructor(
             debugReport = debugReport,
         )
 
-    override suspend fun getLastReportOverview(): DebugReportOverview? =
-        debugReportDataSource.readOverview()
+    override fun getLastReportOverview(): Flow<DebugReportOverview?> =
+        flow {
+            emit(debugReportDataSource.readOverview())
+        }.flowOn(ioDispatcher)
 
-    override suspend fun getLastReportEventsOccurrences(): List<DebugReportEventOccurrence> =
-        debugReportDataSource.readMessages()
+
+    override fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?> =
+        flow {
+            emit(debugReportDataSource.readMessages())
+        }.flowOn(ioDispatcher)
 }

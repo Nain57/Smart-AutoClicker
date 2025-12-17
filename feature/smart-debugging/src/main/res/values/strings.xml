@@ -24,17 +24,11 @@
     <string name="menu_item_debug_report_overview">Overview</string>
     <string name="menu_item_debug_report_timeline">Timeline</string>
 
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -  * Error have the same space as desc
-      -->
     <string name="item_title_report_total_duration">Total duration</string>
-    <string name="item_title_report_image_processed">Images processed</string>
+    <string name="item_title_report_frame_processed">Frames processed</string>
     <string name="item_title_report_avg_image_processing_duration">Average processing duration</string>
-    <string name="item_title_report_total_event_trigger_count">Events triggered</string>
-    <string name="item_title_report_detection_count">Conditions detected</string>
+    <string name="item_title_report_image_event_fulfilled">ImageEvents fulfilled</string>
+    <string name="item_title_report_trigger_event_fulfilled">TriggerEvents fulfilled</string>
 
     <!--
       - Section titles.

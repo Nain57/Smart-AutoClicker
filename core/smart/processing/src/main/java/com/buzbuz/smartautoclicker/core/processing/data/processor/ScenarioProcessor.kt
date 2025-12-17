@@ -136,12 +136,15 @@ internal class ScenarioProcessor(
                 operator = triggerEvent.conditionOperator,
                 conditions = triggerEvent.conditions,
             )
-            if (results.fulfilled  == true) onFulfilled(triggerEvent, results)
 
-            progressListener?.onTriggerEventProcessingCompleted(
-                event = triggerEvent,
-                results = results.getAllTriggerConditionsResults(),
-            )
+            if (results.fulfilled  == true) {
+                progressListener?.onTriggerEventFulfilled(
+                    event = triggerEvent,
+                    results = results.getAllTriggerConditionsResults(),
+                )
+
+                onFulfilled(triggerEvent, results)
+            }
         }
     }
 

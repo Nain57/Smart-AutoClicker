@@ -29,10 +29,10 @@
       -  * Error have the same space as desc
       -->
     <string name="item_title_report_total_duration">Загальна тривалість</string>
-    <string name="item_title_report_image_processed">Оброблені зображення</string>
+    <string name="item_title_report_frame_processed">Оброблені зображення</string>
     <string name="item_title_report_avg_image_processing_duration">Середня тривалість обробки</string>
-    <string name="item_title_report_total_event_trigger_count">Події запущено</string>
-    <string name="item_title_report_detection_count">Виявлені умови</string>
+    <string name="item_title_report_image_event_fulfilled">Події запущено</string>
+    <string name="item_title_report_trigger_event_fulfilled">Виявлені умови</string>
 
     <!--
       - Section titles.

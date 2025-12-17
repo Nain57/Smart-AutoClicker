@@ -16,6 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder
 
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 internal class DebugReportOverviewRecorder {
@@ -47,6 +50,13 @@ internal class DebugReportOverviewRecorder {
     fun onFrameProcessingStarted() {
         frameCount += 1
         frameProcessingDurationRecorder.start()
+    }
+
+    fun onEventFulfilled(event: Event) {
+        when (event) {
+            is ImageEvent -> imageEventFulfilledCount += 1
+            is TriggerEvent -> triggerEventFulfilledCount += 1
+        }
     }
 
     fun onFrameProcessingStopped() {
