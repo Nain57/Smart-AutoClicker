@@ -174,8 +174,6 @@
     <string name="field_event_keep_detecting_desc_disabled">When this Event is triggered, restart the execution from the first event on the list</string>
 
     <string name="field_operator_title">Operator</string>
-    <string name="field_operator_button_and" translatable="false">AND</string>
-    <string name="field_operator_button_or" translatable="false">"OR  "</string>
     <string name="field_operator_desc_or">Only one condition must be fulfilled to trigger the actions</string>
     <string name="field_operator_desc_and">All conditions must be fulfilled to trigger the actions</string>
 
@@ -214,12 +212,6 @@
     <string name="field_counter_comparison_value_label">Value</string>
 
     <string name="dropdown_comparison_operator_label">Operator</string>
-    <string name="dropdown_comparison_operator_item_greater_or_equals" translatable="false">≥</string>
-    <string name="dropdown_comparison_operator_item_greater" translatable="false"><![CDATA[>]]></string>
-    <string name="dropdown_comparison_operator_item_equals" translatable="false">=</string>
-    <string name="dropdown_comparison_operator_item_lower_or_equals" translatable="false">≤</string>
-    <string name="dropdown_comparison_operator_item_lower" translatable="false"><![CDATA[<]]></string>
-
 
     <!-- Dialog Condition Timer Reached ============================================================================ -->
 

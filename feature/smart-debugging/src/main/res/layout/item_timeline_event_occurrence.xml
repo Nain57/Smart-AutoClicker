@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2025 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_horizontal_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginTop="@dimen/margin_vertical_default"
+        android:layout_marginBottom="@dimen/margin_vertical_small">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_name_text"
+            style="@style/AppTheme.TextAppearance.ListItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_large"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/time_text"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="My cool event"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/time_text"
+            style="@style/AppTheme.TextAppearance.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="@id/event_name_text"
+            app:layout_constraintBottom_toBottomOf="@id/event_name_text"
+            app:layout_constraintStart_toEndOf="@id/event_name_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="10m 25s"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/occurrence_text"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintTop_toBottomOf="@id/event_name_text"
+            app:layout_constraintBottom_toTopOf="@id/conditions_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chevron"
+            tools:text="Frame #1234"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/conditions_text"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_mini"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintTop_toBottomOf="@id/occurrence_text"
+            app:layout_constraintBottom_toTopOf="@id/actions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chevron"
+            tools:text="Condition name"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/time_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_chevron_right"
+            tools:ignore="ContentDescription"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/actions"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/conditions_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chevron"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_timeline_actions"
+            tools:itemCount="4"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

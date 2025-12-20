@@ -30,6 +30,24 @@
     <string name="item_title_report_image_event_fulfilled">ImageEvents fulfilled</string>
     <string name="item_title_report_trigger_event_fulfilled">TriggerEvents fulfilled</string>
 
+    <string name="title_event_occurrence_empty">No events</string>
+    <string name="desc_event_occurrence_empty">No events were executed during the last scenario session.</string>
+
+    <string name="item_event_occurrence_frame_number">Frame #%1$d</string>
+    <string name="item_event_occurrence_trigger">Trigger</string>
+
+    <string name="item_event_occurrence_one_condition_fulfilled">Fulfilled: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d conditions processed</string>
+
+    <string name="item_event_occurrence_details_header_title">Condition operator</string>
+
+    <string name="item_event_occurrence_details_image_confidence">Confidence: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">Should be detected ?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">Is fulfilled ?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Broadcast received: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Timer reached: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Counter reached: %1$s %2$s %3$s</string>
+
     <!--
       - Section titles.
       - Should be short and concise.
@@ -53,7 +71,6 @@
       - DO NOT TRANSLATE.
       -->
     <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
-
 
 
 </resources>

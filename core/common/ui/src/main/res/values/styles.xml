@@ -326,6 +326,8 @@
     </style>
     <!-- Text appearance for a card horizontal item text. -->
     <style name="AppTheme.TextAppearance.CardItemHText" parent="@style/TextAppearance.Material3.BodyMedium"/>
+    <!-- Text appearance for the small body text. -->
+    <style name="AppTheme.TextAppearance.BodySmall" parent="@style/TextAppearance.Material3.BodySmall"/>
     <!-- Text appearance for the body text. -->
     <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.Material3.BodyMedium"/>
     <!-- Text appearance for the large body text. -->
