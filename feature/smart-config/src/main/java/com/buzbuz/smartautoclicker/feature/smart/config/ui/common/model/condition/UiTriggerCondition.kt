@@ -74,11 +74,11 @@ private fun TriggerCondition.getTriggerConditionDescription(context: Context): S
 
 private fun TriggerCondition.OnCounterCountReached.getComparisonOperationDisplayName(context: Context): String =
     when (comparisonOperation) {
-        GREATER -> context.getString(R.string.dropdown_comparison_operator_item_greater)
-        GREATER_OR_EQUALS -> context.getString(R.string.dropdown_comparison_operator_item_greater_or_equals)
-        EQUALS -> context.getString(R.string.dropdown_comparison_operator_item_equals)
-        LOWER_OR_EQUALS -> context.getString(R.string.dropdown_comparison_operator_item_lower_or_equals)
-        LOWER -> context.getString(R.string.dropdown_comparison_operator_item_lower)
+        GREATER -> context.getString(R.string.comparison_operator_greater)
+        GREATER_OR_EQUALS -> context.getString(R.string.comparison_operator_greater_or_equals)
+        EQUALS -> context.getString(R.string.comparison_operator_equals)
+        LOWER_OR_EQUALS -> context.getString(R.string.comparison_operator_lower_or_equals)
+        LOWER -> context.getString(R.string.comparison_operator_lower)
     }
 
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastActionDisplayName(): String {

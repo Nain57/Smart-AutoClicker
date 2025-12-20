@@ -44,11 +44,11 @@ class CounterReachedConditionViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    private val greaterItem = DropdownItem(R.string.dropdown_comparison_operator_item_greater)
-    private val greaterOrEqualsItem = DropdownItem(R.string.dropdown_comparison_operator_item_greater_or_equals)
-    private val equalsItem = DropdownItem(R.string.dropdown_comparison_operator_item_equals)
-    private val lowerOrEqualsItem = DropdownItem(R.string.dropdown_comparison_operator_item_lower_or_equals)
-    private val lowerItem = DropdownItem(R.string.dropdown_comparison_operator_item_lower)
+    private val greaterItem = DropdownItem(R.string.comparison_operator_greater)
+    private val greaterOrEqualsItem = DropdownItem(R.string.comparison_operator_greater_or_equals)
+    private val equalsItem = DropdownItem(R.string.comparison_operator_equals)
+    private val lowerOrEqualsItem = DropdownItem(R.string.comparison_operator_lower_or_equals)
+    private val lowerItem = DropdownItem(R.string.comparison_operator_lower)
 
     /** The condition being configured by the user. */
     private val configuredCondition: Flow<TriggerCondition.OnCounterCountReached> =

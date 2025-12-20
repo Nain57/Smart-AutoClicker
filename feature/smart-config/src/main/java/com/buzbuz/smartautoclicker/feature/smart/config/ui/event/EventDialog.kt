@@ -198,8 +198,8 @@ class EventDialog(
             )
             setButtonConfig(
                 DualStateButtonTextConfig(
-                    textLeft = context.getString(R.string.field_operator_button_and),
-                    textRight = context.getString(R.string.field_operator_button_or),
+                    textLeft = context.getString(R.string.condition_operator_and),
+                    textRight = context.getString(R.string.condition_operator_or),
                     selectionRequired = true,
                     singleSelection = true,
                 )

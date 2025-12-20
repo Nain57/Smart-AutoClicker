@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2024 Kevin Buzeau
+* Copyright (C) 2025 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/margin_vertical_extra_large">
 
     <ProgressBar
         android:id="@+id/loading"
@@ -35,8 +36,6 @@
         android:id="@+id/overview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_vertical_large"
-        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:scrollbars="vertical"
         android:visibility="gone"
         tools:visibility="visible">

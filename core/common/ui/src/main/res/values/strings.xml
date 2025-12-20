@@ -100,6 +100,18 @@
     <string name="toast_configure_swipe_to">Touch the position to end the swipe to</string>
 
     <!--
+      - Universal values, DO NOT TRANSLATE
+      - No need to copy them in other language files
+      -->
+    <string name="condition_operator_and" translatable="false">AND</string>
+    <string name="condition_operator_or" translatable="false">"OR "</string>
+    <string name="comparison_operator_greater_or_equals" translatable="false">≥</string>
+    <string name="comparison_operator_greater" translatable="false"><![CDATA[>]]></string>
+    <string name="comparison_operator_equals" translatable="false">=</string>
+    <string name="comparison_operator_lower_or_equals" translatable="false">≤</string>
+    <string name="comparison_operator_lower" translatable="false"><![CDATA[<]]></string>
+
+    <!--
       - Content description texts.
       - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
       -->
@@ -112,4 +124,5 @@
     <string name="content_desc_stop_clicker">Stop Klick\'r</string>
     <string name="content_desc_confirm">Confirm</string>
     <string name="content_desc_go_back">Back to dialog</string>
+
 </resources>
