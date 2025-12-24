@@ -29,4 +29,5 @@ android {
 dependencies {
     implementation(project(":core:common:base"))
     implementation(project(":core:smart:domain"))
+    implementation(project(":core:smart:processing"))
 }

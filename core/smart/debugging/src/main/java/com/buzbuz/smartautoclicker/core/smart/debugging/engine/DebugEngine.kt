@@ -23,7 +23,8 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageConditionResult
@@ -31,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageEventOccurrenceRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
 
@@ -55,7 +55,7 @@ internal class DebugEngine @Inject constructor(
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val debugConfigurationLocalDataSource: DebugConfigurationLocalDataSource,
     private val debugReportLocalDataSource: DebugReportLocalDataSource,
-) : DebuggingListener {
+) : ProcessingListener {
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))

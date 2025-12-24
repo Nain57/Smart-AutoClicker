@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +71,7 @@ class DetectorEngine @Inject constructor(
     private val actionExecutor: AndroidActionExecutor,
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
-    private val debuggingListener: DebuggingListener,
+    private val debuggingListener: ProcessingListener,
 ) {
 
     /** Process the events conditions to detect them on the screen. */

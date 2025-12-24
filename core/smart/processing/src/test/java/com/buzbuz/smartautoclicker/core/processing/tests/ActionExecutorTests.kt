@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*

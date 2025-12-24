@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder
 
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
 
 
 internal class ImageEventOccurrenceRecorder {
