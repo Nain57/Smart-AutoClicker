@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
 
 import kotlinx.coroutines.yield
 
@@ -52,7 +52,7 @@ internal class ScenarioProcessor(
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
-    private val progressListener: DebuggingListener? = null,
+    private val progressListener: ProcessingListener? = null,
 ) {
 
     /** Handle the processing state of the scenario. */

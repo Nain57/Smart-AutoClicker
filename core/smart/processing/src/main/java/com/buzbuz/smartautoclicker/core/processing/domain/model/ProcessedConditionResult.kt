@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result
+package com.buzbuz.smartautoclicker.core.processing.domain.model
 
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-
 
 /** Result of the processing of a condition, provided by the detection engine. */
 sealed class ProcessedConditionResult {

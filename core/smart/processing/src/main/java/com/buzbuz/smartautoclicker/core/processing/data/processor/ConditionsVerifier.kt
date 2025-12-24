@@ -28,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 import kotlinx.coroutines.yield
 
@@ -38,7 +38,7 @@ internal class ConditionsVerifier(
     private val imageDetector: ImageDetector,
     private val scalingManager: ScalingManager,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
-    private val progressListener: DebuggingListener? = null,
+    private val progressListener: ProcessingListener? = null,
 ) {
 
     /** List of results for the last call to verifyConditions. */

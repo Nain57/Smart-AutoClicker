@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 
 internal class ConditionsResults {

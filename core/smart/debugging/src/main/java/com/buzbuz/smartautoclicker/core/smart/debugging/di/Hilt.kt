@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.di
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepositoryImpl
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
@@ -38,6 +38,6 @@ object SmartDebuggingModule {
 
     @Provides
     @Singleton
-    internal fun providesDebuggingListener(debugEngine: DebugEngine): DebuggingListener =
+    internal fun providesDebuggingListener(debugEngine: DebugEngine): ProcessingListener =
         debugEngine
 }

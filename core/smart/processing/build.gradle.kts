@@ -34,7 +34,6 @@ dependencies {
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:display"))
     implementation(project(":core:common:settings"))
-    implementation(project(":core:smart:debugging"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
 

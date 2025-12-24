@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.result.ProcessedConditionResult
+import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 
 internal data class TestScenario(
