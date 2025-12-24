@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.DumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.feature.qstile.R
 import com.buzbuz.smartautoclicker.feature.qstile.data.QSTileScenarioInfo
 import com.buzbuz.smartautoclicker.feature.qstile.data.QsTileConfigDataSource
@@ -62,7 +62,7 @@ class QSTileRepository @Inject constructor(
     private val dumbRepository: DumbRepository,
     private val dumbEngine: DumbEngine,
     private val smartRepository: IRepository,
-    private val smartEngine: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
     private val qsTileConfigDataSource: QsTileConfigDataSource,
 ) {
 
@@ -76,7 +76,7 @@ class QSTileRepository @Inject constructor(
             scenarioInfo ?: return@flatMapLatest flowOf(context.getTileDisplayInfo(false, null, null, null))
 
             if (scenarioInfo.isSmart) {
-                combine(smartRepository.getScenarioFlow(scenarioInfo.id), smartEngine.scenarioId) { scenario, runningId ->
+                combine(smartRepository.getScenarioFlow(scenarioInfo.id), smartProcessingRepository.scenarioId) { scenario, runningId ->
                     context.getTileDisplayInfo(
                         isSmart = true,
                         runningId = runningId?.databaseId,

@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
@@ -53,7 +53,7 @@ class LocalService(
     private val overlayManager: OverlayManager,
     private val appComponentsProvider: AppComponentsProvider,
     private val settingsRepository: SettingsRepository,
-    private val detectionRepository: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
     private val dumbEngine: DumbEngine,
     private val revenueRepository: IRevenueRepository,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
@@ -90,7 +90,7 @@ class LocalService(
         get() = state.isStarted
 
     init {
-        combine(dumbEngine.isRunning, detectionRepository.detectionState) { dumbIsRunning, smartState ->
+        combine(dumbEngine.isRunning, smartProcessingRepository.detectionState) { dumbIsRunning, smartState ->
             dumbIsRunning || smartState == DetectionState.DETECTING
         }.onEach { isRunning ->
             notificationController.updateNotification(context, isRunning, !overlayManager.isStackHidden())
@@ -99,7 +99,7 @@ class LocalService(
         overlayManager.onVisibilityChangedListener = {
             notificationController.updateNotification(
                 context,
-                dumbEngine.isRunning.value || detectionRepository.isRunning(),
+                dumbEngine.isRunning.value || smartProcessingRepository.isRunning(),
                 !overlayManager.isStackHidden()
             )
         }
@@ -154,7 +154,7 @@ class LocalService(
         startJob = serviceScope.launch {
             val mainMenu = MainMenu { stop() }
 
-            detectionRepository.apply {
+            smartProcessingRepository.apply {
                 setScenarioId(scenario.id, markAsUsed = true)
                 setProjectionErrorHandler { mainMenu.onMediaProjectionLost() }
             }
@@ -164,7 +164,7 @@ class LocalService(
                 newOverlay = mainMenu,
             )
 
-            detectionRepository.startScreenRecord(
+            smartProcessingRepository.startScreenRecord(
                 resultCode = resultCode,
                 data = data,
             )
@@ -181,7 +181,7 @@ class LocalService(
 
             dumbEngine.release()
             overlayManager.closeAll(context)
-            detectionRepository.stopScreenRecord()
+            smartProcessingRepository.stopScreenRecord()
 
             onStop()
             notificationController.destroyNotification()
@@ -199,7 +199,7 @@ class LocalService(
 
     private fun play() {
         serviceScope.launch {
-            if (state.isSmartLoaded && !detectionRepository.isRunning()) {
+            if (state.isSmartLoaded && !smartProcessingRepository.isRunning()) {
                 if (revenueRepository.userBillingState.value == UserBillingState.AD_REQUESTED) startPaywall()
                 else startSmartScenario()
             } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {
@@ -212,7 +212,7 @@ class LocalService(
         serviceScope.launch {
             when {
                 dumbEngine.isRunning.value -> dumbEngine.stopDumbScenario()
-                detectionRepository.isRunning() -> detectionRepository.stopDetection()
+                smartProcessingRepository.isRunning() -> smartProcessingRepository.stopDetection()
             }
         }
     }
@@ -231,7 +231,7 @@ class LocalService(
 
     private fun startSmartScenario() {
         serviceScope.launch {
-            detectionRepository.startDetection(
+            smartProcessingRepository.startDetection(
                 context = context,
                 autoStopDuration = revenueRepository.consumeTrial(),
             )

@@ -22,8 +22,8 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebugDetectionResultUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
@@ -56,7 +56,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
-    private val detectionRepository: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
     private val editionRepository: EditionRepository,
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
@@ -65,7 +65,7 @@ class MainMenuModel @Inject constructor(
     debugDetectionResultUseCase: DebugDetectionResultUseCase,
 ) : ViewModel() {
 
-    private val scenarioDbId: StateFlow<Long?> = detectionRepository.scenarioId
+    private val scenarioDbId: StateFlow<Long?> = smartProcessingRepository.scenarioId
         .map { it?.databaseId }
         .stateIn(
             scope = viewModelScope,
@@ -80,7 +80,7 @@ class MainMenuModel @Inject constructor(
         revenueRepository.isBillingFlowInProgress
 
     /** The current of the detection. */
-    val detectionState: StateFlow<UiState> = detectionRepository.detectionState
+    val detectionState: StateFlow<UiState> = smartProcessingRepository.detectionState
         .map { if (it == DetectionState.DETECTING) UiState.Detecting else UiState.Idle }
         .distinctUntilChanged()
         .stateIn(
@@ -89,13 +89,13 @@ class MainMenuModel @Inject constructor(
             UiState.Idle,
         )
 
-    val isMediaProjectionStarted: StateFlow<Boolean> = detectionRepository.detectionState
+    val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
     val isStartButtonEnabled: Flow<Boolean> = combine(
-        detectionRepository.canStartDetection,
+        smartProcessingRepository.canStartDetection,
         editionRepository.isEditionSynchronized,
         isMediaProjectionStarted
     ) { canStartDetection, isSynchronized, isProjectionStarted ->
@@ -103,7 +103,7 @@ class MainMenuModel @Inject constructor(
     }
 
     /** Tells if the detector can't work due to a native library load error. */
-    val nativeLibError: Flow<Boolean> = detectionRepository.detectionState
+    val nativeLibError: Flow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
 
@@ -136,7 +136,7 @@ class MainMenuModel @Inject constructor(
     fun stopDetection(): Boolean {
         if (detectionState.value !is UiState.Detecting) return false
 
-        detectionRepository.stopDetection()
+        smartProcessingRepository.stopDetection()
         return true
     }
 
@@ -156,7 +156,7 @@ class MainMenuModel @Inject constructor(
 
     private fun startDetection(context: Context) {
         viewModelScope.launch {
-            detectionRepository.startDetection(
+            smartProcessingRepository.startDetection(
                 context = context,
                 autoStopDuration = revenueRepository.consumeTrial(),
             )

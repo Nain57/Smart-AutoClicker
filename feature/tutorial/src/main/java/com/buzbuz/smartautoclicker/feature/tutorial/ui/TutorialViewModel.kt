@@ -17,8 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui
 
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
@@ -32,11 +32,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TutorialViewModel @Inject constructor(
-    detectionRepository: DetectionRepository,
+    smartProcessingRepository: SmartProcessingRepository,
     private val tutorialRepository: TutorialRepository
 ) : ViewModel() {
 
-    val shouldBeStopped: Flow<Boolean> = detectionRepository.detectionState
+    val shouldBeStopped: Flow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.INACTIVE }
 
     val onFloatingUiVisibilityStep: Flow<Boolean> = tutorialRepository.activeStep

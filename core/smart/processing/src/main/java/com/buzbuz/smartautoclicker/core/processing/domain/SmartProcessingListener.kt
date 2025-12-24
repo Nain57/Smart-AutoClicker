@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditi
 
 
 /** Listener upon smart scenario processing.*/
-interface ProcessingListener {
+interface SmartProcessingListener {
 
     /**
      * The processing session have started.

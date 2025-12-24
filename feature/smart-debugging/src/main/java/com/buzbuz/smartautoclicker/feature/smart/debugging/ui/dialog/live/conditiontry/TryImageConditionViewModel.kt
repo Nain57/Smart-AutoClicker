@@ -23,7 +23,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebugDetectionResultUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
@@ -44,10 +44,10 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class TryImageConditionViewModel @Inject constructor(
     detectionResultUseCase: DebugDetectionResultUseCase,
-    private val detectionRepository: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
 ) : ViewModel() {
 
-    private val isPlaying: Flow<Boolean> = detectionRepository.detectionState
+    private val isPlaying: Flow<Boolean> = smartProcessingRepository.detectionState
         .map { state -> state == DetectionState.DETECTING }
         .distinctUntilChanged()
 
@@ -80,13 +80,13 @@ class TryImageConditionViewModel @Inject constructor(
             userThreshold.value = imageCondition.threshold
 
             delay(500)
-            detectionRepository.tryImageCondition(context, scenario, imageCondition)
+            smartProcessingRepository.tryImageCondition(context, scenario, imageCondition)
         }
     }
 
     fun stopTry() {
         viewModelScope.launch {
-            detectionRepository.stopDetection()
+            smartProcessingRepository.stopDetection()
         }
     }
 

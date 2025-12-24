@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialDataSource
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialEngine
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialStateDataSource
@@ -66,7 +66,7 @@ import javax.inject.Singleton
 class TutorialRepository @Inject constructor(
     @ApplicationContext context: Context,
     private val scenarioRepository: IRepository,
-    private val detectionRepository: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
     private val dataSource: TutorialDataSource,
     private val stateDataSource: TutorialStateDataSource,
     private val tutorialEngine: TutorialEngine,
@@ -127,7 +127,7 @@ class TutorialRepository @Inject constructor(
     fun setupTutorialMode() {
         if (scenarioId != null) return
 
-        scenarioId = detectionRepository.getScenarioId()
+        scenarioId = smartProcessingRepository.getScenarioId()
 
         Log.d(TAG, "Setup tutorial mode, user scenario is $scenarioId")
         scenarioRepository.startTutorialMode()
@@ -155,7 +155,7 @@ class TutorialRepository @Inject constructor(
 
             activeTutorialIndex.value = index
             tutorialScenarioId = tutoScenarioId
-            detectionRepository.setScenarioId(tutoScenarioId)
+            smartProcessingRepository.setScenarioId(tutoScenarioId)
 
             tutorialEngine.startTutorial(tutorialData)
         }
@@ -169,7 +169,7 @@ class TutorialRepository @Inject constructor(
             Log.d(TAG, "Stop tutorial $tutorialIndex")
 
             tutorialEngine.stopTutorial()
-            detectionRepository.stopDetection()
+            smartProcessingRepository.stopDetection()
             cleanupTutorialState()
 
             activeTutorialIndex.value = null
@@ -185,7 +185,7 @@ class TutorialRepository @Inject constructor(
         coroutineScopeMain.launch {
             stopTutorialJob?.join()
             stopTutorialJob = null
-            scenarioId?.let { detectionRepository.setScenarioId(it) }
+            scenarioId?.let { smartProcessingRepository.setScenarioId(it) }
             scenarioId = null
             activeTutorialIndex.value = null
             scenarioRepository.stopTutorialMode()

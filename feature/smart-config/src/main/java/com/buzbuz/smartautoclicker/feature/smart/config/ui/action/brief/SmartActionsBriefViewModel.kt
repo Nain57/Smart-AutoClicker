@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -55,7 +55,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.t
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,7 +76,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     repository: IRepository,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
-    private val detectionRepository: DetectionRepository,
+    private val smartProcessingRepository: SmartProcessingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     settingsRepository: SettingsRepository,
 ) : ViewModel(), ActionConfigurator {
@@ -102,7 +101,7 @@ class SmartActionsBriefViewModel @Inject constructor(
             }
         }
 
-    val isTestingAction: Flow<Boolean> = detectionRepository.detectionState
+    val isTestingAction: Flow<Boolean> = smartProcessingRepository.detectionState
         .map { state -> state == DetectionState.DETECTING }
 
     private val focusedAction: Flow<Pair<Action?, Boolean>> =
@@ -206,14 +205,14 @@ class SmartActionsBriefViewModel @Inject constructor(
 
         viewModelScope.launch {
             delay(500)
-            detectionRepository.tryAction(context, scenario, actions[index])
+            smartProcessingRepository.tryAction(context, scenario, actions[index])
         }
     }
 
     fun stopAction(): Boolean {
-        if (!detectionRepository.isRunning()) return false
+        if (!smartProcessingRepository.isRunning()) return false
 
-        detectionRepository.stopDetection()
+        smartProcessingRepository.stopDetection()
         return true
     }
 

@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.smart.debugging.di
+package com.buzbuz.smartautoclicker.core.processing.di
 
-import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepositoryImpl
-import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,15 +27,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SmartDebuggingModule {
+object ProcessingModule {
 
     @Provides
     @Singleton
-    internal fun providesDebuggingRepository(debuggingRepositoryImpl: DebuggingRepositoryImpl): DebuggingRepository =
-        debuggingRepositoryImpl
+    internal fun providesProcessingRepository(impl: SmartProcessingRepositoryImpl): SmartProcessingRepository =
+        impl
 
-    @Provides
-    @Singleton
-    internal fun providesDebuggingListener(debugEngine: DebugEngine): SmartProcessingListener =
-        debugEngine
 }
