@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionSc
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
-import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -82,14 +82,14 @@ internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImag
         )
 }
 
-internal fun ProcessingListener.verifyImageConditionProcessed(
+internal fun SmartProcessingListener.verifyImageConditionProcessed(
     condition: TestImageCondition,
     detected: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
     .onImageConditionProcessingCompleted(condition.expectedResult(detected))
 
-internal fun ProcessingListener.monitorImageEventProcessing(
+internal fun SmartProcessingListener.monitorImageEventProcessing(
     events: List<ImageEvent>,
 ): Map<Long, Boolean> {
 
@@ -105,7 +105,7 @@ internal fun ProcessingListener.monitorImageEventProcessing(
     return results
 }
 
-internal fun ProcessingListener.verifyTriggerEventFulfilled(
+internal fun SmartProcessingListener.verifyTriggerEventFulfilled(
     event: TriggerEvent,
     expectedResult: Boolean,
     processedCount: Int = 1,
@@ -114,7 +114,7 @@ internal fun ProcessingListener.verifyTriggerEventFulfilled(
     mode = if (expectedResult) times(processedCount) else never()
 ).onTriggerEventFulfilled(event, event.expectedResult(expectedResult))
 
-internal fun ProcessingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
+internal fun SmartProcessingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
     verify(this, never()).onTriggerEventFulfilled(event, event.expectedResult(true))
     verify(this, never()).onTriggerEventFulfilled(event, event.expectedResult(false))
 }

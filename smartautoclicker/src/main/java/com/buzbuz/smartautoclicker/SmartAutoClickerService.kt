@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
-import com.buzbuz.smartautoclicker.core.processing.domain.DetectionRepository
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
@@ -75,7 +75,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
-    @Inject lateinit var detectionRepository: DetectionRepository
+    @Inject lateinit var smartProcessingRepository: SmartProcessingRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: BitmapRepository
     @Inject lateinit var qualityRepository: QualityRepository
@@ -113,7 +113,7 @@ class SmartAutoClickerService : AccessibilityService() {
                 context = this,
                 overlayManager = overlayManager,
                 appComponentsProvider = appComponentsProvider,
-                detectionRepository = detectionRepository,
+                smartProcessingRepository = smartProcessingRepository,
                 dumbEngine = dumbEngine,
                 revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
@@ -187,7 +187,7 @@ class SmartAutoClickerService : AccessibilityService() {
         displayConfigManager.dump(writer)
         bitmapManager.dump(writer)
         overlayManager.dump(writer)
-        detectionRepository.dump(writer)
+        smartProcessingRepository.dump(writer)
         dumbEngine.dump(writer)
         actionExecutor.dump(writer)
         qualityRepository.dump(writer)

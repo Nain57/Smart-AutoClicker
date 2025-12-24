@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
@@ -55,7 +55,7 @@ internal class DebugEngine @Inject constructor(
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val debugConfigurationLocalDataSource: DebugConfigurationLocalDataSource,
     private val debugReportLocalDataSource: DebugReportLocalDataSource,
-) : ProcessingListener {
+) : SmartProcessingListener {
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))

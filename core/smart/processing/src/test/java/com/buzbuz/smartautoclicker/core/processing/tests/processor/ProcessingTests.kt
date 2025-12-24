@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
-import com.buzbuz.smartautoclicker.core.processing.domain.ProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +72,7 @@ class ProcessingTests {
     @Mock private lateinit var mockImageDetector: ImageDetector
     @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
-    @Mock private lateinit var mockProcessingListener: ProcessingListener
+    @Mock private lateinit var mockProcessingListener: SmartProcessingListener
 
     /** The object under test. */
     private lateinit var scenarioProcessor: ScenarioProcessor

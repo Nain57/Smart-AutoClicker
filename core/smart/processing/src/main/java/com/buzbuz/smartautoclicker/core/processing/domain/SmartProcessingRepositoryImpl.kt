@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:JvmName("SmartProcessingRepositoryKt")
+
 package com.buzbuz.smartautoclicker.core.processing.domain
 
 import android.annotation.SuppressLint
@@ -22,7 +24,6 @@ import android.content.Intent
 import android.os.PowerManager
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
@@ -70,13 +71,13 @@ import kotlin.time.Duration
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
-class DetectionRepository @Inject constructor(
+internal class SmartProcessingRepositoryImpl @Inject constructor(
     @ApplicationContext context: Context,
     @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val scenarioRepository: IRepository,
     private val detectorEngine: DetectorEngine,
-): Dumpable {
+): SmartProcessingRepository {
 
     private val coroutineScopeMain: CoroutineScope =
         CoroutineScope(SupervisorJob() + mainDispatcher)
@@ -96,12 +97,10 @@ class DetectionRepository @Inject constructor(
     /** Stop the detection automatically after selected delay */
     private var autoStopJob: Job? = null
 
-    /** The current scenario unique identifier. */
     private val _scenarioId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
-    val scenarioId: StateFlow<Identifier?> = _scenarioId
+    override val scenarioId: StateFlow<Identifier?> = _scenarioId
 
-    /** The state of the scenario processing. */
-    val detectionState: Flow<DetectionState> = detectorEngine.state
+    override val detectionState: Flow<DetectionState> = detectorEngine.state
         .mapNotNull { it.toDetectionState() }
 
     private val shouldKeepScreenOn: Flow<Boolean> = _scenarioId
@@ -113,11 +112,7 @@ class DetectionRepository @Inject constructor(
         }
         .distinctUntilChanged()
 
-    /**
-     * Tells if the detection can be started or not.
-     * It requires at least one event enabled on start to be started.
-     */
-    val canStartDetection: Flow<Boolean> = scenarioId
+    override val canStartDetection: Flow<Boolean> = scenarioId
         .filterNotNull()
         .flatMapLatest { scenarioRepository.getEventsFlow(it.databaseId) }
         .combine(detectionState) { events, state ->
@@ -135,7 +130,7 @@ class DetectionRepository @Inject constructor(
         shouldKeepScreenOn.onEach(::updateWakeLockState).launchIn(coroutineScopeIo)
     }
 
-    fun setScenarioId(identifier: Identifier, markAsUsed: Boolean = false) {
+    override fun setScenarioId(identifier: Identifier, markAsUsed: Boolean) {
         _scenarioId.value = identifier
 
         if (markAsUsed) {
@@ -143,22 +138,22 @@ class DetectionRepository @Inject constructor(
         }
     }
 
-    fun setProjectionErrorHandler(handler: () -> Unit) {
+    override fun setProjectionErrorHandler(handler: () -> Unit) {
         projectionErrorHandler = handler
     }
 
-    fun getScenarioId(): Identifier? = _scenarioId.value
+    override fun getScenarioId(): Identifier? = _scenarioId.value
 
-    fun isRunning(): Boolean =
+    override fun isRunning(): Boolean =
         detectorEngine.state.value == DetectorState.DETECTING
 
-    fun startScreenRecord(resultCode: Int, data: Intent) {
+    override fun startScreenRecord(resultCode: Int, data: Intent) {
         detectorEngine.startScreenRecord(resultCode, data) {
             coroutineScopeMain.launch { projectionErrorHandler?.invoke() }
         }
     }
 
-    suspend fun startDetection(context: Context, autoStopDuration: Duration? = null) {
+    override suspend fun startDetection(context: Context, autoStopDuration: Duration?) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)
@@ -180,13 +175,13 @@ class DetectionRepository @Inject constructor(
         }
     }
 
-    fun stopDetection() {
+    override fun stopDetection() {
         detectorEngine.stopDetection()
         autoStopJob?.cancel()
         autoStopJob = null
     }
 
-    fun stopScreenRecord() {
+    override fun stopScreenRecord() {
         projectionErrorHandler = null
 
         detectorEngine.apply {
@@ -197,7 +192,7 @@ class DetectionRepository @Inject constructor(
         _scenarioId.value = null
     }
 
-    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent) {
+    override fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent) {
         val triedElement = ImageEventTry(scenario, event)
         tryElement(
             context,
@@ -205,7 +200,7 @@ class DetectionRepository @Inject constructor(
         )
     }
 
-    fun tryImageCondition(context: Context, scenario: Scenario, condition: ImageCondition) {
+    override fun tryImageCondition(context: Context, scenario: Scenario, condition: ImageCondition) {
         val triedElement = ImageConditionTry(scenario, condition)
         tryElement(
             context = context,
@@ -213,7 +208,7 @@ class DetectionRepository @Inject constructor(
         )
     }
 
-    fun tryAction(context: Context,  scenario: Scenario, action: Action) {
+    override fun tryAction(context: Context,  scenario: Scenario, action: Action) {
         tryElement(
             context = context,
             elementTry = ActionTry(scenario, action),
@@ -241,7 +236,7 @@ class DetectionRepository @Inject constructor(
         val contentPrefix = prefix.addDumpTabulationLvl()
 
         writer.apply {
-            append(prefix).println("* DetectionRepository:")
+            append(prefix).println("* SmartProcessingRepository:")
 
             append(contentPrefix)
                 .append("- scenarioId=${scenarioId.value}; ")
@@ -252,7 +247,7 @@ class DetectionRepository @Inject constructor(
     }
 }
 
-private const val TAG = "DetectionRepository"
+private const val TAG = "SmartProcessingRepository"
 
 /** The minimum detection quality for the algorithm. */
 const val DETECTION_QUALITY_MIN = com.buzbuz.smartautoclicker.core.detection.DETECTION_QUALITY_MIN
