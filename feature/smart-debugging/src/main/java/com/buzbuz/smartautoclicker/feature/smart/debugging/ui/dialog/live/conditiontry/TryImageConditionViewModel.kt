@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebugDetectionResultUseCase
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toUiState
@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TryImageConditionViewModel @Inject constructor(
-    detectionResultUseCase: DebugDetectionResultUseCase,
+    detectionResultUseCase: GetDebugLiveDetectionResultUseCase,
     private val smartProcessingRepository: SmartProcessingRepository,
 ) : ViewModel() {
 

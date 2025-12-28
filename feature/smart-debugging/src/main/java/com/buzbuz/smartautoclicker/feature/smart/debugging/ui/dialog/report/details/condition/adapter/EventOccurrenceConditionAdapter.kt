@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.adapter
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.adapter
 
 import android.graphics.Bitmap
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.EventOccurrenceItem
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
 
 import kotlinx.coroutines.Job
 
@@ -41,25 +41,25 @@ class EventOccurrenceItemAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            R.layout.item_condition_result_header -> ItemEventOccurrenceHeaderViewHolder(parent)
-            R.layout.item_condition_result_image -> ItemEventOccurrenceImageViewHolder(parent, bitmapProvider)
-            R.layout.item_condition_result_trigger -> ItemEventOccurrenceTriggerViewHolder(parent)
+            R.layout.item_condition_result_header -> EventOccurrenceConditionHeaderViewHolder(parent)
+            R.layout.item_condition_result_image -> EventOccurrenceConditionImageViewHolder(parent, bitmapProvider)
+            R.layout.item_condition_result_trigger -> EventOccurrenceConditionTriggerViewHolder(parent)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ItemEventOccurrenceHeaderViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Header)
-            is ItemEventOccurrenceImageViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Image)
-            is ItemEventOccurrenceTriggerViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Trigger)
+            is EventOccurrenceConditionHeaderViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Header)
+            is EventOccurrenceConditionImageViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Image)
+            is EventOccurrenceConditionTriggerViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Trigger)
         }
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         when (holder) {
-            is ItemEventOccurrenceImageViewHolder -> holder.unbind()
-            is ItemEventOccurrenceHeaderViewHolder,
-            is ItemEventOccurrenceTriggerViewHolder -> Unit
+            is EventOccurrenceConditionImageViewHolder -> holder.unbind()
+            is EventOccurrenceConditionHeaderViewHolder,
+            is EventOccurrenceConditionTriggerViewHolder -> Unit
         }
     }
 }

@@ -196,7 +196,11 @@ class DetectorEngine @Inject constructor(
             detector.init()
 
             // Setup listeners
-            debuggingListener.onSessionStarted(scenario)
+            debuggingListener.onSessionStarted(
+                scenario = scenario,
+                imageEvents = imageEvents,
+                triggerEvents = triggerEvents,
+            )
 
             // Instantiate the processor and initialize its detection state.
             scenarioProcessor = ScenarioProcessor(

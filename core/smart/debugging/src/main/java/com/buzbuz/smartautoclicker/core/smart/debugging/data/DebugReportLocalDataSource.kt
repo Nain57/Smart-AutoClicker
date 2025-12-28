@@ -19,8 +19,6 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data
 import android.content.Context
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.extensions.safeBufferedOutputStream
 import com.buzbuz.smartautoclicker.core.base.extensions.safeExists
 import com.buzbuz.smartautoclicker.core.base.extensions.safeInputStream
@@ -32,13 +30,9 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.google.protobuf.MessageLite
 
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield

@@ -31,8 +31,13 @@ interface SmartProcessingListener {
      * The processing session have started.
      *
      * @param scenario the [Scenario] running for the processing session.
+     * @param imageEvents the list of [ImageEvent] to be processed for this scenario.
+     * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
      */
-    fun onSessionStarted(scenario: Scenario) = Unit
+    fun onSessionStarted(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) = Unit
+
+    /** The processing of an [TriggerEvent] has begun. */
+    fun onTriggerEventProcessingStarted() = Unit
 
     /**
      * A [TriggerEvent] have been fulfilled.
@@ -75,6 +80,15 @@ interface SmartProcessingListener {
      * This can be caused by the scenario being stopped, or when the device has been rotated.
      */
     fun onImageEventsProcessingCancelled() = Unit
+
+    /**
+     * The value of a counter have changed.
+     *
+     * @param counterName the name of the counter.
+     * @param previousValue the value of the counter before the change
+     * @param newValue the value of the counter after the change.
+     */
+    fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int)
 
     /** The processing session have ended.*/
     fun onSessionEnded() = Unit

@@ -39,4 +39,7 @@ message DebugReportOverview {
 
     /** The number of image events that have been triggered during the session. */
     int32 triggerEventFulfilledCount = 6;
+
+    /** The list of counter name for this scenario. */
+    repeated string countersName = 7;
 }

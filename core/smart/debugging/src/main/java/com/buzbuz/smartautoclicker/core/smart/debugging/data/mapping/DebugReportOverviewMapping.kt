@@ -31,6 +31,7 @@ internal fun DebugReportOverview.toProtobuf(): ProtoDebugReportOverview =
         averageFrameProcessingDurationMs = this@toProtobuf.averageFrameProcessingDuration.inWholeMilliseconds
         imageEventFulfilledCount = this@toProtobuf.imageEventFulfilledCount
         triggerEventFulfilledCount = this@toProtobuf.triggerEventFulfilledCount
+        countersName.addAll(this@toProtobuf.counterNames)
     }
 
 internal fun ProtoDebugReportOverview.toDomain(): DebugReportOverview =
@@ -41,4 +42,5 @@ internal fun ProtoDebugReportOverview.toDomain(): DebugReportOverview =
         averageFrameProcessingDuration = averageFrameProcessingDurationMs.milliseconds,
         imageEventFulfilledCount = imageEventFulfilledCount,
         triggerEventFulfilledCount = triggerEventFulfilledCount,
+        counterNames = countersNameList.toSet(),
     )

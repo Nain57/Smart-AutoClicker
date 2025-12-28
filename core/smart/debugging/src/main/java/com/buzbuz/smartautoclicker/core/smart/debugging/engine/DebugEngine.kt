@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterValuesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageEventOccurrenceRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
 
@@ -62,6 +63,7 @@ internal class DebugEngine @Inject constructor(
 
     private val overviewRecorder: DebugReportOverviewRecorder = DebugReportOverviewRecorder()
     private val imgEventOccurrenceRecorder: ImageEventOccurrenceRecorder = ImageEventOccurrenceRecorder()
+    private val counterValuesRecorder: CounterValuesRecorder = CounterValuesRecorder()
 
     private var isReportEnabled: Boolean = false
 
@@ -72,13 +74,14 @@ internal class DebugEngine @Inject constructor(
     val lastImageEventFulfilled: StateFlow<DebugLiveImageEventOccurrence?> = _lastImageEventFulfilled
 
 
-    override fun onSessionStarted(scenario: Scenario) {
+    override fun onSessionStarted(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) {
         coroutineScopeIo.launch {
             isReportEnabled = debugConfigurationLocalDataSource.isDebugReportEnabled()
             _isDebuggingSession.value = true
 
             if (isReportEnabled) {
                 overviewRecorder.onSessionStart(scenario)
+                counterValuesRecorder.onSessionStarted(imageEvents, triggerEvents)
                 debugReportLocalDataSource.startReportWrite()
             }
         }
@@ -99,6 +102,7 @@ internal class DebugEngine @Inject constructor(
             if (!isReportEnabled) return@launch
 
             imgEventOccurrenceRecorder.onImageEventProcessingStarted()
+            counterValuesRecorder.onEventProcessingStarted()
         }
     }
 
@@ -145,6 +149,7 @@ internal class DebugEngine @Inject constructor(
                         frameNumber = overviewRecorder.frameCount,
                         relativeTimestampMs = overviewRecorder.sessionDurationMs,
                         conditionsResults = imgEventOccurrenceRecorder.imageConditionResults.toList(),
+                        counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
                     )
                 )
                 imgEventOccurrenceRecorder.reset()
@@ -170,6 +175,14 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
+    override fun onTriggerEventProcessingStarted() {
+        coroutineScopeIo.launch {
+            if (!isReportEnabled) return@launch
+
+            counterValuesRecorder.onEventProcessingStarted()
+        }
+    }
+
     override fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
         coroutineScopeIo.launch {
             if (!isReportEnabled) return@launch
@@ -179,6 +192,7 @@ internal class DebugEngine @Inject constructor(
                 occurrence = DebugReportEventOccurrence.TriggerEvent(
                     eventId = event.id.databaseId,
                     relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                    counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
                     conditionsResults = results.map { result ->
                         DebugReportConditionResult.TriggerCondition(
                             conditionId = result.condition.id.databaseId,
@@ -187,6 +201,13 @@ internal class DebugEngine @Inject constructor(
                     }
                 )
             )
+        }
+    }
+
+    override fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) {
+        coroutineScopeIo.launch {
+            if (!isReportEnabled) return@launch
+            counterValuesRecorder.onCounterValueChanged(counterName, previousValue, newValue)
         }
     }
 
@@ -201,10 +222,12 @@ internal class DebugEngine @Inject constructor(
                         averageFrameProcessingDuration = overviewRecorder.averageFrameProcessingDurationMs.milliseconds,
                         imageEventFulfilledCount = overviewRecorder.imageEventFulfilledCount,
                         triggerEventFulfilledCount = overviewRecorder.triggerEventFulfilledCount,
+                        counterNames = counterValuesRecorder.counterNames,
                     )
                 )
 
                 overviewRecorder.reset()
+                counterValuesRecorder.reset()
             }
 
             _lastImageEventFulfilled.value = null

@@ -14,19 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition
 
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 
 
-sealed interface DebugReportEventOccurrenceUiState {
+sealed interface DebugConditionContentUiState {
 
-    data object Loading : DebugReportEventOccurrenceUiState
+    data object Loading : DebugConditionContentUiState
     data class Available(
-        val eventName: String,
         val items: List<EventOccurrenceItem>,
-    ) : DebugReportEventOccurrenceUiState
+    ) : DebugConditionContentUiState
 }
 
 sealed interface EventOccurrenceItem {

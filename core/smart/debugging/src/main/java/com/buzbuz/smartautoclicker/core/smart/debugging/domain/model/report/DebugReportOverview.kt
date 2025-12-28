@@ -26,6 +26,7 @@ import kotlin.time.Duration
  * @param averageFrameProcessingDuration The average duration of a frame processing.
  * @param imageEventFulfilledCount The number of image events that have been triggered during the session.
  * @param triggerEventFulfilledCount The number of image events that have been triggered during the session.
+ * @param counterNames The names of all counters available in the scenario that was ran to made this report.
  */
 data class DebugReportOverview(
     val scenarioId: Long,
@@ -34,4 +35,5 @@ data class DebugReportOverview(
     val averageFrameProcessingDuration: Duration,
     val imageEventFulfilledCount: Int,
     val triggerEventFulfilledCount: Int,
+    val counterNames: Set<String>,
 )

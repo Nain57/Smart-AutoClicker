@@ -1,0 +1,33 @@
+/*
+ * Copyright (C) 2025 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.buzbuz.smartautoclicker.core.smart.debugging;
+
+/** Represents a counter value change during an event execution. */
+message CounterStateChange {
+
+    /** The name of the changed counter. */
+    string counterName = 1;
+
+    /** The value of the counter before the change.*/
+    int32 counterOldValue = 2;
+
+    /** The value of the counter after the change. */
+    int32 counterNewValue = 3;
+}

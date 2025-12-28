@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.adapter
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.adapter
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -27,12 +27,12 @@ import com.buzbuz.smartautoclicker.core.base.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemConditionResultImageBinding
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.EventOccurrenceItem
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
 
 import kotlinx.coroutines.Job
 
 
-class ItemEventOccurrenceImageViewHolder private constructor(
+class EventOccurrenceConditionImageViewHolder private constructor(
     private val viewBinding: ItemConditionResultImageBinding,
     private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {

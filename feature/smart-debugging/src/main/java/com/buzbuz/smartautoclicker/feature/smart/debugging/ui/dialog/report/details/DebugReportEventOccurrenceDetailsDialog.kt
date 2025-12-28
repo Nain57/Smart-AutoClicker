@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
@@ -24,54 +23,69 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
-import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
-import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.DialogEventOccurrenceDetailsBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.adapter.EventOccurrenceItemAdapter
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.DebugConditionContent
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.DebugCounterStateContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.navigation.NavigationBarView
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
 
+/** Displays the content of the current debug report. */
 class DebugReportEventOccurrenceDetailsDialog(
     private val scenarioId: Long,
     private val eventOccurrence: DebugReportEventOccurrence,
-): OverlayDialog(R.style.AppTheme) {
+): NavBarDialog(R.style.AppTheme) {
 
-    /** View model for this content. */
+    /** View model for this dialog. */
     private val viewModel: DebugReportEventOccurrenceDetailsViewModel by viewModels(
         entryPoint = DebuggingViewModelsEntryPoint::class.java,
         creator = { debugReportEventOccurrenceViewModel() },
     )
 
-    private lateinit var conditionsAdapter: EventOccurrenceItemAdapter
-    private lateinit var viewBinding: DialogEventOccurrenceDetailsBinding
-
-
     override fun onCreateView(): ViewGroup {
-        conditionsAdapter = EventOccurrenceItemAdapter(viewModel::getConditionBitmap)
-        viewBinding = DialogEventOccurrenceDetailsBinding.inflate(LayoutInflater.from(context)).apply {
-            layoutTopBar.apply {
-                setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
+        return super.onCreateView().also {
+            topBarBinding.apply {
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
-                buttonDismiss.setDebouncedOnClickListener { back() }
+                setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
             }
 
-            layoutLoadableList.list.adapter = conditionsAdapter
+            viewModel.setOccurrence(scenarioId, eventOccurrence)
         }
+    }
 
-        viewModel.setOccurrence(scenarioId, eventOccurrence)
+    override fun inflateMenu(navBarView: NavigationBarView) {
+        navBarView.inflateMenu(R.menu.menu_debug_event_occurence)
+    }
 
-        return viewBinding.root
+    override fun onCreateContent(navItemId: Int): NavBarDialogContent =
+        when (navItemId) {
+            R.id.page_conditions -> DebugConditionContent(
+                appContext = context.applicationContext,
+                scenarioId = scenarioId,
+                eventOccurrence = eventOccurrence,
+            )
+
+            R.id.page_counters -> DebugCounterStateContent(
+                appContext = context.applicationContext,
+                scenarioId = scenarioId,
+                eventOccurrence = eventOccurrence,
+            )
+
+            else -> throw IllegalArgumentException("Unknown menu id $navItemId")
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
+        super.onDialogCreated(dialog)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect(::updateUiState) }
@@ -79,16 +93,20 @@ class DebugReportEventOccurrenceDetailsDialog(
         }
     }
 
-    private fun updateUiState(uiState: DebugReportEventOccurrenceUiState) {
-        when (uiState) {
-            DebugReportEventOccurrenceUiState.Loading -> viewBinding.layoutLoadableList.updateState(null)
-            is DebugReportEventOccurrenceUiState.Available -> {
-                viewBinding.apply {
-                    layoutTopBar.dialogTitle.text = uiState.eventName
-                    layoutLoadableList.updateState(uiState.items)
-                }
-                conditionsAdapter.submitList(uiState.items)
+    override fun onDialogButtonPressed(buttonType: DialogNavigationButton) {
+        when (buttonType) {
+            DialogNavigationButton.DISMISS -> {
+                back()
+                return
             }
+
+            DialogNavigationButton.SAVE -> Unit
+            DialogNavigationButton.DELETE -> Unit
         }
+    }
+
+    private fun updateUiState(uiState: DebugReportEventOccurrenceUiState?) {
+        uiState ?: return
+        topBarBinding.dialogTitle.text = uiState.dialogTitle
     }
 }

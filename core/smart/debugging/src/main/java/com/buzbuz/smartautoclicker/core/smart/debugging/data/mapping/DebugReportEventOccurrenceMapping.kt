@@ -18,10 +18,7 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping
 
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.ImageEventMessageKt.imageConditionResult
-import com.buzbuz.smartautoclicker.core.smart.debugging.TriggerEventMessageKt.triggerConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.debugReportMessage
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.imageEventMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.triggerEventMessage
@@ -44,28 +41,18 @@ private fun DebugReportEventOccurrence.ImageEvent.toImageEventProtobuf(): ProtoI
     imageEventMessage {
         eventId = this@toImageEventProtobuf.eventId
         frameNumber = this@toImageEventProtobuf.frameNumber
-        results.addAll(
-            values = this@toImageEventProtobuf.conditionsResults.map { result ->
-                imageConditionResult {
-                    conditionId = result.conditionId
-                    isFulfilled = result.isFulFilled
-                    durationMs = result.detectionDurationMs
-                    confidenceRate = result.confidenceRate
-                }
-            }
+        results.addAll(this@toImageEventProtobuf.conditionsResults.map { result -> result.toProtobuf() })
+        counterStateChanges.addAll(
+            this@toImageEventProtobuf.counterChanges.map { counterChange -> counterChange.toProtobuf() }
         )
     }
 
 private fun DebugReportEventOccurrence.TriggerEvent.toTriggerEventProtobuf(): ProtoTriggerEventMessage =
     triggerEventMessage {
         eventId = this@toTriggerEventProtobuf.eventId
-        results.addAll(
-            values = this@toTriggerEventProtobuf.conditionsResults.map { result ->
-                triggerConditionResult {
-                    conditionId = result.conditionId
-                    isFulfilled = result.isFulFilled
-                }
-            }
+        results.addAll(this@toTriggerEventProtobuf.conditionsResults.map { result -> result.toProtobuf() })
+        counterStateChanges.addAll(
+            this@toTriggerEventProtobuf.counterChanges.map { counterChange -> counterChange.toProtobuf() }
         )
     }
 
@@ -87,26 +74,16 @@ private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugRepor
         eventId = eventId,
         frameNumber = frameNumber,
         relativeTimestampMs = relativeTimestamp,
-        conditionsResults = resultsList.map { result ->
-            DebugReportConditionResult.ImageCondition(
-                conditionId = result.conditionId,
-                isFulFilled = result.isFulfilled,
-                detectionDurationMs = result.durationMs,
-                confidenceRate = result.confidenceRate,
-            )
-        }
+        counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
+        conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },
     )
 
 private fun ProtoTriggerEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.TriggerEvent =
     DebugReportEventOccurrence.TriggerEvent(
         eventId = eventId,
         relativeTimestampMs = relativeTimestamp,
-        conditionsResults = resultsList.map { result ->
-            DebugReportConditionResult.TriggerCondition(
-                conditionId = result.conditionId,
-                isFulFilled = result.isFulfilled,
-            )
-        }
+        counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
+        conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },
     )
 
 private const val LOG_TAG = "DebugReportEventOccurrenceMapping"

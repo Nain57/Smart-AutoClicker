@@ -52,11 +52,15 @@ internal class ScenarioProcessor(
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
-    private val progressListener: SmartProcessingListener? = null,
+    private val progressListener: SmartProcessingListener,
 ) {
 
     /** Handle the processing state of the scenario. */
-    @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(imageEvents, triggerEvents)
+    @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(
+        imageEvents = imageEvents,
+        triggerEvents = triggerEvents,
+        progressListener = progressListener,
+    )
     /** Check conditions and tell if they are fulfilled. */
     private val conditionsVerifier = ConditionsVerifier(
         state = processingState,
@@ -107,13 +111,13 @@ internal class ScenarioProcessor(
         processingState.clearIterationState()
 
         // Handle the image detection
-        progressListener?.onImageEventsProcessingStarted()
+        progressListener.onImageEventsProcessingStarted()
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents()) { imageEvent, results ->
                 actionExecutor.executeActions(imageEvent, results)
             }
         }
-        progressListener?.onImageEventsProcessingCompleted()
+        progressListener.onImageEventsProcessingCompleted()
 
         // Loop is completed
         actionExecutor.onScenarioLoopFinished()
@@ -138,7 +142,7 @@ internal class ScenarioProcessor(
             )
 
             if (results.fulfilled  == true) {
-                progressListener?.onTriggerEventFulfilled(
+                progressListener.onTriggerEventFulfilled(
                     event = triggerEvent,
                     results = results.getAllTriggerConditionsResults(),
                 )
@@ -162,19 +166,20 @@ internal class ScenarioProcessor(
                 // No conditions ? This should not happen, skip this event
                 if (imageEvent.conditions.isEmpty()) continue
 
-                progressListener?.onImageEventProcessingStarted()
+                progressListener.onImageEventProcessingStarted()
                 val results = conditionsVerifier.verifyConditions(
                     operator = imageEvent.conditionOperator,
                     conditions = imageEvent.conditions,
                 )
 
                 if (results.fulfilled == true) {
-                    progressListener?.onImageEventFulfilled(
+                    onFulfilled(imageEvent, results)
+
+                    progressListener.onImageEventFulfilled(
                         event = imageEvent,
                         results = results.getAllImageConditionsResults(),
                     )
 
-                    onFulfilled(imageEvent, results)
                     if (!imageEvent.keepDetecting) break
                 }
 
