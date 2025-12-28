@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.na
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ContentDebugReportTimelineBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.adapter.DebugReportTimelineAdapter
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.DebugReportEventOccurrenceDetailsDialog
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.DebugReportEventOccurrenceDetailsDialog
 
 import kotlinx.coroutines.launch
 import kotlin.getValue

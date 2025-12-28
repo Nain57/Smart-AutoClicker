@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.smart.debugging.domain
+package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transformLatest
-import kotlin.time.Duration.Companion.seconds
 import javax.inject.Inject
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Use case providing result for live image event occurrence display.
@@ -32,7 +33,7 @@ import kotlin.time.Duration
  * image event occurs during this reset timer, the new value will be immediately emitted and the reset timer restarted.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class DebugDetectionResultUseCase @Inject constructor(
+class GetDebugLiveDetectionResultUseCase @Inject constructor(
     private val debuggingRepository: DebuggingRepository,
 ) {
 

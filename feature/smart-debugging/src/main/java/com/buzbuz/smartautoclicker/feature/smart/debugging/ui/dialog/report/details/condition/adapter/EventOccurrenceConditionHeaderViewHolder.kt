@@ -14,29 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.adapter
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemConditionResultTriggerBinding
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.EventOccurrenceItem
+import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemConditionResultHeaderBinding
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
 
-class ItemEventOccurrenceTriggerViewHolder private constructor(
-    private val viewBinding: ItemConditionResultTriggerBinding,
+class EventOccurrenceConditionHeaderViewHolder private constructor(
+    private val viewBinding: ItemConditionResultHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     constructor(parent: ViewGroup) : this(
-        viewBinding = ItemConditionResultTriggerBinding.inflate(
+        viewBinding = ItemConditionResultHeaderBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
     )
 
-    fun bind(item: EventOccurrenceItem.Trigger) {
-        viewBinding.apply {
-            conditionImage.setImageResource(item.iconRes)
-            conditionNameText.text = item.conditionName
-            conditionDetailsText.text = item.description
-        }
+    fun bind(item: EventOccurrenceItem.Header) {
+        viewBinding.operatorValueText.text = item.conditionOperatorValueText
     }
 }

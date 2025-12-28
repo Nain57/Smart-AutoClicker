@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details
+package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -65,7 +65,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DebugReportEventOccurrenceDetailsViewModel @Inject constructor(
+class DebugConditionContentViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
@@ -77,11 +77,10 @@ class DebugReportEventOccurrenceDetailsViewModel @Inject constructor(
     private val eventOccurrence: MutableStateFlow<Pair<Event?, DebugReportEventOccurrence?>> =
         MutableStateFlow(Pair(null, null))
 
-    val uiState: StateFlow<DebugReportEventOccurrenceUiState> = eventOccurrence
+    val uiState: StateFlow<DebugConditionContentUiState> = eventOccurrence
         .mapNotNull { (event, occurrence) ->
             if (event == null || occurrence == null) return@mapNotNull null
-            else DebugReportEventOccurrenceUiState.Available(
-                eventName = event.name,
+            else DebugConditionContentUiState.Available(
                 items = buildList {
                     add(event.toHeaderItem(context))
                     addAll(occurrence.conditionsResults.toItems(context, event))
@@ -90,7 +89,7 @@ class DebugReportEventOccurrenceDetailsViewModel @Inject constructor(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DebugReportEventOccurrenceUiState.Loading,
+            initialValue = DebugConditionContentUiState.Loading,
         )
 
     /**

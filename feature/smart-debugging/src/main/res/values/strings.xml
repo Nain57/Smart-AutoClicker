@@ -39,6 +39,10 @@
     <string name="item_event_occurrence_one_condition_fulfilled">Fulfilled: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d conditions processed</string>
 
+
+    <string name="menu_item_debug_event_occurrence_conditions">Conditions</string>
+    <string name="menu_item_debug_event_occurrence_counters">Counters</string>
+
     <string name="item_event_occurrence_details_header_title">Condition operator</string>
 
     <string name="item_event_occurrence_details_image_confidence">Confidence: %1$.2f/%2$.2f</string>
@@ -47,6 +51,10 @@
     <string name="item_event_occurrence_details_trigger_desc_broadcast">Broadcast received: %1$s</string>
     <string name="item_event_occurrence_details_trigger_desc_timer">Timer reached: %1$s</string>
     <string name="item_event_occurrence_details_trigger_desc_counter">Counter reached: %1$s %2$s %3$s</string>
+
+    <string name="item_counter_state_value_same">%1$d</string>
+    <string name="item_counter_state_value_changed">%1$d » %2$d</string>
+
 
     <!--
       - Section titles.

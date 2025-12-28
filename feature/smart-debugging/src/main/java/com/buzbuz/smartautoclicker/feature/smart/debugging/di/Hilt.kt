@@ -22,7 +22,9 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventt
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.overview.DebugReportOverviewViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineViewModel
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.details.DebugReportEventOccurrenceDetailsViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.DebugReportEventOccurrenceDetailsViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.DebugConditionContentViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.DebugCounterStateContentViewModel
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -30,6 +32,8 @@ import dagger.hilt.InstallIn
 @EntryPoint
 @InstallIn(OverlayComponent::class)
 interface DebuggingViewModelsEntryPoint {
+    fun debugConditionContentViewModel(): DebugConditionContentViewModel
+    fun debugCounterStateContentViewModel(): DebugCounterStateContentViewModel
     fun debugReportViewModel(): DebugReportViewModel
     fun debugReportEventOccurrenceViewModel(): DebugReportEventOccurrenceDetailsViewModel
     fun debugReportOverviewViewModel(): DebugReportOverviewViewModel

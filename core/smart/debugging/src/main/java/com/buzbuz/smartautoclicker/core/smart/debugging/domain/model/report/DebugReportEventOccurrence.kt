@@ -25,19 +25,27 @@ sealed class DebugReportEventOccurrence {
     abstract val relativeTimestampMs: Long
     /** The results for all conditions interpreted for this event occurrence.*/
     abstract val conditionsResults: List<DebugReportConditionResult>
+    /** The list of value changes for the counters. Empty if none have changed. */
+    abstract val counterChanges: List<DebugReportActionResult.CounterChange>
 
     /** A TriggerEvent has been fulfilled. */
     data class TriggerEvent(
         override val eventId: Long,
         override val relativeTimestampMs: Long,
         override val conditionsResults: List<DebugReportConditionResult.TriggerCondition>,
+        override val counterChanges: List<DebugReportActionResult.CounterChange>,
     ) : DebugReportEventOccurrence()
 
-    /** An ImageEvent has been fulfilled. */
+    /**
+     * An ImageEvent has been fulfilled.
+     *
+     * @param frameNumber the number of the frame in the current detection session.
+     */
     data class ImageEvent(
         override val eventId: Long,
         override val relativeTimestampMs: Long,
         override val conditionsResults: List<DebugReportConditionResult.ImageCondition>,
+        override val counterChanges: List<DebugReportActionResult.CounterChange>,
         val frameNumber: Long,
     ) : DebugReportEventOccurrence()
 }
