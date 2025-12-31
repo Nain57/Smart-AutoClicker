@@ -14,18 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report
+syntax = "proto3";
+option java_multiple_files = true;
 
-sealed class DebugReportActionResult {
+package com.buzbuz.smartautoclicker.core.smart.debugging;
 
-    data class CounterChange(
-        val counterName: String,
-        val previousValue: Int,
-        val newValue: Int,
-    ) : DebugReportActionResult()
+/** Represents a event state change during an event execution. */
+message EventStateChange {
 
-    data class EventStateChange(
-        val eventId: Long,
-        val newValue: Boolean,
-    ) : DebugReportActionResult()
+    /** The unique identifier for the event that have been changed. */
+    int64 eventId = 1;
+
+    /** The value of the event state the change. */
+    bool newValue = 2;
 }

@@ -20,6 +20,7 @@ import android.graphics.Rect
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -35,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterValuesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageEventOccurrenceRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventStateRecorder
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -56,14 +58,14 @@ internal class DebugEngine @Inject constructor(
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val debugConfigurationLocalDataSource: DebugConfigurationLocalDataSource,
     private val debugReportLocalDataSource: DebugReportLocalDataSource,
+    private val overviewRecorder: DebugReportOverviewRecorder,
+    private val imgEventOccurrenceRecorder: ImageEventOccurrenceRecorder,
+    private val counterValuesRecorder: CounterValuesRecorder,
+    private val eventStateRecorder: EventStateRecorder,
 ) : SmartProcessingListener {
 
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))
-
-    private val overviewRecorder: DebugReportOverviewRecorder = DebugReportOverviewRecorder()
-    private val imgEventOccurrenceRecorder: ImageEventOccurrenceRecorder = ImageEventOccurrenceRecorder()
-    private val counterValuesRecorder: CounterValuesRecorder = CounterValuesRecorder()
 
     private var isReportEnabled: Boolean = false
 
@@ -103,6 +105,7 @@ internal class DebugEngine @Inject constructor(
 
             imgEventOccurrenceRecorder.onImageEventProcessingStarted()
             counterValuesRecorder.onEventProcessingStarted()
+            eventStateRecorder.onEventProcessingStarted()
         }
     }
 
@@ -150,6 +153,7 @@ internal class DebugEngine @Inject constructor(
                         relativeTimestampMs = overviewRecorder.sessionDurationMs,
                         conditionsResults = imgEventOccurrenceRecorder.imageConditionResults.toList(),
                         counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
+                        eventStateChanges = eventStateRecorder.changes.toList(),
                     )
                 )
                 imgEventOccurrenceRecorder.reset()
@@ -193,6 +197,7 @@ internal class DebugEngine @Inject constructor(
                     eventId = event.id.databaseId,
                     relativeTimestampMs = overviewRecorder.sessionDurationMs,
                     counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
+                    eventStateChanges = eventStateRecorder.changes.toList(),
                     conditionsResults = results.map { result ->
                         DebugReportConditionResult.TriggerCondition(
                             conditionId = result.condition.id.databaseId,
@@ -208,6 +213,13 @@ internal class DebugEngine @Inject constructor(
         coroutineScopeIo.launch {
             if (!isReportEnabled) return@launch
             counterValuesRecorder.onCounterValueChanged(counterName, previousValue, newValue)
+        }
+    }
+
+    override fun onEventStateChanged(event: Event, newValue: Boolean) {
+        coroutineScopeIo.launch {
+            if (!isReportEnabled) return@launch
+            eventStateRecorder.onEventStateChanged(event, newValue)
         }
     }
 
@@ -228,6 +240,7 @@ internal class DebugEngine @Inject constructor(
 
                 overviewRecorder.reset()
                 counterValuesRecorder.reset()
+                eventStateRecorder.reset()
             }
 
             _lastImageEventFulfilled.value = null

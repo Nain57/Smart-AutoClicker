@@ -42,6 +42,7 @@ private fun DebugReportEventOccurrence.ImageEvent.toImageEventProtobuf(): ProtoI
         eventId = this@toImageEventProtobuf.eventId
         frameNumber = this@toImageEventProtobuf.frameNumber
         results.addAll(this@toImageEventProtobuf.conditionsResults.map { result -> result.toProtobuf() })
+        eventStateChanges.addAll(this@toImageEventProtobuf.eventStateChanges.map { change -> change.toProtobuf() })
         counterStateChanges.addAll(
             this@toImageEventProtobuf.counterChanges.map { counterChange -> counterChange.toProtobuf() }
         )
@@ -51,6 +52,7 @@ private fun DebugReportEventOccurrence.TriggerEvent.toTriggerEventProtobuf(): Pr
     triggerEventMessage {
         eventId = this@toTriggerEventProtobuf.eventId
         results.addAll(this@toTriggerEventProtobuf.conditionsResults.map { result -> result.toProtobuf() })
+        eventStateChanges.addAll(this@toTriggerEventProtobuf.eventStateChanges.map { change -> change.toProtobuf() })
         counterStateChanges.addAll(
             this@toTriggerEventProtobuf.counterChanges.map { counterChange -> counterChange.toProtobuf() }
         )
@@ -75,6 +77,7 @@ private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugRepor
         frameNumber = frameNumber,
         relativeTimestampMs = relativeTimestamp,
         counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
+        eventStateChanges = eventStateChangesList.map { stateChange -> stateChange.toDomain() },
         conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },
     )
 
@@ -83,6 +86,7 @@ private fun ProtoTriggerEventMessage.toDomain(relativeTimestamp: Long): DebugRep
         eventId = eventId,
         relativeTimestampMs = relativeTimestamp,
         counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
+        eventStateChanges = eventStateChangesList.map { stateChange -> stateChange.toDomain() },
         conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },
     )
 

@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.DebugConditionContent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.DebugCounterStateContent
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.event.DebugEventsStateContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
@@ -69,6 +70,12 @@ class DebugReportEventOccurrenceDetailsDialog(
     override fun onCreateContent(navItemId: Int): NavBarDialogContent =
         when (navItemId) {
             R.id.page_conditions -> DebugConditionContent(
+                appContext = context.applicationContext,
+                scenarioId = scenarioId,
+                eventOccurrence = eventOccurrence,
+            )
+
+            R.id.page_events_state -> DebugEventsStateContent(
                 appContext = context.applicationContext,
                 scenarioId = scenarioId,
                 eventOccurrence = eventOccurrence,

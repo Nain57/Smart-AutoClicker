@@ -27,6 +27,8 @@ sealed class DebugReportEventOccurrence {
     abstract val conditionsResults: List<DebugReportConditionResult>
     /** The list of value changes for the counters. Empty if none have changed. */
     abstract val counterChanges: List<DebugReportActionResult.CounterChange>
+    /** The list of event state changes for this occurrence. Empty if none have changed. */
+    abstract val eventStateChanges: List<DebugReportActionResult.EventStateChange>
 
     /** A TriggerEvent has been fulfilled. */
     data class TriggerEvent(
@@ -34,6 +36,7 @@ sealed class DebugReportEventOccurrence {
         override val relativeTimestampMs: Long,
         override val conditionsResults: List<DebugReportConditionResult.TriggerCondition>,
         override val counterChanges: List<DebugReportActionResult.CounterChange>,
+        override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
     ) : DebugReportEventOccurrence()
 
     /**
@@ -46,6 +49,7 @@ sealed class DebugReportEventOccurrence {
         override val relativeTimestampMs: Long,
         override val conditionsResults: List<DebugReportConditionResult.ImageCondition>,
         override val counterChanges: List<DebugReportActionResult.CounterChange>,
+        override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
         val frameNumber: Long,
     ) : DebugReportEventOccurrence()
 }

@@ -20,8 +20,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import javax.inject.Inject
 
-internal class DebugReportOverviewRecorder {
+internal class DebugReportOverviewRecorder @Inject constructor() {
 
     private val sessionDurationRecorder = DurationRecorder()
     private val frameProcessingDurationRecorder = DurationRecorder()

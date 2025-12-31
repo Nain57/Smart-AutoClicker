@@ -20,8 +20,9 @@ import com.buzbuz.smartautoclicker.core.domain.ext.getAllCounterNames
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportActionResult
+import javax.inject.Inject
 
-internal class CounterValuesRecorder {
+internal class CounterValuesRecorder @Inject constructor() {
 
     private val _counterNames: MutableSet<String> = mutableSetOf()
     val counterNames: Set<String> = _counterNames

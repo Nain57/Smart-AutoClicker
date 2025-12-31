@@ -18,9 +18,10 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder
 
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
+import javax.inject.Inject
 
 
-internal class ImageEventOccurrenceRecorder {
+internal class ImageEventOccurrenceRecorder @Inject constructor() {
 
     private val conditionDurationRecorder: DurationRecorder = DurationRecorder()
 
