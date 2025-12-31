@@ -25,7 +25,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
-import kotlin.collections.toList
 
 /**
  * Get the state of all counters for the given event occurrence.
@@ -81,9 +80,7 @@ class GetDebugOccurrenceAllCounterStateUseCase @Inject constructor(debuggingRepo
             }
 
             // Convert to list and ordered it by name
-            countersStateMap.values
-                .toList()
-                .sortedBy { state -> state.counterName }
+            countersStateMap.values.sortedBy { state -> state.counterName }
         }
 
 }

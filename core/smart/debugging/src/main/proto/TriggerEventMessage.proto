@@ -20,6 +20,7 @@ option java_multiple_files = true;
 package com.buzbuz.smartautoclicker.core.smart.debugging;
 
 import "CounterStateChange.proto";
+import "EventStateChange.proto";
 
 /** Details about an TriggerEvent that has been triggered during a detection session. */
 message TriggerEventMessage {
@@ -30,9 +31,11 @@ message TriggerEventMessage {
     /** The list of results for the conditions verified for this event. */
     repeated TriggerConditionResult results = 2;
 
-    /** List of counter changes triggered by the actions of the image event. */
+    /** List of counter changes triggered by the actions of the event. */
     repeated CounterStateChange counterStateChanges = 5;
 
+    /** List of event state changes triggered by the actions of the event. */
+    repeated EventStateChange eventStateChanges = 6;
 
     /** The results for an TriggerCondition that has been checked during event validation. */
     message TriggerConditionResult {

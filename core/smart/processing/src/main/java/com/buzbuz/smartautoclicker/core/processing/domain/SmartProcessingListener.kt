@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.domain
 
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -88,7 +90,17 @@ interface SmartProcessingListener {
      * @param previousValue the value of the counter before the change
      * @param newValue the value of the counter after the change.
      */
-    fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int)
+    fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) = Unit
+
+    /**
+     * The state of an event has been changed.
+     *
+     * @param event the event that have been changed.
+     * @param previousValue the value of the event state before the change
+     * @param newValue the value of the event state after the change.
+     * @param changeType the type of change applied to the event state.
+     */
+    fun onEventStateChanged(event: Event, newValue: Boolean) = Unit
 
     /** The processing session have ended.*/
     fun onSessionEnded() = Unit

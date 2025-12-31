@@ -42,6 +42,7 @@
 
     <string name="menu_item_debug_event_occurrence_conditions">Conditions</string>
     <string name="menu_item_debug_event_occurrence_counters">Counters</string>
+    <string name="menu_item_debug_event_occurrence_events_state">States</string>
 
     <string name="item_event_occurrence_details_header_title">Condition operator</string>
 
@@ -54,6 +55,9 @@
 
     <string name="item_counter_state_value_same">%1$d</string>
     <string name="item_counter_state_value_changed">%1$d » %2$d</string>
+
+    <string name="item_event_state_header_image">Image events</string>
+    <string name="item_event_state_header_trigger">Trigger events</string>
 
 
     <!--
@@ -79,6 +83,7 @@
       - DO NOT TRANSLATE.
       -->
     <string name="item_title_debug_report_trigger_processed" translatable="false">%1$s / %2$s</string>
+    <string name="event_state_changed_separator" translatable="false">"  »  "</string>
 
 
 </resources>

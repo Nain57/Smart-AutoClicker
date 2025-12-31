@@ -59,11 +59,15 @@ internal class ProcessingState(
         event.conditions.forEach { condition ->
             if (condition is TriggerCondition.OnTimerReached) timersState.setTimerStartToNow(condition)
         }
+
+        progressListener.onEventStateChanged(event = event, newValue = true)
     }
 
     private fun onEventDisabled(event: Event) {
         event.conditions.forEach { condition ->
             if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getValidId())
         }
+
+        progressListener.onEventStateChanged(event = event, newValue = false)
     }
 }

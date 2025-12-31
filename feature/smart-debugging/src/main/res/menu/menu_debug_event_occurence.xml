@@ -22,6 +22,11 @@
         android:icon="@drawable/ic_condition"
         android:title="@string/menu_item_debug_event_occurrence_conditions"/>
     <item
+        android:id="@+id/page_events_state"
+        android:enabled="true"
+        android:icon="@drawable/ic_toggle_event"
+        android:title="@string/menu_item_debug_event_occurrence_events_state"/>
+    <item
         android:id="@+id/page_counters"
         android:enabled="true"
         android:icon="@drawable/ic_change_counter"

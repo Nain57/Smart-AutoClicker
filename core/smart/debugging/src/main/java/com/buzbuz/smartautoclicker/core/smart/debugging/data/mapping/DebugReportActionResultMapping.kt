@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.CounterStateChange
 import com.buzbuz.smartautoclicker.core.smart.debugging.counterStateChange
+import com.buzbuz.smartautoclicker.core.smart.debugging.EventStateChange
+import com.buzbuz.smartautoclicker.core.smart.debugging.eventStateChange
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportActionResult
 
 
@@ -28,10 +30,22 @@ internal fun DebugReportActionResult.CounterChange.toProtobuf(): CounterStateCha
         counterNewValue = this@toProtobuf.newValue
     }
 
+internal fun DebugReportActionResult.EventStateChange.toProtobuf(): EventStateChange =
+    eventStateChange {
+        eventId = this@toProtobuf.eventId
+        newValue = this@toProtobuf.newValue
+    }
+
 
 internal fun CounterStateChange.toDomain(): DebugReportActionResult.CounterChange =
     DebugReportActionResult.CounterChange(
         counterName = counterName,
         previousValue = counterOldValue,
         newValue = counterNewValue,
+    )
+
+internal fun EventStateChange.toDomain(): DebugReportActionResult.EventStateChange =
+    DebugReportActionResult.EventStateChange(
+        eventId = eventId,
+        newValue = newValue,
     )
