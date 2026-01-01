@@ -16,39 +16,55 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <!--
-      - Titles for the dialogs displayed as overlay.
-      - Allowed characters can be small due to save/delete/close buttons.
-      -->
-    <string name="dialog_overlay_title_debug_report">Звіт про налагодження</string>
 
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -  * Error have the same space as desc
-      -->
+    <!-- Debug Report root dialog ================================================================================== -->
+
+    <string name="dialog_overlay_title_debug_report">Звіт про налагодження</string>
+    <string name="menu_item_debug_report_overview">Огляд</string>
+    <string name="menu_item_debug_report_timeline">Хронологія</string>
+
+    <!-- Debug Report Overview Tab-->
     <string name="item_title_report_total_duration">Загальна тривалість</string>
     <string name="item_title_report_frame_processed">Оброблені зображення</string>
     <string name="item_title_report_avg_image_processing_duration">Середня тривалість обробки</string>
     <string name="item_title_report_image_event_fulfilled">Події запущено</string>
     <string name="item_title_report_trigger_event_fulfilled">Виявлені умови</string>
 
-    <!--
-      - Section titles.
-      - Should be short and concise.
-      -->
-    <string name="section_title_report_timing_min">Мін</string>
-    <string name="section_title_report_timing_max">Макс</string>
-    <string name="section_title_report_timing_avg">Середнє</string>
-    <string name="section_title_report_event_trigger_count">Активовано</string>
-    <string name="section_title_report_event_processing_count">Оброблено</string>
-    <string name="section_title_report_condition_detected_count">Виявлено</string>
-    <string name="section_title_report_condition_processing_count">Оброблено</string>
-    <string name="section_title_report_timing_title">Час обробки</string>
-    <string name="section_title_report_confidence_title">Рівень впевненості виявлення</string>
+    <!-- Debug Report Timeline Tab -->
+    <string name="title_event_occurrence_empty">Немає подій</string>
+    <string name="desc_event_occurrence_empty">Під час останньої сесії сценарію не було виконано жодних подій.</string>
+    <string name="item_event_occurrence_frame_number">Кадр № %1$d</string>
+    <string name="item_event_occurrence_trigger">Тригер</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">Виконано: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d умов оброблено</string>
 
-    <!-- Overlay texts -->
+
+    <!-- Debug Report Event Occurrence dialog ====================================================================== -->
+
+    <string name="menu_item_debug_event_occurrence_conditions">Умови</string>
+    <string name="menu_item_debug_event_occurrence_counters">Лічильники</string>
+    <string name="menu_item_debug_event_occurrence_events_state">Штати</string>
+
+    <!-- Debug Report Event Occurrence conditions Tab -->
+    <string name="item_event_occurrence_details_header_title">Оператор умови</string>
+    <string name="item_event_occurrence_details_image_confidence">Довіра: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">Повинно бути виявлено?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">Виконано?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Broadcast отриманий: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Таймер досяг: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Кількість переглядів: %1$s %2$s %3$s</string>
+
+    <!-- Debug Report Event Occurrence counters Tab -->
+    <string name="title_event_occurrence_counters_empty">Без лічильників</string>
+    <string name="desc_event_occurrence_counters_empty">Для цього сценарію не було визначено лічильників.</string>
+
+    <!-- Debug Report Event Occurrence events state Tab -->
+    <string name="item_event_state_header_image">Події зображення</string>
+    <string name="item_event_state_header_trigger">Події-тригери</string>
+
+
+    <!-- Overlay texts ============================================================================================ -->
+
     <string name="overlay_title_results">Результати</string>
     <string name="overlay_title_threshold">Поріг</string>
 
