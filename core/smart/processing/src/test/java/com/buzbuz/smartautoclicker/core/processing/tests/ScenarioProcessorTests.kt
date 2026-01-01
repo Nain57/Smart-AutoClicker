@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
@@ -119,6 +120,7 @@ class ScenarioProcessorTests {
     @Mock private lateinit var mockBitmapSupplier: BitmapSupplier
     @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
+    @Mock private lateinit var mockProgressListener: SmartProcessingListener
 
     @Mock private lateinit var mockScreenBitmap: Bitmap
 
@@ -175,6 +177,7 @@ class ScenarioProcessorTests {
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             androidExecutor = mockAndroidExecutor,
             onStopRequested = mockEndListener::onStopRequested,
+            progressListener = mockProgressListener,
         )
 
         Mockito.clearInvocations(mockAndroidExecutor)
