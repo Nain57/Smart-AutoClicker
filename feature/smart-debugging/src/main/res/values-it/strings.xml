@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,38 +17,54 @@
 -->
 <resources>
 
-    <!--
-      - Titles for the dialogs displayed as overlay.
-      - Allowed characters can be small due to save/delete/close buttons.
-      -->
-    <string name="dialog_overlay_title_debug_report">Rapporto di debug</string>
+    <!-- Debug Report root dialog ================================================================================== -->
 
-    <!--
-      - Text for items in a list or vertical layout.
-      -  * Title should be short and concise.
-      -  * Desc can have more space to describe the title
-      -->
+    <string name="dialog_overlay_title_debug_report">Rapporto di debug</string>
+    <string name="menu_item_debug_report_overview">Panoramica</string>
+    <string name="menu_item_debug_report_timeline">Cronologia</string>
+
+    <!-- Debug Report Overview Tab-->
     <string name="item_title_report_total_duration">Durata totale</string>
     <string name="item_title_report_frame_processed">Immagini processate</string>
     <string name="item_title_report_avg_image_processing_duration">Durata di processo media</string>
     <string name="item_title_report_image_event_fulfilled">Eventi azionati</string>
     <string name="item_title_report_trigger_event_fulfilled">Condizioni rilevate</string>
 
-    <!--
-      - Section titles.
-      - Should be short and concise.
-      -->
-    <string name="section_title_report_timing_min">Min</string>
-    <string name="section_title_report_timing_max">Max</string>
-    <string name="section_title_report_timing_avg">Med</string>
-    <string name="section_title_report_event_trigger_count">Eseguiti</string>
-    <string name="section_title_report_event_processing_count">Processati</string>
-    <string name="section_title_report_condition_detected_count">Rilevati</string>
-    <string name="section_title_report_condition_processing_count">Processati</string>
-    <string name="section_title_report_timing_title">Tempo di processo</string>
-    <string name="section_title_report_confidence_title">Tasso affidabilità rilevamento</string>
+    <!-- Debug Report Timeline Tab -->
+    <string name="title_event_occurrence_empty">Nessun evento</string>
+    <string name="desc_event_occurrence_empty">Durante l\'ultima sessione dello scenario non sono stati eseguiti eventi.</string>
+    <string name="item_event_occurrence_frame_number">Fotogramma #%1$d</string>
+    <string name="item_event_occurrence_trigger">Innesco</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">Soddisfatto: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d condizioni elaborate</string>
 
-    <!-- Overlay texts -->
+
+    <!-- Debug Report Event Occurrence dialog ====================================================================== -->
+
+    <string name="menu_item_debug_event_occurrence_conditions">Condizioni</string>
+    <string name="menu_item_debug_event_occurrence_counters">Contatori</string>
+    <string name="menu_item_debug_event_occurrence_events_state">Stati</string>
+
+    <!-- Debug Report Event Occurrence conditions Tab -->
+    <string name="item_event_occurrence_details_header_title">Operatore di condizione</string>
+    <string name="item_event_occurrence_details_image_confidence">Fiducia: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">Dovrebbe essere rilevato?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">È soddisfatto?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Trasmissione ricevuta: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Timer raggiunto: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Contatore raggiunto: %1$s %2$s %3$s</string>
+
+    <!-- Debug Report Event Occurrence counters Tab -->
+    <string name="title_event_occurrence_counters_empty">Nessun contatore</string>
+    <string name="desc_event_occurrence_counters_empty">Per questo scenario non sono stati definiti contatori.</string>
+
+    <!-- Debug Report Event Occurrence events state Tab -->
+    <string name="item_event_state_header_image">Eventi immagine</string>
+    <string name="item_event_state_header_trigger">Eventi innesco</string>
+
+
+    <!-- Overlay texts ============================================================================================ -->
+
     <string name="overlay_title_results">Risultati</string>
     <string name="overlay_title_threshold">Soglia</string>
 
