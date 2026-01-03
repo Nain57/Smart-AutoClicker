@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -27,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.utils.*
+import org.junit.Before
 
 import org.junit.Rule
 import org.junit.Test
@@ -40,8 +43,6 @@ import org.robolectric.annotation.Config
 class Migration10to11Tests {
 
     private companion object {
-        private const val TEST_DB = "migration-test"
-
         private const val OLD_DB_VERSION = 10
         private const val NEW_DB_VERSION = 11
 
@@ -132,6 +133,15 @@ class Migration10to11Tests {
         )
     }
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrate_quality() {
         // Given
@@ -139,12 +149,12 @@ class Migration10to11Tests {
         val quality = 1200
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.execSQL(getInsertV10Scenario(id, quality))
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Scenarios()).use { cursor ->
 
                 // Verify
@@ -162,12 +172,12 @@ class Migration10to11Tests {
         val expectedSwipe = TEST_SWIPE
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Swipe(expectedSwipe)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -184,12 +194,12 @@ class Migration10to11Tests {
         val expectedPause = TEST_PAUSE
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Pause(expectedPause)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -206,12 +216,12 @@ class Migration10to11Tests {
         val expectedIntent = TEST_INTENT
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Intent(expectedIntent)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -228,12 +238,12 @@ class Migration10to11Tests {
         val expectedToggleEvent = TEST_TOGGLE_EVENT
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10ToggleEvent(expectedToggleEvent)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -250,12 +260,12 @@ class Migration10to11Tests {
         val v10Click = TEST_CLICK_ON_POSITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Click(v10Click)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -275,12 +285,12 @@ class Migration10to11Tests {
         val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Click(v10Click)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -302,13 +312,13 @@ class Migration10to11Tests {
         val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Click(v10Click)
             dbV10.insertTestCondition(conditionId, shouldBeDetected)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -330,13 +340,13 @@ class Migration10to11Tests {
         val v10Click = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Click(v10Click)
             dbV10.insertTestCondition(conditionId, shouldBeDetected)
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify
@@ -363,7 +373,7 @@ class Migration10to11Tests {
         val v10ClickOnCondition = TEST_CLICK_ON_CONDITION
 
         // Insert in V10 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV10 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV10 ->
             dbV10.insertV10Click(v10ClickOnPosition)
             dbV10.insertV10Click(v10ClickOnCondition)
             dbV10.insertTestCondition(condition1Id, condition1ShouldBeDetected)
@@ -372,7 +382,7 @@ class Migration10to11Tests {
         }
 
         // Migrate
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration10to11).use { dbV11 ->
             dbV11.query(getV11Actions()).use { cursor ->
 
                 // Verify

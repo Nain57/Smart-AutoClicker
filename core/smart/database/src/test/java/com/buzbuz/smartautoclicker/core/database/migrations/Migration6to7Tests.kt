@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.database.Cursor
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -30,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getV7EndCondition
 import com.buzbuz.smartautoclicker.core.database.utils.getV7Scenario
 
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,10 +42,6 @@ import org.robolectric.annotation.Config
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class Migration6to7Tests {
-
-    private companion object {
-        private const val TEST_DB = "migration-test"
-    }
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
@@ -71,16 +70,25 @@ class Migration6to7Tests {
         )
     }
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrateScenario_detectionQuality() {
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(24L, "TOTO"))
             close()
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify
         val scenarioCursor = dbV7.query(getV7Scenario())
@@ -101,13 +109,13 @@ class Migration6to7Tests {
     @Test
     fun migrateScenario_endConditionOperator() {
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(24L, "TOTO"))
             close()
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify
         val scenarioCursor = dbV7.query(getV7Scenario())
@@ -128,13 +136,13 @@ class Migration6to7Tests {
     @Test
     fun migrateEndCondition_noEvents() {
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(24L, "TOTO"))
             close()
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify
         val endConditionCursor = dbV7.query(getV7EndCondition())
@@ -147,14 +155,14 @@ class Migration6to7Tests {
     @Test
     fun migrateEndCondition_events_NoStopAfter() {
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(24L, "TOTO"))
             execSQL(getInsertV6Event(1L,24L, "TUTU", 2, null, 1))
             close()
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify
         val endConditionCursor = dbV7.query(getV7EndCondition())
@@ -172,7 +180,7 @@ class Migration6to7Tests {
         val stopAfter = 3
 
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId, "TOTO"))
             execSQL(getInsertV6Event(1L, scenarioId, "TUTU", 2, null, 1))
             execSQL(getInsertV6Event(eventId, scenarioId, "TATA", 2, stopAfter, 2))
@@ -180,7 +188,7 @@ class Migration6to7Tests {
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify created end condition
         val endConditionCursor = dbV7.query(getV7EndCondition())
@@ -204,7 +212,7 @@ class Migration6to7Tests {
         val stopAfter2 = 8
 
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId1, "TOTO"))
             execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", 2, null, 1))
             execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", 2, stopAfter1, 2))
@@ -213,7 +221,7 @@ class Migration6to7Tests {
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify created end condition
         val endConditionCursor = dbV7.query(getV7EndCondition())
@@ -242,7 +250,7 @@ class Migration6to7Tests {
         val stopAfter2 = 8
 
         // Insert in V6 and close
-        helper.createDatabase(TEST_DB, 6).apply {
+        helper.createDatabase(dbPath, 6).apply {
             execSQL(getInsertV6Scenario(scenarioId1, "TOTO"))
             execSQL(getInsertV6Event(1L, scenarioId1, "TUTU", 2, null, 1))
             execSQL(getInsertV6Event(eventId1, scenarioId1, "TATA", 2, stopAfter1, 2))
@@ -252,7 +260,7 @@ class Migration6to7Tests {
         }
 
         // Migrate
-        val dbV7 = helper.runMigrationsAndValidate(TEST_DB, 7, true, Migration6to7)
+        val dbV7 = helper.runMigrationsAndValidate(dbPath, 7, true, Migration6to7)
 
         // Verify created end condition
         val endConditionCursor = dbV7.query(getV7EndCondition())

@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -30,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9Click
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9EmptyAction
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV9Swipe
 import com.buzbuz.smartautoclicker.core.database.utils.getV10Actions
-import com.buzbuz.smartautoclicker.core.database.utils.*
+import org.junit.Before
 
 import org.junit.Rule
 import org.junit.Test
@@ -44,8 +46,6 @@ import org.robolectric.annotation.Config
 class Migration9to10Tests {
 
     private companion object {
-        private const val TEST_DB = "migration-test"
-
         private const val OLD_DB_VERSION = 9
         private const val NEW_DB_VERSION = 10
 
@@ -92,18 +92,27 @@ class Migration9to10Tests {
         ClickDatabase::class.java,
     )
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrate_click_durationOverLimit() {
         val oldDuration = Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS + 500
 
         // Insert in V9 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+        helper.createDatabase(dbPath, OLD_DB_VERSION).apply {
             execSQL(getSqlCreateV9Click(24L, oldDuration))
             close()
         }
 
         // Migrate
-        val dbV10 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration9to10)
+        val dbV10 = helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration9to10)
 
         // Verify
         val actionsCursor = dbV10.query(getV10Actions())
@@ -121,13 +130,13 @@ class Migration9to10Tests {
         val oldDuration = Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS - 500
 
         // Insert in V9 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+        helper.createDatabase(dbPath, OLD_DB_VERSION).apply {
             execSQL(getSqlCreateV9Click(24L, oldDuration))
             close()
         }
 
         // Migrate
-        val dbV10 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration9to10)
+        val dbV10 = helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration9to10)
 
         // Verify
         val actionsCursor = dbV10.query(getV10Actions())
@@ -145,13 +154,13 @@ class Migration9to10Tests {
         val oldDuration = Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS + 500
 
         // Insert in V9 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+        helper.createDatabase(dbPath, OLD_DB_VERSION).apply {
             execSQL(getSqlCreateV9Swipe(24L, oldDuration))
             close()
         }
 
         // Migrate
-        val dbV10 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration9to10)
+        val dbV10 = helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration9to10)
 
         // Verify
         val actionsCursor = dbV10.query(getV10Actions())
@@ -169,13 +178,13 @@ class Migration9to10Tests {
         val oldDuration = Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS - 500
 
         // Insert in V9 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+        helper.createDatabase(dbPath, OLD_DB_VERSION).apply {
             execSQL(getSqlCreateV9Swipe(24L, oldDuration))
             close()
         }
 
         // Migrate
-        val dbV10 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration9to10)
+        val dbV10 = helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration9to10)
 
         // Verify
         val actionsCursor = dbV10.query(getV10Actions())
@@ -194,7 +203,7 @@ class Migration9to10Tests {
         val durationBelow = Migration9to10.NEW_GESTURE_DURATION_LIMIT_MS - 500
 
         // Insert in V9 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).apply {
+        helper.createDatabase(dbPath, OLD_DB_VERSION).apply {
             execSQL(getSqlCreateV9Click(1L, durationOver))
             execSQL(getSqlCreateV9Click(2L, durationBelow))
             execSQL(getSqlCreateV9Swipe(3L, durationOver))
@@ -206,7 +215,7 @@ class Migration9to10Tests {
         }
 
         // Migrate
-        val dbV10 = helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration9to10)
+        val dbV10 = helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration9to10)
 
         // Verify
         val actionsCursor = dbV10.query(getV10Actions())
