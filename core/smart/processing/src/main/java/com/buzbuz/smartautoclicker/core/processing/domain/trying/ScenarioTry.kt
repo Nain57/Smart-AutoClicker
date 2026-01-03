@@ -102,7 +102,7 @@ internal class ActionTry(
         ToggleEvent(
             id = Identifier(databaseId = 1L),
             eventId = eventId,
-            name = "Test Pause",
+            name = "Test Stop",
             priority = 0,
             toggleAll = true,
             toggleAllType = ToggleEvent.ToggleType.DISABLE,
@@ -113,7 +113,7 @@ internal class ActionTry(
             id = Identifier(databaseId = 1L),
             eventId = eventId,
             name = "Test timer reached",
-            durationMs = 1L,
+            durationMs = 500L,
             restartWhenReached = false,
         )
 }
