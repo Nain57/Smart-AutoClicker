@@ -164,6 +164,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
+            isATry = false,
         )
 
         autoStopDuration?.let { duration ->
@@ -222,6 +223,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
+            isATry = true,
         )
     }
 

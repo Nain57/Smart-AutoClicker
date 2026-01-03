@@ -68,6 +68,10 @@ internal class DebugEngine @Inject constructor(
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))
 
     private var isReportEnabled: Boolean = false
+    private var isATry: Boolean = false
+
+    private val shouldWriteReport: Boolean
+        get() = isReportEnabled && !isATry
 
     private val _isDebuggingSession: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDebuggingSession: StateFlow<Boolean> = _isDebuggingSession
@@ -76,12 +80,18 @@ internal class DebugEngine @Inject constructor(
     val lastImageEventFulfilled: StateFlow<DebugLiveImageEventOccurrence?> = _lastImageEventFulfilled
 
 
-    override fun onSessionStarted(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) {
+    override fun onSessionStarted(
+        scenario: Scenario,
+        imageEvents: List<ImageEvent>,
+        triggerEvents: List<TriggerEvent>,
+        isAnElementTry: Boolean,
+    ) {
         coroutineScopeIo.launch {
             isReportEnabled = debugConfigurationLocalDataSource.isDebugReportEnabled()
+            isATry = isAnElementTry
             _isDebuggingSession.value = true
 
-            if (isReportEnabled) {
+            if (shouldWriteReport) {
                 overviewRecorder.onSessionStart(scenario)
                 counterValuesRecorder.onSessionStarted(imageEvents, triggerEvents)
                 debugReportLocalDataSource.startReportWrite()
@@ -92,7 +102,7 @@ internal class DebugEngine @Inject constructor(
     // Processing started on current frame
     override fun onImageEventsProcessingStarted() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             overviewRecorder.onFrameProcessingStarted()
         }
@@ -101,7 +111,7 @@ internal class DebugEngine @Inject constructor(
     // Processing started for current Event
     override fun onImageEventProcessingStarted() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             imgEventOccurrenceRecorder.onImageEventProcessingStarted()
             counterValuesRecorder.onEventProcessingStarted()
@@ -112,7 +122,7 @@ internal class DebugEngine @Inject constructor(
     // Condition is processed
     override fun onImageConditionProcessingStarted() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             imgEventOccurrenceRecorder.onImageConditionProcessingStarted()
         }
@@ -120,7 +130,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             imgEventOccurrenceRecorder.onImageConditionProcessingCompleted(result)
         }
@@ -133,6 +143,7 @@ internal class DebugEngine @Inject constructor(
                 DebugLiveImageEventOccurrence(
                     event = event,
                     imageConditionsResults = results.map { result ->
+                        println("TOTO: results=$results")
                         DebugLiveImageConditionResult(
                             condition = result.condition,
                             isFulfilled = result.isFulfilled,
@@ -144,7 +155,7 @@ internal class DebugEngine @Inject constructor(
                 )
             }
 
-            if (isReportEnabled) {
+            if (shouldWriteReport) {
                 overviewRecorder.onEventFulfilled(event)
                 debugReportLocalDataSource.writeEventOccurrenceToReport(
                     occurrence = DebugReportEventOccurrence.ImageEvent(
@@ -164,7 +175,7 @@ internal class DebugEngine @Inject constructor(
     // Processing ended on current frame
     override fun onImageEventsProcessingCompleted() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             overviewRecorder.onFrameProcessingStopped()
         }
@@ -172,7 +183,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onImageEventsProcessingCancelled() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             overviewRecorder.onFrameProcessingStopped()
             imgEventOccurrenceRecorder.reset()
@@ -181,7 +192,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onTriggerEventProcessingStarted() {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             counterValuesRecorder.onEventProcessingStarted()
         }
@@ -189,7 +200,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
 
             overviewRecorder.onEventFulfilled(event)
             debugReportLocalDataSource.writeEventOccurrenceToReport(
@@ -211,21 +222,21 @@ internal class DebugEngine @Inject constructor(
 
     override fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
             counterValuesRecorder.onCounterValueChanged(counterName, previousValue, newValue)
         }
     }
 
     override fun onEventStateChanged(event: Event, newValue: Boolean) {
         coroutineScopeIo.launch {
-            if (!isReportEnabled) return@launch
+            if (!shouldWriteReport) return@launch
             eventStateRecorder.onEventStateChanged(event, newValue)
         }
     }
 
     override fun onSessionEnded() {
         coroutineScopeIo.launch {
-            if (isReportEnabled) {
+            if (shouldWriteReport) {
                 debugReportLocalDataSource.stopReportWrite(
                     overview = DebugReportOverview(
                         scenarioId = overviewRecorder.scenarioId,

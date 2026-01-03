@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.domain
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -35,8 +34,14 @@ interface SmartProcessingListener {
      * @param scenario the [Scenario] running for the processing session.
      * @param imageEvents the list of [ImageEvent] to be processed for this scenario.
      * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
+     * @param isATry tells if this session is a try or not.
      */
-    fun onSessionStarted(scenario: Scenario, imageEvents: List<ImageEvent>, triggerEvents: List<TriggerEvent>) = Unit
+    fun onSessionStarted(
+        scenario: Scenario,
+        imageEvents: List<ImageEvent>,
+        triggerEvents: List<TriggerEvent>,
+        isAnElementTry: Boolean = false,
+    ) = Unit
 
     /** The processing of an [TriggerEvent] has begun. */
     fun onTriggerEventProcessingStarted() = Unit
