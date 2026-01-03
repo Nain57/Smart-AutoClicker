@@ -18,10 +18,14 @@ package com.buzbuz.smartautoclicker.feature.revenue.data.ads.sdk
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.annotation.MainThread
-import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
-import com.google.android.gms.ads.AdError
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.feature.revenue.BuildConfig
+
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -29,18 +33,38 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.min
 
 @Singleton
-class GoogleAdsSdk @Inject constructor() : IAdsSdk {
+class GoogleAdsSdk @Inject constructor(
+    @Dispatcher(Main) dispatcherMain: CoroutineDispatcher,
+) : IAdsSdk {
+
+    private val coroutineScopeMain: CoroutineScope =
+        CoroutineScope(SupervisorJob() + dispatcherMain)
+
+    /** How long before the data source tries to reconnect to Google play. */
+    private var reconnectMilliseconds = RECONNECT_TIMER_START_MILLISECONDS
+    private var reconnectJob: Job? = null
 
     private var interstitialAd: InterstitialAd? = null
 
     @MainThread
     override fun initializeSdk(context: Context, onComplete: () -> Unit) {
-        MobileAds.initialize(context) { onComplete() }
+        try {
+            MobileAds.initialize(context) { onComplete() }
+        } catch (ex: Exception) {
+            Log.e(LOG_TAG, "Error while initializing Google Ads SDK, retrying...", ex)
+            retryInitWithExponentialBackoff(context, onComplete)
+        }
     }
 
     @MainThread
@@ -101,4 +125,27 @@ class GoogleAdsSdk @Inject constructor() : IAdsSdk {
         override fun onAdDismissedFullScreenContent(): Unit = onDismiss(impression)
         override fun onAdFailedToShowFullScreenContent(adError: AdError): Unit = onError(adError.code, adError.message)
     }
+
+    /**
+     * Retries the Google Ads SDK with exponential backoff, maxing out at the time
+     * specified by RECONNECT_TIMER_MAX_TIME_MILLISECONDS.
+     */
+     private fun retryInitWithExponentialBackoff(context: Context, onComplete: () -> Unit) {
+        if (reconnectJob != null) {
+            Log.e(LOG_TAG, "Reconnection job is already running")
+            return
+        }
+
+        reconnectJob = coroutineScopeMain.launch {
+            delay(reconnectMilliseconds)
+            reconnectMilliseconds = min(reconnectMilliseconds * 2, RECONNECT_TIMER_MAX_TIME_MILLISECONDS)
+
+            reconnectJob = null
+            initializeSdk(context, onComplete)
+        }
+    }
 }
+
+private const val RECONNECT_TIMER_START_MILLISECONDS = 1000L
+private const val RECONNECT_TIMER_MAX_TIME_MILLISECONDS = 1000L * 60L * 15L // 15 minutes
+private const val LOG_TAG = "GoogleAdsSdk"
