@@ -161,6 +161,7 @@ class DetectorEngine @Inject constructor(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
+        isATry: Boolean,
     ) {
         if (_state.value != DetectorState.RECORDING) {
             Log.w(TAG, "startDetection: Screen record is not started.")
@@ -200,6 +201,7 @@ class DetectorEngine @Inject constructor(
                 scenario = scenario,
                 imageEvents = imageEvents,
                 triggerEvents = triggerEvents,
+                isAnElementTry = isATry,
             )
 
             // Instantiate the processor and initialize its detection state.
