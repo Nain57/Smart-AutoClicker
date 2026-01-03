@@ -105,7 +105,7 @@ class ActionCopyModel @Inject constructor(
          * Header item, delimiting sections.
          * @param title the title for the header.
          */
-        data class HeaderItem(@StringRes val title: Int) : ActionCopyItem()
+        data class HeaderItem(@field:StringRes val title: Int) : ActionCopyItem()
 
         /**
          * Action item.

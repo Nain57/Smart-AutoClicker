@@ -185,6 +185,6 @@ internal class DisplayBorderComponent (
  */
 internal class DisplayBorderComponentStyle(
     displayConfigManager: DisplayConfigManager,
-    @ColorInt val color: Int,
+    @field:ColorInt val color: Int,
     val thicknessPx: Int,
 ) : ViewStyle(displayConfigManager)

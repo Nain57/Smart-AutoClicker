@@ -112,5 +112,5 @@ data class SelectorState(
     val isClickable: Boolean,
     val title: String,
     val subText: String?,
-    @DrawableRes val iconRes: Int?,
+    @field:DrawableRes val iconRes: Int?,
 )

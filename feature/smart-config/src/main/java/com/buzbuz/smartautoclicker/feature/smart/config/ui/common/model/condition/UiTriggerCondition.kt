@@ -29,7 +29,7 @@ data class UiTriggerCondition(
     override val condition: TriggerCondition,
     override val name: String,
     override val haveError: Boolean,
-    @DrawableRes val iconRes: Int,
+    @field:DrawableRes val iconRes: Int,
     val description: String,
 ) : UiCondition()
 
@@ -47,7 +47,6 @@ internal fun TriggerCondition.getIconRes(): Int =
         is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
         is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
         is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
-        else -> throw UnsupportedOperationException("Unsupported condition type")
     }
 
 private fun TriggerCondition.getTriggerConditionDescription(context: Context): String =
@@ -68,8 +67,6 @@ private fun TriggerCondition.getTriggerConditionDescription(context: Context): S
             R.string.item_timer_reached_details,
             formatDuration(durationMs),
         )
-
-        else -> throw UnsupportedOperationException("Scenario Start and End Conditions are not supported here")
     }
 
 private fun TriggerCondition.OnCounterCountReached.getComparisonOperationDisplayName(context: Context): String =

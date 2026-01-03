@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescripti
 
 abstract class ItemBriefMenu(
     @StyleRes theme: Int? = null,
-    @StringRes private val noItemText: Int,
+    @field:StringRes private val noItemText: Int,
     private val initialItemIndex: Int = 0,
 ) : OverlayMenu(theme = theme, recreateOverlayViewOnRotation = true) {
 

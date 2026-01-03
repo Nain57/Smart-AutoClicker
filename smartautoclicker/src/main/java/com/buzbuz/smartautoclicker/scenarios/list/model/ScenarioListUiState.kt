@@ -69,7 +69,7 @@ data class ScenarioListUiState(
         data class Item(
             val visible: Boolean,
             val enabled: Boolean = true,
-            @IntRange(from = 0, to = 255) val iconAlpha: Int = 255,
+            @field:IntRange(from = 0, to = 255) val iconAlpha: Int = 255,
         )
 
         data object Search : Menu()

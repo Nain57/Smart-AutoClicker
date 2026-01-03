@@ -21,8 +21,8 @@ import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialInfo
 
 data class Tutorial(
-    @StringRes val nameResId: Int,
-    @StringRes val descResId: Int,
+    @field:StringRes val nameResId: Int,
+    @field:StringRes val descResId: Int,
     val isUnlocked: Boolean,
 )
 

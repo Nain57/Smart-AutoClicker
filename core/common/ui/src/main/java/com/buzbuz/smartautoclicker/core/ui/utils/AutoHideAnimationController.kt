@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 
 class AutoHideAnimationController {
 
-    enum class ScreenSide(@AnimRes internal val inAnim: Int, @AnimRes internal val outAnim: Int) {
+    enum class ScreenSide(@field:AnimRes internal val inAnim: Int, @field:AnimRes internal val outAnim: Int) {
         LEFT(R.anim.slide_in_left, R.anim.slide_out_left),
         TOP(R.anim.slide_in_top, R.anim.slide_out_top),
         BOTTOM(R.anim.slide_in_bottom, R.anim.slide_out_bottom),

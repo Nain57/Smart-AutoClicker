@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.R
  * @param action the action represented by this item.
  */
 data class DumbActionDetails (
-    @DrawableRes val icon: Int,
+    @field:DrawableRes val icon: Int,
     val name: String,
     val detailsText: String,
     val repeatCountText: String?,
@@ -51,7 +51,6 @@ fun DumbAction.toDumbActionDetails(
         is DumbAction.DumbClick -> toClickDetails(context, withPositions, inError)
         is DumbAction.DumbSwipe -> toSwipeDetails(context, withPositions, inError)
         is DumbAction.DumbPause -> toPauseDetails(context, withPositions, inError)
-        else -> throw IllegalArgumentException("Not yet supported")
     }
 
 private fun DumbAction.DumbClick.toClickDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =

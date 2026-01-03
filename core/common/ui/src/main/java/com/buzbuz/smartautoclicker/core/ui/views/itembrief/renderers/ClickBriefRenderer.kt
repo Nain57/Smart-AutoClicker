@@ -127,7 +127,7 @@ data class ClickDescription(
 
 
 internal data class ClickBriefRendererStyle(
-    @ColorInt val backgroundColor: Int,
+    @field:ColorInt val backgroundColor: Int,
     val outerPaint: Paint,
     val innerPaint: Paint,
     val outerRadiusPx: Float,

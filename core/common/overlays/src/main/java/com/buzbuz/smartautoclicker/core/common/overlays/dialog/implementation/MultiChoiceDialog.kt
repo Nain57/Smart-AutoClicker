@@ -45,7 +45,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
  */
 open class MultiChoiceDialog<T : DialogChoice>(
     @StyleRes theme: Int,
-    @StringRes private val dialogTitleText: Int,
+    @field:StringRes private val dialogTitleText: Int,
     private val choices: List<T>,
     private val onChoiceSelected: (T) -> Unit,
     private val onCanceled: (() -> Unit)? = null,
@@ -215,9 +215,9 @@ private class SmallChoiceViewHolder<T : DialogChoice>(
 
 /** Base class for a dialog choice. */
 open class DialogChoice(
-    @StringRes val title: Int,
-    @StringRes val description: Int? = null,
-    @DrawableRes val iconId: Int? = null,
+    @field:StringRes val title: Int,
+    @field:StringRes val description: Int? = null,
+    @field:DrawableRes val iconId: Int? = null,
     val enabled: Boolean = true,
-    @DrawableRes val disabledIconId: Int? = null,
+    @field:DrawableRes val disabledIconId: Int? = null,
 )

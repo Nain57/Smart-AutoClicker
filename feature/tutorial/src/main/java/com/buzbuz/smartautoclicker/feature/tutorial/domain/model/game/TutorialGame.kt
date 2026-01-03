@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 
 data class TutorialGame(
-    @StringRes val instructionsResId: Int,
+    @field:StringRes val instructionsResId: Int,
     val highScore: Int,
     val state: Flow<TutorialGameState>,
     val targets: StateFlow<Map<TutorialGameTargetType, PointF>>,

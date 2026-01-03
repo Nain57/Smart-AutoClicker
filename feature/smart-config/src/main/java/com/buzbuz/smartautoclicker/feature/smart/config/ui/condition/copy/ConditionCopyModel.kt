@@ -132,8 +132,6 @@ class ConditionCopyModel @Inject constructor(
 
                         is TriggerCondition.OnTimerReached -> item.uiCondition.condition.name.hashCode() +
                                 item.uiCondition.condition.durationMs
-
-                        else -> 0
                     }
             }
         }
@@ -145,7 +143,7 @@ class ConditionCopyModel @Inject constructor(
          * Header item, delimiting sections.
          * @param title the title for the header.
          */
-        data class HeaderItem(@StringRes val title: Int) : ConditionCopyItem()
+        data class HeaderItem(@field:StringRes val title: Int) : ConditionCopyItem()
 
         sealed class ConditionItem : ConditionCopyItem() {
 

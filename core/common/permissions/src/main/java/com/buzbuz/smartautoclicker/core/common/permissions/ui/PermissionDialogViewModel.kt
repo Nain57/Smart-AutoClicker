@@ -72,8 +72,8 @@ internal class PermissionDialogViewModel @Inject constructor(
 
 internal data class PermissionDialogUiState(
     val permission: Permission,
-    @StringRes val titleRes: Int,
-    @StringRes val descriptionRes: Int,
+    @field:StringRes val titleRes: Int,
+    @field:StringRes val descriptionRes: Int,
 )
 
 private fun Permission.toPermissionDialogUiState(): PermissionDialogUiState =

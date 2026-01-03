@@ -111,7 +111,6 @@ class IntentDialog(
                 listener.onDeleteClicked()
                 super.back()
             }
-            else -> Unit
         }
     }
 

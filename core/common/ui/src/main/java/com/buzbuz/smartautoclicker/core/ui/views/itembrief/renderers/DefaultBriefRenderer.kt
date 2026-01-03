@@ -74,8 +74,8 @@ internal class DefaultBriefRenderer(
 }
 
 internal data class DefaultBriefRendererStyle(
-    @ColorInt val backgroundColor: Int,
-    @ColorInt val iconColor: Int,
+    @field:ColorInt val backgroundColor: Int,
+    @field:ColorInt val iconColor: Int,
     val iconSize: Float,
     val outerPaint: Paint,
 )

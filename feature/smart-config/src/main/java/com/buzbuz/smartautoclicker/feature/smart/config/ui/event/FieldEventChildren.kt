@@ -108,6 +108,6 @@ private fun RecyclerView.setEmptySpaceClickListener(listener: (() -> Unit)?) {
 }
 
 private data class FieldTitles(
-    @StringRes val titleRes: Int,
-    @StringRes val emptyTitleRes: Int,
+    @field:StringRes val titleRes: Int,
+    @field:StringRes val emptyTitleRes: Int,
 )

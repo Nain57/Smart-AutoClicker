@@ -244,8 +244,8 @@ data class BackupDialogUiState(
 
     val fileSelectionText: String? = null,
     val textStatusText: String? = null,
-    @DrawableRes val iconStatus: Int? = null,
-    @ColorInt val iconTint: Int? = null,
+    @field:DrawableRes val iconStatus: Int? = null,
+    @field:ColorInt val iconTint: Int? = null,
 )
 
 /** Zip mime type. */

@@ -80,15 +80,15 @@ class TutorialOverlayViewModel @Inject constructor(
 }
 
 data class UiTutorialOverlayState(
-    @StringRes val instructionsResId: Int,
+    @field:StringRes val instructionsResId: Int,
     val image: UiTutorialImage? = null,
     val exitButton: TutorialExitButton? = null,
     val isDisplayedInTopHalf: Boolean = true,
 )
 
 data class UiTutorialImage(
-    @DrawableRes val imageResId: Int,
-    @StringRes val imageDescResId: Int,
+    @field:DrawableRes val imageResId: Int,
+    @field:StringRes val imageDescResId: Int,
 )
 
 sealed class TutorialExitButton {

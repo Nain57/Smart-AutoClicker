@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 internal data class TutorialGameData(
-    @StringRes val instructionsResId: Int,
+    @field:StringRes val instructionsResId: Int,
     val gameRules: TutorialGameRules,
 ) : TutorialGameRules by gameRules
 

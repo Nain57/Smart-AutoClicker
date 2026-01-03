@@ -103,7 +103,7 @@ internal open class SingleHint(
     iconsSize: Int,
     maxArea: Rect,
     @DrawableRes iconId: Int,
-    @Size(1) private val inSelector: BooleanArray,
+    @field:Size(1) private val inSelector: BooleanArray,
 ) : Hint(context, iconsSize, iconId, maxArea, inSelector) {
 
     override fun invalidate(selectorArea: Rect, newCenterX: Int, newCenterY: Int,
@@ -135,7 +135,7 @@ internal class DoubleHint(
     maxArea: Rect,
     private val iconsMargin: Int,
     @DrawableRes @Size(2) icons: IntArray,
-    @Size(2) private val inSelector: BooleanArray,
+    @field:Size(2) private val inSelector: BooleanArray,
     private val isVertical: Boolean,
 ): SingleHint(context, iconsSize, maxArea, icons[0], booleanArrayOf(inSelector[0])) {
 

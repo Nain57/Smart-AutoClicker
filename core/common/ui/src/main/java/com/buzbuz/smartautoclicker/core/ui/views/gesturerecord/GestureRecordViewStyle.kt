@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.ui.R
 
 
 internal class GestureRecorderViewStyle(
-    @ColorInt val color: Int,
+    @field:ColorInt val color: Int,
     val thicknessPx: Int,
     val lengthPx: Int,
 )

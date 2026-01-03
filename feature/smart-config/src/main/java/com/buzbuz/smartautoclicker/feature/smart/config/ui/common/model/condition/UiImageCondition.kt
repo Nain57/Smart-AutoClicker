@@ -31,9 +31,9 @@ data class UiImageCondition(
     override val condition: ImageCondition,
     override val name: String,
     override val haveError: Boolean,
-    @DrawableRes val shouldBeVisibleIconRes: Int,
-    @StringRes val shouldBeVisibleTextRes: Int,
-    @DrawableRes val detectionTypeIconRes: Int,
+    @field:DrawableRes val shouldBeVisibleIconRes: Int,
+    @field:StringRes val shouldBeVisibleTextRes: Int,
+    @field:DrawableRes val detectionTypeIconRes: Int,
     val thresholdText: String,
 ) : UiCondition()
 

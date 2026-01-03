@@ -31,15 +31,15 @@ sealed class TutorialStep {
     ): TutorialStep()
 
     data class TutorialOverlay(
-        @StringRes val tutorialInstructionsResId: Int,
+        @field:StringRes val tutorialInstructionsResId: Int,
         val tutorialImage: TutorialImage? = null,
         val closeType: CloseType,
     ): TutorialStep()
 }
 
 data class TutorialImage(
-    @DrawableRes val tutorialImageResId: Int,
-    @StringRes val tutorialImageDescResId: Int,
+    @field:DrawableRes val tutorialImageResId: Int,
+    @field:StringRes val tutorialImageDescResId: Int,
 )
 
 sealed class CloseType {
