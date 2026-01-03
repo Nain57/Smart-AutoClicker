@@ -93,6 +93,11 @@
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:fastScrollEnabled="true"
+        app:fastScrollVerticalThumbDrawable="@drawable/scroll_thumb_drawable"
+        app:fastScrollVerticalTrackDrawable="@drawable/scroll_track_drawable"
+        app:fastScrollHorizontalThumbDrawable="@drawable/scroll_thumb_drawable"
+        app:fastScrollHorizontalTrackDrawable="@drawable/scroll_track_drawable"
         tools:listitem="@layout/item_dropdown"
         tools:visibility="gone"/>
 
