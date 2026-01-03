@@ -109,7 +109,7 @@ sealed class DumbActionCopyItem {
      * Header item, delimiting sections.
      * @param title the title for the header.
      */
-    data class HeaderItem(@StringRes val title: Int) : DumbActionCopyItem()
+    data class HeaderItem(@field:StringRes val title: Int) : DumbActionCopyItem()
 
     /**
      * Action item.

@@ -172,7 +172,7 @@ data class EventToggleSelectorState(
     val enableCount: Int,
     val toggleCount: Int,
     val disableCount: Int,
-    @StringRes val emptyText: Int?,
+    @field:StringRes val emptyText: Int?,
 )
 
 internal const val BUTTON_ENABLE_EVENT = 0

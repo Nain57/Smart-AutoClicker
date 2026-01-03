@@ -26,10 +26,10 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 /** Handles the states of an [ImageButton] and their animated transitions. */
 class AnimatedStatesImageButtonController(
     context: Context,
-    @DrawableRes private val state1StaticRes: Int,
-    @DrawableRes private val state2StaticRes: Int,
-    @DrawableRes state1to2AnimationRes: Int,
-    @DrawableRes state2to1AnimationRes: Int,
+    @field:DrawableRes private val state1StaticRes: Int,
+    @field:DrawableRes private val state2StaticRes: Int,
+    @field:DrawableRes state1to2AnimationRes: Int,
+    @field:DrawableRes state2to1AnimationRes: Int,
 ) {
 
     /** Animation from state 1 to state 2. */

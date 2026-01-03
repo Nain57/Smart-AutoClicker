@@ -9,9 +9,9 @@ import kotlin.time.Duration.Companion.seconds
 import com.buzbuz.smartautoclicker.core.ui.R
 
 open class DropdownItem(
-    @StringRes val title: Int,
-    @StringRes val helperText: Int? = null,
-    @DrawableRes val icon: Int? = null,
+    @field:StringRes val title: Int,
+    @field:StringRes val helperText: Int? = null,
+    @field:DrawableRes val icon: Int? = null,
 )
 
 sealed class TimeUnitDropDownItem(@StringRes title: Int) : DropdownItem(title) {

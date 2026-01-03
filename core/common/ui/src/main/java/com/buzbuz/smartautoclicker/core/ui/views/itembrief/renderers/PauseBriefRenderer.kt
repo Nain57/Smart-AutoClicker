@@ -120,7 +120,7 @@ data class PauseDescription(
 ) : ItemBriefDescription
 
 internal data class PauseBriefRendererStyle(
-    @ColorInt val backgroundColor: Int,
+    @field:ColorInt val backgroundColor: Int,
     val outerPaint: Paint,
     val linePaint: Paint,
     val thicknessPx: Float,

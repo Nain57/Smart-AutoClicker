@@ -128,7 +128,7 @@ class EventCopyModel @Inject constructor(
          * @param title the title for the header.
          */
         data class Header(
-            @StringRes val title: Int,
+            @field:StringRes val title: Int,
         ) : EventCopyItem()
 
         sealed class EventItem : EventCopyItem() {

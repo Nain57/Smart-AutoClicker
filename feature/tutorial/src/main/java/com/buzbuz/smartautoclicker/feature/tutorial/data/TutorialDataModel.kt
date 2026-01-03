@@ -29,8 +29,8 @@ internal data class TutorialData(
 )
 
 internal data class TutorialInfo(
-    @StringRes val nameResId: Int,
-    @StringRes val descResId: Int,
+    @field:StringRes val nameResId: Int,
+    @field:StringRes val descResId: Int,
 )
 
 internal sealed class TutorialStepData {
@@ -43,7 +43,7 @@ internal sealed class TutorialStepData {
     ) : TutorialStepData()
 
     internal data class TutorialOverlay(
-        @StringRes val contentTextResId: Int,
+        @field:StringRes val contentTextResId: Int,
         val image: TutorialStepImage? = null,
         override val stepStartCondition: StepStartCondition,
         val stepEndCondition: StepEndCondition,
@@ -51,8 +51,8 @@ internal sealed class TutorialStepData {
 }
 
 internal data class TutorialStepImage(
-    @DrawableRes val imageResId: Int,
-    @StringRes val imageDescResId: Int,
+    @field:DrawableRes val imageResId: Int,
+    @field:StringRes val imageDescResId: Int,
 )
 
 internal sealed class StepStartCondition {

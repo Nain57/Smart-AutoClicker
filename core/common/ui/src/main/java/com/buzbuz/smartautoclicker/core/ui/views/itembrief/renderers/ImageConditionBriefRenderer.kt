@@ -193,8 +193,8 @@ enum class ImageConditionBriefRenderingType {
 }
 
 internal data class ImageConditionBriefRendererStyle(
-    @ColorInt val backgroundColor: Int,
-    @ColorInt val selectorColor: Int,
+    @field:ColorInt val backgroundColor: Int,
+    @field:ColorInt val selectorColor: Int,
     val thicknessPx: Int,
     val cornerRadiusPx: Float,
 )

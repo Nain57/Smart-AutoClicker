@@ -27,8 +27,8 @@ data class UiImageEvent(
     val name: String,
     val conditionsCountText: String,
     val actionsCountText: String,
-    @StringRes val enabledOnStartTextRes: Int,
-    @DrawableRes val enabledOnStartIconRes: Int,
+    @field:StringRes val enabledOnStartTextRes: Int,
+    @field:DrawableRes val enabledOnStartIconRes: Int,
     val haveError: Boolean,
 ) : UiEvent()
 

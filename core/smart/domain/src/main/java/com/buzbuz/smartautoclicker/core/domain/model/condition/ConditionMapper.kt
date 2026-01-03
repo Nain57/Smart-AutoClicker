@@ -97,7 +97,6 @@ internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
         ConditionType.ON_BROADCAST_RECEIVED -> toDomainBroadcastReceived(cleanIds)
         ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
-        else -> throw IllegalArgumentException("Unsupported condition type for a TriggerCondition")
     }
 
 /** @return the condition for this entity. */

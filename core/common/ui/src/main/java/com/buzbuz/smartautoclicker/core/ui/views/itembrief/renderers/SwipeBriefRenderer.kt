@@ -176,7 +176,7 @@ data class SwipeDescription(
 ) : ItemBriefDescription
 
 internal data class SwipeBriefRendererStyle(
-    @ColorInt val backgroundColor: Int,
+    @field:ColorInt val backgroundColor: Int,
     val linePaint: Paint,
     val outerFromPaint: Paint,
     val outerToPaint: Paint,

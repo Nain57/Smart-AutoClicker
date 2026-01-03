@@ -353,8 +353,8 @@ internal class SelectorComponentStyle(
     val selectorAreaOffset: Int,
     val cornerRadius: Float,
     val selectorThickness: Float,
-    @ColorInt val selectorColor: Int,
-    @ColorInt val selectorBackgroundColor: Int,
+    @field:ColorInt val selectorColor: Int,
+    @field:ColorInt val selectorBackgroundColor: Int,
 ) : ViewStyle(displayConfigManager)
 
 /** The ratio of the maximum width to be considered as the minimum width. */

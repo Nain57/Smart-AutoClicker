@@ -23,9 +23,9 @@ import com.buzbuz.smartautoclicker.core.ui.R
 
 
 internal class ClickOffsetStyle(
-    @ColorInt val innerColor: Int,
-    @ColorInt val outerColor: Int,
-    @ColorInt val backgroundColor: Int,
+    @field:ColorInt val innerColor: Int,
+    @field:ColorInt val outerColor: Int,
+    @field:ColorInt val backgroundColor: Int,
     val radiusPx: Float,
     val innerRadiusPx: Float,
     val thicknessPx: Float,

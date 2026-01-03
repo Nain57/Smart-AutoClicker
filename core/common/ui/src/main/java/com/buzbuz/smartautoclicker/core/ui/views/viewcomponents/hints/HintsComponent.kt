@@ -218,12 +218,12 @@ internal class HintsComponentStyle(
     displayConfigManager: DisplayConfigManager,
     val iconsMargin: Int,
     val iconsSize: Int,
-    @DrawableRes val moveIcon: Int,
-    @DrawableRes val upIcon: Int,
-    @DrawableRes val downIcon: Int,
-    @DrawableRes val leftIcon: Int,
-    @DrawableRes val rightIcon: Int,
-    @DrawableRes val pinchIcon: Int? = null,
+    @field:DrawableRes val moveIcon: Int,
+    @field:DrawableRes val upIcon: Int,
+    @field:DrawableRes val downIcon: Int,
+    @field:DrawableRes val leftIcon: Int,
+    @field:DrawableRes val rightIcon: Int,
+    @field:DrawableRes val pinchIcon: Int? = null,
     val pinchIconMargin: Int? = null,
 ) : ViewStyle(displayConfigManager)
 

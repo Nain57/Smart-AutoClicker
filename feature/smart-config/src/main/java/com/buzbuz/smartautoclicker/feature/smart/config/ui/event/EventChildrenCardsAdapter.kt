@@ -64,6 +64,6 @@ internal object CardIconResDiffUtilCallback: DiffUtil.ItemCallback<EventChildren
 }
 
 data class EventChildrenItem(
-    @DrawableRes val iconRes: Int,
+    @field:DrawableRes val iconRes: Int,
     val isInError: Boolean,
 )
