@@ -1,15 +1,15 @@
 [versions]
 
 # Android SDK
-androidCompileSdk = "35"
+androidCompileSdk = "36"
 androidMinSdk = "24"
 androidNdk = "28.2.13676358"
 
 # Build script
-googleFirebaseCrashlyticsGradle = "3.0.4"
-googleProtobufGradlePlugin = "0.9.5"
-googleServices = "4.4.3"
-androidGradlePlugin = "8.11.1"
+googleFirebaseCrashlyticsGradle = "3.0.6"
+googleProtobufGradlePlugin = "0.9.6"
+googleServices = "4.4.4"
+androidGradlePlugin = "8.11.2"
 java = "21"
 kotlin = "2.2.0"
 kotlinxCoroutines = "1.10.2"
@@ -36,8 +36,8 @@ airbnbLottie = "6.6.7"
 googleMaterial = "1.12.0"
 kotlinSerializationJson = "1.9.0"
 openCv = "4.12.0"
-googleDaggerHilt = "2.56.2"
-googleProtobufRuntime = "3.25.0"
+googleDaggerHilt = "2.57.2"
+googleProtobufRuntime = "4.33.2"
 
 # PlayStore only
 androidBillingClient = "8.0.0"
