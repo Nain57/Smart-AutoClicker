@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.database.Cursor
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -36,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.getV4Scenarios
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,14 +50,19 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.Q])
 class Migration3to4Tests {
 
-    private companion object {
-        private const val TEST_DB = "migration-test"
-    }
-
     @get:Rule val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
         ClickDatabase::class.java,
     )
+
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
 
     @Test
     fun migrateScenarios_one() {
@@ -62,13 +70,13 @@ class Migration3to4Tests {
         val scenarioName = "TOTO"
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, scenarioName))
             close()
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val scenarioCursor = dbV4.query(getV4Scenarios())
@@ -90,7 +98,7 @@ class Migration3to4Tests {
         val scenarioName3 = "TUTU"
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId1, scenarioName1))
             execSQL(getInsertV3Scenario(scenarioId2, scenarioName2))
             execSQL(getInsertV3Scenario(scenarioId3, scenarioName3))
@@ -98,7 +106,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val scenarioCursor = dbV4.query(getV4Scenarios())
@@ -128,7 +136,7 @@ class Migration3to4Tests {
         val threshold = 10
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(
                 getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1,
@@ -140,7 +148,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val conditionCursor = dbV4.query(getV4Conditions())
@@ -183,7 +191,7 @@ class Migration3to4Tests {
         val threshold2 = 2
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(
                 getInsertV3Click(clickId, scenarioId, "TATA", 1, 1, 1, 1, 1,
@@ -199,7 +207,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val conditionCursor = dbV4.query(getV4Conditions())
@@ -241,14 +249,14 @@ class Migration3to4Tests {
         val priority = 1
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(getInsertV3Click(clickId, scenarioId, clickName, 1, 1, 1, 1, 1, conditionOperator, 1, stopAfter, priority))
             close()
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val eventCursor = dbV4.query(getV4Events())
@@ -283,7 +291,7 @@ class Migration3to4Tests {
         val priority2 = 2
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(
                 getInsertV3Click(clickId1, scenarioId, clickName1, 1, 1, 1, 1, 1,
@@ -297,7 +305,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val eventCursor = dbV4.query(getV4Events())
@@ -337,7 +345,7 @@ class Migration3to4Tests {
         val clickDelayAfter = 500L
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(
                 getInsertV3Click(clickId, scenarioId, clickName, 1, clickX, clickY, 1, 1,
@@ -347,7 +355,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val actionCursor = dbV4.query(getV4Actions())
@@ -389,7 +397,7 @@ class Migration3to4Tests {
         val swipeDelayAfter = 500L
 
         // Insert in V3 and close
-        helper.createDatabase(TEST_DB, 3).apply {
+        helper.createDatabase(dbPath, 3).apply {
             execSQL(getInsertV3Scenario(scenarioId, "TOTO"))
             execSQL(
                 getInsertV3Click(swipeId, scenarioId, swipeName, 2, swipeX1, swipeY1, swipeX2, swipeY2,
@@ -399,7 +407,7 @@ class Migration3to4Tests {
         }
 
         // Migrate
-        val dbV4 = helper.runMigrationsAndValidate(TEST_DB, 4, true, Migration3to4)
+        val dbV4 = helper.runMigrationsAndValidate(dbPath, 4, true, Migration3to4)
 
         // Verify
         val actionCursor = dbV4.query(getV4Actions())

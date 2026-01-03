@@ -16,10 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
@@ -50,6 +52,7 @@ import com.buzbuz.smartautoclicker.core.database.utils.insertV12ToggleEvent
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -73,18 +76,27 @@ class Migration12to13Tests {
         ClickDatabase::class.java,
     )
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrate_events() {
         // Given
         val event = V12Event(id = 12L, scenarioId = 2L)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Event(event)
         }
 
         // Migrate to v13 and verify
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             dbV13.query(getV13Events()).use { cursor ->
                 cursor.moveToFirst()
 
@@ -106,13 +118,13 @@ class Migration12to13Tests {
         val condition = V12Condition(id = 12L, eventId = eventId)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Event(V12Event(id = eventId, scenarioId = 1L))
             dbV12.insertV12Condition(condition)
         }
 
         // Migrate to v13 and verify
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             dbV13.query(getV13Conditions()).use { cursor ->
                 cursor.moveToFirst()
 
@@ -137,13 +149,13 @@ class Migration12to13Tests {
         val toggleEventAction = V12ToggleEvent(id = 12L, eventId = eventId)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Event(V12Event(id = eventId, scenarioId = 1L))
             dbV12.insertV12ToggleEvent(toggleEventAction)
         }
 
         // Migrate to v13 and verify
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             assertAggregation(dbV13, expectedAggregator = toggleEventAction, aggregated = listOf(toggleEventAction))
         }
     }
@@ -160,7 +172,7 @@ class Migration12to13Tests {
         val expectedActions = listOf(toggleEventAction1, toggleEventAction2, toggleEventAction3)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Event(V12Event(id = eventId1, scenarioId = 1L))
             dbV12.insertV12Event(V12Event(id = eventId2, scenarioId = 1L))
             dbV12.insertV12Event(V12Event(id = eventId3, scenarioId = 1L))
@@ -170,7 +182,7 @@ class Migration12to13Tests {
         }
 
         // Migrate to v13 and verify
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             assertAggregation(dbV13, expectedAggregator = toggleEventAction1, aggregated = expectedActions)
         }
     }
@@ -191,7 +203,7 @@ class Migration12to13Tests {
         val expectedActionsEvent2 = listOf(toggleEventAction21, toggleEventAction22, toggleEventAction23)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Event(V12Event(id = eventId1, scenarioId = 1L))
             dbV12.insertV12Event(V12Event(id = eventId2, scenarioId = 1L))
             dbV12.insertV12Event(V12Event(id = eventId3, scenarioId = 1L))
@@ -200,7 +212,7 @@ class Migration12to13Tests {
         }
 
         // Migrate to v13 and verify
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             assertAggregation(dbV13, eventId = eventId1, expectedAggregator = toggleEventAction11, aggregated = expectedActionsEvent1)
             assertAggregation(dbV13, eventId = eventId2, expectedAggregator = toggleEventAction21, aggregated = expectedActionsEvent2)
         }
@@ -216,14 +228,14 @@ class Migration12to13Tests {
         val endCondition = V12EndCondition(id = 11L, scenarioId = scenarioId, eventId = eventId)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Scenario(scenario)
             dbV12.insertV12Event(event)
             dbV12.insertV12EndCondition(endCondition)
         }
 
         // Migrate to v13
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             // Verify new trigger event with stop scenario action
             val endEventId = assertStopScenarioEvent(dbV13, scenario)
             // Verify counter to replacing end condition
@@ -248,7 +260,7 @@ class Migration12to13Tests {
         val endConditions = listOf(endCondition1, endCondition2, endCondition3)
 
         // Insert in v12 and close
-        helper.createDatabase(TEST_DB, OLD_DB_VERSION).use { dbV12 ->
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { dbV12 ->
             dbV12.insertV12Scenario(scenario)
             dbV12.insertV12Event(event1)
             dbV12.insertV12Event(event2)
@@ -259,7 +271,7 @@ class Migration12to13Tests {
         }
 
         // Migrate to v13
-        helper.runMigrationsAndValidate(TEST_DB, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration12to13).use { dbV13 ->
             // Verify new trigger event with stop scenario action
             val endEventId = assertStopScenarioEvent(dbV13, scenario)
 

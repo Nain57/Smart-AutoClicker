@@ -16,18 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.os.Build
 
 import androidx.room.testing.MigrationTestHelper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV4Condition
 import com.buzbuz.smartautoclicker.core.database.utils.getV5Conditions
-import com.buzbuz.smartautoclicker.core.database.utils.*
 
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,26 +41,31 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.Q])
 class Migration4to5Tests {
 
-    private companion object {
-        private const val TEST_DB = "migration-test"
-    }
-
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
         InstrumentationRegistry.getInstrumentation(),
         ClickDatabase::class.java,
     )
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrateConditions_nameColumn() {
         // Insert in V4 and close
-        helper.createDatabase(TEST_DB, 4).apply {
+        helper.createDatabase(dbPath, 4).apply {
             execSQL(getInsertV4Condition(24L, 1L, "", 0, 0, 0, 0, 0))
             close()
         }
 
         // Migrate
-        val dbV5 = helper.runMigrationsAndValidate(TEST_DB, 5, true, Migration4to5)
+        val dbV5 = helper.runMigrationsAndValidate(dbPath, 5, true, Migration4to5)
 
         // Verify
         val conditionsCursor = dbV5.query(getV5Conditions())
@@ -75,13 +82,13 @@ class Migration4to5Tests {
     @Test
     fun migrateConditions_detectionTypeColumn() {
         // Insert in V4 and close
-        helper.createDatabase(TEST_DB, 4).apply {
+        helper.createDatabase(dbPath, 4).apply {
             execSQL(getInsertV4Condition(24L, 1L, "", 0, 0, 0, 0, 0))
             close()
         }
 
         // Migrate
-        val dbV5 = helper.runMigrationsAndValidate(TEST_DB, 5, true, Migration4to5)
+        val dbV5 = helper.runMigrationsAndValidate(dbPath, 5, true, Migration4to5)
 
         // Verify
         val conditionsCursor = dbV5.query(getV5Conditions())
@@ -100,13 +107,13 @@ class Migration4to5Tests {
         val thresholdValue = 0
 
         // Insert in V4 and close
-        helper.createDatabase(TEST_DB, 4).apply {
+        helper.createDatabase(dbPath, 4).apply {
             execSQL(getInsertV4Condition(24L, 1L, "", 0, 0, 0, 0, thresholdValue))
             close()
         }
 
         // Migrate
-        val dbV5 = helper.runMigrationsAndValidate(TEST_DB, 5, true, Migration4to5)
+        val dbV5 = helper.runMigrationsAndValidate(dbPath, 5, true, Migration4to5)
 
         // Verify
         val conditionsCursor = dbV5.query(getV5Conditions())
@@ -129,13 +136,13 @@ class Migration4to5Tests {
         val thresholdValue =  Migration4to5.THRESHOLD_MAX_VALUE
 
         // Insert in V4 and close
-        helper.createDatabase(TEST_DB, 4).apply {
+        helper.createDatabase(dbPath, 4).apply {
             execSQL(getInsertV4Condition(24L, 1L, "", 0, 0, 0, 0, thresholdValue))
             close()
         }
 
         // Migrate
-        val dbV5 = helper.runMigrationsAndValidate(TEST_DB, 5, true, Migration4to5)
+        val dbV5 = helper.runMigrationsAndValidate(dbPath, 5, true, Migration4to5)
 
         // Verify
         val conditionsCursor = dbV5.query(getV5Conditions())

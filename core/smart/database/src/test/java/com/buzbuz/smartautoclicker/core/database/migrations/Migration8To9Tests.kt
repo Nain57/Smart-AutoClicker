@@ -16,9 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.database.migrations
 
+import android.content.Context
 import android.database.Cursor
 import android.os.Build
 import androidx.room.testing.MigrationTestHelper
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
@@ -26,9 +28,9 @@ import com.buzbuz.smartautoclicker.core.database.utils.getInsertV8Event
 import com.buzbuz.smartautoclicker.core.database.utils.getInsertV8Scenario
 import com.buzbuz.smartautoclicker.core.database.utils.getV9Events
 import com.buzbuz.smartautoclicker.core.database.utils.getV9Scenario
-import com.buzbuz.smartautoclicker.core.database.utils.*
 import com.buzbuz.smartautoclicker.core.database.utils.TestsData
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,10 +40,6 @@ import org.robolectric.annotation.Config
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class Migration8To9Tests {
-
-    private companion object {
-        private const val TEST_DB = "migration-test"
-    }
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
@@ -60,10 +58,19 @@ class Migration8To9Tests {
         Assert.assertEquals("Invalid event priority", priority, getInt(getColumnIndex("priority")))
     }
 
+    private lateinit var dbPath: String
+
+    @Before
+    fun setUp() {
+        dbPath = ApplicationProvider
+            .getApplicationContext<Context>()
+            .getDatabasePath("migration-test").path
+    }
+
     @Test
     fun migrate_scenario_randomize() {
         // Insert in V8 and close
-        helper.createDatabase(TEST_DB, 8).apply {
+        helper.createDatabase(dbPath, 8).apply {
             execSQL(
                 getInsertV8Scenario(
                 TestsData.SCENARIO_ID,
@@ -76,7 +83,7 @@ class Migration8To9Tests {
         }
 
         // Migrate
-        val dbV9 = helper.runMigrationsAndValidate(TEST_DB, 9, true)
+        val dbV9 = helper.runMigrationsAndValidate(dbPath, 9, true)
 
         // Verify
         val scenarioCursor = dbV9.query(getV9Scenario())
@@ -99,7 +106,7 @@ class Migration8To9Tests {
         val priority = 9
 
         // Insert in V8 and close
-        helper.createDatabase(TEST_DB, 8).apply {
+        helper.createDatabase(dbPath, 8).apply {
             execSQL(
                 getInsertV8Scenario(
                 TestsData.SCENARIO_ID,
@@ -123,7 +130,7 @@ class Migration8To9Tests {
         }
 
         // Migrate
-        val dbV9 = helper.runMigrationsAndValidate(TEST_DB, 9, true)
+        val dbV9 = helper.runMigrationsAndValidate(dbPath, 9, true)
 
         // Verify
         val scenarioCursor = dbV9.query(getV9Events())
@@ -146,7 +153,7 @@ class Migration8To9Tests {
     @Test
     fun migrate_event_enabledOnStart() {
         // Insert in V8 and close
-        helper.createDatabase(TEST_DB, 8).apply {
+        helper.createDatabase(dbPath, 8).apply {
             execSQL(
                 getInsertV8Scenario(
                 TestsData.SCENARIO_ID,
@@ -170,7 +177,7 @@ class Migration8To9Tests {
         }
 
         // Migrate
-        val dbV9 = helper.runMigrationsAndValidate(TEST_DB, 9, true)
+        val dbV9 = helper.runMigrationsAndValidate(dbPath, 9, true)
 
         // Verify
         val scenarioCursor = dbV9.query(getV9Events())
