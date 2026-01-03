@@ -20,31 +20,32 @@ androidxAnnotation = "1.9.1"
 androidxAppCompat = "1.7.1"
 androidxCardView = "1.0.0"
 androidxConstraintLayout = "2.2.1"
-androidxCoreKtx = "1.16.0"
-androidxDatastore = "1.1.7"
-androidxFragmentKtx = "1.8.8"
-androidxLifecycle = "2.9.1"
+androidxCoreKtx = "1.17.0"
+androidxDatastore = "1.2.0"
+androidxFragmentKtx = "1.8.9"
+androidxLifecycle = "2.10.0"
 androidxLifecycleExtension = "2.2.0"
-androidxNavigation = "2.9.1"
+androidxNavigation = "2.9.6"
 androidxRecyclerView = "1.4.0"
-androidxRoom = "2.7.2"
-androidxSplashScreen = "1.0.1"
+androidxRoom = "2.8.4"
+androidxSplashScreen = "1.2.0"
 androidxVectorDrawable = "1.2.0"
 
 # Other
-airbnbLottie = "6.6.7"
-googleMaterial = "1.12.0"
+airbnbLottie = "6.7.1"
+googleMaterial = "1.13.0"
 kotlinSerializationJson = "1.9.0"
 openCv = "4.12.0"
 googleDaggerHilt = "2.57.2"
 googleProtobufRuntime = "4.33.2"
 
 # PlayStore only
-androidBillingClient = "8.0.0"
-googleFirebaseBom = "33.16.0"
+androidBillingClient = "8.3.0"
+googleFirebaseBom = "34.07.0"
 googleFirebaseCrashlytics = "19.4.4"
-googleUserMessaging = "3.2.0"
-googleGmsAds = "24.4.0"
+googleFirebaseCrashlyticsNdk = "20.0.3"
+googleUserMessaging = "4.0.0"
+googleGmsAds = "24.9.0"
 googlePlayReview = "2.0.2"
 
 # Tests only
@@ -119,7 +120,7 @@ android-billingClient = { group = "com.android.billingclient", name = "billing",
 android-billingClient-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "androidBillingClient" }
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "googleFirebaseBom" }
 google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx", version.ref = "googleFirebaseCrashlytics" }
-google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlytics" }
+google-firebase-crashlytics-ndk = { group = "com.google.firebase", name = "firebase-crashlytics-ndk", version.ref = "googleFirebaseCrashlyticsNdk" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
 google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
 google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
