@@ -90,7 +90,7 @@ internal class SQLiteTableDetails private constructor(
 
             val sqlCreateTempTable =
                 if (sqlCreateTable.isNullOrEmpty()) throw IllegalStateException("Can't drop column for $originTableName")
-                else sqlCreateTable!!.replace("CREATE TABLE `$originTableName`", "CREATE TABLE `$copyName`")
+                else sqlCreateTable.replace("CREATE TABLE `$originTableName`", "CREATE TABLE `$copyName`")
 
             return SQLiteTableDetails(sqlCreateTempTable, sqlCreateIndexes, copyName, sqlKeptColumns)
         }
