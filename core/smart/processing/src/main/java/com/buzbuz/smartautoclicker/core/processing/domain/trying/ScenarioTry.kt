@@ -40,8 +40,17 @@ internal class ImageEventTry(
     val event: ImageEvent,
 ) : ScenarioTry() {
 
-    override val imageEvents: List<ImageEvent> = listOf(event)
+    override val imageEvents: List<ImageEvent> = listOf(getTestEvent())
     override val triggerEvents: List<TriggerEvent> = emptyList()
+
+    private fun getTestEvent(): ImageEvent =
+        event.copy(
+            enabledOnStart = true,
+            actions = event.actions.filter { action -> action.canBeTried() }
+        )
+
+    private fun Action.canBeTried(): Boolean =
+        this !is ToggleEvent
 }
 
 internal class ImageConditionTry(
