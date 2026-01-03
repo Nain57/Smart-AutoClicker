@@ -40,6 +40,8 @@ jobs:
           -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
           -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
           assemblePlayStoreRelease bundlePlayStoreRelease smartautoclicker:uploadCrashlyticsSymbolFilePlayStoreRelease
+      env:
+        JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4

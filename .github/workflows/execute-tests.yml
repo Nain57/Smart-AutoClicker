@@ -21,6 +21,8 @@ jobs:
           java-version: '21'
       - name: Local unit tests with Gradle
         run: ./gradlew testFDroidDebugUnitTest
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
       - name: Upload tests results
         uses: actions/upload-artifact@v4
         if: success() || failure()

@@ -54,6 +54,8 @@ jobs:
             -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
             -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
             assembleFDroidRelease
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
 
       # Upload the file as a release asset to the specified release
       - name: Upload release asset
