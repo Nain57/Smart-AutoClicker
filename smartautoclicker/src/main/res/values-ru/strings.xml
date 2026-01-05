@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">Сценарий: %1$s</string>
+    <string name="notification_message">Нажмите, чтобы поменять сценарий</string>
+    <string name="notification_button_play_and_hide">Запустить и скрыть</string>
+    <string name="notification_button_pause_and_show">Приостановить и показать</string>
+    <string name="notification_button_toggle_menu">Скрыть/Показать</string>
+    <string name="notification_button_stop">Остановить</string>
+
+
+    <string name="activity_title">Сценарии</string>
+    <string name="accessibility_service_description">Данному приложению требуется эта служба для 
+        выполнения созданных вами нажатий в других приложениях при исполнении требуемых условий.\n\nНикакие 
+        данные с этих приложений собраны не будут. Исходный код открытый, не стесняйтесь посетить его на GitHub!</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Новый сценарий</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">Экспортировать</string>
+    <string name="menu_item_title_import">Импортировать</string>
+    <string name="menu_item_title_select_all">Выбрать все</string>
+    <string name="menu_item_title_privacy">Конфиденциальность</string>
+    <string name="menu_item_title_remove_ads">Убрать рекламу</string>
+    <string name="menu_item_title_troubleshooting">Устранение неполадок</string>
+    <string name="menu_item_title_cancel">Отмена</string>
+    <string name="menu_item_title_search">Найти</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">Классический автокликер.\nПросто разместите на экране нажатия и смахивания.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Остановиться после %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Неограниченная длительность</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Повторить %1$d раз</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">Повторять бесконечно</string>
+    <string name="item_desc_smart_scenario">Используется обнаружение изображений для создания сложных ситуаций.\nНекоторые функции платные.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Используется обнаружение изображений для создания сложных ситуаций.</string>
+    <string name="item_title_dumb_scenario">Простой</string>
+    <string name="item_title_smart_scenario">Умный</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">Создайте свой первый сценарий и начните автоматизацию задач на своём устройстве.</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">Сценарий %1$s будет удалён. Продолжить?</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Ваша система не отправляет 
+        стандартный в Android запрос на трансляцию экрана. Klick\'r не сможет работать на ней.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">Тип сценария</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">Разрешение на трансляцию экрана отклонено пользователем</string>
+    <string name="toast_denied_foreground_permission">Разрешение на работу в фоновом режиме отклонено пользователем</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Создать сценарий</string>
+ 
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Создать новый сценарий</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">Стандартное название</string>
+    <string name="message_empty_image_events_scenario_list">Снимковых событий нет</string>
+
+</resources>
