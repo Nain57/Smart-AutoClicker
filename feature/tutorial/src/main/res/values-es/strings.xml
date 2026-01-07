@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="activity_tutorial_name">Tutorial</string>
+
+    <string name="message_score">Jugador: %1$d</string>
+    <string name="message_high_score">Mejor: %1$d</string>
+    <string name="message_time_left">Tiempo restante: %1$d</string>
+
+    <string name="button_text_tutorial_start_game">Iniciar juego</string>
+    <string name="button_text_tutorial_next">Siguiente</string>
+
+    <!--
+      - Tutorials definition
+      - Each tutorial must contains the following strings:
+      -
+      - * "item_title_tutorial_n": The name of the tutorial n in the tutorial list. Must be short.
+      - * "item_desc_tutorial_n": The secondary text of the tutorial n in the tutorial list. Can contains more details,
+      - is displayed on two lines if needed.
+      - * "message_tutorial_n_game_instructions": The instructions for the game associated with the tutorial n.
+      - * The following strings for each steps:
+      -   * message_tutorial_n_step_i": The text displayed in the tutorial step i to guide the user during tutorial n.
+      -   * message_tutorial_n_step_secondary_i": The text displayed below the tutorial step i image, if any, during
+      - the tutorial n. This string is not mandatory for each step.
+      -
+      - Note: not all steps are displaying text, this is why there is not necessarily all step indexes defined here.
+    -->
+
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_1">Pulsar un objetivo fijo</string>
+    <string name="item_desc_tutorial_1">Aprenda cómo crear su primer evento para hacer clic en un objetivo fijo</string>
+    <string name="message_tutorial_1_game_instructions">Haz clic en el botón azul lo más rápido posible</string>
+
+    <string name="message_tutorial_1_step_1">¡Bienvenido a su primer tutorial!\n\nAquí intentará superar la puntuación más alta
+        de un juego con la ayuda de Smart AutoClicker.\n\nPrimero, inicie el juego e intente ganar usted mismo.</string>
+
+    <string name="message_tutorial_1_step_3">Difícil, ¿no?\n¡Usemos Smart AutoClicker para vencerlo!\n\nHaga clic en el
+        icono de configuración del escenario para comenzar a editar su nuevo escenario.</string>
+
+    <string name="message_tutorial_1_step_4">Un escenario es la estructura raíz de la automatización de Smart AutoClicker.\n\n
+        Contiene la configuración de detección general y una lista de eventos que describen
+        lo que se ejecutará al iniciar su escenario.\n\nHaga clic en el botón crear evento para crear su primer evento.</string>
+
+    <string name="message_tutorial_1_step_5">Un evento describe qué acciones (hacer clic, deslizar…) ejecutar al cumplir
+        ciertas Condiciones.\n\nDebe crear al menos una Condición y una Acción para poder crear un Evento válido
+        y usarlo en su escenario.\n\nHaga clic en la pestaña Condiciones para mostrar la lista de Condiciones.</string>
+
+    <string name="message_tutorial_1_step_6">Una condición es parte de una captura de pantalla que se comparará con cada
+        fotograma de su dispositivo.\n\nPara ganar el juego, queremos hacer clic en el personaje azul cuando esté visible,
+        por lo que necesitamos una Condición que se cumpla cuando el personaje se muestre en la pantalla de su
+        dispositivo.\n\nHaga clic en el botón Crear condición para crear su primera condición.</string>
+
+    <string name="message_tutorial_1_step_7">El primer paso para crear una condición es tomarle una captura de pantalla.\n\nComo queremos hacer clic
+        cuando el personaje azul esté visible, la captura de pantalla debe contenerlo.
+        Inicie el juego de nuevo para verlo y luego tome la captura de pantalla.</string>
+    <string name="message_tutorial_1_step_secondary_7">Use el botón capturar en el menú flotante para tomar la captura de pantalla.</string>
+
+    <string name="message_tutorial_1_step_8">Una vez que se toma la captura de pantalla, puede recortarla para
+        obtener solo la parte que sea interesante para la detección.</string>
+    <string name="message_tutorial_1_step_secondary_8">Si la captura de pantalla no contiene el personaje
+        azul, puede presionar este botón para tomar una nueva.</string>
+
+    <string name="message_tutorial_1_step_9">Para este juego, la parte interesante es el personaje azul, Así que recorte
+        su captura de pantalla para atraparlo solo a él.\n\nPuede pellizcar la captura de pantalla para ampliarla y obtener
+        una mayor precisión para el selector de recorte.</string>
+    <string name="message_tutorial_1_step_secondary_9">Asegúrese de que el personaje esté completo en el selector. Also try to
+        recórtelo lo más cerca posible de él para facilitar la detección de la imagen.</string>
+
+    <string name="message_tutorial_1_step_10">¡Su imagen de condición ahora está grabada!\n\nAhora se pueden hacer varios ajustes, pero
+        la configuración por defecto se adapta a nuestro caso de uso básico. Como nuestro objetivo no se mueve, detectará
+        solo en la posición de captura, que es más rápido que detectar en toda la pantalla.\n\nHaga clic en el botón Guardar
+        para registrarlo y volver al cuadro de diálogo Configuración de eventos.</string>
+
+    <string name="message_tutorial_1_step_11">Con esta Condición, el escenario sabe cuándo desencadenar las acciones.\n\n
+        Ahora debe definir qué acciones activar, así que para este juego, un clic en el personaje azul.\n\nHaga clic en 
+        la pestaña Acciones para mostrar la lista de acciones.</string>
+
+    <string name="message_tutorial_1_step_12">Una Acción es algo que se ejecuta una vez que se cumplen las Condiciones
+        de su Evento.\n\nPuede ser un clic, un deslizamiento, una pausa, un Intent (una interacción con otra aplicación) o un
+        cambio en la ejecución del Escenario, y se pueden definir Múltiples acciones para el mismo evento.\n\nHaga clic en
+        el botón crear acción para crear su primera Acción.</string>
+
+    <string name="message_tutorial_1_step_13">Primero, debemos elegir un tipo para su Acción.\n\nPara este juego, simplemente
+        necesitamos hacer clic en el personaje azul, así que elija Hacer clic para crear una nueva acción de clic.</string>
+
+    <string name="message_tutorial_1_step_14">Una acción de clic se define por una posición y una duración de pulsación.\n\nComo queremos
+        hacer clic lo más rápido posible, podemos mantener la duración de presión predeterminada de 1ms, que es el valor
+        mas bajo posible. So we only need to define a position.\n\nHaga clic en el botón de selección de posición para seleccionar la
+        posición de Acción de clic.</string>
+
+    <string name="message_tutorial_1_step_15">Debe seleccionar la posición exacta donde se hará clic, iniciar el juego
+        de nuevo para mostrar el personaje azul y luego seleccionar su posición.\n\nUna vez que la posición sea correcta, haga
+        clic en el botón validar para guardarla.</string>
+    <string name="message_tutorial_1_step_secondary_15">No puede interactuar con el juego mientras el selector de posición esté
+        visible, pero puede usar este botón para mostrarlo y ocultarlo a voluntad.</string>
+
+    <string name="message_tutorial_1_step_16">¡El clic ahora está configurado correctamente!\n\nHaga clic en el botón Guardar
+        para registrarlo y volver al cuadro de diálogo Configuración de eventos.</string>
+
+    <string name="message_tutorial_1_step_17">Su evento ahora tiene una Condición y una Acción, lo que significa que sabe qué
+        ejecutar y cuándo ejecutarlo.\n\nHaga clic en el botón guardar para registrarlo y volver al diálogo de Escenario.</string>
+
+    <string name="message_tutorial_1_step_18">El único requisito para un Escenario es tener al menos un evento.\n
+        Como nuestro evento ya cubre cómo ganar el juego, no necesitamos nada más.\n\nHaga clic en el botón guardar, guarde
+        el escenario en la base de datos y cierre los cuadros de diálogo de configuración.</string>
+
+    <string name="message_tutorial_1_step_19">Como puede ver, el botón de reproducir ya está disponible, lo que significa que
+        su escenario es válido y puede usarse para la detección\n\nHaga clic en él para iniciar la detección.</string>
+
+    <string name="message_tutorial_1_step_20">¿Se está reproduciendo pero no pasa nada?\n\nEso es normal, solo hará clic
+        cuando el personaje azul esté visible, ¿recuerda? Mientras se mantiene el escenario en marcha, presiona el botón iniciar juego
+        ¡Y solo mira cómo Smart AutoClicker lo superará por ti!</string>
+
+    <string name="message_tutorial_1_step_21">¡Felicidades!\n\nAhora conoce los conceptos básicos de Smart AutoClicker, pero no
+        todos los casos de uso serán tan simples como este juego.\nEcha un vistazo al siguiente tutorial para aprender a rastrear
+        un objetivo en movimiento</string>
+
+
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_2">Pulsar un objetivo en movimiento</string>
+    <string name="item_desc_tutorial_2">Cambia tu evento para hacer clic en un objetivo que se mueve aleatoriamente</string>
+    <string name="message_tutorial_2_game_instructions">Haga clic en el botón azul en movimiento lo más rápido posible</string>
+
+    <string name="message_tutorial_2_step_1">Vamos a complicar un poco más el juego. Ahora, el objetivo se mueve
+        aleatoriamente.\n\nPrimero, inicie el juego y compruebe si puede ganar usted mismo.</string>
+
+    <string name="message_tutorial_2_step_3">Una vez más, parece imposible ganar manualmente, así que usemos
+        Smart AutoClicker.\n\nSu escenario para el tutorial anterior se mantuvo y se cargó para este, pero necesitaremos
+        cambiar algunos parámetros para poder ganar este nuevo juego.\n\nHaga clic en el icono de configuración del escenario
+         para comenzar a actualizar su nuevo escenario.</string>
+
+    <string name="message_tutorial_2_step_4">Todavía queremos hacer clic en el personaje azul, lo que significa que todavía
+        solo necesitamos una Condición y una Acción.\n\nComo el caso de uso es bastante similar al juego anterior, mantendremos
+        nuestro Evento y simplemente lo actualizaremos.\n\nHaga clic en su evento creado anteriormente para editarlo.</string>
+
+    <string name="message_tutorial_2_step_5">En primer lugar, actualizaremos la Condición que detecta el
+        personaje azul.\n\nHaga clic en la pestaña Condiciones para ver la lista de Condiciones.</string>
+
+    <string name="message_tutorial_2_step_6">Como en el tutorial anterior, necesitamos detectar el personaje azul, pero
+        ahora se está moviendo.\n\nNuestra condición previa ya detecta el personaje azul, pero sólo en una posición.
+        Así que no es necesario tomar otra captura, como ya lo tiene su Condición anterior, sólo tenemos que cambiar
+        sus parámetros.\n\nHaga clic en su condición para empezar a editarla.</string>
+
+    <string name="message_tutorial_2_step_7">Actualmente, el tipo de detección de condición se establece en \"Exacto\", lo que significa
+        que solo se verificará en su posición de captura.\n\nPara ganar este juego, necesitamos verificar la misma Condición, pero en
+        toda la pantalla.\n\nHaga clic en el menú desplegable del tipo de detección para ver todos los tipos.</string>
+
+    <string name="message_tutorial_2_step_8">Seleccione el tipo \"Pantalla completa\" para detectar el carácter azul en
+        cualquier parte de la pantalla.</string>
+    <string name="message_tutorial_2_step_secondary_8">Detectar en toda la pantalla lleva más tiempo que la posición
+        exacta, tenga esto en cuenta cuando el tiempo de ejecución de su escenario sea importante.</string>
+
+    <string name="message_tutorial_2_step_9">¡Eso es!\nSolo necesitamos cambiar el tipo de detección  para que su condición
+        condición se ajuste a nuestras necesidades.\n\nHaga clic en el botón Guardar para registrarlo y volver al
+        cuadro de diálogo de configuración del evento.</string>
+
+    <string name="message_tutorial_2_step_10">¡Su imagen de condición ahora está actualizada!\n\nEn este estado, el escenario
+        ejecutará un clic cada vez que el personaje azul esté visible en cualquier lugar de la pantalla, pero este clic estará
+        en la misma posición, la seleccionada durante el tutorial anterior. Entonces, necesitamos actualizar nuestra Acción.\n\n
+        Haga clic en la pestaña Acciones para mostrar la lista de acciones.</string>
+
+    <string name="message_tutorial_2_step_11">Todavía queremos ejecutar un solo clic, pero esta vez, queremos hacer
+        clic en la Condición y no en una posición fija.\n\nComo esto sigue siendo un clic, todavía necesitamos sólo una
+         acción, así que editemos su clic anterior.\n\nHaga clic en su Acción para comenzar a editarla.</string>
+
+    <string name="message_tutorial_2_step_12">Actualmente, la Acción de clic \"Hacer clic en\" está configurada en \"Posición seleccionada\", 
+        quiere decir que debe configurar manualmente la posición donde hará clic. Veamos qué otras opciones hay disponibles.\n\n
+        Haga clic en el menú desplegable \"Hacer clic en\" para mostrar todas las opciones.</string>
+
+    <string name="message_tutorial_2_step_13">La otra opción es \"Condición\", lo que significa que la Acción hará clic en las
+        coordenadas de una Condición detectada.\n\nEso es exactamente lo que necesitamos para ganar el juego. Cada vez que se detecte
+        el personaje azul, esta Acción hará clic en él.\n\nSelecciónelo para usarlo en su Acción.</string>
+
+    <string name="message_tutorial_2_step_14">Haga clic en la opción Selector de condiciones para seleccionar en qué condición
+        detectada hacer clic.\nNecesitamos especificarlo porque podemos tener múltiples Condiciones en nuestro Evento.</string>
+
+    <string name="message_tutorial_2_step_15">Para nuestro caso de uso es fácil, solo tenemos una condición, el personaje azul.\n\n
+        Selecciónelo para hacer clic en esta Condición cuando se detecte en su pantalla.</string>
+
+    <string name="message_tutorial_2_step_16">¡Eso es!\nSu Acción de Clic ahora está configurada correctamente para ganar
+        el juego.\n\nHaga clic en el botón Guardar para registrarlo y volver al cuadro de diálogo de configuración del evento.</string>
+
+    <string name="message_tutorial_2_step_17">Has actualizado la Condición y tu Acción, no hay nada más que
+        hacer.\n\nHaga clic en el botón Guardar para registrarlo y volver al cuadro de diálogo Escenario.</string>
+
+    <string name="message_tutorial_2_step_18">Un último guardado para registrar sus nuevos cambios en la base de datos
+        y cerrar los cuadros de diálogo de configuración.</string>
+
+    <string name="message_tutorial_2_step_19">Su escenario ahora está configurado para superar este nuevo tutorial.\n\nInicie
+        la detección con el botón de reproducción del menú flotante y luego inicie el juego.</string>
+
+    <string name="message_tutorial_2_step_20">¡Felicitaciones!\n\nAhora sabes cómo rastrear un objetivo único inmóvil o
+        en movimiento, ¡pero aún hay mucho más que aprender!.</string>
+
+
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_3">Combina múltiples condiciones</string>
+    <string name="item_desc_tutorial_3">Crea y combina múltiples condiciones para tu evento</string>
+    <string name="message_tutorial_3_game_instructions">Haga clic en el botón azul solo cuando el botón rojo esté visible</string>
+
+    <string name="message_tutorial_3_step_1">Cambiemos las reglas del juego de nuevo. El objetivo azul ha dejado
+        de moverse, pero ahora solo se debe hacer clic cuando el objetivo rojo esté visible.\n\nPrimero, inicia
+        el juego y comprueba si puedes ganar por ti mismo.</string>
+
+    <string name="message_tutorial_3_step_3">Una vez más, parece imposible ganar manualmente, así que usemos
+        Smart AutoClicker.\n\nSu escenario para el tutorial anterior se mantuvo y se cargó para este tutorial, pero
+        necesitaremos cambiar algunos parámetros para poder ganar este nuevo juego.\n\nHaga clic en el icono
+        de configuración del escenario para comenzar a actualizar su nuevo escenario.</string>
+
+    <string name="message_tutorial_3_step_4">Todavía queremos hacer clic en el objetivo azul, pero solo
+        cuando el rojo esté visible.\nEntonces, necesitamos agregar una condición para este objetivo
+        rojo en nuestro evento.\n\nHaga clic en su evento creado anteriormente para editarlo.</string>
+
+    <string name="message_tutorial_3_step_5">Combinaremos varias condiciones, por lo que debemos verificar el operador
+        de condición para este evento.\n\nEl operador de condición indica cómo se interpretarán juntas múltiples condiciones.\n
+        Haga clic en el selector desplegable para ver las opciones de este operador.</string>
+
+    <string name="message_tutorial_3_step_6">\'Uno\' significa que sólo debe cumplirse una de las condiciones de este suceso para
+        ejecutar las acciones.\n\n\'Todo\' significa que deben cumplirse todas las Condiciones de este Evento para ejecutar las Acciones.
+        \n\nComo queremos detectar si dos cosas se muestran juntas, usaremos \'Todo\'</string>
+
+    <string name="message_tutorial_3_step_7">Ahora debemos actualizar nuestras Condiciones.\n\nClic en la pestaña Condiciones para ver
+        la lista de Condiciones.</string>
+
+    <string name="message_tutorial_3_step_8">La condición anterior de detectar el objetivo azul sigue siendo correcta, pero necesitamos
+        una nuevo para el objetivo rojo.\n\nClic en el botón Crear condición para crear una nueva condición.</string>
+
+    <string name="message_tutorial_3_step_9">Igual que para el objetivo azul, inicie el juego para mostrar el objetivo rojo.
+        Cuando esté visible, ¡Haga una captura de su imagen!</string>
+    <string name="message_tutorial_3_step_secondary_9">Usar el botón de captura del menú flotante para hacer la captura de pantalla.</string>
+
+    <string name="message_tutorial_3_step_10">¿Su captura de pantalla contiene al objetivo rojo? Puede recortarla para que aparezca
+        sólo la parte que le interesa para la detección, el objetivo rojo.</string>
+    <string name="message_tutorial_3_step_secondary_10">Si su captura de pantalla no contiene el objetivo rojo, puede
+        pulsar este botón para tomar una nueva.</string>
+
+    <string name="message_tutorial_3_step_11">¡La imagen de su condición ya está grabada!\n\nComo el objetivo rojo
+        no se mueve, podemos mantener la configuración por defecto.\nHaga clic en el botón Guardar para registrarlo
+        y volver al cuadro de diálogo de Configuración de eventos.</string>
+
+    <string name="message_tutorial_3_step_12">Ahora tenemos dos Condiciones, una para cada objetivo, y las Acciones se ejecutarán
+        sólo si se detectan ambas.\n\nClic en la pestaña Acciones para ver la lista de acciones de nuestro evento.</string>
+
+    <string name="message_tutorial_3_step_13">The action is already set to click on the blue character, and it will only be
+        executed when the blue and the red characters are visible together.\n\nThis is exactly the behaviour we need to beat the
+        game, so no need to edit our click Action.\n\nClick on the save button to register your changes.</string>
+
+    <string name="message_tutorial_3_step_14">Todos los cambios deben guardarse en el escenario para que queden registrados.\n\Clic
+        en el botón Guardar para guardar los cambios.</string>
+
+    <string name="message_tutorial_3_step_15">¡Estamos listos para ganar este juego!\n\nClic en el botón de inicio
+        para iniciar la detección y, entonces, iniciar el juego.</string>
+
+    <string name="message_tutorial_3_step_16">¡Felicidades!\n\nAhora ya sabe cómo combinar varias Condiciones para
+        un Evento, pero aún le queda mucho por aprender</string>
+
+    <!-- Two still targets press when only one is visible tutorial -->
+    <string name="item_title_tutorial_4">Condiciones negativas</string>
+    <string name="item_desc_tutorial_4">Comprobar que no se muestra nada antes de ejecutar una acción</string>
+
+
+    <!-- Two moving targets press in order tutorial -->
+    <string name="item_title_tutorial_5">Escenario de múltiples eventos</string>
+    <string name="item_desc_tutorial_5">Aprenda a combinar varios eventos para lograr una automatización compleja</string>
+
+</resources>

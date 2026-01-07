@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Smart AutoClicker</string>
+    <string name="notification_channel_name" translatable="false">Smart AutoClicker</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">Escenario: %1$s</string>
+    <string name="notification_message">Pulse para cambiar el escenario</string>
+    <string name="activity_title">Escenarios</string>
+    <string name="accessibility_service_description">This application needs this service to inject the clicks you have
+        created into the other applications once the conditions have been detected.\n\nNo data will be collected from
+        this application. Feel free to visit our github, the code is open source !</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Nuevo escenario</string>
+    <string name="dialog_title_permission_accessibility">Servicio de accesibilidad</string>
+    <string name="dialog_title_permission_notification">Notificación</string>
+    <string name="dialog_title_permission_mandatory_denied">Permiso denegado</string>
+    <string name="dialog_title_permission_overlay">Superposición</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">Exportar</string>
+    <string name="menu_item_title_import">Importar</string>
+    <string name="menu_item_title_select_all">Seleccionar todo</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">La experiencia habitual del clicker automático.\nSimplemente haga clic y deslice sobre la pantalla.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Detener después de %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Sin duración máxima</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Repetir %1$d veces</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">Repetición infinita</string>
+    <string name="item_desc_smart_scenario">Usar la detección de imágenes para crear casos de uso complejos.\nContiene limitaciones de pago.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Usar la detección de imágenes para crear casos de uso complejos.</string>
+    <string name="item_title_dumb_scenario">Simple</string>
+    <string name="item_title_smart_scenario">Inteligente</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">Crea tu primer escenario y comienza a automatizar tareas en tu teléfono</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">Esto eliminará %1$s. ¿Seguro?</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Su dispositivo no dispone del diálogo de permiso de
+        captura de pantalla estándar de Android. Smart AutoClicker no podrá funcionar en él.</string>
+    <string name="message_permission_desc_overlay">El permiso de superposición es necesario para mostrar la interfaz de
+        Smart AutoClicker sobre las aplicaciones que desea automatizar, lo que le permite configurar su escenario
+        sin detener la otra aplicación.</string>
+    <string name="message_permission_desc_accessibility">El permiso del servicio de accesibilidad permite a Smart AutoClicker
+        realizar gestos en la pantalla de su dispositivo. Este permiso es necesario para ejecutar los clicks y deslizamientos
+        que creará en sus escenarios de automatizaciones.\n\nSmart AutoClicker no recopila ningún dato\n\nPara conceder el permiso
+        al servicio de Accesibilidad, haga clic en el botón de abajo.</string>
+    <string name="message_permission_desc_notification">Opcional: Mostrar la notificación mientras se ejecuta la aplicación para
+        volver fácilmente a la pantalla de selección de escenario.</string>
+    <string name="message_permission_mandatory_denied">Este permiso es indispensable para Smart AutoClicker.
+        No podrá funcionar correctamente sin él.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">Tipo de escenario</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">Al usuario se le negó el permiso para compartir pantalla</string>
+    <string name="toast_denied_foreground_permission">Al usuario se le negó el permiso de servicio en primer plano</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Crear un escenario</string>
+    <string name="button_request_permission">Solicitar permiso</string>
+    <string name="button_deny">Denegar</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Crear un nuevo escenario</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">Nombre por defecto</string>
+
+</resources>

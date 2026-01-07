@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">Crear respaldo</string>
+    <string name="dialog_title_delete_scenario">Eliminar escenario</string>
+    <string name="dialog_title_import_backup">Importar respaldo</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">Seleccionar archivo de salida</string>
+    <string name="item_title_backup_import_select_file">Seleccionar archivo de respaldo</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">Creando respaldo: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Respaldo completado</string>
+    <string name="message_backup_create_error">Se ha producido un error y se ha cancelado la exportación del respaldo</string>
+    <string name="message_backup_import_progress">Importando respaldo: %1$d</string>
+    <string name="message_backup_import_verification">Verificación de datos</string>
+    <string name="message_backup_import_completed">Importación completada\n%1$d escenario importado</string>
+    <string name="message_backup_import_completed_with_error">Importación completada\n%1$d escenarios importados\n%2$d errores</string>
+    <string name="message_backup_import_error">Se ha producido un error y se ha cancelado la importación del respaldo</string>
+    <string name="message_backup_import_compatibility">Algunos de los escenarios importados se han generado desde un dispositivo con una pantalla diferente y esto puede causar problemas con las coordenadas de detección y acción.\n\nPara solucionarlo, debe tomar nuevas capturas de pantalla de sus condiciones y actualizar sus posiciones de clic/deslizamiento..</string>
+    <string name="message_backup_error_no_zip_app">No se encontró ninguna aplicación en el dispositivo para manejar el guardado/carga de un archivo zip.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">El estado del respaldo.</string>
+
+</resources>
