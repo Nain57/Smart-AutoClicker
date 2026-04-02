@@ -20,6 +20,7 @@ import android.content.Context
 import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -67,7 +68,15 @@ class DumbScenarioConfigContent(appContext: Context) : NavBarDialogContent(appCo
                     InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(fieldName.textField)
+            val imm = context.getSystemService(InputMethodManager::class.java)!!
+            fieldName.textField.setOnFocusChangeListener { v, hasFocus ->
+                if (v.id != fieldName.textField.id) return@setOnFocusChangeListener
+                if (hasFocus) {
+                    root.post { root.scrollTo(0, 0) }
+                } else {
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
 
             fieldRepeatCount.apply {
                 textField.filters = arrayOf(MinMaxInputFilter(

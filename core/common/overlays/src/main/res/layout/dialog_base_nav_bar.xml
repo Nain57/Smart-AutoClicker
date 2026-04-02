@@ -20,7 +20,6 @@
     style="@style/AppTheme.Dialog.BackgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="@dimen/bottom_sheet_min_height"
     android:orientation="vertical">
 
     <include layout="@layout/include_dialog_navigation_top_bar"
@@ -30,12 +29,28 @@
         android:layout_weight="0"/>
 
     <FrameLayout
-        android:id="@+id/dialog_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="@dimen/android_bottom_navigation_height" />
+        android:clipChildren="false">
 
-    <!-- The bottom navigation bar is added programmatically to be at dialog's CoordinatorLayout level -->
+        <FrameLayout
+            android:id="@+id/dialog_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/include_create_copy_buttons"
+            android:id="@+id/create_copy_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" />
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:translationZ="100dp" />
 
 </LinearLayout>

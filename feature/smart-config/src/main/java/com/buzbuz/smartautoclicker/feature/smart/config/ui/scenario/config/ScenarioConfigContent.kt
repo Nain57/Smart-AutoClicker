@@ -21,6 +21,7 @@ import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -63,7 +64,15 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                     LengthFilter(context.resources.getInteger(R.integer.name_max_length))
                 )
             }
-            dialogController.hideSoftInputOnFocusLoss(fieldScenarioName.textField)
+            val imm = context.getSystemService(InputMethodManager::class.java)!!
+            fieldScenarioName.textField.setOnFocusChangeListener { v, hasFocus ->
+                if (v.id != fieldScenarioName.textField.id) return@setOnFocusChangeListener
+                if (hasFocus) {
+                    root.post { root.scrollTo(0, 0) }
+                } else {
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
 
             fieldAntiDetection.apply {
                 setTitle(context.resources.getString(R.string.input_field_label_anti_detection))
