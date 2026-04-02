@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="generic_modify">修改</string>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_title_action_type">動作類型</string>
+    <string name="dialog_title_application_selection">選擇一個應用程式</string>
+    <string name="dialog_title_click">點擊</string>
+    <string name="dialog_title_condition_config">條件</string>
+    <string name="dialog_title_condition_selection">選擇條件</string>
+    <string name="dialog_title_pause">等待</string>
+    <string name="dialog_title_scenario_config">情境</string>
+    <string name="dialog_title_swipe">滑動</string>
+    <string name="dialog_title_toggle_event">事件狀態</string>
+    <string name="dialog_title_events_toggle">事件切換</string>
+    <string name="dialog_title_change_counter">修改計數器</string>
+    <string name="generic_counters">計數器</string>
+    <string name="dialog_title_trigger_condition_type">觸發器類型</string>
+    <string name="dialog_title_timer_reached">計時器達到</string>
+    <string name="dialog_title_broadcast_received">收到廣播</string>
+    <string name="dialog_title_counter_reached">計數器數值</string>
+    <string name="dialog_title_image_event">螢幕事件</string>
+    <string name="dialog_title_trigger_event">觸發器</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_advanced">高級模式</string>
+    <string name="menu_item_title_simple">簡易模式</string>
+    <string name="generic_config">配置</string>
+    <string name="menu_item_title_more">更多</string>
+    <string name="menu_item_title_conditions">條件</string>
+    <string name="menu_item_title_actions">動作</string>
+    <string name="menu_item_title_image_events">螢幕</string>
+    <string name="menu_item_title_trigger_events">觸發器</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -->
+    <string name="item_click_desc">點擊螢幕某處</string>
+    <string name="item_click_details_at_position">持續 %1$s</string>
+    <string name="item_click_details_on_condition">於 %2$s 持續 %1$s</string>
+    <string name="field_condition_selection_desc_and_operator">%1$s</string>
+    <string name="field_condition_selection_desc_and_operator_not_found">未選擇條件</string>
+    <string name="field_condition_selection_desc_or_operator">事件設置為「一個條件」，您無法選擇特定條件</string>
+    <string name="field_click_position_desc">點擊 (%1$d, %2$d)</string>
+    <string name="field_select_detection_area_desc">在[%1$d，%2$d] [%3$d，%4$d]中</string>
+    <string name="item_intent_desc">調用其他的應用程式</string>
+    <string name="item_intent_details">發送廣播： %1$s</string>
+    <string name="item_intent_details_component_name">發送 %1$s 至 %2$s</string>
+    <string name="item_pause_desc">延遲一段時間執行</string>
+    <string name="item_pause_details">延遲 %1$s</string>
+    <string name="generic_select_the_position">選擇一個坐標</string>
+    <string name="item_swipe_desc">從A點滑動到B點</string>
+    <string name="item_swipe_details">延遲 %1$s</string>
+    <string name="field_swipe_positions_desc">從 (%1$d, %2$d) 滑動到 (%3$d, %4$d)</string>
+    <string name="item_toggle_event_desc">啟用或禁用某情境</string>
+    <string name="field_change_all_desc_manual">定義要手動更改的事件</string>
+    <string name="field_change_all_desc_enable_all">啟用此情境中的所有事件</string>
+    <string name="field_change_all_desc_invert_all">反轉該情境中所有事件的狀態</string>
+    <string name="field_change_all_desc_disable_all">停用此情境中的所有事件。停用所有事件後，情境將自動停止。</string>
+    <string name="field_select_toggle_events_desc_empty">請至少選擇一個要更改狀態的事件</string>
+    <string name="item_toggle_event_details_enable_all">啟用所有</string>
+    <string name="item_toggle_event_details_disable_all">全部禁用</string>
+    <string name="item_toggle_event_details_invert_all">全部反轉</string>
+    <string name="item_toggle_event_details_manual">更改 %1$d 個事件</string>
+    <string name="item_change_counter_desc">更改數值以便稍後驗證</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
+    <string name="item_broadcast_received_details">%1$s 收到</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
+    <string name="item_timer_reached_details">%1$s 事件啟用後</string>
+    <string name="item_broadcast_received_desc">收到指定廣播時滿足條件</string>
+    <string name="item_timer_reached_desc">在該觸發器激活後的規定時間內完成</string>
+    <string name="item_counter_reached_desc">驗證被操作修改的計數器值</string>
+    <string name="item_toggle_event_details_error">未找到目標事件</string>
+    <string name="item_change_counter_details_error">計數器無效</string>
+    <string name="item_click_title">點擊</string>
+    <string name="field_condition_selection_title_and_operator">點擊一個條件</string>
+    <string name="field_condition_selection_title_or_operator">點擊第一個檢測到的條件</string>
+    <string name="item_title_debug_generate_report">生成調試報告</string>
+    <string name="field_show_debug_report_desc_available">調試報告可用</string>
+    <string name="field_show_debug_report_desc_not_available">沒有可用的調試報告</string>
+    <string name="field_show_debug_view_title">顯示調試窗口</string>
+    <string name="field_detection_type_desc_exact">在捕獲位置進行檢測</string>
+    <string name="field_detection_type_desc_screen">全屏檢測</string>
+    <string name="item_intent_title">意圖</string>
+    <string name="item_pause_title">等待</string>
+    <string name="item_swipe_title">滑動</string>
+    <string name="item_toggle_event_title">變更事件狀態</string>
+    <string name="field_select_toggle_events_title_empty">無變化</string>
+    <string name="field_select_toggle_events_title">%1$d 變化</string>
+    <string name="item_change_counter_title">更改計數器</string>
+    <string name="item_timer_reached_title">達到計時器時</string>
+    <string name="item_counter_reached_title">計數器達到時</string>
+    <string name="item_broadcast_received_title">收到廣播時</string>
+    <string name="field_timer_restart_title">達到後重新啟動</string>
+    <string name="field_change_all_title">全部更改</string>
+    <string name="item_copy_title">複製</string>
+    <string name="item_copy_desc">從任何情境複製現有操作</string>
+    <string name="item_image_condition_visible">可見</string>
+    <string name="item_image_condition_not_visible">不可見</string>
+    <string name="field_condition_selector_desc">%1$d 個條件</string>
+    <string name="item_intent_details_start_activity">啟動 %1$s</string>
+
+
+    <!--
+      - Fields.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title (3~4 lines max)
+     -->
+    <string name="field_select_detection_area_title">檢測區域</string>
+    <string name="field_swipe_positions_title">滑動位置</string>
+    <string name="field_show_debug_report_title">顯示報告</string>
+    <string name="field_application_selection_desc">執行該操作時啟動應用程式</string>
+    <string name="field_timer_restart_desc_on">一旦達到這一條件，計時器將重新啟動，允許再次滿足這一條件</string>
+    <string name="field_timer_restart_desc_off">一旦達到這一條件，定時器將不會重新啟動，這意味著該條件只能滿足一次</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_empty_action_list_title">未創建動作！</string>
+    <string name="message_empty_trigger_condition_list_title">無條件！</string>
+    <string name="message_empty_screen_condition_list_title">未創建條件！</string>
+    <string name="message_empty_screen_event_title">無螢幕事件 ！</string>
+    <string name="message_empty_trigger_event_list_title">無觸發事件 ！</string>
+    <string name="message_empty_counter_name_list_title">未定義計數器</string>
+
+    <!--
+      - Secondary empty list messages.
+      - Views handles any length here, you can use more verbosity than the regular empty text.
+      -->
+    <string name="message_empty_screen_event_desc">螢幕事件包含一組在螢幕上檢測到特定條件時執行的操作。\n情境中至少需要一個螢幕或觸發器事件才能執行。</string>
+    <string name="message_empty_trigger_event_list_desc">觸發器事件包含一組在滿足自訂條件時執行的操作。\n您需要在情境中至少有一個螢幕或觸發事件才能執行。</string>
+    <string name="message_empty_trigger_condition_list_desc">條件是啟動一項操作的自訂標準。</string>
+    <string name="message_empty_screen_condition_list_desc">螢幕條件是螢幕截圖的一部分，將在手機螢幕顯示的每個幀上進行搜索。</string>
+    <string name="message_empty_action_list_desc">操作是在滿足創建的條件時觸發的與手機的交互（點擊、輕掃…）。</string>
+    <string name="message_empty_counter_name_list_desc">使用更改計數器操作或計數器達到條件創建計數器</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">差異: %1$d%%</string>
+    <string name="warning_dialog_message_toggle_action_from_another_scenario">此事件包含一個或多個「更改事件狀態」操作，其目標位於其他情境。保存前請更新這些目標事件。</string>
+    <string name="warning_dialog_message_event_delete_associated_action">此事件被其他操作引用。刪除該事件將同時刪除相關操作。\n是否確認刪除？</string>
+    <string name="warning_dialog_message_condition_delete_associated_action">此條件被其他操作引用。刪除該條件將同時刪除關聯操作。\n是否確認刪除？</string>
+    <string name="warning_dialog_message_close_without_saving">存在未保存的更改，是否放棄？</string>
+
+    <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
+    <string name="error_dialog_message_scenario_saving">由於內部錯誤，情境無法保存。要繼續編輯還是放棄所有更改？</string>
+    <string name="error_dialog_message_error_native_lib">Klick\'r 安裝錯誤，無法啟動檢測。\n\n如果您是從合法的應用程式商店安裝的，請在 GitHub 上聯繫我們，這將有助於我們修復此問題。</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="field_title_condition_threshold">允許差異</string>
+    <string name="field_scenario_quality_title">檢測解析度</string>
+    <string name="field_intent_extra_value_title">參數值</string>
+    <string name="field_tutorial_title">教程</string>
+
+    <!--
+      - List header.
+      - Displayed on one line.
+      -->
+    <string name="list_header_copy_action_this">本事件的操作</string>
+    <string name="list_header_copy_action_all">其他事件的操作</string>
+    <string name="list_header_copy_conditions_this">本事件的條件</string>
+    <string name="list_header_copy_conditions_all">所有事件的條件</string>
+    <string name="list_header_copy_event_this">本情境的事件</string>
+    <string name="list_header_copy_event_all">所有情境的事件</string>
+    <string name="list_header_image_events">螢幕事件</string>
+    <string name="list_header_trigger_events">觸發事件</string>
+
+
+    <!--
+      - SearchView hint
+      - Displayed on one line.
+      -->
+    <string name="search_view_hint_action_copy">通過動作名搜索</string>
+    <string name="search_view_hint_event_copy">通過情境名搜索</string>
+    <string name="search_view_hint_condition_copy">通過條件名搜索</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="field_scenario_quality_description">為了加快檢測速度，Klick\'r 會在檢測前降低圖像的解析度。\n\n如果提高解析度，檢測會更慢，但更準確。如果降低解析度，檢測速度會更快，但準確性會降低。 找到檢測解析度和條件閾值之間的最佳比例，以獲得最佳方案！</string>
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="generic_name">名稱</string>
+    <string name="field_intent_extra_key_label">參數名</string>
+    <string name="field_event_state_title">狀態</string>
+    <string name="field_counter_operation_value_label">數值</string>
+    <string name="field_counter_name_label">計數器名稱</string>
+    <string name="field_counter_comparison_value_label">數值</string>
+    <string name="input_field_label_timer_duration_no_unit">之後</string>
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+
+    <!-- Dropdown field for selecting the event state -->
+    <string name="item_event_desc_enabled_children">啟用</string>
+    <string name="item_event_desc_disabled_children">禁用</string>
+    <string name="field_event_state_desc_enabled">播放情境時，本事件將正常參與執行。</string>
+    <string name="field_event_state_desc_disabled">播放情境時，本事件默認不執行，須由其他操作將其啟用後方可參與執行。</string>
+
+    <string name="field_event_keep_detecting_title">繼續執行</string>
+    <string name="field_event_keep_detecting_desc_enabled">觸發該事件後，繼續執行列表中的下一個事件</string>
+    <string name="field_event_keep_detecting_desc_disabled">觸發該事件後，從列表中的第一個事件重新開始執行</string>
+
+    <!-- Dropdown field for selecting the conditions operator -->
+    <string name="field_operator_title">條件組合方式</string>
+    <string name="field_operator_desc_or">只要滿足其中任意一個條件，就能夠觸發動作</string>
+    <string name="field_operator_desc_and">需要滿足所有條件，才能觸發動作</string>
+
+    <!-- Dropdown field for selecting the condition detection type. -->
+    <string name="field_detection_type_title">檢測類型</string>
+
+    <!-- Dropdown field for selecting the condition visibility. -->
+    <string name="field_condition_visibility_title">可見性</string>
+    <string name="field_condition_visibility_desc_present">條件滿足時需檢測到目標圖像</string>
+    <string name="field_condition_visibility_desc_absent">條件滿足時需檢測不到目標圖像</string>
+
+    <!-- Dropdown field for selecting the click position type -->
+    <string name="field_click_type_title">點擊位置</string>
+    <string name="field_click_type_desc_on_condition">點擊條件滿足的對應位置坐標</string>
+    <string name="field_click_type_desc_on_position">點擊自訂坐標位置</string>
+
+    <string name="field_click_offset_title">點擊偏移</string>
+    <string name="field_click_offset_desc_none">無</string>
+
+    <!-- Dropdown field for selecting the intent sending type. -->
+    <string name="dropdown_intent_extra_type_title">參數值類型</string>
+    <string name="dropdown_intent_sending_type_label">類型</string>
+
+    <string name="dropdown_comparison_operator_label">運算符</string>
+    <string name="dropdown_counter_operation_label">運算</string>
+    <string name="field_detection_type_desc_area">檢測選定區域</string>
+
+    <string name="field_scenario_keep_screen_on_title">保持螢幕開啟</string>
+    <string name="field_scenario_keep_screen_on_enabled">檢測時保持設備螢幕打開。</string>
+    <string name="field_scenario_keep_screen_on_disabled">使用正常的設備螢幕行為。</string>
+
+
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_notification_title">通知</string>
+    <string name="item_notification_desc">向設備發送通知</string>
+    <string name="item_notification_details_text">發送 \"%1$s\"</string>
+    <string name="item_notification_details_counter">發送 %1$s 值</string>
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">通知</string>
+
+    <string name="field_notification_title_label">標題</string>
+
+    <string name="field_notification_message_title">正文</string>
+    <string name="field_dropdown_notification_message_type_title">類型</string>
+    <string name="field_dropdown_item_notification_message_type_text">文本</string>
+    <string name="field_dropdown_item_notification_message_type_counter">計數器數值</string>
+    <string name="field_notification_message_text_label">內容</string>
+    <string name="field_notification_message_counter_label">計數器名稱</string>
+
+    <string name="field_dropdown_notification_importance_title">重要性</string>
+    <string name="field_dropdown_item_notification_importance_type_low">低</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">沒有聲音</string>
+    <string name="field_dropdown_item_notification_importance_type_default">正常</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">發出聲音</string>
+    <string name="field_dropdown_item_notification_importance_type_high">高</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">發出聲音並顯示提示。</string>
+
+    <string name="button_notification_config">打開設置</string>
+    <string name="message_notification_config">通知行為取決於設備作業系統。您可以在設備設置中配置如何處理通知。</string>
+
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_system_action_title">系統操作</string>
+    <string name="item_system_action_desc">使用 Android 系統操作（返回、主頁或最近應用）</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">輸入文本</string>
+    <string name="item_set_text_desc">在當前獲得焦點的輸入框中輸入文本。</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">清空文本</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">系統操作</string>
+
+    <string name="field_dropdown_system_action_type_title">類型</string>
+    <string name="field_dropdown_system_action_type_back">返回</string>
+    <string name="field_dropdown_system_action_type_home">首頁</string>
+    <string name="field_dropdown_system_action_type_recent_apps">最近使用的應用程式</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">輸入文本</string>
+
+    <string name="field_input_set_text_text_to_write_title">文本</string>
+    <string name="field_set_text_validate_title">確認輸入</string>
+    <string name="field_set_text_validate_desc_enabled">輸入文本後發送「Enter」鍵</string>
+    <string name="field_set_text_validate_desc_disabled">僅輸入文本，不發送確認鍵</string>
+    <string name="message_set_text_focus">若需在指定位置輸入文本，請先點按該處以使輸入框獲得焦點。\n\n視應用而定，點按後可能須短暫等待，否則文本可能過早寫入。\n\n部分未採用標準文本輸入機制的應用可能無法配合，請務必先測試。</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_event_state">事件的狀態</string>
+    <string name="content_desc_conditions_count">本次事件的條件數</string>
+    <string name="content_desc_actions_count">此事件中的操作數</string>
+    <string name="content_desc_image_condition">要被檢測的圖像</string>
+    <string name="content_desc_open_event_list">打開事件列表</string>
+    <string name="content_desc_application_icon">應用圖標</string>
+    <string name="field_application_selection_title">選擇一個應用程式</string>
+
+    <string name="brief_empty_actions">無操作。要創建有效的事件，至少需要一個 "操作"。</string>
+    <string name="brief_empty_image_conditions">無螢幕條件。創建有效事件至少需要一個條件</string>
+
+</resources>

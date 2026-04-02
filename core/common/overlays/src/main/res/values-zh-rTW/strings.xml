@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_move_to_title">移動至</string>
+    <string name="dialog_move_to_position_label">索引</string>
+    <string name="overlay_instructions_gesture_record">正在記錄手勢…</string>
+</resources>

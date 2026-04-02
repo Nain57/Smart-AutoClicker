@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_create_backup">バックアップの作成</string>
+    <string name="dialog_title_delete_scenario">シナリオの削除</string>
+    <string name="dialog_title_import_backup">バックアップのインポート</string>
+    <string name="item_title_backup_create_select_file">出力ファイルを選択</string>
+    <string name="item_title_backup_import_select_file">バックアップ ファイルを選択</string>
+    <string name="message_backup_create_progress">バックアップを作成中：%1$d／%2$d</string>
+    <string name="message_backup_create_completed">バックアップが完了しました</string>
+    <string name="message_backup_create_error">エラーが発生し、バックアップのエクスポートは中止されました</string>
+    <string name="message_backup_import_progress">バックアップをインポート中：%1$d</string>
+    <string name="message_backup_import_verification">データの検証</string>
+    <string name="message_backup_import_completed">インポートが完了しました\nシナリオを %1$d 件インポートしました</string>
+    <string name="message_backup_import_completed_with_error">インポートが完了しました\nシナリオを %1$d 件インポート\nエラー %2$d 件</string>
+    <string name="message_backup_import_error">エラーが発生し、バックアップのインポートは中止されました</string>
+    <string name="message_backup_import_compatibility">インポートしたシナリオの一部は画面サイズの異なる端末で作成されたため、検出や操作座標に影響する場合があります。\n\n条件のスクリーンショットを取り直し、タップ／スワイプ位置を更新してください。</string>
+    <string name="message_backup_error_no_zip_app">Zip ファイルの保存／読み込みを行えるアプリが見つかりません。</string>
+    <string name="content_desc_backup_state">バックアップの状態</string>
+</resources>
