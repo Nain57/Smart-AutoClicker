@@ -108,7 +108,7 @@ class ScenarioCopyDialog : DialogFragment() {
         }
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Copy Scenario")
+            .setTitle(R.string.dialog_title_copy_scenario)
             .setView(viewBinding.root)
             .setCancelable(false)
             .setPositiveButton(android.R.string.ok) { _, _ -> onConfirm() }
