@@ -17,18 +17,24 @@
 package com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar
 
 import android.content.res.Configuration
-import android.view.Gravity
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.Window
+import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 
+import kotlin.math.max
+
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseNavBarBinding
-import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ViewBottomNavBarBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeCreateCopyButtonsBinding
@@ -41,6 +47,9 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     /** Map of navigation bar item id to their content view. */
     private val contentMap: MutableMap<Int, NavBarDialogContent> = mutableMapOf()
+
+    private var portraitKeyboardListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+    private var lastNavigationBarBottomPx: Int = 0
 
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
     protected lateinit var navBarView: NavigationBarView
@@ -55,6 +64,18 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     open fun onContentViewChanged(navItemId: Int) = Unit
 
+    override fun applySoftInputMode(window: Window) {
+        if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            window.setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN,
+            )
+        } else {
+            super.applySoftInputMode(window)
+        }
+    }
+
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -65,21 +86,9 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         }
         topBarBinding = baseViewBinding.layoutTopBar
 
-        // In portrait, we need to inject the navigation view as a child of the dialog's CoordinatorLayout in order to
-        // correctly handle the dialog scrolling behaviour without moving the navigation view from the bottom.
-        // This issue does not occurs in landscape mode, as the NavigationBar is replaced by a NavigationRail, which
-        // is sticky to the dialog start.
-        if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            navBarView = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
-            createCopyButtons = IncludeCreateCopyButtonsBinding.inflate(LayoutInflater.from(context))
-        } else {
-            navBarView = baseViewBinding.navBar
-                ?: throw IllegalStateException("Landscape layout must contains a NavigationRailView")
-            createCopyButtons = baseViewBinding.createCopyButtons
-                ?: throw IllegalStateException("Landscape layout must contains a create copy buttons")
-        }
+        navBarView = baseViewBinding.navBar as NavigationBarView
+        createCopyButtons = baseViewBinding.createCopyButtons
 
-        // Generic setup of the navigation
         navBarView.apply {
             inflateMenu(this)
             setOnItemSelectedListener { item ->
@@ -93,16 +102,13 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     @CallSuper
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        // Setup dialog views. We need to do it here as it is the first place where the dialog is created and where we
-        // can access its views.
-        if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            setupPortraitViews()
-        }
-
         updateContentView(
             itemId = navBarView.selectedItemId,
             forceUpdate = true,
         )
+        if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            installPortraitBottomInsetHandling(dialog)
+        }
     }
 
     override fun onStart() {
@@ -116,6 +122,7 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     }
 
     override fun onDestroy() {
+        clearPortraitBottomInsetHandling()
         contentMap.values.forEach { content ->
             content.destroy()
         }
@@ -127,29 +134,60 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         navBarView.getOrCreateBadge(navItemId).isVisible = haveMissingInput
     }
 
-    private fun setupPortraitViews() {
-        dialogCoordinatorLayout?.apply {
-            // Add the navigation bar.
-            addView(
-                navBarView,
-                CoordinatorLayout.LayoutParams(
-                    CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                ).apply {
-                    gravity = Gravity.BOTTOM
-                }
-            )
+    /**
+     * Do not use translationY on [design_bottom_sheet]: the coordinator clips children and the bottom nav disappears.
+     * Pad the sheet [root] instead so the nav stays visible, and the middle [NestedScrollView] gets a real height limit
+     * so it can scroll when the keyboard is open.
+     */
+    private fun installPortraitBottomInsetHandling(dialog: BottomSheetDialog) {
+        val decor = dialog.window?.decorView ?: return
+        val thresholdPx = (100 * decor.resources.displayMetrics.density).toInt()
 
-            // Add create/copy floating action buttons.
-            addView(
-                createCopyButtons.root,
-                CoordinatorLayout.LayoutParams(
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                    CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                ).apply {
-                    gravity = Gravity.BOTTOM or Gravity.END
-                }
-            )
+        ViewCompat.setOnApplyWindowInsetsListener(decor) { _, insets ->
+            lastNavigationBarBottomPx = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            applyPortraitRootBottomPadding(decor, thresholdPx)
+            insets
+        }
+
+        portraitKeyboardListener = ViewTreeObserver.OnGlobalLayoutListener {
+            applyPortraitRootBottomPadding(decor, thresholdPx)
+        }
+        decor.viewTreeObserver.addOnGlobalLayoutListener(portraitKeyboardListener!!)
+
+        ViewCompat.requestApplyInsets(decor)
+    }
+
+    private fun applyPortraitRootBottomPadding(decor: View, thresholdPx: Int) {
+        if (!::baseViewBinding.isInitialized) return
+        val root = baseViewBinding.root
+        val r = Rect()
+        decor.getWindowVisibleDisplayFrame(r)
+        val gapPx = (decor.rootView.height - r.bottom).coerceAtLeast(0)
+        val imeInset = ViewCompat.getRootWindowInsets(decor)
+            ?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+        val fromKeyboard = max(
+            if (gapPx >= thresholdPx) gapPx else 0,
+            imeInset,
+        )
+        val bottom = if (fromKeyboard > 0) {
+            fromKeyboard
+        } else {
+            max(gapPx, lastNavigationBarBottomPx)
+        }
+        if (root.paddingBottom != bottom) {
+            root.setPadding(0, 0, 0, bottom)
+            root.requestLayout()
+        }
+    }
+
+    private fun clearPortraitBottomInsetHandling() {
+        portraitKeyboardListener?.let { listener ->
+            dialog?.window?.decorView?.viewTreeObserver?.removeOnGlobalLayoutListener(listener)
+        }
+        portraitKeyboardListener = null
+        dialog?.window?.decorView?.let { ViewCompat.setOnApplyWindowInsetsListener(it, null) }
+        if (::baseViewBinding.isInitialized) {
+            baseViewBinding.root.setPadding(0, 0, 0, 0)
         }
     }
 
@@ -161,13 +199,11 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     private fun updateContentView(itemId: Int, forceUpdate: Boolean = false) {
         if (!forceUpdate && navBarView.selectedItemId == itemId) return
 
-        // Get the current content and stop it, if any.
         contentMap[navBarView.selectedItemId]?.apply {
             pause()
             stop()
         }
 
-        // Get new content. If it does not exist yet, create it.
         var content = contentMap[itemId]
         if (content == null) {
             content = createContentView(itemId)
@@ -189,12 +225,9 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     }
 
     private fun handleButtonClick(buttonType: DialogNavigationButton) {
-        // First notify the contents.
         contentMap.values.forEach { contentInfo ->
             contentInfo.onDialogButtonClicked(buttonType)
         }
-
-        // Then, notify the dialog
         onDialogButtonPressed(buttonType)
     }
 }

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import android.content.Context
 
+import com.buzbuz.smartautoclicker.core.base.extensions.withLocaleContextForStrings
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
@@ -35,12 +36,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.getSwipeDurationCo
 internal class EditionDefaultValues(private val scenarioRepository: IRepository) {
 
     fun eventName(context: Context): String =
-        context.getString(R.string.default_event_name)
+        context.withLocaleContextForStrings().getString(R.string.default_event_name)
     @ConditionOperator fun eventConditionOperator(): Int =
         AND
 
     fun conditionName(context: Context): String =
-        context.getString(R.string.default_condition_name)
+        context.withLocaleContextForStrings().getString(R.string.default_condition_name)
     fun conditionThreshold(context: Context): Int =
         if (isTutorialModeEnabled()) 15
         else context.resources.getInteger(R.integer.default_condition_threshold)
@@ -50,7 +51,7 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
         true
 
     fun clickName(context: Context): String =
-        context.getString(R.string.default_click_name)
+        context.withLocaleContextForStrings().getString(R.string.default_click_name)
     fun clickPressDuration(context: Context): Long =
         if (isTutorialModeEnabled()) 1
         else context.getEventConfigPreferences().getClickPressDurationConfig(context)
@@ -58,36 +59,36 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
         Click.PositionType.USER_SELECTED
 
     fun swipeName(context: Context): String =
-        context.getString(R.string.default_swipe_name)
+        context.withLocaleContextForStrings().getString(R.string.default_swipe_name)
     fun swipeDuration(context: Context): Long =
         context.getEventConfigPreferences().getSwipeDurationConfig(context)
 
     fun pauseName(context: Context): String =
-        context.getString(R.string.default_pause_name)
+        context.withLocaleContextForStrings().getString(R.string.default_pause_name)
     fun pauseDuration(context: Context): Long =
         context.getEventConfigPreferences().getPauseDurationConfig(context)
 
     fun intentName(context: Context): String =
-        context.getString(R.string.default_intent_name)
+        context.withLocaleContextForStrings().getString(R.string.default_intent_name)
     fun intentIsAdvanced(context: Context): Boolean =
         context.getEventConfigPreferences().getIntentIsAdvancedConfig(context)
 
     fun toggleEventName(context: Context): String =
-        context.getString(R.string.default_toggle_event_name)
+        context.withLocaleContextForStrings().getString(R.string.default_toggle_event_name)
     fun eventToggleType(): ToggleEvent.ToggleType =
         ToggleEvent.ToggleType.ENABLE
 
     fun changeCounterName(context: Context): String =
-        context.getString(R.string.default_change_counter_name)
+        context.withLocaleContextForStrings().getString(R.string.default_change_counter_name)
 
     fun notificationName(context: Context): String =
-        context.getString(R.string.default_notification_name)
+        context.withLocaleContextForStrings().getString(R.string.default_notification_name)
 
     fun systemActionName(context: Context): String =
-        context.getString(R.string.default_system_action_name)
+        context.withLocaleContextForStrings().getString(R.string.default_system_action_name)
 
     fun setTextName(context: Context): String =
-        context.getString(R.string.default_set_text_name)
+        context.withLocaleContextForStrings().getString(R.string.default_set_text_name)
 
     fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
         TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS

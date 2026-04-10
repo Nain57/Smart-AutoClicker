@@ -19,15 +19,21 @@ package com.buzbuz.smartautoclicker.core.base.extensions
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
 
 import com.buzbuz.smartautoclicker.core.base.data.getOpenWebBrowserIntent
 import com.buzbuz.smartautoclicker.core.base.data.getOpenWebBrowserPickerIntent
+
+import java.util.Locale
 
 @ColorInt
 fun Context.getThemeColor(@AttrRes colorAttr: Int): Int {
@@ -59,5 +65,24 @@ fun Context.safeStartActivity(intent: Intent): Boolean =
         Log.e(TAG, "Error while startActivity with $intent")
         false
     }
+
+/**
+ * Returns a [Context] whose [android.content.res.Resources] resolve strings using the current
+ * app locale ([AppCompatDelegate.getApplicationLocales]) when set, otherwise [Locale.getDefault].
+ *
+ * Use for string lookups from contexts whose configuration may not match the UI locale (for example
+ * [android.accessibilityservice.AccessibilityService]), so `values-xx` resources apply correctly.
+ */
+fun Context.withLocaleContextForStrings(): Context {
+    val application = applicationContext
+    val config = Configuration(application.resources.configuration)
+    val appLocales = AppCompatDelegate.getApplicationLocales()
+    ConfigurationCompat.setLocales(
+        config,
+        if (!appLocales.isEmpty) appLocales
+        else LocaleListCompat.create(Locale.getDefault()),
+    )
+    return application.createConfigurationContext(config)
+}
 
 private const val TAG = "ContextExt"

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="dialog_overlay_title_copy_from">複製來源</string>
+    <string name="dialog_overlay_title_warning">警告</string>
+    <string name="dialog_title_tutorial">教學</string>
+    <string name="field_click_position_title">點擊位置</string>
+    <string name="field_swipe_positions_title">滑動位置</string>
+    <string name="item_title_try_element">測試您的 %1$s</string>
+    <string name="item_error_action_invalid_generic">此動作無效</string>
+    <string name="message_empty_copy">沒有可複製的內容</string>
+    <string name="message_tutorial_volume_down_stop">若情境點擊過快，可能無法透過懸浮選單停止。\n\n此時可按下裝置的實體「音量降低」鍵以停止目前情境。</string>
+    <string name="message_dont_show_again">不再顯示此訊息</string>
+    <string name="button_understood">瞭解</string>
+    <string name="input_field_label_anti_detection">反偵測</string>
+    <string name="input_field_label_click_press_duration">按壓時長（毫秒）</string>
+    <string name="input_field_label_name">名稱</string>
+    <string name="input_field_label_pause_duration">暫停時長</string>
+    <string name="input_field_label_scenario_name">情境名稱</string>
+    <string name="input_field_label_swipe_duration">滑動時長（毫秒）</string>
+    <string name="input_field_error_required">必填</string>
+    <string name="dropdown_item_title_anti_detection_enabled">啟用</string>
+    <string name="dropdown_item_title_anti_detection_disabled">關閉</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">對點擊、滑動與等待的座標及時長施加微小隨機偏移</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">嚴格依照設定值執行</string>
+    <string name="dropdown_label_time_unit_ms">毫秒</string>
+    <string name="dropdown_label_time_unit_s">秒</string>
+    <string name="dropdown_label_time_unit_min">分</string>
+    <string name="dropdown_label_time_unit_h">時</string>
+    <string name="dropdown_label_time_unit">時間單位</string>
+    <string name="toast_configure_single_click">請觸碰要點擊的位置</string>
+    <string name="toast_configure_swipe_from">請觸碰滑動起點</string>
+    <string name="toast_configure_swipe_to">請觸碰滑動終點</string>
+    <string name="content_desc_action_icon">表示動作類型的圖示</string>
+    <string name="content_desc_add_button">用於新建元素的按鈕</string>
+    <string name="content_desc_copy_button">從已有元素建立副本的按鈕</string>
+    <string name="content_desc_move_menu">移動懸浮選單</string>
+    <string name="content_desc_drag_and_drop">拖放以調整順序</string>
+    <string name="content_desc_play_pause_scenario">開始或暫停情境</string>
+    <string name="content_desc_stop_clicker">停止 Klick\'r</string>
+    <string name="content_desc_confirm">確認</string>
+    <string name="content_desc_go_back">返回上一對話方塊</string>
+</resources>
