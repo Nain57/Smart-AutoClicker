@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_create_backup">建立備份</string>
+    <string name="dialog_title_delete_scenario">刪除情境</string>
+    <string name="dialog_title_import_backup">匯入備份</string>
+    <string name="item_title_backup_create_select_file">選擇輸出檔案</string>
+    <string name="item_title_backup_import_select_file">選擇備份檔案</string>
+    <string name="message_backup_create_progress">正在建立備份：%1$d／%2$d</string>
+    <string name="message_backup_create_completed">備份已完成</string>
+    <string name="message_backup_create_error">發生錯誤，已取消備份匯出</string>
+    <string name="message_backup_import_progress">正在匯入備份：%1$d</string>
+    <string name="message_backup_import_verification">資料驗證</string>
+    <string name="message_backup_import_completed">匯入已完成\n已匯入 %1$d 個情境</string>
+    <string name="message_backup_import_completed_with_error">匯入已完成\n已匯入 %1$d 個情境\n錯誤 %2$d 項</string>
+    <string name="message_backup_import_error">發生錯誤，已取消備份匯入</string>
+    <string name="message_backup_import_compatibility">部分匯入的情境來自螢幕規格不同的裝置，可能影響偵測與操作座標。\n\n請重新擷取條件影像，並更新點擊／滑動位置。</string>
+    <string name="message_backup_error_no_zip_app">裝置上未找到可處理 Zip 檔案儲存／讀取的應用程式。</string>
+    <string name="content_desc_backup_state">備份狀態</string>
+</resources>

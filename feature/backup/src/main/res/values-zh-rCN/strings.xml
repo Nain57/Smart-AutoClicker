@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_create_backup">创建备份</string>
+    <string name="dialog_title_delete_scenario">删除场景</string>
+    <string name="dialog_title_import_backup">导入备份</string>
+    <string name="item_title_backup_create_select_file">选择输出文件</string>
+    <string name="item_title_backup_import_select_file">选择备份文件</string>
+    <string name="message_backup_create_progress">正在创建备份：%1$d／%2$d</string>
+    <string name="message_backup_create_completed">备份已完成</string>
+    <string name="message_backup_create_error">发生错误，已取消备份导出</string>
+    <string name="message_backup_import_progress">正在导入备份：%1$d</string>
+    <string name="message_backup_import_verification">数据校验</string>
+    <string name="message_backup_import_completed">导入已完成\n已导入 %1$d 个场景</string>
+    <string name="message_backup_import_completed_with_error">导入已完成\n已导入 %1$d 个场景\n错误 %2$d 项</string>
+    <string name="message_backup_import_error">发生错误，已取消备份导入</string>
+    <string name="message_backup_import_compatibility">部分导入的场景来自屏幕规格不同的设备，可能影响检测与操作坐标。\n\n请重新截取条件图像，并更新点击／滑动位置。</string>
+    <string name="message_backup_error_no_zip_app">设备上未找到可处理 Zip 文件保存／读取的应用。</string>
+    <string name="content_desc_backup_state">备份状态</string>
+</resources>

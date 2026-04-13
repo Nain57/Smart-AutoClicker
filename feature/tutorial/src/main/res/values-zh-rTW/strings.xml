@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="activity_tutorial_name">教程</string>
+
+    <string name="message_score">玩家：%1$d</string>
+    <string name="message_high_score">最佳：%1$d</string>
+    <string name="message_time_left">剩餘時間：%1$d</string>
+
+    <string name="button_text_tutorial_start_game">開始遊戲</string>
+    <string name="button_text_tutorial_next">下一步</string>
+
+    <!--
+      - Tutorials definition
+      - Each tutorial must contains the following strings:
+      -
+      - * "item_title_tutorial_n": The name of the tutorial n in the tutorial list. Must be short.
+      - * "item_desc_tutorial_n": The secondary text of the tutorial n in the tutorial list. Can contains more details,
+      - is displayed on two lines if needed.
+      - * "message_tutorial_n_game_instructions": The instructions for the game associated with the tutorial n.
+      - * The following strings for each steps:
+      -   * message_tutorial_n_step_i": The text displayed in the tutorial step i to guide the user during tutorial n.
+      -   * message_tutorial_n_step_secondary_i": The text displayed below the tutorial step i image, if any, during
+      - the tutorial n. This string is not mandatory for each step.
+      -
+      - Note: not all steps are displaying text, this is why there is not necessarily all step indexes defined here.
+    -->
+
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_1">點擊靜止目標</string>
+    <string name="item_desc_tutorial_1">學習如何創建你的第一個事件，以便點擊靜止目標</string>
+    <string name="message_tutorial_1_game_instructions">儘可能快地點擊藍色按鈕</string>
+
+    <string name="message_tutorial_1_step_1">歡迎來到你的第一個教程！\n\n在這裡，你將嘗試在Klick\'r的幫助下打破遊戲的最高分記錄。\n\n首先，開始遊戲並嘗試自己贏得比賽。</string>
+
+    <string name="message_tutorial_1_step_3">難度很大，不是嗎？\n讓我們使用Klick\'r來戰勝它！\n\n
+    點擊場景配置圖標開始編輯你的新場景。</string>
+
+    <string name="message_tutorial_1_step_4">場景是Klick\'r自動化的根結構。\n\n
+    它包含了通用檢測設置和描述在運行你的場景時將執行的事件列表。\n\n點擊創建事件按鈕以創建你的第一個事件。</string>
+
+    <string name="message_tutorial_1_step_5">事件描述了在滿足特定條件時執行的操作（點擊、滑動等）。\n\n為了創建一個有效的事件並在場景中使用它，你必須至少創建一個條件和一個操作。\n\n單擊條件欄位，顯示條件列表。</string>
+
+    <string name="message_tutorial_1_step_6">條件是將與你的設備螢幕的每個螢幕幀進行比較的截圖的一部分。\n\n為了打贏遊戲，我們希望在藍色角色顯示在螢幕上時進行點擊，因此我們需要一個在角色顯示在你的設備螢幕上時滿足的條件。\n\n點擊創建條件按鈕以創建你的第一個條件。</string>
+
+    <string name="message_tutorial_1_step_7">創建條件的第一步是為其拍攝截圖。\n\n
+    由於我們希望在藍色角色可見時進行點擊，因此截圖必須包含它。再次開始遊戲以顯示它，然後拍攝截圖。</string>
+    <string name="message_tutorial_1_step_secondary_7">使用浮動菜單中的拍攝按鈕來拍攝截圖。</string>
+
+    <string name="message_tutorial_1_step_8">一旦截圖被拍攝，你可以裁剪它，以獲取感興趣的部分。</string>
+    <string name="message_tutorial_1_step_secondary_8">如果你的截圖不包含藍色角色，你可以按下此按鈕以拍攝新截圖。</string>
+
+    <string name="message_tutorial_1_step_9">對於這個遊戲，感興趣的部分是藍色角色，所以裁剪你的截圖以只獲取他。</string>
+    <string name="message_tutorial_1_step_secondary_9">確保選擇器中的角色完整。也儘量將其裁剪得離他越近越好，以便簡化圖像檢測。</string>
+
+    <string name="message_tutorial_1_step_10">你的條件圖像現在已經記錄下來！\n\n現在可以對它進行幾個調整，但是默認設置適用於我們的基本用例。由於我們的目標不在移動，它只會在捕獲位置進行檢測，這比在整個螢幕上檢測更快。\n\n單擊保存 按鈕進行註冊，然後返回條件列表。</string>
+
+    <string name="message_tutorial_1_step_11">關閉條件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_1_step_12">有了這個條件，場景就知道何時觸發操作了。\n\n
+    現在你需要定義要觸發的操作，所以對於這個遊戲，是對藍色角色進行點擊。\n\n單擊 操作欄位，顯示操作列表。</string>
+
+    <string name="message_tutorial_1_step_13">操作是在其事件的條件滿足時執行的操作。\n\n它可以是點擊、滑動、暫停、意圖（與另一個應用程式的交互）或場景執行的更改，可以為同一個事件定義多個操作。\n\n點擊創建操作按鈕以創建你的第一個操作。</string>
+
+    <string name="message_tutorial_1_step_14">首先，需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們只需要點擊藍色角色，所以選擇點擊來創建新的點擊操作。</string>
+
+    <string name="message_tutorial_1_step_15">點擊操作由位置和按壓持續時間定義。\n\n由於我們希望儘快點擊，我們可以保持默認的按壓持續時間為1毫秒，這是最低可能的值。所以我們只需要定義一個位置。\n\n點擊位置選擇器按鈕來選擇點擊操作的位置。</string>
+
+    <string name="message_tutorial_1_step_16">你需要選擇要點擊的確切位置，因此你需要重新開始遊戲以顯示藍色角色，然後選擇其位置。\n\n位置正確後，點擊驗證按鈕以保存它。</string>
+    <string name="message_tutorial_1_step_secondary_16">在位置選擇器可見時，你無法與遊戲進行交互，但你可以使用此按鈕來顯示和隱藏它，以便隨時取消該限制。</string>
+
+    <string name="message_tutorial_1_step_17">點擊現在已經正確配置！\n\n單擊保存按鈕 註冊並返回操作列表。</string>
+
+    <string name="message_tutorial_1_step_18">關閉操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_1_step_19">你的事件現在有一個條件和一個操作，這意味著它知道何時執行操作。\n\n點擊保存按鈕以保存它並返回場景對話框。</string>
+
+    <string name="message_tutorial_1_step_20">場景的唯一要求是至少有一個事件。\n
+    由於我們的事件已經涵蓋了如何贏得比賽，我們不需要其他任何東西。\n\n點擊保存按鈕以將場景保存在資料庫中並關閉配置對話框。</string>
+
+    <string name="message_tutorial_1_step_21">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於檢測\n\n點擊它以開始檢測。</string>
+
+    <string name="message_tutorial_1_step_22">它正在運行，但沒有發生任何事情？\n\n那是正常的，它只會在藍色角色可見時點擊，記住嗎？在保持場景運行的同時，按下開始遊戲按鈕，只需觀看Klick\'r將為你贏得比賽！</string>
+
+    <string name="message_tutorial_1_step_23">恭喜！\n\n你現在了解了Klick\'r的基礎知識，但並非所有用例都像這個遊戲那麼簡單。\n看看下一個教程，了解如何跟蹤移動目標</string>
+
+
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_2">點擊移動目標</string>
+    <string name="item_desc_tutorial_2">將您的事件更改為點擊隨機移動目標</string>
+    <string name="message_tutorial_2_game_instructions">儘可能快地點擊移動的藍色按鈕</string>
+
+    <string name="message_tutorial_2_step_1">讓我們再增加遊戲的難度。現在，目標是隨機移動的。\n\n首先，開始遊戲並查看自己是否能夠贏得比賽。</string>
+
+    <string name="message_tutorial_2_step_3">再次嘗試手動贏得比賽似乎不可能，所以讓我們使用Klick\'r。\n\n你之前教程的場景已經被保存並加載到這個教程中，但是為了贏得這場新比賽，我們需要更改一些參數。\n\n點擊場景配置圖標開始更新你的新場景。</string>
+
+    <string name="message_tutorial_2_step_4">我們仍然想點擊藍色角色，這意味著我們仍然只需要一個條件和一個操作，所以只需要一個事件。\n\n由於用例與之前的遊戲非常相似，我們將保留我們的事件並簡單地對其進行更新。\n\n點擊你之前創建的事件以進行編輯。</string>
+
+    <string name="message_tutorial_2_step_5">首先，我們將更新檢測藍色角色的條件。\n\n單擊條件欄位，顯示條件列表。</string>
+
+    <string name="message_tutorial_2_step_6">與之前的教程一樣，我們需要檢測藍色角色，但現在它在移動。\n\n我們之前的條件已經在檢測藍色角色，但只在一個位置。所以你不需要拍攝新的截圖，因為你之前的條件已經有了它，我們只需要更改它的參數。\n\n點擊條件以開始編輯它。</string>
+
+    <string name="message_tutorial_2_step_7">當前，條件檢測類型設置為「精確」，這意味著它只會在捕獲位置進行驗證。\n\n為了贏得這個遊戲，我們需要在整個螢幕上驗證相同的條件。\n\n選擇「整個螢幕」類型以在螢幕的任何位置檢測藍色角色。</string>
+    <string name="message_tutorial_2_step_secondary_7">在整個螢幕上進行檢測需要更多時間，當你的場景執行時間很重要時請記住這一點。</string>
+
+    <string name="message_tutorial_2_step_8">就是這樣！\n我們只需要更改檢測類型，以使你的條件符合我們的需求。\n\n單擊保存 按鈕進行註冊，然後返回條件列表。</string>
+
+    <string name="message_tutorial_2_step_9">關閉條件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_2_step_10">你的條件圖像現在已經更新！\n在這種狀態下，場景現在會在螢幕的任何位置檢測到藍色角色時執行一次點擊，但這次點擊將在上一個教程中選擇的相同位置上進行。所以，我們需要更新我們的操作。\n\n單擊 「操作 」欄位，顯示 「操作 」列表。</string>
+
+    <string name="message_tutorial_2_step_11">我們仍然想執行單擊操作，但這次我們想要單擊條件，而不是一個固定位置。\n\n由於這仍然是一個單擊，我們仍然只需要一個操作，所以讓我們編輯你之前的單擊操作。\n\n點擊操作以開始編輯它。</string>
+
+    <string name="message_tutorial_2_step_12">目前，單擊操作「單擊位置」設置為「選擇的位置」，這意味著你必須手動設置要點擊的位置。另一個選擇是「條件」，這意味著操作將單擊檢測到的條件坐標。\n\n這正是我們打贏比賽所需要的。每次檢測到藍色角色時，此操作將對其進行單擊。\n\n選擇它以在你的操作中使用它。</string>
+
+    <string name="message_tutorial_2_step_13">點擊條件選擇器選項以選擇要單擊的檢測條件。\n我們需要指定它，因為我們的事件中可以有多個條件。</string>
+
+    <string name="message_tutorial_2_step_14">對於我們的用例來說很容易，我們只有一個條件，即藍色角色。\n\n
+    選擇它以在螢幕上檢測到此條件時單擊它。</string>
+
+    <string name="message_tutorial_2_step_15">就是這樣！\n你的單擊操作現在已經正確配置以打贏比賽。\n\n單擊保存按鈕 註冊並返回操作列表。</string>
+
+    <string name="message_tutorial_2_step_16">關閉操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_2_step_17">你已經更新了條件和操作，沒有其他要做的了。\n\n點擊保存按鈕以註冊它並返回場景對話框。</string>
+
+    <string name="message_tutorial_2_step_18">最後一次保存，將你的新更改註冊到資料庫中並關閉配置對話框。</string>
+
+    <string name="message_tutorial_2_step_19">你的場景現在已經配置為打贏這個新教程。\n\n使用浮動菜單播放按鈕開始檢測，然後開始遊戲。</string>
+
+    <string name="message_tutorial_2_step_20">恭喜！\n\n你現在知道如何跟蹤靜止或移動的單一目標，但還有很多東西要學！</string>
+
+
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_3">組合多個條件</string>
+    <string name="item_desc_tutorial_3">為您的事件創建和組合多個條件</string>
+    <string name="message_tutorial_3_game_instructions">只有在紅色按鈕可見時才點擊藍色按鈕</string>
+
+    <string name="message_tutorial_3_step_1">讓我們再次改變遊戲規則。藍色目標停止移動，但現在只有在紅色目標可見時才能點擊。\n\n首先，開始遊戲並檢查是否能自己贏得比賽。</string>
+
+    <string name="message_tutorial_3_step_3">再次嘗試手動贏得比賽似乎不可能，所以讓我們使用Klick\'r。\n\n你之前教程的場景已經被保留並加載到這個教程中，但是為了贏得這場新比賽，我們需要更改一些參數。\n\n點擊場景配置圖標開始更新你的新場景。</string>
+
+    <string name="message_tutorial_3_step_4">我們仍然想要點擊藍色目標，但只有在紅色目標可見時才能點擊。\n
+所以我們需要在事件中為這個紅色目標添加一個條件。\n\n點擊你之前創建的事件以進行編輯。</string>
+
+    <string name="message_tutorial_3_step_5">我們將結合多個條件，所以我們需要檢查此事件的條件運算符。\n\n條件運算符表示如何一起解釋多個條件。\n
+『單一』表示此事件的條件中只需滿足一個條件即可執行操作。\n\n『所有』表示此事件的所有條件必須滿足才能執行操作。\n\n由於我們要檢測兩個事物是否同時顯示，所以我們將使用『All』</string>
+
+    <string name="message_tutorial_3_step_6">現在我們需要更新我們的條件。\n\n單擊條件欄位以顯示 條件列表。</string>
+
+    <string name="message_tutorial_3_step_7">檢測藍色目標的先前條件仍然正確，但我們需要一個新的條件來檢測紅色目標。\n\n點擊創建條件按鈕以為其創建一個新條件。</string>
+
+    <string name="message_tutorial_3_step_8">就像藍色目標一樣，開始遊戲以顯示紅色目標。一旦它可見，就拍攝一張螢幕截圖！</string>
+    <string name="message_tutorial_3_step_secondary_8">使用浮動菜單中的截屏按鈕來拍攝截圖。</string>
+
+    <string name="message_tutorial_3_step_9">你的截圖是否包含紅色目標？您可以裁剪它，以便僅獲得檢測所需的紅色目標部分。</string>
+    <string name="message_tutorial_3_step_secondary_9">如果你的截圖不包含紅色目標，你可以按此按鈕拍攝新的截圖。</string>
+
+    <string name="message_tutorial_3_step_10">你的條件圖像現在已記錄！由於紅色目標不會移動，我們可以保留默認配置。\n單擊保存 按鈕進行註冊，然後返回條件列表。</string>
+
+    <string name="message_tutorial_3_step_11">關閉條件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_3_step_12">現在我們有了兩個條件，一個用於每個目標，只有在兩者都檢測到時，操作才會執行。\n\n單擊 「操作 」欄位，顯示事件的操作列表。</string>
+
+    <string name="message_tutorial_3_step_13">該操作已設置為點擊藍色角色，只有在藍色和紅色角色同時可見時才會執行。\n\n這正是我們贏得比賽所需的行為，因此無需編輯我們的點擊操作。\n\n關閉操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_3_step_14">點擊保存按鈕，保存您的活動</string>
+
+    <string name="message_tutorial_3_step_15">所有更改都必須保存到你的場景中以進行註冊。\n\n點擊保存按鈕以保存你的更改。</string>
+
+    <string name="message_tutorial_3_step_16">我們準備好贏得這場比賽了！\n\n點擊開始按鈕以開始檢測，然後開始遊戲。</string>
+
+    <string name="message_tutorial_3_step_17">恭喜！\n\n你現在知道如何為事件組合多個條件，但還有很多東西要學習！</string>
+
+    <!-- Two still targets press when only one is visible tutorial -->
+    <string name="item_title_tutorial_4">負條件</string>
+    <string name="item_desc_tutorial_4">在執行操作之前驗證某物是否未顯示</string>
+
+    <!-- Two moving targets press in order tutorial -->
+    <string name="item_title_tutorial_5">多事件方案</string>
+    <string name="item_desc_tutorial_5">學習如何組合多個事件以實現複雜的自動化</string>
+</resources>

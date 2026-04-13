@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="header_starting_detection">正在啟動偵測</string>
+    <string name="message_billing">本應用程式為開放原始碼專案，由志工於業餘時間維護。\n\n請觀看廣告以支持開發，或購買 Klick\'r 專業版以永久移除廣告。</string>
+    <string name="message_billing_success">感謝您購買\nKlick\'r 專業版！</string>
+    <string name="button_text_watch_ad_loading">正在載入廣告</string>
+    <string name="button_text_watch_ad">觀看廣告</string>
+    <string name="button_text_watch_ad_error">廣告錯誤</string>
+    <string name="button_text_buy_pro_loading">購買專業版</string>
+    <string name="button_text_buy_pro">購買專業版（%1$s）</string>
+    <string name="button_text_understood">瞭解</string>
+    <string name="button_text_buy_pro_error">無法購買</string>
+    <string name="button_text_visit_github">前往 GitHub</string>
+    <string name="button_text_trial">試用 %1$d 分鐘</string>
+    <string name="button_text_buy_pro_pending">交易處理中</string>
+</resources>

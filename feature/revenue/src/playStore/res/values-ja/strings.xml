@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="header_starting_detection">検出を開始しています</string>
+    <string name="message_billing">本アプリはオープンソースであり、有志が空き時間で開発しています。\n\n広告の視聴で開発を支援いただくか、Klick\'r Pro をご購入のうえ、広告を恒久的に非表示にできます。</string>
+    <string name="message_billing_success">Klick\'r Pro を\nご購入いただきありがとうございます。</string>
+    <string name="button_text_watch_ad_loading">広告を読み込み中</string>
+    <string name="button_text_watch_ad">広告を見る</string>
+    <string name="button_text_watch_ad_error">広告エラー</string>
+    <string name="button_text_buy_pro_loading">Pro を購入</string>
+    <string name="button_text_buy_pro">Pro を購入（%1$s）</string>
+    <string name="button_text_understood">了解しました</string>
+    <string name="button_text_buy_pro_error">購入できません</string>
+    <string name="button_text_visit_github">GitHub を開く</string>
+    <string name="button_text_trial">%1$d 分間のトライアル</string>
+    <string name="button_text_buy_pro_pending">取引処理中</string>
+</resources>

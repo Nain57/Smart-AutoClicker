@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_overlay_title_debug_report">调试报告</string>
+    <string name="menu_item_debug_report_overview">概览</string>
+    <string name="menu_item_debug_report_timeline">时间线</string>
+    <string name="item_title_report_total_duration">总时长</string>
+    <string name="item_title_report_frame_processed">已处理帧数</string>
+    <string name="item_title_report_avg_image_processing_duration">平均处理耗时</string>
+    <string name="item_title_report_image_event_fulfilled">已满足的图像事件</string>
+    <string name="item_title_report_trigger_event_fulfilled">已满足的触发事件</string>
+    <string name="title_event_occurrence_empty">无事件</string>
+    <string name="desc_event_occurrence_empty">上次场景会话期间未执行任何事件。</string>
+    <string name="item_event_occurrence_frame_number">帧 #%1$d</string>
+    <string name="item_event_occurrence_trigger">触发</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">已满足：%1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">已处理 %1$d 个条件</string>
+    <string name="menu_item_debug_event_occurrence_conditions">条件</string>
+    <string name="menu_item_debug_event_occurrence_counters">计数器</string>
+    <string name="menu_item_debug_event_occurrence_events_state">状态</string>
+    <string name="item_event_occurrence_details_header_title">条件运算符</string>
+    <string name="item_event_occurrence_details_image_confidence">置信度：%1$.2f／%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">是否应被检测到？</string>
+    <string name="item_event_occurrence_details_image_fulfilled">是否已满足？</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">已接收广播：%1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">计时器已到：%1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">计数器已到：%1$s %2$s %3$s</string>
+    <string name="title_event_occurrence_counters_empty">无计数器</string>
+    <string name="desc_event_occurrence_counters_empty">本场景未定义计数器。</string>
+    <string name="item_event_state_header_image">图像事件</string>
+    <string name="item_event_state_header_trigger">触发事件</string>
+    <string name="overlay_title_results">结果</string>
+    <string name="overlay_title_threshold">阈值</string>
+</resources>

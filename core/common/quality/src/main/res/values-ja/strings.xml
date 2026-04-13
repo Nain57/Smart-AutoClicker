@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_issue">トラブルシューティング</string>
+    <string name="message_accessibility_issues">ユーザー補助サービスの権限が複数回解除されているようです。ご自身で変更していない場合は、端末が解除した可能性があります。\n\n一部のメーカーはバックグラウンド動作の標準仕様に従わない場合があり、機種により追加設定が必要になることがあります。\n\n当該問題の詳細と権限の安定化については、次のウェブサイトをご参照ください。</string>
+    <string name="button_open_dont_kill_my_app">アプリの強制終了を防ぐ</string>
+</resources>
