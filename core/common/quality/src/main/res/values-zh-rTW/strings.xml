@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_issue">疑難排解</string>
+    <string name="message_accessibility_issues">無障礙服務權限似乎已被多次撤銷。若非由您本人變更，則可能為系統所致。\n\n部分裝置製造商未遵循背景應用程式的標準行為，視品牌不同，可能須進行額外設定。\n\n請參閱下列網站，以了解該問題及改善權限穩定性的方式。</string>
+    <string name="button_open_dont_kill_my_app">別殺我的應用程式</string>
+</resources>

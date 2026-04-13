@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_issue">疑难解答</string>
+    <string name="message_accessibility_issues">无障碍服务权限似乎已被多次撤销。若并非由您本人更改，则可能是系统所致。\n\n部分设备制造商未遵循后台应用的标准行为，视品牌不同，可能需进行额外设置。\n\n请参阅下列网站，以了解该问题及改善权限稳定性的方法。</string>
+    <string name="button_open_dont_kill_my_app">别杀我的应用</string>
+</resources>

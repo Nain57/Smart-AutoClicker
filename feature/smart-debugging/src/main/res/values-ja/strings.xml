@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_overlay_title_debug_report">デバッグ レポート</string>
+    <string name="menu_item_debug_report_overview">概要</string>
+    <string name="menu_item_debug_report_timeline">タイムライン</string>
+    <string name="item_title_report_total_duration">合計時間</string>
+    <string name="item_title_report_frame_processed">処理したフレーム数</string>
+    <string name="item_title_report_avg_image_processing_duration">平均処理時間</string>
+    <string name="item_title_report_image_event_fulfilled">成立した画像イベント</string>
+    <string name="item_title_report_trigger_event_fulfilled">成立したトリガー イベント</string>
+    <string name="title_event_occurrence_empty">イベントなし</string>
+    <string name="desc_event_occurrence_empty">直前のシナリオ セッションではイベントは実行されませんでした。</string>
+    <string name="item_event_occurrence_frame_number">フレーム #%1$d</string>
+    <string name="item_event_occurrence_trigger">トリガー</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">成立：%1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">条件を %1$d 件処理</string>
+    <string name="menu_item_debug_event_occurrence_conditions">条件</string>
+    <string name="menu_item_debug_event_occurrence_counters">カウンター</string>
+    <string name="menu_item_debug_event_occurrence_events_state">状態</string>
+    <string name="item_event_occurrence_details_header_title">条件の結合</string>
+    <string name="item_event_occurrence_details_image_confidence">信頼度：%1$.2f／%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">検出されるべきですか。</string>
+    <string name="item_event_occurrence_details_image_fulfilled">成立しましたか。</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">ブロードキャスト受信：%1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">タイマー到達：%1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">カウンター到達：%1$s %2$s %3$s</string>
+    <string name="title_event_occurrence_counters_empty">カウンターなし</string>
+    <string name="desc_event_occurrence_counters_empty">このシナリオにはカウンターが定義されていません。</string>
+    <string name="item_event_state_header_image">画像イベント</string>
+    <string name="item_event_state_header_trigger">トリガー イベント</string>
+    <string name="overlay_title_results">結果</string>
+    <string name="overlay_title_threshold">しきい値</string>
+</resources>

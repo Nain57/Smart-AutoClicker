@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label_start_scenario">Klick\'r を開始</string>
+    <string name="tile_label_stop_scenario">Klick\'r を停止</string>
+    <string name="tile_subtext_unavailable">シナリオが定義されていません</string>
+</resources>

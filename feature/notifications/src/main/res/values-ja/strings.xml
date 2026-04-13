@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_title">シナリオ：%1$s</string>
+    <string name="notification_message">タップしてシナリオを変更します</string>
+    <string name="notification_button_play">再生</string>
+    <string name="notification_button_pause">一時停止</string>
+    <string name="notification_button_show">表示</string>
+    <string name="notification_button_hide">非表示</string>
+    <string name="notification_button_stop">停止</string>
+    <string name="notification_button_config">設定</string>
+</resources>
