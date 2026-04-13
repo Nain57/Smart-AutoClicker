@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_accessibility">ユーザー補助サービス</string>
+    <string name="dialog_title_permission_notification">通知</string>
+    <string name="dialog_title_permission_mandatory_denied">権限が拒否されました</string>
+    <string name="dialog_title_permission_overlay">オーバーレイ</string>
+
+    <string name="message_permission_desc_overlay">オーバーレイ権限は、自動化したいアプリの上に Klick\'r の画面を表示し、他のアプリを終了せずにシナリオを設定するために必要です。</string>
+    <string name="message_permission_desc_accessibility">ユーザー補助サービスにより、画面上でジェスチャを実行できます。自動化シナリオのタップおよびスワイプには本権限が必要です。\n\nKlick\'r はデータを収集しません。\n\n下のボタンからユーザー補助サービスを有効にしてください。</string>
+    <string name="message_permission_desc_notification">任意：アプリ実行中に通知を表示し、シナリオ選択画面へ戻りやすくします。</string>
+    <string name="message_permission_mandatory_denied">本権限は Klick\'r に必須です。付与されない場合、正常に動作しません。</string>
+
+    <string name="button_request_permission">権限をリクエスト</string>
+    <string name="button_deny">拒否</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_overlay_title_dumb_action_type">操作类型</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">场景</string>
+    <string name="menu_item_title_dumb_actions">操作</string>
+    <string name="menu_item_title_dumb_config">配置</string>
+    <string name="item_desc_dumb_action_duration">持续 %1$s</string>
+    <string name="item_desc_dumb_click">在屏幕上某处点击</string>
+    <string name="item_desc_dumb_click_details">于 [%2$d, %3$d] 持续 %1$s</string>
+    <string name="item_desc_dumb_click_on_position">于 %1$d, %2$d 点击</string>
+    <string name="item_desc_dumb_pause">暂停执行</string>
+    <string name="item_desc_dumb_pause_details">持续 %1$s</string>
+    <string name="item_desc_dumb_repeat_count">重复 %1$d 次</string>
+    <string name="item_desc_dumb_repeat_infinite">无限重复</string>
+    <string name="item_desc_dumb_swipe">从屏幕上一点滑动至另一点</string>
+    <string name="item_desc_dumb_swipe_details">自 [%2$d, %3$d] 至 [%4$d, %5$d]，持续 %1$s</string>
+    <string name="item_desc_dumb_swipe_positions">自 %1$d, %2$d 滑动至 %3$d, %4$d</string>
+    <string name="item_title_dumb_click">点击</string>
+    <string name="item_title_dumb_pause">等待</string>
+    <string name="item_title_dumb_swipe">滑动</string>
+    <string name="item_title_no_dumb_actions">无操作</string>
+    <string name="item_title_dumb_action_copy">复制</string>
+    <string name="item_desc_dumb_action_copy">从任意场景复制已有操作</string>
+    <string name="message_empty_dumb_action_list">尚未创建操作！</string>
+    <string name="message_empty_secondary_dumb_action_list">至少需要一个操作方可运行场景</string>
+    <string name="message_dumb_brief_empty_action_list">至少需要一个操作方可执行场景</string>
+    <string name="list_header_copy_dumb_action_this">本场景的操作</string>
+    <string name="list_header_copy_dumb_action_all">所有场景的操作</string>
+    <string name="search_view_hint_dumb_action_copy">按操作名称搜索</string>
+    <string name="input_field_label_maximum_duration">最长持续时间（分钟）</string>
+    <string name="input_field_label_repeat_count">重复次数</string>
+    <string name="input_field_label_repeat_delay">重复间隔（毫秒）</string>
+    <string name="content_desc_add_action">向场景添加新操作</string>
+    <string name="content_desc_show_actions">显示或隐藏已创建的操作</string>
+    <string name="content_desc_open_action_list">打开操作列表</string>
+</resources>
