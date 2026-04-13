@@ -73,7 +73,7 @@ class ScenarioCreationViewModel @Inject constructor(
                 smartItem = ScenarioTypeItem.Smart,
                 selectedItem = selectedType,
                 showPaidLimitationWarning =
-                    billingState == UserBillingState.PURCHASED && selectedType == ScenarioTypeSelection.SMART
+                    billingState == UserBillingState.AD_REQUESTED && selectedType == ScenarioTypeSelection.SMART
             )
         }
 
