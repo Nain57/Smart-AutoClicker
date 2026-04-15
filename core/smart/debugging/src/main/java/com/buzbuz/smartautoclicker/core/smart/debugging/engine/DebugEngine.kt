@@ -143,7 +143,6 @@ internal class DebugEngine @Inject constructor(
                 DebugLiveImageEventOccurrence(
                     event = event,
                     imageConditionsResults = results.map { result ->
-                        println("TOTO: results=$results")
                         DebugLiveImageConditionResult(
                             condition = result.condition,
                             isFulfilled = result.isFulfilled,
