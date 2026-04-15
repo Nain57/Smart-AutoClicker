@@ -101,9 +101,7 @@ internal class ScenarioProcessor(
 
         // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
-            processTriggerEvents(processingState.getEnabledTriggerEvents()) { triggerEvent, results ->
-                actionExecutor.executeActions(triggerEvent, results)
-            }
+            processTriggerEvents(processingState.getEnabledTriggerEvents())
         }
 
         // Reset any values that needs to be reset for each iteration
@@ -113,9 +111,7 @@ internal class ScenarioProcessor(
         // Handle the image detection
         progressListener.onImageEventsProcessingStarted()
         if (!processingState.areAllImageEventsDisabled()) {
-            processImageEvents(screenFrame, processingState.getEnabledImageEvents()) { imageEvent, results ->
-                actionExecutor.executeActions(imageEvent, results)
-            }
+            processImageEvents(screenFrame, processingState.getEnabledImageEvents())
         }
         progressListener.onImageEventsProcessingCompleted()
 
@@ -125,10 +121,7 @@ internal class ScenarioProcessor(
         return
     }
 
-    private suspend fun processTriggerEvents(
-        events: Collection<TriggerEvent>,
-        onFulfilled: suspend (TriggerEvent, ConditionsResults) -> Unit,
-    ) {
+    private suspend fun processTriggerEvents(events: Collection<TriggerEvent>) {
         for (triggerEvent in events) {
             // Enabled state of the event might have changed during the loop
             if (!processingState.isEventEnabled(triggerEvent.id.databaseId)) continue
@@ -136,27 +129,24 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
+            progressListener.onTriggerEventProcessingStarted()
             val results = conditionsVerifier.verifyConditions(
                 operator = triggerEvent.conditionOperator,
                 conditions = triggerEvent.conditions,
             )
 
             if (results.fulfilled  == true) {
+                actionExecutor.executeActions(triggerEvent, results)
+
                 progressListener.onTriggerEventFulfilled(
                     event = triggerEvent,
                     results = results.getAllTriggerConditionsResults(),
                 )
-
-                onFulfilled(triggerEvent, results)
             }
         }
     }
 
-    private suspend fun processImageEvents(
-        screenFrame: Bitmap,
-        events: Collection<ImageEvent>,
-        onFulfilled: suspend (ImageEvent, ConditionsResults) -> Unit,
-    ) {
+    private suspend fun processImageEvents(screenFrame: Bitmap, events: Collection<ImageEvent>) {
         // Set the current screen image
         imageDetector.setScreenBitmap(screenFrame, processingTag)
 
@@ -173,7 +163,7 @@ internal class ScenarioProcessor(
                 )
 
                 if (results.fulfilled == true) {
-                    onFulfilled(imageEvent, results)
+                    actionExecutor.executeActions(imageEvent, results)
 
                     progressListener.onImageEventFulfilled(
                         event = imageEvent,
