@@ -27,6 +27,7 @@ sealed interface DebugReportTimelineUiState {
     data object Empty: DebugReportTimelineUiState
     data class Available(
         val eventsOccurrences: List<DebugReportTimelineEventOccurrenceItem>,
+        val durationMs: Long,
     ) : DebugReportTimelineUiState
 
 }

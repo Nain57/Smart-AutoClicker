@@ -39,6 +39,12 @@
     <string name="item_event_occurrence_several_condition_processed">处理了 %1$d 个条件</string>
 
 
+    <!-- Debug Report Timeline filters dialog ====================================================================== -->
+
+    <string name="dialog_overlay_title_timeline_filters">Timeline filters</string>
+    <string name="field_debug_filter_duration_title">Time</string>
+
+
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->
 
     <string name="menu_item_debug_event_occurrence_conditions">条件</string>

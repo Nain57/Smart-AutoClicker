@@ -40,12 +40,15 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingReposito
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.DebugReportTimelineFilter
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.shouldFilter
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.findWithId
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -53,6 +56,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 
@@ -78,40 +82,56 @@ class DebugReportTimelineViewModel @Inject constructor(
         scenario?.id?.databaseId?.let { dbId -> smartRepository.getTriggerEventsFlow(dbId) } ?: flowOf(null)
     }
 
+    /** List of filters applied to the timeline. empty by default. */
+    private val filters: MutableStateFlow<List<DebugReportTimelineFilter>> = MutableStateFlow(emptyList())
+
     /** The occurrences of events while the scenario was running. Null if not found or no reports. */
     private val eventsOccurrences: Flow<List<DebugReportEventOccurrence>?> =
         debuggingRepository.getLastReportEventsOccurrences()
 
 
     val uiState: StateFlow<DebugReportTimelineUiState> =
-        combine(eventsOccurrences, imageEvents, triggerEvents) { occurrences, imgEvts, trigEvts ->
-            occurrences.toUiState(context, imgEvts, trigEvts)
+        combine(eventsOccurrences, imageEvents, triggerEvents, filters) { occurrences, imgEvts, trigEvts, userFilters ->
+            occurrences.toUiState(context, imgEvts, trigEvts, userFilters)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DebugReportTimelineUiState.Loading,
         )
 
+    fun setFilters(timelineFilters: List<DebugReportTimelineFilter>) {
+        filters.update { timelineFilters }
+    }
+
+    fun getFilters(): List<DebugReportTimelineFilter> = filters.value
 
     private fun List<DebugReportEventOccurrence>?.toUiState(
         context: Context,
         imgEvents: List<ImageEvent>?,
         trigEvents: List<TriggerEvent>?,
+        filters: List<DebugReportTimelineFilter>,
     ): DebugReportTimelineUiState {
         if (this == null || imgEvents == null || trigEvents == null) return DebugReportTimelineUiState.NotAvailable
 
-        val items = toUiStateItems(context, imgEvents, trigEvents)
+        val items = toUiStateItems(context, imgEvents, trigEvents, filters)
 
-        return if (items.isEmpty()) DebugReportTimelineUiState.Empty
-        else DebugReportTimelineUiState.Available(items)
+        return if (isEmpty()) DebugReportTimelineUiState.Empty
+        else DebugReportTimelineUiState.Available(
+            eventsOccurrences = items,
+            durationMs = last().relativeTimestampMs,
+        )
     }
 
     private fun List<DebugReportEventOccurrence>.toUiStateItems(
         context: Context,
         imgEvents: List<ImageEvent>,
         trigEvents: List<TriggerEvent>,
+        filters: List<DebugReportTimelineFilter>,
     ): List<DebugReportTimelineEventOccurrenceItem> =
         mapIndexedNotNull { index, occurrence ->
+            if (filters.shouldFilter(occurrence))
+                return@mapIndexedNotNull null
+
             val event = when (occurrence) {
                 is DebugReportEventOccurrence.ImageEvent -> imgEvents.findWithId(occurrence.eventId)
                 is DebugReportEventOccurrence.TriggerEvent -> trigEvents.findWithId(occurrence.eventId)
