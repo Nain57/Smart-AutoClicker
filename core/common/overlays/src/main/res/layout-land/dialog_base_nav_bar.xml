@@ -55,8 +55,8 @@
             app:layout_constraintStart_toEndOf="@id/nav_bar"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <include layout="@layout/include_create_copy_buttons"
-            android:id="@+id/create_copy_buttons"
+        <include layout="@layout/include_floating_action_buttons"
+            android:id="@+id/floating_action_buttons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

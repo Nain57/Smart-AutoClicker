@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseNa
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.ViewBottomNavBarBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeCreateCopyButtonsBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogNavigationTopBarBinding
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFloatingActionButtonsBinding
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
@@ -44,7 +44,7 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     private lateinit var baseViewBinding: DialogBaseNavBarBinding
     protected lateinit var navBarView: NavigationBarView
-    lateinit var createCopyButtons: IncludeCreateCopyButtonsBinding
+    lateinit var floatingActionButtons: IncludeFloatingActionButtonsBinding
     lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
     abstract fun inflateMenu(navBarView: NavigationBarView)
@@ -71,12 +71,12 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         // is sticky to the dialog start.
         if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             navBarView = ViewBottomNavBarBinding.inflate(LayoutInflater.from(context)).root
-            createCopyButtons = IncludeCreateCopyButtonsBinding.inflate(LayoutInflater.from(context))
+            floatingActionButtons = IncludeFloatingActionButtonsBinding.inflate(LayoutInflater.from(context))
         } else {
             navBarView = baseViewBinding.navBar
                 ?: throw IllegalStateException("Landscape layout must contains a NavigationRailView")
-            createCopyButtons = baseViewBinding.createCopyButtons
-                ?: throw IllegalStateException("Landscape layout must contains a create copy buttons")
+            floatingActionButtons = baseViewBinding.floatingActionButtons
+                ?: throw IllegalStateException("Landscape layout must contains a floating action buttons layout")
         }
 
         // Generic setup of the navigation
@@ -142,7 +142,7 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
             // Add create/copy floating action buttons.
             addView(
-                createCopyButtons.root,
+                floatingActionButtons.root,
                 CoordinatorLayout.LayoutParams(
                     CoordinatorLayout.LayoutParams.WRAP_CONTENT,
                     CoordinatorLayout.LayoutParams.WRAP_CONTENT,
@@ -177,8 +177,8 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         content.start()
         onContentViewChanged(itemId)
 
-        createCopyButtons.root.visibility =
-            if (content.createCopyButtonsAreAvailable()) View.VISIBLE
+        floatingActionButtons.root.visibility =
+            if (content.floatingActionButtonsAreAvailable()) View.VISIBLE
             else View.GONE
 
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) content.resume()
