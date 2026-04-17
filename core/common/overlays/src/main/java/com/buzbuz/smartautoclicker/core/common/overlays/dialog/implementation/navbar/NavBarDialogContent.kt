@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.n
 import android.app.Application
 import android.content.Context
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Lifecycle
@@ -34,6 +35,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponentBuild
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.common.overlays.di.createHiltViewModelFactory
+import com.buzbuz.smartautoclicker.core.ui.R
 import dagger.hilt.EntryPoints
 
 abstract class NavBarDialogContent(
@@ -103,10 +105,16 @@ abstract class NavBarDialogContent(
 
         rootContainer.addView(root)
 
-        if (createCopyButtonsAreAvailable()) {
-            dialogController.createCopyButtons.apply {
-                buttonNew.setOnClickListener { onCreateButtonClicked() }
-                buttonCopy.setOnClickListener { onCopyButtonClicked() }
+        if (floatingActionButtonsAreAvailable()) {
+            dialogController.floatingActionButtons.apply {
+                primary.apply {
+                    setOnClickListener { onPrimaryFloatingActionButtonClicked() }
+                    setImageResource(primaryFloatingActionButtonIcon())
+                }
+                secondary.apply {
+                    setOnClickListener { onSecondaryFloatingActionButtonClicked() }
+                    setImageResource(secondaryFloatingActionButtonIcon())
+                }
             }
         }
 
@@ -169,11 +177,17 @@ abstract class NavBarDialogContent(
 
     open fun onDialogButtonClicked(buttonType: DialogNavigationButton) = Unit
 
-    protected open fun onCreateButtonClicked() = Unit
+    protected open fun onPrimaryFloatingActionButtonClicked() = Unit
 
-    protected open fun onCopyButtonClicked() = Unit
+    protected open fun onSecondaryFloatingActionButtonClicked() = Unit
 
-    open fun createCopyButtonsAreAvailable(): Boolean = false
+    open fun floatingActionButtonsAreAvailable(): Boolean = false
+
+    @DrawableRes
+    protected open fun primaryFloatingActionButtonIcon(): Int = R.drawable.ic_add
+
+    @DrawableRes
+    protected open fun secondaryFloatingActionButtonIcon(): Int = R.drawable.ic_copy
 }
 
 inline fun <reified VM : ViewModel, EP : Any> NavBarDialogContent.viewModels(

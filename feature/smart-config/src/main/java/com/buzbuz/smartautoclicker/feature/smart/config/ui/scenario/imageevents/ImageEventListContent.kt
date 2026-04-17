@@ -57,7 +57,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     /** Adapter for the list of events. */
     private lateinit var eventAdapter: ImageEventListAdapter
 
-    override fun createCopyButtonsAreAvailable(): Boolean = true
+    override fun floatingActionButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         eventAdapter = ImageEventListAdapter(
@@ -95,13 +95,13 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
         viewModel.stopViewMonitoring()
     }
 
-    override fun onCreateButtonClicked() {
+    override fun onPrimaryFloatingActionButtonClicked() {
         debounceUserInteraction {
             showEventConfigDialog(viewModel.createNewEvent(context))
         }
     }
 
-    override fun onCopyButtonClicked() {
+    override fun onSecondaryFloatingActionButtonClicked() {
         debounceUserInteraction {
             showEventCopyDialog()
         }
@@ -126,7 +126,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun updateCopyButtonVisibility(isVisible: Boolean) {
-        dialogController.createCopyButtons.buttonCopy.apply {
+        dialogController.floatingActionButtons.secondary.apply {
             if (isVisible) show() else hide()
         }
     }

@@ -25,7 +25,7 @@
     android:translationZ="100dp">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_copy"
+        android:id="@+id/secondary"
         style="@style/AppTheme.Widget.FabSecondary"
         app:srcCompat="@drawable/ic_copy"
         android:contentDescription="@string/content_desc_copy_button"
@@ -33,7 +33,7 @@
         tools:visibility="visible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_new"
+        android:id="@+id/primary"
         style="@style/AppTheme.Widget.Fab"
         android:layout_marginBottom="@dimen/dialog_create_copy_buttons_bottom_margin"
         app:srcCompat="@drawable/ic_add"

@@ -61,7 +61,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     /** TouchHelper applied to [dumbActionsAdapter] allowing to drag and drop the items. */
     private val itemTouchHelper = ItemTouchHelper(DumbActionReorderTouchHelper())
 
-    override fun createCopyButtonsAreAvailable(): Boolean = true
+    override fun floatingActionButtonsAreAvailable(): Boolean = true
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         dumbActionsAdapter = DumbActionListAdapter(
@@ -110,7 +110,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    override fun onCreateButtonClicked() {
+    override fun onPrimaryFloatingActionButtonClicked() {
         debounceUserInteraction {
             dialogController.overlayManager.startDumbActionCreationUiFlow(
                 context = context,
@@ -120,7 +120,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    override fun onCopyButtonClicked() {
+    override fun onSecondaryFloatingActionButtonClicked() {
         debounceUserInteraction {
 
         }
@@ -142,7 +142,7 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun updateCopyButtonState(enabled: Boolean) {
-        dialogController.createCopyButtons.buttonCopy.apply {
+        dialogController.floatingActionButtons.secondary.apply {
             if (enabled) show() else hide()
         }
     }
