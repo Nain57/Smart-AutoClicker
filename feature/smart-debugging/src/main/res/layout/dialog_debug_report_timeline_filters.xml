@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.Dialog.BackgroundLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_dialog_navigation_top_bar"
+        android:id="@+id/layout_top_bar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_horizontal_default">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/detection_quality_card"
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_large">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/card_title_time"
+                        style="@style/AppTheme.Field.TitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="@string/field_debug_filter_duration_title" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_start_time"
+                        style="@style/AppTheme.Widget.Card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                        android:layout_marginStart="@dimen/margin_horizontal_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/card_end_time"
+                        app:layout_constraintTop_toBottomOf="@id/card_title_time"
+                        app:layout_constraintBottom_toTopOf="@id/range_slider_time"
+                        app:layout_constraintHorizontal_chainStyle="spread_inside"
+                        app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/text_start_time"
+                            style="@style/AppTheme.TextAppearance.ListItemTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                            android:layout_marginVertical="@dimen/margin_vertical_small"
+                            android:layout_gravity="center"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            tools:text="00:00:00.000"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_end_time"
+                        style="@style/AppTheme.Widget.Card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_horizontal_default"
+                        app:layout_constraintStart_toEndOf="@id/card_start_time"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_title_time"
+                        app:layout_constraintBottom_toTopOf="@id/range_slider_time"
+                        app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/text_end_time"
+                            style="@style/AppTheme.TextAppearance.ListItemTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                            android:layout_marginVertical="@dimen/margin_vertical_small"
+                            android:layout_gravity="center"
+                            android:textColor="?attr/colorOnSecondaryContainer"
+                            tools:text="2:01:28.125"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.slider.RangeSlider
+                        android:id="@+id/range_slider_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_start_time"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:trackColor="?attr/colorSecondaryContainer"
+                        app:thumbHeight="32dp"
+                        app:trackHeight="12dp"
+                        app:labelBehavior="gone"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

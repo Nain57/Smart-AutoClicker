@@ -47,14 +47,10 @@ internal fun Long.formatDebugTimelineTimestamp(): String {
     val duration = milliseconds
     var value = ""
 
-    if (duration.inWholeHours > 0) {
-        value += "${duration.inWholeHours}h "
-    }
-    if (duration.inWholeMinutes % 60 > 0) {
-        value += "${duration.inWholeMinutes % 60}m "
-    }
-
-    value += "${duration.inWholeSeconds % 60}s "
+    value += "${duration.inWholeHours}:".padStart(3, '0')
+    value += "${duration.inWholeMinutes % 60}:".padStart(3, '0')
+    value += "${duration.inWholeSeconds % 60}.".padStart(3, '0')
+    value += "${duration.inWholeMilliseconds % 1000}".padStart(3, '0')
 
     return value.trim()
 }
