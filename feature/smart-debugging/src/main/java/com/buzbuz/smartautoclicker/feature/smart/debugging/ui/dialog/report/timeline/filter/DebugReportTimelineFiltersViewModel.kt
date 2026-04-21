@@ -16,28 +16,53 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-class DebugReportTimelineFiltersViewModel  @Inject constructor() : ViewModel() {
+class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
 
     private val _timeUiState: MutableStateFlow<DebugReportTimeFilterUiState?> = MutableStateFlow(null)
     val timeUiState: StateFlow<DebugReportTimeFilterUiState?> = _timeUiState
 
-    fun setupUserValues(reportDurationMs: Long, filters: List<DebugReportTimelineFilter>) {
+    private val _imageEventsUiState: MutableStateFlow<DebugReportImageEventFilterUiState?> = MutableStateFlow(null)
+    val imageEventsUiState: StateFlow<DebugReportImageEventFilterUiState?> = _imageEventsUiState
+
+    private val _triggerEventsUiState: MutableStateFlow<DebugReportTriggerEventFilterUiState?> = MutableStateFlow(null)
+    val triggerEventsUiState: StateFlow<DebugReportTriggerEventFilterUiState?> = _triggerEventsUiState
+
+
+    fun setupUserValues(context: Context, reportDurationMs: Long, filters: List<DebugReportTimelineFilter>) {
         _timeUiState.update {
             buildTimeFilterUiState(
                 durationMs = reportDurationMs,
                 userFilter = filters.find { it is DebugReportTimelineFilter.Time } as? DebugReportTimelineFilter.Time,
             )
         }
+
+        _imageEventsUiState.update {
+            buildImageEventsFilterUiState(
+                context = context,
+                userFilter = filters.find { it is DebugReportTimelineFilter.Events.Image }
+                        as? DebugReportTimelineFilter.Events.Image,
+            )
+        }
+
+        _triggerEventsUiState.update {
+            buildTriggerEventsFilterUiState(
+                context = context,
+                userFilter = filters.find { it is DebugReportTimelineFilter.Events.Trigger }
+                        as? DebugReportTimelineFilter.Events.Trigger,
+            )
+        }
     }
 
-    fun setUserLowerBound(lowerBoundMs: Long) {
+    fun setUserTimeLowerBound(lowerBoundMs: Long) {
         val value = lowerBoundMs.coerceIn(0, _timeUiState.value?.upperValueMs ?: 0)
         _timeUiState.update { previous ->
             previous?.copy(
@@ -47,7 +72,7 @@ class DebugReportTimelineFiltersViewModel  @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setUserUpperBound(upperBoundMs: Long) {
+    fun setUserTimeUpperBound(upperBoundMs: Long) {
         val value = _timeUiState.value?.let { filter ->
             upperBoundMs.coerceIn(filter.lowerValueMs + 1, filter.upperBoundMs)
         } ?: 0
@@ -60,12 +85,76 @@ class DebugReportTimelineFiltersViewModel  @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getFilters(): List<DebugReportTimelineFilter> =
+    fun toggleShowImageEvents() {
+        _imageEventsUiState.update { previous ->
+            previous?.copy(
+                checkboxState = !previous.checkboxState,
+                filteredIdsSelectorState = !previous.checkboxState,
+            )
+        }
+    }
+
+    fun toggleShowTriggerEvents() {
+        _triggerEventsUiState.update { previous ->
+            previous?.copy(
+                checkboxState = !previous.checkboxState,
+                filteredIdsSelectorState = !previous.checkboxState,
+            )
+        }
+    }
+
+    fun setEventsFilter(context: Context, filter: DebugReportTimelineFilter.Events) {
+        when (filter) {
+            is DebugReportTimelineFilter.Events.Image -> _imageEventsUiState.update { previous ->
+                previous?.copy(
+                    filteredIds = filter.filteredIds,
+                    filteredIdsText = filter.filteredIds.getDisplayText(context, previous.checkboxState),
+                )
+            }
+
+            is DebugReportTimelineFilter.Events.Trigger -> _triggerEventsUiState.update { previous ->
+                previous?.copy(
+                    filteredIds = filter.filteredIds,
+                    filteredIdsText = filter.filteredIds.getDisplayText(context, previous.checkboxState),
+                )
+            }
+        }
+    }
+
+    fun getImageEventsFilter(): DebugReportTimelineFilter.Events.Image {
+        val state = _imageEventsUiState.value ?: return DebugReportTimelineFilter.Events.Image()
+        return DebugReportTimelineFilter.Events.Image(
+            filterAll = !state.checkboxState,
+            filteredIds = state.filteredIds,
+        )
+    }
+
+    fun getTriggerEventsFilter(): DebugReportTimelineFilter.Events.Trigger {
+        val state = _triggerEventsUiState.value ?: return DebugReportTimelineFilter.Events.Trigger()
+        return DebugReportTimelineFilter.Events.Trigger(
+            filterAll = !state.checkboxState,
+            filteredIds = state.filteredIds,
+        )
+    }
+
+    fun getAllFilters(): List<DebugReportTimelineFilter> =
         buildList {
             _timeUiState.value?.let { state ->
                 add(DebugReportTimelineFilter.Time(
                     lowerBoundMs = state.lowerValueMs,
                     upperBoundMs = state.upperValueMs,
+                ))
+            }
+            _imageEventsUiState.value?.let { state ->
+                add(DebugReportTimelineFilter.Events.Image(
+                    filterAll = !state.checkboxState,
+                    filteredIds = state.filteredIds,
+                ))
+            }
+            _triggerEventsUiState.value?.let { state ->
+                add(DebugReportTimelineFilter.Events.Trigger(
+                    filterAll = !state.checkboxState,
+                    filteredIds = state.filteredIds,
                 ))
             }
         }
@@ -88,4 +177,42 @@ class DebugReportTimelineFiltersViewModel  @Inject constructor() : ViewModel() {
             upperValueText = upperValue.formatDebugTimelineTimestamp(),
         )
     }
+
+    private fun buildImageEventsFilterUiState(
+        context: Context,
+        userFilter: DebugReportTimelineFilter.Events.Image?,
+    ): DebugReportImageEventFilterUiState {
+
+        val showEvents = userFilter?.filterAll?.not() ?: true
+        val filteredIds = userFilter?.filteredIds ?: emptySet()
+        return DebugReportImageEventFilterUiState(
+            checkboxState = showEvents,
+            checkboxDescId = if (showEvents) 0 else 1,
+            filteredIdsSelectorState = showEvents,
+            filteredIds = filteredIds,
+            filteredIdsText = filteredIds.getDisplayText(context, showEvents),
+        )
+    }
+
+    private fun buildTriggerEventsFilterUiState(
+        context: Context,
+        userFilter: DebugReportTimelineFilter.Events.Trigger?,
+    ): DebugReportTriggerEventFilterUiState {
+
+        val showEvents = userFilter?.filterAll?.not() ?: true
+        val filteredIds = userFilter?.filteredIds ?: emptySet()
+        return DebugReportTriggerEventFilterUiState(
+            checkboxState = showEvents,
+            checkboxDescId = if (showEvents) 0 else 1,
+            filteredIdsSelectorState = showEvents,
+            filteredIds = filteredIds,
+            filteredIdsText = filteredIds.getDisplayText(context, showEvents),
+        )
+    }
 }
+
+private fun Set<Long>.getDisplayText(context: Context, enabled: Boolean): String =
+    when {
+        isEmpty() || !enabled -> context.getString(R.string.field_debug_filter_events_show_select_desc_none)
+        else -> context.getString(R.string.field_debug_filter_events_show_select_desc, size)
+    }
