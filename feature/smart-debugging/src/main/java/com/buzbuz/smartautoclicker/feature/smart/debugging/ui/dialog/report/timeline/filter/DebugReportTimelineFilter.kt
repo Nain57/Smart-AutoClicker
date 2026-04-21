@@ -18,16 +18,47 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.tim
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 
+/** Types of filters that can be applied to the debug timeline. */
 sealed interface DebugReportTimelineFilter {
 
+    /** @return true if the event should be filtered by this filter, false if not. */
     fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean
 
+    /**
+     * Filter on a range of time.
+     * @param lowerBoundMs The lower bound of the filter in milliseconds.
+     * @param upperBoundMs The upper bound of the filter in milliseconds.
+     */
     data class Time(val lowerBoundMs: Long, val upperBoundMs: Long) : DebugReportTimelineFilter {
         override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
             occurrence.relativeTimestampMs !in lowerBoundMs..upperBoundMs
     }
+
+    sealed interface Events : DebugReportTimelineFilter {
+
+        /** If true, filter all ImageEvents/TriggerEvents occurrences. */
+        val filterAll: Boolean
+        /** Only used if [filterAll] is false. Specify the ids of the Events to filters.*/
+        val filteredIds: Set<Long>
+
+        override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
+            filterAll || filteredIds.contains(occurrence.eventId)
+
+        fun copyFilter(filteredIds: Set<Long>): Events =
+            when (this) {
+                is Image -> copy(filteredIds = filteredIds)
+                is Trigger -> copy(filteredIds = filteredIds)
+            }
+
+        /** Filter on ImageEvents. */
+        data class Image(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events
+
+        /** Filter on TriggerEvents. */
+        data class Trigger(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events
+    }
 }
 
+/** Convenience method to filter an event occurrence on the timeline against a list of filters. */
 internal fun List<DebugReportTimelineFilter>.shouldFilter(occurrence: DebugReportEventOccurrence): Boolean {
     forEach { filter -> if (filter.shouldFilter(occurrence)) return true }
     return false

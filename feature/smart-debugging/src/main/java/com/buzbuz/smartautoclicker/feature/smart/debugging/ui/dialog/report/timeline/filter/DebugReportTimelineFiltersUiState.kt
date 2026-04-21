@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter
 
-/** Ui state for the time filter in the debug report timeline filter dialog.*/
+/** Ui state for the time filter in the debug report timeline filter dialog. */
 data class DebugReportTimeFilterUiState(
 
     /** The lower possible bound for the time filter. Usually 0. */
@@ -42,4 +42,37 @@ data class DebugReportTimeFilterUiState(
 
     /** Display value of [upperBoundMs]. */
     val upperValueText: String,
+)
+
+
+/** Ui state for the Image Events filter in the debug report timeline filter dialog. */
+data class DebugReportImageEventFilterUiState(
+
+    /** State of the checkbox telling if the image events should be shown or not. */
+    val checkboxState: Boolean,
+    /** Secondary text explaining current effect. */
+    val checkboxDescId: Int,
+
+    /** Tells if the event id selector is enabled or not. */
+    val filteredIdsSelectorState: Boolean,
+    /** The event ids to be filtered. */
+    val filteredIds: Set<Long>,
+    /** The text for the event ids to be filtered. */
+    val filteredIdsText: String,
+)
+
+/** Ui state for the Trigger Events filter in the debug report timeline filter dialog. */
+data class DebugReportTriggerEventFilterUiState(
+
+    /** State of the checkbox telling if the image events should be shown or not. */
+    val checkboxState: Boolean,
+    /** Secondary text explaining current effect. */
+    val checkboxDescId: Int,
+
+    /** Tells if the event id selector is enabled or not. */
+    val filteredIdsSelectorState: Boolean,
+    /** The event ids to be filtered. */
+    val filteredIds: Set<Long>,
+    /** The text for the event ids to be filtered. */
+    val filteredIdsText: String,
 )

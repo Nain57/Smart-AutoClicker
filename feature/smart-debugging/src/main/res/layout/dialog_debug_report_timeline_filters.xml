@@ -41,7 +41,6 @@
             android:layout_marginVertical="@dimen/margin_horizontal_default">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/detection_quality_card"
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,26 +52,16 @@
                     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                     android:layout_marginVertical="@dimen/margin_vertical_default">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/card_title_time"
-                        style="@style/AppTheme.Field.TitleText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:text="@string/field_debug_filter_duration_title" />
-
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_start_time"
                         style="@style/AppTheme.Widget.Card"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
                         android:layout_marginStart="@dimen/margin_horizontal_default"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_end_time"
-                        app:layout_constraintTop_toBottomOf="@id/card_title_time"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toTopOf="@id/range_slider_time"
                         app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:cardBackgroundColor="?attr/colorSecondaryContainer">
@@ -98,8 +87,8 @@
                         android:layout_marginEnd="@dimen/margin_horizontal_default"
                         app:layout_constraintStart_toEndOf="@id/card_start_time"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/card_title_time"
-                        app:layout_constraintBottom_toTopOf="@id/range_slider_time"
+                        app:layout_constraintTop_toTopOf="@id/card_start_time"
+                        app:layout_constraintBottom_toBottomOf="@id/card_start_time"
                         app:cardBackgroundColor="?attr/colorSecondaryContainer">
 
                         <com.google.android.material.textview.MaterialTextView
@@ -111,7 +100,7 @@
                             android:layout_marginVertical="@dimen/margin_vertical_small"
                             android:layout_gravity="center"
                             android:textColor="?attr/colorOnSecondaryContainer"
-                            tools:text="2:01:28.125"/>
+                            tools:text="02:01:28.125"/>
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -133,9 +122,73 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default">
+
+                    <include layout="@layout/include_field_switch"
+                        android:id="@+id/field_show_image_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
+                    <include layout="@layout/include_field_selector"
+                        android:id="@+id/field_select_image_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_small"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default">
+
+                    <include layout="@layout/include_field_switch"
+                        android:id="@+id/field_show_trigger_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+
+                    <include layout="@layout/include_field_selector"
+                        android:id="@+id/field_select_trigger_events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_small"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
-
-
 
     </androidx.core.widget.NestedScrollView>
 

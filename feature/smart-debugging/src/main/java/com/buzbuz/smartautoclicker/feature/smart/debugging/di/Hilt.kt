@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.deta
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.DebugCounterStateContentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.event.DebugEventsStateContentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.DebugReportTimelineFiltersViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.events.FilteredEventsSelectorViewModel
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -42,6 +43,7 @@ interface DebuggingViewModelsEntryPoint {
     fun debugReportOverviewViewModel(): DebugReportOverviewViewModel
     fun debugReportTimelineViewModel(): DebugReportTimelineViewModel
     fun debugReportTimelineFiltersViewModel(): DebugReportTimelineFiltersViewModel
+    fun filteredEventsSelectorViewModel(): FilteredEventsSelectorViewModel
     fun tryElementViewModel(): TryElementViewModel
     fun tryImageConditionViewModel(): TryImageConditionViewModel
 }
