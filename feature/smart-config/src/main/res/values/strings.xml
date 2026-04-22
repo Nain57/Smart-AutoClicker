@@ -137,7 +137,9 @@
 
 
     <string name="field_show_debug_view_title">Show debug view</string>
+    <string name="field_show_debug_view_desc">Display the events triggered while detecting.</string>
     <string name="item_title_debug_generate_report">Generate a report</string>
+    <string name="item_desc_debug_generate_report">Capture your scenario behaviour while detecting to create a report.</string>
 
     <string name="field_show_debug_report_title">Show report</string>
     <string name="field_show_debug_report_desc_available">Debug report is available</string>
