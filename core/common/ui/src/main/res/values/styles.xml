@@ -359,4 +359,13 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="AppTheme.RecyclerViewFastScroll">
+        <item name="android:scrollbars">none</item>
+        <item name="fastScrollEnabled">true</item>
+        <item name="fastScrollVerticalThumbDrawable">@drawable/scroll_thumb_drawable</item>
+        <item name="fastScrollVerticalTrackDrawable">@drawable/scroll_track_drawable</item>
+        <item name="fastScrollHorizontalThumbDrawable">@drawable/scroll_thumb_drawable</item>
+        <item name="fastScrollHorizontalTrackDrawable">@drawable/scroll_track_drawable</item>
+    </style>
+
 </resources>
