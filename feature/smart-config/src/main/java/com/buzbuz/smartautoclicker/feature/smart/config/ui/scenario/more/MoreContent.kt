@@ -61,13 +61,13 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
             fieldDebugOverlay.apply {
                 setTitle(context.getString(R.string.field_show_debug_view_title))
-                setupDescriptions(emptyList())
+                setDescription(context.getString(R.string.field_show_debug_view_desc))
                 setOnClickListener(viewModel::toggleIsDebugViewEnabled)
             }
 
             fieldDebugReport.apply {
                 setTitle(context.getString(R.string.item_title_debug_generate_report))
-                setupDescriptions(emptyList())
+                setDescription(context.getString(R.string.item_desc_debug_generate_report))
                 setOnClickListener(viewModel::toggleIsDebugReportEnabled)
             }
 

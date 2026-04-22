@@ -100,9 +100,11 @@
     <string name="field_condition_selection_title_and_operator">单击一个条件</string>
     <string name="field_condition_selection_title_or_operator">单击第一个检测到的条件</string>
     <string name="item_title_debug_generate_report">生成调试报告</string>
+    <string name="item_desc_debug_generate_report">Capture your scenario behaviour while detecting to create a report.</string>
     <string name="field_show_debug_report_desc_available">调试报告可用</string>
     <string name="field_show_debug_report_desc_not_available">没有可用的调试报告</string>
     <string name="field_show_debug_view_title">显示调试窗口</string>
+    <string name="field_show_debug_view_desc">Display the events triggered while detecting.</string>
     <string name="field_detection_type_desc_exact">在捕获位置进行检测</string>
     <string name="field_detection_type_desc_screen">全屏检测</string>
     <string name="item_intent_title">意图</string>
