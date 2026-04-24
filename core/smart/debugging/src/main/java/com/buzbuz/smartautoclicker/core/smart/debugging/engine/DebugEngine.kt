@@ -24,19 +24,21 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageConditionResult
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterValuesRecorder
-import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageEventOccurrenceRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventOccurrencesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventStateRecorder
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageConditionOccurrenceRecorder
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +61,8 @@ internal class DebugEngine @Inject constructor(
     private val debugConfigurationLocalDataSource: DebugConfigurationLocalDataSource,
     private val debugReportLocalDataSource: DebugReportLocalDataSource,
     private val overviewRecorder: DebugReportOverviewRecorder,
-    private val imgEventOccurrenceRecorder: ImageEventOccurrenceRecorder,
+    private val eventOccurrencesRecorder: EventOccurrencesRecorder,
+    private val imgConditionOccurrenceRecorder: ImageConditionOccurrenceRecorder,
     private val counterValuesRecorder: CounterValuesRecorder,
     private val eventStateRecorder: EventStateRecorder,
 ) : SmartProcessingListener {
@@ -76,8 +79,8 @@ internal class DebugEngine @Inject constructor(
     private val _isDebuggingSession: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDebuggingSession: StateFlow<Boolean> = _isDebuggingSession
 
-    private val _lastImageEventFulfilled: MutableStateFlow<DebugLiveImageEventOccurrence?> = MutableStateFlow(null)
-    val lastImageEventFulfilled: StateFlow<DebugLiveImageEventOccurrence?> = _lastImageEventFulfilled
+    private val _lastEventFulfilled: MutableStateFlow<DebugLiveEventOccurrence?> = MutableStateFlow(null)
+    val lastEventFulfilled: StateFlow<DebugLiveEventOccurrence?> = _lastEventFulfilled
 
 
     override fun onSessionStarted(
@@ -100,7 +103,7 @@ internal class DebugEngine @Inject constructor(
     }
 
     // Processing started on current frame
-    override fun onImageEventsProcessingStarted() {
+    override fun onEventsListProcessingStarted(eventType: EventType) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
@@ -109,70 +112,59 @@ internal class DebugEngine @Inject constructor(
     }
 
     // Processing started for current Event
-    override fun onImageEventProcessingStarted() {
+    override fun onEventProcessingStarted(event: Event) {
         coroutineScopeIo.launch {
-            if (!shouldWriteReport) return@launch
+            eventOccurrencesRecorder.onEventProcessingStarted()
+            imgConditionOccurrenceRecorder.onEventProcessingStarted()
 
-            imgEventOccurrenceRecorder.onImageEventProcessingStarted()
+            if (!shouldWriteReport) return@launch
             counterValuesRecorder.onEventProcessingStarted()
             eventStateRecorder.onEventProcessingStarted()
         }
     }
 
-    // Condition is processed
-    override fun onImageConditionProcessingStarted() {
+    override fun onEventFulfilled(event: Event, results: List<ProcessedConditionResult>) {
         coroutineScopeIo.launch {
-            if (!shouldWriteReport) return@launch
+            eventOccurrencesRecorder.onEventFulfilled(event)
 
-            imgEventOccurrenceRecorder.onImageConditionProcessingStarted()
-        }
-    }
-
-    override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) {
-        coroutineScopeIo.launch {
-            if (!shouldWriteReport) return@launch
-
-            imgEventOccurrenceRecorder.onImageConditionProcessingCompleted(result)
+            _lastEventFulfilled.update {
+                @Suppress("UNCHECKED_CAST")
+                when (event) {
+                    is ImageEvent -> getLiveImageEventOccurrence(
+                        event = event,
+                        results = results as List<ProcessedConditionResult.Image>,
+                    )
+                    is TriggerEvent -> getLiveTriggerEventOccurrence(
+                        event = event,
+                        results = results as List<ProcessedConditionResult.Trigger>,
+                    )
+                }
+            }
         }
     }
 
     // Processing ended for current Event
-    override fun onImageEventFulfilled(event: ImageEvent, results: List<ProcessedConditionResult.Image>) {
+    override fun onEventActionsExecuted(event: Event, results: List<ProcessedConditionResult>) {
         coroutineScopeIo.launch {
-            _lastImageEventFulfilled.update {
-                DebugLiveImageEventOccurrence(
-                    event = event,
-                    imageConditionsResults = results.map { result ->
-                        DebugLiveImageConditionResult(
-                            condition = result.condition,
-                            isFulfilled = result.isFulfilled,
-                            isDetected = result.haveBeenDetected,
-                            confidenceRate = result.confidenceRate,
-                            detectionArea = result.getDetectionArea(),
-                        )
-                    },
-                )
-            }
+            if (!shouldWriteReport) return@launch
 
-            if (shouldWriteReport) {
-                overviewRecorder.onEventFulfilled(event)
-                debugReportLocalDataSource.writeEventOccurrenceToReport(
-                    occurrence = DebugReportEventOccurrence.ImageEvent(
-                        eventId = event.id.databaseId,
-                        frameNumber = overviewRecorder.frameCount,
-                        relativeTimestampMs = overviewRecorder.sessionDurationMs,
-                        conditionsResults = imgEventOccurrenceRecorder.imageConditionResults.toList(),
-                        counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
-                        eventStateChanges = eventStateRecorder.changes.toList(),
-                    )
-                )
-                imgEventOccurrenceRecorder.reset()
+            overviewRecorder.onActionsExecuted(event)
+
+            @Suppress("UNCHECKED_CAST")
+            when (event) {
+                is ImageEvent -> {
+                    writeImageEventToReport(event)
+                    imgConditionOccurrenceRecorder.reset()
+                }
+
+                is TriggerEvent ->
+                    writeTriggerEventToReport(event, results as List<ProcessedConditionResult.Trigger>)
             }
         }
     }
 
     // Processing ended on current frame
-    override fun onImageEventsProcessingCompleted() {
+    override fun onEventsProcessingCompleted(eventType: EventType) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
@@ -180,42 +172,31 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
-    override fun onImageEventsProcessingCancelled() {
+    override fun onEventsProcessingCancelled() {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
             overviewRecorder.onFrameProcessingStopped()
-            imgEventOccurrenceRecorder.reset()
+            imgConditionOccurrenceRecorder.reset()
+            eventOccurrencesRecorder.reset()
         }
     }
 
-    override fun onTriggerEventProcessingStarted() {
+    // Image Condition is processed
+    override fun onImageConditionProcessingStarted() {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            counterValuesRecorder.onEventProcessingStarted()
+            imgConditionOccurrenceRecorder.onImageConditionProcessingStarted()
         }
     }
 
-    override fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
+    // Called anyway,even if not matched
+    override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            overviewRecorder.onEventFulfilled(event)
-            debugReportLocalDataSource.writeEventOccurrenceToReport(
-                occurrence = DebugReportEventOccurrence.TriggerEvent(
-                    eventId = event.id.databaseId,
-                    relativeTimestampMs = overviewRecorder.sessionDurationMs,
-                    counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
-                    eventStateChanges = eventStateRecorder.changes.toList(),
-                    conditionsResults = results.map { result ->
-                        DebugReportConditionResult.TriggerCondition(
-                            conditionId = result.condition.id.databaseId,
-                            isFulFilled = result.isFulfilled,
-                        )
-                    }
-                )
-            )
+            imgConditionOccurrenceRecorder.onImageConditionProcessingCompleted(result)
         }
     }
 
@@ -253,24 +234,87 @@ internal class DebugEngine @Inject constructor(
                 eventStateRecorder.reset()
             }
 
-            _lastImageEventFulfilled.value = null
+            eventOccurrencesRecorder.reset()
+            imgConditionOccurrenceRecorder.reset()
+            _lastEventFulfilled.value = null
             _isDebuggingSession.value = false
             isReportEnabled = false
         }
     }
 
-    private fun ProcessedConditionResult.Image.getDetectionArea(): Rect? {
-        val pos = position ?: return null
-        val halfWidth = condition.area.width() / 2
-        val halfHeight = condition.area.height() / 2
+    @Suppress("UNCHECKED_CAST")
+    private fun getLiveImageEventOccurrence(event: Event, results: List<ProcessedConditionResult.Image>): DebugLiveEventOccurrence.Image =
+        DebugLiveEventOccurrence.Image(
+            event = event as ImageEvent,
+            fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
+            processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
+            conditionsResults = results.map { result ->
+                DebugLiveEventConditionResult.Image(
+                    condition = result.condition,
+                    isFulfilled = result.isFulfilled,
+                    isDetected = result.haveBeenDetected,
+                    confidenceRate = result.confidenceRate,
+                    detectionArea = result.getDetectionArea(),
+                )
+            },
+        )
 
+    @Suppress("UNCHECKED_CAST")
+    private fun getLiveTriggerEventOccurrence(event: Event, results: List<ProcessedConditionResult.Trigger>): DebugLiveEventOccurrence.Trigger =
+        DebugLiveEventOccurrence.Trigger(
+            event = event as TriggerEvent,
+            fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
+            processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
+            conditionsResults = results.map { result ->
+                DebugLiveEventConditionResult.Trigger(
+                    condition = result.condition,
+                    isFulfilled = result.isFulfilled,
+                )
+            },
+        )
 
-        return if (pos.x == 0 && pos.y == 0) Rect()
-        else Rect(
-            pos.x - halfWidth,
-            pos.y - halfHeight,
-            pos.x + halfWidth,
-            pos.y + halfHeight,
+    private suspend fun writeImageEventToReport(event: ImageEvent) {
+        debugReportLocalDataSource.writeEventOccurrenceToReport(
+            occurrence = DebugReportEventOccurrence.ImageEvent(
+                eventId = event.id.databaseId,
+                frameNumber = overviewRecorder.frameCount,
+                relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                conditionsResults = imgConditionOccurrenceRecorder.imageConditionResults.toList(),
+                counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
+                eventStateChanges = eventStateRecorder.changes.toList(),
+            )
         )
     }
+
+    private suspend fun writeTriggerEventToReport(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) {
+        debugReportLocalDataSource.writeEventOccurrenceToReport(
+            occurrence = DebugReportEventOccurrence.TriggerEvent(
+                eventId = event.id.databaseId,
+                relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
+                eventStateChanges = eventStateRecorder.changes.toList(),
+                conditionsResults = results.map { result ->
+                    DebugReportConditionResult.TriggerCondition(
+                        conditionId = result.condition.id.databaseId,
+                        isFulFilled = result.isFulfilled,
+                    )
+                }
+            )
+        )
+    }
+}
+
+private fun ProcessedConditionResult.Image.getDetectionArea(): Rect? {
+    val pos = position ?: return null
+    val halfWidth = condition.area.width() / 2
+    val halfHeight = condition.area.height() / 2
+
+
+    return if (pos.x == 0 && pos.y == 0) Rect()
+    else Rect(
+        pos.x - halfWidth,
+        pos.y - halfHeight,
+        pos.x + halfWidth,
+        pos.y + halfHeight,
+    )
 }

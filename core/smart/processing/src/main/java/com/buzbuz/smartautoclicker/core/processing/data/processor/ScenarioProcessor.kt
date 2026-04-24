@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 
 import kotlinx.coroutines.yield
@@ -100,20 +101,22 @@ internal class ScenarioProcessor(
         }
 
         // Handle all trigger events enabled during previous processing
+        progressListener.onEventsListProcessingStarted(EventType.Trigger)
         if (!processingState.areAllTriggerEventsDisabled()) {
             processTriggerEvents(processingState.getEnabledTriggerEvents())
         }
+        progressListener.onEventsProcessingCompleted(EventType.Trigger)
 
         // Reset any values that needs to be reset for each iteration
         // After the triggers to let them handle changes, before the image processing to start capturing values before
         processingState.clearIterationState()
 
         // Handle the image detection
-        progressListener.onImageEventsProcessingStarted()
+        progressListener.onEventsListProcessingStarted(EventType.Image)
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents())
         }
-        progressListener.onImageEventsProcessingCompleted()
+        progressListener.onEventsProcessingCompleted(EventType.Image)
 
         // Loop is completed
         actionExecutor.onScenarioLoopFinished()
@@ -129,19 +132,17 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
-            progressListener.onTriggerEventProcessingStarted()
+            progressListener.onEventProcessingStarted(triggerEvent)
             val results = conditionsVerifier.verifyConditions(
                 operator = triggerEvent.conditionOperator,
                 conditions = triggerEvent.conditions,
             )
 
-            if (results.fulfilled  == true) {
-                actionExecutor.executeActions(triggerEvent, results)
 
-                progressListener.onTriggerEventFulfilled(
-                    event = triggerEvent,
-                    results = results.getAllTriggerConditionsResults(),
-                )
+            if (results.fulfilled  == true) {
+                progressListener.onEventFulfilled(triggerEvent, results.getAllTriggerConditionsResults())
+                actionExecutor.executeActions(triggerEvent, results)
+                progressListener.onEventActionsExecuted(triggerEvent, results.getAllTriggerConditionsResults())
             }
         }
     }
@@ -156,19 +157,16 @@ internal class ScenarioProcessor(
                 // No conditions ? This should not happen, skip this event
                 if (imageEvent.conditions.isEmpty()) continue
 
-                progressListener.onImageEventProcessingStarted()
+                progressListener.onEventProcessingStarted(imageEvent)
                 val results = conditionsVerifier.verifyConditions(
                     operator = imageEvent.conditionOperator,
                     conditions = imageEvent.conditions,
                 )
 
                 if (results.fulfilled == true) {
+                    progressListener.onEventFulfilled(imageEvent, results.getAllImageConditionsResults())
                     actionExecutor.executeActions(imageEvent, results)
-
-                    progressListener.onImageEventFulfilled(
-                        event = imageEvent,
-                        results = results.getAllImageConditionsResults(),
-                    )
+                    progressListener.onEventActionsExecuted(imageEvent, results.getAllImageConditionsResults())
 
                     if (!imageEvent.keepDetecting) break
                 }

@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import javax.inject.Inject
 
 
-internal class ImageEventOccurrenceRecorder @Inject constructor() {
+internal class ImageConditionOccurrenceRecorder @Inject constructor() {
 
     private val conditionDurationRecorder: DurationRecorder = DurationRecorder()
 
@@ -29,7 +29,7 @@ internal class ImageEventOccurrenceRecorder @Inject constructor() {
     val imageConditionResults: List<DebugReportConditionResult.ImageCondition> = _imageConditionResults
 
 
-    fun onImageEventProcessingStarted() {
+    fun onEventProcessingStarted() {
         reset()
     }
 

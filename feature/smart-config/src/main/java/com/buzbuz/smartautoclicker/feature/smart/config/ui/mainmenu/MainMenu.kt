@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu
 
 import android.content.DialogInterface
 import android.util.Size
@@ -26,6 +26,7 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
@@ -37,6 +38,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRestartMediaProjectionStarterOverlay
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingActionsAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingUiState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
@@ -63,12 +67,20 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         creator = { mainMenuViewModel() },
     )
 
+    /** The view model for the live debugging. */
+    private val debuggingViewModel: LiveDebuggingViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { liveDebuggingViewModel() },
+    )
+
     private var isHiddenForPaywall: Boolean = false
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
     /** Controls the animations of the play/pause button. */
     private lateinit var playPauseButtonController: AnimatedStatesImageButtonController
+    /** Adapter upon actions being executed while in live debugging. */
+    private val debugLiveActionsAdapter: LiveDebuggingActionsAdapter = LiveDebuggingActionsAdapter()
 
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
@@ -98,6 +110,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         // Ensure the debug view state is correct
         viewBinding.layoutDebug.visibility = View.GONE
+        viewBinding.actionList.adapter = debugLiveActionsAdapter
+        viewBinding.actionList.itemAnimator = null
+
         setOverlayViewVisibility(false)
 
         lifecycleScope.launch {
@@ -112,7 +127,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
-                launch { viewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
+                launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
             }
         }
     }
@@ -256,6 +271,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         }
     }
 
+    private fun updateProjectionErrorBadge(isProjectionStarted: Boolean) {
+        viewBinding.errorBadge.visibility = if (isProjectionStarted) View.GONE else View.VISIBLE
+    }
+
     /**
      * Change the debug state of this UI.
      * @param isVisible true when the debug view should be shown, false to hide it.
@@ -269,15 +288,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             debugObservableJob?.cancel()
             debugObservableJob = null
 
-            viewBinding.debugEventName.text = null
-            viewBinding.debugConditionName.text = null
-            viewBinding.debugConfidenceRate.text = null
+            updateLiveDebugUiState(null)
             viewBinding.layoutDebug.visibility = View.GONE
         }
-    }
-
-    private fun updateProjectionErrorBadge(isProjectionStarted: Boolean) {
-        viewBinding.errorBadge.visibility = if (isProjectionStarted) View.GONE else View.VISIBLE
     }
 
     /**
@@ -287,12 +300,29 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun observeDebugValues() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
-                viewModel.debugLastPositive.collect { debugInfo ->
-                    viewBinding.debugEventName.text = debugInfo.eventText
-                    viewBinding.debugConditionName.text = debugInfo.conditionText
-                    viewBinding.debugConfidenceRate.text = debugInfo.confidenceRateText
-                }
+                debuggingViewModel.debugLastPositive.collect(::updateLiveDebugUiState)
             }
+        }
+    }
+
+    private fun updateLiveDebugUiState(uiState: LiveDebuggingUiState?) {
+        viewBinding.apply {
+            debugEventName.apply {
+                text = uiState?.eventName
+                setLeftCompoundDrawable(uiState?.eventIcon)
+            }
+
+            debugEventFulfilledCount.apply {
+                text = uiState?.eventFulfilledCount
+                setLeftCompoundDrawable(R.drawable.ic_confirm)
+            }
+
+            debugEventConditionComputeTime.apply {
+                text = uiState?.eventDuration
+                setLeftCompoundDrawable(R.drawable.ic_duration)
+            }
+
+            debugLiveActionsAdapter.submitList(uiState?.actions)
         }
     }
 

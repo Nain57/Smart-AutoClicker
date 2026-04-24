@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationController
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationListener

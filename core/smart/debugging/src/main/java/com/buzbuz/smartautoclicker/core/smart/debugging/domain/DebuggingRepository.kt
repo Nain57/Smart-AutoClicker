@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ interface DebuggingRepository {
     val isLiveDebugging: Flow<Boolean>
 
     /** The last event that has been matched, with all interpreted conditions results. */
-    val lastImageEventFulfilled: Flow<DebugLiveImageEventOccurrence?>
+    val lastImageEventFulfilled: Flow<DebugLiveEventOccurrence?>
 
     /** Tells if a debug report is available. */
     val isDebugReportAvailable: StateFlow<Boolean>

@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageEventResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toUiState
@@ -51,7 +52,7 @@ class TryElementViewModel @Inject constructor(
 
     val displayResults: Flow<ImageEventResultUiState?> = detectionResultUseCase()
         .combine(isPlaying) { results, playing -> if (playing) results else null }
-        .map { results -> results?.toUiState() }
+        .map { results -> (results as? DebugLiveEventOccurrence.Image)?.toUiState() }
 
     fun startTry(context: Context, scenario: Scenario, imageEvent: ImageEvent) {
         viewModelScope.launch {

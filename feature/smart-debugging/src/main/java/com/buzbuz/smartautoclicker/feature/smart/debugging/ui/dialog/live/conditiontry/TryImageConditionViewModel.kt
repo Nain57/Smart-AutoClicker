@@ -25,10 +25,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toConditionUiState
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -56,8 +57,8 @@ class TryImageConditionViewModel @Inject constructor(
     private val detectionResult: Flow<ImageConditionResultUiState?> = detectionResultUseCase()
         .combine(isPlaying) { results, playing -> if (playing) results else null }
         .map { results ->
-            if (results == null || results.imageConditionsResults.isEmpty()) null
-            else results.imageConditionsResults.first().toUiState()
+            if (results == null || results.conditionsResults.isEmpty()) null
+            else (results.conditionsResults.first() as DebugLiveEventConditionResult.Image).toConditionUiState()
         }
 
     val displayResults: Flow<ImageConditionResultUiState?> =

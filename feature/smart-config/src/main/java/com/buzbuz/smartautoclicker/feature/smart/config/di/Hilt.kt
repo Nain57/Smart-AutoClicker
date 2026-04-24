@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.di
 
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.MainMenuModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.MainMenuModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
@@ -49,6 +49,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.cou
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.imageevents.ImageEventListViewModel
@@ -85,6 +86,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun imageEventListViewModel(): ImageEventListViewModel
     fun intentActionsSelectionViewModel(): IntentActionsSelectionViewModel
     fun intentViewModel(): IntentViewModel
+    fun liveDebuggingViewModel(): LiveDebuggingViewModel
     fun mainMenuViewModel(): MainMenuModel
     fun moreViewModel(): MoreViewModel
     fun notificationViewModel(): NotificationViewModel

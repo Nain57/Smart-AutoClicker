@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.processing.domain
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -34,7 +33,7 @@ interface SmartProcessingListener {
      * @param scenario the [Scenario] running for the processing session.
      * @param imageEvents the list of [ImageEvent] to be processed for this scenario.
      * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
-     * @param isATry tells if this session is a try or not.
+     * @param isAnElementTry tells if this session is a complete scenario or a try made during scenario creation.
      */
     fun onSessionStarted(
         scenario: Scenario,
@@ -43,22 +42,37 @@ interface SmartProcessingListener {
         isAnElementTry: Boolean = false,
     ) = Unit
 
-    /** The processing of an [TriggerEvent] has begun. */
-    fun onTriggerEventProcessingStarted() = Unit
-
-    /**
-     * A [TriggerEvent] have been fulfilled.
-     *
-     * @param event the event fulfilled
-     * @param results the results for each [TriggerCondition] processed for the event?
-     */
-    fun onTriggerEventFulfilled(event: TriggerEvent, results: List<ProcessedConditionResult.Trigger>) = Unit
 
     /** The processing of the [ImageEvent] list on a new screen frame has begun. */
-    fun onImageEventsProcessingStarted() = Unit
+    fun onEventsListProcessingStarted(eventType: EventType) = Unit
 
-    /** The processing of an [ImageEvent] on the current screen frame has begun. */
-    fun onImageEventProcessingStarted() = Unit
+    /** The processing of an [Event] on the current screen frame has begun. */
+    fun onEventProcessingStarted(event: Event) = Unit
+
+    /**
+     * A [Event] have been fulfilled and but its actions haven't been executed.
+     *
+     * @param event the event fulfilled
+     * @param results the results for each Condition processed for the event
+     */
+    fun onEventFulfilled(event: Event, results: List<ProcessedConditionResult>)
+
+    /**
+     * A [Event] have been fulfilled and its actions are done being executed..
+     *
+     * @param event the event fulfilled
+     * @param results the results for each Condition processed for the event?
+     */
+    fun onEventActionsExecuted(event: Event, results: List<ProcessedConditionResult>) = Unit
+
+    /** The processing of the [Event] list on a new screen frame is complete. */
+    fun onEventsProcessingCompleted(eventType: EventType) = Unit
+
+    /**
+     * The processing of the [Event] list has been cancelled.
+     * This can be caused by the scenario being stopped, or when the device has been rotated.
+     */
+    fun onEventsProcessingCancelled() = Unit
 
     /** The processing of an [ImageCondition] for the current [ImageEvent] has begun. */
     fun onImageConditionProcessingStarted() = Unit
@@ -70,23 +84,6 @@ interface SmartProcessingListener {
      * @param result the result of the detection for the processed condition.
      */
     fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) = Unit
-
-    /**
-     * A [ImageEvent] have been fulfilled.
-     *
-     * @param event the event fulfilled
-     * @param results the results for each [ImageCondition] processed for the event?
-     */
-    fun onImageEventFulfilled(event: ImageEvent, results: List<ProcessedConditionResult.Image>) = Unit
-
-    /** The processing of the [ImageEvent] list on a new screen frame is complete. */
-    fun onImageEventsProcessingCompleted() = Unit
-
-    /**
-     * The processing of the [ImageEvent] list has been cancelled.
-     * This can be caused by the scenario being stopped, or when the device has been rotated.
-     */
-    fun onImageEventsProcessingCancelled() = Unit
 
     /**
      * The value of a counter have changed.
@@ -101,12 +98,15 @@ interface SmartProcessingListener {
      * The state of an event has been changed.
      *
      * @param event the event that have been changed.
-     * @param previousValue the value of the event state before the change
      * @param newValue the value of the event state after the change.
-     * @param changeType the type of change applied to the event state.
      */
     fun onEventStateChanged(event: Event, newValue: Boolean) = Unit
 
     /** The processing session have ended.*/
     fun onSessionEnded() = Unit
+}
+
+enum class EventType {
+    Image,
+    Trigger
 }

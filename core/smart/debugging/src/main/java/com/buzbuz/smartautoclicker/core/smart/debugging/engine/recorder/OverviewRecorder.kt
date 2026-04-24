@@ -53,7 +53,7 @@ internal class DebugReportOverviewRecorder @Inject constructor() {
         frameProcessingDurationRecorder.start()
     }
 
-    fun onEventFulfilled(event: Event) {
+    fun onActionsExecuted(event: Event) {
         when (event) {
             is ImageEvent -> imageEventFulfilledCount += 1
             is TriggerEvent -> triggerEventFulfilledCount += 1

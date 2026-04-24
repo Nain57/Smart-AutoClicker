@@ -16,11 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping
 
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatConditionResultsDisplayText
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageEventResultUiState
 
-internal fun DebugLiveImageEventOccurrence.toUiState(): ImageEventResultUiState =
+internal fun DebugLiveEventOccurrence.Image.toUiState(): ImageEventResultUiState =
     ImageEventResultUiState(
         eventText = event.name,
         conditionsText = formatConditionResultsDisplayText(),

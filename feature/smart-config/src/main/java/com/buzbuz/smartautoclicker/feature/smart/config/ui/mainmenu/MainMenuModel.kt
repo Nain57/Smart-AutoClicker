@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu
 
 import android.content.Context
 import android.util.Log
@@ -25,17 +25,12 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
-import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
-import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatConditionResultsDisplayText
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +47,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
@@ -61,8 +55,6 @@ class MainMenuModel @Inject constructor(
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-    debuggingRepository: DebuggingRepository,
-    debugDetectionResultUseCase: GetDebugLiveDetectionResultUseCase,
 ) : ViewModel() {
 
     private val scenarioDbId: StateFlow<Long?> = smartProcessingRepository.scenarioId
@@ -106,15 +98,6 @@ class MainMenuModel @Inject constructor(
     val nativeLibError: Flow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
-
-    /** Tells if the current detection is running in debug mode. */
-    val isDebugging = debuggingRepository.isLiveDebugging
-
-    /** The info on the last positive detection. */
-    val debugLastPositive: Flow<DebugInfoUiState> = debugDetectionResultUseCase
-        .invoke(displayDuration = POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
-        .combine(isDebugging) { results, isDebugging -> if (isDebugging) results else null }
-        .map { result -> result?.toLastPositiveDebugInfo() ?: DebugInfoUiState() }
 
     /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
     fun loadAdIfNeeded(context: Context) {
@@ -216,35 +199,11 @@ class MainMenuModel @Inject constructor(
 
     private fun UserBillingState.isAdRequested(): Boolean =
         this == UserBillingState.AD_REQUESTED
-
-    private fun DebugLiveImageEventOccurrence.toLastPositiveDebugInfo(): DebugInfoUiState {
-        val firstPositiveCondition = imageConditionsResults.find { conditionResult -> conditionResult.isFulfilled }
-        return DebugInfoUiState(
-            eventText = event.name,
-            conditionText = formatConditionResultsDisplayText(),
-            confidenceRateText = firstPositiveCondition?.confidenceRate?.formatDebugConfidenceRate() ?: "",
-        )
-    }
 }
 
 sealed class UiState {
     data object Detecting: UiState()
     data object Idle: UiState()
 }
-
-/**
- * Info on the last positive detection.
- * @param eventText name of the event
- * @param conditionText the name of the condition detected.
- * @param confidenceRateText the text to display for the confidence rate
- */
-data class DebugInfoUiState(
-    val eventText: String = "",
-    val conditionText: String = "",
-    val confidenceRateText: String = "",
-)
-
-/** Delay before removing the last positive result display in debug. */
-private val POSITIVE_VALUE_DISPLAY_TIMEOUT_MS = 1500.milliseconds
 
 private const val TAG = "MainMenuViewModel"
