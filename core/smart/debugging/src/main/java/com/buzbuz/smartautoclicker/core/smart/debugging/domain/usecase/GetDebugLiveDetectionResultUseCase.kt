@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Use case providing result for live image event occurrence display.
  *
- * Each [DebugLiveImageEventOccurrence] are provided for a maximum of displayDuration, and then reset to null. If a new
+ * Each [DebugLiveEventOccurrence] are provided for a maximum of displayDuration, and then reset to null. If a new
  * image event occurs during this reset timer, the new value will be immediately emitted and the reset timer restarted.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,7 +41,7 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
         private val DEFAULT_RESULT_DISPLAY_DURATION = 3.seconds
     }
 
-    operator fun invoke(displayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION): Flow<DebugLiveImageEventOccurrence?> =
+    operator fun invoke(displayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION): Flow<DebugLiveEventOccurrence?> =
         debuggingRepository.lastImageEventFulfilled
             .transformLatest { results ->
                 if (results == null) {

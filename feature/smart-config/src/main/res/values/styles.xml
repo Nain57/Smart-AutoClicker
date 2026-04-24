@@ -78,4 +78,9 @@
         <item name="android:textColor">@color/textTitle</item>
     </style>
 
+    <!-- Text appearance for the debug overlay. -->
+    <style name="AppTheme.TextAppearance.DebugOverlayText.Small" parent="AppTheme.TextAppearance.DebugOverlayText">
+        <item name="android:textSize">@dimen/text_size_overlay_small</item>
+    </style>
+
 </resources>

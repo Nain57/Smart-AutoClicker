@@ -236,7 +236,7 @@ class DetectorEngine @Inject constructor(
         processingScope?.launch {
             if (_state.value == DetectorState.DETECTING) {
                 processingJob?.cancelAndJoin()
-                debuggingListener.onImageEventsProcessingCancelled()
+                debuggingListener.onEventsProcessingCancelled()
             }
 
 

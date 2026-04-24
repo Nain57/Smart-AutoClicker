@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.utils
 
 import android.annotation.SuppressLint
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveImageEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 
 /** Format this value as a displayable confidence rate. */
 @SuppressLint("DefaultLocale")
@@ -28,11 +28,11 @@ fun Double.formatDebugConfidenceRate(): String =
  * Format this image event occurrence conditions results as a displayable text.
  * If only one condition have been fulfilled, use its name. If more are fulfilled, use 'fulfilled/conditionsCount'.
  */
-fun DebugLiveImageEventOccurrence.formatConditionResultsDisplayText(): String =
+fun DebugLiveEventOccurrence.formatConditionResultsDisplayText(): String =
     if (event.conditions.size == 1) {
-        imageConditionsResults.first().condition.name
+        conditionsResults.first().condition.name
     } else {
-        val fulfilled = imageConditionsResults.fold(0) { acc, result ->
+        val fulfilled = conditionsResults.fold(0) { acc, result ->
             acc + (if (result.isFulfilled) 1 else 0)
         }
         "$fulfilled/${event.conditions.size}"
