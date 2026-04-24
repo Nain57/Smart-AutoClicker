@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -27,13 +28,14 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingReposito
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.debugging.R
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.collections.toMutableList
 import kotlin.time.Duration.Companion.milliseconds
 
 class LiveDebuggingViewModel @Inject constructor(
@@ -59,8 +61,15 @@ private fun DebugLiveEventOccurrence.toLastPositiveDebugInfo(context: Context): 
         eventName = event.name,
         eventFulfilledCount = fulfilledCount.toString(),
         eventDuration = context.getDurationText(processingDurationMs),
-        actions = event.actions.map { action -> LiveDebuggingActionsItem(action.getIconRes()) },
+        actions = event.actions.toActionItems(),
     )
+
+private fun List<Action>.toActionItems(): List<LiveDebuggingActionsItem> =
+    if (size <= 5) map { action -> LiveDebuggingActionsItem(action.getIconRes()) }
+    else subList(0, 4)
+        .map { action -> LiveDebuggingActionsItem(action.getIconRes()) }
+        .toMutableList()
+        .apply { add(LiveDebuggingActionsItem(R.drawable.ic_more)) }
 
 @DrawableRes
 private fun Event.getDebugIcon(): Int =
