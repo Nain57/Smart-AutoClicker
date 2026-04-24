@@ -49,7 +49,7 @@ class LiveDebuggingViewModel @Inject constructor(
 
     /** The info on the last positive detection. */
     val debugLastPositive: Flow<LiveDebuggingUiState?> = debugDetectionResultUseCase
-        .invoke(displayDuration = POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
+        .invoke(minDisplayDuration = POSITIVE_VALUE_DISPLAY_TIMEOUT_MS)
         .combine(isDebugging) { results, isDebugging -> if (isDebugging) results else null }
         .map { result -> result?.toLastPositiveDebugInfo(context) }
 

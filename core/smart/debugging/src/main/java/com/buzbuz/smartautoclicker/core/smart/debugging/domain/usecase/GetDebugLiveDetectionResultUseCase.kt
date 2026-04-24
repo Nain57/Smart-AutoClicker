@@ -16,6 +16,16 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +51,7 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
         private val DEFAULT_RESULT_DISPLAY_DURATION = 3.seconds
     }
 
-    operator fun invoke(displayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION): Flow<DebugLiveEventOccurrence?> =
+    operator fun invoke(minDisplayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION): Flow<DebugLiveEventOccurrence?> =
         debuggingRepository.lastImageEventFulfilled
             .transformLatest { results ->
                 if (results == null) {
@@ -50,7 +60,27 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
                 }
 
                 emit(results)
-                delay(3.seconds)
+                delay(results.getDisplayDurationMs(minDisplayDuration))
                 emit(null)
             }
+
+    private fun DebugLiveEventOccurrence.getDisplayDurationMs(minDisplayDuration: Duration): Long =
+        (processingDurationMs + event.actions.getDurationMs())
+            .coerceAtLeast(minDisplayDuration.inWholeMilliseconds)
+
+
+    private fun List<Action>.getDurationMs(): Long =
+        fold(initial = 0) { acc, action ->
+            acc + when (action) {
+                is Click -> action.pressDuration ?: 0
+                is Swipe -> action.swipeDuration ?: 0
+                is Pause -> action.pauseDuration ?: 0
+                is ChangeCounter,
+                is Intent,
+                is Notification,
+                is SetText,
+                is SystemAction,
+                is ToggleEvent -> 0
+            }
+        }
 }
