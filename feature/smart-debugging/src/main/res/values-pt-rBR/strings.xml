@@ -42,20 +42,19 @@
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
 
-    <string name="dialog_overlay_title_timeline_filters">Timeline filters</string>
-    <string name="field_debug_filter_duration_title">Time</string>
+    <string name="dialog_overlay_title_timeline_filters">Filtros da linha do tempo</string>
 
-    <string name="field_debug_filter_image_events_title">Image Events</string>
-    <string name="field_debug_filter_image_events_show_desc_on">Show Image Events occurrences in the timeline</string>
-    <string name="field_debug_filter_image_events_show_desc_off">Hide all Image Events occurrences in the timeline</string>
+    <string name="field_debug_filter_image_events_title">Eventos de Imagem</string>
+    <string name="field_debug_filter_image_events_show_desc_on">Mostrar ocorrências de eventos na linha do tempo</string>
+    <string name="field_debug_filter_image_events_show_desc_off">Ocultar todas as ocorrências de eventos de imagem na linha do tempo</string>
 
-    <string name="field_debug_filter_trigger_events_title">Trigger Events</string>
-    <string name="field_debug_filter_trigger_events_show_desc_on">Show Trigger Events occurrences in timeline</string>
-    <string name="field_debug_filter_trigger_events_show_desc_off">Hide all Trigger Events occurrences in timeline</string>
+    <string name="field_debug_filter_trigger_events_title">Eventos desencadeadores</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">Mostrar ocorrências de eventos de acionamento na linha do tempo</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">Ocultar todas as ocorrências de eventos de acionamento na linha do tempo</string>
 
-    <string name="field_debug_filter_events_show_title">Filter</string>
-    <string name="field_debug_filter_events_show_select_desc">%1$d events</string>
-    <string name="field_debug_filter_events_show_select_desc_none">No events</string>
+    <string name="field_debug_filter_events_show_title">Filtro</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d eventos</string>
+    <string name="field_debug_filter_events_show_select_desc_none">Não há eventos</string>
 
 
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->

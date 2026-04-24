@@ -41,20 +41,19 @@
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
 
-    <string name="dialog_overlay_title_timeline_filters">Timeline filters</string>
-    <string name="field_debug_filter_duration_title">Time</string>
+    <string name="dialog_overlay_title_timeline_filters">时间轴筛选器</string>
 
-    <string name="field_debug_filter_image_events_title">Image Events</string>
-    <string name="field_debug_filter_image_events_show_desc_on">Show Image Events occurrences in the timeline</string>
-    <string name="field_debug_filter_image_events_show_desc_off">Hide all Image Events occurrences in the timeline</string>
+    <string name="field_debug_filter_image_events_title">图片活动</string>
+    <string name="field_debug_filter_image_events_show_desc_on">在时间轴上显示图像事件的发生情况</string>
+    <string name="field_debug_filter_image_events_show_desc_off">在时间轴中隐藏所有“图像事件”的实例</string>
 
-    <string name="field_debug_filter_trigger_events_title">Trigger Events</string>
-    <string name="field_debug_filter_trigger_events_show_desc_on">Show Trigger Events occurrences in timeline</string>
-    <string name="field_debug_filter_trigger_events_show_desc_off">Hide all Trigger Events occurrences in timeline</string>
+    <string name="field_debug_filter_trigger_events_title">触发事件</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">在时间轴中显示触发事件的发生情况</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">在时间轴中隐藏所有触发事件的实例</string>
 
-    <string name="field_debug_filter_events_show_title">Filter</string>
-    <string name="field_debug_filter_events_show_select_desc">%1$d events</string>
-    <string name="field_debug_filter_events_show_select_desc_none">No events</string>
+    <string name="field_debug_filter_events_show_title">筛选</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d 项活动</string>
+    <string name="field_debug_filter_events_show_select_desc_none">暂无活动</string>
 
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->
 

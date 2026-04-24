@@ -136,9 +136,9 @@
     <string name="field_scenario_quality_description">Для швидшого виявлення Klick\'r зменшує масштаб зображень перед виявленням.\n\nЯкщо ви збільшите роздільну здатність, виявлення буде повільнішим, але точнішим. Якщо ви зменшите роздільну здатність, виявлення буде швидшим, але менш точним. Знайдіть хороше співвідношення між роздільною здатністю виявлення та порогами умов, щоб отримати найкраще з ваших сценаріїв!</string>
 
     <string name="field_show_debug_view_title">Показати режим налагодження</string>
-    <string name="field_show_debug_view_desc">Display the events triggered while detecting.</string>
+    <string name="field_show_debug_view_desc">Відобразити події, що спрацьовують під час виявлення.</string>
     <string name="item_title_debug_generate_report">Створити звіт</string>
-    <string name="item_desc_debug_generate_report">Capture your scenario behaviour while detecting to create a report.</string>
+    <string name="item_desc_debug_generate_report">Зафіксуйте поведінку сценарію під час виявлення, щоб створити звіт.</string>
 
     <string name="field_show_debug_report_title">Показати звіт</string>
     <string name="field_show_debug_report_desc_available">Звіт налагодження доступний</string>
