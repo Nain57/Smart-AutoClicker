@@ -41,9 +41,6 @@ sealed interface DebugReportTimelineFilter {
         /** Only used if [filterAll] is false. Specify the ids of the Events to filters.*/
         val filteredIds: Set<Long>
 
-        override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
-            filterAll || filteredIds.contains(occurrence.eventId)
-
         fun copyFilter(filteredIds: Set<Long>): Events =
             when (this) {
                 is Image -> copy(filteredIds = filteredIds)
@@ -51,10 +48,16 @@ sealed interface DebugReportTimelineFilter {
             }
 
         /** Filter on ImageEvents. */
-        data class Image(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events
+        data class Image(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events {
+            override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
+                occurrence is DebugReportEventOccurrence.ImageEvent && filterAll || filteredIds.contains(occurrence.eventId)
+        }
 
         /** Filter on TriggerEvents. */
-        data class Trigger(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events
+        data class Trigger(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events {
+            override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
+                occurrence is DebugReportEventOccurrence.TriggerEvent && filterAll || filteredIds.contains(occurrence.eventId)
+        }
     }
 }
 
