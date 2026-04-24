@@ -314,12 +314,12 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
             debugEventFulfilledCount.apply {
                 text = uiState?.eventFulfilledCount
-                setLeftCompoundDrawable(R.drawable.ic_confirm)
+                setLeftCompoundDrawable(if (uiState != null) R.drawable.ic_confirm else null)
             }
 
             debugEventConditionComputeTime.apply {
                 text = uiState?.eventDuration
-                setLeftCompoundDrawable(R.drawable.ic_duration)
+                setLeftCompoundDrawable(if (uiState != null) R.drawable.ic_duration else null)
             }
 
             debugLiveActionsAdapter.submitList(uiState?.actions)
