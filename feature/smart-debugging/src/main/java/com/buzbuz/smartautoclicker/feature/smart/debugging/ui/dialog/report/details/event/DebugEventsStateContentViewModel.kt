@@ -67,7 +67,7 @@ class DebugEventsStateContentViewModel @Inject constructor(
 
     val uiState: StateFlow<DebugEventsStateContentUiState> =
         combine(imageEventsState, triggerEventsState) { imgEvents, trigEvents ->
-            if (imgEvents.isNullOrEmpty() || trigEvents.isNullOrEmpty())
+            if (imgEvents.isNullOrEmpty() && trigEvents.isNullOrEmpty())
                 return@combine DebugEventsStateContentUiState.Empty
 
             DebugEventsStateContentUiState.Available(
@@ -105,16 +105,16 @@ class DebugEventsStateContentViewModel @Inject constructor(
         }
 
     private fun buildEventsStateItems(
-        imgItems: List<DebugEventStateItem>,
-        trigItems: List<DebugEventStateItem>,
+        imgItems: List<DebugEventStateItem>?,
+        trigItems: List<DebugEventStateItem>?,
     ): List<DebugEventStateItem> = buildList {
 
-        if (imgItems.isNotEmpty()) {
+        if (!imgItems.isNullOrEmpty()) {
             add(getImageEventsHeader())
             addAll(imgItems)
         }
 
-        if (trigItems.isNotEmpty()) {
+        if (!trigItems.isNullOrEmpty()) {
             add(getTriggerEventsHeader())
             addAll(trigItems)
         }
