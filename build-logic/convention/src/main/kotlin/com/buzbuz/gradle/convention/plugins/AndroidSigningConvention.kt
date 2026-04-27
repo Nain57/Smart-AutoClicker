@@ -16,6 +16,7 @@
  */
 package com.buzbuz.gradle.convention.plugins
 
+import com.android.build.api.dsl.ApkSigningConfig
 import com.buzbuz.gradle.convention.extensions.androidApp
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -27,7 +28,7 @@ class AndroidSigningConvention : Plugin<Project> {
             buildTypes.forEach { buildType ->
                 val signConfig = signingConfigs.findByName(buildType.name) ?: return@forEach
 
-                if (signConfig.isSigningReady) {
+                if (signConfig.isSigningReady()) {
                     if (signConfig.storeFile?.exists() == true) {
                         buildType.signingConfig = signConfig
                     } else {
@@ -39,4 +40,7 @@ class AndroidSigningConvention : Plugin<Project> {
             }
         }
     }
+
+    private fun ApkSigningConfig.isSigningReady(): Boolean =
+        storeFile != null && storePassword != null && keyAlias != null && keyPassword != null
 }

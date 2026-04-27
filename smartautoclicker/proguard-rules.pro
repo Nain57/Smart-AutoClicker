@@ -26,6 +26,9 @@
 -keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.
 
+-dontwarn com.google.firebase.crashlytics.ktx.FirebaseCrashlyticsKt
+-dontwarn com.google.firebase.ktx.Firebase
+
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 

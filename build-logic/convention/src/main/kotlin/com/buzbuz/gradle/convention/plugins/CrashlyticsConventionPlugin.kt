@@ -18,7 +18,7 @@ package com.buzbuz.gradle.convention.plugins
 
 import com.buzbuz.gradle.convention.extensions.getLibs
 import com.buzbuz.gradle.convention.extensions.playStoreImplementation
-import com.buzbuz.gradle.convention.extensions.android
+import com.buzbuz.gradle.convention.extensions.androidApp
 import com.buzbuz.gradle.convention.extensions.plugins
 
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
@@ -38,7 +38,7 @@ class CrashlyticsConventionPlugin : Plugin<Project> {
             apply(libs.plugins.google.gms)
         }
 
-        android {
+        androidApp {
             buildTypes {
                 getByName("release") {
                     configure<CrashlyticsExtension> {

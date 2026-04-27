@@ -30,7 +30,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
         plugins {
             apply(libs.plugins.android.application)
-            apply(libs.plugins.jetBrains.kotlin.android)
         }
 
         androidApp {
