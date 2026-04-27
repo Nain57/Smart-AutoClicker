@@ -125,7 +125,7 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity {
         counterName = counterName,
         counterOperation = operation.toEntity(),
         counterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
-        counterOperationValue = if (isNumberValue) operationValue.value as Int else null,
+        counterOperationValue = if (isNumberValue) operationValue.value else null,
         counterOperationCounterName = if (isNumberValue) null else operationValue.value as String,
     )
 }

@@ -19,7 +19,6 @@ plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.kotlinSerialization)
-    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.hilt)
 }
 
@@ -48,6 +47,4 @@ dependencies {
     implementation(project(":core:smart:database"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:dumb"))
-
-    testImplementation(libs.kotlinx.coroutines.test)
 }

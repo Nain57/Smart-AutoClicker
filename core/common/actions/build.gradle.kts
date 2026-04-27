@@ -26,6 +26,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.core.ktx)
 
     implementation(project(":core:common:base"))
     implementation(project(":core:common:permissions"))

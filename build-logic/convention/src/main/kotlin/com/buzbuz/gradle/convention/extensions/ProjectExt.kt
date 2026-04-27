@@ -16,9 +16,15 @@
  */
 package com.buzbuz.gradle.convention.extensions
 
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.android.build.api.dsl.AndroidResources
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.BuildFeatures
+import com.android.build.api.dsl.BuildType
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.DefaultConfig
+import com.android.build.api.dsl.Installation
+import com.android.build.api.dsl.LibraryExtension
+import com.android.build.api.dsl.ProductFlavor
 import com.buzbuz.gradle.convention.libs.VersionCatalogWrapper
 import com.buzbuz.gradle.convention.model.KlickrBuildType
 import com.buzbuz.gradle.convention.model.KlickrFlavour
@@ -28,8 +34,10 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.PluginManager
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+import org.jetbrains.kotlin.tooling.core.closure
 
 /**
  * Check if the current build is for the provided variant.
@@ -54,14 +62,17 @@ internal fun Project.getLibs(): VersionCatalogWrapper =
 internal inline fun Project.plugins(closure: PluginManager.() -> Unit) =
     closure(pluginManager)
 
-internal inline fun Project.androidApp(crossinline closure: BaseAppModuleExtension.() -> Unit) =
-    extensions.configure<BaseAppModuleExtension> { closure() }
+internal inline fun Project.androidApp(crossinline closure: ApplicationExtension.() -> Unit) =
+    plugins.withId("com.android.application") {
+        extensions.configure<ApplicationExtension> { closure() }
+    }
 
 internal inline fun Project.androidLib(crossinline closure: LibraryExtension.() -> Unit) =
-    extensions.configure<LibraryExtension> { closure() }
-
-internal inline fun Project.android(crossinline closure: BaseExtension.() -> Unit) =
-    extensions.configure<BaseExtension> { closure() }
+    plugins.withId("com.android.library") {
+        extensions.configure<LibraryExtension> { closure() }
+    }
 
 internal inline fun Project.protobuf(crossinline closure: ProtobufExtension.() -> Unit) =
-    extensions.configure<ProtobufExtension> { closure() }
+    plugins.withId("com.google.protobuf") {
+        extensions.configure<ProtobufExtension> { closure() }
+    }
