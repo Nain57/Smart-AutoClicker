@@ -20,6 +20,7 @@ import android.content.Context
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.extensions.safeBufferedOutputStream
+import com.buzbuz.smartautoclicker.core.base.extensions.safeDelete
 import com.buzbuz.smartautoclicker.core.base.extensions.safeExists
 import com.buzbuz.smartautoclicker.core.base.extensions.safeInputStream
 import com.buzbuz.smartautoclicker.core.base.extensions.safeRecreate
@@ -164,6 +165,16 @@ internal class DebugReportLocalDataSource @Inject constructor(
                 }
             }
         }
+
+    /** Delete the current report files, if any. */
+    suspend fun deleteReport() {
+        filesMutex.withLock {
+            messagesFile.safeDelete()
+            overviewFile.safeDelete()
+
+            _isReportAvailable.update { false }
+        }
+    }
 
     private fun OutputStream.safeWriteDelimited(message: MessageLite) {
         try {

@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingReposito
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 
@@ -41,7 +42,10 @@ class MoreViewModel @Inject constructor(
     val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
 
     /** Tells if a debug report is available. */
-    val isDebugReportAvailable: Flow<Boolean> = debuggingRepository.isDebugReportAvailable
+    val showDebugReportEnabled: Flow<Boolean> = debuggingRepository.isDebugReportAvailable
+        .combine(_isDebugReportEnabled) { available, enabled ->
+            available && enabled
+        }
 
 
     fun toggleIsDebugViewEnabled() {
