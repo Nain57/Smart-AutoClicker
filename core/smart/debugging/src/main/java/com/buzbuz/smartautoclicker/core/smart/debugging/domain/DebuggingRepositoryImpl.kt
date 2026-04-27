@@ -26,11 +26,14 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,6 +46,8 @@ internal class DebuggingRepositoryImpl @Inject constructor(
     private val debugReportDataSource: DebugReportLocalDataSource,
 ) : DebuggingRepository {
 
+
+    private val ioScope: CoroutineScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
     override val isLiveDebugging: Flow<Boolean> = debugEngine.isDebuggingSession.map { isDebuggingSession ->
         isDebuggingSession && isDebugViewEnabled()
@@ -61,11 +66,18 @@ internal class DebuggingRepositoryImpl @Inject constructor(
     override fun isDebugReportEnabled(): Boolean =
         debugConfigurationDataSource.isDebugReportEnabled()
 
-    override fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean) =
-        debugConfigurationDataSource.setDebuggingConfig(
-            debugView = debugView,
-            debugReport = debugReport,
-        )
+    override fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean) {
+        ioScope.launch {
+            // Debug report is being disabled, remove report files
+            if (!debugReport && isDebugViewEnabled()) debugReportDataSource.deleteReport()
+
+            debugConfigurationDataSource.setDebuggingConfig(
+                debugView = debugView,
+                debugReport = debugReport,
+            )
+        }
+    }
+
 
     override fun getLastReportOverview(): Flow<DebugReportOverview?> =
         flow {
