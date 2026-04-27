@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
     implementation(libs.androidx.appCompat)
 
     implementation(project(":core:common:actions"))

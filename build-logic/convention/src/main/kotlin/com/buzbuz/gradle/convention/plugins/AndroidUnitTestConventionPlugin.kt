@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,29 @@
  */
 package com.buzbuz.gradle.convention.plugins
 
+import com.buzbuz.gradle.convention.extensions.androidLib
 import com.buzbuz.gradle.convention.extensions.getLibs
 import com.buzbuz.gradle.convention.extensions.testImplementation
-import com.buzbuz.gradle.convention.extensions.android
-import com.buzbuz.gradle.convention.extensions.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.withType
 
 class AndroidUnitTestConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = with(target) {
         val libs = getLibs()
 
-        plugins {
-            apply(libs.plugins.jetBrains.kotlin.android)
-        }
-
-        android {
+        androidLib {
             defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             testOptions.unitTests.isIncludeAndroidResources = true
+            testOptions.targetSdk = libs.versions.android.compileSdk
+        }
+
+        tasks.withType<Test>().configureEach {
+            failOnNoDiscoveredTests.set(false)
         }
 
         dependencies {

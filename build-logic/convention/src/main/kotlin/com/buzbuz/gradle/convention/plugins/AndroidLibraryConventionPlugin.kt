@@ -30,14 +30,13 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
         plugins {
             apply(libs.plugins.android.library)
-            apply(libs.plugins.jetBrains.kotlin.android)
         }
 
         androidLib {
             compileSdk = libs.versions.android.compileSdk
+            lint.targetSdk = libs.versions.android.compileSdk
 
             defaultConfig.apply {
-                targetSdk = libs.versions.android.compileSdk
                 minSdk = libs.versions.android.minSdk
             }
 

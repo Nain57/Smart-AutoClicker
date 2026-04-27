@@ -43,8 +43,6 @@ internal class Plugins internal constructor(private val libs: VersionCatalog) {
         val kotlin: Kotlin by lazy { Kotlin() }
 
         inner class Kotlin {
-            val android: String
-                get() = libs.getPluginId("jetbrainsKotlinAndroid")
             val serialization: String
                 get() = libs.getPluginId("jetbrainsKotlinSerialization")
         }

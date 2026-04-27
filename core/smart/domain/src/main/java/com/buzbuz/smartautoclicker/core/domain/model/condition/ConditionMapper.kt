@@ -73,7 +73,7 @@ private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): Con
         counterName = counterName,
         counterComparisonOperation = comparisonOperation.toEntity(),
         counterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
-        counterValue = if (isNumberValue) counterValue.value as Int else null,
+        counterValue = if (isNumberValue) counterValue.value else null,
         counterOperationCounterName = if (isNumberValue) null else counterValue.value as String,
         priority = 0,
     )

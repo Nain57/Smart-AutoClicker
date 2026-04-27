@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageCon
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,6 +68,7 @@ internal class DebugEngine @Inject constructor(
     private val eventStateRecorder: EventStateRecorder,
 ) : SmartProcessingListener {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))
 

@@ -126,7 +126,7 @@ private fun getPurchaseButtonState(context: Context, purchaseState: PurchaseStat
             LoadableButtonState.Loaded.Disabled(context.getString(R.string.button_text_buy_pro_error))
 
         else ->
-            LoadableButtonState.Loaded.Enabled(context.getString(R.string.button_text_buy_pro, info?.price))
+            LoadableButtonState.Loaded.Enabled(context.getString(R.string.button_text_buy_pro, info.price))
     }
 
 private fun getTrialButtonState(context: Context, trialAvailable: Boolean, trialDurationMinutes: Int) =

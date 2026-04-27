@@ -66,7 +66,7 @@ android {
                 cmake {
                     arguments.addAll(
                         listOf(
-                            "-DANDROID_SDK_ROOT=${project.android.sdkDirectory}",
+                            "-DANDROID_SDK_ROOT=${project.androidComponents.sdkComponents.sdkDirectory}",
                             "-DCMAKE_BUILD_TYPE=Release",
                             "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
                             "-DOPENCV_ENABLE_NONFREE=OFF",

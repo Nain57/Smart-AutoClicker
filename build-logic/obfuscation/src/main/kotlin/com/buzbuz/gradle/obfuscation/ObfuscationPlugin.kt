@@ -16,7 +16,7 @@
  */
 package com.buzbuz.gradle.obfuscation
 
-import com.android.build.gradle.AppExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.buzbuz.gradle.obfuscation.application.ObfuscatedApplication
 import com.buzbuz.gradle.obfuscation.application.toDomain
@@ -58,6 +58,9 @@ class ObfuscationPlugin : Plugin<Project> {
             onSetup = ::onConfigure,
         )
 
+        // Create values for the manifests
+        registerManifestPlaceholders(target)
+
         target.afterEvaluate {
             afterEvaluate()
         }
@@ -88,9 +91,6 @@ class ObfuscationPlugin : Plugin<Project> {
     }
 
     private fun afterEvaluate() {
-        // Create values for the manifests
-        registerManifestPlaceholders(target)
-
         if (!configPluginExtension.randomize) return
 
         val randomizeApplicationTask = target.registerRandomizeApplicationTask(obfuscatedApplication)
@@ -137,24 +137,28 @@ class ObfuscationPlugin : Plugin<Project> {
     }
 
     private fun registerManifestPlaceholders(target: Project) {
-        target.extensions.findByType(AppExtension::class.java)?.apply {
-            this.applicationVariants.forEach { variant ->
-                // Register the app name
-                variant.mergedFlavor.manifestPlaceholders[MANIFEST_PLACEHOLDER_APP_NAME] =
-                    if (configPluginExtension.randomize) random.nextString(10)
-                    else configPluginExtension.appNameRes
+        target.extensions.getByType(ApplicationAndroidComponentsExtension::class.java).onVariants { variant ->
+            // Register the app name
+            variant.manifestPlaceholders.put(
+                MANIFEST_PLACEHOLDER_APP_NAME,
+                if (configPluginExtension.randomize) random.nextString(10)
+                else configPluginExtension.appNameRes,
+            )
 
-                // Register the application
-                variant.mergedFlavor.manifestPlaceholders[obfuscatedApplication.manifestPlaceholderKey] =
-                    if (configPluginExtension.randomize) obfuscatedApplication.manifestPlaceholderValue
-                    else obfuscatedApplication.originalFullClassName
+            // Register the application
+            variant.manifestPlaceholders.put(
+                obfuscatedApplication.manifestPlaceholderKey,
+                if (configPluginExtension.randomize) obfuscatedApplication.manifestPlaceholderValue
+                else obfuscatedApplication.originalFullClassName,
+            )
 
-                // Register the components
-                obfuscatedComponents.forEach { component ->
-                    variant.mergedFlavor.manifestPlaceholders[component.manifestPlaceholderKey] =
-                        if (configPluginExtension.randomize) component.manifestPlaceholderValue
-                        else component.originalComponentName
-                }
+            // Register the components
+            obfuscatedComponents.forEach { component ->
+                variant.manifestPlaceholders.put(
+                    component.manifestPlaceholderKey,
+                    if (configPluginExtension.randomize) component.manifestPlaceholderValue
+                    else component.originalComponentName,
+                )
             }
         }
     }

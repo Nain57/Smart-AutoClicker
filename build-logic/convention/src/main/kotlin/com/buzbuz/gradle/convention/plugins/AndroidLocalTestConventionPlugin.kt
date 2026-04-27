@@ -16,10 +16,9 @@
  */
 package com.buzbuz.gradle.convention.plugins
 
+import com.buzbuz.gradle.convention.extensions.androidLib
 import com.buzbuz.gradle.convention.extensions.getLibs
-import com.buzbuz.gradle.convention.extensions.android
 import com.buzbuz.gradle.convention.extensions.androidTestImplementation
-import com.buzbuz.gradle.convention.extensions.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -30,11 +29,7 @@ class AndroidLocalTestConventionPlugin : Plugin<Project> {
     override fun apply(target: Project): Unit = with(target) {
         val libs = getLibs()
 
-        plugins {
-            apply(libs.plugins.jetBrains.kotlin.android)
-        }
-
-        android {
+        androidLib {
             defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
             testOptions.unitTests.isIncludeAndroidResources = true
         }
