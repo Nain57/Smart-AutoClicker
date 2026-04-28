@@ -23,12 +23,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 /** Event occurrence during a live debugging session. */
 sealed interface DebugLiveEventOccurrence {
     val event: Event
+    val fulfilled: Boolean
     val fulfilledCount: Int
     val processingDurationMs: Long
     val conditionsResults: List<DebugLiveEventConditionResult>
 
     data class Image(
         override val event: ImageEvent,
+        override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,
         override val conditionsResults: List<DebugLiveEventConditionResult.Image>,
@@ -36,6 +38,7 @@ sealed interface DebugLiveEventOccurrence {
 
     data class Trigger(
         override val event: TriggerEvent,
+        override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,
         override val conditionsResults: List<DebugLiveEventConditionResult.Trigger>,

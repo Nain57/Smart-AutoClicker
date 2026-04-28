@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -51,8 +52,12 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
         private val DEFAULT_RESULT_DISPLAY_DURATION = 3.seconds
     }
 
-    operator fun invoke(minDisplayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION): Flow<DebugLiveEventOccurrence?> =
-        debuggingRepository.lastImageEventFulfilled
+    operator fun invoke(
+        minDisplayDuration: Duration = DEFAULT_RESULT_DISPLAY_DURATION,
+        filterNotFulfilled: Boolean = true,
+    ): Flow<DebugLiveEventOccurrence?> =
+        debuggingRepository.lastImageEventProcessed
+            .filter { results -> !filterNotFulfilled || (results?.fulfilled == true) }
             .transformLatest { results ->
                 if (results == null) {
                     emit(null)

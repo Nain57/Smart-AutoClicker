@@ -50,12 +50,13 @@ interface SmartProcessingListener {
     fun onEventProcessingStarted(event: Event) = Unit
 
     /**
-     * A [Event] have been fulfilled and but its actions haven't been executed.
+     * A [Event] conditions have been processed but its actions haven't been executed.
      *
      * @param event the event fulfilled
+     * @param fulfilled true if event conditions are fulfilled, false if not.
      * @param results the results for each Condition processed for the event
      */
-    fun onEventFulfilled(event: Event, results: List<ProcessedConditionResult>)
+    fun onEventProcessingCompleted(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult>)
 
     /**
      * A [Event] have been fulfilled and its actions are done being executed..

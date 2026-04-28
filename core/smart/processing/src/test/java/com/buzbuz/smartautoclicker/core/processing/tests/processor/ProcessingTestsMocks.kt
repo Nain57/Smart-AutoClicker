@@ -112,9 +112,9 @@ internal fun SmartProcessingListener.verifyTriggerEventFulfilled(
 ): Unit = verify(
     mock = this,
     mode = if (expectedResult) times(processedCount) else never()
-).onEventFulfilled(event, event.expectedResult(expectedResult))
+).onEventProcessingCompleted(event, processedCount > 0, event.expectedResult(expectedResult))
 
 internal fun SmartProcessingListener.verifyTriggerEventNotProcessed(event: TriggerEvent) {
-    verify(this, never()).onEventFulfilled(event, event.expectedResult(true))
-    verify(this, never()).onEventFulfilled(event, event.expectedResult(false))
+    verify(this, never()).onEventProcessingCompleted(event, true, event.expectedResult(true))
+    verify(this, never()).onEventProcessingCompleted(event, false, event.expectedResult(false))
 }

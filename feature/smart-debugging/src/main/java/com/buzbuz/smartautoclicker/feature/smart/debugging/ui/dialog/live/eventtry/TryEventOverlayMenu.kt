@@ -26,6 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
@@ -34,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryEventMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageEventResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.EventResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.view.DebugOverlayView
 
 import kotlinx.coroutines.launch
@@ -50,10 +51,14 @@ class TryEventOverlayMenu(
         creator = { tryElementViewModel() },
     )
 
+    /** Adapter upon actions being executed while in live debugging. */
+    private val tryEventActionsAdapter: TryEventActionsAdapter = TryEventActionsAdapter()
+
     private lateinit var viewBinding: OverlayTryEventMenuBinding
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayTryEventMenuBinding.inflate(LayoutInflater.from(context))
+        viewBinding.actionList.adapter = tryEventActionsAdapter
 
         return viewBinding.root
     }
@@ -102,8 +107,24 @@ class TryEventOverlayMenu(
         return true
     }
 
-    private fun updateDetectionResults(results: ImageEventResultUiState?) {
-        (screenOverlayView as? DebugOverlayView)?.setResults(results?.detectionResults ?: emptyList())
-        viewBinding.textResult.text = results?.eventText
+    private fun updateDetectionResults(uiState: EventResultUiState?) {
+        (screenOverlayView as? DebugOverlayView)?.setResults(uiState?.detectionResults ?: emptyList())
+        viewBinding.apply {
+            debugEventName.apply {
+                text = uiState?.eventName
+                setLeftCompoundDrawable(uiState?.eventIcon)
+            }
+
+            debugEventConditionOperator.apply {
+                text = uiState?.eventConditionOperator
+            }
+
+            debugEventConditionComputeTime.apply {
+                text = uiState?.eventDuration
+                setLeftCompoundDrawable(if (uiState != null) R.drawable.ic_duration else null)
+            }
+
+            tryEventActionsAdapter.submitList(uiState?.actions)
+        }
     }
 }

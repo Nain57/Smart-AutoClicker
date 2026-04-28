@@ -29,7 +29,7 @@ interface DebuggingRepository {
     val isLiveDebugging: Flow<Boolean>
 
     /** The last event that has been matched, with all interpreted conditions results. */
-    val lastImageEventFulfilled: Flow<DebugLiveEventOccurrence?>
+    val lastImageEventProcessed: Flow<DebugLiveEventOccurrence?>
 
     /** Tells if a debug report is available. */
     val isDebugReportAvailable: StateFlow<Boolean>

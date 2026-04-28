@@ -138,9 +138,8 @@ internal class ScenarioProcessor(
                 conditions = triggerEvent.conditions,
             )
 
-
+            progressListener.onEventProcessingCompleted(triggerEvent, results.fulfilled == true, results.getAllTriggerConditionsResults())
             if (results.fulfilled  == true) {
-                progressListener.onEventFulfilled(triggerEvent, results.getAllTriggerConditionsResults())
                 actionExecutor.executeActions(triggerEvent, results)
                 progressListener.onEventActionsExecuted(triggerEvent, results.getAllTriggerConditionsResults())
             }
@@ -163,8 +162,8 @@ internal class ScenarioProcessor(
                     conditions = imageEvent.conditions,
                 )
 
+                progressListener.onEventProcessingCompleted(imageEvent, results.fulfilled == true, results.getAllImageConditionsResults())
                 if (results.fulfilled == true) {
-                    progressListener.onEventFulfilled(imageEvent, results.getAllImageConditionsResults())
                     actionExecutor.executeActions(imageEvent, results)
                     progressListener.onEventActionsExecuted(imageEvent, results.getAllImageConditionsResults())
 
