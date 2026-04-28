@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2024 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_action_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom">
 
         <View
@@ -119,10 +119,10 @@
             android:id="@+id/space_background_top"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/overlay_brief_background_top_padding"
+            android:layout_marginBottom="@dimen/overlay_brief_background_top_padding_port"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/list_actions"/>
+            app:layout_constraintBottom_toTopOf="@+id/card_action_index"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/empty_scenario_card"
@@ -152,11 +152,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_actions"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_brief_height"
+            android:layout_height="0dp"
+            android:paddingHorizontal="@dimen/margin_horizontal_large"
             android:layout_marginBottom="@dimen/margin_vertical_extra_large"
             app:layout_constraintBottom_toTopOf="@id/card_action_index"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:scrollbars="none"
             tools:itemCount="12"/>

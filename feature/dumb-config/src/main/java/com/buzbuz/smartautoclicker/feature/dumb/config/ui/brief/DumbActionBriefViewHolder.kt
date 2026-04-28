@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.ItemDumbActionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionDetails
+import com.google.android.material.card.MaterialCardView
 
 
 class DumbActionBriefViewHolder(
@@ -40,7 +41,7 @@ class DumbActionBriefViewHolder(
 
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
-            viewRoot.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
+            card.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
 
             val details = item.data as DumbActionDetails
             name.visibility = View.VISIBLE
@@ -60,6 +61,7 @@ class DumbActionBriefViewHolder(
 
 class ItemDumbActionBriefBinding private constructor(
     val viewRoot: View,
+    val card: MaterialCardView,
     val name: TextView,
     val duration: TextView,
     val repeat: TextView,
@@ -76,6 +78,7 @@ class ItemDumbActionBriefBinding private constructor(
 
     constructor(binding: ItemDumbActionBriefPortBinding) : this(
         viewRoot = binding.root,
+        card = binding.itemCard,
         name = binding.actionName,
         duration = binding.actionDuration,
         repeat = binding.actionRepeat,
@@ -84,6 +87,7 @@ class ItemDumbActionBriefBinding private constructor(
 
     constructor(binding: ItemDumbActionBriefLandBinding) : this(
         viewRoot = binding.root,
+        card = binding.itemCard,
         name = binding.actionName,
         duration = binding.actionDuration,
         repeat = binding.actionRepeat,

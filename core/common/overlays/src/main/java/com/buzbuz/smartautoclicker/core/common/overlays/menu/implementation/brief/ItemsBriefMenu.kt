@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
+import androidx.core.view.isVisible
 
 abstract class ItemBriefMenu(
     @StyleRes theme: Int? = null,
@@ -240,7 +241,7 @@ abstract class ItemBriefMenu(
     }
 
     protected fun isGestureCaptureStarted(): Boolean =
-        briefViewBinding.viewRecorder.visibility == View.VISIBLE
+        briefViewBinding.viewRecorder.isVisible
 
     private fun updateBriefButtons(itemCount: Int) {
         briefViewBinding.apply {
@@ -251,24 +252,22 @@ abstract class ItemBriefMenu(
                 buttonMoveNext.isEnabled = false
                 buttonPlay.isEnabled = false
                 buttonDelete.isEnabled = false
-                textActionIndex.text = context.getString(
-                    R.string.item_brief_items_count,
-                    0,
-                    0,
-                )
+                textActionIndex.text = getIndexText(currentIndex = 0, itemCount = 0)
                 textActionIndex.isEnabled = false
             } else {
+                displayConfigManager.displayConfig.orientation
                 buttonMovePrevious.isEnabled = itemListSnapHelper.snapPosition != 0
                 buttonMoveNext.isEnabled = itemListSnapHelper.snapPosition != (itemCount - 1)
                 buttonPlay.isEnabled = true
                 buttonDelete.isEnabled = true
-                textActionIndex.text = context.getString(
-                    R.string.item_brief_items_count,
-                    index + 1,
-                    itemCount,
-                )
+                textActionIndex.text = getIndexText(currentIndex = index + 1, itemCount = itemCount)
                 textActionIndex.isEnabled = true
             }
         }
     }
+
+    private fun getIndexText(currentIndex: Int, itemCount: Int): String =
+        if (displayConfigManager.displayConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            context.getString(R.string.item_brief_items_count_land, currentIndex, itemCount)
+        else context.getString(R.string.item_brief_items_count_port, currentIndex, itemCount)
 }

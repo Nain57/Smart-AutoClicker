@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.google.android.material.card.MaterialCardView
 
 
 class SmartActionBriefViewHolder(
@@ -39,7 +40,7 @@ class SmartActionBriefViewHolder(
 
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
-            rootView.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
+            card.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
 
             val details = item.data as UiAction
             name.visibility = View.VISIBLE
@@ -53,6 +54,7 @@ class SmartActionBriefViewHolder(
 
 class ItemSmartActionBriefBinding private constructor(
     val rootView: View,
+    val card: MaterialCardView,
     val icon: ImageView,
     val name: TextView,
     val description: TextView,
@@ -69,6 +71,7 @@ class ItemSmartActionBriefBinding private constructor(
 
     constructor(binding: ItemSmartActionBriefPortBinding) : this(
         rootView = binding.root,
+        card = binding.itemCard,
         icon = binding.itemIcon,
         name = binding.itemName,
         description = binding.itemDescription,
@@ -77,6 +80,7 @@ class ItemSmartActionBriefBinding private constructor(
 
     constructor(binding: ItemSmartActionBriefLandBinding) : this(
         rootView = binding.root,
+        card = binding.itemCard,
         icon = binding.itemIcon,
         name = binding.itemName,
         description = binding.itemDescription,

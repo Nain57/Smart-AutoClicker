@@ -21,26 +21,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_width="200dp"
-    tools:layout_height="500dp">
+    android:layout_marginVertical="@dimen/margin_vertical_large">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/item_card"
         style="@style/AppTheme.Widget.Card"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/overlay_brief_item_width_land"
         android:layout_height="match_parent"
-        android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_gravity="start">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_card_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_small"
-            android:layout_marginVertical="@dimen/margin_vertical_default">
+            android:layout_marginHorizontal="@dimen/margin_horizontal_mini">
 
             <ImageView
                 android:id="@+id/error_badge"

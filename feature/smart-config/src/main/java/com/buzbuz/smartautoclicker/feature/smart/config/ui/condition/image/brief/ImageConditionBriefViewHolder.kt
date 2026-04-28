@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.google.android.material.card.MaterialCardView
 
 
 class ImageConditionBriefViewHolder(
@@ -43,7 +44,7 @@ class ImageConditionBriefViewHolder(
 
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
-            rootView.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
+            card.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
             val details = item.data as UiImageCondition
 
             name.visibility = View.VISIBLE
@@ -68,6 +69,7 @@ class ImageConditionBriefViewHolder(
 
 class ImageConditionBriefBinding private constructor(
     val rootView: View,
+    val card: MaterialCardView,
     val icon: ImageView,
     val name: TextView,
     val shouldBeDetectedText: TextView,
@@ -86,6 +88,7 @@ class ImageConditionBriefBinding private constructor(
 
     constructor(binding: ItemImageConditionBriefPortBinding) : this(
         rootView = binding.root,
+        card = binding.itemCard,
         icon = binding.itemIcon,
         name = binding.itemName,
         shouldBeDetectedText = binding.textShouldBeDetected,
@@ -96,6 +99,7 @@ class ImageConditionBriefBinding private constructor(
 
     constructor(binding: ItemImageConditionBriefLandBinding) : this(
         rootView = binding.root,
+        card = binding.itemCard,
         icon = binding.itemIcon,
         name = binding.itemName,
         shouldBeDetectedText = binding.textShouldBeDetected,
