@@ -39,6 +39,15 @@ internal class ItemsBriefSnapHelper : PagerSnapHelper() {
             Log.d(TAG, "onItemRangeInserted: new item, snapping to last insertion index")
             snapTo(positionStart + itemCount - 1, animateScroll = false)
         }
+
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            if (itemCount != 1) return
+
+            when (snapPosition) {
+                fromPosition -> onSnapPositionUpdated(toPosition)
+                toPosition -> onSnapPositionUpdated(fromPosition)
+            }
+        }
     }
 
     private var initialItemConsumed: Boolean = false
@@ -70,7 +79,7 @@ internal class ItemsBriefSnapHelper : PagerSnapHelper() {
 
     fun snapTo(position: Int, animateScroll: Boolean = true) {
         val itemCount = attachedRecyclerView.getListItemCount() ?: return
-        if (position < 0 || position >= itemCount) return
+        if (position !in 0..< itemCount) return
 
         attachedRecyclerView?.snapTo(position, animateScroll)
     }
