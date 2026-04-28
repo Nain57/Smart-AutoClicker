@@ -20,5 +20,7 @@
     <string name="dialog_move_to_position_label">Index</string>
     <string name="overlay_instructions_gesture_record">Recording gesture…</string>
 
-    <string name="item_brief_items_count" translatable="false">%1$d/%2$d</string>
+    <string name="item_brief_items_count_port" translatable="false">%1$d/%2$d</string>
+    <string name="item_brief_items_count_land" translatable="false">%1$d\n—\n%2$d</string>
+
 </resources>

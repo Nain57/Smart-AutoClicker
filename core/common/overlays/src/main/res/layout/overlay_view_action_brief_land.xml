@@ -102,9 +102,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_action_list"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom">
+        android:layout_gravity="start">
 
         <View
             android:id="@+id/background_list"
@@ -120,7 +120,7 @@
             android:id="@+id/space_background_end"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/overlay_brief_background_top_padding"
+            android:layout_marginStart="@dimen/overlay_brief_background_end_padding_land"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/card_action_index"/>
@@ -153,25 +153,55 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_actions"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/card_action_index"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="match_parent"
+            android:paddingVertical="64dp"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card_action_index"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clipToPadding="false"
             android:orientation="vertical"
             android:scrollbars="none"
             tools:itemCount="12"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_previous"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:icon="@drawable/ic_move_up"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+            app:layout_constraintTop_toBottomOf="@id/button_move_previous"
+            app:layout_constraintBottom_toTopOf="@+id/card_action_index"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_delete"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_action_index"
             style="@style/AppTheme.Widget.Card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
+            android:layout_marginVertical="@dimen/margin_vertical_large"
+            app:layout_constraintTop_toBottomOf="@id/button_delete"
+            app:layout_constraintBottom_toTopOf="@id/button_play_action"
             app:layout_constraintStart_toStartOf="@id/button_delete"
-            app:layout_constraintBottom_toTopOf="@id/button_move_previous"
-            app:layout_constraintEnd_toEndOf="@id/button_play_action">
+            app:layout_constraintEnd_toEndOf="@id/button_delete">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_action_index"
@@ -181,59 +211,34 @@
                 android:gravity="center"
                 android:textSize="@dimen/text_size_list_item_text_big"
                 android:textStyle="bold"
-                android:singleLine="true"
-                tools:text="1/12"/>
+                tools:text="1\n—\n12"/>
 
         </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_move_previous"
-            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:layout_marginBottom="@dimen/margin_vertical_small"
-            app:layout_constraintBottom_toTopOf="@id/button_delete"
-            app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_move_up"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_move_next"
-            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_move_previous"
-            app:layout_constraintStart_toEndOf="@id/button_move_previous"
-            app:layout_constraintBottom_toBottomOf="@id/button_move_previous"
-            app:icon="@drawable/ic_move_down"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_delete"
-            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            android:layout_marginTop="@dimen/margin_vertical_default"
-            android:layout_marginBottom="@dimen/margin_vertical_large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_delete"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_play_action"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-            android:layout_marginVertical="@dimen/margin_vertical_default"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_delete"
-            app:layout_constraintStart_toEndOf="@id/button_delete"
-            app:layout_constraintBottom_toBottomOf="@id/button_delete"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginTop="@dimen/margin_vertical_extra_large"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
+            app:layout_constraintTop_toBottomOf="@id/card_action_index"
+            app:layout_constraintBottom_toTopOf="@id/button_move_next"
+            app:layout_constraintStart_toStartOf="parent"
             app:icon="@drawable/ic_play_arrow"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_next"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            app:layout_constraintTop_toBottomOf="@id/button_play_action"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_move_down"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,7 +16,12 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <dimen name="overlay_brief_background_top_padding">32dp</dimen>
+    <dimen name="overlay_brief_background_top_padding_port">112dp</dimen>
+    <dimen name="overlay_brief_background_end_padding_land">156dp</dimen>
+
     <dimen name="overlay_brief_instructions_bottom_padding">24dp</dimen>
+    <dimen name="overlay_brief_item_width_land">124dp</dimen>
+    <dimen name="overlay_brief_item_height_land">256dp</dimen>
+
     <dimen name="item_brief_height">80dp</dimen>
 </resources>
