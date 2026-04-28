@@ -81,8 +81,8 @@ internal class DebugEngine @Inject constructor(
     private val _isDebuggingSession: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDebuggingSession: StateFlow<Boolean> = _isDebuggingSession
 
-    private val _lastEventFulfilled: MutableStateFlow<DebugLiveEventOccurrence?> = MutableStateFlow(null)
-    val lastEventFulfilled: StateFlow<DebugLiveEventOccurrence?> = _lastEventFulfilled
+    private val _lastEventProcessed: MutableStateFlow<DebugLiveEventOccurrence?> = MutableStateFlow(null)
+    val lastEventProcessed: StateFlow<DebugLiveEventOccurrence?> = _lastEventProcessed
 
 
     override fun onSessionStarted(
@@ -125,19 +125,21 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
-    override fun onEventFulfilled(event: Event, results: List<ProcessedConditionResult>) {
+    override fun onEventProcessingCompleted(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult>) {
         coroutineScopeIo.launch {
-            eventOccurrencesRecorder.onEventFulfilled(event)
+            if (fulfilled) eventOccurrencesRecorder.onEventFulfilled(event)
 
-            _lastEventFulfilled.update {
+            _lastEventProcessed.update {
                 @Suppress("UNCHECKED_CAST")
                 when (event) {
                     is ImageEvent -> getLiveImageEventOccurrence(
                         event = event,
+                        fulfilled = fulfilled,
                         results = results as List<ProcessedConditionResult.Image>,
                     )
                     is TriggerEvent -> getLiveTriggerEventOccurrence(
                         event = event,
+                        fulfilled = fulfilled,
                         results = results as List<ProcessedConditionResult.Trigger>,
                     )
                 }
@@ -238,16 +240,17 @@ internal class DebugEngine @Inject constructor(
 
             eventOccurrencesRecorder.reset()
             imgConditionOccurrenceRecorder.reset()
-            _lastEventFulfilled.value = null
+            _lastEventProcessed.value = null
             _isDebuggingSession.value = false
             isReportEnabled = false
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getLiveImageEventOccurrence(event: Event, results: List<ProcessedConditionResult.Image>): DebugLiveEventOccurrence.Image =
+    private fun getLiveImageEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Image>): DebugLiveEventOccurrence.Image =
         DebugLiveEventOccurrence.Image(
             event = event as ImageEvent,
+            fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
             conditionsResults = results.map { result ->
@@ -262,9 +265,10 @@ internal class DebugEngine @Inject constructor(
         )
 
     @Suppress("UNCHECKED_CAST")
-    private fun getLiveTriggerEventOccurrence(event: Event, results: List<ProcessedConditionResult.Trigger>): DebugLiveEventOccurrence.Trigger =
+    private fun getLiveTriggerEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Trigger>): DebugLiveEventOccurrence.Trigger =
         DebugLiveEventOccurrence.Trigger(
             event = event as TriggerEvent,
+            fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
             conditionsResults = results.map { result ->

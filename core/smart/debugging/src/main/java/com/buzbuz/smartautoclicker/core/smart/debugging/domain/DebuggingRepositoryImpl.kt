@@ -53,8 +53,8 @@ internal class DebuggingRepositoryImpl @Inject constructor(
         isDebuggingSession && isDebugViewEnabled()
     }
 
-    override val lastImageEventFulfilled: Flow<DebugLiveEventOccurrence?> =
-        debugEngine.lastEventFulfilled
+    override val lastImageEventProcessed: Flow<DebugLiveEventOccurrence?> =
+        debugEngine.lastEventProcessed
 
     override val isDebugReportAvailable: StateFlow<Boolean> =
         debugReportDataSource.isReportAvailable

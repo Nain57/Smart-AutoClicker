@@ -40,7 +40,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_result"
+                app:layout_constraintEnd_toStartOf="@id/layout_debug"
                 android:animateLayoutChanges="true">
 
                 <ImageButton
@@ -63,32 +63,125 @@
 
             </LinearLayout>
 
-            <FrameLayout
-                android:id="@+id/layout_result"
-                style="@style/AppTheme.TextAppearance.Overlay.Big"
-                android:layout_width="@dimen/overlay_debug_text_width"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-                android:maxLines="1"
-                android:gravity="center"
-                android:textColor="@color/textTitle"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_debug"
+                android:layout_width="@dimen/overlay_debug_event_try_panel_width"
+                android:layout_height="@dimen/overlay_debug_event_try_panel_height"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toEndOf="@id/menu_items"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/text_result"
-                    style="@style/AppTheme.TextAppearance.Overlay.Big"
-                    android:layout_width="match_parent"
+                <View
+                    android:id="@+id/separator_start"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent"
+                    android:background="@android:drawable/divider_horizontal_bright"
+                    android:backgroundTint="@color/overlayViewPrimary"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/debug_event_name"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_default"
                     android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
                     android:maxLines="1"
-                    android:gravity="center"
-                    android:textColor="@color/textTitle"
-                    tools:text="4/5"/>
+                    android:ellipsize="marquee"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/separator_1"
+                    app:layout_constraintVertical_chainStyle="spread_inside"
+                    app:drawableTint="@color/overlayMenuButtons"
+                    android:drawablePadding="@dimen/margin_horizontal_small"
+                    tools:text="Event Name"
+                    tools:drawableStart="@drawable/ic_condition" />
 
-            </FrameLayout>
+                <View
+                    android:id="@+id/separator_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    app:layout_constraintTop_toBottomOf="@id/debug_event_name"
+                    app:layout_constraintBottom_toTopOf="@id/debug_event_condition_operator"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@android:drawable/divider_horizontal_bright"
+                    android:backgroundTint="@color/overlayViewPrimary" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/debug_event_condition_operator"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_horizontal_small"
+                    android:layout_marginEnd="@dimen/margin_horizontal_mini"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@id/separator_1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/separator_3"
+                    app:layout_constraintBottom_toTopOf="@id/separator_2"
+                    tools:text="AND"/>
+
+                <View
+                    android:id="@+id/separator_3"
+                    android:layout_width="2dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/separator_1"
+                    app:layout_constraintBottom_toTopOf="@id/separator_2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@android:drawable/divider_horizontal_bright"
+                    android:backgroundTint="@color/overlayViewPrimary" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/debug_event_condition_compute_time"
+                    style="@style/AppTheme.TextAppearance.DebugOverlayText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@id/separator_1"
+                    app:layout_constraintStart_toEndOf="@id/separator_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/separator_2"
+                    android:drawablePadding="@dimen/margin_horizontal_mini"
+                    app:drawableStartCompat="@drawable/ic_duration"
+                    app:drawableTint="@color/overlayMenuButtons"
+                    tools:text="142ms"/>
+
+                <View
+                    android:id="@+id/separator_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    app:layout_constraintTop_toBottomOf="@id/debug_event_condition_operator"
+                    app:layout_constraintBottom_toTopOf="@id/action_list"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@android:drawable/divider_horizontal_bright"
+                    android:backgroundTint="@color/overlayViewPrimary" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/action_list"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/separator_2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:orientation="horizontal"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_live_debugging_event_try_action"
+                    tools:itemCount="3"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
