@@ -63,6 +63,8 @@ class ScenarioCreationViewModel @Inject constructor(
         .take(1)
     val nameError: Flow<Boolean> = _name
         .map { it.isNullOrEmpty() }
+    val showPaidLimitationWarning: Flow<Boolean> = revenueRepository.userBillingState
+        .map { it != UserBillingState.PURCHASED }
 
     private val _selectedType: MutableStateFlow<ScenarioTypeSelection> =
         MutableStateFlow(ScenarioTypeSelection.SMART)
@@ -72,8 +74,6 @@ class ScenarioCreationViewModel @Inject constructor(
                 dumbItem = ScenarioTypeItem.Dumb,
                 smartItem = ScenarioTypeItem.Smart,
                 selectedItem = selectedType,
-                showPaidLimitationWarning =
-                    billingState == UserBillingState.PURCHASED && selectedType == ScenarioTypeSelection.SMART
             )
         }
 
@@ -150,7 +150,6 @@ data class ScenarioTypeSelectionState(
     val dumbItem: ScenarioTypeItem.Dumb,
     val smartItem: ScenarioTypeItem.Smart,
     val selectedItem: ScenarioTypeSelection,
-    val showPaidLimitationWarning: Boolean,
 )
 
 sealed class ScenarioTypeItem(val titleRes: Int, val iconRes: Int, val descriptionText: Int) {

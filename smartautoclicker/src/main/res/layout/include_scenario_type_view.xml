@@ -24,40 +24,56 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:checkable="true"
-    android:focusable="true"
-    tools:layout_width="180dp">
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_vertical_default">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_scenario_type"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
-            app:layout_constraintWidth_percent="0.5"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/title_scenario_type"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/ic_smart"/>
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title_scenario_type"
-            style="@style/AppTheme.TextAppearance.BodyLarge"
-            android:layout_width="match_parent"
+            style="@style/AppTheme.TextAppearance.DisplaySmall"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_scenario_type"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/title_scenario_type_desc"
+            app:drawableStartCompat="@drawable/ic_smart"
+            android:drawablePadding="@dimen/margin_horizontal_small"
             tools:text="@string/item_title_smart_scenario" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title_scenario_type_desc"
+            style="@style/AppTheme.TextAppearance.CardItemHText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_scenario_type"
+            app:layout_constraintBottom_toTopOf="@id/title_scenario_type_ad_warning"
+            tools:text="@string/item_desc_smart_scenario" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title_scenario_type_ad_warning"
+            style="@style/AppTheme.TextAppearance.CardItemHText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_scenario_type_desc"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?attr/colorError"
+            android:text="@string/item_desc_smart_scenario_pro_mode"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
