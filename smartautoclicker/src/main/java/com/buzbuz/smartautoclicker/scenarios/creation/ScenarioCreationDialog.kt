@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
@@ -72,6 +73,7 @@ class ScenarioCreationDialog : DialogFragment() {
                 launch { viewModel.nameError.collect(viewBinding.scenarioNameInputLayout::setError) }
                 launch { viewModel.scenarioTypeSelectionState.collect(::updateTypeSelection) }
                 launch { viewModel.creationState.collect(::updateCreationState) }
+                launch { viewModel.showPaidLimitationWarning.collect(::updatePaidLimitationWarning) }
             }
         }
     }
@@ -128,11 +130,14 @@ class ScenarioCreationDialog : DialogFragment() {
         when (type) {
             ScenarioTypeSelection.DUMB -> {
                 titleScenarioType.setText(R.string.item_title_dumb_scenario)
-                imageScenarioType.setImageResource(R.drawable.ic_dumb)
+                titleScenarioType.setLeftCompoundDrawable(R.drawable.ic_dumb)
+                titleScenarioTypeDesc.setText(R.string.item_desc_dumb_scenario)
             }
             ScenarioTypeSelection.SMART -> {
                 titleScenarioType.setText(R.string.item_title_smart_scenario)
-                imageScenarioType.setImageResource(R.drawable.ic_smart)
+                titleScenarioType.setLeftCompoundDrawable(R.drawable.ic_smart)
+                titleScenarioTypeDesc.setText(R.string.item_desc_smart_scenario)
+                titleScenarioTypeAdWarning.setText(R.string.item_desc_smart_scenario_pro_mode)
             }
         }
 
@@ -145,32 +150,21 @@ class ScenarioCreationDialog : DialogFragment() {
 
     private fun updateTypeSelection(state: ScenarioTypeSelectionState) {
         viewBinding.apply {
-            scenarioTypeDumb.setState(state.dumbItem, state.selectedItem, ScenarioTypeSelection.DUMB)
-            scenarioTypeSmart.setState(state.smartItem, state.selectedItem, ScenarioTypeSelection.SMART)
-
-            when (state.selectedItem) {
-                ScenarioTypeSelection.DUMB -> {
-                    scenarioTypeDescription.setText(state.dumbItem.descriptionText)
-                    scenarioTypeDescriptionNotPurchased.visibility = View.GONE
-                }
-                ScenarioTypeSelection.SMART -> {
-                    scenarioTypeDescription.setText(state.smartItem.descriptionText)
-                    scenarioTypeDescriptionNotPurchased.visibility =
-                        if (state.showPaidLimitationWarning) View.VISIBLE else View.GONE
-                }
-            }
+            scenarioTypeDumb.setState(state.selectedItem, ScenarioTypeSelection.DUMB)
+            scenarioTypeSmart.setState(state.selectedItem, ScenarioTypeSelection.SMART)
         }
     }
 
+    private fun updatePaidLimitationWarning(enabled: Boolean) {
+        viewBinding.scenarioTypeSmart.titleScenarioTypeAdWarning.visibility =
+            if (enabled) View.VISIBLE else View.GONE
+    }
+
     private fun IncludeScenarioTypeViewBinding.setState(
-        item: ScenarioTypeItem,
         selectedItem: ScenarioTypeSelection,
         type: ScenarioTypeSelection,
     ) {
         root.isChecked = selectedItem == type
-        titleScenarioType.setText(item.titleRes)
-        imageScenarioType.setImageResource(item.iconRes)
-
         root.setOnClickListener { viewModel.setSelectedType(type) }
     }
 
