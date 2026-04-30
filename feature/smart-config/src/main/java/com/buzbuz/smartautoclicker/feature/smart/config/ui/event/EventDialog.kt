@@ -325,8 +325,7 @@ class EventDialog(
         viewBinding.apply {
             fieldKeepDetecting.root.visibility =  if (isEnabled) View.VISIBLE else View.GONE
             dividerKeepDetecting.visibility =  if (isEnabled) View.VISIBLE else View.GONE
-            fieldTestEvent.root.visibility = if (isEnabled) View.VISIBLE else View.GONE
-            dividerTrySelector.visibility = if (isEnabled) View.VISIBLE else View.GONE
+            cardEventTest.visibility = if (isEnabled) View.VISIBLE else View.GONE
         }
     }
 
