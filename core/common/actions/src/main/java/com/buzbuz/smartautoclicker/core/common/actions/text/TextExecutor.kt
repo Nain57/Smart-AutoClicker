@@ -17,6 +17,9 @@
 package com.buzbuz.smartautoclicker.core.common.actions.text
 
 import android.accessibilityservice.AccessibilityService
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -29,15 +32,17 @@ internal class TextExecutor @Inject constructor() {
 
     fun writeText(service: AccessibilityService, text: String, validateInput: Boolean) {
         // Find the view to write on
-        val focusedItem = service.findFocusInput() ?: let {
+        val focusedItem = service.findTextInputNode() ?: let {
             Log.d(TAG, "Cannot write text, no focused item found")
             return
         }
 
-        // Write the text
+        // Write the text, if not successful, try to paste it
         if (!focusedItem.writeText(text)) {
-            Log.d(TAG, "Cannot write text, focused item can't be written on")
-            return
+            if (!focusedItem.pasteText(service, text)) {
+                Log.d(TAG, "Cannot write text, focused item can't be written on")
+                return
+            }
         }
 
         // Nothing to validate? We can stop here
@@ -48,8 +53,33 @@ internal class TextExecutor @Inject constructor() {
     }
 }
 
-private fun AccessibilityService.findFocusInput(): AccessibilityNodeInfo? =
-    findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+private fun AccessibilityService.findTextInputNode(): AccessibilityNodeInfo? =
+    findFocus(AccessibilityNodeInfo.FOCUS_INPUT)?.findTextInputNode()
+        ?: return null
+
+private fun AccessibilityNodeInfo.findTextInputNode(): AccessibilityNodeInfo? {
+    val stack = ArrayDeque<Pair<AccessibilityNodeInfo, Int>>()
+    stack.add(this to 0)
+
+    while (stack.isNotEmpty()) {
+        // Process next node in stack
+        val (node, depth) = stack.removeLast()
+
+        // Check if it is the focused node
+        if (node.isFocused) return node
+        if (depth >= FOCUS_FINDER_MAX_DEPTH) continue
+
+        // Push children onto the stack
+        for (i in node.childCount - 1 downTo 0) {
+            node.getChild(i)?.let { child ->
+                stack.add(child to (depth + 1))
+            }
+        }
+    }
+
+    Log.d(TAG, "Can't find focusable view for input within children.")
+    return null
+}
 
 private fun AccessibilityNodeInfo.writeText(textToWrite: String): Boolean =
     performAction(
@@ -58,6 +88,15 @@ private fun AccessibilityNodeInfo.writeText(textToWrite: String): Boolean =
             putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, textToWrite)
         }
     )
+
+private fun AccessibilityNodeInfo.pasteText(service: AccessibilityService, text: String): Boolean {
+    val clipboard = service.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        ?: return false
+
+    clipboard.setPrimaryClip(ClipData.newPlainText("text", text))
+
+    return performAction(AccessibilityNodeInfo.ACTION_PASTE)
+}
 
 private fun AccessibilityNodeInfo.validateInput(): Boolean {
     // Recent API just need to request ENTER
@@ -70,4 +109,5 @@ private fun AccessibilityNodeInfo.validateInput(): Boolean {
     return performAction(actionImeEnter.id)
 }
 
+private const val FOCUS_FINDER_MAX_DEPTH = 10
 private const val TAG = "TextExecutor"
