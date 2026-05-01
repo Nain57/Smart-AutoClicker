@@ -38,8 +38,8 @@ import kotlinx.coroutines.yield
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
  * @param imageEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
- * @param androidExecutor execute the actions requiring an interaction with Android..
- * @param onStopRequested called when a end condition of the scenario have been reached or all events are disabled.
+ * @param androidExecutor execute the actions requiring an interaction with Android.
+ * @param onStopRequested called when an end condition of the scenario have been reached or all events are disabled.
  * @param progressListener the object to notify for detection progress. Can be null if not required.
  */
 internal class ScenarioProcessor(
@@ -53,7 +53,7 @@ internal class ScenarioProcessor(
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
-    private val progressListener: SmartProcessingListener,
+    private val progressListener: SmartProcessingListener?,
 ) {
 
     /** Handle the processing state of the scenario. */
@@ -101,22 +101,22 @@ internal class ScenarioProcessor(
         }
 
         // Handle all trigger events enabled during previous processing
-        progressListener.onEventsListProcessingStarted(EventType.Trigger)
+        progressListener?.onEventsListProcessingStarted(EventType.Trigger)
         if (!processingState.areAllTriggerEventsDisabled()) {
             processTriggerEvents(processingState.getEnabledTriggerEvents())
         }
-        progressListener.onEventsProcessingCompleted(EventType.Trigger)
+        progressListener?.onEventsProcessingCompleted(EventType.Trigger)
 
         // Reset any values that needs to be reset for each iteration
         // After the triggers to let them handle changes, before the image processing to start capturing values before
         processingState.clearIterationState()
 
         // Handle the image detection
-        progressListener.onEventsListProcessingStarted(EventType.Image)
+        progressListener?.onEventsListProcessingStarted(EventType.Image)
         if (!processingState.areAllImageEventsDisabled()) {
             processImageEvents(screenFrame, processingState.getEnabledImageEvents())
         }
-        progressListener.onEventsProcessingCompleted(EventType.Image)
+        progressListener?.onEventsProcessingCompleted(EventType.Image)
 
         // Loop is completed
         actionExecutor.onScenarioLoopFinished()
@@ -132,16 +132,16 @@ internal class ScenarioProcessor(
             // No conditions ? This should not happen, skip this event
             if (triggerEvent.conditions.isEmpty()) continue
 
-            progressListener.onEventProcessingStarted(triggerEvent)
+            progressListener?.onEventProcessingStarted(triggerEvent)
             val results = conditionsVerifier.verifyConditions(
                 operator = triggerEvent.conditionOperator,
                 conditions = triggerEvent.conditions,
             )
 
-            progressListener.onEventProcessingCompleted(triggerEvent, results.fulfilled == true, results.getAllTriggerConditionsResults())
+            progressListener?.onEventProcessingCompleted(triggerEvent, results.fulfilled == true, results.getAllTriggerConditionsResults())
             if (results.fulfilled  == true) {
                 actionExecutor.executeActions(triggerEvent, results)
-                progressListener.onEventActionsExecuted(triggerEvent, results.getAllTriggerConditionsResults())
+                progressListener?.onEventActionsExecuted(triggerEvent, results.getAllTriggerConditionsResults())
             }
         }
     }
@@ -156,16 +156,16 @@ internal class ScenarioProcessor(
                 // No conditions ? This should not happen, skip this event
                 if (imageEvent.conditions.isEmpty()) continue
 
-                progressListener.onEventProcessingStarted(imageEvent)
+                progressListener?.onEventProcessingStarted(imageEvent)
                 val results = conditionsVerifier.verifyConditions(
                     operator = imageEvent.conditionOperator,
                     conditions = imageEvent.conditions,
                 )
 
-                progressListener.onEventProcessingCompleted(imageEvent, results.fulfilled == true, results.getAllImageConditionsResults())
+                progressListener?.onEventProcessingCompleted(imageEvent, results.fulfilled == true, results.getAllImageConditionsResults())
                 if (results.fulfilled == true) {
                     actionExecutor.executeActions(imageEvent, results)
-                    progressListener.onEventActionsExecuted(imageEvent, results.getAllImageConditionsResults())
+                    progressListener?.onEventActionsExecuted(imageEvent, results.getAllImageConditionsResults())
 
                     if (!imageEvent.keepDetecting) break
                 }

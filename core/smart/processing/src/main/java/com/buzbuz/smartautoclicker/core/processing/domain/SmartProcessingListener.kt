@@ -33,13 +33,13 @@ interface SmartProcessingListener {
      * @param scenario the [Scenario] running for the processing session.
      * @param imageEvents the list of [ImageEvent] to be processed for this scenario.
      * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
-     * @param isAnElementTry tells if this session is a complete scenario or a try made during scenario creation.
+     * @param generateLiveEvents tells if the live debugging events should be generated.
      */
     fun onSessionStarted(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        isAnElementTry: Boolean = false,
+        generateLiveEvents: Boolean,
     ) = Unit
 
 

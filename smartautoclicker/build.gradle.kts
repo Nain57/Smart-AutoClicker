@@ -115,6 +115,7 @@ dependencies {
     implementation(project(":core:common:settings"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:dumb"))
+    implementation(project(":core:smart:debugging"))
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))

@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationController
@@ -56,6 +57,7 @@ class LocalService(
     private val smartProcessingRepository: SmartProcessingRepository,
     private val dumbEngine: DumbEngine,
     private val revenueRepository: IRevenueRepository,
+    private val debuggingRepository: DebuggingRepository,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
     private val onStop: () -> Unit,
 ) : ILocalService {
@@ -128,7 +130,7 @@ class LocalService(
      * This requires the media projection permission code and its data intent, they both can be retrieved using the
      * results of the activity intent provided by [MediaProjectionManager.createScreenCaptureIntent] (this Intent
      * shows the dialog warning about screen recording privacy). Any attempt to call this method without the
-     * correct screen capture intent result will leads to a crash.
+     * correct screen capture intent result will lead to a crash.
      *
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
@@ -234,6 +236,8 @@ class LocalService(
             smartProcessingRepository.startDetection(
                 context = context,
                 autoStopDuration = revenueRepository.consumeTrial(),
+                liveDebugging = debuggingRepository.isDebugViewEnabled(),
+                generateReport = debuggingRepository.isDebugReportEnabled(),
             )
         }
     }

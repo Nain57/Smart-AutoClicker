@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -55,6 +56,7 @@ class MainMenuModel @Inject constructor(
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
+    private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
 
     private val scenarioDbId: StateFlow<Long?> = smartProcessingRepository.scenarioId
@@ -142,6 +144,8 @@ class MainMenuModel @Inject constructor(
             smartProcessingRepository.startDetection(
                 context = context,
                 autoStopDuration = revenueRepository.consumeTrial(),
+                liveDebugging = debuggingRepository.isDebugViewEnabled(),
+                generateReport = debuggingRepository.isDebugReportEnabled(),
             )
         }
     }

@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -59,7 +60,7 @@ import javax.inject.Inject
  * clicks detection.
  * This API is offered through the [LocalService] class, which is instantiated in the [LocalServiceProvider] object.
  * This system is used instead of the usual binder interface because an [AccessibilityService] already has its own
- * binder and it can't be changed. To access this local service, use [LocalServiceProvider].
+ * binder, and it can't be changed. To access this local service, use [LocalServiceProvider].
  *
  * We need this service to be an accessibility service in order to inject the detected event on the currently
  * displayed activity. This injection is made by the [dispatchGesture] method, which is called everytime an event has
@@ -86,6 +87,7 @@ class SmartAutoClickerService : AccessibilityService() {
     @Inject lateinit var reviewRepository: ReviewRepository
     @Inject lateinit var appComponentsProvider: AppComponentsProvider
     @Inject lateinit var actionExecutor: AndroidActionExecutor
+    @Inject lateinit var debuggingRepository: DebuggingRepository
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -117,6 +119,7 @@ class SmartAutoClickerService : AccessibilityService() {
                 dumbEngine = dumbEngine,
                 revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
+                debuggingRepository = debuggingRepository,
                 onStart = ::onLocalServiceStarted,
                 onStop = ::onLocalServiceStopped,
             )
@@ -154,7 +157,7 @@ class SmartAutoClickerService : AccessibilityService() {
         actionExecutor.resetState()
 
         if (reviewRepository.isUserCandidateForReview()) {
-            Log.i(TAG, "User is candidate for review, ")
+            Log.i(TAG, "User is candidate for review")
 
             reviewRepository.getReviewActivityIntent(this)?.let { intent ->
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
