@@ -153,7 +153,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun startDetection(context: Context, autoStopDuration: Duration?) {
+    override suspend fun startDetection(context: Context, liveDebugging: Boolean, generateReport: Boolean, autoStopDuration: Duration?) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getImageEvents(id)
@@ -164,7 +164,8 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = scenario,
             imageEvents = events,
             triggerEvents = triggerEvents,
-            isATry = false,
+            liveDebugging = liveDebugging,
+            generateReport = generateReport,
         )
 
         autoStopDuration?.let { duration ->
@@ -223,7 +224,8 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = elementTry.scenario,
             imageEvents = elementTry.imageEvents,
             triggerEvents = elementTry.triggerEvents,
-            isATry = true,
+            liveDebugging = true,
+            generateReport = false,
         )
     }
 

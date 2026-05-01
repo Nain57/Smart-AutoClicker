@@ -30,7 +30,7 @@ interface ICountersState {
 internal class CountersState(
     imageEvents: List<ImageEvent>,
     triggerEvent: List<TriggerEvent>,
-    private val listener: SmartProcessingListener,
+    private val listener: SmartProcessingListener?,
 ) : ICountersState {
 
     /** Parse the whole event list to get all the counters names. */
@@ -48,6 +48,6 @@ internal class CountersState(
 
         // Values are initialized at 0, previous should never be null
         val previous = counterMap.put(counterName, value) ?: return
-        listener.onCounterValueChanged(counterName, previous, value)
+        listener?.onCounterValueChanged(counterName, previous, value)
     }
 }

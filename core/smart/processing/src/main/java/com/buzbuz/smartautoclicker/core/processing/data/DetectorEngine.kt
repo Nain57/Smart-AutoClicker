@@ -99,9 +99,9 @@ class DetectorEngine @Inject constructor(
      * This requires the media projection permission code and its data intent, they both can be retrieved using the
      * results of the activity intent provided by [MediaProjectionManager.createScreenCaptureIntent] (this Intent shows
      * the dialog warning about screen recording privacy). Any attempt to call this method without the correct screen
-     * capture intent result will leads to a crash.
+     * capture intent result will lead to a crash.
      *
-     * Once started, you can use [startDetection]. Once your are done, call [stopScreenRecord].
+     * Once started, you can use [startDetection]. Once you are done, call [stopScreenRecord].
      *
      * @param resultCode the result code provided by the screen capture intent activity result callback
      * [android.app.Activity.onActivityResult]
@@ -161,7 +161,8 @@ class DetectorEngine @Inject constructor(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        isATry: Boolean,
+        liveDebugging: Boolean,
+        generateReport: Boolean,
     ) {
         if (_state.value != DetectorState.RECORDING) {
             Log.w(TAG, "startDetection: Screen record is not started.")
@@ -196,13 +197,15 @@ class DetectorEngine @Inject constructor(
             imageDetector = detector
             detector.init()
 
-            // Setup listeners
-            debuggingListener.onSessionStarted(
-                scenario = scenario,
-                imageEvents = imageEvents,
-                triggerEvents = triggerEvents,
-                isAnElementTry = isATry,
-            )
+            // Setup listeners if needed
+            if (liveDebugging || generateReport) {
+                debuggingListener.onSessionStarted(
+                    scenario = scenario,
+                    imageEvents = imageEvents,
+                    triggerEvents = triggerEvents,
+                    generateLiveEvents = liveDebugging,
+                )
+            }
 
             // Instantiate the processor and initialize its detection state.
             scenarioProcessor = ScenarioProcessor(
@@ -216,7 +219,7 @@ class DetectorEngine @Inject constructor(
                 androidExecutor = actionExecutor,
                 unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),
                 onStopRequested = { stopDetection() },
-                progressListener  = debuggingListener,
+                progressListener  = if (liveDebugging || generateReport) debuggingListener else null,
             )
             scenarioProcessor?.onScenarioStart(context)
 
@@ -344,7 +347,7 @@ class DetectorEngine @Inject constructor(
      * This allows to check the job state correctly within the [block], even quickly after its start, as the [launch]
      * method with the [CoroutineStart.DEFAULT] starts the coroutine execution before returning the resulting [Job].
      *
-     * The job will affected to the [processingJob] variable.
+     * The job will be affected to the [processingJob] variable.
      *
      * @param block the coroutine code which will be invoked in the context of the provided scope.
      */

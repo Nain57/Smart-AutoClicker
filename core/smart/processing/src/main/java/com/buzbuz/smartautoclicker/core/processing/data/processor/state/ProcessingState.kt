@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListene
 internal class ProcessingState(
     imageEvents: List<ImageEvent>,
     triggerEvents: List<TriggerEvent>,
-    private val progressListener: SmartProcessingListener,
+    private val progressListener: SmartProcessingListener?,
     private val eventsState: EventsState = EventsState(imageEvents, triggerEvents),
     private val broadcastsState: BroadcastsState = BroadcastsState(triggerEvents),
     private val countersState: CountersState = CountersState(imageEvents, triggerEvents, progressListener),
@@ -60,7 +60,7 @@ internal class ProcessingState(
             if (condition is TriggerCondition.OnTimerReached) timersState.setTimerStartToNow(condition)
         }
 
-        progressListener.onEventStateChanged(event = event, newValue = true)
+        progressListener?.onEventStateChanged(event = event, newValue = true)
     }
 
     private fun onEventDisabled(event: Event) {
@@ -68,6 +68,6 @@ internal class ProcessingState(
             if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getValidId())
         }
 
-        progressListener.onEventStateChanged(event = event, newValue = false)
+        progressListener?.onEventStateChanged(event = event, newValue = false)
     }
 }

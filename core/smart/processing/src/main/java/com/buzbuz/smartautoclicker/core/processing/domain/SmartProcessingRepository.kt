@@ -79,12 +79,14 @@ interface SmartProcessingRepository : Dumpable {
 
     /**
      * Start the processing for the current [Scenario].
-     * Ignored if the state is different than [DetectionState.RECORDING].
+     * Ignored if the state is different from [DetectionState.RECORDING].
      *
      * @param context the Android context.
+     * @param liveDebugging true if the session should generate live debugging events.
+     * @param generateReport true if the session should generate a debugging report.
      * @param autoStopDuration the duration after which the detection will be stopped.
      */
-    suspend fun startDetection(context: Context, autoStopDuration: Duration? = null)
+    suspend fun startDetection(context: Context, liveDebugging: Boolean, generateReport: Boolean, autoStopDuration: Duration? = null)
 
     /**
      * Stop the processing for the current [Scenario].

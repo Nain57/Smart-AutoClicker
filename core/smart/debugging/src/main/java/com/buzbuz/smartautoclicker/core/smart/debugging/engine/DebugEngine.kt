@@ -73,10 +73,10 @@ internal class DebugEngine @Inject constructor(
         CoroutineScope(SupervisorJob() + ioDispatcher.limitedParallelism(1))
 
     private var isReportEnabled: Boolean = false
-    private var isATry: Boolean = false
+    private var shouldGenerateLiveEvents: Boolean = false
 
     private val shouldWriteReport: Boolean
-        get() = isReportEnabled && !isATry
+        get() = isReportEnabled
 
     private val _isDebuggingSession: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isDebuggingSession: StateFlow<Boolean> = _isDebuggingSession
@@ -89,11 +89,11 @@ internal class DebugEngine @Inject constructor(
         scenario: Scenario,
         imageEvents: List<ImageEvent>,
         triggerEvents: List<TriggerEvent>,
-        isAnElementTry: Boolean,
+        generateLiveEvents: Boolean,
     ) {
         coroutineScopeIo.launch {
             isReportEnabled = debugConfigurationLocalDataSource.isDebugReportEnabled()
-            isATry = isAnElementTry
+            shouldGenerateLiveEvents = generateLiveEvents
             _isDebuggingSession.value = true
 
             if (shouldWriteReport) {
@@ -128,6 +128,7 @@ internal class DebugEngine @Inject constructor(
     override fun onEventProcessingCompleted(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult>) {
         coroutineScopeIo.launch {
             if (fulfilled) eventOccurrencesRecorder.onEventFulfilled(event)
+            if (!shouldGenerateLiveEvents) return@launch
 
             _lastEventProcessed.update {
                 @Suppress("UNCHECKED_CAST")
@@ -243,6 +244,7 @@ internal class DebugEngine @Inject constructor(
             _lastEventProcessed.value = null
             _isDebuggingSession.value = false
             isReportEnabled = false
+            shouldGenerateLiveEvents= false
         }
     }
 
