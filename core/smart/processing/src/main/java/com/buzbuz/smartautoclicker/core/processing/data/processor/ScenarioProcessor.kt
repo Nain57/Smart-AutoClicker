@@ -101,22 +101,22 @@ internal class ScenarioProcessor(
         }
 
         // Handle all trigger events enabled during previous processing
-        progressListener?.onEventsListProcessingStarted(EventType.Trigger)
         if (!processingState.areAllTriggerEventsDisabled()) {
+            progressListener?.onEventsListProcessingStarted(EventType.Trigger)
             processTriggerEvents(processingState.getEnabledTriggerEvents())
+            progressListener?.onEventsProcessingCompleted(EventType.Trigger)
         }
-        progressListener?.onEventsProcessingCompleted(EventType.Trigger)
 
         // Reset any values that needs to be reset for each iteration
         // After the triggers to let them handle changes, before the image processing to start capturing values before
         processingState.clearIterationState()
 
         // Handle the image detection
-        progressListener?.onEventsListProcessingStarted(EventType.Image)
         if (!processingState.areAllImageEventsDisabled()) {
+            progressListener?.onEventsListProcessingStarted(EventType.Image)
             processImageEvents(screenFrame, processingState.getEnabledImageEvents())
+            progressListener?.onEventsProcessingCompleted(EventType.Image)
         }
-        progressListener?.onEventsProcessingCompleted(EventType.Image)
 
         // Loop is completed
         actionExecutor.onScenarioLoopFinished()
