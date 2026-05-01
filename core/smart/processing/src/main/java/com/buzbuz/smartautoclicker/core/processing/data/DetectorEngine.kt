@@ -52,6 +52,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.system.measureNanoTime
 
 /**
  * Detects [ImageEvent] conditions on a display and execute its actions.
@@ -335,9 +337,18 @@ class DetectorEngine @Inject constructor(
     private suspend fun processScreenImages() {
         _state.emit(DetectorState.DETECTING)
 
+        var processingDurationNs: Long
         while (processingJob?.isActive == true) {
             displayRecorder.acquireLatestBitmap()?.let { screenFrame ->
-                scenarioProcessor?.process(screenFrame)
+                processingDurationNs = measureNanoTime {
+                    scenarioProcessor?.process(screenFrame)
+                }
+
+                // Avoid looping infinitely to quickly for nothing.
+                if (processingDurationNs < MIN_PROCESSING_DURATION_NS) {
+                    delay(max(1, (MIN_PROCESSING_DURATION_NS - processingDurationNs) / 1000000))
+                }
+
             } ?: delay(NO_IMAGE_DELAY_MS)
         }
     }
@@ -384,6 +395,8 @@ internal enum class DetectorState {
  * This is to avoid spamming when there is no image.
  */
 private const val NO_IMAGE_DELAY_MS = 20L
+
+private const val MIN_PROCESSING_DURATION_NS = 1000000L
 
 /** Tag for logs. */
 private const val TAG = "DetectorEngine"
