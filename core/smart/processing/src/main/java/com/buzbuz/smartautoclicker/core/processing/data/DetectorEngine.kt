@@ -95,6 +95,9 @@ class DetectorEngine @Inject constructor(
     /** Current state of the detector. */
     internal val state: StateFlow<DetectorState> = _state
 
+    /** Scenario currently processed. Null if not detecting. */
+    private var minProcessingDurationNs: Long = DEFAULT_MIN_PROCESSING_DURATION_NS
+
     /**
      * Start the screen detection.
      *
@@ -195,6 +198,14 @@ class DetectorEngine @Inject constructor(
                 )
             )
 
+            // Compute minimal processing duration
+            val frameLimit = scenario.frameLimit
+            minProcessingDurationNs = if (frameLimit == 0) DEFAULT_MIN_PROCESSING_DURATION_NS
+                else ONE_SECOND_IN_NANO / frameLimit
+
+            Log.i(TAG, "Process scenario at ${if (frameLimit == 0) "unlimited" else frameLimit} FPS " +
+                    "(${minProcessingDurationNs}ns per loop)")
+
             // Setup native detector
             imageDetector = detector
             detector.init()
@@ -287,6 +298,7 @@ class DetectorEngine @Inject constructor(
 
             _state.emit(DetectorState.RECORDING)
             processingShutdownJob = null
+            minProcessingDurationNs  = DEFAULT_MIN_PROCESSING_DURATION_NS
         }
     }
 
@@ -345,8 +357,8 @@ class DetectorEngine @Inject constructor(
                 }
 
                 // Avoid looping infinitely to quickly for nothing.
-                if (processingDurationNs < MIN_PROCESSING_DURATION_NS) {
-                    delay(max(1, (MIN_PROCESSING_DURATION_NS - processingDurationNs) / 1000000))
+                if (processingDurationNs < minProcessingDurationNs) {
+                    delay(max(1, (minProcessingDurationNs - processingDurationNs) / ONE_SECOND_IN_NANO))
                 }
 
             } ?: delay(NO_IMAGE_DELAY_MS)
@@ -396,7 +408,10 @@ internal enum class DetectorState {
  */
 private const val NO_IMAGE_DELAY_MS = 20L
 
-private const val MIN_PROCESSING_DURATION_NS = 1000000L
+/** The value of 1 second in nanoseconds. */
+private const val ONE_SECOND_IN_NANO = 1000000L
+/** The default minimal processing duration in nanoseconds. */
+private const val DEFAULT_MIN_PROCESSING_DURATION_NS = ONE_SECOND_IN_NANO
 
 /** Tag for logs. */
 private const val TAG = "DetectorEngine"
