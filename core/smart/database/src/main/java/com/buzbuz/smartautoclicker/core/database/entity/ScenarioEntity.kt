@@ -34,6 +34,7 @@ import kotlinx.serialization.Serializable
  *
  * @param id the unique identifier for a scenario.
  * @param name the name of the scenario.
+ * @param frameLimit the maximum amount of event loop per seconds. If 0, limit is disabled.
  * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
  *                         quality, while higher values means better and slower detection.
  * @param randomize if true, the action values such as timers, positions will be shifted by a small random value in
@@ -47,6 +48,7 @@ data class ScenarioEntity(
     @PrimaryKey(autoGenerate = true) override val id: Long,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "detection_quality") val detectionQuality: Int,
+    @ColumnInfo(name = "frame_limit", defaultValue="0") val frameLimit: Int = 0,
     @ColumnInfo(name = "randomize", defaultValue="0") val randomize: Boolean = false,
     @ColumnInfo(name = "keep_screen_on", defaultValue="0") val keepScreenOn: Boolean = false,
 ) : EntityWithId

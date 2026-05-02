@@ -40,7 +40,7 @@ class DeserializerTests {
     private companion object {
 
         private val DEFAULT_COMPLETE_SCENARIO = CompleteScenario(
-            scenario = ScenarioEntity(1, "Scenario", 600, false),
+            scenario = ScenarioEntity(1, "Scenario", 600, 0, false),
             events = listOf(
                 CompleteEventEntity(
                     event = EventEntity(1, 1, "Event", 1, 0, true, EventType.IMAGE_EVENT),
