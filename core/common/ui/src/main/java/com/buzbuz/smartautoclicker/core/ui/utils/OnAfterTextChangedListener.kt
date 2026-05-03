@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.ui.utils
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.TextView
 
 /** [TextWatcher] implementation allowing to only declare [TextWatcher.afterTextChanged] in implementation. */
 class OnAfterTextChangedListener(private val callback: (Editable) -> Unit) : TextWatcher {
@@ -26,4 +27,8 @@ class OnAfterTextChangedListener(private val callback: (Editable) -> Unit) : Tex
     override fun afterTextChanged(s: Editable?) {
         s?.let { callback(it) }
     }
+}
+
+fun TextView.addOnAfterTextChangedListener(callback: (Editable) -> Unit) {
+    addTextChangedListener(OnAfterTextChangedListener(callback))
 }

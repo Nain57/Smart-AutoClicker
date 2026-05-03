@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
+import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
+import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
@@ -37,6 +39,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
+import com.buzbuz.smartautoclicker.core.ui.utils.addOnAfterTextChangedListener
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -87,6 +91,24 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 setOnClickListener(viewModel::toggleKeepScreenOn)
             }
 
+            fieldLimitFps.apply {
+                setTitle(context.getString(R.string.field_scenario_fps_limit_title))
+                setDescription(context.getString(R.string.field_scenario_fps_limit_desc))
+                setOnClickListener(viewModel::toggleFpsLimiter)
+            }
+            seekbarFrameLimit.addOnChangeListener {seekbar, value, fromUser ->
+                if (fromUser) viewModel.setFpsLimit(value)
+                if (seekbar.isEnabled) textFpsLimit.setText(value.toInt().toString())
+            }
+            textFpsLimit.addOnAfterTextChangedListener { editable ->
+                val limit = try {
+                    editable.toString().toInt()
+                } catch (_: NumberFormatException) {
+                    return@addOnAfterTextChangedListener
+                }
+                viewModel.setFpsLimit(limit.toFloat())
+            }
+
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
             seekbarResolution.addOnChangeListener { _, value, fromUser ->
@@ -104,6 +126,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 launch { viewModel.scenarioNameError.collect(viewBinding.fieldScenarioName::setError) }
                 launch { viewModel.randomization.collect(::updateRandomization) }
                 launch { viewModel.keepScreenOn.collect(::updateKeepScreenOn) }
+                launch { viewModel.fpsLimit.collect(::updateFpsLimit) }
                 launch { viewModel.detectionQuality.collect(::updateQuality) }
             }
         }
@@ -127,7 +150,42 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    private fun updateQuality(quality: UiDetectionQuality) {
+    private fun updateFpsLimit(state: ScenarioConfigUiState.FpsLimit) {
+        viewBinding.apply {
+            fieldLimitFps.setChecked(state.isEnabled)
+
+            seekbarFrameLimit.apply {
+                isEnabled = state.isEnabled
+                alpha = if (state.isEnabled) ALPHA_ENABLED else ALPHA_DISABLED
+
+                val isNotInitialized = value == 0f
+                value = if (state.value != 0f) state.value else FRAME_LIMIT_MAX_VALUE
+
+                if (isNotInitialized) {
+                    valueFrom = state.minValue
+                    valueTo = state.maxValue
+                    stepSize = 1f
+                }
+            }
+
+            textFpsLimit.apply {
+                if (!state.isEnabled) {
+                    textFpsLimit.filters = emptyArray<InputFilter>()
+                    setText(context.getString(R.string.field_scenario_fps_limit_disable_rate))
+                } else {
+                    textFpsLimit.filters = arrayOf<InputFilter>(
+                        MinMaxInputFilter(state.minValue.toInt(), state.maxValue.toInt())
+                    )
+                }
+            }
+            editFpsLimit.apply {
+                isEnabled = state.isEnabled
+                alpha = if (state.isEnabled) ALPHA_ENABLED else ALPHA_DISABLED
+            }
+        }
+    }
+
+    private fun updateQuality(quality: ScenarioConfigUiState.DetectionQuality) {
         viewBinding.apply {
             textQualityValue.text = quality.displayText
 

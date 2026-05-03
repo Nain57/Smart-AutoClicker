@@ -20,8 +20,9 @@ import android.content.Context
 import android.graphics.Point
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -64,8 +65,12 @@ class ScenarioConfigViewModel @Inject constructor(
     val keepScreenOn: Flow<Boolean> = configuredScenario
         .map { it.keepScreenOn }
 
+    /** State of the FPS limiter card. */
+    val fpsLimit: Flow<ScenarioConfigUiState.FpsLimit> = configuredScenario
+        .map { it.toFpsLimitUiState() }
+
     /** The detection resolution */
-    val detectionQuality: Flow<UiDetectionQuality> = configuredScenario
+    val detectionQuality: Flow<ScenarioConfigUiState.DetectionQuality> = configuredScenario
         .map { scenario ->
             context.getUiDetectionQuality(displayConfigManager.displayConfig.sizePx, scenario.detectionQuality)
         }
@@ -97,6 +102,30 @@ class ScenarioConfigViewModel @Inject constructor(
         }
     }
 
+    fun toggleFpsLimiter() {
+        editionRepository.editionState.getScenario()?.let { scenario ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(
+                    scenario.copy(frameLimit = if (scenario.frameLimit != 0) 0 else FRAME_LIMIT_DEFAULT_VALUE.toInt())
+                )
+            }
+        }
+    }
+
+    /** @return true if the value was valid and set, false if not. */
+    fun setFpsLimit(value: Float): Boolean {
+        if (value !in FRAME_LIMIT_MIN_VALUE..FRAME_LIMIT_MAX_VALUE) return false
+
+        editionRepository.editionState.getScenario()?.let { scenario ->
+            viewModelScope.launch {
+                editionRepository.updateEditedScenario(scenario.copy(frameLimit = value.toInt()))
+            }
+            return true
+        }
+
+        return false
+    }
+
     /** Remove one to the detection quality */
     fun decreaseDetectionQuality() {
         editionRepository.editionState.getScenario()?.let { scenario ->
@@ -126,12 +155,20 @@ class ScenarioConfigViewModel @Inject constructor(
         }
     }
 
-    private fun Context.getUiDetectionQuality(displaySize: Point, resolution: Int): UiDetectionQuality {
+    private fun Scenario.toFpsLimitUiState(): ScenarioConfigUiState.FpsLimit =
+        ScenarioConfigUiState.FpsLimit(
+            isEnabled = frameLimit != 0,
+            value = frameLimit.toFloat(),
+            minValue = FRAME_LIMIT_MIN_VALUE,
+            maxValue = FRAME_LIMIT_MAX_VALUE,
+        )
+
+    private fun Context.getUiDetectionQuality(displaySize: Point, resolution: Int): ScenarioConfigUiState.DetectionQuality {
         val maxVal = maxOf(displaySize.x, displaySize.y, 1).toFloat()
         val minVal = minOf(displaySize.x, displaySize.y).toFloat()
         val quality = resolution.toFloat().coerceIn(DETECTION_QUALITY_MIN.toFloat(), maxVal)
 
-        return UiDetectionQuality(
+        return ScenarioConfigUiState.DetectionQuality(
             displayText = getString(
                 R.string.field_scenario_quality_resolution,
                 quality.toInt(),
@@ -147,9 +184,6 @@ class ScenarioConfigViewModel @Inject constructor(
         maxOf(displayConfig.sizePx.x, displayConfig.sizePx.y, 1)
 }
 
-data class UiDetectionQuality(
-    val displayText: String,
-    val qualityValue: Float,
-    val min: Float,
-    val max: Float,
-)
+internal const val FRAME_LIMIT_DEFAULT_VALUE = 60f
+internal const val FRAME_LIMIT_MIN_VALUE = 1f
+internal const val FRAME_LIMIT_MAX_VALUE = 240f

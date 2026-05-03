@@ -104,6 +104,8 @@
     <style name="AppTheme.Widget.CardOutlined" parent="@style/Widget.Material3.CardView.Outlined" />
     <!-- Style for the input text fields. -->
     <style name="AppTheme.Widget.InputText" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
+    <!-- Style for the input text fields. -->
+    <style name="AppTheme.Widget.InputText.Dense" parent="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"/>
     <!-- Style for the filled input text fields. -->
     <style name="AppTheme.Widget.InputTextFilled" parent="@style/Widget.Material3.TextInputLayout.FilledBox"/>
     <!-- Style for the input dropdown fields.-->

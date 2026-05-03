@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.bindings
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config
 
-const val ALPHA_ENABLED = 1.0f
-const val ALPHA_DISABLED = 0.5f
+interface ScenarioConfigUiState {
+
+    data class FpsLimit(
+        val isEnabled: Boolean,
+        val value: Float,
+        val minValue: Float,
+        val maxValue: Float,
+    )
+
+    data class DetectionQuality(
+        val displayText: String,
+        val qualityValue: Float,
+        val min: Float,
+        val max: Float,
+    )
+}
