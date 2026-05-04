@@ -89,6 +89,8 @@ enum class NotificationMessageType {
 enum class ConditionType {
     /** Condition fulfilled upon broadcast reception. */
     ON_BROADCAST_RECEIVED,
+    /** Condition fulfilled upon color detected. */
+    ON_COLOR_DETECTED,
     /** Condition fulfilled upon counter value. */
     ON_COUNTER_REACHED,
     /** Condition fulfilled upon image detected. */

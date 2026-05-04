@@ -67,6 +67,7 @@ data class ConditionEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "type") val type: ConditionType,
     @ColumnInfo(name = "priority", defaultValue = "0") val priority: Int,
+    @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean? = null,
 
     // ConditionType.ON_IMAGE_DETECTED
     @ColumnInfo(name = "path") var path: String? = null,
@@ -76,7 +77,6 @@ data class ConditionEntity(
     @ColumnInfo(name = "area_bottom") val areaBottom: Int? = null,
     @ColumnInfo(name = "threshold") val threshold: Int? = null,
     @ColumnInfo(name = "detection_type") val detectionType: Int? = null,
-    @ColumnInfo(name = "shouldBeDetected") val shouldBeDetected: Boolean? = null,
     @ColumnInfo(name = "detection_area_left") val detectionAreaLeft: Int? = null,
     @ColumnInfo(name = "detection_area_top") val detectionAreaTop: Int? = null,
     @ColumnInfo(name = "detection_area_right") val detectionAreaRight: Int? = null,
@@ -95,4 +95,13 @@ data class ConditionEntity(
     // ConditionType.ON_TIMER_REACHED
     @ColumnInfo(name = "timer_value_ms") val timerValueMs: Long? = null,
     @ColumnInfo(name = "timer_restart_when_reached") val restartWhenReached: Boolean? = null,
+
+    // ConditionType.ON_COLOR_DETECTED
+    @ColumnInfo(name = "color_rgba") val colorRgba: Int? = null,
+    @ColumnInfo(name = "color_area_left") val colorAreaLeft: Int? = null,
+    @ColumnInfo(name = "color_area_top") val colorAreaTop: Int? = null,
+    @ColumnInfo(name = "color_area_right") val colorAreaRight: Int? = null,
+    @ColumnInfo(name = "color_area_bottom") val colorAreaBottom: Int? = null,
+    @ColumnInfo(name = "color_threshold") val colorThreshold: Int? = null,
+
 ) : EntityWithId

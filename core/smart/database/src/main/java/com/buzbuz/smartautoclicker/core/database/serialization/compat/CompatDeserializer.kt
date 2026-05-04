@@ -244,6 +244,7 @@ internal open class CompatDeserializer : Deserializer {
     open fun deserializeCondition(jsonCondition: JsonObject): ConditionEntity? =
         when (deserializeConditionType(jsonCondition)) {
             ConditionType.ON_BROADCAST_RECEIVED -> deserializeConditionBroadcastReceived(jsonCondition)
+            ConditionType.ON_COLOR_DETECTED -> deserializeConditionColorDetected(jsonCondition)
             ConditionType.ON_COUNTER_REACHED -> deserializeConditionCounterReached(jsonCondition)
             ConditionType.ON_IMAGE_DETECTED -> deserializeConditionImageDetected(jsonCondition)
             ConditionType.ON_TIMER_REACHED -> deserializeConditionTimerReached(jsonCondition)
@@ -297,6 +298,32 @@ internal open class CompatDeserializer : Deserializer {
             name = jsonCondition.getString("name") ?: "",
             type = ConditionType.ON_BROADCAST_RECEIVED,
             broadcastAction = broadcastAction,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeConditionColorDetected(jsonCondition: JsonObject): ConditionEntity? {
+        val id = jsonCondition.getLong("id", true) ?: return null
+        val eventId = jsonCondition.getLong("eventId", true) ?: return null
+        val colorRgba = jsonCondition.getInt("colorRgba") ?: return null
+        val area = jsonCondition.getRect("colorAreaLeft", "colorAreaTop", "colorAreaRight", "colorAreaBottom")
+            ?: return null
+
+        return ConditionEntity(
+            id = id,
+            eventId = eventId,
+            priority = 0,
+            name = jsonCondition.getString("name") ?: "",
+            type = ConditionType.ON_COLOR_DETECTED,
+            shouldBeDetected = jsonCondition.getBoolean("shouldBeDetected") ?: true,
+            colorRgba = colorRgba,
+            colorThreshold = jsonCondition.getInt("colorThreshold")
+                ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
+                ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
+            colorAreaLeft = area.left,
+            colorAreaTop = area.top,
+            colorAreaRight = area.right,
+            colorAreaBottom = area.bottom,
         )
     }
 
