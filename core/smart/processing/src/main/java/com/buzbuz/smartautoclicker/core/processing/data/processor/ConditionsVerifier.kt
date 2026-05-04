@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
@@ -77,8 +77,9 @@ internal class ConditionsVerifier(
 
     private suspend fun verifyCondition(condition: Condition): ProcessedConditionResult =
         when (condition) {
-            is ImageCondition -> verifyImageCondition(condition)
+            is ScreenCondition.Image -> verifyImageCondition(condition)
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
+            is ScreenCondition.Color -> TODO()
         }
 
     private fun verifyTriggerCondition(condition: TriggerCondition): Boolean =
@@ -128,7 +129,7 @@ internal class ConditionsVerifier(
         } else false
     }
 
-    private suspend fun verifyImageCondition(condition: ImageCondition): ProcessedConditionResult.Image {
+    private suspend fun verifyImageCondition(condition: ScreenCondition.Image): ProcessedConditionResult.Image {
         progressListener?.onImageConditionProcessingStarted()
 
         val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition)
@@ -162,7 +163,7 @@ internal class ConditionsVerifier(
         return result
     }
 
-    private fun ImageCondition.toInvalidConditionResult(): ProcessedConditionResult.Image =
+    private fun ScreenCondition.Image.toInvalidConditionResult(): ProcessedConditionResult.Image =
         ProcessedConditionResult.Image(
             isFulfilled = false,
             haveBeenDetected = false,

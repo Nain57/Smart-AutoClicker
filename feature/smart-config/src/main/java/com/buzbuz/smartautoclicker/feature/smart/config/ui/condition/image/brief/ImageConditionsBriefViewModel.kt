@@ -72,11 +72,11 @@ class ImageConditionsBriefViewModel @Inject constructor(
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
-    private val editedConditions: Flow<EditedListState<ImageCondition>> =
+    private val editedConditions: Flow<EditedListState<ScreenCondition.Image>> =
         editionRepository.editionState.editedEventImageConditionsState
 
     private val currentFocusItemIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val focusedCondition: StateFlow<Pair<ImageCondition, Bitmap?>?> =
+    private val focusedCondition: StateFlow<Pair<ScreenCondition.Image, Bitmap?>?> =
         combine(currentFocusItemIndex, editedConditions) { focusedIndex, conditions ->
             val conditionList = conditions.value ?: return@combine null
             if (focusedIndex !in conditionList.indices) return@combine null
@@ -106,11 +106,11 @@ class ImageConditionsBriefViewModel @Inject constructor(
         currentFocusItemIndex.value = index
     }
 
-    fun createNewImageConditionFromCopy(condition: ImageCondition): ImageCondition =
+    fun createNewImageConditionFromCopy(condition: ScreenCondition.Image): ScreenCondition.Image =
         editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
 
     fun deleteImageCondition(index: Int, force: Boolean = false): Boolean {
-        val conditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return false
+        val conditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return false
         if (index !in conditions.indices) return false
 
         editionRepository.startConditionEdition(conditions[index])
@@ -144,7 +144,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
     fun swapConditions(i: Int, j: Int) {
         if (i == j) return
 
-        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return
         if (imageConditions.isEmpty() || i !in imageConditions.indices || j !in imageConditions.indices) return
 
         Collections.swap(imageConditions, i, j)
@@ -152,7 +152,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
     }
 
     fun moveConditions(from: Int, to: Int) {
-        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return
         val movedAction = imageConditions.removeAt(from)
         imageConditions.add(to, movedAction)
 
@@ -187,7 +187,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
     }
 }
 
-private fun ImageCondition.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
+private fun ScreenCondition.Image.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(
         conditionBitmap = bitmap,
         conditionDetectionType = when (detectionType) {

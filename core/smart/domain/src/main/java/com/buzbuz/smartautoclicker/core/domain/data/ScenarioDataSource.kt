@@ -49,12 +49,11 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
@@ -341,12 +340,7 @@ internal class ScenarioDataSource @Inject constructor(
             currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
             newItems = newConditions,
             mappingClosure = { condition ->
-                when (condition) {
-                    is ImageCondition ->
-                        condition.copy(eventId = Identifier(databaseId = eventDbId)).toEntity()
-                    is TriggerCondition ->
-                        condition.copy(evtId = Identifier(databaseId = eventDbId)).toEntity()
-                }
+                condition.copyWithNewId(evtId = Identifier(databaseId = eventDbId)).toEntity()
             }
         )
         Log.d(TAG, "Conditions updater: $updater")
@@ -481,7 +475,7 @@ internal class ScenarioDataSource @Inject constructor(
                 // Find the deleted domain event, get its image conditions list and map to their path
                 val removedEvent = this@getRemovedConditionsPath
                     .find { event -> event is ImageEvent && event.id.databaseId == removedEntity.id }
-                    ?.conditions?.filterIsInstance<ImageCondition>()
+                    ?.conditions?.filterIsInstance<ScreenCondition.Image>()
                     ?.map { condition -> condition.path }
                     ?: return@forEach
 

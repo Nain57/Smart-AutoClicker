@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 
@@ -506,7 +506,7 @@ class ScalingManagerTests {
             )
     }
 
-    private fun createTestEvent(id: Long, conditions: List<ImageCondition>) : ImageEvent =
+    private fun createTestEvent(id: Long, conditions: List<ScreenCondition.Image>) : ImageEvent =
         ImageEvent(
             id = Identifier(databaseId = id),
             conditions = conditions,
@@ -525,8 +525,8 @@ class ScalingManagerTests {
         area: Rect,
         @DetectionType type: Int,
         detectionArea: Rect? = null,
-    ): ImageCondition =
-        ImageCondition(
+    ): ScreenCondition.Image =
+        ScreenCondition.Image(
             id = Identifier(databaseId = id),
             eventId = Identifier(databaseId = evtId),
             area = area,

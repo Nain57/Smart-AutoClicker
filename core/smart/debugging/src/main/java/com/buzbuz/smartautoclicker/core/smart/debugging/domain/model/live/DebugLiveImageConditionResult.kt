@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live
 
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 
 /** Event Condition results during a live debugging session. */
@@ -35,7 +35,7 @@ sealed interface DebugLiveEventConditionResult {
      * @param detectionArea the area of the image that have been detected. Null if not detected.
      */
     data class Image(
-        override val condition: ImageCondition,
+        override val condition: ScreenCondition.Image,
         override val isFulfilled: Boolean,
         val isDetected: Boolean,
         val confidenceRate: Double,

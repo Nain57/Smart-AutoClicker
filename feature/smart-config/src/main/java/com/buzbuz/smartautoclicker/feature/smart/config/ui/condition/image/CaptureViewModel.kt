@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -60,7 +60,7 @@ class CaptureViewModel @Inject constructor(
      * @param area the area of the condition to create.
      * @param bitmap the image for the condition to create.
      */
-    fun createImageCondition(context: Context, area: Rect, bitmap: Bitmap, completed: (ImageCondition) -> Unit) {
+    fun createImageCondition(context: Context, area: Rect, bitmap: Bitmap, completed: (ScreenCondition.Image) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val condition = editionRepository.editedItemsBuilder.createNewImageCondition(context, area, bitmap)
             withContext(Dispatchers.Main) { completed(condition) }

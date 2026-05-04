@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
@@ -52,7 +52,7 @@ class ClickOffsetViewModel @Inject constructor(
         .filterIsInstance<ImageEvent>()
 
     /** The ImageConditions being edited by the user. */
-    private val editedImageConditions: Flow<List<ImageCondition>> =
+    private val editedImageConditions: Flow<List<ScreenCondition.Image>> =
         editionRepository.editionState.editedEventImageConditionsState
             .mapNotNull { it.value }
 
@@ -61,7 +61,7 @@ class ClickOffsetViewModel @Inject constructor(
         .mapNotNull { action -> action.value }
         .filterIsInstance<Click>()
 
-    private val conditionToShow: Flow<ImageCondition?> =
+    private val conditionToShow: Flow<ScreenCondition.Image?> =
         combine(editedEvent, editedImageConditions, configuredClick) { event, imageConditions, click ->
             if (!click.haveDeterminedCondition(event.conditionOperator)) null
             else imageConditions.getImageConditionFromId(click.clickOnConditionId)
@@ -124,7 +124,7 @@ class ClickOffsetViewModel @Inject constructor(
                 && conditionOperator == AND
                 && clickOnConditionId != null
 
-    private fun List<ImageCondition>.getImageConditionFromId(id: Identifier?): ImageCondition? =
+    private fun List<ScreenCondition.Image>.getImageConditionFromId(id: Identifier?): ScreenCondition.Image? =
         id?.let { identifier -> find { imageCondition -> imageCondition.id == identifier } }
 }
 

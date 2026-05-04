@@ -21,15 +21,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
 
 import kotlinx.coroutines.Job
 
 class EventOccurrenceItemAdapter(
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<EventOccurrenceItem, RecyclerView.ViewHolder>(EventOccurrenceDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =

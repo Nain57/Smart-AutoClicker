@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -151,7 +151,7 @@ internal object ProcessingTestData {
 
         val conditionId = newConditionId()
 
-        val condition = ImageCondition(
+        val condition = ScreenCondition.Image(
             id = conditionId,
             eventId = eventId,
             shouldBeDetected = shouldBeDetected,

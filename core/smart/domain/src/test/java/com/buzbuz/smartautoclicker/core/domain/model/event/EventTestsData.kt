@@ -18,11 +18,10 @@ package com.buzbuz.smartautoclicker.core.domain.model.event
 
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
-import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.ScenarioTestsData
 import com.buzbuz.smartautoclicker.core.domain.utils.asIdentifier
@@ -58,7 +57,7 @@ internal object EventTestsData {
         @ConditionOperator conditionOperator: Int = EVENT_CONDITION_OPERATOR,
         enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
         actions: List<Action> = emptyList(),
-        conditions: List<ImageCondition> = emptyList(),
+        conditions: List<ScreenCondition.Image> = emptyList(),
         scenarioId: Long,
         priority: Int = 0,
     ) = ImageEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)

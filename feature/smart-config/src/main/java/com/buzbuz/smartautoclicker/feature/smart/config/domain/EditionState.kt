@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -101,7 +101,7 @@ internal class EditionState internal constructor(
             eventEditor?.conditionsEditor?.listState ?: emptyFlow()
         }
 
-    override val editedEventImageConditionsState: Flow<EditedListState<ImageCondition>> =
+    override val editedEventImageConditionsState: Flow<EditedListState<ScreenCondition.Image>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
@@ -111,7 +111,7 @@ internal class EditionState internal constructor(
             else emptyFlow()
         }
 
-    override val editedImageConditionState: Flow<EditedElementState<ImageCondition>> =
+    override val editedImageConditionState: Flow<EditedElementState<ScreenCondition.Image>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)

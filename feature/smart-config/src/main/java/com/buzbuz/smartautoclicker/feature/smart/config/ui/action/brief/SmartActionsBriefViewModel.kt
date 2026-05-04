@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
@@ -322,7 +322,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     private suspend fun Click.findClickOnConditionBitmap(): Bitmap? {
         if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return null
 
-        return editionRepository.editionState.getEditedEventConditions<ImageCondition>()
+        return editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()
             ?.find { it.id == clickOnConditionId }
             ?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
     }

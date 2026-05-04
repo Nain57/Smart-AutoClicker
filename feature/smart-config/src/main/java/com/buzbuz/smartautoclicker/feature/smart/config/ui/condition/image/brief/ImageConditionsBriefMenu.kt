@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
@@ -169,7 +169,7 @@ class ImageConditionsBriefMenu(
             context = context,
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->
-                    if (conditionSelected !is ImageCondition) return@ConditionCopyDialog
+                    if (conditionSelected !is ScreenCondition.Image) return@ConditionCopyDialog
                     showImageConditionConfigDialog(
                         viewModel.createNewImageConditionFromCopy(conditionSelected),
                     )
@@ -188,7 +188,7 @@ class ImageConditionsBriefMenu(
         )
     }
 
-    private fun showImageConditionConfigDialog(condition: ImageCondition) {
+    private fun showImageConditionConfigDialog(condition: ScreenCondition.Image) {
         viewModel.startConditionEdition(condition)
 
         val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {

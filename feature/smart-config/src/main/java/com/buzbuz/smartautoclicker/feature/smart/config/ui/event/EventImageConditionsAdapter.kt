@@ -22,8 +22,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
@@ -33,7 +33,7 @@ import kotlinx.coroutines.Job
 
 internal class EventImageConditionsAdapter(
     private val itemClickedListener: (index: Int) -> Unit,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<UiImageCondition, EventImageConditionViewHolder>(ImageConditionDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventImageConditionViewHolder =
@@ -54,7 +54,7 @@ internal class EventImageConditionsAdapter(
 
 internal class EventImageConditionViewHolder (
     private val viewBinding: ItemImageConditionListBinding,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val itemClickedListener: (index: Int) -> Unit,
 ): ViewHolder(viewBinding.root) {
 

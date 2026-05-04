@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.domain
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -75,11 +75,11 @@ interface SmartProcessingListener {
      */
     fun onEventsProcessingCancelled() = Unit
 
-    /** The processing of an [ImageCondition] for the current [ImageEvent] has begun. */
+    /** The processing of an [ScreenCondition.Image] for the current [ImageEvent] has begun. */
     fun onImageConditionProcessingStarted() = Unit
 
     /**
-     * The processing of an [ImageCondition] for the current [ImageEvent] has completed.
+     * The processing of an [ScreenCondition.Image] for the current [ImageEvent] has completed.
      * This will be called even if the condition is not fulfilled.
      *
      * @param result the result of the detection for the processed condition.

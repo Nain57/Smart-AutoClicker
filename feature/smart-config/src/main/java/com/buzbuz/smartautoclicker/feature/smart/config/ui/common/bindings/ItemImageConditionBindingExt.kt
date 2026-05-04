@@ -20,8 +20,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 
 import androidx.core.content.ContextCompat
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeImageConditionCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
@@ -33,8 +33,8 @@ import kotlinx.coroutines.Job
  */
 fun IncludeImageConditionCardBinding.bind(
     uiCondition: UiImageCondition,
-    bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    conditionClickedListener: (ImageCondition) -> Unit
+    bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    conditionClickedListener: (ScreenCondition.Image) -> Unit
 ): Job? {
     root.setOnClickListener { conditionClickedListener.invoke(uiCondition.condition) }
 

@@ -33,4 +33,12 @@ sealed class Condition : Identifiable, Completable {
 
     abstract fun hashCodeNoIds(): Int
 
+    @Suppress("USELESS_CAST") // Yet it is required by Android Studio
+    fun copyWithNewId(evtId: Identifier) = when (this) {
+        is TriggerCondition.OnBroadcastReceived -> (this as TriggerCondition.OnBroadcastReceived).copy(eventId = evtId)
+        is TriggerCondition.OnCounterCountReached -> (this as TriggerCondition.OnCounterCountReached).copy(eventId = evtId)
+        is TriggerCondition.OnTimerReached -> (this as TriggerCondition.OnTimerReached).copy(eventId = evtId)
+        is ScreenCondition.Color -> (this as ScreenCondition.Color).copy(eventId = evtId)
+        is ScreenCondition.Image -> (this as ScreenCondition.Image).copy(eventId = evtId)
+    }
 }

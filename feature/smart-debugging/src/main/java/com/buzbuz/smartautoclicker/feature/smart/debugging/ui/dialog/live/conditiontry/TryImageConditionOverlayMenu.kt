@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryImageConditionMenuBinding
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 
 class TryImageConditionOverlayMenu(
     private val scenario: Scenario,
-    private val imageCondition: ImageCondition,
+    private val imageCondition: ScreenCondition.Image,
     private val onNewThresholdSelected: (Int) -> Unit,
 ) : OverlayMenu() {
 

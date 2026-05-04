@@ -23,9 +23,9 @@ import android.view.ViewGroup
 
 import androidx.annotation.IntDef
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.conditionselector.ConditionSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayValidationMenuBinding
@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
  * @param onConditionSelected listener upon confirmation of the area to be capture to create the event condition.
  */
 class CaptureMenu(
-    private val onConditionSelected: (ImageCondition) -> Unit
+    private val onConditionSelected: (ScreenCondition.Image) -> Unit
 ) : OverlayMenu() {
 
     private companion object {

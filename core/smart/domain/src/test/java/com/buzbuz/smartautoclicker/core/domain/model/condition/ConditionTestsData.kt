@@ -60,8 +60,22 @@ internal object ConditionTestsData {
         detectionType: Int = CONDITION_DETECTION_TYPE,
         shouldBeDetected: Boolean = true,
         eventId: Long
-    ) = ConditionEntity(id, eventId, name, ConditionType.ON_IMAGE_DETECTED, priority, path, area.left, area.top, area.right,
-        area.bottom, threshold, detectionType, shouldBeDetected, detectionArea?.left, detectionArea?.top, detectionArea?.right, detectionArea?.bottom)
+    ) = ConditionEntity(
+        id = id,
+        eventId = eventId,
+        name = name,
+        type = ConditionType.ON_IMAGE_DETECTED,
+        priority = priority,
+        shouldBeDetected = shouldBeDetected,
+        path = path,
+        areaLeft = area.left, areaTop = area.top, areaRight = area.right, areaBottom = area.bottom,
+        threshold = threshold,
+        detectionType = detectionType,
+        detectionAreaLeft = detectionArea?.left,
+        detectionAreaTop = detectionArea?.top,
+        detectionAreaRight = detectionArea?.right,
+        detectionAreaBottom = detectionArea?.bottom,
+    )
 
     fun getNewImageCondition(
         id: Long = CONDITION_ID,
@@ -74,7 +88,18 @@ internal object ConditionTestsData {
         detectionType: Int = CONDITION_DETECTION_TYPE,
         shouldBeDetected: Boolean = true,
         eventId: Long
-    ) = ImageCondition(id.asIdentifier(), eventId.asIdentifier(), name, priority, path, area, threshold, detectionType, shouldBeDetected, detectionArea)
+    ) = ScreenCondition.Image(
+        id = id.asIdentifier(),
+        eventId = eventId.asIdentifier(),
+        name = name,
+        threshold = threshold,
+        shouldBeDetected = shouldBeDetected,
+        priority = priority,
+        path = path,
+        area = area,
+        detectionType = detectionType,
+        detectionArea = detectionArea,
+    )
 
     fun getNewBroadcastReceivedConditionEntity(
         id: Long = CONDITION_ID,

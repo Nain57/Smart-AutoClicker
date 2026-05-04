@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
@@ -43,7 +43,7 @@ import kotlinx.coroutines.Job
  */
 class ConditionCopyAdapter(
     private val conditionClickedListener: (Condition) -> Unit,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ): ListAdapter<ConditionCopyModel.ConditionCopyItem, RecyclerView.ViewHolder>(ConditionDiffUtilCallback) {
 
     val spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -135,7 +135,7 @@ class HeaderViewHolder(
  */
 private class ImageConditionViewHolder(
     private val viewBinding: ItemImageConditionGridBinding,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /** Job for the loading of the condition bitmap. Null until bound. */
@@ -149,7 +149,7 @@ private class ImageConditionViewHolder(
      */
     fun onBind(
         item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Image,
-        conditionClickedListener: (ImageCondition) -> Unit,
+        conditionClickedListener: (ScreenCondition.Image) -> Unit,
     ) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(

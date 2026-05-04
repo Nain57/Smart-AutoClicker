@@ -21,7 +21,7 @@ import android.graphics.Point
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -36,7 +36,7 @@ internal data class TestScenario(
 )
 
 internal data class TestImageCondition(
-    val imageCondition: ImageCondition,
+    val imageCondition: ScreenCondition.Image,
     val mockedBitmap: Bitmap,
 )
 

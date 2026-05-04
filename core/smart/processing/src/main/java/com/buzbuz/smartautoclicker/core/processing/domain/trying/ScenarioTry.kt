@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -55,7 +55,7 @@ internal class ImageEventTry(
 
 internal class ImageConditionTry(
     override val scenario: Scenario,
-    val condition: ImageCondition,
+    val condition: ScreenCondition.Image,
 ) : ScenarioTry() {
 
     override val imageEvents: List<ImageEvent> = listOf(getTestImageEvent())

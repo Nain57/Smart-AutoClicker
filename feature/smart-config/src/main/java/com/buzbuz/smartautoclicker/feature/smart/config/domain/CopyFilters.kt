@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
@@ -112,4 +112,4 @@ internal fun List<Action>.filterActionsForCopy(editedEvent: Event, editedActions
     }
 
 private fun Event.isConditionCompatibleForCopy(condition: Condition): Boolean =
-    (this is ImageEvent && condition is ImageCondition) || (this is TriggerEvent && condition is TriggerCondition)
+    (this is ImageEvent && condition is ScreenCondition.Image) || (this is TriggerEvent && condition is TriggerCondition)

@@ -24,7 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.base.extensions.setRightCompoundDrawable
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemConditionResultImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
@@ -34,13 +34,13 @@ import kotlinx.coroutines.Job
 
 class EventOccurrenceConditionImageViewHolder private constructor(
     private val viewBinding: ItemConditionResultImageBinding,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /** Job for the loading of the condition bitmap. Null until bound. */
     private var bitmapLoadingJob: Job? = null
 
-    constructor(parent: ViewGroup, bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?) : this(
+    constructor(parent: ViewGroup, bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?) : this(
         bitmapProvider = bitmapProvider,
         viewBinding = ItemConditionResultImageBinding.inflate(
             LayoutInflater.from(parent.context), parent, false

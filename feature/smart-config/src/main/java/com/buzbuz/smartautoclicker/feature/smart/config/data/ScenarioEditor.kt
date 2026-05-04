@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.data
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -102,7 +102,7 @@ internal class ScenarioEditor {
     fun updateActionsOrder(actions: List<Action>) =
         currentEventEditor.value?.actionsEditor?.updateList(actions)
 
-    fun updateImageConditionsOrder(imageConditions: List<ImageCondition>) =
+    fun updateImageConditionsOrder(imageConditions: List<ScreenCondition.Image>) =
         currentEventEditor.value?.conditionsEditor?.updateList(imageConditions)
 
     fun upsertEditedEvent() =

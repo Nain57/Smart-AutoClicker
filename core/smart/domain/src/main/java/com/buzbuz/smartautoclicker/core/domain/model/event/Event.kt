@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -57,7 +57,7 @@ sealed class Event: Identifiable, Completable {
     ): Event =
         when (this) {
             is ImageEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
-                enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<ImageCondition>)
+                enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<ScreenCondition.Image>)
             is TriggerEvent -> copy(id = id, scenarioId = scenarioId, name = name, conditionOperator = conditionOperator,
                 enabledOnStart = enabledOnStart, actions = actions, conditions = conditions as List<TriggerCondition>)
         }
@@ -79,7 +79,7 @@ data class ImageEvent(
     override val name: String,
     @param:ConditionOperator override val conditionOperator: Int,
     override val actions: List<Action> = emptyList(),
-    override val conditions: List<ImageCondition> =  emptyList(),
+    override val conditions: List<ScreenCondition.Image> =  emptyList(),
     override val enabledOnStart: Boolean = true,
     override var priority: Int,
     val keepDetecting: Boolean,

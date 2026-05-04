@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import javax.inject.Inject
 import kotlin.math.max
@@ -61,7 +61,7 @@ class ScalingManager @Inject constructor(
         refreshScalingData(scaledScreenSize, emptyList())
     }
 
-    internal fun getImageConditionScalingInfo(imageCondition: ImageCondition): ImageConditionScalingInfo? =
+    internal fun getImageConditionScalingInfo(imageCondition: ScreenCondition.Image): ImageConditionScalingInfo? =
         conditionScalingInfo[imageCondition.id.databaseId]
 
     internal fun scaleUpDetectionResult(result: Point): Point =
@@ -84,7 +84,7 @@ class ScalingManager @Inject constructor(
         return scaledScreenSize
     }
 
-    private fun refreshScalingData(scaledScreenSize: Point, imageConditions: List<ImageCondition>) {
+    private fun refreshScalingData(scaledScreenSize: Point, imageConditions: List<ScreenCondition.Image>) {
         conditionScalingInfo.clear()
 
         imageConditions.forEach { imageCondition ->
@@ -103,7 +103,7 @@ class ScalingManager @Inject constructor(
         Log.i(TAG, "Scaling data refresh for ${imageConditions.size} conditions")
     }
 
-    private fun ImageCondition.getDetectionArea(scaledImageArea: Rect, bounds: Rect): Rect =
+    private fun ScreenCondition.Image.getDetectionArea(scaledImageArea: Rect, bounds: Rect): Rect =
         when (detectionType) {
             EXACT -> scaledImageArea.grow(bounds)
             WHOLE_SCREEN -> bounds
@@ -112,7 +112,7 @@ class ScalingManager @Inject constructor(
             else -> throw IllegalArgumentException("Unexpected detection type")
         }
 
-    private fun List<ImageEvent>.toConditionsList(): List<ImageCondition> =
+    private fun List<ImageEvent>.toConditionsList(): List<ScreenCondition.Image> =
         fold(listOf()) { acc, event -> acc + event.conditions }
 
     private fun Point.scaleDown(): Point = scale(scalingRatio)

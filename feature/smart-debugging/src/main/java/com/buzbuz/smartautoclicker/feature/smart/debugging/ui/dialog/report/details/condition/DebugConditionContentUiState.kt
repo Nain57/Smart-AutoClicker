@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition
 
 import androidx.annotation.DrawableRes
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
 
 sealed interface DebugConditionContentUiState {
@@ -38,7 +38,7 @@ sealed interface EventOccurrenceItem {
         val id: Long,
         val conditionName: String,
         val durationText: String,
-        val condition: ImageCondition,
+        val condition: ScreenCondition.Image,
         val confidenceText: String,
         val confidenceValid: Boolean,
         val shouldDetectedValue: Boolean,

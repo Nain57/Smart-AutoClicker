@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -177,8 +177,8 @@ class ImageConditionViewModel @Inject constructor(
         )
     }
 
-    private fun updateEditedCondition(closure: (oldValue: ImageCondition) -> ImageCondition?) {
-        editionRepository.editionState.getEditedCondition<ImageCondition>()?.let { condition ->
+    private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Image) -> ScreenCondition.Image?) {
+        editionRepository.editionState.getEditedCondition<ScreenCondition.Image>()?.let { condition ->
             closure(condition)?.let { newValue ->
                 editionRepository.updateEditedCondition(newValue)
             }

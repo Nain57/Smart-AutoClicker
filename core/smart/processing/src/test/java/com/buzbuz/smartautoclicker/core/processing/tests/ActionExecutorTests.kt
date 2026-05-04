@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
@@ -74,7 +74,7 @@ class ActionExecutorTests {
         private const val TEST_Y1 = 88
         private const val TEST_Y2 = 76
 
-        fun getNewDefaultEvent(operator: Int = OR, conditions: List<ImageCondition> = emptyList(), actions: List<Action> = emptyList()) =
+        fun getNewDefaultEvent(operator: Int = OR, conditions: List<ScreenCondition.Image> = emptyList(), actions: List<Action> = emptyList()) =
             ImageEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0, keepDetecting = false)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
@@ -91,7 +91,7 @@ class ActionExecutorTests {
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
         fun getNewDefaultCondition(id: Long) =
-            ImageCondition(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, "path", Rect(), 10, EXACT, true, null)
+            ScreenCondition.Image(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, true, 10, "path", Rect(), EXACT, null)
     }
 
     @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor

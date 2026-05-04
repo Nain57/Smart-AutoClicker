@@ -41,7 +41,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -135,7 +135,7 @@ class EditedItemsBuilder internal constructor(
         ).also { eventCopyConditionIdMap.clear() }
     }
 
-    suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ImageCondition {
+    suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ScreenCondition.Image {
         val id = conditionsIdCreator.generateNewIdentifier()
         val newPath = bitmapRepository.saveImageConditionBitmap(
             bitmap = bitmap,
@@ -143,7 +143,7 @@ class EditedItemsBuilder internal constructor(
         )
         _newImageConditionsPaths.add(newPath)
 
-        return ImageCondition(
+        return ScreenCondition.Image(
             id = id,
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.conditionName(context),
@@ -156,7 +156,7 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
-    fun createNewImageConditionFrom(condition: ImageCondition, eventId: Identifier = getEditedEventIdOrThrow()): ImageCondition =
+    fun createNewImageConditionFrom(condition: ScreenCondition.Image, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Image =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,

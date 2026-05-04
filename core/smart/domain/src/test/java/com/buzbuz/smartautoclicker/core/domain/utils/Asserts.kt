@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
 import org.junit.Assert.assertEquals
@@ -57,7 +57,7 @@ private fun assertSameEventNoIdCheck(expected: ImageEvent, actual: ImageEvent) {
     }
 }
 
-private fun assertSameConditionNoIdCheck(expected: ImageCondition, actual: ImageCondition) = assertTrue(
+private fun assertSameConditionNoIdCheck(expected: ScreenCondition.Image, actual: ScreenCondition.Image) = assertTrue(
     "Conditions are not the same",
     expected.name == actual.name
             && expected.shouldBeDetected == actual.shouldBeDetected

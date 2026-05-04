@@ -21,7 +21,7 @@ import android.content.Intent
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
@@ -117,7 +117,7 @@ interface SmartProcessingRepository : Dumpable {
      * @param scenario the original scenario containing the condition to test
      * @param condition the condition to be tested.
      */
-    fun tryImageCondition(context: Context, scenario: Scenario, condition: ImageCondition)
+    fun tryImageCondition(context: Context, scenario: Scenario, condition: ScreenCondition.Image)
 
     /**
      * Creates a dedicated scenario containing only an Event with the [Action] to be tested.

@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.databinding.ItemDumbScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEmptyScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemOrderingAndFilteringBinding
@@ -42,7 +42,7 @@ import kotlinx.coroutines.Job
  * @param deleteScenarioListener listener upon the delete button of a scenario.
  */
 class ScenarioAdapter(
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
     private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
     private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),

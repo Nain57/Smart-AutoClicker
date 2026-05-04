@@ -17,19 +17,10 @@
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
-import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
-sealed class TriggerCondition: Condition(), Identifiable, Completable {
-
-    @Suppress("USELESS_CAST") // Yet it is required by Android Studio
-    fun copy(evtId: Identifier) = when (this) {
-        is OnBroadcastReceived -> (this as OnBroadcastReceived).copy(eventId = evtId)
-        is OnCounterCountReached -> (this as OnCounterCountReached).copy(eventId = evtId)
-        is OnTimerReached -> (this as OnTimerReached).copy(eventId = evtId)
-    }
+sealed class TriggerCondition: Condition() {
 
     override fun hashCodeNoIds(): Int =
         name.hashCode()

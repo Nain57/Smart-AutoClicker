@@ -23,8 +23,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.conditio
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel.ConditionCopyItem.ConditionItem.*
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -99,18 +100,20 @@ class ConditionCopyModel @Inject constructor(
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     /** */
     private fun List<Condition>.toCopyItems(context: Context) = map { condition ->
         when (condition) {
-            is ImageCondition -> ConditionCopyItem.ConditionItem.Image(
+            is ScreenCondition.Image -> Image(
                 condition.toUiImageCondition(context, shortThreshold = true, inError = !condition.isComplete())
             )
-            is TriggerCondition -> ConditionCopyItem.ConditionItem.Trigger(
+            is TriggerCondition -> Trigger(
                 condition.toUiTriggerCondition(context, inError = !condition.isComplete())
             )
+
+            is ScreenCondition.Color -> TODO()
         }
     }
 

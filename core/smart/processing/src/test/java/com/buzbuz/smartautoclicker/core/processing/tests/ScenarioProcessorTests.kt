@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
@@ -135,7 +135,7 @@ class ScenarioProcessorTests {
         @DetectionType detectionType: Int,
         shouldBeOnScreen: Boolean,
         isDetected: Boolean,
-    ) : ImageCondition = runBlocking {
+    ) : ScreenCondition.Image = runBlocking {
         val condition = newCondition(path, area, threshold, detectionType, shouldBeOnScreen)
         val conditionBitmap = mock(Bitmap::class.java)
 

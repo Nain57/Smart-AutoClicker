@@ -24,33 +24,49 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 
+internal fun Condition.toEntity() = when (this) {
+    is ScreenCondition.Color -> toColorConditionEntity()
+    is ScreenCondition.Image -> toImageConditionEntity()
+    is TriggerCondition.OnBroadcastReceived -> toBroadcastReceivedEntity()
+    is TriggerCondition.OnCounterCountReached -> toCounterReachedEntity()
+    is TriggerCondition.OnTimerReached -> toTimerReachedEntity()
+}
 
-/** @return the entity equivalent of this condition. */
-internal fun ImageCondition.toEntity() = ConditionEntity(
+private fun ScreenCondition.Color.toColorConditionEntity() = ConditionEntity(
     id = id.databaseId,
     eventId = eventId.databaseId,
     name = name,
     priority = priority,
     type = ConditionType.ON_IMAGE_DETECTED,
+    threshold = threshold,
+    shouldBeDetected = shouldBeDetected,
+    colorRgba = color,
+    detectionAreaLeft = detectionArea.left,
+    detectionAreaTop = detectionArea.top,
+    detectionAreaRight = detectionArea.right,
+    detectionAreaBottom = detectionArea.bottom,
+)
+
+/** @return the entity equivalent of this condition. */
+private fun ScreenCondition.Image.toImageConditionEntity() = ConditionEntity(
+    id = id.databaseId,
+    eventId = eventId.databaseId,
+    name = name,
+    priority = priority,
+    type = ConditionType.ON_IMAGE_DETECTED,
+    threshold = threshold,
+    shouldBeDetected = shouldBeDetected,
     path = path,
     areaLeft = area.left,
     areaTop = area.top,
     areaRight = area.right,
     areaBottom = area.bottom,
-    threshold = threshold,
     detectionType = detectionType,
-    shouldBeDetected = shouldBeDetected,
     detectionAreaLeft = detectionArea?.left,
     detectionAreaTop = detectionArea?.top,
     detectionAreaRight = detectionArea?.right,
     detectionAreaBottom = detectionArea?.bottom,
 )
-
-internal fun TriggerCondition.toEntity(): ConditionEntity = when (this) {
-    is TriggerCondition.OnBroadcastReceived -> toBroadcastReceivedEntity()
-    is TriggerCondition.OnCounterCountReached -> toCounterReachedEntity()
-    is TriggerCondition.OnTimerReached -> toTimerReachedEntity()
-}
 
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): ConditionEntity =
     ConditionEntity(
@@ -93,16 +109,27 @@ private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEnt
 
 internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
     when (type) {
-        ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
         ConditionType.ON_BROADCAST_RECEIVED -> toDomainBroadcastReceived(cleanIds)
+        ConditionType.ON_COLOR_DETECTED -> toDomainColorCondition(cleanIds)
         ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
+        ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
-        ConditionType.ON_COLOR_DETECTED -> TODO()
     }
 
-/** @return the condition for this entity. */
-private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): ImageCondition =
-    ImageCondition(
+private fun ConditionEntity.toDomainColorCondition(cleanIds: Boolean = false): ScreenCondition.Color =
+    ScreenCondition.Color(
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
+        name = name,
+        priority = priority,
+        threshold = threshold!!,
+        shouldBeDetected = shouldBeDetected ?: true,
+        detectionArea = getDetectionArea()!!,
+        color = colorRgba!!,
+    )
+
+private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): ScreenCondition.Image =
+    ScreenCondition.Image(
         id = Identifier(id = id, asTemporary = cleanIds),
         eventId = Identifier(id = eventId, asTemporary = cleanIds),
         name = name,

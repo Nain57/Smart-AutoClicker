@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.scenarios.list.model.isEmpty
 import com.buzbuz.smartautoclicker.scenarios.list.model.toggleAllScenarioSelectionForBackup
 import com.buzbuz.smartautoclicker.scenarios.list.model.toggleScenarioSelectionForBackup
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -211,7 +211,7 @@ class ScenarioListViewModel @Inject constructor(
      * @param condition the condition to load the bitmap of.
      * @param onBitmapLoaded the callback notified upon completion.
      */
-    fun getConditionBitmap(condition: ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     private fun ScenarioListUiState.Type.toMenuUiState(

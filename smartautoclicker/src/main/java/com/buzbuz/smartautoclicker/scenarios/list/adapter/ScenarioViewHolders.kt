@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.databinding.ItemDumbScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEmptyScenarioBinding
@@ -101,7 +101,7 @@ class DumbScenarioViewHolder(
 /** ViewHolder for the [ScenarioAdapter]. */
 class SmartScenarioViewHolder(
     private val viewBinding: ItemSmartScenarioBinding,
-    bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),

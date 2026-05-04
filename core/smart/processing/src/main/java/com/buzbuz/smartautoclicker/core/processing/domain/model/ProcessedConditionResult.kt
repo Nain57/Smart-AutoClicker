@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.domain.model
 
 import android.graphics.Point
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 
 /** Result of the processing of a condition, provided by the detection engine. */
@@ -37,7 +37,7 @@ sealed class ProcessedConditionResult {
     data class Image(
         override val isFulfilled: Boolean,
         val haveBeenDetected: Boolean,
-        val condition: ImageCondition,
+        val condition: ScreenCondition.Image,
         val confidenceRate: Double,
         val position: Point?,
     ) : ProcessedConditionResult()

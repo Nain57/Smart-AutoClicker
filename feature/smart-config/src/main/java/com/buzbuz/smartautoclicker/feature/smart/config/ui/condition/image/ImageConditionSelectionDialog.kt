@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
@@ -46,8 +46,8 @@ import kotlinx.coroutines.Job
 
 class ImageConditionSelectionDialog(
     private val conditionList: List<UiImageCondition>,
-    bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
+    bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val onConditionSelected: (ScreenCondition.Image) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** Monitors views for the tutorial. */
@@ -92,7 +92,7 @@ class ImageConditionSelectionDialog(
         conditionsAdapter.submitList(conditionList)
     }
 
-    private fun onConditionClicked(condition: ImageCondition) {
+    private fun onConditionClicked(condition: ScreenCondition.Image) {
         onConditionSelected(condition)
         back()
     }
@@ -113,8 +113,8 @@ class ImageConditionSelectionDialog(
  * @param onConditionSelected listener on user click on a condition.
  */
 private class ImageConditionsAdapter(
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val onConditionSelected: (ScreenCondition.Image) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
 ) : ListAdapter<UiImageCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
 
@@ -154,8 +154,8 @@ private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiImageCon
  */
 private class ImageConditionViewHolder(
     val viewBinding: ItemImageConditionGridBinding,
-    private val bitmapProvider: (ImageCondition, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val onConditionSelected: (ImageCondition) -> Unit,
+    private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
+    private val onConditionSelected: (ScreenCondition.Image) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
     /** Job for the loading of the condition bitmap. Null until bound. */

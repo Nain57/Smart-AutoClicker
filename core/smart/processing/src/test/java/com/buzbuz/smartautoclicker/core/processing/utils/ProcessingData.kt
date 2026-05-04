@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 
 /** Test data and helpers for the detection tests. */
@@ -34,7 +34,7 @@ internal object ProcessingData {
         id: Long = 1L,
         @ConditionOperator operator: Int = AND,
         actions: List<Action> = emptyList(),
-        conditions: List<ImageCondition> = emptyList(),
+        conditions: List< ScreenCondition.Image> = emptyList(),
         enableOnStart: Boolean = true,
     ) = ImageEvent(
         id = Identifier(databaseId = id),
@@ -55,16 +55,16 @@ internal object ProcessingData {
         threshold: Int,
         @DetectionType detectionType: Int,
         shouldBeDetected: Boolean = true,
-    ) = ImageCondition(
+    ) =  ScreenCondition.Image(
         Identifier(databaseId = 1L),
         Identifier(databaseId = 1L),
         "TOTO",
+        threshold,
+        shouldBeDetected,
         0,
         path,
         area,
-        threshold,
         detectionType,
-        shouldBeDetected,
         null
     )
 }

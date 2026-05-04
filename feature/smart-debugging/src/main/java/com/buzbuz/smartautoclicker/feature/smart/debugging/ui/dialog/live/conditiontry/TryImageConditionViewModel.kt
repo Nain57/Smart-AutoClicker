@@ -20,8 +20,8 @@ import android.content.Context
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
@@ -76,7 +76,7 @@ class TryImageConditionViewModel @Inject constructor(
         }
     }
 
-    fun startTry(context: Context, scenario: Scenario, imageCondition: ImageCondition) {
+    fun startTry(context: Context, scenario: Scenario, imageCondition: ScreenCondition.Image) {
         viewModelScope.launch {
             userThreshold.value = imageCondition.threshold
 
