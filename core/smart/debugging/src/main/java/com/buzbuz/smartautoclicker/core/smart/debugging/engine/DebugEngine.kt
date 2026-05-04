@@ -17,9 +17,11 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.engine
 
 import android.graphics.Rect
+import android.util.Size
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -136,7 +138,7 @@ internal class DebugEngine @Inject constructor(
                     is ScreenEvent -> getLiveImageEventOccurrence(
                         event = event,
                         fulfilled = fulfilled,
-                        results = results as List<ProcessedConditionResult.Image>,
+                        results = results as List<ProcessedConditionResult.Screen>,
                     )
                     is TriggerEvent -> getLiveTriggerEventOccurrence(
                         event = event,
@@ -197,7 +199,7 @@ internal class DebugEngine @Inject constructor(
     }
 
     // Called anyway,even if not matched
-    override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) {
+    override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
@@ -249,7 +251,7 @@ internal class DebugEngine @Inject constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getLiveImageEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Image>): DebugLiveEventOccurrence.Image =
+    private fun getLiveImageEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Screen>): DebugLiveEventOccurrence.Image =
         DebugLiveEventOccurrence.Image(
             event = event as ScreenEvent,
             fulfilled = fulfilled,
@@ -312,17 +314,20 @@ internal class DebugEngine @Inject constructor(
     }
 }
 
-private fun ProcessedConditionResult.Image.getDetectionArea(): Rect? {
+private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
     val pos = position ?: return null
-    val halfWidth = condition.area.width() / 2
-    val halfHeight = condition.area.height() / 2
-
+    val halfSize = when (val cond = condition) {
+        is ScreenCondition.Color ->
+            Size(cond.detectionArea.width() / 2, cond.detectionArea.height() / 2)
+        is ScreenCondition.Image ->
+            Size(cond.area.width() / 2,  cond.area.height() / 2)
+    }
 
     return if (pos.x == 0 && pos.y == 0) Rect()
     else Rect(
-        pos.x - halfWidth,
-        pos.y - halfHeight,
-        pos.x + halfWidth,
-        pos.y + halfHeight,
+        pos.x - halfSize.width,
+        pos.y - halfSize.height,
+        pos.x + halfSize.width,
+        pos.y + halfSize.height,
     )
 }

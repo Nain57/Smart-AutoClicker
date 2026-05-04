@@ -84,7 +84,7 @@ interface SmartProcessingListener {
      *
      * @param result the result of the detection for the processed condition.
      */
-    fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) = Unit
+    fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) = Unit
 
     /**
      * The value of a counter have changed.

@@ -37,7 +37,7 @@ internal class ImageConditionOccurrenceRecorder @Inject constructor() {
         conditionDurationRecorder.start()
     }
 
-    fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Image) {
+    fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) {
         _imageConditionResults.add(
             DebugReportConditionResult.ImageCondition(
                 conditionId = result.condition.id.databaseId,

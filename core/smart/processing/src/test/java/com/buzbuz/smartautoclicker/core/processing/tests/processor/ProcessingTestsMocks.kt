@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
-import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.ProcessingTests.BitmapSupplier
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
@@ -36,9 +36,9 @@ import org.mockito.kotlin.verify
 
 
 internal fun ScalingManager.mockScaling(testCondition: TestImageCondition, detectionArea: Rect? = null) {
-    `when`(getImageConditionScalingInfo(testCondition.imageCondition)).thenReturn(
-        ImageConditionScalingInfo(
-            imageCondition = testCondition.imageCondition,
+    `when`(getScreenConditionScalingInfo(testCondition.imageCondition)).thenReturn(
+        ScreenConditionScalingInfo.Image(
+            screenCondition = testCondition.imageCondition,
             imageArea = testCondition.imageCondition.area,
             detectionArea = detectionArea ?: testCondition.imageCondition.area,
         )

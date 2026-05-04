@@ -153,7 +153,7 @@ class ActionExecutorTests {
         val results = ConditionsResults()
         results.addResult(
             conditionId = condition.getDatabaseId(),
-            result = ProcessedConditionResult.Image(
+            result = ProcessedConditionResult.Screen(
                 isFulfilled = true,
                 haveBeenDetected = true,
                 condition = condition,
@@ -183,7 +183,7 @@ class ActionExecutorTests {
         val results = ConditionsResults()
         results.addResult(
             conditionId = conditionValid.getDatabaseId(),
-            result = ProcessedConditionResult.Image(
+            result = ProcessedConditionResult.Screen(
                 isFulfilled = true,
                 haveBeenDetected = true,
                 condition = conditionValid,
@@ -193,7 +193,7 @@ class ActionExecutorTests {
         )
         results.addResult(
             conditionId = conditionOther.getDatabaseId(),
-            result = ProcessedConditionResult.Image(
+            result = ProcessedConditionResult.Screen(
                 isFulfilled = true,
                 haveBeenDetected = false,
                 condition = conditionOther,

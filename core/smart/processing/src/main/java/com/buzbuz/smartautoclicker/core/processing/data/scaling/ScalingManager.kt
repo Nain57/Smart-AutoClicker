@@ -32,7 +32,7 @@ class ScalingManager @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
 ) {
 
-    private val conditionScalingInfo: MutableMap<Long, ImageConditionScalingInfo> = mutableMapOf()
+    private val conditionScalingInfo: MutableMap<Long, ScreenConditionScalingInfo> = mutableMapOf()
 
     private var detectionQuality: Double = QUALITY_MAX
     private var scalingRatio: Double = 1.0
@@ -49,7 +49,7 @@ class ScalingManager @Inject constructor(
 
     internal fun refreshScaling(): Point {
         val scaledScreenSize = refreshScalingMetrics()
-        refreshScalingData(scaledScreenSize, conditionScalingInfo.values.map { it.imageCondition })
+        refreshScalingData(scaledScreenSize, conditionScalingInfo.values.map { it.screenCondition })
 
         return scaledScreenSize
     }
@@ -61,7 +61,7 @@ class ScalingManager @Inject constructor(
         refreshScalingData(scaledScreenSize, emptyList())
     }
 
-    internal fun getImageConditionScalingInfo(imageCondition: ScreenCondition.Image): ImageConditionScalingInfo? =
+    internal fun getScreenConditionScalingInfo(imageCondition: ScreenCondition): ScreenConditionScalingInfo? =
         conditionScalingInfo[imageCondition.id.databaseId]
 
     internal fun scaleUpDetectionResult(result: Point): Point =
@@ -84,35 +84,43 @@ class ScalingManager @Inject constructor(
         return scaledScreenSize
     }
 
-    private fun refreshScalingData(scaledScreenSize: Point, imageConditions: List<ScreenCondition.Image>) {
+    private fun refreshScalingData(scaledScreenSize: Point, screenConditions: List<ScreenCondition>) {
         conditionScalingInfo.clear()
 
-        imageConditions.forEach { imageCondition ->
-            val scaledImageArea = imageCondition.area.scaleDown()
-            conditionScalingInfo[imageCondition.id.databaseId] =
-                ImageConditionScalingInfo(
-                    imageCondition = imageCondition,
-                    imageArea = scaledImageArea,
-                    detectionArea = imageCondition.getDetectionArea(
-                        scaledImageArea = scaledImageArea,
-                        bounds = scaledScreenSize.toArea(),
-                    ),
-                )
+        screenConditions.forEach { screenCondition ->
+            conditionScalingInfo[screenCondition.id.databaseId] = when (screenCondition) {
+                is ScreenCondition.Color -> screenCondition.toColorScalingInfo(scaledScreenSize)
+                is ScreenCondition.Image -> screenCondition.toImageScalingInfo(scaledScreenSize)
+            }
         }
 
-        Log.i(TAG, "Scaling data refresh for ${imageConditions.size} conditions")
+        Log.i(TAG, "Scaling data refresh for ${screenConditions.size} conditions")
     }
 
-    private fun ScreenCondition.Image.getDetectionArea(scaledImageArea: Rect, bounds: Rect): Rect =
-        when (detectionType) {
-            EXACT -> scaledImageArea.grow(bounds)
-            WHOLE_SCREEN -> bounds
-            IN_AREA -> detectionArea?.scaleDown()?.grow(bounds)
-                ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
-            else -> throw IllegalArgumentException("Unexpected detection type")
-        }
+    private fun ScreenCondition.Image.toImageScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Image {
+        val scaledImageArea = area.scaleDown()
+        val bounds = scaledScreenSize.toArea()
 
-    private fun List<ScreenEvent>.toConditionsList(): List<ScreenCondition.Image> =
+        return ScreenConditionScalingInfo.Image(
+            screenCondition = this,
+            imageArea = scaledImageArea,
+            detectionArea = when (detectionType) {
+                EXACT -> scaledImageArea.grow(bounds)
+                WHOLE_SCREEN -> bounds
+                IN_AREA -> detectionArea?.scaleDown()?.grow(bounds)
+                    ?: throw IllegalArgumentException("Invalid IN_AREA condition, no area defined")
+                else -> throw IllegalArgumentException("Unexpected detection type")
+            },
+        )
+    }
+
+    private fun ScreenCondition.Color.toColorScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Color =
+        ScreenConditionScalingInfo.Color(
+            screenCondition = this,
+            detectionArea = detectionArea.scaleDown().coerceIn(bounds = scaledScreenSize.toArea())
+        )
+
+    private fun List<ScreenEvent>.toConditionsList(): List<ScreenCondition> =
         fold(listOf()) { acc, event -> acc + event.conditions }
 
     private fun Point.scaleDown(): Point = scale(scalingRatio)

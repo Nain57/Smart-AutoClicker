@@ -254,7 +254,11 @@ class ClickViewModel @Inject constructor(
 
     private suspend fun Context.getOnConditionWithAndPositionState(event: ScreenEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
-        val conditionBitmap = conditionToClick?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
+
+        //TODO update for color condition
+        val conditionBitmap = (conditionToClick as? ScreenCondition.Image)?.let { condition ->
+            bitmapRepository.getConditionBitmap(condition)
+        }
 
         return ClickPositionUiState(
             positionType = Click.PositionType.ON_DETECTED_CONDITION,

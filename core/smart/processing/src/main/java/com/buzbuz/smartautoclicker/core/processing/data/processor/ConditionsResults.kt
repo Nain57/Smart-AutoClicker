@@ -26,18 +26,18 @@ internal class ConditionsResults {
     var fulfilled: Boolean? = null
         private set
 
-    fun getImageConditionResult(conditionId: Long): ProcessedConditionResult.Image? =
-        _results[conditionId]?.let { result -> result as? ProcessedConditionResult.Image }
+    fun getImageConditionResult(conditionId: Long): ProcessedConditionResult.Screen? =
+        _results[conditionId]?.let { result -> result as? ProcessedConditionResult.Screen }
 
-    fun getFirstImageDetectedResult(): ProcessedConditionResult.Image? =
-        _results.values.find { it is ProcessedConditionResult.Image && it.isFulfilled && it.condition.shouldBeDetected }
-                as ProcessedConditionResult.Image?
+    fun getFirstImageDetectedResult(): ProcessedConditionResult.Screen? =
+        _results.values.find { it is ProcessedConditionResult.Screen && it.isFulfilled && it.condition.shouldBeDetected }
+                as ProcessedConditionResult.Screen?
 
     fun getAllTriggerConditionsResults(): List<ProcessedConditionResult.Trigger> =
         _results.mapNotNull { it.value as? ProcessedConditionResult.Trigger }
 
-    fun getAllImageConditionsResults(): List<ProcessedConditionResult.Image> =
-        _results.mapNotNull { it.value as? ProcessedConditionResult.Image }
+    fun getAllImageConditionsResults(): List<ProcessedConditionResult.Screen> =
+        _results.mapNotNull { it.value as? ProcessedConditionResult.Screen }
 
     fun reset() {
         _results.clear()

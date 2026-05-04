@@ -175,7 +175,7 @@ data class ScenarioListUiState(
                         val eventName: String,
                         val actionsCount: Int,
                         val conditionsCount: Int,
-                        val firstCondition: ScreenCondition.Image?,
+                        val firstCondition: ScreenCondition?,
                     )
                 }
             }

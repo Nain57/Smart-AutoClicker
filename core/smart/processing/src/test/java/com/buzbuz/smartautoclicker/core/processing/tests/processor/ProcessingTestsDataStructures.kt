@@ -45,7 +45,7 @@ internal data class TestEventToggle(
     val toggleType: ToggleEvent.ToggleType,
 )
 
-internal fun TestImageCondition.expectedResult(detected: Boolean) = ProcessedConditionResult.Image(
+internal fun TestImageCondition.expectedResult(detected: Boolean) = ProcessedConditionResult.Screen(
     isFulfilled = detected == imageCondition.shouldBeDetected,
     haveBeenDetected = detected,
     condition = imageCondition,

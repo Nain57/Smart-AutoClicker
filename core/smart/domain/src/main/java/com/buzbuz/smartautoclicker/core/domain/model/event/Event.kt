@@ -79,7 +79,7 @@ data class ScreenEvent(
     override val name: String,
     @param:ConditionOperator override val conditionOperator: Int,
     override val actions: List<Action> = emptyList(),
-    override val conditions: List<ScreenCondition.Image> =  emptyList(),
+    override val conditions: List<ScreenCondition> =  emptyList(),
     override val enabledOnStart: Boolean = true,
     override var priority: Int,
     val keepDetecting: Boolean,

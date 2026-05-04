@@ -57,13 +57,21 @@ private fun assertSameEventNoIdCheck(expected: ScreenEvent, actual: ScreenEvent)
     }
 }
 
-private fun assertSameConditionNoIdCheck(expected: ScreenCondition.Image, actual: ScreenCondition.Image) = assertTrue(
+private fun assertSameConditionNoIdCheck(expected: ScreenCondition, actual: ScreenCondition) = assertTrue(
     "Conditions are not the same",
-    expected.name == actual.name
-            && expected.shouldBeDetected == actual.shouldBeDetected
-            && expected.area == actual.area
-            && expected.detectionType == actual.detectionType
-            && expected.threshold == actual.threshold
+    when {
+        expected is ScreenCondition.Color && actual is ScreenCondition.Color -> expected.name == actual.name
+                && expected.shouldBeDetected == actual.shouldBeDetected
+                && expected.color == actual.color
+                && expected.detectionArea == actual.detectionArea
+                && expected.threshold == actual.threshold
+        expected is ScreenCondition.Image && actual is ScreenCondition.Image -> expected.name == actual.name
+                && expected.shouldBeDetected == actual.shouldBeDetected
+                && expected.area == actual.area
+                && expected.detectionType == actual.detectionType
+                && expected.threshold == actual.threshold
+        else -> false
+    }
 )
 
 private fun assertSameActionNoIdCheck(expected: Action, actual: Action) {

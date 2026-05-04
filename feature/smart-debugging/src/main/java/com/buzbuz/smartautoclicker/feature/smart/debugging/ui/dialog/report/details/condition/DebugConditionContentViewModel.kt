@@ -147,7 +147,7 @@ class DebugConditionContentViewModel @Inject constructor(
                 this@toImageItems.find { result -> condition.id.databaseId == result.conditionId }?.let { result ->
                     EventOccurrenceItem.Image(
                         id = result.conditionId,
-                        condition = condition,
+                        condition = condition as? ScreenCondition.Image ?: throw UnsupportedOperationException("Color not yet implemented"),
                         conditionName = condition.name,
                         durationText = result.detectionDurationMs.formatDebugDuration(),
                         shouldDetectedValue = condition.shouldBeDetected,

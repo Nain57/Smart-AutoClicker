@@ -51,3 +51,11 @@ internal fun Rect.grow(bounds: Rect, growValue: Int = 1): Rect =
         (right + growValue).coerceIn(bounds.left, bounds.right),
         (bottom + growValue).coerceIn(bounds.top, bounds.bottom),
     )
+
+internal fun Rect.coerceIn(bounds: Rect): Rect =
+    Rect(
+        left.coerceIn(bounds.left, bounds.right),
+        top.coerceIn(bounds.top, bounds.bottom),
+        right.coerceIn(bounds.left, bounds.right),
+        bottom.coerceIn(bounds.top, bounds.bottom),
+    )

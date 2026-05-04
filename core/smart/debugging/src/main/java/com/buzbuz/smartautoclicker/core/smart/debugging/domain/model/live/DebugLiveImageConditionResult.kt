@@ -35,7 +35,7 @@ sealed interface DebugLiveEventConditionResult {
      * @param detectionArea the area of the image that have been detected. Null if not detected.
      */
     data class Image(
-        override val condition: ScreenCondition.Image,
+        override val condition: ScreenCondition,
         override val isFulfilled: Boolean,
         val isDetected: Boolean,
         val confidenceRate: Double,

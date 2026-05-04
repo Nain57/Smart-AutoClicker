@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
-import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
@@ -143,8 +143,8 @@ class ScenarioProcessorTests {
 
         val pass = if (isDetected) TEST_DETECTION_OK else TEST_DETECTION_KO
         mockWhen(mockImageDetector.detectImage(eq(conditionBitmap), anyInt(),anyInt(), anyNotNull(), anyInt())).thenReturn(pass)
-        mockWhen(mockScalingManager.getImageConditionScalingInfo(condition))
-            .thenReturn(ImageConditionScalingInfo(condition, area, area))
+        mockWhen(mockScalingManager.getScreenConditionScalingInfo(condition))
+            .thenReturn(ScreenConditionScalingInfo.Image(condition, area, area))
 
         condition
     }

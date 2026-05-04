@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
@@ -77,9 +78,9 @@ internal class ConditionsVerifier(
 
     private suspend fun verifyCondition(condition: Condition): ProcessedConditionResult =
         when (condition) {
+            is ScreenCondition.Color -> verifyColorCondition(condition)
             is ScreenCondition.Image -> verifyImageCondition(condition)
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
-            is ScreenCondition.Color -> TODO()
         }
 
     private fun verifyTriggerCondition(condition: TriggerCondition): Boolean =
@@ -129,28 +130,54 @@ internal class ConditionsVerifier(
         } else false
     }
 
-    private suspend fun verifyImageCondition(condition: ScreenCondition.Image): ProcessedConditionResult.Image {
+    private fun verifyColorCondition(condition: ScreenCondition.Color): ProcessedConditionResult.Screen {
         progressListener?.onImageConditionProcessingStarted()
 
-        val scaledConditionArea = scalingManager.getImageConditionScalingInfo(condition)
+        val conditionScalingInfo = scalingManager
+            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Color
+            ?: return condition.toInvalidConditionResult()
+
+        val detectionResult = imageDetector.detectColor(
+            conditionColor = condition.color,
+            detectionArea = conditionScalingInfo.detectionArea,
+            threshold = condition.threshold,
+        )
+
+        val result = ProcessedConditionResult.Screen(
+            isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
+            haveBeenDetected = detectionResult.isDetected,
+            condition = condition,
+            position = scalingManager.scaleUpDetectionResult(detectionResult.position),
+            confidenceRate = detectionResult.confidenceRate,
+        )
+
+        progressListener?.onImageConditionProcessingCompleted(result)
+        return result
+    }
+
+    private suspend fun verifyImageCondition(condition: ScreenCondition.Image): ProcessedConditionResult.Screen {
+        progressListener?.onImageConditionProcessingStarted()
+
+        val conditionScalingInfo = scalingManager
+            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Image
             ?: return condition.toInvalidConditionResult()
 
         val bitmap = bitmapSupplier(
             condition.path,
-            scaledConditionArea.imageArea.width(),
-            scaledConditionArea.imageArea.height(),
+            conditionScalingInfo.imageArea.width(),
+            conditionScalingInfo.imageArea.height(),
         )
 
         val result = bitmap?.let { conditionBitmap ->
             val detectionResult = imageDetector.detectImage(
                 conditionBitmap = conditionBitmap,
-                conditionWidth = scaledConditionArea.imageArea.width(),
-                conditionHeight = scaledConditionArea.imageArea.height(),
-                detectionArea = scaledConditionArea.detectionArea,
+                conditionWidth = conditionScalingInfo.imageArea.width(),
+                conditionHeight = conditionScalingInfo.imageArea.height(),
+                detectionArea = conditionScalingInfo.detectionArea,
                 threshold = condition.threshold,
             )
 
-            ProcessedConditionResult.Image(
+            ProcessedConditionResult.Screen(
                 isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
                 haveBeenDetected = detectionResult.isDetected,
                 condition = condition,
@@ -163,8 +190,8 @@ internal class ConditionsVerifier(
         return result
     }
 
-    private fun ScreenCondition.Image.toInvalidConditionResult(): ProcessedConditionResult.Image =
-        ProcessedConditionResult.Image(
+    private fun ScreenCondition.toInvalidConditionResult(): ProcessedConditionResult.Screen =
+        ProcessedConditionResult.Screen(
             isFulfilled = false,
             haveBeenDetected = false,
             condition = this,

@@ -20,6 +20,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.ColorInt
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
@@ -111,7 +112,7 @@ class EditedItemsBuilder internal constructor(
             scenarioId = scenarioId,
             name = "" + from.name,
             conditions = from.conditions.map { conditionOrig ->
-                val conditionCopy = createNewImageConditionFrom(conditionOrig, eventId)
+                val conditionCopy = createNewScreenConditionFrom(conditionOrig, eventId)
                 eventCopyConditionIdMap[conditionOrig.id] = conditionCopy.id
                 conditionCopy
             },
@@ -135,6 +136,22 @@ class EditedItemsBuilder internal constructor(
         ).also { eventCopyConditionIdMap.clear() }
     }
 
+    fun createNewColorCondition(context: Context, @ColorInt color: Int, detectionArea: Rect): ScreenCondition.Color {
+        val id = conditionsIdCreator.generateNewIdentifier()
+
+        return ScreenCondition.Color(
+            id = id,
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            detectionArea = detectionArea,
+            threshold = defaultValues.conditionThreshold(context),
+            shouldBeDetected = defaultValues.conditionShouldBeDetected(),
+            priority = 0,
+            color = color,
+        )
+    }
+
+
     suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ScreenCondition.Image {
         val id = conditionsIdCreator.generateNewIdentifier()
         val newPath = bitmapRepository.saveImageConditionBitmap(
@@ -155,6 +172,19 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
     }
+
+    fun createNewScreenConditionFrom(condition: ScreenCondition, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition =
+        when (condition) {
+            is ScreenCondition.Color -> createNewColorConditionFrom(condition, eventId)
+            is ScreenCondition.Image -> createNewImageConditionFrom(condition, eventId)
+        }
+
+    fun createNewColorConditionFrom(condition: ScreenCondition.Color, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Color =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+        )
 
     fun createNewImageConditionFrom(condition: ScreenCondition.Image, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Image =
         condition.copy(

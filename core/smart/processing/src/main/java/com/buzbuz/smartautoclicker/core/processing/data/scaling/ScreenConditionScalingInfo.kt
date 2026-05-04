@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,18 @@ package com.buzbuz.smartautoclicker.core.processing.data.scaling
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
-internal data class ImageConditionScalingInfo(
-    val imageCondition: ScreenCondition.Image,
-    val imageArea: Rect,
-    val detectionArea: Rect,
-)
+internal sealed class ScreenConditionScalingInfo {
+    abstract val screenCondition: ScreenCondition
+    abstract val detectionArea: Rect
+
+    data class Color(
+        override val screenCondition: ScreenCondition.Color,
+        override val detectionArea: Rect,
+    ) : ScreenConditionScalingInfo()
+
+    data class Image(
+        override val screenCondition: ScreenCondition.Image,
+        override val detectionArea: Rect,
+        val imageArea: Rect,
+    ) : ScreenConditionScalingInfo()
+}

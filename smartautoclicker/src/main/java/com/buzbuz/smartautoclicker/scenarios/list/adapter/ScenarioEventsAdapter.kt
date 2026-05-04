@@ -75,7 +75,8 @@ class EventCardViewHolder(
             eventActionsCount.text = item.actionsCount.toString()
             eventConditionsCount.text = item.conditionsCount.toString()
 
-            if (item.firstCondition == null) {
+            // TODO update for color conditions
+            if (item.firstCondition == null || item.firstCondition !is ScreenCondition.Image) {
                 setErrorBitmap()
                 return
             }

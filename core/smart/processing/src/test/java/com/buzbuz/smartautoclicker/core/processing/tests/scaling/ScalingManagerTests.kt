@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert
@@ -170,9 +171,9 @@ class ScalingManagerTests {
         scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1, event2))
 
         // Then
-        Assert.assertNotNull(scalingManager.getImageConditionScalingInfo(condition1))
-        Assert.assertNotNull(scalingManager.getImageConditionScalingInfo(condition2))
-        Assert.assertNotNull(scalingManager.getImageConditionScalingInfo(condition3))
+        Assert.assertNotNull(scalingManager.getScreenConditionScalingInfo(condition1))
+        Assert.assertNotNull(scalingManager.getScreenConditionScalingInfo(condition2))
+        Assert.assertNotNull(scalingManager.getScreenConditionScalingInfo(condition3))
     }
 
     @Test
@@ -207,9 +208,9 @@ class ScalingManagerTests {
         scalingManager.stopScaling()
 
         // Then
-        Assert.assertNull(scalingManager.getImageConditionScalingInfo(condition1))
-        Assert.assertNull(scalingManager.getImageConditionScalingInfo(condition2))
-        Assert.assertNull(scalingManager.getImageConditionScalingInfo(condition3))
+        Assert.assertNull(scalingManager.getScreenConditionScalingInfo(condition1))
+        Assert.assertNull(scalingManager.getScreenConditionScalingInfo(condition2))
+        Assert.assertNull(scalingManager.getScreenConditionScalingInfo(condition3))
     }
 
     @Test
@@ -230,10 +231,10 @@ class ScalingManagerTests {
         scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(conditionArea, scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(conditionArea, (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea)
         Assert.assertEquals(Rect(9, 19, 31, 41), scalingInfo.detectionArea)
     }
 
@@ -257,10 +258,13 @@ class ScalingManagerTests {
         scalingManager.startScaling(quality, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(
+            Rect(50, 50, 100, 100),
+            (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,
+        )
         Assert.assertEquals(Rect(49, 49, 101, 101), scalingInfo.detectionArea)
     }
 
@@ -286,10 +290,14 @@ class ScalingManagerTests {
         scalingManager.refreshScaling()
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(
+            Rect(50, 50, 100, 100),
+            (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,
+        )
+
         Assert.assertEquals(Rect(49, 49, 101, 101), scalingInfo.detectionArea)
     }
 
@@ -311,10 +319,10 @@ class ScalingManagerTests {
         scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(conditionArea, scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(conditionArea, (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,)
         Assert.assertEquals(
             Rect(0, 0, TEST_DEFAULT_SCREEN_SIZE.x, TEST_DEFAULT_SCREEN_SIZE.y),
             scalingInfo.detectionArea,
@@ -341,10 +349,13 @@ class ScalingManagerTests {
         scalingManager.startScaling(quality, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(
+            Rect(50, 50, 100, 100),
+            (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,
+        )
         Assert.assertEquals(Rect(0, 0, 500, 1000), scalingInfo.detectionArea)
     }
 
@@ -370,10 +381,13 @@ class ScalingManagerTests {
         scalingManager.refreshScaling()
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(
+            Rect(50, 50, 100, 100),
+            (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,
+        )
         Assert.assertEquals(Rect(0, 0, 500, 1000), scalingInfo.detectionArea)
     }
 
@@ -397,10 +411,10 @@ class ScalingManagerTests {
         scalingManager.startScaling(TEST_MAX_QUALITY, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(conditionArea, scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(conditionArea, (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,)
         Assert.assertEquals(Rect(9, 9, 51, 51), scalingInfo.detectionArea)
     }
 
@@ -426,10 +440,10 @@ class ScalingManagerTests {
         scalingManager.startScaling(quality, listOf(event1))
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(Rect(50, 50, 100, 100), (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,)
         Assert.assertEquals(Rect(4, 4, 251, 251), scalingInfo.detectionArea)
     }
 
@@ -457,10 +471,13 @@ class ScalingManagerTests {
         scalingManager.refreshScaling()
 
         // Then
-        val scalingInfo = scalingManager.getImageConditionScalingInfo(condition)
+        val scalingInfo = scalingManager.getScreenConditionScalingInfo(condition)
         Assert.assertNotNull(scalingInfo)
-        Assert.assertEquals(condition, scalingInfo!!.imageCondition)
-        Assert.assertEquals(Rect(50, 50, 100, 100), scalingInfo.imageArea)
+        Assert.assertEquals(condition, scalingInfo!!.screenCondition)
+        Assert.assertEquals(
+            Rect(50, 50, 100, 100),
+            (scalingInfo as? ScreenConditionScalingInfo.Image)?.imageArea,
+        )
         Assert.assertEquals(Rect(4, 4, 251, 251), scalingInfo.detectionArea)
     }
 

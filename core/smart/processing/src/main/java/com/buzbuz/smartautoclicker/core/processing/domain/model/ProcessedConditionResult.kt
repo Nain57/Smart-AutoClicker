@@ -27,17 +27,17 @@ sealed class ProcessedConditionResult {
     abstract val isFulfilled: Boolean
 
     /**
-     * Results for an ImageCondition.
+     * Results for an ScreenCondition.
      *
-     * @param haveBeenDetected true if the image have been detected, false if not.
+     * @param haveBeenDetected true if the condition have been detected, false if not.
      * @param condition the condition that triggered this result.
      * @param confidenceRate the confidence rate of the detection algorithm on this result. Between [0 - 100].
-     * @param position the position at which the condition image have been detected. Null if not detected.
+     * @param position the position at which the condition have been detected. Null if not detected.
      */
-    data class Image(
+    data class Screen(
         override val isFulfilled: Boolean,
         val haveBeenDetected: Boolean,
-        val condition: ScreenCondition.Image,
+        val condition: ScreenCondition,
         val confidenceRate: Double,
         val position: Point?,
     ) : ProcessedConditionResult()
