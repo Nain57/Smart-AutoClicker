@@ -20,8 +20,8 @@
 
 #include <opencv2/core/types.hpp>
 
-#include "../images/condition_image.hpp"
-#include "../images/screen_image.hpp"
+#include "../../images/condition_image.hpp"
+#include "../../images/screen_image.hpp"
 #include "template_matching_result.hpp"
 
 namespace smartautoclicker {
@@ -43,6 +43,10 @@ namespace smartautoclicker {
 
     public:
         void reset();
+        static bool isRoiValidForMatching(
+                const cv::Rect& screenRoi,
+                const cv::Rect& conditionRoi,
+                const cv::Rect& roi);
         void matchTemplate(
                 const ScreenImage& screenImage,
                 const ConditionImage& condition,

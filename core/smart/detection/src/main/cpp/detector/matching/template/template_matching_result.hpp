@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,11 @@
 #define KLICK_R_TEMPLATE_MATCHING_RESULT_HPP
 
 #include <opencv2/core/types.hpp>
+#include "../../detection_result.hpp"
 
 namespace smartautoclicker {
 
-    class TemplateMatchingResult {
+    class TemplateMatchingResult: public DetectionResult {
     private:
         bool detected;
         double minVal;
@@ -41,11 +42,11 @@ namespace smartautoclicker {
         void markResultAsDetected();
         void reset();
 
-        [[nodiscard]] bool isDetected() const;
-        [[nodiscard]] double getResultConfidence() const;
-        [[nodiscard]] cv::Rect getResultArea() const;
-        [[nodiscard]] int getResultAreaCenterX() const;
-        [[nodiscard]] int getResultAreaCenterY() const;
+        [[nodiscard]] bool isDetected() const override;
+        [[nodiscard]] double getResultConfidence() const override;
+        [[nodiscard]] cv::Rect getResultArea() const override;
+        [[nodiscard]] int getResultAreaCenterX() const override;
+        [[nodiscard]] int getResultAreaCenterY() const override;
 
         void invalidateCurrentResult(const cv::Mat& condition, cv::Mat& results) const;
     };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ void Detector::setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const cha
     screenImage->processNewData(std::move(screenColorMat), metricsTag);
 }
 
-TemplateMatchingResult* Detector::detectCondition(
+TemplateMatchingResult* Detector::detectImage(
         std::unique_ptr<cv::Mat> conditionMat,
         int targetConditionWidth,
         int targetConditionHeight,
@@ -47,7 +47,7 @@ TemplateMatchingResult* Detector::detectCondition(
             targetConditionHeight);
 
     // Check if the condition fits in the detection area
-    if (!isRoiValidForDetection(roi)) {
+    if (!TemplateMatcher::isRoiValidForMatching(screenImage->getRoi(), conditionImage->getRoi(), roi)) {
         return templateMatcher->getMatchingResults();
     }
 
@@ -61,28 +61,30 @@ TemplateMatchingResult* Detector::detectCondition(
     return templateMatcher->getMatchingResults();
 }
 
-bool Detector::isRoiValidForDetection(const cv::Rect& roi) const {
-    cv::Rect screenRoi = screenImage->getRoi();
-    cv::Rect conditionRoi = conditionImage->getRoi();
+ColorMatchingResult* Detector::detectColor(
+        int colorCondition,
+        const cv::Rect& roi,
+        int threshold
+) {
+    colorMatcher->reset();
 
-    if (!isRoiBiggerOrEquals(screenRoi, conditionRoi)) {
-        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than screen (w=%d, h=%d)",
-             conditionRoi.width, conditionRoi.height, screenRoi.width, screenRoi.height);
-        return false;
+    // Verify area validity
+    if (!ColorMatcher::isRoiValidForMatching(screenImage->getRoi(), roi)) {
+        return colorMatcher->getMatchingResults();
     }
 
-    if (!isRoiContainsOrEquals(screenRoi, roi)) {
-        LOGD("Detector", "Can't detectCondition, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
-             roi.x, roi.y, roi.width, roi.height,
-             screenRoi.width, screenRoi.height);
-        return false;
-    }
+    // Create the color int (RGBA) into a scalar of size 3 (RGB)
+    cv::Scalar conditionColor(
+            (double)((colorCondition >> 16) & 0xFF),
+            (double)((colorCondition >> 8) & 0xFF),
+            (double)(colorCondition & 0xFF));
 
-    if (!isRoiBiggerOrEquals(roi, conditionRoi)) {
-        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than detection area (x=%d, y=%d, w=%d, h=%d)",
-             conditionRoi.width, conditionRoi.height, roi.x, roi.y, roi.width, roi.height);
-        return false;
-    }
+    // Apply color matching and get global results.
+    colorMatcher->matchColor(
+            *screenImage,
+            conditionColor,
+            roi,
+            threshold);
 
-    return true;
+    return colorMatcher->getMatchingResults();
 }

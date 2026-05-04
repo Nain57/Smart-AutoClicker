@@ -61,7 +61,7 @@ internal fun ImageDetector.mockAllDetectionResult(testConditions: List<TestImage
 
 internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition, isDetected: Boolean, detectionArea: Rect? = null) {
     `when`(
-        detectCondition(
+        detectImage(
             conditionBitmap = testCondition.mockedBitmap,
             conditionWidth = testCondition.imageCondition.area.width(),
             conditionHeight = testCondition.imageCondition.area.height(),
@@ -73,7 +73,7 @@ internal fun ImageDetector.mockDetectionResult(testCondition: TestImageCondition
 
 internal fun ImageDetector.verifyConditionNeverProcessed(testCondition: TestImageCondition) {
     verify(this, never())
-        .detectCondition(
+        .detectImage(
             conditionBitmap = eq(testCondition.mockedBitmap),
             conditionWidth = eq(testCondition.imageCondition.area.width()),
             conditionHeight = eq(testCondition.imageCondition.area.height()),

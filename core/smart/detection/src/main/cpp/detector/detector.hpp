@@ -20,8 +20,10 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "matching/template_matcher.hpp"
-#include "matching/template_matching_result.hpp"
+#include "matching/color/color_matcher.hpp"
+#include "matching/color/color_matching_result.hpp"
+#include "matching/template/template_matcher.hpp"
+#include "matching/template/template_matching_result.hpp"
 #include "images/condition_image.hpp"
 #include "images/screen_image.hpp"
 
@@ -32,9 +34,12 @@ namespace smartautoclicker {
     private:
         std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
         std::unique_ptr<ConditionImage> conditionImage = std::make_unique<ConditionImage>();
-        std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
 
-        [[nodiscard]] bool isRoiValidForDetection(const cv::Rect& roi) const;
+        std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
+        std::unique_ptr<ColorMatcher> colorMatcher = std::make_unique<ColorMatcher>();
+
+        [[nodiscard]] bool isRoiValidForTemplateMatching(const cv::Rect& roi) const;
+        [[nodiscard]] bool isRoiValidForColorMatching(const cv::Rect& roi) const;
 
     public:
 
@@ -42,10 +47,15 @@ namespace smartautoclicker {
 
         void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
-        TemplateMatchingResult* detectCondition(
+        TemplateMatchingResult* detectImage(
                 std::unique_ptr<cv::Mat> conditionMat,
                 int targetConditionWidth,
                 int targetConditionHeight,
+                const cv::Rect& roi,
+                int threshold);
+
+        ColorMatchingResult* detectColor(
+                int colorCondition,
                 const cv::Rect& roi,
                 int threshold);
     };

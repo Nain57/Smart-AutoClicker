@@ -184,7 +184,7 @@ class DetectionTests {
 
             setScreenBitmap(screenBitmap, "")
 
-            val results = detectCondition(
+            val results = detectImage(
                 conditionBitmap = conditionBitmap,
                 conditionWidth = conditionBitmap.width,
                 conditionHeight = conditionBitmap.height,

@@ -19,8 +19,8 @@
 #include <opencv2/imgproc/imgproc_c.h>
 
 #include "template_matcher.hpp"
-#include "../../logs/log.h"
-#include "../../utils/roi.h"
+#include "../../../logs/log.h"
+#include "../../../utils/roi.h"
 
 
 using namespace smartautoclicker;
@@ -32,6 +32,29 @@ void TemplateMatcher::reset() {
 
 TemplateMatchingResult *TemplateMatcher::getMatchingResults() {
     return &currentMatchingResult;
+}
+
+bool TemplateMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& conditionRoi, const cv::Rect& roi) {
+    if (!isRoiBiggerOrEquals(screenRoi, conditionRoi)) {
+        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than screen (w=%d, h=%d)",
+             conditionRoi.width, conditionRoi.height, screenRoi.width, screenRoi.height);
+        return false;
+    }
+
+    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+        LOGD("Detector", "Can't detectCondition, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
+             roi.x, roi.y, roi.width, roi.height,
+             screenRoi.width, screenRoi.height);
+        return false;
+    }
+
+    if (!isRoiBiggerOrEquals(roi, conditionRoi)) {
+        LOGD("Detector", "Can't detectCondition, condition (w=%d, h=%d) is bigger than detection area (x=%d, y=%d, w=%d, h=%d)",
+             conditionRoi.width, conditionRoi.height, roi.x, roi.y, roi.width, roi.height);
+        return false;
+    }
+
+    return true;
 }
 
 void TemplateMatcher::matchTemplate(

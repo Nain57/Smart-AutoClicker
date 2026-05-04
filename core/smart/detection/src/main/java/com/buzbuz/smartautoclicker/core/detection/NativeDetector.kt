@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ class NativeDetector private constructor() : ImageDetector {
         setScreenImage(screenBitmap, metadata)
     }
 
-    override fun detectCondition(
+    override fun detectImage(
         conditionBitmap: Bitmap,
         conditionWidth: Int,
         conditionHeight: Int,
@@ -80,7 +80,7 @@ class NativeDetector private constructor() : ImageDetector {
         if (isClosed) return detectionResult.copy()
 
         try {
-            detect(conditionBitmap, conditionWidth, conditionHeight, detectionArea.left, detectionArea.top,
+            detectImage(conditionBitmap, conditionWidth, conditionHeight, detectionArea.left, detectionArea.top,
                 detectionArea.width(), detectionArea.height(), threshold, detectionResult)
         } catch (ex: Exception) {
             ex.throwWithKeys(
@@ -88,6 +88,30 @@ class NativeDetector private constructor() : ImageDetector {
                     "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
                     "originalConditionSize" to "${conditionBitmap.width}x${conditionBitmap.height}",
                     "conditionSize" to "${conditionWidth}x$conditionHeight",
+                    "detectionArea" to detectionArea.toString(),
+                    "threshold" to threshold.toString(),
+                ),
+            )
+        }
+
+        return detectionResult.copy()
+    }
+
+    override fun detectColor(
+        conditionColor: Int,
+        detectionArea: Rect,
+        threshold: Int
+    ): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
+        try {
+            detectColor(conditionColor, detectionArea.left, detectionArea.top, detectionArea.width(),
+                detectionArea.height(), threshold, detectionResult)
+        } catch (ex: Exception) {
+            ex.throwWithKeys(
+                keys = mapOf(
+                    "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
+                    "conditionColor" to conditionColor.toString(),
                     "detectionArea" to detectionArea.toString(),
                     "threshold" to threshold.toString(),
                 ),
@@ -135,10 +159,30 @@ class NativeDetector private constructor() : ImageDetector {
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      */
-    private external fun detect(
+    private external fun detectImage(
         conditionBitmap: Bitmap,
         conditionWidth: Int,
         conditionHeight: Int,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        threshold: Int,
+        result: DetectionResult,
+    )
+
+    /**
+     * Native method for detecting if the color is at a specific position in the current screen bitmap.
+     *
+     * @param conditionColor the condition to detect in the screen.
+     * @param x the horizontal position of the condition.
+     * @param y the vertical position of the condition.
+     * @param width the width of the condition.
+     * @param height the height of the condition.
+     * @param threshold the allowed error threshold allowed for the condition.
+     */
+    private external fun detectColor(
+        conditionColor: Int,
         x: Int,
         y: Int,
         width: Int,

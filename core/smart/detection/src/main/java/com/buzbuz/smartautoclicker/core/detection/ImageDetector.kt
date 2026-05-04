@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.detection
 
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.annotation.ColorInt
 
 /**
  * Detects bitmaps within other bitmaps for conditions detection on the screen.
@@ -30,7 +31,7 @@ interface ImageDetector : AutoCloseable {
 
     /**
      * Set the bitmap for the screen.
-     * All following calls to [detectCondition] methods will be verified against this bitmap.
+     * All following calls to [detectImage] methods will be verified against this bitmap.
      *
      * @param screenBitmap the content of the screen as a bitmap.
      */
@@ -48,10 +49,26 @@ interface ImageDetector : AutoCloseable {
      *
      * @return the results of the detection.
      */
-    fun detectCondition(
+    fun detectImage(
         conditionBitmap: Bitmap,
         conditionWidth: Int,
         conditionHeight: Int,
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult
+
+    /**
+     * Detect if the average color of the provided area match the condition color.
+     * [setScreenBitmap] must have been called first with the content of the screen.
+     *
+     * @param conditionColor the color to detect.
+     * @param detectionArea the area of the detected color.
+     * @param threshold the allowed error threshold allowed for the condition.
+     *
+     * @return the results of the detection.
+     */
+    fun detectColor(
+        @ColorInt conditionColor: Int,
         detectionArea: Rect,
         threshold: Int,
     ): DetectionResult

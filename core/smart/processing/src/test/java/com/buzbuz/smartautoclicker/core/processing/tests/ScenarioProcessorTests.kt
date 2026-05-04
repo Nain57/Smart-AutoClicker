@@ -142,7 +142,7 @@ class ScenarioProcessorTests {
         mockWhen(mockBitmapSupplier.getBitmap(condition.path, area.width(), area.height())).thenReturn(conditionBitmap)
 
         val pass = if (isDetected) TEST_DETECTION_OK else TEST_DETECTION_KO
-        mockWhen(mockImageDetector.detectCondition(eq(conditionBitmap), anyInt(),anyInt(), anyNotNull(), anyInt())).thenReturn(pass)
+        mockWhen(mockImageDetector.detectImage(eq(conditionBitmap), anyInt(),anyInt(), anyNotNull(), anyInt())).thenReturn(pass)
         mockWhen(mockScalingManager.getImageConditionScalingInfo(condition))
             .thenReturn(ImageConditionScalingInfo(condition, area, area))
 

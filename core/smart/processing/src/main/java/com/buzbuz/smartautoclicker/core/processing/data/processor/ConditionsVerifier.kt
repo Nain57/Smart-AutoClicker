@@ -141,7 +141,7 @@ internal class ConditionsVerifier(
         )
 
         val result = bitmap?.let { conditionBitmap ->
-            val detectionResult = imageDetector.detectCondition(
+            val detectionResult = imageDetector.detectImage(
                 conditionBitmap = conditionBitmap,
                 conditionWidth = scaledConditionArea.imageArea.width(),
                 conditionHeight = scaledConditionArea.imageArea.height(),

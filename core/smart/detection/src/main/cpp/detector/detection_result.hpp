@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef KLICK_R_DETECTION_RESULT_HPP
+#define KLICK_R_DETECTION_RESULT_HPP
 
-#include "jni.hpp"
-#include "../detector/detection_result.hpp"
+#include <opencv2/core/types.hpp>
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
+namespace smartautoclicker {
+     class DetectionResult {
 
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
-
-    env->CallVoidMethod(self, methodId,
-                        result->isDetected(),
-                        (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
-                        result->getResultConfidence());
+     public:
+         [[nodiscard]] virtual bool isDetected() const = 0;
+         [[nodiscard]] virtual double getResultConfidence() const = 0;
+         [[nodiscard]] virtual cv::Rect getResultArea() const = 0;
+         [[nodiscard]] virtual int getResultAreaCenterX() const = 0;
+         [[nodiscard]] virtual int getResultAreaCenterY() const = 0;
+     };
 }
+#endif //KLICK_R_DETECTION_RESULT_HPP

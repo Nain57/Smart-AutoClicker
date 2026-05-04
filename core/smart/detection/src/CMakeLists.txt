@@ -35,6 +35,7 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         main/cpp/smartautoclicker.cpp
+        main/cpp/detector/detection_result.hpp
         main/cpp/detector/detector.cpp
         main/cpp/detector/detector.hpp
         main/cpp/detector/images/condition_image.cpp
@@ -43,10 +44,14 @@ add_library( # Sets the name of the library.
         main/cpp/detector/images/detection_image.hpp
         main/cpp/detector/images/screen_image.cpp
         main/cpp/detector/images/screen_image.hpp
-        main/cpp/detector/matching/template_matcher.cpp
-        main/cpp/detector/matching/template_matcher.hpp
-        main/cpp/detector/matching/template_matching_result.cpp
-        main/cpp/detector/matching/template_matching_result.hpp
+        main/cpp/detector/matching/color/color_matcher.cpp
+        main/cpp/detector/matching/color/color_matcher.hpp
+        main/cpp/detector/matching/color/color_matching_result.cpp
+        main/cpp/detector/matching/color/color_matching_result.hpp
+        main/cpp/detector/matching/template/template_matcher.cpp
+        main/cpp/detector/matching/template/template_matcher.hpp
+        main/cpp/detector/matching/template/template_matching_result.cpp
+        main/cpp/detector/matching/template/template_matching_result.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp

@@ -54,7 +54,7 @@ extern "C" {
         env->ReleaseStringUTFChars(metricsTag, nativeMetricsTag);
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detect(
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectImage(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
@@ -74,7 +74,7 @@ extern "C" {
         if (!conditionMat) return;
 
         try {
-            setDetectionResult(env,result,detector->detectCondition(
+            setDetectionResult(env,result,detector->detectImage(
                     std::move(conditionMat),
                     conditionWidth,
                     conditionHeight,
@@ -82,11 +82,40 @@ extern "C" {
                     threshold));
         } catch (...) {
             releaseBitmapLock(env, conditionBitmap);
-            env->ThrowNew(env->FindClass("java/lang/RuntimeException"), "Invalid detection arguments");
+            env->ThrowNew(
+                    env->FindClass("java/lang/RuntimeException"),
+                    "Invalid detection arguments for image detection");
             return;
         }
 
         releaseBitmapLock(env, conditionBitmap);
+    }
+
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectColor(
+            JNIEnv *env,
+            jobject self,
+            jint conditionColor,
+            jint x,
+            jint y,
+            jint width,
+            jint height,
+            jint threshold,
+            jobject result
+    ) {
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return;
+
+        try {
+            setDetectionResult(env,result,detector->detectColor(
+                    conditionColor,
+                    cv::Rect(x, y, width, height),
+                    threshold));
+        } catch (...) {
+            env->ThrowNew(
+                    env->FindClass("java/lang/RuntimeException"),
+                    "Invalid detection arguments for color detection");
+            return;
+        }
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_releaseScreenImage(
