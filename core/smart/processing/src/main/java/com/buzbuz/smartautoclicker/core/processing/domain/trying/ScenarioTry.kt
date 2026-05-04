@@ -23,27 +23,27 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
 internal sealed class ScenarioTry {
 
     internal abstract val scenario: Scenario
-    internal abstract val imageEvents: List<ImageEvent>
+    internal abstract val screenEvents: List<ScreenEvent>
     internal abstract val triggerEvents: List<TriggerEvent>
 
 }
 
 internal class ImageEventTry(
     override val scenario: Scenario,
-    val event: ImageEvent,
+    val event: ScreenEvent,
 ) : ScenarioTry() {
 
-    override val imageEvents: List<ImageEvent> = listOf(getTestEvent())
+    override val screenEvents: List<ScreenEvent> = listOf(getTestEvent())
     override val triggerEvents: List<TriggerEvent> = emptyList()
 
-    private fun getTestEvent(): ImageEvent =
+    private fun getTestEvent(): ScreenEvent =
         event.copy(
             enabledOnStart = true,
             actions = event.actions.filter { action -> action.canBeTried() }
@@ -58,12 +58,12 @@ internal class ImageConditionTry(
     val condition: ScreenCondition.Image,
 ) : ScenarioTry() {
 
-    override val imageEvents: List<ImageEvent> = listOf(getTestImageEvent())
+    override val screenEvents: List<ScreenEvent> = listOf(getTestImageEvent())
     override val triggerEvents: List<TriggerEvent> = emptyList()
 
-    private fun getTestImageEvent(): ImageEvent {
+    private fun getTestImageEvent(): ScreenEvent {
         val tryEventId = Identifier(databaseId = 1L)
-        return ImageEvent(
+        return ScreenEvent(
             id = tryEventId,
             scenarioId = scenario.id,
             name = "Test Event",
@@ -91,7 +91,7 @@ internal class ActionTry(
     val action: Action,
 ) : ScenarioTry() {
 
-    override val imageEvents: List<ImageEvent> = emptyList()
+    override val screenEvents: List<ScreenEvent> = emptyList()
     override val triggerEvents: List<TriggerEvent> = listOf(getTestTriggerEvent())
 
     private fun getTestTriggerEvent(): TriggerEvent {

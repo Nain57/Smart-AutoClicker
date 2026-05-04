@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainImageEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainTriggerEvent
@@ -69,7 +69,7 @@ internal class Repository @Inject internal constructor(
     override val scenarios: Flow<List<Scenario>> =
         dataSource.scenarios.mapList { it.toDomain() }
 
-    override val allImageEvents: Flow<List<ImageEvent>> =
+    override val allScreenEvents: Flow<List<ScreenEvent>> =
         dataSource.allImageEvents.mapList { it.toDomainImageEvent() }
 
     override val allTriggerEvents: Flow<List<TriggerEvent>> =
@@ -101,10 +101,10 @@ internal class Repository @Inject internal constructor(
             }
         }
 
-    override suspend fun getImageEvents(scenarioId: Long): List<ImageEvent> =
+    override suspend fun getImageEvents(scenarioId: Long): List<ScreenEvent> =
         dataSource.getImageEvents(scenarioId).map { it.toDomainImageEvent() }
 
-    override fun getImageEventsFlow(scenarioId: Long): Flow<List<ImageEvent>> =
+    override fun getImageEventsFlow(scenarioId: Long): Flow<List<ScreenEvent>> =
         dataSource.getImageEventsFlow(scenarioId).mapList { it.toDomainImageEvent() }
 
     override suspend fun getTriggerEvents(scenarioId: Long): List<TriggerEvent> =

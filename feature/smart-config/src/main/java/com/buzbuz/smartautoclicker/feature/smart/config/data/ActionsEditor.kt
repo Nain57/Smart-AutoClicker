@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.base.ListEditor
 
@@ -67,7 +67,7 @@ internal class ActionsEditor<Parent>(
                 is TriggerEvent ->
                     item.isComplete() && item.positionType != Click.PositionType.ON_DETECTED_CONDITION
 
-                is ImageEvent ->
+                is ScreenEvent ->
                     if (item.isComplete()) !(parent.conditionOperator == AND && !item.isClickOnConditionValid())
                     else false
 

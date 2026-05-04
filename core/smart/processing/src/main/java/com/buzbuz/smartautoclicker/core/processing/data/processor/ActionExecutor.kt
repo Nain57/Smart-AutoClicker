@@ -46,7 +46,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlinx.coroutines.Dispatchers
@@ -129,7 +129,7 @@ internal class ActionExecutor(
     }
 
     private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResults?): Path? {
-        if (event !is ImageEvent) return null
+        if (event !is ScreenEvent) return null
 
         val result = when {
             event.conditionOperator == OR -> results?.getFirstImageDetectedResult()

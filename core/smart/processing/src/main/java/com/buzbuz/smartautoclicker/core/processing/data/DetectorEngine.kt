@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
@@ -56,10 +56,10 @@ import kotlin.math.max
 import kotlin.system.measureNanoTime
 
 /**
- * Detects [ImageEvent] conditions on a display and execute its actions.
+ * Detects [ScreenEvent] conditions on a display and execute its actions.
  *
  * In order to detect, you must start recording the screen to get images to detect on, this can be done by calling
- * [startScreenRecord]. Or, you can start the detection of a list of [ImageEvent] by using [startDetection].
+ * [startScreenRecord]. Or, you can start the detection of a list of [ScreenEvent] by using [startDetection].
  * The states of the recording and the detection are available in [state].
  * Once you no longer needs to capture or detect, call [stopDetection] or [stopScreenRecord] to release all processing resources.
  */
@@ -164,7 +164,7 @@ class DetectorEngine @Inject constructor(
     internal fun startDetection(
         context: Context,
         scenario: Scenario,
-        imageEvents: List<ImageEvent>,
+        screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>,
         liveDebugging: Boolean,
         generateReport: Boolean,
@@ -194,7 +194,7 @@ class DetectorEngine @Inject constructor(
             displayRecorder.resizeDisplay(
                 displaySize = scalingManager.startScaling(
                     quality = scenario.detectionQuality.toDouble(),
-                    screenEvents = imageEvents,
+                    screenEvents = screenEvents,
                 )
             )
 
@@ -214,7 +214,7 @@ class DetectorEngine @Inject constructor(
             if (liveDebugging || generateReport) {
                 debuggingListener.onSessionStarted(
                     scenario = scenario,
-                    imageEvents = imageEvents,
+                    screenEvents = screenEvents,
                     triggerEvents = triggerEvents,
                     generateLiveEvents = liveDebugging,
                 )
@@ -226,7 +226,7 @@ class DetectorEngine @Inject constructor(
                 imageDetector = detector,
                 scalingManager = scalingManager,
                 randomize = scenario.randomize,
-                imageEvents = imageEvents,
+                screenEvents = screenEvents,
                 triggerEvents = triggerEvents,
                 bitmapSupplier = bitmapRepository::getImageConditionBitmap,
                 androidExecutor = actionExecutor,

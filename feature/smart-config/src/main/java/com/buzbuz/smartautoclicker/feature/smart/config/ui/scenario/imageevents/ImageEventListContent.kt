@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.na
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
@@ -107,7 +107,7 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
         }
     }
 
-    private fun onEventItemClicked(event: ImageEvent) {
+    private fun onEventItemClicked(event: ScreenEvent) {
         debounceUserInteraction {
             showEventConfigDialog(event)
         }
@@ -137,13 +137,13 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
             context = context,
             newOverlay = EventCopyDialog(
                 requestTriggerEvents = false,
-                onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event as ImageEvent)) },
+                onEventSelected = { event -> showEventConfigDialog(viewModel.createNewEvent(context, event as ScreenEvent)) },
             ),
         )
     }
 
     /** Opens the dialog allowing the user to add a new event. */
-    private fun showEventConfigDialog(item: ImageEvent) {
+    private fun showEventConfigDialog(item: ScreenEvent) {
         viewModel.startEventEdition(item)
 
         dialogController.overlayManager.navigateTo(

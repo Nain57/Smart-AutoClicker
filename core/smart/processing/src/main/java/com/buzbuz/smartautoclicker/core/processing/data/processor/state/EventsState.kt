@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
 interface IEventsState {
@@ -28,7 +28,7 @@ interface IEventsState {
     fun areAllImageEventsDisabled(): Boolean
     fun areAllTriggerEventsDisabled(): Boolean
 
-    fun getEnabledImageEvents(): Collection<ImageEvent>
+    fun getEnabledImageEvents(): Collection<ScreenEvent>
     fun getEnabledTriggerEvents(): Collection<TriggerEvent>
 
     fun enableAll()
@@ -54,31 +54,31 @@ interface EventStateListener {
  * Handles the ToggleEvent actions and move the events between those maps accordingly.
  */
 internal class EventsState(
-    imageEvents: List<ImageEvent>,
+    screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
 ) : IEventsState {
 
     /** Monitor the state of all image events. */
-    private val imageEventList: EventList<ImageEvent> = EventList(imageEvents)
+    private val screenEventList: EventList<ScreenEvent> = EventList(screenEvents)
     /** Monitor the state of all trigger events. */
     private val triggerEventList: EventList<TriggerEvent> = EventList(triggerEvents)
 
     override fun setEventStateListener(listener: EventStateListener) {
         triggerEventList.eventEnabledListener = listener
-        imageEventList.eventEnabledListener = listener
+        screenEventList.eventEnabledListener = listener
     }
 
     override fun isEventEnabled(eventId: Long): Boolean =
-        triggerEventList.isEventEnabled(eventId) || imageEventList.isEventEnabled(eventId)
+        triggerEventList.isEventEnabled(eventId) || screenEventList.isEventEnabled(eventId)
 
     override fun areAllEventsDisabled(): Boolean =
-        imageEventList.areAllEventsDisabled() && triggerEventList.areAllEventsDisabled()
+        screenEventList.areAllEventsDisabled() && triggerEventList.areAllEventsDisabled()
 
     override fun areAllImageEventsDisabled(): Boolean =
-        imageEventList.areAllEventsDisabled()
+        screenEventList.areAllEventsDisabled()
 
-    override fun getEnabledImageEvents(): Collection<ImageEvent> =
-        imageEventList.getEnabledEvents().sortedByPriority()
+    override fun getEnabledImageEvents(): Collection<ScreenEvent> =
+        screenEventList.getEnabledEvents().sortedByPriority()
 
     override fun areAllTriggerEventsDisabled(): Boolean =
         triggerEventList.areAllEventsDisabled()
@@ -87,32 +87,32 @@ internal class EventsState(
         triggerEventList.getEnabledEvents().toList()
 
     override fun enableEvent(eventId: Long) {
-        imageEventList.enableEvent(eventId)
+        screenEventList.enableEvent(eventId)
         triggerEventList.enableEvent(eventId)
     }
 
     override fun disableEvent(eventId: Long) {
-        imageEventList.disableEvent(eventId)
+        screenEventList.disableEvent(eventId)
         triggerEventList.disableEvent(eventId)
     }
 
     override fun toggleEvent(eventId: Long) {
-        imageEventList.toggleEvent(eventId)
+        screenEventList.toggleEvent(eventId)
         triggerEventList.toggleEvent(eventId)
     }
 
     override fun enableAll() {
-        imageEventList.enableAll()
+        screenEventList.enableAll()
         triggerEventList.enableAll()
     }
 
     override fun disableAll() {
-        imageEventList.disableAll()
+        screenEventList.disableAll()
         triggerEventList.disableAll()
     }
 
     override fun toggleAll() {
-        imageEventList.toggleAll()
+        screenEventList.toggleAll()
         triggerEventList.toggleAll()
     }
 }

@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.tests.processor
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.detection.DetectionResult
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ImageConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
@@ -90,7 +90,7 @@ internal fun SmartProcessingListener.verifyImageConditionProcessed(
     .onImageConditionProcessingCompleted(condition.expectedResult(detected))
 
 internal fun SmartProcessingListener.monitorImageEventProcessing(
-    events: List<ImageEvent>,
+    events: List<ScreenEvent>,
 ): Map<Long, Boolean> {
 
     val results = mutableMapOf<Long, Boolean>()

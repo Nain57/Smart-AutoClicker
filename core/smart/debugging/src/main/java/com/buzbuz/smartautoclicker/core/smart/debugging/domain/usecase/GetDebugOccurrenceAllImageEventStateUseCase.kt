@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugEventOccurrenceEventState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
@@ -38,7 +38,7 @@ class GetDebugOccurrenceAllImageEventStateUseCase @Inject constructor(
     debuggingRepository: DebuggingRepository,
 ) {
 
-    private val events: Flow<List<ImageEvent>?> = debuggingRepository.getLastReportOverview()
+    private val events: Flow<List<ScreenEvent>?> = debuggingRepository.getLastReportOverview()
         .map { overview ->
             overview ?: return@map null
             smartRepository.getImageEvents(overview.scenarioId)

@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import kotlinx.coroutines.flow.Flow
@@ -102,16 +102,16 @@ interface SmartProcessingRepository : Dumpable {
     fun stopScreenRecord()
 
     /**
-     * Creates a dedicated scenario containing only the [ImageEvent] to be tested.
+     * Creates a dedicated scenario containing only the [ScreenEvent] to be tested.
      *
      * @param context the Android context.
      * @param scenario the original scenario containing the event to test
      * @param event the event to be tested.
      */
-    fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent)
+    fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent)
 
     /**
-     * Creates a dedicated scenario containing only an [ImageEvent] with the [ImageCondition] to be tested.
+     * Creates a dedicated scenario containing only an [ScreenEvent] with the [ImageCondition] to be tested.
      *
      * @param context the Android context.
      * @param scenario the original scenario containing the condition to test

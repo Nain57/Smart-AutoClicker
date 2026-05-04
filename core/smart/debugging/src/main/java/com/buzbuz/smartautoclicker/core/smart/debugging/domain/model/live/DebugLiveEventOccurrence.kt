@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 
 /** Event occurrence during a live debugging session. */
@@ -29,7 +29,7 @@ sealed interface DebugLiveEventOccurrence {
     val conditionsResults: List<DebugLiveEventConditionResult>
 
     data class Image(
-        override val event: ImageEvent,
+        override val event: ScreenEvent,
         override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,

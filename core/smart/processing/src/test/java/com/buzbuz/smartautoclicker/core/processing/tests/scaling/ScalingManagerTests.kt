@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -506,8 +506,8 @@ class ScalingManagerTests {
             )
     }
 
-    private fun createTestEvent(id: Long, conditions: List<ScreenCondition.Image>) : ImageEvent =
-        ImageEvent(
+    private fun createTestEvent(id: Long, conditions: List<ScreenCondition.Image>) : ScreenEvent =
+        ScreenEvent(
             id = Identifier(databaseId = id),
             conditions = conditions,
             scenarioId = Identifier(databaseId = 1),    // Unused in scaling

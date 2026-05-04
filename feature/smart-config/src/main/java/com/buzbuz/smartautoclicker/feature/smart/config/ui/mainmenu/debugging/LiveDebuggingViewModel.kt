@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
@@ -74,7 +74,7 @@ private fun List<Action>.toActionItems(): List<LiveDebuggingActionsItem> =
 @DrawableRes
 private fun Event.getDebugIcon(): Int =
     when (this) {
-        is ImageEvent -> R.drawable.ic_condition
+        is ScreenEvent -> R.drawable.ic_condition
         is TriggerEvent -> R.drawable.ic_trigger_event
     }
 

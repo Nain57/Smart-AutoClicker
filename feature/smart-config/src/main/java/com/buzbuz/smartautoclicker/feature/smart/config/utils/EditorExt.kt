@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.feature.smart.config.utils
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
-internal fun Action.isValidInEvent(event: ImageEvent?): Boolean {
+internal fun Action.isValidInEvent(event: ScreenEvent?): Boolean {
     event ?: return false
 
     return if (event.conditionOperator == AND && this is Click && positionType == Click.PositionType.ON_DETECTED_CONDITION) {

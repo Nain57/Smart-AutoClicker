@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.domain.ext.getAllCounterNames
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 
@@ -28,14 +28,14 @@ interface ICountersState {
 }
 
 internal class CountersState(
-    imageEvents: List<ImageEvent>,
+    screenEvents: List<ScreenEvent>,
     triggerEvent: List<TriggerEvent>,
     private val listener: SmartProcessingListener?,
 ) : ICountersState {
 
     /** Parse the whole event list to get all the counters names. */
     private val counterMap: MutableMap<String, Int> = mutableMapOf<String, Int>().apply {
-        (imageEvents + triggerEvent).getAllCounterNames().forEach { counterName ->
+        (screenEvents + triggerEvent).getAllCounterNames().forEach { counterName ->
             put(counterName, 0)
         }
     }

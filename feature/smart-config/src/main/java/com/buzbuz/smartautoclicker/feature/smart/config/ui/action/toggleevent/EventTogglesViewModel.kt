@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -68,7 +68,7 @@ class EventTogglesViewModel @Inject constructor(
                 editedEvents
                     .sortedBy { event ->
                         when (event) {
-                            is ImageEvent -> event.priority
+                            is ScreenEvent -> event.priority
                             is TriggerEvent -> -1
                         }
                     }
@@ -78,13 +78,13 @@ class EventTogglesViewModel @Inject constructor(
                         )
 
                         when (event) {
-                            is ImageEvent -> imageEvents.add(item)
+                            is ScreenEvent -> imageEvents.add(item)
                             is TriggerEvent -> triggerEvents.add(item)
                         }
                     }
 
                 when (editionRepository.editionState.getEditedEvent<Event>()) {
-                    is ImageEvent -> {
+                    is ScreenEvent -> {
                         if (imageEvents.size > 1) addAll(imageEvents)
                         if (triggerEvents.size > 1) addAll(triggerEvents)
                     }

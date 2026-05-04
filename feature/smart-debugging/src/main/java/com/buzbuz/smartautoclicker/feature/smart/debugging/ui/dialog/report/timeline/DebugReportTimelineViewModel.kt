@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
@@ -73,7 +73,7 @@ class DebugReportTimelineViewModel @Inject constructor(
     }
 
     /** The image events of the scenario referenced by the last debug report. Null if not found or no reports. */
-    private val imageEvents: Flow<List<ImageEvent>?> = scenario.flatMapLatest { scenario ->
+    private val screenEvents: Flow<List<ScreenEvent>?> = scenario.flatMapLatest { scenario ->
         scenario?.id?.databaseId?.let { dbId -> smartRepository.getImageEventsFlow(dbId) } ?: flowOf(null)
     }
 
@@ -91,7 +91,7 @@ class DebugReportTimelineViewModel @Inject constructor(
 
 
     val uiState: StateFlow<DebugReportTimelineUiState> =
-        combine(eventsOccurrences, imageEvents, triggerEvents, filters) { occurrences, imgEvts, trigEvts, userFilters ->
+        combine(eventsOccurrences, screenEvents, triggerEvents, filters) { occurrences, imgEvts, trigEvts, userFilters ->
             occurrences.toUiState(context, imgEvts, trigEvts, userFilters)
         }.stateIn(
             scope = viewModelScope,
@@ -107,7 +107,7 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     private fun List<DebugReportEventOccurrence>?.toUiState(
         context: Context,
-        imgEvents: List<ImageEvent>?,
+        imgEvents: List<ScreenEvent>?,
         trigEvents: List<TriggerEvent>?,
         filters: List<DebugReportTimelineFilter>,
     ): DebugReportTimelineUiState {
@@ -124,7 +124,7 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     private fun List<DebugReportEventOccurrence>.toUiStateItems(
         context: Context,
-        imgEvents: List<ImageEvent>,
+        imgEvents: List<ScreenEvent>,
         trigEvents: List<TriggerEvent>,
         filters: List<DebugReportTimelineFilter>,
     ): List<DebugReportTimelineEventOccurrenceItem> =

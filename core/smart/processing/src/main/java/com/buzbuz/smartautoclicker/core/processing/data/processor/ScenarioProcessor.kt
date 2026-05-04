@@ -22,7 +22,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
@@ -32,11 +32,11 @@ import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListene
 import kotlinx.coroutines.yield
 
 /**
- * Process a screen image and tries to detect the list of [ImageEvent] on it.
+ * Process a screen image and tries to detect the list of [ScreenEvent] on it.
  *
  * @param imageDetector the detector for images.
  * @param randomize true to randomize the actions values a bit to avoid being taken for a bot.
- * @param imageEvents the list of scenario events to be detected.
+ * @param screenEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param androidExecutor execute the actions requiring an interaction with Android.
  * @param onStopRequested called when an end condition of the scenario have been reached or all events are disabled.
@@ -47,7 +47,7 @@ internal class ScenarioProcessor(
     private val imageDetector: ImageDetector,
     scalingManager: ScalingManager,
     randomize: Boolean,
-    imageEvents: List<ImageEvent>,
+    screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidActionExecutor,
@@ -58,7 +58,7 @@ internal class ScenarioProcessor(
 
     /** Handle the processing state of the scenario. */
     @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(
-        imageEvents = imageEvents,
+        screenEvents = screenEvents,
         triggerEvents = triggerEvents,
         progressListener = progressListener,
     )
@@ -146,7 +146,7 @@ internal class ScenarioProcessor(
         }
     }
 
-    private suspend fun processImageEvents(screenFrame: Bitmap, events: Collection<ImageEvent>) {
+    private suspend fun processImageEvents(screenFrame: Bitmap, events: Collection<ScreenEvent>) {
         // Set the current screen image
         imageDetector.setScreenBitmap(screenFrame, processingTag)
 

@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER_OR_EQUALS
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
@@ -133,13 +133,13 @@ class DebugConditionContentViewModel @Inject constructor(
         event: Event,
     ): List<EventOccurrenceItem> =
         when (event) {
-            is ImageEvent -> (this@toItems as? List<DebugReportConditionResult.ImageCondition>)?.toImageItems(context, event)
+            is ScreenEvent -> (this@toItems as? List<DebugReportConditionResult.ImageCondition>)?.toImageItems(context, event)
             is TriggerEvent -> (this@toItems as? List<DebugReportConditionResult.TriggerCondition>)?.toTriggerItems(context, event)
         } ?: emptyList()
 
     private fun List<DebugReportConditionResult.ImageCondition>.toImageItems(
         context: Context,
-        event: ImageEvent,
+        event: ScreenEvent,
     ): List<EventOccurrenceItem> =
         event.conditions
             .sortedBy { condition -> condition.priority }

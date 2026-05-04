@@ -21,7 +21,7 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
@@ -87,7 +87,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onSessionStarted(
         scenario: Scenario,
-        imageEvents: List<ImageEvent>,
+        screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>,
         generateLiveEvents: Boolean,
     ) {
@@ -98,7 +98,7 @@ internal class DebugEngine @Inject constructor(
 
             if (shouldWriteReport) {
                 overviewRecorder.onSessionStart(scenario)
-                counterValuesRecorder.onSessionStarted(imageEvents, triggerEvents)
+                counterValuesRecorder.onSessionStarted(screenEvents, triggerEvents)
                 debugReportLocalDataSource.startReportWrite()
             }
         }
@@ -133,7 +133,7 @@ internal class DebugEngine @Inject constructor(
             _lastEventProcessed.update {
                 @Suppress("UNCHECKED_CAST")
                 when (event) {
-                    is ImageEvent -> getLiveImageEventOccurrence(
+                    is ScreenEvent -> getLiveImageEventOccurrence(
                         event = event,
                         fulfilled = fulfilled,
                         results = results as List<ProcessedConditionResult.Image>,
@@ -157,7 +157,7 @@ internal class DebugEngine @Inject constructor(
 
             @Suppress("UNCHECKED_CAST")
             when (event) {
-                is ImageEvent -> {
+                is ScreenEvent -> {
                     writeImageEventToReport(event)
                     imgConditionOccurrenceRecorder.reset()
                 }
@@ -251,7 +251,7 @@ internal class DebugEngine @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     private fun getLiveImageEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Image>): DebugLiveEventOccurrence.Image =
         DebugLiveEventOccurrence.Image(
-            event = event as ImageEvent,
+            event = event as ScreenEvent,
             fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
@@ -281,7 +281,7 @@ internal class DebugEngine @Inject constructor(
             },
         )
 
-    private suspend fun writeImageEventToReport(event: ImageEvent) {
+    private suspend fun writeImageEventToReport(event: ScreenEvent) {
         debugReportLocalDataSource.writeEventOccurrenceToReport(
             occurrence = DebugReportEventOccurrence.ImageEvent(
                 eventId = event.id.databaseId,

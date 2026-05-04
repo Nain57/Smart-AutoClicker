@@ -82,7 +82,7 @@ class ProcessingTests {
             processingTag = "tests",
             scalingManager = mockScalingManager,
             randomize = testScenario.scenario.randomize,
-            imageEvents = testScenario.imageEvents,
+            screenEvents = testScenario.screenEvents,
             triggerEvents = testScenario.triggerEvents,
             imageDetector = mockImageDetector,
             androidExecutor = mockAndroidExecutor,
@@ -126,7 +126,7 @@ class ProcessingTests {
         val testConditionEvt3 = testsData.newTestImageCondition(eventId3)
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
-            imageEvents = listOf(
+            screenEvents = listOf(
                 testsData.newTestImageEvent(
                     eventId = eventId1,
                     scenarioId = scenarioId,
@@ -238,7 +238,7 @@ class ProcessingTests {
         val testConditionEvt3 = testsData.newTestImageCondition(eventId3)
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
-            imageEvents = listOf(
+            screenEvents = listOf(
                 testsData.newTestImageEvent(
                     eventId = eventId1,
                     scenarioId = scenarioId,
@@ -362,7 +362,7 @@ class ProcessingTests {
         val testConditionEvt2 = testsData.newTestImageCondition(eventId2, shouldBeDetected = false)
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
-            imageEvents = listOf(
+            screenEvents = listOf(
                 testsData.newTestImageEvent(
                     eventId = eventId1,
                     scenarioId = scenarioId,
@@ -398,7 +398,7 @@ class ProcessingTests {
             mockDetectionResult(testConditionEvt2, false)
         }
         // Keep track of event fulfillment results
-        val eventsFulfilled = mockProcessingListener.monitorImageEventProcessing(testScenario.imageEvents)
+        val eventsFulfilled = mockProcessingListener.monitorImageEventProcessing(testScenario.screenEvents)
 
         // When: Only verify on one frame here
         scenarioProcessor = createScenarioProcessor(testScenario).apply {

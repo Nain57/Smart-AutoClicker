@@ -18,12 +18,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
 data class UiImageEvent(
-    override val event: ImageEvent,
+    override val event: ScreenEvent,
     val name: String,
     val conditionsCountText: String,
     val actionsCountText: String,
@@ -32,7 +32,7 @@ data class UiImageEvent(
     val haveError: Boolean,
 ) : UiEvent()
 
-fun ImageEvent.toUiImageEvent(inError: Boolean): UiImageEvent {
+fun ScreenEvent.toUiImageEvent(inError: Boolean): UiImageEvent {
     @StringRes val enabledOnStartTextRes: Int
     @DrawableRes val enabledOnStartIconRes: Int
     if (enabledOnStart) {

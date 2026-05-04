@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
@@ -126,13 +126,13 @@ class ClickViewModel @Inject constructor(
                 evt is TriggerEvent ->
                     context.getUserSelectedClickPositionState(click, forced = true)
 
-                evt is ImageEvent && click.positionType == Click.PositionType.USER_SELECTED ->
+                evt is ScreenEvent && click.positionType == Click.PositionType.USER_SELECTED ->
                     context.getUserSelectedClickPositionState(click, forced = false)
 
-                evt is ImageEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
+                evt is ScreenEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
                     context.getOnConditionWithOrPositionState(click)
 
-                evt is ImageEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
+                evt is ScreenEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
                     context.getOnConditionWithAndPositionState(evt, click)
 
                 else -> null
@@ -252,7 +252,7 @@ class ClickViewModel @Inject constructor(
             clickOffsetDescription = getClickOffsetString(click),
         )
 
-    private suspend fun Context.getOnConditionWithAndPositionState(event: ImageEvent, click: Click): ClickPositionUiState {
+    private suspend fun Context.getOnConditionWithAndPositionState(event: ScreenEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
         val conditionBitmap = conditionToClick?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
 

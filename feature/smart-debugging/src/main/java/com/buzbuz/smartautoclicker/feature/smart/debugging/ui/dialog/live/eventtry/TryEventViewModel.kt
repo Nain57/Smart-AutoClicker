@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
@@ -81,10 +81,10 @@ class TryElementViewModel @Inject constructor(
             if (isPlaying) result?.toUiState(context) else null
         }
 
-    fun startTry(context: Context, scenario: Scenario, imageEvent: ImageEvent) {
+    fun startTry(context: Context, scenario: Scenario, screenEvent: ScreenEvent) {
         viewModelScope.launch {
             delay(500)
-            smartProcessingRepository.tryEvent(context, scenario, imageEvent)
+            smartProcessingRepository.tryEvent(context, scenario, screenEvent)
         }
     }
 
@@ -122,7 +122,7 @@ private fun List<Action>.toActionItems(): List<TryEventActionsItem> =
 @DrawableRes
 private fun Event.getDebugIcon(): Int =
     when (this) {
-        is ImageEvent -> R.drawable.ic_condition
+        is ScreenEvent -> R.drawable.ic_condition
         is TriggerEvent -> R.drawable.ic_trigger_event
     }
 

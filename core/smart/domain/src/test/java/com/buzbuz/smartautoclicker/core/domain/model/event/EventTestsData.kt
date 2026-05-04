@@ -60,7 +60,7 @@ internal object EventTestsData {
         conditions: List<ScreenCondition.Image> = emptyList(),
         scenarioId: Long,
         priority: Int = 0,
-    ) = ImageEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
+    ) = ScreenEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
 
     fun getNewTriggerEvent(
         id: Long = EVENT_ID,

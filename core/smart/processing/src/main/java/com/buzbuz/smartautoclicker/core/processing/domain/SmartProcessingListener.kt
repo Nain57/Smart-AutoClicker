@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.domain
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
@@ -31,19 +31,19 @@ interface SmartProcessingListener {
      * The processing session have started.
      *
      * @param scenario the [Scenario] running for the processing session.
-     * @param imageEvents the list of [ImageEvent] to be processed for this scenario.
+     * @param screenEvents the list of [ScreenEvent] to be processed for this scenario.
      * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
      * @param generateLiveEvents tells if the live debugging events should be generated.
      */
     fun onSessionStarted(
         scenario: Scenario,
-        imageEvents: List<ImageEvent>,
+        screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>,
         generateLiveEvents: Boolean,
     ) = Unit
 
 
-    /** The processing of the [ImageEvent] list on a new screen frame has begun. */
+    /** The processing of the [ScreenEvent] list on a new screen frame has begun. */
     fun onEventsListProcessingStarted(eventType: EventType) = Unit
 
     /** The processing of an [Event] on the current screen frame has begun. */
@@ -75,11 +75,11 @@ interface SmartProcessingListener {
      */
     fun onEventsProcessingCancelled() = Unit
 
-    /** The processing of an [ScreenCondition.Image] for the current [ImageEvent] has begun. */
+    /** The processing of an [ScreenCondition.Image] for the current [ScreenEvent] has begun. */
     fun onImageConditionProcessingStarted() = Unit
 
     /**
-     * The processing of an [ScreenCondition.Image] for the current [ImageEvent] has completed.
+     * The processing of an [ScreenCondition.Image] for the current [ScreenEvent] has completed.
      * This will be called even if the condition is not fulfilled.
      *
      * @param result the result of the detection for the processed condition.

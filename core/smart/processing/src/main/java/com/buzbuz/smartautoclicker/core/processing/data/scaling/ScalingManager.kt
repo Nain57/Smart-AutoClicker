@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -38,7 +38,7 @@ class ScalingManager @Inject constructor(
     private var scalingRatio: Double = 1.0
 
 
-    internal fun startScaling(quality: Double, screenEvents: List<ImageEvent>): Point {
+    internal fun startScaling(quality: Double, screenEvents: List<ScreenEvent>): Point {
         detectionQuality = quality
 
         val scaledScreenSize = refreshScalingMetrics()
@@ -112,7 +112,7 @@ class ScalingManager @Inject constructor(
             else -> throw IllegalArgumentException("Unexpected detection type")
         }
 
-    private fun List<ImageEvent>.toConditionsList(): List<ScreenCondition.Image> =
+    private fun List<ScreenEvent>.toConditionsList(): List<ScreenCondition.Image> =
         fold(listOf()) { acc, event -> acc + event.conditions }
 
     private fun Point.scaleDown(): Point = scale(scalingRatio)

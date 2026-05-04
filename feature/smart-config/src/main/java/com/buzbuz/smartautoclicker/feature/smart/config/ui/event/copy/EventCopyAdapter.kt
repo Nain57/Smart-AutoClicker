@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
@@ -97,7 +97,7 @@ class HeaderViewHolder(
 
 class ImageEventViewHolder(private val viewBinding: ItemImageEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ImageEvent) -> Unit) {
+    fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ScreenEvent) -> Unit) {
         viewBinding.bind(item.uiEvent, false, eventClickedListener)
     }
 }

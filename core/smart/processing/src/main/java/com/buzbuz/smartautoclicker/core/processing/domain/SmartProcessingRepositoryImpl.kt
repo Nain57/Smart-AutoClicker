@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
@@ -162,7 +162,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         detectorEngine.startDetection(
             context = context,
             scenario = scenario,
-            imageEvents = events,
+            screenEvents = events,
             triggerEvents = triggerEvents,
             liveDebugging = liveDebugging,
             generateReport = generateReport,
@@ -194,7 +194,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         _scenarioId.value = null
     }
 
-    override fun tryEvent(context: Context, scenario: Scenario, event: ImageEvent) {
+    override fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent) {
         val triedElement = ImageEventTry(scenario, event)
         tryElement(
             context,
@@ -218,11 +218,11 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
     }
 
     private fun tryElement(context: Context, elementTry: ScenarioTry) {
-        Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.imageEvents}")
+        Log.d(TAG, "Trying element: Scenario=${elementTry.scenario}; ImageEvents=${elementTry.screenEvents}")
         detectorEngine.startDetection(
             context = context,
             scenario = elementTry.scenario,
-            imageEvents = elementTry.imageEvents,
+            screenEvents = elementTry.screenEvents,
             triggerEvents = elementTry.triggerEvents,
             liveDebugging = true,
             generateReport = false,

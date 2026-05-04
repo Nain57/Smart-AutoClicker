@@ -55,7 +55,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -474,7 +474,7 @@ internal class ScenarioDataSource @Inject constructor(
             removedEntities.forEach { removedEntity ->
                 // Find the deleted domain event, get its image conditions list and map to their path
                 val removedEvent = this@getRemovedConditionsPath
-                    .find { event -> event is ImageEvent && event.id.databaseId == removedEntity.id }
+                    .find { event -> event is ScreenEvent && event.id.databaseId == removedEntity.id }
                     ?.conditions?.filterIsInstance<ScreenCondition.Image>()
                     ?.map { condition -> condition.path }
                     ?: return@forEach
