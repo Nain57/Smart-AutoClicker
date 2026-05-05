@@ -36,8 +36,8 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putClickPressDurationConfig
@@ -104,11 +104,11 @@ class ClickViewModel @Inject constructor(
     val pressDurationError: Flow<Boolean> = configuredClick
         .map { (it.pressDuration ?: -1) <= 0 }
 
-    val availableConditions: StateFlow<List<UiImageCondition>> = editionRepository.editionState.editedEventImageConditionsState
+    val availableConditions: StateFlow<List<UiScreenCondition>> = editionRepository.editionState.editedEventScreenConditionsState
         .map { editedConditions ->
             editedConditions.value?.filter { it.shouldBeDetected }
                 ?.map {
-                    it.toUiImageCondition(
+                    it.toUiScreenCondition(
                         context = context,
                         shortThreshold = true,
                         inError = !it.isComplete(),
@@ -197,7 +197,7 @@ class ClickViewModel @Inject constructor(
         getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     /** Set the condition to click on when the events conditions are fulfilled. */
-    fun setConditionToBeClicked(condition: ScreenCondition.Image) {
+    fun setConditionToBeClicked(condition: ScreenCondition) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
         }

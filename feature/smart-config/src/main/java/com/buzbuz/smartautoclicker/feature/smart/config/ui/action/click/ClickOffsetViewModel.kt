@@ -52,8 +52,8 @@ class ClickOffsetViewModel @Inject constructor(
         .filterIsInstance<ScreenEvent>()
 
     /** The ImageConditions being edited by the user. */
-    private val editedImageConditions: Flow<List<ScreenCondition.Image>> =
-        editionRepository.editionState.editedEventImageConditionsState
+    private val editedImageConditions: Flow<List<ScreenCondition>> =
+        editionRepository.editionState.editedEventScreenConditionsState
             .mapNotNull { it.value }
 
     /** The Action currently configured by the user. */
@@ -61,7 +61,7 @@ class ClickOffsetViewModel @Inject constructor(
         .mapNotNull { action -> action.value }
         .filterIsInstance<Click>()
 
-    private val conditionToShow: Flow<ScreenCondition.Image?> =
+    private val conditionToShow: Flow<ScreenCondition?> =
         combine(editedEvent, editedImageConditions, configuredClick) { event, imageConditions, click ->
             if (!click.haveDeterminedCondition(event.conditionOperator)) null
             else imageConditions.getImageConditionFromId(click.clickOnConditionId)
@@ -80,7 +80,13 @@ class ClickOffsetViewModel @Inject constructor(
     }
 
     val conditionImage: Flow<Bitmap?> = conditionToShow
-        .map { imageCondition -> imageCondition?.let { bitmapRepository.getConditionBitmap(it) } }
+        .map { screenCondition -> 
+            when (screenCondition) {
+                is ScreenCondition.Color -> TODO()
+                is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(screenCondition)
+                null -> null
+            }
+        }
 
     fun getOffsetMaxBoundsX(): IntRange =
         displayConfigManager.displayConfig.let { displayConfig ->
@@ -124,8 +130,8 @@ class ClickOffsetViewModel @Inject constructor(
                 && conditionOperator == AND
                 && clickOnConditionId != null
 
-    private fun List<ScreenCondition.Image>.getImageConditionFromId(id: Identifier?): ScreenCondition.Image? =
-        id?.let { identifier -> find { imageCondition -> imageCondition.id == identifier } }
+    private fun List<ScreenCondition>.getImageConditionFromId(id: Identifier?): ScreenCondition? =
+        id?.let { identifier -> find { screenCondition -> screenCondition.id == identifier } }
 }
 
 data class ClickOffsetState(

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -44,7 +44,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -62,7 +62,7 @@ import java.util.Collections
 import javax.inject.Inject
 
 
-class ImageConditionsBriefViewModel @Inject constructor(
+class ScreenConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
@@ -72,21 +72,25 @@ class ImageConditionsBriefViewModel @Inject constructor(
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
-    private val editedConditions: Flow<EditedListState<ScreenCondition.Image>> =
-        editionRepository.editionState.editedEventImageConditionsState
+    private val editedConditions: Flow<EditedListState<ScreenCondition>> =
+        editionRepository.editionState.editedEventScreenConditionsState
 
     private val currentFocusItemIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    private val focusedCondition: StateFlow<Pair<ScreenCondition.Image, Bitmap?>?> =
+    private val focusedCondition: StateFlow<Pair<ScreenCondition, Bitmap?>?> =
         combine(currentFocusItemIndex, editedConditions) { focusedIndex, conditions ->
             val conditionList = conditions.value ?: return@combine null
             if (focusedIndex !in conditionList.indices) return@combine null
 
             val condition = conditionList[focusedIndex]
+            if (condition !is ScreenCondition.Image) return@combine null // TODO handle color case
+
             condition to bitmapRepository.getConditionBitmap(condition)
         }.flowOn(ioDispatcher).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->
-        focusedCondition?.first?.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
+        val condition = focusedCondition?.first
+        if (condition !is ScreenCondition.Image) return@map null // TODO handle color case
+        condition.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
     }
 
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->
@@ -94,7 +98,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
         conditionList.mapIndexed { index, condition ->
             ItemBrief(
                 condition.id,
-                condition.toUiImageCondition(context, shortThreshold = false, inError = !conditions.itemValidity[index]),
+                condition.toUiScreenCondition(context, shortThreshold = false, inError = !conditions.itemValidity[index]),
             )
         }
     }
@@ -135,7 +139,7 @@ class ImageConditionsBriefViewModel @Inject constructor(
 
         editionRepository.apply {
             startConditionEdition(condition)
-            updateEditedCondition(condition.copy(threshold = newThreshold))
+            updateEditedCondition(condition.copyCondition(threshold = newThreshold))
             upsertEditedCondition()
             stopConditionEdition()
         }

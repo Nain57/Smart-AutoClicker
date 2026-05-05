@@ -149,7 +149,7 @@ private class ImageConditionViewHolder(
      */
     fun onBind(
         item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Image,
-        conditionClickedListener: (ScreenCondition.Image) -> Unit,
+        conditionClickedListener: (ScreenCondition) -> Unit,
     ) {
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(

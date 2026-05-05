@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
-import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ScreenEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -101,22 +101,22 @@ internal class EditionState internal constructor(
             eventEditor?.conditionsEditor?.listState ?: emptyFlow()
         }
 
-    override val editedEventImageConditionsState: Flow<EditedListState<ScreenCondition.Image>> =
+    override val editedEventScreenConditionsState: Flow<EditedListState<ScreenCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
 
-            if (editor is ImageEventsEditor)
+            if (editor is ScreenEventsEditor)
                 editor.conditionsEditor.listState
             else emptyFlow()
         }
 
-    override val editedImageConditionState: Flow<EditedElementState<ScreenCondition.Image>> =
+    override val editedScreenConditionState: Flow<EditedElementState<ScreenCondition>> =
         editor.currentEventEditor.flatMapLatest { eventEditor ->
             eventEditor ?: return@flatMapLatest emptyFlow()
             val editor = (eventEditor as EventsEditor<*, *>)
 
-            if (editor is ImageEventsEditor)
+            if (editor is ScreenEventsEditor)
                 editor.conditionsEditor.editedItemState
             else emptyFlow()
         }
@@ -186,7 +186,7 @@ internal class EditionState internal constructor(
 
     override val conditionsForCopy: Flow<List<Condition>> =
         combine(editor.editedEvent, allEditedEvents, repository.allConditions) { editedEvent, allEditedEvents, dbConditions ->
-            if (editedEvent == null) return@combine emptyList<Condition>()
+            if (editedEvent == null) return@combine emptyList()
             buildList {
                 val editedConditions = allEditedEvents.getEditedConditionsForCopy(editedEvent)
                 addAll(editedConditions)

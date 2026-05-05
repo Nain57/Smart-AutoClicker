@@ -58,7 +58,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ImageConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

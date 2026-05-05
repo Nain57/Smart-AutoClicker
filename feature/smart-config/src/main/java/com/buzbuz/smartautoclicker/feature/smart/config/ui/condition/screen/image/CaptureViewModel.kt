@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -39,7 +39,7 @@ class CaptureViewModel @Inject constructor(
     private val displayRecorder: DisplayRecorder,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-) : ViewModel()  {
+) : androidx.lifecycle.ViewModel()  {
 
     fun takeScreenshot(resultCallback: (Bitmap) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

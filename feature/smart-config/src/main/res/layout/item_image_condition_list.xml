@@ -25,7 +25,7 @@
     android:layout_marginBottom="@dimen/margin_vertical_small"
     android:elevation="@dimen/elevation_level_2">
 
-    <include layout="@layout/include_image_condition_card"
+    <include layout="@layout/include_screen_condition_card"
         android:id="@+id/card_image_condition"/>
 
 </com.google.android.material.card.MaterialCardView>

@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image
 
 import android.graphics.Rect
 
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
@@ -34,17 +35,27 @@ class ImageConditionAreaSelectorViewModel @Inject constructor(
 
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedImageConditionState
+    private val configuredCondition = editionRepository.editionState.editedScreenConditionState
         .mapNotNull { it.value }
 
     /** The position at which the selector should be initialized. */
     val initialArea: Flow<SelectorUiState> = configuredCondition
-        .mapNotNull { condition ->
-            if (condition.detectionType != IN_AREA) null
-            else SelectorUiState(
-                initialArea = condition.detectionArea ?: condition.area,
-                minimalArea = condition.area,
-            )
+        .mapNotNull { condition -> condition.toSelectorUiState() }
+
+    private fun ScreenCondition.toSelectorUiState(): SelectorUiState? =
+        when (this) {
+            is ScreenCondition.Color ->
+                SelectorUiState(
+                    initialArea = detectionArea,
+                    minimalArea = Rect(0, 0, 1, 1),
+                )
+
+            is ScreenCondition.Image ->
+                if (detectionType != IN_AREA) null
+                else SelectorUiState(
+                    initialArea = detectionArea ?: area,
+                    minimalArea = area,
+                )
         }
 }
 

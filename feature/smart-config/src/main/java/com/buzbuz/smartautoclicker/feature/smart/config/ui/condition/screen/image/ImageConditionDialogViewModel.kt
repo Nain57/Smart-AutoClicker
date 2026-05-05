@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -60,11 +61,12 @@ class ImageConditionViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** The condition being configured by the user. */
-    private val configuredCondition = editionRepository.editionState.editedImageConditionState
+    private val configuredCondition = editionRepository.editionState.editedScreenConditionState
         .mapNotNull { it.value }
+        .filterIsInstance<ScreenCondition.Image>()
 
     private val editedConditionHasChanged: StateFlow<Boolean> =
-        editionRepository.editionState.editedImageConditionState
+        editionRepository.editionState.editedScreenConditionState
             .map { it.hasChanged }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
@@ -96,7 +98,7 @@ class ImageConditionViewModel @Inject constructor(
         bitmapRepository.getConditionBitmap(condition)
     }.flowOn(Dispatchers.IO)
     /** Tells if the configured condition is valid and can be saved. */
-    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedImageConditionState.map { condition ->
+    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedScreenConditionState.map { condition ->
         condition.canBeSaved
     }
 

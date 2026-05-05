@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
 
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefPortBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.google.android.material.card.MaterialCardView
 
 
@@ -45,7 +45,7 @@ class ImageConditionBriefViewHolder(
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
             card.setOnClickListener { itemClickedListener(bindingAdapterPosition, item) }
-            val details = item.data as UiImageCondition
+            val details = item.data as UiScreenCondition
 
             name.visibility = View.VISIBLE
             name.text = details.name

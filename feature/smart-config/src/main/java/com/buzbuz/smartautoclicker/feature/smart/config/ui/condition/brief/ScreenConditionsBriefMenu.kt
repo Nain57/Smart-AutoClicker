@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
 
 import android.view.LayoutInflater
 import android.view.View
@@ -31,20 +31,20 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayImageConditionsBriefMenuBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayScreenConditionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.CaptureMenu
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
 
 
-class ImageConditionsBriefMenu(
+class ScreenConditionsBriefMenu(
     initialFocusedIndex: Int,
 ) : ItemBriefMenu(
     theme = R.style.AppTheme,
@@ -53,12 +53,12 @@ class ImageConditionsBriefMenu(
 ) {
 
     /** The view model for this dialog. */
-    private val viewModel: ImageConditionsBriefViewModel by viewModels(
+    private val viewModel: ScreenConditionsBriefViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { imageConditionsBriefViewModel() }
+        creator = { screenConditionsBriefViewModel() }
     )
 
-    private lateinit var viewBinding: OverlayImageConditionsBriefMenuBinding
+    private lateinit var viewBinding: OverlayScreenConditionsBriefMenuBinding
 
     override fun onCreate() {
         super.onCreate()
@@ -73,7 +73,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        viewBinding = OverlayImageConditionsBriefMenuBinding.inflate(layoutInflater)
+        viewBinding = OverlayScreenConditionsBriefMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }
 
@@ -118,7 +118,7 @@ class ImageConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog((item.data as UiImageCondition).condition)
+        showImageConditionConfigDialog((item.data as UiScreenCondition).condition)
     }
 
     override fun onDeleteItemClicked(index: Int) {
@@ -148,13 +148,15 @@ class ImageConditionsBriefMenu(
 
     private fun showTryConditionOverlay() {
         val focusedItem = getFocusedItemBrief() ?: return
+        val condition = (focusedItem.data as? UiScreenCondition)?.condition
+        if (condition !is ScreenCondition.Image) return // TODO handle color condition
 
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = TryImageConditionOverlayMenu(
                     scenario = scenario,
-                    imageCondition = (focusedItem.data as UiImageCondition).condition,
+                    imageCondition = condition,
                     onNewThresholdSelected = { threshold ->
                         viewModel.updateConditionThreshold(threshold)
                     }
@@ -188,7 +190,8 @@ class ImageConditionsBriefMenu(
         )
     }
 
-    private fun showImageConditionConfigDialog(condition: ScreenCondition.Image) {
+    private fun showImageConditionConfigDialog(condition: ScreenCondition) {
+        if (condition !is ScreenCondition.Image) return // TODO handle Color condition
         viewModel.startConditionEdition(condition)
 
         val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {

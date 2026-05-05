@@ -54,8 +54,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartAct
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.image.brief.ImageConditionsBriefMenu
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief.ScreenConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryEventOverlayMenu
 
@@ -295,7 +295,7 @@ class EventDialog(
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
     }
 
-    private fun updateImageConditionsField(conditions: List<UiImageCondition>) {
+    private fun updateImageConditionsField(conditions: List<UiScreenCondition>) {
         viewBinding.fieldImageConditionsSelector.setItems(conditions)
     }
 
@@ -349,7 +349,7 @@ class EventDialog(
     private fun showImageConditionsBriefMenu(initialFocusedIndex: Int = 0) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionsBriefMenu(initialFocusedIndex),
+            newOverlay = ScreenConditionsBriefMenu(initialFocusedIndex),
             hideCurrent = true,
         )
     }

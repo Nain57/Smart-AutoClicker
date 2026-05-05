@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
-import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ImageEventsEditor
+import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ScreenEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
@@ -55,7 +55,7 @@ internal class ScenarioEditor {
         EditedElementState(edit, hasChanged, canBeSaved)
     }
 
-    private val imageEventsEditor = ImageEventsEditor(::deleteAllReferencesToEvent, editedScenario)
+    private val imageEventsEditor = ScreenEventsEditor(::deleteAllReferencesToEvent, editedScenario)
     private val triggerEventsEditor = TriggerEventsEditor(::deleteAllReferencesToEvent, editedScenario)
 
     val currentEventEditor: StateFlow<EventsEditor<Event, Condition>?> = _currentEventEditor

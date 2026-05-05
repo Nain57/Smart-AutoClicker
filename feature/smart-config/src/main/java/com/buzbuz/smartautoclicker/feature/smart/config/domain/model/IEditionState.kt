@@ -48,8 +48,8 @@ interface IEditionState {
 
     // Edited Event child conditions
     val editedEventConditionsState: Flow<EditedListState<Condition>>
-    val editedEventImageConditionsState: Flow<EditedListState<ScreenCondition.Image>>
-    val editedImageConditionState: Flow<EditedElementState<ScreenCondition.Image>>
+    val editedEventScreenConditionsState: Flow<EditedListState<ScreenCondition>>
+    val editedScreenConditionState: Flow<EditedElementState<ScreenCondition>>
     val editedEventTriggerConditionsState: Flow<EditedListState<TriggerCondition>>
     val editedTriggerConditionState: Flow<EditedElementState<TriggerCondition>>
 

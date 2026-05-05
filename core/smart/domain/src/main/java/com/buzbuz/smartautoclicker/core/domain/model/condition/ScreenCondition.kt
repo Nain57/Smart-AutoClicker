@@ -32,6 +32,12 @@ sealed class ScreenCondition : Condition(), Prioritizable {
     /** If the condition should be fulfilled when the color is detected or when it is not detected. */
     abstract val shouldBeDetected: Boolean
 
+    fun copyCondition(threshold: Int = this.threshold, shouldBeDetected: Boolean = this.shouldBeDetected) =
+        when (this) {
+            is Color -> copy(threshold = threshold, shouldBeDetected = shouldBeDetected)
+            is Image -> copy(threshold = threshold, shouldBeDetected = shouldBeDetected)
+        }
+
     /**
      * Color condition for a Event.
      *

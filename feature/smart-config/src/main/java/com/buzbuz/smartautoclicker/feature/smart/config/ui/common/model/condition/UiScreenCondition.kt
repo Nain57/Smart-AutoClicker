@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-data class UiImageCondition(
-    override val condition: ScreenCondition.Image,
+data class UiScreenCondition(
+    override val condition: ScreenCondition,
     override val name: String,
     override val haveError: Boolean,
     @field:DrawableRes val shouldBeVisibleIconRes: Int,
@@ -37,7 +37,7 @@ data class UiImageCondition(
     val thresholdText: String,
 ) : UiCondition()
 
-fun ScreenCondition.Image.toUiImageCondition(context: Context, shortThreshold: Boolean, inError: Boolean) = UiImageCondition(
+fun ScreenCondition.toUiScreenCondition(context: Context, shortThreshold: Boolean, inError: Boolean) = UiScreenCondition(
     condition = this,
     name = name,
     shouldBeVisibleIconRes = getShouldBeDetectedIconRes(),
@@ -48,30 +48,34 @@ fun ScreenCondition.Image.toUiImageCondition(context: Context, shortThreshold: B
 )
 
 @DrawableRes
-private fun ScreenCondition.Image.getShouldBeDetectedIconRes(): Int =
+private fun ScreenCondition.getShouldBeDetectedIconRes(): Int =
     if (shouldBeDetected) R.drawable.ic_confirm else R.drawable.ic_cancel
 
 @StringRes
-private fun ScreenCondition.Image.getShouldBeDetectedTextRes(): Int =
+private fun ScreenCondition.getShouldBeDetectedTextRes(): Int =
     if (shouldBeDetected) R.string.item_image_condition_visible else R.string.item_image_condition_not_visible
 
-@DrawableRes
-private fun ScreenCondition.Image.getDetectionTypeIconRes(): Int =
-    when (detectionType) {
-        EXACT -> R.drawable.ic_detect_exact
-        WHOLE_SCREEN -> R.drawable.ic_detect_whole_screen
-        IN_AREA -> R.drawable.ic_detect_in_area
-        else -> throw IllegalStateException("Can't get detection type icon, unknown type $detectionType")
-    }
-
-private fun ScreenCondition.Image.getShortThresholdText(context: Context): String =
+private fun ScreenCondition.getShortThresholdText(context: Context): String =
     context.getString(
         R.string.item_image_condition_desc_threshold,
         threshold,
     )
 
-private fun ScreenCondition.Image.getThresholdText(context: Context): String =
+private fun ScreenCondition.getThresholdText(context: Context): String =
     context.getString(
         R.string.item_image_condition_desc_complete_threshold,
         threshold,
     )
+
+@DrawableRes
+private fun ScreenCondition.getDetectionTypeIconRes(): Int =
+    when (this) {
+        is ScreenCondition.Color -> R.drawable.ic_detect_in_area
+
+        is ScreenCondition.Image -> when (detectionType) {
+            EXACT -> R.drawable.ic_detect_exact
+            WHOLE_SCREEN -> R.drawable.ic_detect_whole_screen
+            IN_AREA -> R.drawable.ic_detect_in_area
+            else -> throw IllegalStateException("Can't get detection type icon, unknown type $detectionType")
+        }
+    }

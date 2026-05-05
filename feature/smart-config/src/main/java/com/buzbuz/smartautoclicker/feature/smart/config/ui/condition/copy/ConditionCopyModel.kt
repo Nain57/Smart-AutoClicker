@@ -21,17 +21,17 @@ import android.graphics.Bitmap
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiImageCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel.ConditionCopyItem.ConditionItem.*
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
@@ -107,7 +107,7 @@ class ConditionCopyModel @Inject constructor(
     private fun List<Condition>.toCopyItems(context: Context) = map { condition ->
         when (condition) {
             is ScreenCondition.Image -> Image(
-                condition.toUiImageCondition(context, shortThreshold = true, inError = !condition.isComplete())
+                condition.toUiScreenCondition(context, shortThreshold = true, inError = !condition.isComplete())
             )
             is TriggerCondition -> Trigger(
                 condition.toUiTriggerCondition(context, inError = !condition.isComplete())
@@ -120,10 +120,10 @@ class ConditionCopyModel @Inject constructor(
     private fun List<ConditionCopyItem.ConditionItem>.distinctByUiDisplay() =
         distinctBy { item ->
             when (item) {
-                is ConditionCopyItem.ConditionItem.Image ->
+                is Image ->
                     item.uiCondition.condition.hashCodeNoIds()
 
-                is ConditionCopyItem.ConditionItem.Trigger ->
+                is Trigger ->
                     when (item.uiCondition.condition) {
                         is TriggerCondition.OnBroadcastReceived -> item.uiCondition.condition.name.hashCode() +
                                 item.uiCondition.condition.intentAction.hashCode()
@@ -156,7 +156,7 @@ class ConditionCopyModel @Inject constructor(
              * Image Condition item.
              * @param uiCondition the details for the condition.
              */
-            data class Image(override val uiCondition: UiImageCondition) : ConditionItem()
+            data class Image(override val uiCondition: UiScreenCondition) : ConditionItem()
 
             /**
              * Trigger Condition item.
