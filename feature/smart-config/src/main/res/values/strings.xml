@@ -49,6 +49,12 @@
     <string name="item_broadcast_received_desc">Fulfilled when a Broadcast is received</string>
     <string name="item_broadcast_received_details">%1$s received</string>
 
+    <string name="item_color_condition_title">On color detected</string>
+    <string name="item_color_condition_desc">Fulfilled when a color is visible somewhere on the screen</string>
+
+    <string name="item_image_condition_title">On image detected</string>
+    <string name="item_image_condition_desc">Fulfilled when an image is visible somewhere on the screen</string>
+
     <string name="item_copy_title">Copy</string>
     <string name="item_copy_desc">Copy an existing Action from any Scenarios</string>
 
@@ -157,6 +163,7 @@
     <string name="dialog_title_image_event">Screen Event</string>
     <string name="dialog_title_trigger_event">Trigger</string>
     <string name="dialog_title_action_type">Action type</string>
+    <string name="dialog_title_screen_condition_type">Condition type</string>
     <string name="dialog_title_trigger_condition_type">Trigger type</string>
 
     <string name="field_condition_selector_desc">%1$d conditions</string>

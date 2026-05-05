@@ -26,6 +26,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -37,8 +38,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.allScreenConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.allTriggerConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
@@ -103,7 +107,7 @@ class ScreenConditionsBriefMenu(
     override fun onMenuItemClicked(viewId: Int) {
         when (viewId) {
             R.id.btn_save -> back()
-            R.id.btn_add -> showNewCaptureOverlay()
+            R.id.btn_add -> showScreenConditionTypeSelectionDialog()
             R.id.btn_copy -> showImageConditionCopyDialog()
         }
     }
@@ -177,6 +181,24 @@ class ScreenConditionsBriefMenu(
                     )
                 },
             ),
+        )
+    }
+
+    private fun showScreenConditionTypeSelectionDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = MultiChoiceDialog(
+                theme = R.style.AppTheme,
+                dialogTitleText = R.string.dialog_title_screen_condition_type,
+                choices = allScreenConditionChoices(),
+                onChoiceSelected = { choice ->
+                    when (choice) {
+                        ScreenConditionTypeChoice.OnColorDetected -> TODO()
+                        ScreenConditionTypeChoice.OnImageDetected -> showNewCaptureOverlay()
+                    }
+                },
+            ),
+            hideCurrent = false,
         )
     }
 
