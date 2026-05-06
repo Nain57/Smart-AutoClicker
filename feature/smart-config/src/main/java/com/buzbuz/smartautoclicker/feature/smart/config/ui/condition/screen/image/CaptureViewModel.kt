@@ -39,16 +39,16 @@ class CaptureViewModel @Inject constructor(
     private val displayRecorder: DisplayRecorder,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
-) : androidx.lifecycle.ViewModel()  {
+) : ViewModel()  {
 
     fun takeScreenshot(resultCallback: (Bitmap) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             delay(200L)
-            displayRecorder.takeScreenshot { screenshot ->
-                withContext(Dispatchers.Main) {
-                    resultCallback(screenshot)
-                    monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE)
-                }
+            val screenshot = displayRecorder.takeScreenshot() ?: return@launch
+
+            withContext(Dispatchers.Main) {
+                resultCallback(screenshot)
+                monitoredViewsManager.notifyClick(MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE)
             }
         }
     }

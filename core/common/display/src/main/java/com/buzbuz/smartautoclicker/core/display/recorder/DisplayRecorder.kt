@@ -29,6 +29,7 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -140,15 +141,17 @@ class DisplayRecorder @Inject internal constructor(
         imageReaderProxy.getLastFrame()
     }
 
-    suspend fun takeScreenshot(completion: suspend (Bitmap) -> Unit) {
-        var finished = false
-        do {
-            imageReaderProxy.getLastFrame()?.let { screenFrame ->
-                completion(screenFrame)
-                finished = true
-            }
+    suspend fun takeScreenshot(): Bitmap? {
+        var result: Bitmap?
+        val startTimeMs: Long = System.currentTimeMillis()
 
-        } while (!finished)
+        do {
+            result = imageReaderProxy.getLastFrame()
+            if (result == null) delay(20)
+
+        } while (result == null && System.currentTimeMillis() < (startTimeMs + 1000))
+
+        return result
     }
 
     /**

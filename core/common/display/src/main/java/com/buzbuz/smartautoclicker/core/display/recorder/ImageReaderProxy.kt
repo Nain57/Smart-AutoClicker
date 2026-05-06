@@ -65,9 +65,14 @@ internal class ImageReaderProxy @Inject constructor(
             return null
         }
 
-        return reader.acquireLatestImage()
-            ?.use { image -> image.toBitmap().also { lastFrame = it } }
-            ?: lastFrame
+        try {
+            return reader.acquireLatestImage()
+                ?.use { image -> image.toBitmap().also { lastFrame = it } }
+                ?: lastFrame
+        } catch (uoEx: UnsupportedOperationException) {
+            Log.e(TAG, "Unsupported screen format", uoEx)
+            return null
+        }
     }
 
     private fun Image.toBitmap(): Bitmap {
