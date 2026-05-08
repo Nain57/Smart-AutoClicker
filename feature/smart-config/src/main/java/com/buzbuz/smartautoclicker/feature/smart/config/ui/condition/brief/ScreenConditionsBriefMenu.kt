@@ -40,9 +40,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.allScreenConditionChoices
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.allTriggerConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
@@ -122,7 +122,7 @@ class ScreenConditionsBriefMenu(
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
-        showImageConditionConfigDialog((item.data as UiScreenCondition).condition)
+        showScreenConditionConfigDialog((item.data as UiScreenCondition).condition)
     }
 
     override fun onDeleteItemClicked(index: Int) {
@@ -176,7 +176,7 @@ class ScreenConditionsBriefMenu(
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->
                     if (conditionSelected !is ScreenCondition.Image) return@ConditionCopyDialog
-                    showImageConditionConfigDialog(
+                    showScreenConditionConfigDialog(
                         viewModel.createNewImageConditionFromCopy(conditionSelected),
                     )
                 },
@@ -193,8 +193,8 @@ class ScreenConditionsBriefMenu(
                 choices = allScreenConditionChoices(),
                 onChoiceSelected = { choice ->
                     when (choice) {
-                        ScreenConditionTypeChoice.OnColorDetected -> TODO()
-                        ScreenConditionTypeChoice.OnImageDetected -> showNewCaptureOverlay()
+                        ScreenConditionTypeChoice.OnColorDetected -> showNewColorCaptureOverlay()
+                        ScreenConditionTypeChoice.OnImageDetected -> showNewImageCaptureOverlay()
                     }
                 },
             ),
@@ -202,17 +202,27 @@ class ScreenConditionsBriefMenu(
         )
     }
 
-    private fun showNewCaptureOverlay() {
+    private fun showNewColorCaptureOverlay() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = CaptureMenu { capturedCondition ->
-                showImageConditionConfigDialog(capturedCondition)
+            newOverlay = ColorCaptureMenu { position, color ->
+                //showScreenConditionConfigDialog(capturedCondition)
             },
             hideCurrent = true,
         )
     }
 
-    private fun showImageConditionConfigDialog(condition: ScreenCondition) {
+    private fun showNewImageCaptureOverlay() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CaptureMenu { capturedCondition ->
+                showScreenConditionConfigDialog(capturedCondition)
+            },
+            hideCurrent = true,
+        )
+    }
+
+    private fun showScreenConditionConfigDialog(condition: ScreenCondition) {
         if (condition !is ScreenCondition.Image) return // TODO handle Color condition
         viewModel.startConditionEdition(condition)
 

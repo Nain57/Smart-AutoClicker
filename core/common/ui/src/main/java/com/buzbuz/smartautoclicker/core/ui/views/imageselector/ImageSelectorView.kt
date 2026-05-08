@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.conditionselector
+package com.buzbuz.smartautoclicker.core.ui.views.imageselector
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -35,6 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponen
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ComponentsView
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.base.ViewComponent
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponent
+import androidx.core.graphics.drawable.toDrawable
 
 /**
  * Overlay view used as screenOverlayView showing the area to capture the content as an event condition.
@@ -46,7 +47,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsCompo
  * @param onSelectorValidityChanged listener upon the selector validity.
  */
 @SuppressLint("ViewConstructor") // Not intended to be used from XML
-class ConditionSelectorView(
+class ImageSelectorView(
     context: Context,
     private val displayConfigManager: DisplayConfigManager,
     private val onSelectorValidityChanged: (Boolean) -> Unit,
@@ -59,7 +60,7 @@ class ConditionSelectorView(
     /** Controls the display of the user hints around the selector. */
     private lateinit var hintsIcons: HintsComponent
     /** Controls the animations. */
-    private lateinit var animations: ConditionSelectorAnimations
+    private lateinit var animations: ImageSelectorAnimations
 
     /** Tells if the view have ignored a touch event due to a animation running or being hidden. */
     private var haveTouchEventIgnored = false
@@ -70,8 +71,8 @@ class ConditionSelectorView(
 
     /** Get the attributes from the style file and initialize all components. */
     init {
-        context.obtainStyledAttributes(null, R.styleable.ConditionSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
-            animations = ConditionSelectorAnimations(ta.getAnimationsStyle())
+        context.obtainStyledAttributes(null, R.styleable.ImageSelectorView, R.attr.conditionSelectorStyle, 0).use { ta ->
+            animations = ImageSelectorAnimations(ta.getAnimationsStyle())
             capture = CaptureComponent(context, ta.getCaptureComponentStyle(displayConfigManager), this)
             selector = SelectorComponent(context, ta.getSelectorComponentStyle(displayConfigManager), this)
             hintsIcons = HintsComponent(context, ta.getHintsStyle(displayConfigManager), this)
@@ -145,10 +146,10 @@ class ConditionSelectorView(
     /**
      * Shows the capture on the screen.
      *
-     * @param bitmap the capture the be shown.
+     * @param bitmap the capture to be shown.
      */
     fun showCapture(bitmap: Bitmap) {
-        capture.screenCapture = BitmapDrawable(resources, bitmap)
+        capture.screenCapture = bitmap.toDrawable(resources)
         hintsIcons.showAll()
         animations.startShowSelectorAnimation(
             onAnimationCompleted = {

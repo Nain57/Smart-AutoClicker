@@ -19,6 +19,8 @@
 
     <attr format="reference" name="itemBriefStyle"/>
 
+    <attr format="reference" name="pixelSelectorStyle"/>
+
     <attr format="reference" name="conditionSelectorStyle"/>
 
     <attr format="reference" name="areaSelectorStyle"/>
@@ -74,6 +76,11 @@
     <!-- The duration of the show selector animation, in milliseconds . -->
     <attr name="showSelectorAnimationDuration" format="integer" />
 
+    <!-- The minimum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+    <attr name="minimumZoomValue" format="float" />
+    <!-- The maximum value for the zoom. Should be between [0f..10f] for reasonable results) -->
+    <attr name="maximumZoomValue" format="float" />
+
     <!-- Styleable attributes for the ItemBriefView. -->
     <declare-styleable name="ItemBriefView" >
         <attr name="colorInner"/>
@@ -86,8 +93,16 @@
         <attr name="innerRadius"/>
     </declare-styleable>
 
-    <!-- Styleable attributes for the ConditionSelectorView. -->
-    <declare-styleable name="ConditionSelectorView" >
+    <!-- Styleable attributes for the ColorSelectorView. -->
+    <declare-styleable name="PixelSelectorView" >
+        <attr name="minimumZoomValue"/>
+        <attr name="maximumZoomValue"/>
+        <attr name="colorOutlinePrimary"/>
+        <attr name="thickness" />
+    </declare-styleable>
+
+    <!-- Styleable attributes for the ImageSelectorView. -->
+    <declare-styleable name="ImageSelectorView" >
         <attr name="colorInner"/>
         <attr name="colorOutlinePrimary"/>
         <attr name="colorOutlineSecondary"/>
@@ -107,6 +122,8 @@
         <attr name="hintResizeLeftIcon"/>
         <attr name="hintResizeRightIcon"/>
         <attr name="showSelectorAnimationDuration"/>
+        <attr name="minimumZoomValue"/>
+        <attr name="maximumZoomValue"/>
 
         <!-- The drawable for the pinch to zoom Hint. -->
         <attr name="hintPinchIcon" format="reference" />
@@ -114,10 +131,6 @@
         <attr name="hintsPinchIconMargin" format="dimension"/>
         <!-- The duration of the show capture animation, in milliseconds . -->
         <attr name="showCaptureAnimationDuration" format="integer" />
-        <!-- The minimum value for the zoom. Should be between [0f..10f] for reasonable results) -->
-        <attr name="minimumZoomValue" format="float" />
-        <!-- The maximum value for the zoom. Should be between [0f..10f] for reasonable results) -->
-        <attr name="maximumZoomValue" format="float" />
     </declare-styleable>
 
     <!-- Styleable attributes for the AreaSelectorView. -->

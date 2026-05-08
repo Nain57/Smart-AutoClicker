@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,29 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="ScenarioConfigTheme" parent="AppTheme">
-        <item name="areaSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Condition</item>
-        <item name="conditionSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Condition</item>
-        <item name="pixelSelectorStyle">@style/AppTheme.ScenarioConfig.Selector.Pixel</item>
-    </style>
+    <item
+        android:id="@+id/background_circle"
+        android:start="4dp"
+        android:end="4dp"
+        android:top="4dp"
+        android:bottom="4dp">
 
-</resources>
+        <shape android:shape="oval">
+            <solid android:color="@color/overlayMenuButtons" />
+        </shape>
+
+    </item>
+
+    <item android:id="@+id/border_circle">
+
+        <shape android:shape="oval">
+            <stroke
+                android:width="4dp"
+                android:color="?attr/colorControlNormal" />
+        </shape>
+
+    </item>
+
+</layer-list>

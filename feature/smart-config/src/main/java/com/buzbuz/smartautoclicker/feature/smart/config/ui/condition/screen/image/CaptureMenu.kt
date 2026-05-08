@@ -26,7 +26,7 @@ import androidx.annotation.IntDef
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.ui.views.conditionselector.ConditionSelectorView
+import com.buzbuz.smartautoclicker.core.ui.views.imageselector.ImageSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayValidationMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -69,7 +69,7 @@ class CaptureMenu(
     /** The view binding for the overlay menu. */
     private lateinit var viewBinding: OverlayValidationMenuBinding
     /** The view displaying the screenshot and the selector for the capture. */
-    private lateinit var selectorView: ConditionSelectorView
+    private lateinit var selectorView: ImageSelectorView
 
     /** The current state of the overlay. */
     @ConditionCaptureState
@@ -104,7 +104,7 @@ class CaptureMenu(
     override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        selectorView = ConditionSelectorView(context, displayConfigManager, ::onSelectorValidityChanged)
+        selectorView = ImageSelectorView(context, displayConfigManager, ::onSelectorValidityChanged)
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
         return viewBinding.root
     }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.conditionselector
+package com.buzbuz.smartautoclicker.core.ui.views.imageselector
 
 import android.animation.Animator
 import android.animation.AnimatorSet
@@ -26,11 +26,11 @@ import androidx.core.animation.doOnEnd
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 /**
- * Handles the animation for the [ConditionSelectorView].
+ * Handles the animation for the [ImageSelectorView].
  *
  * @param style the style for the animations
  */
-internal class ConditionSelectorAnimations(style: AnimationsStyle) {
+internal class ImageSelectorAnimations(style: AnimationsStyle) {
 
     /** The transparency of the background color of the selector. */
     private val selectorBackgroundAlpha: Int = style.selectorBackgroundAlpha
@@ -139,7 +139,7 @@ internal class ConditionSelectorAnimations(style: AnimationsStyle) {
 }
 
 /**
- * Style for the [ConditionSelectorAnimations].
+ * Style for the [ImageSelectorAnimations].
  *
  * @param selectorBackgroundAlpha the transparency of the background color of the selector.
  * @param hintFadeDuration the duration of the hints fading animation in milliseconds.

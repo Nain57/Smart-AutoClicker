@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.imag
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief.ScreenConditionsBriefViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
@@ -68,6 +69,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun activitySelectionViewModel(): ActivitySelectionModel
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel
     fun captureViewModel(): CaptureViewModel
+    fun colorCaptureViewModel(): ColorCaptureViewModel
     fun changeCounterViewModel(): ChangeCounterViewModel
     fun clickOffsetViewModel(): ClickOffsetViewModel
     fun clickViewModel(): ClickViewModel

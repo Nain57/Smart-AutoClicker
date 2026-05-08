@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.conditionselector
+package com.buzbuz.smartautoclicker.core.ui.views.imageselector
 
 import android.content.res.TypedArray
 import android.graphics.Color
@@ -22,35 +22,38 @@ import android.graphics.PointF
 
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.ui.R
+import com.buzbuz.smartautoclicker.core.ui.views.pixelselector.PixelSelectorView
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.CaptureComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DEFAULT_ZOOM_MAXIMUM
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.DEFAULT_ZOOM_MINIMUM
+import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.PixelPositionComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.SelectorComponentStyle
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.DEFAULT_HINTS_ICON_MARGIN
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.DEFAULT_HINTS_ICON_SIZE
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.DEFAULT_HINTS_PINCH_ICON_MARGIN
 import com.buzbuz.smartautoclicker.core.ui.views.viewcomponents.hints.HintsComponentStyle
+import kotlin.math.ceil
 
 internal fun TypedArray.getAnimationsStyle() =
     AnimationsStyle(
         selectorBackgroundAlpha = getColor(
-            R.styleable.ConditionSelectorView_colorBackground,
+            R.styleable.ImageSelectorView_colorBackground,
             Color.TRANSPARENT
         ).shr(24),
         hintFadeDuration = getInteger(
-            R.styleable.ConditionSelectorView_hintsFadeDuration,
+            R.styleable.ImageSelectorView_hintsFadeDuration,
             DEFAULT_FADE_DURATION
         ).toLong(),
         hintAllFadeDelay = getInteger(
-            R.styleable.ConditionSelectorView_hintsAllFadeDelay,
+            R.styleable.ImageSelectorView_hintsAllFadeDelay,
             DEFAULT_FADE_ALL_HINTS_DURATION
         ).toLong(),
         showSelectorAnimationDuration = getInteger(
-            R.styleable.ConditionSelectorView_showSelectorAnimationDuration,
+            R.styleable.ImageSelectorView_showSelectorAnimationDuration,
             DEFAULT_SELECTOR_ANIMATION_DURATION
         ).toLong(),
         showCaptureAnimationDuration = getInteger(
-            R.styleable.ConditionSelectorView_showCaptureAnimationDuration,
+            R.styleable.ImageSelectorView_showCaptureAnimationDuration,
             DEFAULT_CAPTURE_ANIMATION_DURATION
         ).toLong(),
     )
@@ -59,11 +62,11 @@ internal fun TypedArray.getCaptureComponentStyle(displayConfigManager: DisplayCo
     CaptureComponentStyle(
         displayConfigManager = displayConfigManager,
         zoomMin = getFloat(
-            R.styleable.ConditionSelectorView_minimumZoomValue,
+            R.styleable.ImageSelectorView_minimumZoomValue,
             DEFAULT_ZOOM_MINIMUM
         ),
         zoomMax = getFloat(
-            R.styleable.ConditionSelectorView_maximumZoomValue,
+            R.styleable.ImageSelectorView_maximumZoomValue,
             DEFAULT_ZOOM_MAXIMUM
         )
     )
@@ -73,38 +76,38 @@ internal fun TypedArray.getSelectorComponentStyle(displayConfigManager: DisplayC
         displayConfigManager = displayConfigManager,
         selectorDefaultSize = PointF(
             getDimensionPixelSize(
-                R.styleable.ConditionSelectorView_defaultWidth,
+                R.styleable.ImageSelectorView_defaultWidth,
                 100,
             ).toFloat() / 2f,
             getDimensionPixelSize(
-                R.styleable.ConditionSelectorView_defaultHeight,
+                R.styleable.ImageSelectorView_defaultHeight,
                 100,
             ).toFloat() / 2f
         ),
         handleSize = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_resizeHandleSize,
+            R.styleable.ImageSelectorView_resizeHandleSize,
             10,
         ).toFloat(),
-        selectorAreaOffset = kotlin.math.ceil(
+        selectorAreaOffset = ceil(
             getDimensionPixelSize(
-                R.styleable.ConditionSelectorView_thickness,
+                R.styleable.ImageSelectorView_thickness,
                 4,
             ).toFloat() / 2
         ).toInt(),
         cornerRadius = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_cornerRadius,
+            R.styleable.ImageSelectorView_cornerRadius,
             2,
         ).toFloat(),
         selectorThickness = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_thickness,
+            R.styleable.ImageSelectorView_thickness,
             4,
         ).toFloat(),
         selectorColor = getColor(
-            R.styleable.ConditionSelectorView_colorOutlinePrimary,
+            R.styleable.ImageSelectorView_colorOutlinePrimary,
             Color.WHITE,
         ),
         selectorBackgroundColor = getColor(
-            R.styleable.ConditionSelectorView_colorBackground,
+            R.styleable.ImageSelectorView_colorBackground,
             Color.TRANSPARENT,
         ),
     )
@@ -113,21 +116,21 @@ internal fun TypedArray.getHintsStyle(displayConfigManager: DisplayConfigManager
     HintsComponentStyle(
         displayConfigManager = displayConfigManager,
         iconsMargin = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_hintsIconsMargin,
+            R.styleable.ImageSelectorView_hintsIconsMargin,
             DEFAULT_HINTS_ICON_MARGIN,
         ),
         iconsSize = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_hintsIconsSize,
+            R.styleable.ImageSelectorView_hintsIconsSize,
             DEFAULT_HINTS_ICON_SIZE,
         ),
-        moveIcon = getResourceId(R.styleable.ConditionSelectorView_hintMoveIcon, 0),
-        upIcon = getResourceId(R.styleable.ConditionSelectorView_hintResizeUpIcon, 0),
-        downIcon = getResourceId(R.styleable.ConditionSelectorView_hintResizeDownIcon, 0),
-        leftIcon = getResourceId(R.styleable.ConditionSelectorView_hintResizeLeftIcon, 0),
-        rightIcon = getResourceId(R.styleable.ConditionSelectorView_hintResizeRightIcon, 0),
-        pinchIcon = getResourceId(R.styleable.ConditionSelectorView_hintPinchIcon, 0),
+        moveIcon = getResourceId(R.styleable.ImageSelectorView_hintMoveIcon, 0),
+        upIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeUpIcon, 0),
+        downIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeDownIcon, 0),
+        leftIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeLeftIcon, 0),
+        rightIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeRightIcon, 0),
+        pinchIcon = getResourceId(R.styleable.ImageSelectorView_hintPinchIcon, 0),
         pinchIconMargin = getDimensionPixelSize(
-            R.styleable.ConditionSelectorView_hintsPinchIconMargin,
+            R.styleable.ImageSelectorView_hintsPinchIconMargin,
             DEFAULT_HINTS_PINCH_ICON_MARGIN,
         ),
     )

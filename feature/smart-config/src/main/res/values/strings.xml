@@ -196,6 +196,12 @@
     <string name="brief_empty_image_conditions">No Screen Condition. You need at least one Condition to create a valid Event</string>
 
 
+    <!-- Dialog Condition Color ==================================================================================== -->
+
+    <string name="overlay_pixel_selector_title">Select a pixel</string>
+    <string name="dialog_title_condition_color_config">Condition</string>
+
+
     <!-- Dialog Condition Image ==================================================================================== -->
 
     <string name="dialog_title_condition_config">Condition</string>
