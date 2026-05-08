@@ -74,7 +74,7 @@ internal fun CompleteEventEntity.toDomainImageEvent(cleanIds: Boolean = false): 
         enabledOnStart = event.enabledOnStart,
         keepDetecting = event.keepDetecting == true,
         actions = actions.map { it.toDomain(cleanIds) }.sortedByPriority().toMutableList(),
-        conditions = conditions.map { it.toDomain(cleanIds) as ScreenCondition.Image }.sortedByPriority().toMutableList(),
+        conditions = conditions.map { it.toDomain(cleanIds) as ScreenCondition }.sortedByPriority().toMutableList(),
     )
 
 /** @return the complete trigger event for this entity. */

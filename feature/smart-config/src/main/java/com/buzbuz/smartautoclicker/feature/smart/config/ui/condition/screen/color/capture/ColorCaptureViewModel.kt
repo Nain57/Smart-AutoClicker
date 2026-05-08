@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.toRgbaHexString
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -59,11 +60,7 @@ class ColorCaptureViewModel @Inject constructor(
         return selectedPosition to selectedColor
     }
 
-    fun cancelCapture() {
-        _uiState.update { screenshotSelectionState() }
-    }
-
-    fun captureScreen() {
+    fun captureScreen(initialFocusPosition: PointF?) {
         _uiState.update { capturingState() }
 
         screenshotJob = viewModelScope.launch(ioDispatcher) {
@@ -71,9 +68,13 @@ class ColorCaptureViewModel @Inject constructor(
 
             val screenshot = displayRecorder.takeScreenshot()
             _uiState.update {
-                if (screenshot == null) capturingState() else pixelSelectionState(screenshot)
+                if (screenshot == null) capturingState() else pixelSelectionState(screenshot, initialFocusPosition)
             }
         }
+    }
+
+    fun cancelCapture() {
+        _uiState.update { screenshotSelectionState() }
     }
 
     fun updateSelectedPosition(position: PointF?) {
@@ -113,9 +114,9 @@ class ColorCaptureViewModel @Inject constructor(
             showHideButtonEnabled = false,
         )
 
-    private fun pixelSelectionState(screenshot: Bitmap): ColorCaptureUiState {
+    private fun pixelSelectionState(screenshot: Bitmap, initialFocusPosition: PointF?): ColorCaptureUiState {
         val displaySize = displayConfigManager.displayConfig.sizePx
-        val position = PointF(displaySize.x / 2f, displaySize.y / 2f)
+        val position = initialFocusPosition ?: PointF(displaySize.x / 2f, displaySize.y / 2f)
         val selectorColor = screenshot.getPixelColor(position)
 
         return ColorCaptureUiState(
@@ -141,17 +142,5 @@ class ColorCaptureViewModel @Inject constructor(
             position.x.toInt().coerceIn(0, width - 1),
             position.y.toInt().coerceIn(0, height - 1),
         )
-
-    /**
-     * Converts a [ColorInt] to a string containing the RGBA hexadecimal notation (#RRGGBBAA).
-     * @return the color as a string.
-     */
-    private fun Int.toRgbaHexString(): String {
-        val a = (this shr 24) and 0xFF
-        val r = (this shr 16) and 0xFF
-        val g = (this shr 8) and 0xFF
-        val b = this and 0xFF
-        return "#%02X%02X%02X%02X".format(r, g, b, a)
-    }
 }
 

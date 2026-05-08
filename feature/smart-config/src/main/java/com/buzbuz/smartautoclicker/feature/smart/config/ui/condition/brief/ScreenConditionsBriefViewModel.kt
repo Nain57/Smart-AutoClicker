@@ -19,8 +19,10 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.PointF
 import android.graphics.Rect
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -49,6 +51,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.conditio
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,6 +60,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Collections
 
 import javax.inject.Inject
@@ -161,6 +166,20 @@ class ScreenConditionsBriefViewModel @Inject constructor(
         imageConditions.add(to, movedAction)
 
         editionRepository.updateImageConditionsOrder(imageConditions)
+    }
+
+    fun createColorCondition(context: Context, position: PointF, @ColorInt color: Int, completed: (ScreenCondition.Color) -> Unit) {
+         viewModelScope.launch(Dispatchers.IO) {
+             val condition = editionRepository.editedItemsBuilder.createNewColorCondition(
+                 context = context,
+                 color = color,
+                 detectionArea = Rect(
+                     position.x.toInt(), position.y.toInt(),
+                     position.x.toInt() + 1, position.y.toInt() + 1
+                 ),
+             )
+             withContext(Dispatchers.Main) { completed(condition) }
+         }
     }
 
     fun monitorBriefFirstItemView(briefItemView: View) {

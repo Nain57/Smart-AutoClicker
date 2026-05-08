@@ -40,6 +40,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.allScreenConditionChoices
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
@@ -206,7 +207,9 @@ class ScreenConditionsBriefMenu(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ColorCaptureMenu { position, color ->
-                //showScreenConditionConfigDialog(capturedCondition)
+                viewModel.createColorCondition(context, position, color) { condition ->
+                    showScreenConditionConfigDialog(condition)
+                }
             },
             hideCurrent = true,
         )
@@ -223,14 +226,11 @@ class ScreenConditionsBriefMenu(
     }
 
     private fun showScreenConditionConfigDialog(condition: ScreenCondition) {
-        if (condition !is ScreenCondition.Image) return // TODO handle Color condition
         viewModel.startConditionEdition(condition)
 
         val conditionConfigDialogListener: OnConditionConfigCompleteListener by lazy {
             object : OnConditionConfigCompleteListener {
-                override fun onConfirmClicked() {
-                    viewModel.upsertEditedCondition()
-                }
+                override fun onConfirmClicked() { viewModel.upsertEditedCondition() }
                 override fun onDeleteClicked() { viewModel.removeEditedCondition() }
                 override fun onDismissClicked() { viewModel.dismissEditedCondition() }
             }
@@ -238,7 +238,10 @@ class ScreenConditionsBriefMenu(
 
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionDialog(conditionConfigDialogListener),
+            newOverlay = when (condition) {
+                is ScreenCondition.Color -> ColorConditionDialog(conditionConfigDialogListener)
+                is ScreenCondition.Image -> ImageConditionDialog(conditionConfigDialogListener)
+            },
             hideCurrent = true,
         )
     }

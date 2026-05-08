@@ -17,13 +17,9 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture
 
 import android.graphics.PointF
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.annotation.ColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -35,12 +31,14 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureZoomViewBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateIndicatorColor
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
 
 class ColorCaptureMenu (
+    private val defaultPosition: PointF? = null,
     private val onColorSelected: (position: PointF, colorInt: Int) -> Unit,
 ) : OverlayMenu(theme = R.style.AppTheme) {
 
@@ -93,7 +91,7 @@ class ColorCaptureMenu (
 
         when (viewId) {
             R.id.btn_confirm -> when (captureStep) {
-                ColorCaptureMenuStep.SCREENSHOT_SELECTION -> viewModel.captureScreen()
+                ColorCaptureMenuStep.SCREENSHOT_SELECTION -> viewModel.captureScreen(defaultPosition)
                 ColorCaptureMenuStep.PIXEL_SELECTION -> {
                     viewModel.getPixelSelection()?.let { (position, color) ->
                         back()
@@ -156,10 +154,5 @@ class ColorCaptureMenu (
         visibleZoomLayout.viewZoom.setZoomPosition(uiState.selectedPosition)
         visibleZoomLayout.textColorValue.text = uiState.selectedColorDisplayText
         visibleZoomLayout.iconColorValue.updateIndicatorColor(uiState.selectedColor ?: 0)
-    }
-
-    private fun ImageView.updateIndicatorColor(@ColorInt color: Int) {
-        ((drawable as? LayerDrawable)?.findDrawableByLayerId(R.id.background_circle) as? GradientDrawable)
-            ?.setColor(color)
     }
 }
