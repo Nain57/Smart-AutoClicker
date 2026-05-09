@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.scaling
 import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.base.extensions.ensureMinSize
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -117,7 +118,10 @@ class ScalingManager @Inject constructor(
     private fun ScreenCondition.Color.toColorScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Color =
         ScreenConditionScalingInfo.Color(
             screenCondition = this,
-            detectionArea = detectionArea.scaleDown().coerceIn(bounds = scaledScreenSize.toArea())
+            detectionArea = detectionArea
+                .scaleDown()
+                .ensureMinSize()
+                .coerceIn(bounds = scaledScreenSize.toArea())
         )
 
     private fun List<ScreenEvent>.toConditionsList(): List<ScreenCondition> =
