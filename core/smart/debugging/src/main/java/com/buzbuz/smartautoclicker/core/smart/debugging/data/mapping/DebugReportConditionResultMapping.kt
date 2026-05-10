@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.TriggerEventMessageKt.tr
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 
 
-internal fun DebugReportConditionResult.ImageCondition.toProtobuf(): ImageEventMessage.ImageConditionResult =
+internal fun DebugReportConditionResult.ScreenCondition.toProtobuf(): ImageEventMessage.ImageConditionResult =
     imageConditionResult {
         conditionId = this@toProtobuf.conditionId
         isFulfilled = this@toProtobuf.isFulFilled
@@ -38,8 +38,8 @@ internal fun DebugReportConditionResult.TriggerCondition.toProtobuf(): TriggerEv
     }
 
 
-internal fun ImageEventMessage.ImageConditionResult.toDomain(): DebugReportConditionResult.ImageCondition =
-    DebugReportConditionResult.ImageCondition(
+internal fun ImageEventMessage.ImageConditionResult.toDomain(): DebugReportConditionResult.ScreenCondition =
+    DebugReportConditionResult.ScreenCondition(
         conditionId = conditionId,
         isFulFilled = isFulfilled,
         detectionDurationMs = durationMs,

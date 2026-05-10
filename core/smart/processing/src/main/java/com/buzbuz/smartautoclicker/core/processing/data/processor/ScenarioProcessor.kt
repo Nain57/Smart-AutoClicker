@@ -112,10 +112,10 @@ internal class ScenarioProcessor(
         processingState.clearIterationState()
 
         // Handle the image detection
-        if (!processingState.areAllImageEventsDisabled()) {
-            progressListener?.onEventsListProcessingStarted(EventType.Image)
-            processImageEvents(screenFrame, processingState.getEnabledImageEvents())
-            progressListener?.onEventsProcessingCompleted(EventType.Image)
+        if (!processingState.areAllScreenEventsDisabled()) {
+            progressListener?.onEventsListProcessingStarted(EventType.Screen)
+            processScreenEvents(screenFrame, processingState.getEnabledScreenEvents())
+            progressListener?.onEventsProcessingCompleted(EventType.Screen)
         }
 
         // Loop is completed
@@ -146,28 +146,28 @@ internal class ScenarioProcessor(
         }
     }
 
-    private suspend fun processImageEvents(screenFrame: Bitmap, events: Collection<ScreenEvent>) {
+    private suspend fun processScreenEvents(screenFrame: Bitmap, events: Collection<ScreenEvent>) {
         // Set the current screen image
         imageDetector.setScreenBitmap(screenFrame, processingTag)
 
         try {
             // Check all events
-            for (imageEvent in events) {
+            for (screenEvent in events) {
                 // No conditions ? This should not happen, skip this event
-                if (imageEvent.conditions.isEmpty()) continue
+                if (screenEvent.conditions.isEmpty()) continue
 
-                progressListener?.onEventProcessingStarted(imageEvent)
+                progressListener?.onEventProcessingStarted(screenEvent)
                 val results = conditionsVerifier.verifyConditions(
-                    operator = imageEvent.conditionOperator,
-                    conditions = imageEvent.conditions,
+                    operator = screenEvent.conditionOperator,
+                    conditions = screenEvent.conditions,
                 )
 
-                progressListener?.onEventProcessingCompleted(imageEvent, results.fulfilled == true, results.getAllImageConditionsResults())
+                progressListener?.onEventProcessingCompleted(screenEvent, results.fulfilled == true, results.getAllScreenConditionsResults())
                 if (results.fulfilled == true) {
-                    actionExecutor.executeActions(imageEvent, results)
-                    progressListener?.onEventActionsExecuted(imageEvent, results.getAllImageConditionsResults())
+                    actionExecutor.executeActions(screenEvent, results)
+                    progressListener?.onEventActionsExecuted(screenEvent, results.getAllScreenConditionsResults())
 
-                    if (!imageEvent.keepDetecting) break
+                    if (!screenEvent.keepDetecting) break
                 }
 
                 // Stop processing if requested

@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryImageConditionMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ScreenConditionResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.view.DebugOverlayView
 import com.google.android.material.slider.Slider
 
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 
 class TryImageConditionOverlayMenu(
     private val scenario: Scenario,
-    private val imageCondition: ScreenCondition.Image,
+    private val imageCondition: ScreenCondition,
     private val onNewThresholdSelected: (Int) -> Unit,
 ) : OverlayMenu() {
 
@@ -116,7 +116,8 @@ class TryImageConditionOverlayMenu(
         return true
     }
 
-    private fun updateDetectionResults(results: ImageConditionResultUiState?) {
+    private fun updateDetectionResults(results: ScreenConditionResultUiState?) {
+        println("TOTO: $results")
         (screenOverlayView as? DebugOverlayView)?.setResults(results?.let { listOf(it) } ?: emptyList())
         viewBinding.valueResult.text = results?.resultText
     }

@@ -40,7 +40,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.model.toDetectionState
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ActionTry
-import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageConditionTry
+import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScreenConditionTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ImageEventTry
 import com.buzbuz.smartautoclicker.core.processing.domain.trying.ScenarioTry
 
@@ -202,8 +202,8 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun tryImageCondition(context: Context, scenario: Scenario, condition: ScreenCondition.Image) {
-        val triedElement = ImageConditionTry(scenario, condition)
+    override fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition) {
+        val triedElement = ScreenConditionTry(scenario, condition)
         tryElement(
             context = context,
             elementTry = triedElement,

@@ -53,9 +53,9 @@ internal class ImageEventTry(
         this !is ToggleEvent
 }
 
-internal class ImageConditionTry(
+internal class ScreenConditionTry(
     override val scenario: Scenario,
-    val condition: ScreenCondition.Image,
+    val condition: ScreenCondition,
 ) : ScenarioTry() {
 
     override val screenEvents: List<ScreenEvent> = listOf(getTestImageEvent())
@@ -70,7 +70,7 @@ internal class ImageConditionTry(
             conditionOperator = AND,
             enabledOnStart = true,
             priority = 0,
-            conditions = listOf(condition.copy(eventId = tryEventId)),
+            conditions = listOf(condition.copyCondition(eventId = tryEventId)),
             actions = listOf(getTestPauseAction(tryEventId)),
             keepDetecting = false,
         )

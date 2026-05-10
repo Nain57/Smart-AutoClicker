@@ -37,7 +37,7 @@ data class EventResultUiState(
     val eventConditionOperator: String,
     val eventDuration: String,
     val actions: List<TryEventActionsItem>,
-    val detectionResults: List<ImageConditionResultUiState>,
+    val detectionResults: List<ScreenConditionResultUiState>,
 )
 
 /** Icons for the actions of the event being executed.*/

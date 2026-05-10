@@ -34,7 +34,7 @@ sealed interface DebugLiveEventConditionResult {
      * @param confidenceRate the confidence rate of the detection algorithm on this result. Between [0 - 100].
      * @param detectionArea the area of the image that have been detected. Null if not detected.
      */
-    data class Image(
+    data class Screen(
         override val condition: ScreenCondition,
         override val isFulfilled: Boolean,
         val isDetected: Boolean,

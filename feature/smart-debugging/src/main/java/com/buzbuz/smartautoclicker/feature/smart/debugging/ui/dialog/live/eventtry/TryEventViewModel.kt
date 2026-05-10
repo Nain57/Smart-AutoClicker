@@ -46,7 +46,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugL
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.TryEventActionsItem
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.EventResultUiState
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ScreenConditionResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toConditionUiState
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -106,9 +106,9 @@ private fun DebugLiveEventOccurrence.toUiState(context: Context): EventResultUiS
         detectionResults = conditionsResults.toUiState(),
     )
 
-private fun List<DebugLiveEventConditionResult>.toUiState(): List<ImageConditionResultUiState> =
+private fun List<DebugLiveEventConditionResult>.toUiState(): List<ScreenConditionResultUiState> =
     mapNotNull { result ->
-        if (result !is DebugLiveEventConditionResult.Image) return@mapNotNull null
+        if (result !is DebugLiveEventConditionResult.Screen) return@mapNotNull null
         else result.toConditionUiState()
     }
 

@@ -32,7 +32,7 @@ sealed class DebugEventOccurrenceEventState {
     abstract val currentValue: Boolean
     abstract val previousValue: Boolean?
 
-    data class Image(
+    data class Screen(
         override val eventId: Long,
         override val eventName: String,
         override val currentValue: Boolean,

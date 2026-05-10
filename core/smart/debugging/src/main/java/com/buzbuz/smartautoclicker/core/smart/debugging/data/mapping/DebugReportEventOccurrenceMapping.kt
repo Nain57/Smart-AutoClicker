@@ -32,12 +32,12 @@ internal fun DebugReportEventOccurrence.toProtobuf(): ProtoDebugReportMessage =
     debugReportMessage {
         relativeTimestampMs = this@toProtobuf.relativeTimestampMs
         when (this@toProtobuf) {
-            is DebugReportEventOccurrence.ImageEvent -> imageEventMessage = this@toProtobuf.toImageEventProtobuf()
+            is DebugReportEventOccurrence.ScreenEvent -> imageEventMessage = this@toProtobuf.toImageEventProtobuf()
             is DebugReportEventOccurrence.TriggerEvent -> triggerEventMessage = this@toProtobuf.toTriggerEventProtobuf()
         }
     }
 
-private fun DebugReportEventOccurrence.ImageEvent.toImageEventProtobuf(): ProtoImageEventMessage =
+private fun DebugReportEventOccurrence.ScreenEvent.toImageEventProtobuf(): ProtoImageEventMessage =
     imageEventMessage {
         eventId = this@toImageEventProtobuf.eventId
         frameNumber = this@toImageEventProtobuf.frameNumber
@@ -71,8 +71,8 @@ internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
         }
     }
 
-private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.ImageEvent =
-    DebugReportEventOccurrence.ImageEvent(
+private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.ScreenEvent =
+    DebugReportEventOccurrence.ScreenEvent(
         eventId = eventId,
         frameNumber = frameNumber,
         relativeTimestampMs = relativeTimestamp,

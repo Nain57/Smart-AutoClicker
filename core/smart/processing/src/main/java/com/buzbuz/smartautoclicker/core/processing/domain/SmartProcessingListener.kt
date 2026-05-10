@@ -108,6 +108,6 @@ interface SmartProcessingListener {
 }
 
 enum class EventType {
-    Image,
+    Screen,
     Trigger
 }

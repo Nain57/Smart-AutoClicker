@@ -50,7 +50,7 @@ class DebugReportEventOccurrenceDetailsViewModel @Inject constructor(
     fun setOccurrence(scenarioId: Long, occurrence: DebugReportEventOccurrence) {
         viewModelScope.launch {
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ImageEvent -> smartRepository.getImageEvents(scenarioId)
+                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getImageEvents(scenarioId)
                 is DebugReportEventOccurrence.TriggerEvent -> smartRepository.getTriggerEvents(scenarioId)
             }.findWithId(occurrence.eventId) ?: return@launch
 

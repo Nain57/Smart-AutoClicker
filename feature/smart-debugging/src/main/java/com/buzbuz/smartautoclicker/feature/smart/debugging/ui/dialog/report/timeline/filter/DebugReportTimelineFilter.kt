@@ -50,7 +50,7 @@ sealed interface DebugReportTimelineFilter {
         /** Filter on ImageEvents. */
         data class Image(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events {
             override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
-                occurrence is DebugReportEventOccurrence.ImageEvent && filterAll || filteredIds.contains(occurrence.eventId)
+                occurrence is DebugReportEventOccurrence.ScreenEvent && filterAll || filteredIds.contains(occurrence.eventId)
         }
 
         /** Filter on TriggerEvents. */

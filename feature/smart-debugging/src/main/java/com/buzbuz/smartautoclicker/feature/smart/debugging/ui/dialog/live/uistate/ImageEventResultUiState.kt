@@ -19,5 +19,5 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uista
 data class ImageEventResultUiState(
     val eventText: String,
     val conditionsText: String,
-    val detectionResults: List<ImageConditionResultUiState>,
+    val detectionResults: List<ScreenConditionResultUiState>,
 )

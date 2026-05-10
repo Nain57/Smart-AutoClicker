@@ -20,14 +20,14 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ScreenConditionResultUiState
 
 
-internal fun DebugLiveEventOccurrence.Image.toConditionResultsUiState(): List<ImageConditionResultUiState> =
+internal fun DebugLiveEventOccurrence.Screen.toConditionResultsUiState(): List<ScreenConditionResultUiState> =
     conditionsResults.map { result -> result.toConditionUiState() }
 
-internal fun DebugLiveEventConditionResult.Image.toConditionUiState(): ImageConditionResultUiState =
-    ImageConditionResultUiState(
+internal fun DebugLiveEventConditionResult.Screen.toConditionUiState(): ScreenConditionResultUiState =
+    ScreenConditionResultUiState(
         positive = isFulfilled,
         coordinates = detectionArea ?: Rect(),
         confidenceRate = confidenceRate,

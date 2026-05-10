@@ -40,14 +40,14 @@ sealed class DebugReportEventOccurrence {
     ) : DebugReportEventOccurrence()
 
     /**
-     * An ImageEvent has been fulfilled.
+     * An ScreenEvent has been fulfilled.
      *
      * @param frameNumber the number of the frame in the current detection session.
      */
-    data class ImageEvent(
+    data class ScreenEvent(
         override val eventId: Long,
         override val relativeTimestampMs: Long,
-        override val conditionsResults: List<DebugReportConditionResult.ImageCondition>,
+        override val conditionsResults: List<DebugReportConditionResult.ScreenCondition>,
         override val counterChanges: List<DebugReportActionResult.CounterChange>,
         override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
         val frameNumber: Long,

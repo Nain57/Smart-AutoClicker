@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uista
 
 import android.graphics.Rect
 
-data class ImageConditionResultUiState(
+data class ScreenConditionResultUiState(
     val positive: Boolean,
     val coordinates: Rect,
     val confidenceRate: Double,

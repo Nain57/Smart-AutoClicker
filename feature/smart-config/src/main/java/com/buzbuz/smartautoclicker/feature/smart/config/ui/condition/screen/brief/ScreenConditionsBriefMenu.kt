@@ -153,8 +153,7 @@ class ScreenConditionsBriefMenu(
 
     private fun showTryConditionOverlay() {
         val focusedItem = getFocusedItemBrief() ?: return
-        val condition = (focusedItem.data as? UiScreenCondition)?.condition
-        if (condition !is ScreenCondition.Image) return // TODO handle color condition
+        val condition = (focusedItem.data as? UiScreenCondition)?.condition ?: return
 
         viewModel.getEditedScenario()?.let { scenario ->
             overlayManager.navigateTo(

@@ -151,6 +151,7 @@ internal class ConditionsVerifier(
             confidenceRate = detectionResult.confidenceRate,
         )
 
+        println("TOTO: color=${result.confidenceRate}")
         progressListener?.onImageConditionProcessingCompleted(result)
         return result
     }
@@ -186,6 +187,7 @@ internal class ConditionsVerifier(
             )
         } ?: condition.toInvalidConditionResult()
 
+        println("TOTO: img=${result.confidenceRate}")
         progressListener?.onImageConditionProcessingCompleted(result)
         return result
     }

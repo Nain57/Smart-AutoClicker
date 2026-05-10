@@ -21,12 +21,12 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 import javax.inject.Inject
 
 
-internal class ImageConditionOccurrenceRecorder @Inject constructor() {
+internal class ScreenConditionOccurrenceRecorder @Inject constructor() {
 
     private val conditionDurationRecorder: DurationRecorder = DurationRecorder()
 
-    private val _imageConditionResults: MutableList<DebugReportConditionResult.ImageCondition> = mutableListOf()
-    val imageConditionResults: List<DebugReportConditionResult.ImageCondition> = _imageConditionResults
+    private val _screenConditionResults: MutableList<DebugReportConditionResult.ScreenCondition> = mutableListOf()
+    val screenConditionResults: List<DebugReportConditionResult.ScreenCondition> = _screenConditionResults
 
 
     fun onEventProcessingStarted() {
@@ -38,8 +38,8 @@ internal class ImageConditionOccurrenceRecorder @Inject constructor() {
     }
 
     fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) {
-        _imageConditionResults.add(
-            DebugReportConditionResult.ImageCondition(
+        _screenConditionResults.add(
+            DebugReportConditionResult.ScreenCondition(
                 conditionId = result.condition.id.databaseId,
                 isFulFilled = result.isFulfilled,
                 detectionDurationMs = conditionDurationRecorder.durationMs(),
@@ -52,6 +52,6 @@ internal class ImageConditionOccurrenceRecorder @Inject constructor() {
 
     fun reset() {
         conditionDurationRecorder.reset()
-        _imageConditionResults.clear()
+        _screenConditionResults.clear()
     }
 }

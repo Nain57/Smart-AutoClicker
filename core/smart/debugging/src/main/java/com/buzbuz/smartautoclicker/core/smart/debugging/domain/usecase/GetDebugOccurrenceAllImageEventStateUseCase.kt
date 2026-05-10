@@ -47,16 +47,16 @@ class GetDebugOccurrenceAllImageEventStateUseCase @Inject constructor(
     private val eventOccurrences: Flow<List<DebugReportEventOccurrence>?> =
         debuggingRepository.getLastReportEventsOccurrences()
 
-    operator fun invoke(eventOccurrence: DebugReportEventOccurrence): Flow<List<DebugEventOccurrenceEventState.Image>> =
+    operator fun invoke(eventOccurrence: DebugReportEventOccurrence): Flow<List<DebugEventOccurrenceEventState.Screen>> =
         combine(events, eventOccurrences) { events, occurrences ->
             if (events == null || occurrences == null) return@combine emptyList()
 
             // Initialize all events state
-            val eventsStateMap: MutableMap<Long, DebugEventOccurrenceEventState.Image> = mutableMapOf()
+            val eventsStateMap: MutableMap<Long, DebugEventOccurrenceEventState.Screen> = mutableMapOf()
             events.forEach { event ->
                 eventsStateMap.put(
                     key = event.id.databaseId,
-                    value = DebugEventOccurrenceEventState.Image(
+                    value = DebugEventOccurrenceEventState.Screen(
                         eventId = event.id.databaseId,
                         eventName = event.name,
                         eventPriority = event.priority,

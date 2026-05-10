@@ -113,7 +113,7 @@ class DebugConditionContentViewModel @Inject constructor(
     fun setOccurrence(scenarioId: Long, occurrence: DebugReportEventOccurrence) {
         viewModelScope.launch {
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ImageEvent -> smartRepository.getImageEvents(scenarioId)
+                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getImageEvents(scenarioId)
                 is DebugReportEventOccurrence.TriggerEvent -> smartRepository.getTriggerEvents(scenarioId)
             }.findWithId(occurrence.eventId) ?: return@launch
 
@@ -133,11 +133,11 @@ class DebugConditionContentViewModel @Inject constructor(
         event: Event,
     ): List<EventOccurrenceItem> =
         when (event) {
-            is ScreenEvent -> (this@toItems as? List<DebugReportConditionResult.ImageCondition>)?.toImageItems(context, event)
+            is ScreenEvent -> (this@toItems as? List<DebugReportConditionResult.ScreenCondition>)?.toImageItems(context, event)
             is TriggerEvent -> (this@toItems as? List<DebugReportConditionResult.TriggerCondition>)?.toTriggerItems(context, event)
         } ?: emptyList()
 
-    private fun List<DebugReportConditionResult.ImageCondition>.toImageItems(
+    private fun List<DebugReportConditionResult.ScreenCondition>.toImageItems(
         context: Context,
         event: ScreenEvent,
     ): List<EventOccurrenceItem> =

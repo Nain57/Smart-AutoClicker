@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.utils.formatDebugConfidenceRate
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ScreenConditionResultUiState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.mapping.toConditionUiState
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,14 +54,14 @@ class TryImageConditionViewModel @Inject constructor(
 
     private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
 
-    private val detectionResult: Flow<ImageConditionResultUiState?> = detectionResultUseCase()
+    private val detectionResult: Flow<ScreenConditionResultUiState?> = detectionResultUseCase()
         .combine(isPlaying) { results, playing -> if (playing) results else null }
         .map { results ->
             if (results == null || results.conditionsResults.isEmpty()) null
-            else (results.conditionsResults.first() as DebugLiveEventConditionResult.Image).toConditionUiState()
+            else (results.conditionsResults.first() as DebugLiveEventConditionResult.Screen).toConditionUiState()
         }
 
-    val displayResults: Flow<ImageConditionResultUiState?> =
+    val displayResults: Flow<ScreenConditionResultUiState?> =
         combine(userThreshold, detectionResult) { userThreshold, result ->
             result?.copy(positive = (1.0 - (userThreshold / 100.0)) < result.confidenceRate)
         }
@@ -76,12 +76,12 @@ class TryImageConditionViewModel @Inject constructor(
         }
     }
 
-    fun startTry(context: Context, scenario: Scenario, imageCondition: ScreenCondition.Image) {
+    fun startTry(context: Context, scenario: Scenario, imageCondition: ScreenCondition) {
         viewModelScope.launch {
             userThreshold.value = imageCondition.threshold
 
             delay(500)
-            smartProcessingRepository.tryImageCondition(context, scenario, imageCondition)
+            smartProcessingRepository.tryScreenCondition(context, scenario, imageCondition)
         }
     }
 

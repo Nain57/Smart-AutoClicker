@@ -111,13 +111,13 @@ interface SmartProcessingRepository : Dumpable {
     fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent)
 
     /**
-     * Creates a dedicated scenario containing only an [ScreenEvent] with the [ImageCondition] to be tested.
+     * Creates a dedicated scenario containing only an [ScreenEvent] with the [ScreenCondition] to be tested.
      *
      * @param context the Android context.
      * @param scenario the original scenario containing the condition to test
      * @param condition the condition to be tested.
      */
-    fun tryImageCondition(context: Context, scenario: Scenario, condition: ScreenCondition.Image)
+    fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition)
 
     /**
      * Creates a dedicated scenario containing only an Event with the [Action] to be tested.

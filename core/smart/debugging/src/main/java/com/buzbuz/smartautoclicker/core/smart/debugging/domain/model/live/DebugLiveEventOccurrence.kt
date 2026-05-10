@@ -28,12 +28,12 @@ sealed interface DebugLiveEventOccurrence {
     val processingDurationMs: Long
     val conditionsResults: List<DebugLiveEventConditionResult>
 
-    data class Image(
+    data class Screen(
         override val event: ScreenEvent,
         override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,
-        override val conditionsResults: List<DebugLiveEventConditionResult.Image>,
+        override val conditionsResults: List<DebugLiveEventConditionResult.Screen>,
     ) : DebugLiveEventOccurrence
 
     data class Trigger(

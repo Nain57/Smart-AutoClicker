@@ -40,7 +40,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterV
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventOccurrencesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventStateRecorder
-import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ImageConditionOccurrenceRecorder
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ScreenConditionOccurrenceRecorder
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -65,7 +65,7 @@ internal class DebugEngine @Inject constructor(
     private val debugReportLocalDataSource: DebugReportLocalDataSource,
     private val overviewRecorder: DebugReportOverviewRecorder,
     private val eventOccurrencesRecorder: EventOccurrencesRecorder,
-    private val imgConditionOccurrenceRecorder: ImageConditionOccurrenceRecorder,
+    private val screenConditionOccurrenceRecorder: ScreenConditionOccurrenceRecorder,
     private val counterValuesRecorder: CounterValuesRecorder,
     private val eventStateRecorder: EventStateRecorder,
 ) : SmartProcessingListener {
@@ -119,7 +119,7 @@ internal class DebugEngine @Inject constructor(
     override fun onEventProcessingStarted(event: Event) {
         coroutineScopeIo.launch {
             eventOccurrencesRecorder.onEventProcessingStarted()
-            imgConditionOccurrenceRecorder.onEventProcessingStarted()
+            screenConditionOccurrenceRecorder.onEventProcessingStarted()
 
             if (!shouldWriteReport) return@launch
             counterValuesRecorder.onEventProcessingStarted()
@@ -135,7 +135,7 @@ internal class DebugEngine @Inject constructor(
             _lastEventProcessed.update {
                 @Suppress("UNCHECKED_CAST")
                 when (event) {
-                    is ScreenEvent -> getLiveImageEventOccurrence(
+                    is ScreenEvent -> getLiveScreenEventOccurrence(
                         event = event,
                         fulfilled = fulfilled,
                         results = results as List<ProcessedConditionResult.Screen>,
@@ -161,7 +161,7 @@ internal class DebugEngine @Inject constructor(
             when (event) {
                 is ScreenEvent -> {
                     writeImageEventToReport(event)
-                    imgConditionOccurrenceRecorder.reset()
+                    screenConditionOccurrenceRecorder.reset()
                 }
 
                 is TriggerEvent ->
@@ -184,7 +184,7 @@ internal class DebugEngine @Inject constructor(
             if (!shouldWriteReport) return@launch
 
             overviewRecorder.onFrameProcessingStopped()
-            imgConditionOccurrenceRecorder.reset()
+            screenConditionOccurrenceRecorder.reset()
             eventOccurrencesRecorder.reset()
         }
     }
@@ -194,7 +194,7 @@ internal class DebugEngine @Inject constructor(
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            imgConditionOccurrenceRecorder.onImageConditionProcessingStarted()
+            screenConditionOccurrenceRecorder.onImageConditionProcessingStarted()
         }
     }
 
@@ -203,7 +203,7 @@ internal class DebugEngine @Inject constructor(
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            imgConditionOccurrenceRecorder.onImageConditionProcessingCompleted(result)
+            screenConditionOccurrenceRecorder.onImageConditionProcessingCompleted(result)
         }
     }
 
@@ -242,7 +242,7 @@ internal class DebugEngine @Inject constructor(
             }
 
             eventOccurrencesRecorder.reset()
-            imgConditionOccurrenceRecorder.reset()
+            screenConditionOccurrenceRecorder.reset()
             _lastEventProcessed.value = null
             _isDebuggingSession.value = false
             isReportEnabled = false
@@ -251,14 +251,14 @@ internal class DebugEngine @Inject constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getLiveImageEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Screen>): DebugLiveEventOccurrence.Image =
-        DebugLiveEventOccurrence.Image(
+    private fun getLiveScreenEventOccurrence(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult.Screen>): DebugLiveEventOccurrence.Screen =
+        DebugLiveEventOccurrence.Screen(
             event = event as ScreenEvent,
             fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
             conditionsResults = results.map { result ->
-                DebugLiveEventConditionResult.Image(
+                DebugLiveEventConditionResult.Screen(
                     condition = result.condition,
                     isFulfilled = result.isFulfilled,
                     isDetected = result.haveBeenDetected,
@@ -285,11 +285,11 @@ internal class DebugEngine @Inject constructor(
 
     private suspend fun writeImageEventToReport(event: ScreenEvent) {
         debugReportLocalDataSource.writeEventOccurrenceToReport(
-            occurrence = DebugReportEventOccurrence.ImageEvent(
+            occurrence = DebugReportEventOccurrence.ScreenEvent(
                 eventId = event.id.databaseId,
                 frameNumber = overviewRecorder.frameCount,
                 relativeTimestampMs = overviewRecorder.sessionDurationMs,
-                conditionsResults = imgConditionOccurrenceRecorder.imageConditionResults.toList(),
+                conditionsResults = screenConditionOccurrenceRecorder.screenConditionResults.toList(),
                 counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
                 eventStateChanges = eventStateRecorder.changes.toList(),
             )

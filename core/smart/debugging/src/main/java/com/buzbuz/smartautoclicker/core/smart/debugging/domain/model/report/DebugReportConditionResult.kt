@@ -31,12 +31,12 @@ sealed class DebugReportConditionResult {
     ) : DebugReportConditionResult()
 
     /**
-     * Result for an ImageCondition.
+     * Result for an ScreenCondition.
      *
      * @param detectionDurationMs The duration of the detection for this condition in milliseconds.
      * @param confidenceRate The confidence rate in percent (0-100) of the detection for this condition.
      */
-    data class ImageCondition(
+    data class ScreenCondition(
         override val conditionId: Long,
         override val isFulFilled: Boolean,
         val detectionDurationMs: Long,

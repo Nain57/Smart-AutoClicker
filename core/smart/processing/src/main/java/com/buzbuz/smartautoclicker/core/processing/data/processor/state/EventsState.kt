@@ -25,10 +25,10 @@ interface IEventsState {
 
     fun isEventEnabled(eventId: Long): Boolean
     fun areAllEventsDisabled(): Boolean
-    fun areAllImageEventsDisabled(): Boolean
+    fun areAllScreenEventsDisabled(): Boolean
     fun areAllTriggerEventsDisabled(): Boolean
 
-    fun getEnabledImageEvents(): Collection<ScreenEvent>
+    fun getEnabledScreenEvents(): Collection<ScreenEvent>
     fun getEnabledTriggerEvents(): Collection<TriggerEvent>
 
     fun enableAll()
@@ -74,10 +74,10 @@ internal class EventsState(
     override fun areAllEventsDisabled(): Boolean =
         screenEventList.areAllEventsDisabled() && triggerEventList.areAllEventsDisabled()
 
-    override fun areAllImageEventsDisabled(): Boolean =
+    override fun areAllScreenEventsDisabled(): Boolean =
         screenEventList.areAllEventsDisabled()
 
-    override fun getEnabledImageEvents(): Collection<ScreenEvent> =
+    override fun getEnabledScreenEvents(): Collection<ScreenEvent> =
         screenEventList.getEnabledEvents().sortedByPriority()
 
     override fun areAllTriggerEventsDisabled(): Boolean =

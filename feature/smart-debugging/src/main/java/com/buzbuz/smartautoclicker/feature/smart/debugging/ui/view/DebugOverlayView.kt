@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
 
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ImageConditionResultUiState
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.uistate.ScreenConditionResultUiState
 
 /**
  * Displays a rectangle at the selected position to represents the detection.
@@ -29,10 +29,10 @@ internal class DebugOverlayView(context: Context) : View(context) {
     /** The margin between the actual condition position and the displayed borders. */
     private val conditionBordersMargin = 10
 
-    private val results: MutableList<ImageConditionResultUiState> = mutableListOf()
+    private val results: MutableList<ScreenConditionResultUiState> = mutableListOf()
     private val displayedResults: MutableList<Pair<Paint, Rect>> = mutableListOf()
 
-    fun setResults(newResults: List<ImageConditionResultUiState>) {
+    fun setResults(newResults: List<ScreenConditionResultUiState>) {
         updateResults(newResults)
         postInvalidate()
     }
@@ -55,7 +55,7 @@ internal class DebugOverlayView(context: Context) : View(context) {
         }
     }
 
-    private fun updateResults(newResults: List<ImageConditionResultUiState>) {
+    private fun updateResults(newResults: List<ScreenConditionResultUiState>) {
         if (results != newResults) {
             results.clear()
             results.addAll(newResults)
@@ -70,7 +70,7 @@ internal class DebugOverlayView(context: Context) : View(context) {
         results.forEach { result -> displayedResults.add(result.toDisplayResult()) }
     }
 
-    private fun ImageConditionResultUiState.toDisplayResult(): Pair<Paint, Rect> = Pair(
+    private fun ScreenConditionResultUiState.toDisplayResult(): Pair<Paint, Rect> = Pair(
         if (positive) positiveResultPaint else negativeResultPaint,
         Rect(
             coordinates.left - conditionBordersMargin,
