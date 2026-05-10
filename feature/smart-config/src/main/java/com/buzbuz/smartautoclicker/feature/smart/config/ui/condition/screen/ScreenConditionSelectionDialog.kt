@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionGridBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 
@@ -43,7 +43,7 @@ import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.Job
 
-class ImageConditionSelectionDialog(
+class ScreenConditionSelectionDialog(
     private val conditionList: List<UiScreenCondition>,
     bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ScreenCondition) -> Unit,
@@ -115,21 +115,21 @@ private class ImageConditionsAdapter(
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ScreenCondition) -> Unit,
     private val itemViewBound: ((Int, View?) -> Unit),
-) : androidx.recyclerview.widget.ListAdapter<UiScreenCondition, ImageConditionViewHolder>(ImageConditionsDiffUtilCallback) {
+) : androidx.recyclerview.widget.ListAdapter<UiScreenCondition, ScreenConditionViewHolder>(ScreenConditionsDiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageConditionViewHolder =
-        ImageConditionViewHolder(
-            ItemImageConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScreenConditionViewHolder =
+        ScreenConditionViewHolder(
+            ItemScreenConditionGridBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             bitmapProvider,
             onConditionSelected,
         )
 
-    override fun onBindViewHolder(holder: ImageConditionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ScreenConditionViewHolder, position: Int) {
         holder.onBind(getItem(position))
         itemViewBound(position, holder.viewBinding.cardImageCondition.root)
     }
 
-    override fun onViewRecycled(holder: ImageConditionViewHolder) {
+    override fun onViewRecycled(holder: ScreenConditionViewHolder) {
         holder.onUnbind()
         itemViewBound(holder.bindingAdapterPosition, null)
         super.onViewRecycled(holder)
@@ -137,7 +137,7 @@ private class ImageConditionsAdapter(
 }
 
 /** DiffUtil Callback comparing two items when updating the [ImageConditionsAdapter] list. */
-private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiScreenCondition>() {
+private object ScreenConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiScreenCondition>() {
     override fun areItemsTheSame(oldItem: UiScreenCondition, newItem: UiScreenCondition): Boolean =
         oldItem.condition.id == newItem.condition.id
     override fun areContentsTheSame(oldItem: UiScreenCondition, newItem: UiScreenCondition): Boolean =
@@ -151,8 +151,8 @@ private object ImageConditionsDiffUtilCallback: DiffUtil.ItemCallback<UiScreenCo
  * @param bitmapProvider provides the conditions bitmap.
  * @param onConditionSelected called when the user select a condition.
  */
-private class ImageConditionViewHolder(
-    val viewBinding: ItemImageConditionGridBinding,
+private class ScreenConditionViewHolder(
+    val viewBinding: ItemScreenConditionGridBinding,
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
     private val onConditionSelected: (ScreenCondition) -> Unit,
 ): RecyclerView.ViewHolder(viewBinding.root) {

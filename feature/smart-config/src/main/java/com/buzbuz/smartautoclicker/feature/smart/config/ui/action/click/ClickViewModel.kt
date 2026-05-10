@@ -122,17 +122,17 @@ class ClickViewModel @Inject constructor(
         combine(editionRepository.editionState.editedEventState, configuredClick) { event, click ->
             val evt = event.value ?: return@combine null
 
-            when {
-                evt is TriggerEvent ->
+            when (evt) {
+                is TriggerEvent ->
                     context.getUserSelectedClickPositionState(click, forced = true)
 
-                evt is ScreenEvent && click.positionType == Click.PositionType.USER_SELECTED ->
+                is ScreenEvent if click.positionType == Click.PositionType.USER_SELECTED ->
                     context.getUserSelectedClickPositionState(click, forced = false)
 
-                evt is ScreenEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
+                is ScreenEvent if click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
                     context.getOnConditionWithOrPositionState(click)
 
-                evt is ScreenEvent && click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
+                is ScreenEvent if click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
                     context.getOnConditionWithAndPositionState(evt, click)
 
                 else -> null
