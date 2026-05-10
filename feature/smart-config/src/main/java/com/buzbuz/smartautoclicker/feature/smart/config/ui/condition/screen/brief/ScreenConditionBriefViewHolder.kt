@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief
 
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -29,18 +29,20 @@ import androidx.viewbinding.ViewBinding
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefViewHolder
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefLandBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionBriefPortBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionBriefLandBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setColorIndicatorDrawable
 import com.google.android.material.card.MaterialCardView
 
 
-class ImageConditionBriefViewHolder(
+class ScreenConditionBriefViewHolder(
     layoutInflater: LayoutInflater,
     orientation: Int,
     parent: ViewGroup,
-) : ItemBriefViewHolder<ImageConditionBriefBinding>(ImageConditionBriefBinding.inflate(layoutInflater, orientation, parent)) {
+) : ItemBriefViewHolder<ScreenConditionBriefBinding>(ScreenConditionBriefBinding.inflate(layoutInflater, orientation, parent)) {
 
     override fun onBind(item: ItemBrief, itemClickedListener: (Int, ItemBrief) -> Unit) {
         viewBinding.apply {
@@ -59,15 +61,22 @@ class ImageConditionBriefViewHolder(
             )
 
             threshold.text = details.thresholdText
-            icon.setImageResource(details.detectionTypeIconRes)
 
             errorBadge.visibility = if (details.haveError) View.VISIBLE else View.GONE
+
+            when (val condition = details.condition) {
+                is ScreenCondition.Color ->
+                    icon.setColorIndicatorDrawable(condition.color)
+
+                is ScreenCondition.Image ->
+                    icon.setImageResource(details.detectionTypeIconRes)
+            }
         }
     }
 
 }
 
-class ImageConditionBriefBinding private constructor(
+class ScreenConditionBriefBinding private constructor(
     val rootView: View,
     val card: MaterialCardView,
     val icon: ImageView,
@@ -81,12 +90,12 @@ class ImageConditionBriefBinding private constructor(
     companion object {
         fun inflate(layoutInflater: LayoutInflater, orientation: Int, parent: ViewGroup) =
             if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                ImageConditionBriefBinding(ItemImageConditionBriefPortBinding.inflate(layoutInflater, parent, false))
+                ScreenConditionBriefBinding(ItemScreenConditionBriefPortBinding.inflate(layoutInflater, parent, false))
             else
-                ImageConditionBriefBinding(ItemImageConditionBriefLandBinding.inflate(layoutInflater, parent, false))
+                ScreenConditionBriefBinding(ItemScreenConditionBriefLandBinding.inflate(layoutInflater, parent, false))
     }
 
-    constructor(binding: ItemImageConditionBriefPortBinding) : this(
+    constructor(binding: ItemScreenConditionBriefPortBinding) : this(
         rootView = binding.root,
         card = binding.itemCard,
         icon = binding.itemIcon,
@@ -97,7 +106,7 @@ class ImageConditionBriefBinding private constructor(
         errorBadge = binding.errorBadge,
     )
 
-    constructor(binding: ItemImageConditionBriefLandBinding) : this(
+    constructor(binding: ItemScreenConditionBriefLandBinding) : this(
         rootView = binding.root,
         card = binding.itemCard,
         icon = binding.itemIcon,

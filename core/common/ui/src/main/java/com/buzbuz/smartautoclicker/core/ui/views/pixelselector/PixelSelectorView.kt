@@ -84,10 +84,6 @@ class PixelSelectorView(
         return true
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-    }
-
     private fun Context.obtainPixelSelectorViewStyledAttributes(): TypedArray =
         obtainStyledAttributes(null, R.styleable.PixelSelectorView, R.attr.pixelSelectorStyle, 0)
 }

@@ -107,7 +107,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/item_icon"
                 android:layout_width="@dimen/dialog_choice_item_icon_size"
                 android:layout_height="@dimen/dialog_choice_item_icon_size"

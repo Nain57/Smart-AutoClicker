@@ -23,8 +23,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import androidx.annotation.ColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -52,7 +50,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.rgbToColorInt
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setGradientBackground
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateIndicatorColor
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateColorIndicatorDrawableColor
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -189,7 +187,7 @@ class ColorConditionDialog(
         viewBinding.apply {
             if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.conditionName)
             fieldEditName.setError(uiState.conditionNameError)
-            iconColorValue.updateIndicatorColor(uiState.conditionColor)
+            iconColorValue.updateColorIndicatorDrawableColor(uiState.conditionColor)
             textColorValue.text = uiState.conditionColorText
 
             updateRGBSliders(uiState)

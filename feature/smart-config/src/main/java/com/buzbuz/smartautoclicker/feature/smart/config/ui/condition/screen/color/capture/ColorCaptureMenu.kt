@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureZoomViewBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateIndicatorColor
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateColorIndicatorDrawableColor
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -153,6 +153,6 @@ class ColorCaptureMenu (
         visibleZoomLayout.viewZoom.setImageBitmap(uiState.screenshot)
         visibleZoomLayout.viewZoom.setZoomPosition(uiState.selectedPosition)
         visibleZoomLayout.textColorValue.text = uiState.selectedColorDisplayText
-        visibleZoomLayout.iconColorValue.updateIndicatorColor(uiState.selectedColor ?: 0)
+        visibleZoomLayout.iconColorValue.updateColorIndicatorDrawableColor(uiState.selectedColor ?: 0)
     }
 }

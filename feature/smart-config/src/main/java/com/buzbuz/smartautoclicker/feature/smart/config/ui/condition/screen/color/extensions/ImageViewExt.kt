@@ -16,14 +16,33 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions
 
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 
-fun ImageView.updateIndicatorColor(@ColorInt color: Int) {
-    ((drawable as? LayerDrawable)?.findDrawableByLayerId(R.id.background_circle) as? GradientDrawable)
+fun ImageView.setColorIndicatorDrawable(@ColorInt color: Int? = null) {
+    imageTintList = null
+
+    val indicatorDrawable = ContextCompat.getDrawable(
+        context,
+        R.drawable.ic_color_indicator,
+    )?.mutate() as? LayerDrawable ?: return
+
+    if (color != null) indicatorDrawable.setColorIndicatorDrawableColor(color)
+
+    setImageDrawable(indicatorDrawable)
+}
+
+fun ImageView.updateColorIndicatorDrawableColor(@ColorInt color: Int) {
+    drawable.setColorIndicatorDrawableColor(color)
+}
+
+private fun Drawable.setColorIndicatorDrawableColor(@ColorInt color: Int) {
+    ((this as? LayerDrawable)?.findDrawableByLayerId(R.id.background_circle) as? GradientDrawable)
         ?.setColor(color)
 }

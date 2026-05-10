@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief
 
 import android.view.LayoutInflater
 import android.view.View
@@ -82,8 +82,8 @@ class ScreenConditionsBriefMenu(
         return viewBinding.root
     }
 
-    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ImageConditionBriefViewHolder =
-        ImageConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
+    override fun onCreateBriefItemViewHolder(parent: ViewGroup, orientation: Int): ScreenConditionBriefViewHolder =
+        ScreenConditionBriefViewHolder(LayoutInflater.from(parent.context), orientation, parent)
 
     override fun onBriefItemViewBound(index: Int, itemView: View?) {
         if (index != 0) return

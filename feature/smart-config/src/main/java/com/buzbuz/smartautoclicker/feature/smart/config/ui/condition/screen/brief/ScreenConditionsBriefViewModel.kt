@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -42,6 +42,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -87,15 +89,17 @@ class ScreenConditionsBriefViewModel @Inject constructor(
             if (focusedIndex !in conditionList.indices) return@combine null
 
             val condition = conditionList[focusedIndex]
-            if (condition !is ScreenCondition.Image) return@combine null // TODO handle color case
-
-            condition to bitmapRepository.getConditionBitmap(condition)
+            condition to (if (condition is ScreenCondition.Image) bitmapRepository.getConditionBitmap(condition) else null)
         }.flowOn(ioDispatcher).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    val conditionVisualization: Flow<ImageConditionDescription?> = focusedCondition.map { focusedCondition ->
-        val condition = focusedCondition?.first
-        if (condition !is ScreenCondition.Image) return@map null // TODO handle color case
-        condition.toItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
+    val conditionVisualization: Flow<ItemBriefDescription?> = focusedCondition.map { focusedCondition ->
+        when (val condition = focusedCondition?.first) {
+            is ScreenCondition.Color ->
+                condition.toColorItemDescription()
+            is ScreenCondition.Image ->
+                condition.toImageItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
+            null -> null
+        }
     }
 
     val conditionBriefList: Flow<List<ItemBrief>> = editedConditions.map { conditions ->
@@ -210,7 +214,13 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     }
 }
 
-private fun ScreenCondition.Image.toItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
+private fun ScreenCondition.Color.toColorItemDescription(): ColorConditionDescription =
+    ColorConditionDescription(
+        conditionColor = color,
+        conditionPosition = PointF(detectionArea.left.toFloat(), detectionArea.top.toFloat()),
+    )
+
+private fun ScreenCondition.Image.toImageItemDescription(screenArea: Point, bitmap: Bitmap?): ImageConditionDescription =
     ImageConditionDescription(
         conditionBitmap = bitmap,
         conditionDetectionType = when (detectionType) {

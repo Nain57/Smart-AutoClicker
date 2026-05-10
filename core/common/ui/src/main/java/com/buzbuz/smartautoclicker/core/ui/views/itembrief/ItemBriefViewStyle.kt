@@ -26,6 +26,7 @@ import androidx.core.content.res.use
 
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRendererStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
@@ -37,6 +38,7 @@ internal class ItemBriefViewStyle(
     val swipeStyle: SwipeBriefRendererStyle,
     val pauseStyle: PauseBriefRendererStyle,
     val imageConditionStyle: ImageConditionBriefRendererStyle,
+    val colorConditionStyle: ColorConditionBriefRendererStyle,
     val defaultStyle: DefaultBriefRendererStyle,
 )
 
@@ -84,6 +86,11 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 selectorColor = colorOutlinePrimary,
                 thicknessPx = thickness.toInt(),
                 cornerRadiusPx = cornerRadius,
+            ),
+            colorConditionStyle = ColorConditionBriefRendererStyle(
+                backgroundColor = backgroundColor,
+                selectorColor = colorOutlinePrimary,
+                thicknessPx = thickness.toInt(),
             ),
             defaultStyle = DefaultBriefRendererStyle(
                 backgroundColor = backgroundColor,

@@ -29,6 +29,8 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderer
@@ -81,6 +83,9 @@ class ItemBriefView @JvmOverloads constructor(
                 is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
                 is ImageConditionDescription -> ImageConditionBriefRenderer(
                     this, style.imageConditionStyle, displayConfigManager,
+                )
+                is ColorConditionDescription -> ColorConditionBriefRenderer(
+                    this, style.colorConditionStyle,
                 )
                 is DefaultDescription -> DefaultBriefRenderer(this, style.defaultStyle)
                 else -> null
