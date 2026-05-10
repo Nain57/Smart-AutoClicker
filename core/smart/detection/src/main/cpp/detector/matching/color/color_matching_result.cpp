@@ -55,7 +55,7 @@ bool ColorMatchingResult::isDetected() const {
 }
 
 double ColorMatchingResult::getResultConfidence() const {
-    return colorDiffResult;
+    return 1 - colorDiffResult;
 }
 
 cv::Rect ColorMatchingResult::getResultArea() const {

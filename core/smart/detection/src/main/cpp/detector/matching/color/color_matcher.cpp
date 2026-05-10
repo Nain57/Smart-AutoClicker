@@ -65,7 +65,7 @@ void ColorMatcher::matchColor(
     for (int i = 0; i < 3; i++) {
         diff += abs(imageColorMeans.val[i] - conditionColor.val[i]);
     }
-    diff = (diff * 100) / (255 * 3);
+    diff = diff / (255 * 3);
 
     currentMatchingResult.updateResults(detectionArea, diff);
 
