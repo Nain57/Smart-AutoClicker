@@ -106,21 +106,19 @@ class ConditionCopyModel @Inject constructor(
     /** */
     private fun List<Condition>.toCopyItems(context: Context) = map { condition ->
         when (condition) {
-            is ScreenCondition.Image -> Image(
+            is ScreenCondition -> Screen(
                 condition.toUiScreenCondition(context, shortThreshold = true, inError = !condition.isComplete())
             )
             is TriggerCondition -> Trigger(
                 condition.toUiTriggerCondition(context, inError = !condition.isComplete())
             )
-
-            is ScreenCondition.Color -> TODO()
         }
     }
 
     private fun List<ConditionCopyItem.ConditionItem>.distinctByUiDisplay() =
         distinctBy { item ->
             when (item) {
-                is Image ->
+                is Screen ->
                     item.uiCondition.condition.hashCodeNoIds()
 
                 is Trigger ->
@@ -153,10 +151,10 @@ class ConditionCopyModel @Inject constructor(
             abstract val uiCondition: UiCondition
 
             /**
-             * Image Condition item.
+             * Screen Condition item.
              * @param uiCondition the details for the condition.
              */
-            data class Image(override val uiCondition: UiScreenCondition) : ConditionItem()
+            data class Screen(override val uiCondition: UiScreenCondition) : ConditionItem()
 
             /**
              * Trigger Condition item.

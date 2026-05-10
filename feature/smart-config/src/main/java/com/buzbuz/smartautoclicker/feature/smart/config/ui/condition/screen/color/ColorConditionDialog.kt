@@ -50,7 +50,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.rgbToColorInt
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setGradientBackground
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateColorIndicatorDrawableColor
+import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

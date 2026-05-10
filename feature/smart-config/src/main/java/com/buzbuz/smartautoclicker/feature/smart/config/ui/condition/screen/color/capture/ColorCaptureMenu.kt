@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureZoomViewBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.updateColorIndicatorDrawableColor
+import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
 
 import kotlinx.coroutines.launch
 import kotlin.getValue

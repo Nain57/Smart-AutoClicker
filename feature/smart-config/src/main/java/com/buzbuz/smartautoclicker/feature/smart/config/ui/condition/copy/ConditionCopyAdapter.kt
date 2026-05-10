@@ -51,14 +51,14 @@ class ConditionCopyAdapter(
             when (getItem(position)) {
                 is ConditionCopyModel.ConditionCopyItem.HeaderItem -> 2
                 is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> 2
-                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> 1
+                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen -> 1
             }
     }
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
             is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_list_header
-            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Image -> R.layout.item_image_condition_list
+            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen -> R.layout.item_image_condition_list
             is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> R.layout.item_trigger_condition
         }
 
@@ -80,7 +80,7 @@ class ConditionCopyAdapter(
         when (holder) {
             is HeaderViewHolder -> holder.onBind(getItem(position) as ConditionCopyModel.ConditionCopyItem.HeaderItem)
             is ImageConditionViewHolder -> holder.onBind(
-                getItem(position) as ConditionCopyModel.ConditionCopyItem.ConditionItem.Image,
+                getItem(position) as ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen,
                 conditionClickedListener,
             )
             is TriggerConditionViewHolder -> holder.onBind(
@@ -148,7 +148,7 @@ private class ImageConditionViewHolder(
      * @param conditionClickedListener listener notified upon user click on this item.
      */
     fun onBind(
-        item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Image,
+        item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen,
         conditionClickedListener: (ScreenCondition) -> Unit,
     ) {
         bitmapLoadingJob?.cancel()

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions
+package com.buzbuz.smartautoclicker.core.ui.utils
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -22,7 +22,7 @@ import android.graphics.drawable.LayerDrawable
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
-import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.core.ui.R
 
 
 fun ImageView.setColorIndicatorDrawable(@ColorInt color: Int? = null) {

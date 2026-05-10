@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.View
-import android.widget.ImageView.ScaleType
 
 import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -27,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeScreenConditionCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 
 import kotlinx.coroutines.Job
 

@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 import com.google.android.material.card.MaterialCardView
 
 

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState.Item.ScenarioItem.Valid.Smart.EventItem
 
@@ -75,19 +76,22 @@ class EventCardViewHolder(
             eventActionsCount.text = item.actionsCount.toString()
             eventConditionsCount.text = item.conditionsCount.toString()
 
-            // TODO update for color conditions
-            if (item.firstCondition == null || item.firstCondition !is ScreenCondition.Image) {
+            if (item.firstCondition == null) {
                 setErrorBitmap()
                 return
             }
 
-            bitmapJob = bitmapProvider(item.firstCondition) { bitmap ->
-                if (bitmap != null) {
-                    conditionImage.setImageBitmap(bitmap)
-                } else {
-                   setErrorBitmap()
+            when (item.firstCondition) {
+                is ScreenCondition.Color -> conditionImage.setColorIndicatorDrawable(item.firstCondition.color)
+                is ScreenCondition.Image -> bitmapJob = bitmapProvider(item.firstCondition) { bitmap ->
+                    if (bitmap != null) {
+                        conditionImage.setImageBitmap(bitmap)
+                    } else {
+                        setErrorBitmap()
+                    }
                 }
             }
+
         }
     }
 
