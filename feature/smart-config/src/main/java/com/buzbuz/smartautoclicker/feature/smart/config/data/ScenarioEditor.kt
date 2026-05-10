@@ -102,8 +102,8 @@ internal class ScenarioEditor {
     fun updateActionsOrder(actions: List<Action>) =
         currentEventEditor.value?.actionsEditor?.updateList(actions)
 
-    fun updateImageConditionsOrder(imageConditions: List<ScreenCondition.Image>) =
-        currentEventEditor.value?.conditionsEditor?.updateList(imageConditions)
+    fun updateScreenConditionsOrder(screenConditions: List<ScreenCondition>) =
+        currentEventEditor.value?.conditionsEditor?.updateList(screenConditions)
 
     fun upsertEditedEvent() =
         currentEventEditor.value?.upsertEditedItem()

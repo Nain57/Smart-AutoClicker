@@ -144,9 +144,9 @@ class EditionRepository @Inject constructor(
             actions.mapIndexed { index, action -> action.copyBase(priority = index) }
         )
     }
-    fun updateImageConditionsOrder(imageConditions: List<ScreenCondition.Image>) {
-        scenarioEditor.updateImageConditionsOrder(
-            imageConditions.mapIndexed { index, imgCond -> imgCond.copy(priority = index) }
+    fun updateScreenConditionsOrder(screenConditions: List<ScreenCondition>) {
+        scenarioEditor.updateScreenConditionsOrder(
+            screenConditions.mapIndexed { index, imgCond -> imgCond.copyCondition(priority = index) }
         )
     }
 

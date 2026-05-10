@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ImageCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
@@ -119,11 +119,13 @@ class ScreenConditionsBriefViewModel @Inject constructor(
         currentFocusItemIndex.value = index
     }
 
-    fun createNewImageConditionFromCopy(condition: ScreenCondition.Image): ScreenCondition.Image =
-        editionRepository.editedItemsBuilder.createNewImageConditionFrom(condition)
+    fun createNewScreenConditionFromCopy(condition: Condition): ScreenCondition? {
+        if (condition !is ScreenCondition) return null
+        return editionRepository.editedItemsBuilder.createNewScreenConditionFrom(condition)
+    }
 
-    fun deleteImageCondition(index: Int, force: Boolean = false): Boolean {
-        val conditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return false
+    fun deleteScreenCondition(index: Int, force: Boolean = false): Boolean {
+        val conditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition>()?.toMutableList() ?: return false
         if (index !in conditions.indices) return false
 
         editionRepository.startConditionEdition(conditions[index])
@@ -157,19 +159,19 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     fun swapConditions(i: Int, j: Int) {
         if (i == j) return
 
-        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition>()?.toMutableList() ?: return
         if (imageConditions.isEmpty() || i !in imageConditions.indices || j !in imageConditions.indices) return
 
         Collections.swap(imageConditions, i, j)
-        editionRepository.updateImageConditionsOrder(imageConditions)
+        editionRepository.updateScreenConditionsOrder(imageConditions)
     }
 
     fun moveConditions(from: Int, to: Int) {
-        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()?.toMutableList() ?: return
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition>()?.toMutableList() ?: return
         val movedAction = imageConditions.removeAt(from)
         imageConditions.add(to, movedAction)
 
-        editionRepository.updateImageConditionsOrder(imageConditions)
+        editionRepository.updateScreenConditionsOrder(imageConditions)
     }
 
     fun createColorCondition(context: Context, position: PointF, @ColorInt color: Int, completed: (ScreenCondition.Color) -> Unit) {

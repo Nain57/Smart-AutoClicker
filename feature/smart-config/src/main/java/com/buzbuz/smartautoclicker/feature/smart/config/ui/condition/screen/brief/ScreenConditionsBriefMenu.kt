@@ -109,7 +109,7 @@ class ScreenConditionsBriefMenu(
         when (viewId) {
             R.id.btn_save -> back()
             R.id.btn_add -> showScreenConditionTypeSelectionDialog()
-            R.id.btn_copy -> showImageConditionCopyDialog()
+            R.id.btn_copy -> showScreenConditionCopyDialog()
         }
     }
 
@@ -127,9 +127,9 @@ class ScreenConditionsBriefMenu(
     }
 
     override fun onDeleteItemClicked(index: Int) {
-        if (!viewModel.deleteImageCondition(index)) {
+        if (!viewModel.deleteScreenCondition(index)) {
             context.showDeleteConditionsWithAssociatedActionsDialog {
-                viewModel.deleteImageCondition(index, force = true)
+                viewModel.deleteScreenCondition(index, force = true)
             }
         }
     }
@@ -170,15 +170,14 @@ class ScreenConditionsBriefMenu(
         }
     }
 
-    private fun showImageConditionCopyDialog() {
+    private fun showScreenConditionCopyDialog() {
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
                 onConditionSelected = { conditionSelected ->
-                    if (conditionSelected !is ScreenCondition.Image) return@ConditionCopyDialog
-                    showScreenConditionConfigDialog(
-                        viewModel.createNewImageConditionFromCopy(conditionSelected),
-                    )
+                    viewModel.createNewScreenConditionFromCopy(conditionSelected)?.let { conditionCopy ->
+                        showScreenConditionConfigDialog(conditionCopy)
+                    }
                 },
             ),
         )
