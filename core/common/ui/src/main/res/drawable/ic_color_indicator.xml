@@ -25,6 +25,7 @@
         android:bottom="4dp">
 
         <shape android:shape="oval">
+            <size android:width="44dp" android:height="44dp" />
             <solid android:color="@color/overlayMenuButtons" />
         </shape>
 
@@ -33,6 +34,7 @@
     <item android:id="@+id/border_circle">
 
         <shape android:shape="oval">
+            <size android:width="48dp" android:height="48dp" />
             <stroke
                 android:width="4dp"
                 android:color="?attr/colorControlNormal" />

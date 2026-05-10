@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.view.View
+import android.widget.ImageView.ScaleType
 
 import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -25,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeScreenConditionCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setColorIndicatorDrawable
 
 import kotlinx.coroutines.Job
 
@@ -40,19 +43,28 @@ fun IncludeScreenConditionCardBinding.bind(
 
     conditionName.text = uiCondition.name
     conditionShouldBeDetected.setImageResource(uiCondition.shouldBeVisibleIconRes)
-    conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
     conditionThreshold.text = uiCondition.thresholdText
 
-    if (uiCondition.condition !is ScreenCondition.Image) return null // TODO handle Color condition
-    return bitmapProvider.invoke(uiCondition.condition) { bitmap ->
-        if (bitmap != null) {
-            conditionImage.setImageBitmap(bitmap)
-        } else {
-            conditionImage.setImageDrawable(
-                ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
-                    setTint(Color.RED)
+    return when (val condition = uiCondition.condition) {
+        is ScreenCondition.Color -> {
+            conditionDetectionType.visibility = View.GONE
+            conditionImage.setColorIndicatorDrawable(condition.color)
+            null
+        }
+        is ScreenCondition.Image -> {
+            conditionDetectionType.visibility = View.VISIBLE
+            conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
+            bitmapProvider.invoke(condition) { bitmap ->
+                if (bitmap != null) {
+                    conditionImage.setImageBitmap(bitmap)
+                } else {
+                    conditionImage.setImageDrawable(
+                        ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
+                            setTint(Color.RED)
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }

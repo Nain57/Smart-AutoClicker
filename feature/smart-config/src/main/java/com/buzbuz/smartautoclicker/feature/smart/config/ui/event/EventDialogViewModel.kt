@@ -93,8 +93,8 @@ class EventDialogViewModel @Inject constructor(
 
     val imageConditions: Flow<List<UiScreenCondition>> =
         editionRepository.editionState.editedEventScreenConditionsState
-            .mapNotNull { imageConditionsState ->
-                imageConditionsState.value?.map { imageCondition ->
+            .mapNotNull { screenConditionState ->
+                screenConditionState.value?.map { imageCondition ->
                     imageCondition.toUiScreenCondition(
                         context = context,
                         shortThreshold = true,

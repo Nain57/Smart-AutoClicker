@@ -22,8 +22,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageConditionListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
@@ -61,9 +61,10 @@ internal class EventImageConditionViewHolder (
     /** Job for the loading of the condition bitmap. Null until bound. */
     private var bitmapLoadingJob: Job? = null
 
-    fun onBind(condition: UiScreenCondition) {
+    fun onBind(uiCondition: UiScreenCondition) {
+
         bitmapLoadingJob?.cancel()
-        bitmapLoadingJob = viewBinding.cardImageCondition.bind(condition, bitmapProvider) {
+        bitmapLoadingJob = viewBinding.cardImageCondition.bind(uiCondition, bitmapProvider) {
             itemClickedListener(bindingAdapterPosition)
         }
     }
