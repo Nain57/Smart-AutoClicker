@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -46,6 +48,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setIconBitmap
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setImageDrawable
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
@@ -221,7 +224,12 @@ class ClickDialog(
             setTitle(state.selectorTitle)
             setDescription(state.selectorDescription)
             setEnabled(state.isSelectorEnabled)
-            setIconBitmap(state.selectorBitmap)
+
+            when (val visualization = state.selectorVisualization) {
+                is Drawable -> setImageDrawable(visualization)
+                is Bitmap -> setIconBitmap(visualization)
+                else -> setImageDrawable(null)
+            }
 
             when (state.positionType) {
                 Click.PositionType.USER_SELECTED ->

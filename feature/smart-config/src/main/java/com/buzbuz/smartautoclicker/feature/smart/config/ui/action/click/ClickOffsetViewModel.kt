@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
-import android.graphics.Bitmap
+import android.content.Context
 import android.graphics.Point
 import androidx.lifecycle.ViewModel
 
@@ -29,7 +29,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
+import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +43,7 @@ import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
 class ClickOffsetViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val displayConfigManager: DisplayConfigManager,
@@ -79,10 +82,10 @@ class ClickOffsetViewModel @Inject constructor(
         else ClickOffsetState(user.offset, user.updateFrom)
     }
 
-    val conditionImage: Flow<Bitmap?> = conditionToShow
+    val conditionImage: Flow<Any?> = conditionToShow
         .map { screenCondition -> 
             when (screenCondition) {
-                is ScreenCondition.Color -> TODO()
+                is ScreenCondition.Color -> context.createColorIndicatorDrawable(screenCondition.color)
                 is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(screenCondition)
                 null -> null
             }

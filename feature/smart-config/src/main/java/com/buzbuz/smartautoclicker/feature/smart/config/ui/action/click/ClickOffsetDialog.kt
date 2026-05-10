@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.InputType
 import android.view.LayoutInflater
@@ -128,14 +129,17 @@ class ClickOffsetDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         }
     }
 
-    private fun updateConditionImage(bitmap: Bitmap?) {
+    private fun updateConditionImage(image: Any?) {
         viewBinding.viewClickOffset.apply {
-            if (bitmap != null) setImageBitmap(bitmap)
-            else setImageResource(R.drawable.ic_image_condition_big)
+            when (image) {
+                is Bitmap -> setImageBitmap(image)
+                is Drawable -> setImageDrawable(image)
+                else -> setImageResource(R.drawable.ic_image_condition_big)
+            }
         }
     }
 }
 
 private fun Editable.getOffsetValue(): Int? =
     try { toString().toInt() }
-    catch (nfEx: NumberFormatException) { null }
+    catch (_: NumberFormatException) { null }

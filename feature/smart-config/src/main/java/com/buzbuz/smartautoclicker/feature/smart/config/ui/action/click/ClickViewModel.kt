@@ -61,6 +61,7 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import androidx.core.content.edit
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 
 @OptIn(FlowPreview::class)
 class ClickViewModel @Inject constructor(
@@ -255,9 +256,10 @@ class ClickViewModel @Inject constructor(
     private suspend fun Context.getOnConditionWithAndPositionState(event: ScreenEvent, click: Click): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
 
-        //TODO update for color condition
-        val conditionBitmap = (conditionToClick as? ScreenCondition.Image)?.let { condition ->
-            bitmapRepository.getConditionBitmap(condition)
+        val conditionVisualization = when (conditionToClick) {
+            is ScreenCondition.Color -> createColorIndicatorDrawable(conditionToClick.color)
+            is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(conditionToClick)
+            null -> null
         }
 
         return ClickPositionUiState(
@@ -266,9 +268,9 @@ class ClickViewModel @Inject constructor(
             isSelectorEnabled = availableConditions.value.isNotEmpty(),
             selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
             selectorDescription =
-                if (conditionToClick == null || conditionBitmap == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
+                if (conditionToClick == null || conditionVisualization == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
                 else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
-            selectorBitmap = conditionBitmap,
+            selectorVisualization = conditionVisualization,
             isClickOffsetVisible = true,
             isClickOffsetEnabled = true,
             clickOffsetDescription = getClickOffsetString(click),
@@ -294,5 +296,5 @@ data class ClickPositionUiState(
     val isSelectorEnabled: Boolean,
     val selectorTitle: String,
     val selectorDescription: String?,
-    val selectorBitmap: Bitmap? = null,
+    val selectorVisualization: Any? = null,
 )

@@ -68,7 +68,8 @@
                     <include layout="@layout/include_field_multi_state"
                         android:id="@+id/field_click_type"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"
@@ -78,7 +79,8 @@
                     <include layout="@layout/include_field_selector"
                         android:id="@+id/field_click_selection"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_small"/>
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"
@@ -89,7 +91,8 @@
                     <include layout="@layout/include_field_selector"
                         android:id="@+id/field_click_offset"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_small"/>
 
                 </LinearLayout>
 

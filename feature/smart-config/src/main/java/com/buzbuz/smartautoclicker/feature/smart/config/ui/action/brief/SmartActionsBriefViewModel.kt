@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.toPoint
 import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
@@ -41,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
+import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
@@ -301,7 +303,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         is Click -> ClickDescription(
             position = position?.toPointF(),
             pressDurationMs = pressDuration ?: 1,
-            imageConditionBitmap = findClickOnConditionBitmap(),
+            imageConditionBitmap = findClickOnConditionBitmap(context),
         )
 
         is Swipe -> SwipeDescription(
@@ -319,12 +321,17 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
     }
 
-    private suspend fun Click.findClickOnConditionBitmap(): Bitmap? {
+    private suspend fun Click.findClickOnConditionBitmap(context: Context): Bitmap? {
         if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return null
 
-        return editionRepository.editionState.getEditedEventConditions<ScreenCondition.Image>()
+        return editionRepository.editionState.getEditedEventConditions<ScreenCondition>()
             ?.find { it.id == clickOnConditionId }
-            ?.let { condition -> bitmapRepository.getConditionBitmap(condition) }
+            ?.let { condition ->
+                when (condition) {
+                    is ScreenCondition.Color -> context.createColorIndicatorDrawable(condition.color)?.toBitmap()
+                    is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(condition)
+                }
+            }
     }
 }
 
