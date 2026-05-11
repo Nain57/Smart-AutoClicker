@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.base.extensions.setRightCompoundDrawable
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemConditionResultImageBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.EventOccurrenceItem
@@ -32,7 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.deta
 import kotlinx.coroutines.Job
 
 
-class EventOccurrenceConditionImageViewHolder private constructor(
+class EventOccurrenceConditionScreenViewHolder private constructor(
     private val viewBinding: ItemConditionResultImageBinding,
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
@@ -47,7 +48,7 @@ class EventOccurrenceConditionImageViewHolder private constructor(
         )
     )
 
-    fun bind(item: EventOccurrenceItem.Image) {
+    fun bind(item: EventOccurrenceItem.Screen) {
         viewBinding.apply {
             conditionNameText.text = item.conditionName
             conditionDurationText.text = item.durationText
@@ -65,14 +66,22 @@ class EventOccurrenceConditionImageViewHolder private constructor(
                 if (item.isFulfilledValue) R.drawable.ic_debug_confirm else R.drawable.ic_debug_cancel
             )
 
-            bitmapLoadingJob?.cancel()
-            bitmapLoadingJob = bitmapProvider(item.condition) { bitmap ->
-                if (bitmap != null) conditionImage.setImageBitmap(bitmap)
-                else conditionImage.setImageDrawable(
-                    ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
-                        setTint(Color.RED)
+            when (item.condition) {
+                is ScreenCondition.Color -> {
+                    conditionImage.setColorIndicatorDrawable(item.condition.color)
+                }
+
+                is ScreenCondition.Image -> {
+                    bitmapLoadingJob?.cancel()
+                    bitmapLoadingJob = bitmapProvider(item.condition) { bitmap ->
+                        if (bitmap != null) conditionImage.setImageBitmap(bitmap)
+                        else conditionImage.setImageDrawable(
+                            ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
+                                setTint(Color.RED)
+                            }
+                        )
                     }
-                )
+                }
             }
         }
     }

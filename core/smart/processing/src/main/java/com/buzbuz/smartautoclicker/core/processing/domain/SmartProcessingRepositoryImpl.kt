@@ -156,7 +156,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
     override suspend fun startDetection(context: Context, liveDebugging: Boolean, generateReport: Boolean, autoStopDuration: Duration?) {
         val id = scenarioId.value?.databaseId ?: return
         val scenario = scenarioRepository.getScenario(id) ?: return
-        val events = scenarioRepository.getImageEvents(id)
+        val events = scenarioRepository.getScreenEvents(id)
         val triggerEvents = scenarioRepository.getTriggerEvents(id)
 
         detectorEngine.startDetection(

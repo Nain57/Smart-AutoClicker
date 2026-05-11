@@ -100,7 +100,7 @@ internal class ScenarioDataSource @Inject constructor(
         eventDaoFlow.flatMapLatest { it.getAllTriggerEventsFlow() }
 
     val allImageEvents: Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getAllImageEventsFlow() }
+        eventDaoFlow.flatMapLatest { it.getAllScreenEventsFlow() }
 
 
     fun useTutorialDatabase() {
@@ -124,11 +124,11 @@ internal class ScenarioDataSource @Inject constructor(
     fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?> =
         scenarioDaoFlow.flatMapLatest { it.getScenarioFlow(scenarioId) }
 
-    suspend fun getImageEvents(scenarioId: Long): List<CompleteEventEntity> =
-        currentDatabase.value.eventDao().getCompleteImageEvents(scenarioId)
+    suspend fun getScreenEvents(scenarioId: Long): List<CompleteEventEntity> =
+        currentDatabase.value.eventDao().getCompleteScreenEvents(scenarioId)
 
-    fun getImageEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getCompleteImageEventsFlow(scenarioId) }
+    fun getScreenEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
+        eventDaoFlow.flatMapLatest { it.getCompleteScreenEventsFlow(scenarioId) }
 
     suspend fun getTriggerEvents(scenarioId: Long): List<CompleteEventEntity> =
         currentDatabase.value.eventDao().getCompleteTriggerEvents(scenarioId)

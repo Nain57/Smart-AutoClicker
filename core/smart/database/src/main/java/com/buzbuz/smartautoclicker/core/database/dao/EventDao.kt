@@ -59,7 +59,7 @@ abstract class EventDao {
      */
     @Transaction
     @Query("SELECT * FROM $EVENT_TABLE WHERE type='IMAGE_EVENT' ORDER BY name")
-    abstract fun getAllImageEventsFlow(): Flow<List<CompleteEventEntity>>
+    abstract fun getAllScreenEventsFlow(): Flow<List<CompleteEventEntity>>
 
     /**
      * Get the list of complete events for a scenario ordered by priority.
@@ -69,7 +69,7 @@ abstract class EventDao {
      */
     @Transaction
     @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
-    abstract suspend fun getCompleteImageEvents(scenarioId: Long): List<CompleteEventEntity>
+    abstract suspend fun getCompleteScreenEvents(scenarioId: Long): List<CompleteEventEntity>
 
     /**
      * Get the list of complete events for a scenario ordered by priority.
@@ -79,7 +79,7 @@ abstract class EventDao {
      */
     @Transaction
     @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='IMAGE_EVENT' ORDER BY priority")
-    abstract fun getCompleteImageEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
+    abstract fun getCompleteScreenEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
 
     /**
      * Get the list of trigger events from all scenarios.

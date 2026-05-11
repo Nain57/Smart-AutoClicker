@@ -51,13 +51,10 @@ class GetDebugOccurrenceAllTriggerEventStateUseCase @Inject constructor(
             // Initialize all events state
             val eventsStateMap: MutableMap<Long, DebugEventOccurrenceEventState.Trigger> = mutableMapOf()
             events.forEach { event ->
-                eventsStateMap.put(
-                    key = event.id.databaseId,
-                    value = DebugEventOccurrenceEventState.Trigger(
-                        eventId = event.id.databaseId,
-                        eventName = event.name,
-                        currentValue = event.enabledOnStart,
-                    )
+                eventsStateMap[event.id.databaseId] = DebugEventOccurrenceEventState.Trigger(
+                    eventId = event.id.databaseId,
+                    eventName = event.name,
+                    currentValue = event.enabledOnStart,
                 )
             }
 

@@ -117,7 +117,6 @@ class TryImageConditionOverlayMenu(
     }
 
     private fun updateDetectionResults(results: ScreenConditionResultUiState?) {
-        println("TOTO: $results")
         (screenOverlayView as? DebugOverlayView)?.setResults(results?.let { listOf(it) } ?: emptyList())
         viewBinding.valueResult.text = results?.resultText
     }

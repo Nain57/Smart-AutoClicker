@@ -113,7 +113,7 @@ class DebugConditionContentViewModel @Inject constructor(
     fun setOccurrence(scenarioId: Long, occurrence: DebugReportEventOccurrence) {
         viewModelScope.launch {
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getImageEvents(scenarioId)
+                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getScreenEvents(scenarioId)
                 is DebugReportEventOccurrence.TriggerEvent -> smartRepository.getTriggerEvents(scenarioId)
             }.findWithId(occurrence.eventId) ?: return@launch
 
@@ -145,9 +145,9 @@ class DebugConditionContentViewModel @Inject constructor(
             .sortedBy { condition -> condition.priority }
             .mapNotNull { condition ->
                 this@toImageItems.find { result -> condition.id.databaseId == result.conditionId }?.let { result ->
-                    EventOccurrenceItem.Image(
+                    EventOccurrenceItem.Screen(
                         id = result.conditionId,
-                        condition = condition as? ScreenCondition.Image ?: throw UnsupportedOperationException("Color not yet implemented"),
+                        condition = condition,
                         conditionName = condition.name,
                         durationText = result.detectionDurationMs.formatDebugDuration(),
                         shouldDetectedValue = condition.shouldBeDetected,

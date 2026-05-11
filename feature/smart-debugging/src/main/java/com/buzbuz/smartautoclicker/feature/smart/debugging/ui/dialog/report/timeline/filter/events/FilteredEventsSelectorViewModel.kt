@@ -57,7 +57,7 @@ class FilteredEventsSelectorViewModel @Inject constructor(
         .flatMapLatest { (scenario, filter) ->
             scenario?.id?.databaseId?.let { dbId ->
                 when (filter) {
-                    is DebugReportTimelineFilter.Events.Image -> smartRepository.getImageEventsFlow(dbId)
+                    is DebugReportTimelineFilter.Events.Image -> smartRepository.getScreenEventsFlow(dbId)
                     is DebugReportTimelineFilter.Events.Trigger -> smartRepository.getTriggerEventsFlow(dbId)
                     null -> flowOf(null)
                 }

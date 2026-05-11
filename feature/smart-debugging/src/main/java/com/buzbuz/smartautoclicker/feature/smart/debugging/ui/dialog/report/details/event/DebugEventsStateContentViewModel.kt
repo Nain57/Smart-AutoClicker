@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugEventOccurrenceEventState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
-import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugOccurrenceAllImageEventStateUseCase
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugOccurrenceAllScreenEventStateUseCase
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugOccurrenceAllTriggerEventStateUseCase
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.findWithId
@@ -45,7 +45,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class DebugEventsStateContentViewModel @Inject constructor(
     private val smartRepository: IRepository,
-    private val getAllImgEvtStateUseCase: GetDebugOccurrenceAllImageEventStateUseCase,
+    private val getAllImgEvtStateUseCase: GetDebugOccurrenceAllScreenEventStateUseCase,
     private val getAllTrigEvtStateUseCase: GetDebugOccurrenceAllTriggerEventStateUseCase,
 ) : ViewModel() {
 
@@ -86,7 +86,7 @@ class DebugEventsStateContentViewModel @Inject constructor(
     fun setOccurrence(scenarioId: Long, occurrence: DebugReportEventOccurrence) {
         viewModelScope.launch {
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getImageEvents(scenarioId)
+                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getScreenEvents(scenarioId)
                 is DebugReportEventOccurrence.TriggerEvent -> smartRepository.getTriggerEvents(scenarioId)
             }.findWithId(occurrence.eventId) ?: return@launch
 

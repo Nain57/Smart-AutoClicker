@@ -44,10 +44,8 @@ class GetDebugOccurrenceAllCounterStateUseCase @Inject constructor(debuggingRepo
             // Initialize all counters state
             val countersStateMap = mutableMapOf<String, DebugEventOccurrenceCounterState>()
             overview.counterNames.forEach { counterName ->
-                countersStateMap.put(
-                    counterName,
+                countersStateMap[counterName] =
                     DebugEventOccurrenceCounterState(counterName = counterName, currentValue = 0)
-                )
             }
 
             // Update counters state up to requested event occurrence

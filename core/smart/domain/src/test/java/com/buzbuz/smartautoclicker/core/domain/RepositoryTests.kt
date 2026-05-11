@@ -122,7 +122,7 @@ class RepositoryTests {
 
     @Test
     fun getCompleteImageEventList() = runTest {
-        mockWhen(mockEventDao.getCompleteImageEventsFlow(ScenarioTestsData.SCENARIO_ID)).thenReturn(
+        mockWhen(mockEventDao.getCompleteScreenEventsFlow(ScenarioTestsData.SCENARIO_ID)).thenReturn(
             flow {
                 emit(listOf(
                     CompleteEventEntity(
@@ -143,7 +143,7 @@ class RepositoryTests {
                     conditions = mutableListOf(ConditionTestsData.getNewImageCondition(eventId = EventTestsData.EVENT_ID))
                 ),
             ),
-            repository.getImageEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
+            repository.getScreenEventsFlow(ScenarioTestsData.SCENARIO_ID).first(),
         )
     }
 

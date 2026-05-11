@@ -92,7 +92,7 @@ class EditionRepository @Inject constructor(
 
         scenarioEditor.startEdition(
             scenario = scenario,
-            screenEvents = repository.getImageEvents(scenarioId),
+            screenEvents = repository.getScreenEvents(scenarioId),
             triggerEvents = repository.getTriggerEvents(scenarioId),
         )
         return true

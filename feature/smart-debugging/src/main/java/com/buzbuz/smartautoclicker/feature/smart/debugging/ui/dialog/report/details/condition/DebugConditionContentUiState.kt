@@ -34,11 +34,11 @@ sealed interface EventOccurrenceItem {
         val conditionOperatorValueText: String,
     ) : EventOccurrenceItem
 
-    data class Image(
+    data class Screen(
         val id: Long,
         val conditionName: String,
         val durationText: String,
-        val condition: ScreenCondition.Image,
+        val condition: ScreenCondition,
         val confidenceText: String,
         val confidenceValid: Boolean,
         val shouldDetectedValue: Boolean,

@@ -23,7 +23,7 @@ package com.buzbuz.smartautoclicker.core.database.entity
 
 /** Type of [EventEntity]. */
 enum class EventType {
-    /** The conditions of the event are images. */
+    /** The conditions of the event are screen conditions. */
     IMAGE_EVENT,
     /** The conditions of the event are triggers. */
     TRIGGER_EVENT,

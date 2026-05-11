@@ -33,7 +33,7 @@ import javax.inject.Inject
  * The output will be ordered by priority.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class GetDebugOccurrenceAllImageEventStateUseCase @Inject constructor(
+class GetDebugOccurrenceAllScreenEventStateUseCase @Inject constructor(
     private val smartRepository: IRepository,
     debuggingRepository: DebuggingRepository,
 ) {
@@ -41,7 +41,7 @@ class GetDebugOccurrenceAllImageEventStateUseCase @Inject constructor(
     private val events: Flow<List<ScreenEvent>?> = debuggingRepository.getLastReportOverview()
         .map { overview ->
             overview ?: return@map null
-            smartRepository.getImageEvents(overview.scenarioId)
+            smartRepository.getScreenEvents(overview.scenarioId)
         }
 
     private val eventOccurrences: Flow<List<DebugReportEventOccurrence>?> =
@@ -54,14 +54,11 @@ class GetDebugOccurrenceAllImageEventStateUseCase @Inject constructor(
             // Initialize all events state
             val eventsStateMap: MutableMap<Long, DebugEventOccurrenceEventState.Screen> = mutableMapOf()
             events.forEach { event ->
-                eventsStateMap.put(
-                    key = event.id.databaseId,
-                    value = DebugEventOccurrenceEventState.Screen(
-                        eventId = event.id.databaseId,
-                        eventName = event.name,
-                        eventPriority = event.priority,
-                        currentValue = event.enabledOnStart,
-                    )
+                eventsStateMap[event.id.databaseId] = DebugEventOccurrenceEventState.Screen(
+                    eventId = event.id.databaseId,
+                    eventName = event.name,
+                    eventPriority = event.priority,
+                    currentValue = event.enabledOnStart,
                 )
             }
 

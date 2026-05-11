@@ -35,14 +35,14 @@ class EventOccurrenceItemAdapter(
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
             is EventOccurrenceItem.Header -> R.layout.item_condition_result_header
-            is EventOccurrenceItem.Image -> R.layout.item_condition_result_image
+            is EventOccurrenceItem.Screen -> R.layout.item_condition_result_image
             is EventOccurrenceItem.Trigger -> R.layout.item_condition_result_trigger
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_condition_result_header -> EventOccurrenceConditionHeaderViewHolder(parent)
-            R.layout.item_condition_result_image -> EventOccurrenceConditionImageViewHolder(parent, bitmapProvider)
+            R.layout.item_condition_result_image -> EventOccurrenceConditionScreenViewHolder(parent, bitmapProvider)
             R.layout.item_condition_result_trigger -> EventOccurrenceConditionTriggerViewHolder(parent)
             else -> throw IllegalArgumentException("Unknown view type $viewType")
         }
@@ -50,14 +50,14 @@ class EventOccurrenceItemAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is EventOccurrenceConditionHeaderViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Header)
-            is EventOccurrenceConditionImageViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Image)
+            is EventOccurrenceConditionScreenViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Screen)
             is EventOccurrenceConditionTriggerViewHolder -> holder.bind(getItem(position) as EventOccurrenceItem.Trigger)
         }
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         when (holder) {
-            is EventOccurrenceConditionImageViewHolder -> holder.unbind()
+            is EventOccurrenceConditionScreenViewHolder -> holder.unbind()
             is EventOccurrenceConditionHeaderViewHolder,
             is EventOccurrenceConditionTriggerViewHolder -> Unit
         }
@@ -69,7 +69,7 @@ private object EventOccurrenceDiffUtilCallback : DiffUtil.ItemCallback<EventOccu
     override fun areItemsTheSame(oldItem: EventOccurrenceItem, newItem: EventOccurrenceItem): Boolean =
         when {
             oldItem is EventOccurrenceItem.Header && newItem is EventOccurrenceItem.Header -> true
-            oldItem is EventOccurrenceItem.Image && newItem is EventOccurrenceItem.Image -> oldItem.id == newItem.id
+            oldItem is EventOccurrenceItem.Screen && newItem is EventOccurrenceItem.Screen -> oldItem.id == newItem.id
             oldItem is EventOccurrenceItem.Trigger && newItem is EventOccurrenceItem.Trigger -> oldItem.id == newItem.id
             else -> false
         }

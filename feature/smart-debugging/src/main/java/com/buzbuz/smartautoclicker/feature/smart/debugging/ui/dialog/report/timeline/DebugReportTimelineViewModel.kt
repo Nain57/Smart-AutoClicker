@@ -74,7 +74,7 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     /** The image events of the scenario referenced by the last debug report. Null if not found or no reports. */
     private val screenEvents: Flow<List<ScreenEvent>?> = scenario.flatMapLatest { scenario ->
-        scenario?.id?.databaseId?.let { dbId -> smartRepository.getImageEventsFlow(dbId) } ?: flowOf(null)
+        scenario?.id?.databaseId?.let { dbId -> smartRepository.getScreenEventsFlow(dbId) } ?: flowOf(null)
     }
 
     /** The trigger events of the scenario referenced by the last debug report. Null if not found or no reports. */
@@ -91,8 +91,8 @@ class DebugReportTimelineViewModel @Inject constructor(
 
 
     val uiState: StateFlow<DebugReportTimelineUiState> =
-        combine(eventsOccurrences, screenEvents, triggerEvents, filters) { occurrences, imgEvts, trigEvts, userFilters ->
-            occurrences.toUiState(context, imgEvts, trigEvts, userFilters)
+        combine(eventsOccurrences, screenEvents, triggerEvents, filters) { occurrences, screenEvts, trigEvts, userFilters ->
+            occurrences.toUiState(context, screenEvts, trigEvts, userFilters)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -107,13 +107,13 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     private fun List<DebugReportEventOccurrence>?.toUiState(
         context: Context,
-        imgEvents: List<ScreenEvent>?,
+        screenEvents: List<ScreenEvent>?,
         trigEvents: List<TriggerEvent>?,
         filters: List<DebugReportTimelineFilter>,
     ): DebugReportTimelineUiState {
-        if (this == null || imgEvents == null || trigEvents == null) return DebugReportTimelineUiState.NotAvailable
+        if (this == null || screenEvents == null || trigEvents == null) return DebugReportTimelineUiState.NotAvailable
 
-        val items = toUiStateItems(context, imgEvents, trigEvents, filters)
+        val items = toUiStateItems(context, screenEvents, trigEvents, filters)
 
         return if (isEmpty()) DebugReportTimelineUiState.Empty
         else DebugReportTimelineUiState.Available(
@@ -124,7 +124,7 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     private fun List<DebugReportEventOccurrence>.toUiStateItems(
         context: Context,
-        imgEvents: List<ScreenEvent>,
+        screenEvents: List<ScreenEvent>,
         trigEvents: List<TriggerEvent>,
         filters: List<DebugReportTimelineFilter>,
     ): List<DebugReportTimelineEventOccurrenceItem> =
@@ -133,7 +133,7 @@ class DebugReportTimelineViewModel @Inject constructor(
                 return@mapIndexedNotNull null
 
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ScreenEvent -> imgEvents.findWithId(occurrence.eventId)
+                is DebugReportEventOccurrence.ScreenEvent -> screenEvents.findWithId(occurrence.eventId)
                 is DebugReportEventOccurrence.TriggerEvent -> trigEvents.findWithId(occurrence.eventId)
             } ?: return@mapIndexedNotNull null
 
