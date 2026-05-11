@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture
 
+import android.content.res.Configuration
 import android.graphics.PointF
 import android.view.LayoutInflater
 import android.view.View
@@ -29,9 +30,9 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.views.pixelselector.PixelSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureMenuBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureZoomViewBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCardZoomedViewBinding
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -40,7 +41,7 @@ import kotlin.getValue
 class ColorCaptureMenu (
     private val defaultPosition: PointF? = null,
     private val onColorSelected: (position: PointF, colorInt: Int) -> Unit,
-) : OverlayMenu(theme = R.style.AppTheme) {
+) : OverlayMenu(theme = R.style.AppTheme, recreateOverlayViewOnRotation = true) {
 
     /** The view model for this menu. */
     private val viewModel: ColorCaptureViewModel by viewModels(
@@ -55,25 +56,12 @@ class ColorCaptureMenu (
     /** The view displaying the screenshot and the selector for the capture. */
     private lateinit var selectorView: PixelSelectorView
 
+    /** Orientation of the device. */
+    private var orientation: Int = Configuration.ORIENTATION_PORTRAIT
+
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
-        selectorView = PixelSelectorView(
-            context = context,
-            displayConfigManager = displayConfigManager,
-            onSelectedPositionChanged = viewModel::updateSelectedPosition,
-        )
-
         viewBinding = OverlayColorCaptureMenuBinding.inflate(layoutInflater)
-        overlayView = OverlayColorCaptureZoomViewBinding.inflate(layoutInflater).apply {
-            root.addView(selectorView)
-
-            layoutZoomTop.viewZoom.onPixelSelected = { x, y ->
-                viewModel.updateSelectedPosition(PointF(x, y))
-            }
-            layoutZoomBottom.viewZoom.onPixelSelected = { x, y ->
-                viewModel.updateSelectedPosition(PointF(x, y))
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -84,7 +72,27 @@ class ColorCaptureMenu (
         return viewBinding.root
     }
 
-    override fun onCreateOverlayView(): View = overlayView.root
+    override fun onCreateOverlayView(): View {
+        selectorView = PixelSelectorView(
+            context = context,
+            displayConfigManager = displayConfigManager,
+            onSelectedPositionChanged = viewModel::updateSelectedPosition,
+        )
+
+        orientation = displayConfigManager.displayConfig.orientation
+        overlayView = OverlayColorCaptureZoomViewBinding.inflate(LayoutInflater.from(context), orientation).apply {
+            root.addView(selectorView)
+
+            zoomCardPrimary.viewZoom.onPixelSelected = { x, y ->
+                viewModel.updateSelectedPosition(PointF(x, y))
+            }
+            zoomCardSecondary.viewZoom.onPixelSelected = { x, y ->
+                viewModel.updateSelectedPosition(PointF(x, y))
+            }
+        }
+
+        return overlayView.root
+    }
 
     override fun onMenuItemClicked(viewId: Int) {
         val captureStep = viewModel.uiState.value.captureStep
@@ -133,26 +141,37 @@ class ColorCaptureMenu (
         selectorView.updateCapture(uiState.screenshot)
         uiState.selectedPosition?.let { selectorView.updatePixelPosition(it.x, it.y) }
 
-        if (uiState.selectedPosition == null) {
-            overlayView.layoutZoomTop.root.visibility = View.GONE
-            overlayView.layoutZoomBottom.root.visibility = View.GONE
+        val visibleZoomLayout = getVisibleZoomView(uiState.selectedPosition)
+        if (visibleZoomLayout == null) {
+            overlayView.zoomCardPrimary.root.visibility = View.GONE
+            overlayView.zoomCardSecondary.root.visibility = View.GONE
             return
         }
 
-        val visibleZoomLayout =
-            if (uiState.selectedPosition.y < overlayView.root.height / 2) overlayView.layoutZoomBottom
-            else overlayView.layoutZoomTop
-
-        overlayView.layoutZoomTop.root.visibility =
-            if (visibleZoomLayout == overlayView.layoutZoomTop) View.VISIBLE
-            else View.GONE
-        overlayView.layoutZoomBottom.root.visibility =
-            if (visibleZoomLayout == overlayView.layoutZoomBottom) View.VISIBLE
-            else View.GONE
+        overlayView.zoomCardPrimary.root.visibility =
+            if (visibleZoomLayout == overlayView.zoomCardPrimary) View.VISIBLE else View.GONE
+        overlayView.zoomCardSecondary.root.visibility =
+            if (visibleZoomLayout == overlayView.zoomCardSecondary) View.VISIBLE else View.GONE
 
         visibleZoomLayout.viewZoom.setImageBitmap(uiState.screenshot)
-        visibleZoomLayout.viewZoom.setZoomPosition(uiState.selectedPosition)
+        visibleZoomLayout.viewZoom.setZoomPosition(uiState.selectedPosition!!)
         visibleZoomLayout.textColorValue.text = uiState.selectedColorDisplayText
         visibleZoomLayout.iconColorValue.updateColorIndicatorDrawableColor(uiState.selectedColor ?: 0)
+    }
+
+    private fun getVisibleZoomView(selectedPosition: PointF?): IncludeCardZoomedViewBinding? {
+        if (selectedPosition == null) return null
+
+        return when (orientation) {
+            Configuration.ORIENTATION_LANDSCAPE ->
+                if (selectedPosition.x < overlayView.root.width / 2) overlayView.zoomCardSecondary
+                else overlayView.zoomCardPrimary
+
+            Configuration.ORIENTATION_PORTRAIT ->
+                if (selectedPosition.y < overlayView.root.height / 2) overlayView.zoomCardSecondary
+                else overlayView.zoomCardPrimary
+
+            else -> null
+        }
     }
 }
