@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.bri
 
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Color
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +37,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenCo
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionBriefPortBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.color.MaterialColors
 
 
 class ScreenConditionBriefViewHolder(
@@ -68,8 +72,19 @@ class ScreenConditionBriefViewHolder(
                 is ScreenCondition.Color ->
                     icon.setColorIndicatorDrawable(condition.color)
 
-                is ScreenCondition.Image ->
+                is ScreenCondition.Image -> {
+                    icon.setIconTintColor(
+                        MaterialColors.getColor(
+                            ContextThemeWrapper(
+                                root.context,
+                                R.style.AppTheme,
+                            ),
+                            com.google.android.material.R.attr.colorOnPrimaryContainer,
+                            Color.WHITE,
+                        )
+                    )
                     icon.setImageResource(details.detectionTypeIconRes)
+                }
             }
         }
     }
