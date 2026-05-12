@@ -20,6 +20,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
@@ -105,7 +106,7 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
 
             window?.apply {
                 setType(OverlayManager.OVERLAY_WINDOW_TYPE)
-                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                applySoftInputMode(this)
                 decorView.setOnTouchListener(hideSoftInputTouchListener)
             }
 
@@ -118,6 +119,13 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
         }
 
         onDialogCreated(dialog!!)
+    }
+
+    protected open fun applySoftInputMode(window: Window) {
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN,
+        )
     }
 
     @CallSuper
