@@ -36,6 +36,7 @@ airbnbLottie = "6.7.1"
 googleMaterial = "1.13.0"
 kotlinSerializationJson = "1.11.0"
 openCv = "4.12.0"
+ncnn = "20260113"
 googleDaggerHilt = "2.59.2"
 googleProtobufRuntime = "4.34.1"
 

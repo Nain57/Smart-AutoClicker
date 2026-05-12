@@ -36,6 +36,15 @@ sourceDownload {
             unzipPath = File("src/release/opencv")
             requiredForTask = "configureCMakeRelease"
         }
+
+        register("ncnn") {
+            projectAccount = "Tencent"
+            projectName = "ncnn"
+            projectVersion = libs.versions.ncnn.get()
+
+            unzipPath = File("src/release/ncnn")
+            requiredForTask = "configureCMakeRelease"
+        }
     }
 }
 
@@ -62,6 +71,9 @@ android {
         }
 
         release {
+            ndk {
+                debugSymbolLevel = "NONE"
+            }
             externalNativeBuild {
                 cmake {
                     arguments.addAll(
@@ -108,7 +120,20 @@ android {
                             "-DBUILD_JAVA=OFF",
                             "-DBUILD_ANDROID_EXAMPLES=OFF",
                             "-DBUILD_ANDROID_PROJECTS=OFF",
-                            "-DBUILD_SHARED_LIBS=ON"
+                            "-DBUILD_SHARED_LIBS=ON",
+                            "-DNCNN_SHARED_LIB=ON",
+                            "-DNCNN_BUILD_TOOLS=OFF",
+                            "-DNCNN_BUILD_EXAMPLES=OFF",
+                            "-DNCNN_BUILD_BENCHMARK=OFF",
+                            "-DNCNN_BUILD_TESTS=OFF",
+                            "-DNCNN_VULKAN=OFF",
+                            "-DNCNN_OPENMP=OFF",
+                            "-DNCNN_RUNTIME_CPU=ON",
+                            "-DNCNN_DISABLE_RTTI=OFF",
+                            "-DNCNN_DISABLE_EXCEPTION=OFF",
+                            "-DNCNN_BF16=OFF",
+                            "-DNCNN_FP16=OFF",
+                            "-DNCNN_INT8=OFF",
                         )
                     )
                 }
