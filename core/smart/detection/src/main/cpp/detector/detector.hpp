@@ -18,12 +18,14 @@
 #ifndef KLICK_R_DETECTOR_HPP
 #define KLICK_R_DETECTOR_HPP
 
+#include <android/asset_manager_jni.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "matching/color/color_matcher.hpp"
 #include "matching/color/color_matching_result.hpp"
 #include "matching/template/template_matcher.hpp"
 #include "matching/template/template_matching_result.hpp"
+#include "matching/text/text_matcher.hpp"
 #include "images/condition_image.hpp"
 #include "images/screen_image.hpp"
 
@@ -35,16 +37,15 @@ namespace smartautoclicker {
         std::unique_ptr<ScreenImage> screenImage = std::make_unique<ScreenImage>();
         std::unique_ptr<ConditionImage> conditionImage = std::make_unique<ConditionImage>();
 
-        std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
         std::unique_ptr<ColorMatcher> colorMatcher = std::make_unique<ColorMatcher>();
-
-        [[nodiscard]] bool isRoiValidForTemplateMatching(const cv::Rect& roi) const;
-        [[nodiscard]] bool isRoiValidForColorMatching(const cv::Rect& roi) const;
+        std::unique_ptr<TemplateMatcher> templateMatcher = std::make_unique<TemplateMatcher>();
+        std::unique_ptr<TextMatcher> textMatcher = std::make_unique<TextMatcher>();
 
     public:
 
         Detector() = default;
 
+        bool init(AAssetManager* assetManager);
         void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
         TemplateMatchingResult* detectImage(

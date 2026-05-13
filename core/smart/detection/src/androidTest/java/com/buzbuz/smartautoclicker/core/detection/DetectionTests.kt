@@ -52,7 +52,7 @@ class DetectionTests {
         testedDetector = NativeDetector.newInstance() ?:
             throw IllegalStateException("Can't instantiate detector for tests")
 
-        testedDetector.init()
+        testedDetector.init(context)
     }
 
     @After

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.detection
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 import androidx.annotation.ColorInt
@@ -27,7 +28,7 @@ import androidx.annotation.ColorInt
 interface ImageDetector : AutoCloseable {
 
     /** Initialize the detector. Must be called on the same thread as the detection. */
-    fun init()
+    fun init(context: Context)
 
     /**
      * Set the bitmap for the screen.

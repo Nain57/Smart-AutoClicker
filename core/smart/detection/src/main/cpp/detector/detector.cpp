@@ -27,8 +27,14 @@ using namespace cv;
 using namespace smartautoclicker;
 
 
+
+bool Detector::init(AAssetManager* assetManager) {
+    return textMatcher->init(assetManager);
+}
+
 void Detector::setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag) {
     screenImage->processNewData(std::move(screenColorMat), metricsTag);
+    textMatcher->matchText(*screenImage, "searching", cv::Rect(0, 0, 400, 750), 80);
 }
 
 TemplateMatchingResult* Detector::detectImage(

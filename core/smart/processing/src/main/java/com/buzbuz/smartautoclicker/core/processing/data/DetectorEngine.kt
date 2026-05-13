@@ -208,7 +208,7 @@ class DetectorEngine @Inject constructor(
 
             // Setup native detector
             imageDetector = detector
-            detector.init()
+            detector.init(context)
 
             // Setup listeners if needed
             if (liveDebugging || generateReport) {

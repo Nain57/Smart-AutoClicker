@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
 #include <jni.h>
@@ -33,6 +35,21 @@ extern "C" {
             jobject self
     ) {
         return reinterpret_cast<jlong>(new Detector());
+    }
+
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_init(
+            JNIEnv* env,
+            jobject self,
+            jobject assetManager
+    ) {
+        AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+        if (!mgr) return JNI_FALSE;
+
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return JNI_FALSE;
+
+        if (detector->init(mgr)) return JNI_TRUE;
+        else return JNI_FALSE;
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setScreenImage(

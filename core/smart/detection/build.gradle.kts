@@ -51,6 +51,10 @@ sourceDownload {
 android {
     namespace = "com.buzbuz.smartautoclicker.core.detection"
 
+    androidResources {
+        noCompress += listOf("bin", "param")
+    }
+
     defaultConfig {
         externalNativeBuild {
             cmake {
@@ -116,7 +120,7 @@ android {
                             "-DWITH_QUIRC=OFF",
                             "-DWITH_V4L=OFF",
                             "-DWITH_WEBP=OFF",
-                            "-DBUILD_LIST=core,imgproc",
+                            "-DBUILD_LIST=core,imgproc,imgcodecs",
                             "-DBUILD_JAVA=OFF",
                             "-DBUILD_ANDROID_EXAMPLES=OFF",
                             "-DBUILD_ANDROID_PROJECTS=OFF",

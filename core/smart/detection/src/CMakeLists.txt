@@ -52,6 +52,11 @@ add_library( # Sets the name of the library.
         main/cpp/detector/matching/template/template_matcher.hpp
         main/cpp/detector/matching/template/template_matching_result.cpp
         main/cpp/detector/matching/template/template_matching_result.hpp
+        main/cpp/detector/matching/text/detection/text_detector.cpp
+        main/cpp/detector/matching/text/detection/text_detector.hpp
+        main/cpp/detector/matching/text/detection/text_detector_result.hpp
+        main/cpp/detector/matching/text/text_matcher.cpp
+        main/cpp/detector/matching/text/text_matcher.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp
@@ -73,6 +78,13 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log )
 
+find_library( # Sets the name of the path variable.
+        android-lib
+
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        android )
+
 # In debug, we want to use the prebuilts of OpenCV in order to speed up the dev process/CI
 IF(CMAKE_BUILD_TYPE MATCHES Debug)
 
@@ -90,6 +102,13 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             opencv_imgproc
             PROPERTIES IMPORTED_LOCATION
             "${PREBUILT_OPENCV_PATH}/libs/${ANDROID_ABI}/libopencv_imgproc.so" )
+
+    add_library( opencv_imgcodecs SHARED IMPORTED )
+    set_target_properties(
+            opencv_imgcodecs
+            PROPERTIES IMPORTED_LOCATION
+            "${PREBUILT_OPENCV_PATH}/libs/${ANDROID_ABI}/libopencv_imgcodecs.so" )
+
 
     add_library( ncnn SHARED IMPORTED )
     set_target_properties(
@@ -115,7 +134,8 @@ ELSE()
 
         target_include_directories(smartautoclicker PUBLIC
                 ${SOURCE_OPENCV_PATH}/modules/core/include
-                ${SOURCE_OPENCV_PATH}/modules/imgproc/include )
+                ${SOURCE_OPENCV_PATH}/modules/imgproc/include
+                ${SOURCE_OPENCV_PATH}/modules/imgcodecs/include)
 
         # Required to get opencv2/open_modules.hpp generated at build time
         include_directories (${CMAKE_BINARY_DIR})
@@ -136,4 +156,4 @@ ENDIF()
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
-target_link_libraries(smartautoclicker opencv_core opencv_imgproc ncnn -ljnigraphics ${log-lib} )
+target_link_libraries(smartautoclicker opencv_core opencv_imgproc opencv_imgcodecs ncnn -ljnigraphics ${android-lib} ${log-lib} )
