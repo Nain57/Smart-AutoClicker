@@ -142,9 +142,12 @@ class ImageConditionsBriefViewModel @Inject constructor(
     }
 
     fun swapConditions(i: Int, j: Int) {
-        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
-        Collections.swap(imageConditions, i, j)
+        if (i == j) return
 
+        val imageConditions = editionRepository.editionState.getEditedEventConditions<ImageCondition>()?.toMutableList() ?: return
+        if (imageConditions.isEmpty() || i !in imageConditions.indices || j !in imageConditions.indices) return
+
+        Collections.swap(imageConditions, i, j)
         editionRepository.updateImageConditionsOrder(imageConditions)
     }
 

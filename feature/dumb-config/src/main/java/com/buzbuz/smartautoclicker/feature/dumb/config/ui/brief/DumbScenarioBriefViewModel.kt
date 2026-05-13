@@ -162,9 +162,12 @@ class DumbScenarioBriefViewModel @Inject constructor(
     }
 
     fun swapDumbActions(i: Int, j: Int) {
-        val actions = dumbEditionRepository.editedDumbScenario.value?.dumbActions?.toMutableList() ?: return
-        Collections.swap(actions, i, j)
+        if (i == j) return
 
+        val actions = dumbEditionRepository.editedDumbScenario.value?.dumbActions?.toMutableList() ?: return
+        if (actions.isEmpty() || i !in actions.indices || j !in actions.indices) return
+
+        Collections.swap(actions, i, j)
         dumbEditionRepository.updateDumbActions(actions)
     }
 
