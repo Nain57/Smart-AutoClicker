@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY أو FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">إنشاء نسخة احتياطية</string>
+    <string name="dialog_title_delete_scenario">حذف السيناريو</string>
+    <string name="dialog_title_import_backup">استيراد النسخة الاحتياطية</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">اختر ملف الإخراج</string>
+    <string name="item_title_backup_import_select_file">اختر ملف النسخة الاحتياطية</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">جارٍ إنشاء النسخة الاحتياطية: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">اكتملت النسخة الاحتياطية</string>
+    <string name="message_backup_create_error">حدث خطأ وتم إلغاء تصدير النسخة الاحتياطية</string>
+    <string name="message_backup_import_progress">جارٍ استيراد النسخة الاحتياطية: %1$d</string>
+    <string name="message_backup_import_verification">التحقق من البيانات</string>
+    <string name="message_backup_import_completed">اكتمل الاستيراد\n%1$d سيناريو مستورد</string>
+    <string name="message_backup_import_completed_with_error">اكتمل الاستيراد\n%1$d سيناريو مستورد\n%2$d أخطاء</string>
+    <string name="message_backup_import_error">حدث خطأ وتم إلغاء استيراد النسخة الاحتياطية</string>
+    <string name="message_backup_import_compatibility">بعض السيناريوهات المستوردة تم إنشاؤها من جهاز بشاشة مختلفة وقد يتسبب ذلك في مشاكل مع الكشف وإحداثيات الإجراءات.\n\nلإصلاح ذلك، تحتاج إلى أخذ لقطات شاشة جديدة لشروطك وتحديث مواضع النقر/السحب الخاصة بك.</string>
+    <string name="message_backup_error_no_zip_app">لا توجد تطبيقات على الجهاز للتعامل مع حفظ/تحميل ملف zip.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">حالة النسخة الاحتياطية</string>
+
+</resources>
