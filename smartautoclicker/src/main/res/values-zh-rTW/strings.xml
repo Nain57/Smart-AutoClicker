@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+
+    <string name="notification_title">腳本：%1$s</string>
+    <string name="notification_message">按下以變更腳本</string>
+    <string name="notification_button_play_and_hide">播放並隱藏</string>
+    <string name="notification_button_pause_and_show">暫停並顯示</string>
+    <string name="notification_button_toggle_menu">顯示/隱藏</string>
+    <string name="notification_button_stop">停止</string>
+
+
+    <string name="activity_scenario_title">腳本</string>
+    <string name="accessibility_service_description">此應用程式需要此服務，才能在偵測到條件後，將您建立的點擊注入到其他應用程式中。\n\n本應用程式不會收集任何資料。歡迎造訪我們的 GitHub，程式碼是開源的！</string>
+
+    <string name="dialog_title_add_scenario">新增腳本</string>
+    <string name="dialog_title_copy_scenario">複製腳本</string>
+
+    <string name="menu_item_title_export">匯出</string>
+    <string name="menu_item_title_import">匯入</string>
+    <string name="menu_item_title_select_all">全選</string>
+    <string name="menu_item_title_cancel">取消</string>
+    <string name="menu_item_title_search">搜尋</string>
+    <string name="menu_item_title_settings">設定</string>
+
+    <string name="item_scenario_filter_by_name">名稱</string>
+    <string name="item_scenario_filter_by_recent">最近</string>
+    <string name="item_scenario_filter_by_favorite">我的最愛</string>
+
+    <string name="item_desc_dumb_scenario">一般的自動點擊器體驗。\n只需在螢幕上放置點擊和滑動即可。</string>
+    <string name="item_desc_dumb_scenario_max_duration">在 %1$s 後停止</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">無最長持續時間</string>
+    <string name="item_desc_dumb_scenario_repeat_count">重複 %1$d 次</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">無限重複</string>
+    <string name="item_desc_smart_scenario">使用影像偵測來建立複雜的使用案例。</string>
+    <string name="item_desc_smart_scenario_pro_mode">需要觀看廣告或購買專業版</string>
+    <string name="item_title_dumb_scenario">簡易</string>
+    <string name="item_title_smart_scenario">智慧</string>
+
+    <string name="message_empty_scenario_list">建立您的第一個腳本，開始在手機上自動化執行任務</string>
+
+    <string name="message_delete_scenario">這將刪除 %1$s。您確定嗎？</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的裝置未提供標準的 Android 螢幕擷取權限對話方塊。Klick\'r 將無法在此裝置上執行。</string>
+
+    <string name="section_title_scenario_type_title">腳本類型</string>
+
+
+    <string name="toast_denied_screen_sharing_permission">使用者拒絕了螢幕分享權限</string>
+    <string name="toast_denied_foreground_permission">使用者拒絕了前景服務權限</string>
+
+    <string name="button_text_create_scenario">建立腳本</string>
+
+    <string name="content_desc_add_scenario">建立新腳本</string>
+
+
+    <string name="default_scenario_name">預設名稱</string>
+    <string name="message_empty_image_events_scenario_list">沒有影像事件</string>
+
+
+    <string name="activity_settings_title">設定</string>
+
+    <string name="field_show_scenario_filters_ui_title">顯示腳本篩選器</string>
+    <string name="field_show_scenario_filters_ui_desc">在腳本列表畫面中顯示或隱藏篩選器。</string>
+
+    <string name="field_legacy_action_ui_title">傳統動作介面</string>
+    <string name="field_legacy_action_ui_desc">將動作顯示方式變更為列表。對於複雜的腳本很有用。</string>
+
+    <string name="field_legacy_notification_ui_title">傳統通知介面</string>
+    <string name="field_legacy_notification_ui_desc">在通知中使用系統按鈕，而非圖示按鈕。</string>
+
+    <string name="field_force_entire_screen_title">強制全螢幕</string>
+    <string name="field_force_entire_screen_desc">強制螢幕擷取選擇器為「整個螢幕」。可能無法在您的裝置上運作</string>
+
+    <string name="field_input_block_workaround_title">解除觸控螢幕封鎖</string>
+    <string name="field_input_block_workaround_desc">在搭載 Android 15 的 Pixel 裝置上，使用自動點擊器可能會導致觸控螢幕被封鎖。\n要解除封鎖，您需要同時用多根手指觸碰螢幕。此設定會嘗試每 10 秒模擬一次此操作。</string>
+
+    <string name="field_privacy">隱私設定</string>
+    <string name="field_remove_ads">移除廣告</string>
+    <string name="field_troubleshooting">疑難排解</string>
+
+
+    <string name="dialog_condition_migration_title">遷移</string>
+
+    <string name="message_condition_migration_desc">Klick\'r 的影像格式已變更，您的腳本需要更新。這可能需要幾分鐘的時間，具體取決於要遷移的條件數量。</string>
+    <string name="message_condition_migration_count">有 %1$d 個影像條件需要遷移。</string>
+    <string name="message_condition_migration_success">所有影像條件皆已遷移。</string>
+    <string name="message_condition_migration_error">部分條件無法遷移。請檢查您的腳本。</string>
+
+    <string name="button_condition_migration_start">開始遷移</string>
+    <string name="button_condition_migration_running">遷移中</string>
+    <string name="button_condition_migration_finished">確定</string>
+
+</resources>
