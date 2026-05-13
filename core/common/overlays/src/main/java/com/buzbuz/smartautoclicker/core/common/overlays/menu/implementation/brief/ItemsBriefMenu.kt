@@ -197,6 +197,8 @@ abstract class ItemBriefMenu(
 
             briefAdapter.submitList(actions)
         }
+
+        updateBriefButtons(actions.size)
     }
 
     @SuppressLint("ClickableViewAccessibility")
