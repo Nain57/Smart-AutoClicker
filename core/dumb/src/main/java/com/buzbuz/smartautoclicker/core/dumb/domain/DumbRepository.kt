@@ -16,20 +16,30 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.data.DumbScenarioDataSource
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DumbRepository @Inject constructor(
+    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val dumbScenarioDataSource: DumbScenarioDataSource,
 ) : IDumbRepository {
+
+    private val coroutineScopeIo: CoroutineScope =
+        CoroutineScope(SupervisorJob() + ioDispatcher)
 
     override val dumbScenarios: Flow<List<DumbScenario>> =
         dumbScenarioDataSource.getAllDumbScenarios
@@ -50,8 +60,12 @@ class DumbRepository @Inject constructor(
     override suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long? =
         dumbScenarioDataSource.addDumbScenarioCopy(scenario)
 
-    override suspend fun addDumbScenarioCopy(scenarioId: Long, copyName: String): Long? =
-        dumbScenarioDataSource.addDumbScenarioCopy(scenarioId, copyName)
+    override fun addDumbScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: () -> Unit) {
+        coroutineScopeIo.launch {
+            dumbScenarioDataSource.addDumbScenarioCopy(scenarioId, copyName)
+            onCopyCompleted()
+        }
+    }
 
     override suspend fun updateDumbScenario(scenario: DumbScenario) {
         dumbScenarioDataSource.updateDumbScenario(scenario)

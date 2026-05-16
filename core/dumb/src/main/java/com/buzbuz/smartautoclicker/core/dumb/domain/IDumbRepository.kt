@@ -37,7 +37,7 @@ interface IDumbRepository {
 
     suspend fun addDumbScenarioCopy(scenario: DumbScenarioWithActions): Long?
 
-    suspend fun addDumbScenarioCopy(scenarioId: Long, copyName: String): Long?
+    fun addDumbScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: () -> Unit)
 
     suspend fun updateDumbScenario(scenario: DumbScenario)
 
