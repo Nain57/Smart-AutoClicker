@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.ScenarioTestsData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 
 import org.junit.Assert.assertEquals
@@ -88,7 +89,7 @@ class RepositoryTests {
         mockWhen(mockTutoDatabase.conditionDao()).thenReturn(mockTutoConditionDao)
 
         val dataSource = ScenarioDataSource(mockDatabase, mockTutoDatabase)
-        repository = Repository(dataSource, mockBitmapManager)
+        repository = Repository(UnconfinedTestDispatcher(), dataSource, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao)
     }
 

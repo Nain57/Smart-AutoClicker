@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.appcompat.app.AlertDialog
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
@@ -111,7 +112,7 @@ class ScenarioCopyDialog : DialogFragment() {
             .setTitle("Copy Scenario")
             .setView(viewBinding.root)
             .setCancelable(false)
-            .setPositiveButton(android.R.string.ok) { _, _ -> onConfirm() }
+            .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
 
@@ -120,6 +121,10 @@ class ScenarioCopyDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
+
+        (dialog as? AlertDialog)
+            ?.getButton(AlertDialog.BUTTON_POSITIVE)
+            ?.setOnClickListener { onConfirm() }
 
         viewBinding.fieldScenarioName.textField.requestFocus()
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)

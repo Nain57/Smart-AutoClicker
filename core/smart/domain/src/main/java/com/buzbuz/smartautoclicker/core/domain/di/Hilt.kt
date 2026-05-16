@@ -16,6 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.di
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.Repository
@@ -26,6 +28,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -35,7 +38,8 @@ object RepositoryHiltModule {
     @Provides
     @Singleton
     internal fun providesRepository(
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
         dataSource: ScenarioDataSource,
         bitmapManager: BitmapRepository,
-    ): IRepository = Repository(dataSource, bitmapManager)
+    ): IRepository = Repository(ioDispatcher, dataSource, bitmapManager)
 }

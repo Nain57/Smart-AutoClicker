@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.domain
 import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.FILE_EXTENSION_PNG
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
@@ -36,10 +38,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.toDomainTriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toDomain
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -49,9 +55,13 @@ import kotlin.math.max
  * the application data folder.
  */
 internal class Repository @Inject internal constructor(
+    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val dataSource: ScenarioDataSource,
     private val bitmapRepository: BitmapRepository,
 ): IRepository {
+
+    private val coroutineScopeIo: CoroutineScope =
+        CoroutineScope(SupervisorJob() + ioDispatcher)
 
     override val isTutorialModeEnabled: Flow<Boolean> =
         dataSource.isTutorialModeEnabled
@@ -118,10 +128,14 @@ internal class Repository @Inject internal constructor(
         return dataSource.addCompleteScenario(scenario, events, ::clearRemovedConditionsBitmaps)
     }
 
-    override suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long? {
-        val (scenario, events) = dataSource.getCompleteScenario(scenarioId)
-            ?.toDomain(cleanIds = true) ?: return null
-        return dataSource.addCompleteScenario(scenario.copy(name = copyName), events, ::clearRemovedConditionsBitmaps)
+    override fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: () -> Unit) {
+        coroutineScopeIo.launch {
+            val (scenario, events) = dataSource.getCompleteScenario(scenarioId)
+                ?.toDomain(cleanIds = true) ?: return@launch
+
+            dataSource.addCompleteScenario(scenario.copy(name = copyName), events, ::clearRemovedConditionsBitmaps)
+            onCopyCompleted()
+        }
     }
 
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
