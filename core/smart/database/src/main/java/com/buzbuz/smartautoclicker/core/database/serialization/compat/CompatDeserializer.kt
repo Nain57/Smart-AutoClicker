@@ -247,6 +247,7 @@ internal open class CompatDeserializer : Deserializer {
             ConditionType.ON_COLOR_DETECTED -> deserializeConditionColorDetected(jsonCondition)
             ConditionType.ON_COUNTER_REACHED -> deserializeConditionCounterReached(jsonCondition)
             ConditionType.ON_IMAGE_DETECTED -> deserializeConditionImageDetected(jsonCondition)
+            ConditionType.ON_TEXT_DETECTED -> deserializeConditionTextDetected(jsonCondition)
             ConditionType.ON_TIMER_REACHED -> deserializeConditionTimerReached(jsonCondition)
             null -> null
         }
@@ -306,7 +307,7 @@ internal open class CompatDeserializer : Deserializer {
         val id = jsonCondition.getLong("id", true) ?: return null
         val eventId = jsonCondition.getLong("eventId", true) ?: return null
         val colorRgba = jsonCondition.getInt("colorRgba") ?: return null
-        val area = jsonCondition.getRect("colorAreaLeft", "colorAreaTop", "colorAreaRight", "colorAreaBottom")
+        val area = jsonCondition.getRect("detectionAreaLeft", "detectionAreaTop", "detectionAreaRight", "detectionAreaBottom")
             ?: return null
 
         return ConditionEntity(
@@ -317,13 +318,13 @@ internal open class CompatDeserializer : Deserializer {
             type = ConditionType.ON_COLOR_DETECTED,
             shouldBeDetected = jsonCondition.getBoolean("shouldBeDetected") ?: true,
             colorRgba = colorRgba,
-            colorThreshold = jsonCondition.getInt("colorThreshold")
+            threshold = jsonCondition.getInt("threshold")
                 ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
                 ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
-            colorAreaLeft = area.left,
-            colorAreaTop = area.top,
-            colorAreaRight = area.right,
-            colorAreaBottom = area.bottom,
+            detectionAreaLeft = area.left,
+            detectionAreaTop = area.top,
+            detectionAreaRight = area.right,
+            detectionAreaBottom = area.bottom,
         )
     }
 
@@ -351,6 +352,32 @@ internal open class CompatDeserializer : Deserializer {
             counterOperationValueType = counterOperationValueType,
             counterValue = counterOperationValue,
             counterOperationCounterName = counterOperationCounterName,
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeConditionTextDetected(jsonCondition: JsonObject): ConditionEntity? {
+        val id = jsonCondition.getLong("id", true) ?: return null
+        val eventId = jsonCondition.getLong("eventId", true) ?: return null
+        val textToDetect = jsonCondition.getString("textToDetect") ?: return null
+        val area = jsonCondition.getRect("detectionAreaLeft", "detectionAreaTop", "detectionAreaRight", "detectionAreaBottom")
+            ?: return null
+
+        return ConditionEntity(
+            id = id,
+            eventId = eventId,
+            priority = 0,
+            name = jsonCondition.getString("name") ?: "",
+            type = ConditionType.ON_TEXT_DETECTED,
+            shouldBeDetected = jsonCondition.getBoolean("shouldBeDetected") ?: true,
+            textToDetect = textToDetect,
+            threshold = jsonCondition.getInt("threshold")
+                ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
+                ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
+            detectionAreaLeft = area.left,
+            detectionAreaTop = area.top,
+            detectionAreaRight = area.right,
+            detectionAreaBottom = area.bottom,
         )
     }
 

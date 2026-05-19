@@ -90,6 +90,8 @@ class EventCardViewHolder(
                         setErrorBitmap()
                     }
                 }
+
+                is ScreenCondition.Text -> TODO()
             }
 
         }

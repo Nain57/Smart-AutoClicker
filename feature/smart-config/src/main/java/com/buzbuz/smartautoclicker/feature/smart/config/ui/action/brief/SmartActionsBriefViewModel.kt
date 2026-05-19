@@ -330,6 +330,7 @@ class SmartActionsBriefViewModel @Inject constructor(
                 when (condition) {
                     is ScreenCondition.Color -> context.createColorIndicatorDrawable(condition.color)?.toBitmap()
                     is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(condition)
+                    is ScreenCondition.Text -> TODO()
                 }
             }
     }

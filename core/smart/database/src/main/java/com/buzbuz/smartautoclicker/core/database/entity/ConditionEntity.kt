@@ -98,10 +98,8 @@ data class ConditionEntity(
 
     // ConditionType.ON_COLOR_DETECTED
     @ColumnInfo(name = "color_rgba") val colorRgba: Int? = null,
-    @ColumnInfo(name = "color_area_left") val colorAreaLeft: Int? = null,
-    @ColumnInfo(name = "color_area_top") val colorAreaTop: Int? = null,
-    @ColumnInfo(name = "color_area_right") val colorAreaRight: Int? = null,
-    @ColumnInfo(name = "color_area_bottom") val colorAreaBottom: Int? = null,
-    @ColumnInfo(name = "color_threshold") val colorThreshold: Int? = null,
+
+    // ConditionType.ON_TEXT_DETECTED
+    @ColumnInfo(name = "text_to_detect") val textToDetect: String? = null,
 
 ) : EntityWithId

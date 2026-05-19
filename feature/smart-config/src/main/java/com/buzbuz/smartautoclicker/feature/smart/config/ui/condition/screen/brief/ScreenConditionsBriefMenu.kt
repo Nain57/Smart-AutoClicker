@@ -239,6 +239,7 @@ class ScreenConditionsBriefMenu(
             newOverlay = when (condition) {
                 is ScreenCondition.Color -> ColorConditionDialog(conditionConfigDialogListener)
                 is ScreenCondition.Image -> ImageConditionDialog(conditionConfigDialogListener)
+                is ScreenCondition.Text -> TODO()
             },
             hideCurrent = true,
         )

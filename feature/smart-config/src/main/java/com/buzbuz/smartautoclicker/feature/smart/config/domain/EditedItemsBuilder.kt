@@ -177,6 +177,7 @@ class EditedItemsBuilder internal constructor(
         when (condition) {
             is ScreenCondition.Color -> createNewColorConditionFrom(condition, eventId)
             is ScreenCondition.Image -> createNewImageConditionFrom(condition, eventId)
+            is ScreenCondition.Text -> TODO()
         }
 
     fun createNewColorConditionFrom(condition: ScreenCondition.Color, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Color =

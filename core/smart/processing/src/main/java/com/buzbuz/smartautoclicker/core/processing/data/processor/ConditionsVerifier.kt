@@ -80,6 +80,7 @@ internal class ConditionsVerifier(
         when (condition) {
             is ScreenCondition.Color -> verifyColorCondition(condition)
             is ScreenCondition.Image -> verifyImageCondition(condition)
+            is ScreenCondition.Text -> TODO()
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
         }
 

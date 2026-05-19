@@ -259,6 +259,7 @@ class ClickViewModel @Inject constructor(
         val conditionVisualization = when (conditionToClick) {
             is ScreenCondition.Color -> createColorIndicatorDrawable(conditionToClick.color)
             is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(conditionToClick)
+            is ScreenCondition.Text -> TODO()
             null -> null
         }
 

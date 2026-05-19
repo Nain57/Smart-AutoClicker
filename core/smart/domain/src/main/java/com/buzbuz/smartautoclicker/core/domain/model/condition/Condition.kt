@@ -40,5 +40,6 @@ sealed class Condition : Identifiable, Completable {
         is TriggerCondition.OnTimerReached -> (this as TriggerCondition.OnTimerReached).copy(eventId = evtId)
         is ScreenCondition.Color -> (this as ScreenCondition.Color).copy(eventId = evtId)
         is ScreenCondition.Image -> (this as ScreenCondition.Image).copy(eventId = evtId)
+        is ScreenCondition.Text -> (this as ScreenCondition.Text).copy(eventId = evtId)
     }
 }

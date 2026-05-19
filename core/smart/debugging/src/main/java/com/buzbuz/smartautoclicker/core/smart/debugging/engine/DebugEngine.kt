@@ -321,6 +321,7 @@ private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
             Size(cond.detectionArea.width() / 2, cond.detectionArea.height() / 2)
         is ScreenCondition.Image ->
             Size(cond.area.width() / 2,  cond.area.height() / 2)
+        is ScreenCondition.Text -> TODO()
     }
 
     return if (pos.x == 0 && pos.y == 0) Rect()

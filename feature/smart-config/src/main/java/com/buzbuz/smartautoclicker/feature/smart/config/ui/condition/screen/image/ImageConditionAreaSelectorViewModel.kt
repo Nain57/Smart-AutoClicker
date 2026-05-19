@@ -56,6 +56,8 @@ class ImageConditionAreaSelectorViewModel @Inject constructor(
                     initialArea = detectionArea ?: area,
                     minimalArea = area,
                 )
+
+            is ScreenCondition.Text -> TODO()
         }
 }
 

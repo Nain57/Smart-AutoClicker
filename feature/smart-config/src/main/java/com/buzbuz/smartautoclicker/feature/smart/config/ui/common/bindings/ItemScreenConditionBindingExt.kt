@@ -65,6 +65,8 @@ fun IncludeScreenConditionCardBinding.bind(
                 }
             }
         }
+
+        is ScreenCondition.Text -> TODO()
     }
 }
 

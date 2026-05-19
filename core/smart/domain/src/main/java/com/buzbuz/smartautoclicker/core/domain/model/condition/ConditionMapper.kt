@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
 internal fun Condition.toEntity() = when (this) {
     is ScreenCondition.Color -> toColorConditionEntity()
     is ScreenCondition.Image -> toImageConditionEntity()
+    is ScreenCondition.Text -> toTextConditionEntity()
     is TriggerCondition.OnBroadcastReceived -> toBroadcastReceivedEntity()
     is TriggerCondition.OnCounterCountReached -> toCounterReachedEntity()
     is TriggerCondition.OnTimerReached -> toTimerReachedEntity()
@@ -66,6 +67,21 @@ private fun ScreenCondition.Image.toImageConditionEntity() = ConditionEntity(
     detectionAreaTop = detectionArea?.top,
     detectionAreaRight = detectionArea?.right,
     detectionAreaBottom = detectionArea?.bottom,
+)
+
+private fun ScreenCondition.Text.toTextConditionEntity() = ConditionEntity(
+    id = id.databaseId,
+    eventId = eventId.databaseId,
+    name = name,
+    priority = priority,
+    type = ConditionType.ON_TEXT_DETECTED,
+    threshold = threshold,
+    shouldBeDetected = shouldBeDetected,
+    textToDetect = text,
+    detectionAreaLeft = detectionArea.left,
+    detectionAreaTop = detectionArea.top,
+    detectionAreaRight = detectionArea.right,
+    detectionAreaBottom = detectionArea.bottom,
 )
 
 private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): ConditionEntity =
@@ -113,6 +129,7 @@ internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
         ConditionType.ON_COLOR_DETECTED -> toDomainColorCondition(cleanIds)
         ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
         ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
+        ConditionType.ON_TEXT_DETECTED -> toDomainTextCondition(cleanIds)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
     }
 
@@ -140,6 +157,18 @@ private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): S
         detectionType = detectionType!!,
         detectionArea = getDetectionArea(),
         shouldBeDetected = shouldBeDetected ?: true,
+    )
+
+private fun ConditionEntity.toDomainTextCondition(cleanIds: Boolean = false): ScreenCondition.Text =
+    ScreenCondition.Text(
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
+        name = name,
+        priority = priority,
+        threshold = threshold!!,
+        shouldBeDetected = shouldBeDetected ?: true,
+        detectionArea = getDetectionArea()!!,
+        text = textToDetect!!,
     )
 
 private fun ConditionEntity.toDomainBroadcastReceived(cleanIds: Boolean = false): TriggerCondition =

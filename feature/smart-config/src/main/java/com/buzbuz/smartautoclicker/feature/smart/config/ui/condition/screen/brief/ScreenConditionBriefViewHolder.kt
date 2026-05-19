@@ -85,6 +85,8 @@ class ScreenConditionBriefViewHolder(
                     )
                     icon.setImageResource(details.detectionTypeIconRes)
                 }
+
+                is ScreenCondition.Text -> TODO()
             }
         }
     }

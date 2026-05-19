@@ -82,6 +82,8 @@ class EventOccurrenceConditionScreenViewHolder private constructor(
                         )
                     }
                 }
+
+                is ScreenCondition.Text -> TODO()
             }
         }
     }

@@ -98,6 +98,7 @@ class ScreenConditionsBriefViewModel @Inject constructor(
                 condition.toColorItemDescription()
             is ScreenCondition.Image ->
                 condition.toImageItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
+            is ScreenCondition.Text -> TODO()
             null -> null
         }
     }

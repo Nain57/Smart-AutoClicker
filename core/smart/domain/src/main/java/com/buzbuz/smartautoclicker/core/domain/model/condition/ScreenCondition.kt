@@ -41,6 +41,7 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         when (this) {
             is Color -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
             is Image -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
+            is Text -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
         }
 
     /**
@@ -99,5 +100,26 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         override fun hashCodeNoIds(): Int =
             name.hashCode() + path.hashCode() + area.hashCode() + threshold.hashCode() + detectionType.hashCode() +
                     shouldBeDetected.hashCode() + detectionArea.hashCode() + priority.hashCode()
+    }
+
+    data class Text(
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String,
+        override val threshold: Int,
+        override val shouldBeDetected: Boolean,
+        override var priority: Int,
+        val text: String,
+        val detectionArea: Rect,
+    ): ScreenCondition(), Prioritizable {
+
+        /** Tells if this condition is complete and valid to be saved. */
+        override fun isComplete(): Boolean =
+            super.isComplete() && text.isNotEmpty()
+
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + text.hashCode() + threshold.hashCode() + shouldBeDetected.hashCode() +
+                    detectionArea.hashCode() + priority.hashCode()
+
     }
 }
