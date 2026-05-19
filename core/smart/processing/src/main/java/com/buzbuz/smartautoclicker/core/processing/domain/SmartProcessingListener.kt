@@ -75,8 +75,8 @@ interface SmartProcessingListener {
      */
     fun onEventsProcessingCancelled() = Unit
 
-    /** The processing of an [ScreenCondition.Image] for the current [ScreenEvent] has begun. */
-    fun onImageConditionProcessingStarted() = Unit
+    /** The processing of an [ScreenCondition] for the current [ScreenEvent] has begun. */
+    fun onScreenConditionProcessingStarted() = Unit
 
     /**
      * The processing of an [ScreenCondition.Image] for the current [ScreenEvent] has completed.
@@ -84,7 +84,7 @@ interface SmartProcessingListener {
      *
      * @param result the result of the detection for the processed condition.
      */
-    fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) = Unit
+    fun onScreenConditionProcessingCompleted(result: ProcessedConditionResult.Screen) = Unit
 
     /**
      * The value of a counter have changed.

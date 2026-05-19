@@ -87,7 +87,7 @@ internal fun SmartProcessingListener.verifyImageConditionProcessed(
     detected: Boolean,
     processedCount: Int = 1,
 ): Unit = verify(this, times(processedCount))
-    .onImageConditionProcessingCompleted(condition.expectedResult(detected))
+    .onScreenConditionProcessingCompleted(condition.expectedResult(detected))
 
 internal fun SmartProcessingListener.monitorImageEventProcessing(
     events: List<ScreenEvent>,

@@ -33,4 +33,9 @@ internal sealed class ScreenConditionScalingInfo {
         override val detectionArea: Rect,
         val imageArea: Rect,
     ) : ScreenConditionScalingInfo()
+
+    data class Text(
+        override val screenCondition: ScreenCondition.Text,
+        override val detectionArea: Rect,
+    ) : ScreenConditionScalingInfo()
 }

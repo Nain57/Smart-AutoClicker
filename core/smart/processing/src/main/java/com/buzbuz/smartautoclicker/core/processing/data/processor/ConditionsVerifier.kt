@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ internal class ConditionsVerifier(
         when (condition) {
             is ScreenCondition.Color -> verifyColorCondition(condition)
             is ScreenCondition.Image -> verifyImageCondition(condition)
-            is ScreenCondition.Text -> TODO()
+            is ScreenCondition.Text -> verifyTextCondition(condition)
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
         }
 
@@ -132,7 +132,7 @@ internal class ConditionsVerifier(
     }
 
     private fun verifyColorCondition(condition: ScreenCondition.Color): ProcessedConditionResult.Screen {
-        progressListener?.onImageConditionProcessingStarted()
+        progressListener?.onScreenConditionProcessingStarted()
 
         val conditionScalingInfo = scalingManager
             .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Color
@@ -152,12 +152,12 @@ internal class ConditionsVerifier(
             confidenceRate = detectionResult.confidenceRate,
         )
 
-        progressListener?.onImageConditionProcessingCompleted(result)
+        progressListener?.onScreenConditionProcessingCompleted(result)
         return result
     }
 
     private suspend fun verifyImageCondition(condition: ScreenCondition.Image): ProcessedConditionResult.Screen {
-        progressListener?.onImageConditionProcessingStarted()
+        progressListener?.onScreenConditionProcessingStarted()
 
         val conditionScalingInfo = scalingManager
             .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Image
@@ -187,7 +187,32 @@ internal class ConditionsVerifier(
             )
         } ?: condition.toInvalidConditionResult()
 
-        progressListener?.onImageConditionProcessingCompleted(result)
+        progressListener?.onScreenConditionProcessingCompleted(result)
+        return result
+    }
+
+    private fun verifyTextCondition(condition: ScreenCondition.Text): ProcessedConditionResult.Screen {
+        progressListener?.onScreenConditionProcessingStarted()
+
+        val conditionScalingInfo = scalingManager
+            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Text
+            ?: return condition.toInvalidConditionResult()
+
+        val detectionResult = imageDetector.detectText(
+            conditionText = condition.text,
+            detectionArea = conditionScalingInfo.detectionArea,
+            threshold = condition.threshold,
+        )
+
+        val result = ProcessedConditionResult.Screen(
+            isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
+            haveBeenDetected = detectionResult.isDetected,
+            condition = condition,
+            position = scalingManager.scaleUpDetectionResult(detectionResult.position),
+            confidenceRate = detectionResult.confidenceRate,
+        )
+
+        progressListener?.onScreenConditionProcessingCompleted(result)
         return result
     }
 

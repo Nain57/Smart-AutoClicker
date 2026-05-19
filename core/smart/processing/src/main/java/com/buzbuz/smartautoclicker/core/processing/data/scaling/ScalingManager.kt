@@ -92,7 +92,7 @@ class ScalingManager @Inject constructor(
             conditionScalingInfo[screenCondition.id.databaseId] = when (screenCondition) {
                 is ScreenCondition.Color -> screenCondition.toColorScalingInfo(scaledScreenSize)
                 is ScreenCondition.Image -> screenCondition.toImageScalingInfo(scaledScreenSize)
-                is ScreenCondition.Text -> TODO()
+                is ScreenCondition.Text -> screenCondition.toTextScalingInfo(scaledScreenSize)
             }
         }
 
@@ -118,6 +118,15 @@ class ScalingManager @Inject constructor(
 
     private fun ScreenCondition.Color.toColorScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Color =
         ScreenConditionScalingInfo.Color(
+            screenCondition = this,
+            detectionArea = detectionArea
+                .scaleDown()
+                .ensureMinSize()
+                .coerceIn(bounds = scaledScreenSize.toArea())
+        )
+
+    private fun ScreenCondition.Text.toTextScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Text =
+        ScreenConditionScalingInfo.Text(
             screenCondition = this,
             detectionArea = detectionArea
                 .scaleDown()

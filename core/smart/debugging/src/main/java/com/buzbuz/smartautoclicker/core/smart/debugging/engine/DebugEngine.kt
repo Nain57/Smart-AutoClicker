@@ -190,7 +190,7 @@ internal class DebugEngine @Inject constructor(
     }
 
     // Image Condition is processed
-    override fun onImageConditionProcessingStarted() {
+    override fun onScreenConditionProcessingStarted() {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
@@ -199,7 +199,7 @@ internal class DebugEngine @Inject constructor(
     }
 
     // Called anyway,even if not matched
-    override fun onImageConditionProcessingCompleted(result: ProcessedConditionResult.Screen) {
+    override fun onScreenConditionProcessingCompleted(result: ProcessedConditionResult.Screen) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
