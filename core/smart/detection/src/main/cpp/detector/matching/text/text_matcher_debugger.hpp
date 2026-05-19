@@ -18,7 +18,6 @@
 #ifndef KLICK_R_TEXT_MATCHER_DEBUGGER_HPP
 #define KLICK_R_TEXT_MATCHER_DEBUGGER_HPP
 
-
 #include <opencv2/core.hpp>
 #include "detection/text_detector_result.hpp"
 

@@ -19,25 +19,96 @@
 
 #include <opencv2/core/types.hpp>
 #include <net.h>
+
+#include "text_matching_result.hpp"
 #include "detection/text_detector.hpp"
+#include "recognition/text_recognizer.hpp"
 #include "../../images/screen_image.hpp"
 
 namespace smartautoclicker {
 
+    /**
+     * Orchestrates the text matching process by combining text detection and recognition.
+     * It locates text areas on the screen, converts them to strings using OCR, and compares
+     * the results against a target condition using fuzzy string matching.
+     */
     class TextMatcher {
-    private:
-        std::unique_ptr<TextDetector> textLocator = std::make_unique<TextDetector>();
 
+    private:
+        /** Handles the localization of text bounding boxes. */
+        std::unique_ptr<TextDetector> textLocator = std::make_unique<TextDetector>();
+        /** Handles the conversion of image crops to text. */
+        std::unique_ptr<TextRecognizer> textRecognizer = std::make_unique<TextRecognizer>();
+
+        /** Buffer for Levenshtein distance calculations (previous row). */
+        std::vector<int> comparisonPrevRow;
+        /** Buffer for Levenshtein distance calculations (current row). */
+        std::vector<int> comparisonCurrRow;
+        /** Buffer for Levenshtein distance calculations (two rows back). */
+        std::vector<int> comparisonPrevPrevRow;
+
+        /** Stores the result of the most recent match operation. */
+        TextMatchingResult currentMatchingResult;
+
+        /**
+         * Calculates the similarity between two strings.
+         * @param recognized The text recognized by the OCR.
+         * @param target The expected text.
+         * @param minSimilarity The threshold to consider a match successful.
+         *
+         * @return A value between 0.0 (no match) and 1.0 (perfect match).
+         */
+        float similarity(const std::string& recognized, const std::string& target, float minSimilarity = 0.80f);
+
+        /**
+         * Finds the best substring match within the recognized text.
+         * Useful when the target text is part of a larger detected block.
+         * @param recognized The text recognized by the OCR.
+         * @param target The text to search for.
+         * @param minSimilarity The threshold for a valid match.
+         *
+         * @return The highest similarity score found.
+         */
+        float bestSubstringSimilarity(const std::string& recognized, const std::string& target, float minSimilarity = 0.80f);
+
+        /**
+         * Normalizes a character for comparison (e.g., case folding).
+         * @param c The character to normalize.
+         *
+         * @return The normalized character.
+         */
+        static char normalizeChar(char c);
 
     public:
+        /** Resets the matcher state for a new search. */
+        void reset();
+
+        /**
+         * Initializes the underlying detector and recognizer.
+         * @param assetManager The Android Asset Manager to load models.
+         *
+         * @return true if both components initialized successfully.
+         */
         bool init(AAssetManager* assetManager);
 
+        /**
+         * Performs text detection and recognition on a specific area of the screen.
+         * Results are stored internally and can be retrieved with getMatchingResults().
+         *
+         * @param screenImage The source screen capture.
+         * @param conditionText The text to look for.
+         * @param detectionArea The region of the screen to search in.
+         * @param threshold Confidence threshold for the detection/recognition.
+         */
         void matchText(
                 const ScreenImage& screenImage,
-                const std::string& condition,
-                const cv::Rect& detectionArea);
+                const std::string& conditionText,
+                const cv::Rect& detectionArea,
+                int threshold);
+
+        /** @return A pointer to the results of the last matching operation. */
+        TextMatchingResult* getMatchingResults();
     };
 }
 
 #endif //KLICK_R_TEXT_MATCHER_HPP
-

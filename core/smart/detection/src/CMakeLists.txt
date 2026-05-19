@@ -55,8 +55,14 @@ add_library( # Sets the name of the library.
         main/cpp/detector/matching/text/detection/text_detector.cpp
         main/cpp/detector/matching/text/detection/text_detector.hpp
         main/cpp/detector/matching/text/detection/text_detector_result.hpp
+        main/cpp/detector/matching/text/recognition/text_recognizer.cpp
+        main/cpp/detector/matching/text/recognition/text_recognizer.hpp
+        main/cpp/detector/matching/text/recognition/text_recognizer_result.hpp
         main/cpp/detector/matching/text/text_matcher.cpp
         main/cpp/detector/matching/text/text_matcher.hpp
+        main/cpp/detector/matching/text/text_matcher_debugger.hpp
+        main/cpp/detector/matching/text/text_matching_result.cpp
+        main/cpp/detector/matching/text/text_matching_result.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
         main/cpp/jni/jni_detector.cpp
