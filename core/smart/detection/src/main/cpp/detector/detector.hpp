@@ -59,6 +59,8 @@ namespace smartautoclicker {
                 int colorCondition,
                 const cv::Rect& roi,
                 int threshold);
+
+        TextMatchingResult *detectText(const char *textCondition, const cv::Rect &roi, int threshold);
     };
 }
 

@@ -37,7 +37,7 @@ class NativeDetector private constructor() : ImageDetector {
         fun newInstance(): NativeDetector? = try {
             System.loadLibrary("smartautoclicker")
             NativeDetector()
-        } catch (ex: UnsatisfiedLinkError) {
+        } catch (_: UnsatisfiedLinkError) {
             null
         }
     }
@@ -100,11 +100,7 @@ class NativeDetector private constructor() : ImageDetector {
         return detectionResult.copy()
     }
 
-    override fun detectColor(
-        conditionColor: Int,
-        detectionArea: Rect,
-        threshold: Int
-    ): DetectionResult {
+    override fun detectColor(conditionColor: Int, detectionArea: Rect, threshold: Int): DetectionResult {
         if (isClosed) return detectionResult.copy()
 
         try {
@@ -115,6 +111,26 @@ class NativeDetector private constructor() : ImageDetector {
                 keys = mapOf(
                     "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
                     "conditionColor" to conditionColor.toString(),
+                    "detectionArea" to detectionArea.toString(),
+                    "threshold" to threshold.toString(),
+                ),
+            )
+        }
+
+        return detectionResult.copy()
+    }
+
+    override fun detectText(conditionText: String, detectionArea: Rect, threshold: Int, ): DetectionResult {
+        if (isClosed) return detectionResult.copy()
+
+        try {
+            detectText(conditionText, detectionArea.left, detectionArea.top, detectionArea.width(),
+                detectionArea.height(), threshold, detectionResult)
+        } catch (ex: Exception) {
+            ex.throwWithKeys(
+                keys = mapOf(
+                    "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
+                    "conditionText" to conditionText,
                     "detectionArea" to detectionArea.toString(),
                     "threshold" to threshold.toString(),
                 ),
@@ -191,6 +207,26 @@ class NativeDetector private constructor() : ImageDetector {
      */
     private external fun detectColor(
         conditionColor: Int,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        threshold: Int,
+        result: DetectionResult,
+    )
+
+    /**
+     * Native method for detecting if the text is at a specific position in the current screen bitmap.
+     *
+     * @param conditionText the condition to detect in the screen.
+     * @param x the horizontal position of the condition.
+     * @param y the vertical position of the condition.
+     * @param width the width of the condition.
+     * @param height the height of the condition.
+     * @param threshold the allowed error threshold allowed for the condition.
+     */
+    private external fun detectText(
+        conditionText: String,
         x: Int,
         y: Int,
         width: Int,

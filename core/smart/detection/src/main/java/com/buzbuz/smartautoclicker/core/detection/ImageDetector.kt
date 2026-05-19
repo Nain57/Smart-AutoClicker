@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,6 +70,22 @@ interface ImageDetector : AutoCloseable {
      */
     fun detectColor(
         @ColorInt conditionColor: Int,
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult
+
+    /**
+     * Detect if a text is visible the provided area.
+     * [setScreenBitmap] must have been called first with the content of the screen.
+     *
+     * @param conditionText the text to detect.
+     * @param detectionArea the area to search for the text.
+     * @param threshold the allowed error threshold allowed for the condition.
+     *
+     * @return the results of the detection.
+     */
+    fun detectText(
+        conditionText: String,
         detectionArea: Rect,
         threshold: Int,
     ): DetectionResult

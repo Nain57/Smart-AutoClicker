@@ -91,6 +91,8 @@ namespace smartautoclicker {
          */
         bool init(AAssetManager* assetManager);
 
+        static bool isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi);
+
         /**
          * Performs text detection and recognition on a specific area of the screen.
          * Results are stored internally and can be retrieved with getMatchingResults().

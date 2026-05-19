@@ -34,7 +34,6 @@ bool Detector::init(AAssetManager* assetManager) {
 
 void Detector::setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag) {
     screenImage->processNewData(std::move(screenColorMat), metricsTag);
-    textMatcher->matchText(*screenImage, "searching", cv::Rect(0, 0, 400, 750), 80);
 }
 
 TemplateMatchingResult* Detector::detectImage(
@@ -67,11 +66,7 @@ TemplateMatchingResult* Detector::detectImage(
     return templateMatcher->getMatchingResults();
 }
 
-ColorMatchingResult* Detector::detectColor(
-        int colorCondition,
-        const cv::Rect& roi,
-        int threshold
-) {
+ColorMatchingResult* Detector::detectColor(int colorCondition, const cv::Rect& roi, int threshold) {
     colorMatcher->reset();
 
     // Verify area validity
@@ -93,4 +88,21 @@ ColorMatchingResult* Detector::detectColor(
             threshold);
 
     return colorMatcher->getMatchingResults();
+}
+
+TextMatchingResult* Detector::detectText(const char* textCondition, const cv::Rect& roi, int threshold) {
+    textMatcher->reset();
+
+    // Verify area validity
+    if (!TextMatcher::isRoiValidForMatching(screenImage->getRoi(), roi)) {
+        return textMatcher->getMatchingResults();
+    }
+
+    textMatcher->matchText(
+            *screenImage,
+            std::string(textCondition),
+            roi,
+            threshold);
+
+    return textMatcher->getMatchingResults();
 }

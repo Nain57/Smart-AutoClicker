@@ -20,6 +20,7 @@
 
 #include "text_matcher.hpp"
 #include "../../../logs/log.h"
+#include "../../../utils/roi.h"
 
 using namespace smartautoclicker;
 
@@ -33,6 +34,17 @@ bool TextMatcher::init(AAssetManager* assetManager) {
 
 TextMatchingResult* TextMatcher::getMatchingResults() {
     return &currentMatchingResult;
+}
+
+bool TextMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi) {
+    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+        LOGD("TextMatcher", "Can't detect color, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
+             roi.x, roi.y, roi.width, roi.height,
+             screenRoi.width, screenRoi.height);
+        return false;
+    }
+
+    return true;
 }
 
 void TextMatcher::matchText(

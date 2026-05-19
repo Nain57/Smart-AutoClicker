@@ -135,6 +135,38 @@ extern "C" {
         }
     }
 
+    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectText(
+            JNIEnv *env,
+            jobject self,
+            jstring conditionText,
+            jint x,
+            jint y,
+            jint width,
+            jint height,
+            jint threshold,
+            jobject result
+    ) {
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return;
+
+        const char* nativeConditionText = env->GetStringUTFChars(conditionText, nullptr);
+        if (conditionText == nullptr) return;
+
+        try {
+            setDetectionResult(env,result,detector->detectText(
+                    nativeConditionText,
+                    cv::Rect(x, y, width, height),
+                    threshold));
+        } catch (...) {
+            env->ThrowNew(
+                    env->FindClass("java/lang/RuntimeException"),
+                    "Invalid detection arguments for color detection");
+            return;
+        }
+
+        env->ReleaseStringUTFChars(conditionText, nativeConditionText);
+    }
+
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_releaseScreenImage(
             JNIEnv *env,
             jobject self,
