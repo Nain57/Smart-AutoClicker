@@ -16,7 +16,6 @@
  */
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/imgcodecs.hpp>
 
 #include "text_detector.hpp"
 #include "../text_matcher_debugger.hpp"
@@ -77,7 +76,7 @@ std::vector<TextDetectorResult> TextDetector::detectText(const cv::Mat& rgbScree
     // Format output results
     auto results = formatResults(rgbScreenCrop, boundingBoxes);
 
-    // Debugging
+    // Debugging (does nothing in release builds)
     saveScoreMap(scoreMap);
     saveBinaryMap(binaryResults);
     saveVisualDebug(rgbScreenCrop, contours, scaleX, scaleY);

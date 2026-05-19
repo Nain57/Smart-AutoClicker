@@ -21,7 +21,10 @@
 #include <opencv2/core.hpp>
 #include "detection/text_detector_result.hpp"
 
-#ifdef NDEBUG // Skip debugging methods in release builds
+// Manual switch for visual debugging. Set to 1 to enable image saving.
+#define VISUAL_DEBUG 0
+
+#if defined(NDEBUG) || !VISUAL_DEBUG // Skip debugging methods in release builds or when visual debug is disabled
 
 inline void saveScoreMap(const cv::Mat& scoreMap) {}
 inline void saveBinaryMap(const cv::Mat& binary) {}
@@ -35,11 +38,6 @@ inline void saveCrops(const std::vector<smartautoclicker::TextDetectorResult>& r
 #include "../../../logs/log.h"
 
 inline void saveScoreMap(const cv::Mat& scoreMap) {
-    double minVal;
-    double maxVal;
-    cv::minMaxLoc(scoreMap, &minVal, &maxVal);
-    LOGI("TextDetector","Score range: %f -> %f", minVal, maxVal);
-
     cv::Mat debugScore;
     scoreMap.convertTo(debugScore, CV_8UC1, 255.0);
     cv::imwrite("/sdcard/Download/ocr_score.png", debugScore);

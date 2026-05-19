@@ -109,12 +109,12 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             PROPERTIES IMPORTED_LOCATION
             "${PREBUILT_OPENCV_PATH}/libs/${ANDROID_ABI}/libopencv_imgproc.so" )
 
+    # Required only for debugging files creation
     add_library( opencv_imgcodecs SHARED IMPORTED )
     set_target_properties(
             opencv_imgcodecs
             PROPERTIES IMPORTED_LOCATION
             "${PREBUILT_OPENCV_PATH}/libs/${ANDROID_ABI}/libopencv_imgcodecs.so" )
-
 
     add_library( ncnn SHARED IMPORTED )
     set_target_properties(
@@ -127,6 +127,9 @@ IF(CMAKE_BUILD_TYPE MATCHES Debug)
             PUBLIC
             ${PREBUILT_OPENCV_PATH}/include
             ${PREBUILT_NCNN_PATH}/include )
+
+    target_link_libraries(smartautoclicker opencv_core opencv_imgproc opencv_imgcodecs ncnn -ljnigraphics ${android-lib} ${log-lib} )
+
 ELSE()
 
     IF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/release/opencv")
@@ -140,8 +143,7 @@ ELSE()
 
         target_include_directories(smartautoclicker PUBLIC
                 ${SOURCE_OPENCV_PATH}/modules/core/include
-                ${SOURCE_OPENCV_PATH}/modules/imgproc/include
-                ${SOURCE_OPENCV_PATH}/modules/imgcodecs/include)
+                ${SOURCE_OPENCV_PATH}/modules/imgproc/include)
 
         # Required to get opencv2/open_modules.hpp generated at build time
         include_directories (${CMAKE_BINARY_DIR})
@@ -157,9 +159,8 @@ ELSE()
                 ${SOURCE_NCNN_PATH}/src
                 ${CMAKE_CURRENT_BINARY_DIR}/release/ncnn/src )
     ENDIF()
+
+    target_link_libraries(smartautoclicker opencv_core opencv_imgproc ncnn -ljnigraphics ${android-lib} ${log-lib} )
+
 ENDIF()
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
-target_link_libraries(smartautoclicker opencv_core opencv_imgproc opencv_imgcodecs ncnn -ljnigraphics ${android-lib} ${log-lib} )

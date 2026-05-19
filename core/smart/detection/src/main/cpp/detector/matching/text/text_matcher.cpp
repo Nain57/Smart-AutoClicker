@@ -17,7 +17,6 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/imgcodecs.hpp>
 
 #include "text_matcher.hpp"
 #include "../../../logs/log.h"

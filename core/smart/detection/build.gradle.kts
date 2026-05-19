@@ -120,7 +120,7 @@ android {
                             "-DWITH_QUIRC=OFF",
                             "-DWITH_V4L=OFF",
                             "-DWITH_WEBP=OFF",
-                            "-DBUILD_LIST=core,imgproc,imgcodecs",
+                            "-DBUILD_LIST=core,imgproc",
                             "-DBUILD_JAVA=OFF",
                             "-DBUILD_ANDROID_EXAMPLES=OFF",
                             "-DBUILD_ANDROID_PROJECTS=OFF",
