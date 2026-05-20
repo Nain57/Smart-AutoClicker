@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector
 
 import android.graphics.Rect
 import android.view.LayoutInflater
@@ -34,12 +34,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 
 import kotlinx.coroutines.launch
 
-class ImageConditionAreaSelectorMenu(
+class ConditionAreaSelectorMenu(
     private val onAreaSelected: (Rect) -> Unit
 ) : OverlayMenu() {
 
     /** The view model for this dialog. */
-    private val viewModel: ImageConditionAreaSelectorViewModel by viewModels(
+    private val viewModel: ConditionAreaSelectorViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { imageConditionAreaSelectorViewModel() },
     )

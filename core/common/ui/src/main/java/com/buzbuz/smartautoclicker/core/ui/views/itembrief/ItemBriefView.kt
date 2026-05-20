@@ -39,6 +39,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefR
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionDescription
 import dagger.hilt.EntryPoints
 
 
@@ -86,6 +88,9 @@ class ItemBriefView @JvmOverloads constructor(
                 )
                 is ColorConditionDescription -> ColorConditionBriefRenderer(
                     this, style.colorConditionStyle,
+                )
+                is TextConditionDescription -> TextConditionBriefRenderer(
+                    this, style.textConditionStyle,
                 )
                 is DefaultDescription -> DefaultBriefRenderer(this, style.defaultStyle)
                 else -> null

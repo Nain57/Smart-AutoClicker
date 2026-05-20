@@ -40,11 +40,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counte
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionAreaSelectorViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
@@ -84,7 +85,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun eventTogglesViewModel(): EventTogglesViewModel
     fun extraConfigViewModel(): ExtraConfigModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel
-    fun imageConditionAreaSelectorViewModel(): ImageConditionAreaSelectorViewModel
+    fun imageConditionAreaSelectorViewModel(): ConditionAreaSelectorViewModel
     fun screenConditionsBriefViewModel(): ScreenConditionsBriefViewModel
     fun imageConditionViewModel(): ImageConditionViewModel
     fun imageEventListViewModel(): ImageEventListViewModel
@@ -101,6 +102,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun systemActionViewModel(): SystemActionViewModel
     fun smartActionsBriefViewModel(): SmartActionsBriefViewModel
     fun swipeViewModel(): SwipeViewModel
+    fun textConditionViewModel(): TextConditionViewModel
     fun timerReachedConditionViewModel(): TimerReachedConditionViewModel
     fun toggleEventViewModel(): ToggleEventViewModel
     fun triggerConditionsViewModel(): TriggerConditionListViewModel

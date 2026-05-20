@@ -14,21 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 
-import android.graphics.PointF
+import android.content.Context
 import android.graphics.Rect
-import androidx.annotation.ColorInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
+import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.getBlueValue
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.getGreenValue
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.getRedValue
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.toRgbaHexString
 
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,22 +40,23 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-class ColorConditionViewModel  @Inject constructor(
+class TextConditionViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
-) : ViewModel()  {
+) : ViewModel() {
 
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedScreenConditionState
         .mapNotNull { it.value }
-        .filterIsInstance<ScreenCondition.Color>()
+        .filterIsInstance<ScreenCondition.Text>()
 
     private val editedConditionHasChanged: StateFlow<Boolean> =
         editionRepository.editionState.editedScreenConditionState
             .map { it.hasChanged }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    val uiState: StateFlow<ColorConditionUiState?> = configuredCondition
-        .map { colorCondition -> colorCondition.toUiState() }
+    val uiState: StateFlow<TextConditionUiState?> = configuredCondition
+        .map { colorCondition -> colorCondition.toUiState(context) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
@@ -76,21 +76,19 @@ class ColorConditionViewModel  @Inject constructor(
         updateEditedCondition { it.copy(name = name) }
     }
 
-    fun setColor(@ColorInt colorInt: Int) {
-        updateEditedCondition { it.copy(color = colorInt) }
-    }
-
-    fun setPosition(position: PointF) {
-        updateEditedCondition {
-            val x = position.x.toInt()
-            val y = position.y.toInt()
-            it.copy(detectionArea = Rect(x, y, x + 1, y + 1))
-        }
+    fun setTextToDetect(text: String) {
+        updateEditedCondition { it.copy(text = text) }
     }
 
     fun toggleShouldBeDetected() {
         updateEditedCondition { oldCondition ->
             oldCondition.copy(shouldBeDetected = !oldCondition.shouldBeDetected)
+        }
+    }
+
+    fun setDetectionArea(area: Rect) {
+        updateEditedCondition {
+            it.copy(detectionArea = area)
         }
     }
 
@@ -100,26 +98,37 @@ class ColorConditionViewModel  @Inject constructor(
         }
     }
 
-    private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Color) -> ScreenCondition.Color?) {
-        editionRepository.editionState.getEditedCondition<ScreenCondition.Color>()?.let { condition ->
+    fun appendCounterReferenceToTextToWrite(counterName: String): String {
+        editionRepository.editionState.getEditedCondition<ScreenCondition.Text>()?.let { condition ->
+            val newValue = condition.text.appendCounterReference(counterName)
+            editionRepository.updateEditedCondition(condition.copy(text = newValue))
+            return newValue
+        }
+
+        return ""
+    }
+
+    private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Text) -> ScreenCondition.Text?) {
+        editionRepository.editionState.getEditedCondition<ScreenCondition.Text>()?.let { condition ->
             closure(condition)?.let { newValue ->
                 editionRepository.updateEditedCondition(newValue)
             }
         }
     }
 
-    private fun ScreenCondition.Color.toUiState(): ColorConditionUiState =
-        ColorConditionUiState(
+    private fun ScreenCondition.Text.toUiState(context: Context): TextConditionUiState =
+        TextConditionUiState(
             canBeSaved = isComplete(),
-            conditionName = name,
-            conditionNameError = name.isEmpty(),
-            conditionColor = color,
-            conditionColorText = color.toRgbaHexString(),
-            conditionPosition = PointF(detectionArea.left.toFloat(), detectionArea.top.toFloat()),
-            redValue = color.getRedValue(),
-            greenValue = color.getGreenValue(),
-            blueValue = color.getBlueValue(),
+            name = name,
+            nameError = name.isEmpty(),
+            textToSearch = text,
             shouldBeDetectedChecked = shouldBeDetected,
+            detectionAreaDescription = detectionArea.toDetectionAreaDisplayText(context),
+            detectionAreaError = detectionArea.isEmpty,
             detectionThreshold = threshold,
         )
+
+    private fun Rect.toDetectionAreaDisplayText(context: Context): String =
+        if (isEmpty) context.getString(R.string.field_text_detection_area_desc_empty)
+        else context.getString(R.string.field_text_detection_area_desc, left, top, right, bottom)
 }

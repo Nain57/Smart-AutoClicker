@@ -55,6 +55,9 @@
     <string name="item_image_condition_title">On image detected</string>
     <string name="item_image_condition_desc">Fulfilled when an image is visible somewhere on the screen</string>
 
+    <string name="item_text_condition_title">On text detected</string>
+    <string name="item_text_condition_desc">Fulfilled when a text is visible somewhere on the screen</string>
+
     <string name="item_copy_title">Copy</string>
     <string name="item_copy_desc">Copy an existing Action from any Scenarios</string>
 
@@ -219,6 +222,16 @@
     <string name="field_select_detection_area_desc">In [%1$d, %2$d, %3$d, %4$d]</string>
 
     <string name="field_title_condition_threshold">Tolerated difference</string>
+
+
+
+    <!-- Dialog Condition Text ==================================================================================== -->
+
+    <string name="field_text_to_detect_label">Text to detect</string>
+
+    <string name="field_text_detection_area_title">Detection area</string>
+    <string name="field_text_detection_area_desc_empty">Click here to select an area</string>
+    <string name="field_text_detection_area_desc" translatable="false">[%1$d - %2$d; %3$d - %4$d]</string>
 
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->

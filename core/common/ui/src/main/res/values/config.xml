@@ -22,5 +22,8 @@
     <!-- The maximum size for the set text action. -->
     <integer name="set_text_action_max_length">200</integer>
 
+    <!-- The maximum size for text condition detection text . -->
+    <integer name="text_condition_max_length">100</integer>
+
     <item name="alpha_menu_item_disabled" type="dimen">40%</item>
 </resources>

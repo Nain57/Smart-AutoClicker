@@ -59,6 +59,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -260,7 +261,7 @@ class ImageConditionDialog(
     private fun showDetectionAreaSelector() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ImageConditionAreaSelectorMenu(
+            newOverlay = ConditionAreaSelectorMenu(
                 onAreaSelected = viewModel::setDetectionArea,
             ),
             hideCurrent = true,

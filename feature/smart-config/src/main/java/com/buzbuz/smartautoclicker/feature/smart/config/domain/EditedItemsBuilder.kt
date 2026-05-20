@@ -151,6 +151,20 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
+    fun createNewTextCondition(context: Context): ScreenCondition.Text {
+        val id = conditionsIdCreator.generateNewIdentifier()
+
+        return ScreenCondition.Text(
+            id = id,
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            threshold = defaultValues.conditionThreshold(context),
+            shouldBeDetected = defaultValues.conditionShouldBeDetected(),
+            priority = 0,
+            text = "",
+            detectionArea = Rect(),
+        )
+    }
 
     suspend fun createNewImageCondition(context: Context, area: Rect, bitmap: Bitmap): ScreenCondition.Image {
         val id = conditionsIdCreator.generateNewIdentifier()

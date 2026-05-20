@@ -79,5 +79,5 @@ private fun ScreenCondition.getDetectionTypeIconRes(): Int =
             else -> throw IllegalStateException("Can't get detection type icon, unknown type $detectionType")
         }
 
-        is ScreenCondition.Text -> TODO()
+        is ScreenCondition.Text -> R.drawable.ic_detect_in_area
     }

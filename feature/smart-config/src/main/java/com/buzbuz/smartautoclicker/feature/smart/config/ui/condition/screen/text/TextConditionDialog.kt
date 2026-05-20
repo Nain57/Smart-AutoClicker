@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 
-import android.content.res.ColorStateList
-import android.graphics.Color
+import android.graphics.Rect
 import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,50 +31,51 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnValueChangedFromUserListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderRange
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionColorBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTextBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.rgbToColorInt
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.setGradientBackground
-import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.math.roundToInt
 
-class ColorConditionDialog(
+class TextConditionDialog(
     private val listener: OnConditionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: ColorConditionViewModel by viewModels(
+    private val viewModel: TextConditionViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { colorConditionViewModel() },
+        creator = { textConditionViewModel() },
     )
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogConfigConditionColorBinding
+    private lateinit var viewBinding: DialogConfigConditionTextBinding
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogConfigConditionColorBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigConditionTextBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_config)
 
@@ -102,10 +102,28 @@ class ColorConditionDialog(
             }
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
-            iconColorValue.setOnClickListener { showPixelColorPickerOverlay() }
-            sliderRed.slider.addOnChangeListener(::onColorSliderValueChanged)
-            sliderGreen.slider.addOnChangeListener(::onColorSliderValueChanged)
-            sliderBlue.slider.addOnChangeListener(::onColorSliderValueChanged)
+            fieldTextToSearch.apply {
+                setup(
+                    label = R.string.field_text_to_detect_label,
+                    icon = R.drawable.ic_search,
+                    disableInputWithCheckbox = false,
+                )
+                textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(
+                    context.resources.getInteger(R.integer.text_condition_max_length)
+                ))
+                setOnTextChangedListener { viewModel.setTextToDetect(it.toString()) }
+                setOnCheckboxClickedListener {
+                    showCounterSelectionDialog { counterName ->
+                        setTextValue(viewModel.appendCounterReferenceToTextToWrite(counterName))
+                    }
+                }
+            }
+            hideSoftInputOnFocusLoss(fieldEditName.textField)
+
+            fieldSelectArea.apply {
+                setTitle(context.getString(R.string.field_text_detection_area_title))
+                setOnClickListener { showDetectionAreaSelector() }
+            }
 
             fieldShouldAppear.apply {
                 setTitle(context.getString(R.string.field_condition_visibility_title))
@@ -156,6 +174,22 @@ class ColorConditionDialog(
         super.back()
     }
 
+    private fun updateUi(uiState: TextConditionUiState?) {
+        if (uiState == null) return
+
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
+            if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.name)
+            fieldEditName.setError(uiState.nameError)
+
+            if (fieldTextToSearch.textField.text.isNullOrEmpty()) fieldTextToSearch.setTextValue(uiState.textToSearch)
+
+            fieldSelectArea.setDescription(uiState.detectionAreaDescription)
+            fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
+            fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
+        }
+    }
+
     private fun onDeleteClicked() {
         if (viewModel.isConditionRelatedToClick()) {
             context.showDeleteConditionsWithAssociatedActionsDialog { onConfirmDelete() }
@@ -170,70 +204,6 @@ class ColorConditionDialog(
         super.back()
     }
 
-    @Suppress("unused")
-    private fun onColorSliderValueChanged(view: Slider, value: Float, fromUser: Boolean) {
-        if (!fromUser) return
-
-        viewModel.setColor(
-            rgbToColorInt(
-                red = viewBinding.sliderRed.slider.value.toInt(),
-                green = viewBinding.sliderGreen.slider.value.toInt(),
-                blue = viewBinding.sliderBlue.slider.value.toInt(),
-            )
-        )
-    }
-
-    private fun updateUi(uiState: ColorConditionUiState?) {
-        if (uiState == null) return
-
-        viewBinding.apply {
-            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
-
-            if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.conditionName)
-            fieldEditName.setError(uiState.conditionNameError)
-            iconColorValue.updateColorIndicatorDrawableColor(uiState.conditionColor)
-            textColorValue.text = uiState.conditionColorText
-
-            updateRGBSliders(uiState)
-
-            viewBinding.fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
-            viewBinding.fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
-        }
-    }
-
-    private fun updateRGBSliders(uiState: ColorConditionUiState) {
-        viewBinding.sliderRed.apply {
-            slider.value = uiState.redValue.toFloat()
-            slider.thumbTintList =
-                ColorStateList.valueOf(Color.rgb(uiState.redValue, 0, 0))
-            backgroundGradient.setGradientBackground(
-                startColor = Color.rgb(0, uiState.greenValue, uiState.blueValue),
-                endColor = Color.rgb(255, uiState.greenValue, uiState.blueValue)
-            )
-        }
-
-        viewBinding.sliderGreen.apply {
-            slider.value = uiState.greenValue.toFloat()
-            slider.thumbTintList =
-                ColorStateList.valueOf(Color.rgb(0, uiState.greenValue, 0))
-            backgroundGradient.setGradientBackground(
-                startColor = Color.rgb(uiState.redValue, 0, uiState.blueValue),
-                endColor = Color.rgb(uiState.redValue, 255, uiState.blueValue),
-            )
-        }
-
-        viewBinding.sliderBlue.apply {
-            slider.value = uiState.blueValue.toFloat()
-            slider.thumbTintList =
-                ColorStateList.valueOf(Color.rgb(0 , 0, uiState.blueValue))
-            backgroundGradient.setGradientBackground(
-                startColor = Color.rgb(uiState.redValue, uiState.greenValue, 0),
-                endColor = Color.rgb(uiState.redValue, uiState.greenValue, 255)
-            )
-        }
-    }
-
-
     private fun onConditionEditingStateChanged(isEditing: Boolean) {
         if (!isEditing) {
             Log.e(TAG, "Closing ConditionDialog because there is no condition edited")
@@ -241,21 +211,23 @@ class ColorConditionDialog(
         }
     }
 
-    private fun showPixelColorPickerOverlay() {
-        val uiState = viewModel.uiState.value ?: return
-
+    private fun showCounterSelectionDialog(onCounterSelected: (String) -> Unit) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ColorCaptureMenu(
-                defaultPosition = uiState.conditionPosition,
-                onColorSelected = { position, selectedColor ->
-                    viewModel.setColor(selectedColor)
-                    viewModel.setPosition(position)
-                }
-            ) ,
+            newOverlay = CounterNameSelectionDialog(onCounterSelected),
+            hideCurrent = true,
+        )
+    }
+
+    private fun showDetectionAreaSelector() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ConditionAreaSelectorMenu(
+                onAreaSelected = viewModel::setDetectionArea,
+            ),
             hideCurrent = true,
         )
     }
 }
 
-private const val TAG = "ColorConditionDialog"
+private const val TAG = "TextConditionDialog"

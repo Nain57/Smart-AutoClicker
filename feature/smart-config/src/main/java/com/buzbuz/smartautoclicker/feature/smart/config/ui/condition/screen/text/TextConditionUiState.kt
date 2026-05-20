@@ -14,21 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 
-import android.graphics.PointF
-import androidx.annotation.ColorInt
-
-data class ColorConditionUiState(
+data class TextConditionUiState(
     val canBeSaved: Boolean,
-    val conditionName: String,
-    val conditionNameError: Boolean,
-    val conditionPosition: PointF,
-    @param:ColorInt val conditionColor: Int,
-    val conditionColorText: String,
-    val redValue: Int,
-    val greenValue: Int,
-    val blueValue: Int,
+    val name: String,
+    val nameError: Boolean,
+    val textToSearch: String,
     val shouldBeDetectedChecked: Boolean,
+    val detectionAreaDescription: String,
+    val detectionAreaError: Boolean,
     val detectionThreshold: Int,
 )

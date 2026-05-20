@@ -44,6 +44,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.colo
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
@@ -194,6 +195,9 @@ class ScreenConditionsBriefMenu(
                     when (choice) {
                         ScreenConditionTypeChoice.OnColorDetected -> showNewColorCaptureOverlay()
                         ScreenConditionTypeChoice.OnImageDetected -> showNewImageCaptureOverlay()
+                        ScreenConditionTypeChoice.OnTextDetected -> viewModel.createTextCondition(context) { condition ->
+                            showScreenConditionConfigDialog(condition)
+                        }
                     }
                 },
             ),
@@ -239,7 +243,7 @@ class ScreenConditionsBriefMenu(
             newOverlay = when (condition) {
                 is ScreenCondition.Color -> ColorConditionDialog(conditionConfigDialogListener)
                 is ScreenCondition.Image -> ImageConditionDialog(conditionConfigDialogListener)
-                is ScreenCondition.Text -> TODO()
+                is ScreenCondition.Text -> TextConditionDialog(conditionConfigDialogListener)
             },
             hideCurrent = true,
         )

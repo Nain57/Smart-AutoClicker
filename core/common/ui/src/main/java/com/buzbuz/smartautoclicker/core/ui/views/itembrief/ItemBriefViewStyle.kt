@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBrie
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRendererStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionBriefRendererStyle
 
 
 internal class ItemBriefViewStyle(
@@ -39,6 +40,7 @@ internal class ItemBriefViewStyle(
     val pauseStyle: PauseBriefRendererStyle,
     val imageConditionStyle: ImageConditionBriefRendererStyle,
     val colorConditionStyle: ColorConditionBriefRendererStyle,
+    val textConditionStyle: TextConditionBriefRendererStyle,
     val defaultStyle: DefaultBriefRendererStyle,
 )
 
@@ -91,6 +93,12 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 backgroundColor = backgroundColor,
                 selectorColor = colorOutlinePrimary,
                 thicknessPx = thickness.toInt(),
+            ),
+            textConditionStyle = TextConditionBriefRendererStyle(
+                backgroundColor = backgroundColor,
+                selectorColor = colorOutlinePrimary,
+                thicknessPx = thickness.toInt(),
+                cornerRadiusPx = cornerRadius,
             ),
             defaultStyle = DefaultBriefRendererStyle(
                 backgroundColor = backgroundColor,

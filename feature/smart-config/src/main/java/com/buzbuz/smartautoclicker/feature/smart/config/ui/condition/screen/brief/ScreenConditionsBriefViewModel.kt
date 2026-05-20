@@ -46,6 +46,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
@@ -98,7 +99,8 @@ class ScreenConditionsBriefViewModel @Inject constructor(
                 condition.toColorItemDescription()
             is ScreenCondition.Image ->
                 condition.toImageItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
-            is ScreenCondition.Text -> TODO()
+            is ScreenCondition.Text ->
+                condition.toTextItemDescription()
             null -> null
         }
     }
@@ -189,6 +191,13 @@ class ScreenConditionsBriefViewModel @Inject constructor(
          }
     }
 
+    fun createTextCondition(context: Context, completed: (ScreenCondition.Text) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val condition = editionRepository.editedItemsBuilder.createNewTextCondition(context)
+            withContext(Dispatchers.Main) { completed(condition) }
+        }
+    }
+
     fun monitorBriefFirstItemView(briefItemView: View) {
         monitoredViewsManager.attach(
             MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM,
@@ -239,4 +248,10 @@ private fun ScreenCondition.Image.toImageItemDescription(screenArea: Point, bitm
                 WHOLE_SCREEN -> Rect(0, 0, screenArea.x, screenArea.y)
                 else -> null
             },
+    )
+
+private fun ScreenCondition.Text.toTextItemDescription(): TextConditionDescription =
+    TextConditionDescription(
+        conditionText = text,
+        conditionDetectionArea = detectionArea,
     )
