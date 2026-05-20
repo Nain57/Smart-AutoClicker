@@ -91,7 +91,9 @@ class EventCardViewHolder(
                     }
                 }
 
-                is ScreenCondition.Text -> TODO()
+                is ScreenCondition.Text -> {
+                    conditionImage.setImageResource(R.drawable.ic_text_condition)
+                }
             }
 
         }

@@ -47,11 +47,17 @@ fun IncludeScreenConditionCardBinding.bind(
     return when (val condition = uiCondition.condition) {
         is ScreenCondition.Color -> {
             conditionDetectionType.visibility = View.GONE
+            conditionImage.visibility = View.VISIBLE
+            conditionText.visibility = View.GONE
+
             conditionImage.setColorIndicatorDrawable(condition.color)
             null
         }
         is ScreenCondition.Image -> {
             conditionDetectionType.visibility = View.VISIBLE
+            conditionImage.visibility = View.VISIBLE
+            conditionText.visibility = View.GONE
+
             conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
             bitmapProvider.invoke(condition) { bitmap ->
                 if (bitmap != null) {
@@ -66,7 +72,14 @@ fun IncludeScreenConditionCardBinding.bind(
             }
         }
 
-        is ScreenCondition.Text -> TODO()
+        is ScreenCondition.Text ->  {
+            conditionDetectionType.visibility = View.GONE
+            conditionImage.visibility = View.GONE
+            conditionText.visibility = View.VISIBLE
+
+            conditionText.text = condition.text
+            null
+        }
     }
 }
 

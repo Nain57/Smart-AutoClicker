@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
 import android.content.Context
 import android.graphics.Point
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -87,7 +89,7 @@ class ClickOffsetViewModel @Inject constructor(
             when (screenCondition) {
                 is ScreenCondition.Color -> context.createColorIndicatorDrawable(screenCondition.color)
                 is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(screenCondition)
-                is ScreenCondition.Text -> TODO()
+                is ScreenCondition.Text -> ContextCompat.getDrawable(context, R.drawable.ic_text_condition)
                 null -> null
             }
         }

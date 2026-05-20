@@ -36,13 +36,28 @@
         android:contentDescription="@string/content_desc_image_condition"
         tools:src="@drawable/ic_condition" />
 
+    <TextView
+        android:id="@+id/condition_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/margin_vertical_mini"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        android:background="?attr/colorSurfaceVariant"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:src="@drawable/ic_condition"
+        tools:text="Hello world"/>
+
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/condition_image"
         app:layout_constraintBottom_toTopOf="@id/condition_name"/>
 
     <com.google.android.material.textview.MaterialTextView

@@ -191,7 +191,7 @@ class EditedItemsBuilder internal constructor(
         when (condition) {
             is ScreenCondition.Color -> createNewColorConditionFrom(condition, eventId)
             is ScreenCondition.Image -> createNewImageConditionFrom(condition, eventId)
-            is ScreenCondition.Text -> TODO()
+            is ScreenCondition.Text -> createNewTextConditionFrom(condition, eventId)
         }
 
     fun createNewColorConditionFrom(condition: ScreenCondition.Color, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Color =
@@ -207,6 +207,14 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + condition.name,
             path = "" + condition.path,
+        )
+
+    fun createNewTextConditionFrom(condition: ScreenCondition.Text, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Text =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
+            text = "" + condition.text,
         )
 
     fun createNewOnBroadcastReceived(context: Context): TriggerCondition.OnBroadcastReceived =

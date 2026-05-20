@@ -21,6 +21,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
+import androidx.core.content.ContextCompat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -259,7 +260,7 @@ class ClickViewModel @Inject constructor(
         val conditionVisualization = when (conditionToClick) {
             is ScreenCondition.Color -> createColorIndicatorDrawable(conditionToClick.color)
             is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(conditionToClick)
-            is ScreenCondition.Text -> TODO()
+            is ScreenCondition.Text -> ContextCompat.getDrawable(this, R.drawable.ic_text_condition)
             null -> null
         }
 

@@ -66,8 +66,8 @@ void TextMatcher::matchText(
 
     // Parse results and find matching candidate, if any
     for (const auto& recognizerResult: recognizerResults) {
-        float score = bestSubstringSimilarity(recognizerResult.text,"youtube") * 100;
-        LOGD("TextMatcher", "Score=%f; recognized=%s, target=%s", score, recognizerResult.text.c_str(), "youtube");
+        float score = bestSubstringSimilarity(recognizerResult.text,conditionText) * 100;
+        LOGD("TextMatcher", "Score=%f; recognized=%s", score, recognizerResult.text.c_str());
 
         if (score < currentMatchingResult.getResultConfidence()) continue;
 

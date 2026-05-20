@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
@@ -330,7 +331,7 @@ class SmartActionsBriefViewModel @Inject constructor(
                 when (condition) {
                     is ScreenCondition.Color -> context.createColorIndicatorDrawable(condition.color)?.toBitmap()
                     is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(condition)
-                    is ScreenCondition.Text -> TODO()
+                    is ScreenCondition.Text -> ContextCompat.getDrawable(context, R.drawable.ic_text_condition)?.toBitmap()
                 }
             }
     }
