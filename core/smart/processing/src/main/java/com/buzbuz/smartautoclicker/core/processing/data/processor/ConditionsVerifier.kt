@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.graphics.Bitmap
 
+import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
+import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterReferences
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
@@ -198,8 +200,16 @@ internal class ConditionsVerifier(
             .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Text
             ?: return condition.toInvalidConditionResult()
 
+        val counters = buildMap {
+            condition.text.findCounterReferences().forEach { counterName ->
+                state.getCounterValue(counterName)?.let { counterValue ->
+                    put(counterName, counterValue)
+                }
+            }
+        }
+
         val detectionResult = imageDetector.detectText(
-            conditionText = condition.text,
+            conditionText = condition.text.replaceCounterReferences(counters),
             detectionArea = conditionScalingInfo.detectionArea,
             threshold = condition.threshold,
         )
