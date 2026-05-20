@@ -37,6 +37,13 @@ internal class TextConditionBriefRenderer(
     viewStyle: TextConditionBriefRendererStyle,
 ) : ItemBriefRenderer<TextConditionBriefRendererStyle>(briefView, viewStyle) {
 
+    private companion object {
+        /** Maximal size of the condition text. */
+        private const val MAX_TEXT_SIZE = 48f
+        /** Margin between the text and the border rect. */
+        private const val TEXT_MARGIN_PX = 8f
+    }
+
     private val selectorPaint = Paint().apply {
         isAntiAlias = true
         this.style = Paint.Style.STROKE
@@ -48,6 +55,11 @@ internal class TextConditionBriefRenderer(
         style = Paint.Style.FILL
         color = viewStyle.backgroundColor
     }
+    private val textPaint = Paint().apply {
+        isAntiAlias = true
+        color = viewStyle.selectorColor
+        textAlign = Paint.Align.CENTER
+    }
 
     private var detectionBorderRect: RectF? = null
     private val backgroundPath = Path().apply {
@@ -55,6 +67,9 @@ internal class TextConditionBriefRenderer(
     }
 
     private var briefDescription: TextConditionDescription? = null
+    private var textToShow: String? = null
+    private var textX = 0f
+    private var textY = 0f
 
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is TextConditionDescription) return
@@ -64,41 +79,54 @@ internal class TextConditionBriefRenderer(
     override fun onInvalidate() {
         detectionBorderRect = null
         backgroundPath.reset()
+        textToShow = null
 
         // Nothing to display ? Exit early
-        val detectionArea = briefDescription?.conditionDetectionArea ?: return
+        val description = briefDescription ?: return
+        val detectionArea = description.conditionDetectionArea
         backgroundPath.addRectangleWithHole(
             RectF(0f, 0f, briefView.width.toFloat(), briefView.height.toFloat()),
             detectionArea.toRectF(),
         )
-        detectionBorderRect = detectionArea.toDrawableRect(
+        val borderRect = detectionArea.toDrawableRect(
             viewStyle.thicknessPx, briefView.width, briefView.height,
         )
+        detectionBorderRect = borderRect
+
+        val text = description.conditionText
+        if (text.isEmpty()) return
+
+        val margin = TEXT_MARGIN_PX + viewStyle.thicknessPx / 2f
+        val maxWidth = borderRect.width() - 2 * margin
+        val maxHeight = borderRect.height() - 2 * margin
+        if (maxWidth <= 0 || maxHeight <= 0) return
+
+        textPaint.textSize = MAX_TEXT_SIZE
+        val bounds = Rect()
+        textPaint.getTextBounds(text, 0, text.length, bounds)
+
+        val widthScale = maxWidth / bounds.width()
+        val heightScale = maxHeight / bounds.height()
+        val scale = min(1f, min(widthScale, heightScale))
+
+        textPaint.textSize = MAX_TEXT_SIZE * scale
+        textX = borderRect.centerX()
+        textY = borderRect.centerY() - (textPaint.descent() + textPaint.ascent()) / 2
+        textToShow = text
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (detectionBorderRect != null) {
-            canvas.drawPath(backgroundPath, backgroundPaint)
-            detectionBorderRect?.let { borderRect ->
-                canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, selectorPaint)
-            }
+        val borderRect = detectionBorderRect ?: return
+
+        canvas.drawPath(backgroundPath, backgroundPaint)
+        canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, selectorPaint)
+
+        textToShow?.let { text ->
+            canvas.drawText(text, textX, textY, textPaint)
         }
     }
 
     override fun onStop() = Unit
-
-    /** Get the position of this rectangle if it was centered in the provided container. */
-    private fun Rect.centerIn(container: Rect): Rect {
-        val offsetX = (container.width() - width()) / 2
-        val offsetY = (container.height() - height()) / 2
-
-        return Rect(
-            container.left + offsetX,
-            container.top + offsetY,
-            container.right - offsetX,
-            container.bottom - offsetY,
-        )
-    }
 
     /** Get the path to draw a rectangle containing a rectangle hole inside it.  */
     private fun Path.addRectangleWithHole(area: RectF, hole: RectF) {
