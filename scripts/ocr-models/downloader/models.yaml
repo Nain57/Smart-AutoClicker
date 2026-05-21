@@ -1,0 +1,160 @@
+# PaddleOCR recognition models by alphabet/script
+# =============================================================================
+#
+# INFERENCE MODEL URLs  (paddleocr.bj.bcebos.com)
+#   Hosted on Baidu's object storage (bcebos). These URLs are stable in
+#   practice — PaddleOCR has never broken them across releases — but they are
+#   NOT under a versioning guarantee. If a URL stops resolving, cross-reference
+#   the current download links in the official model registry:
+#   https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/paddleocr.py
+#
+# DICTIONARY URLs  (raw.githubusercontent.com, branch: release/2.7)
+#   Pinned to the release/2.7 branch ref, NOT a commit SHA. This means the
+#   content can technically change if the branch is force-pushed (unlikely but
+#   possible).
+#
+# MODEL VERSIONS
+#   PP-OCRv4 is used where Baidu published a v4 multilingual model (Chinese
+#   simplified, Devanagari). All other scripts use PP-OCRv3, which remains
+#   the latest published multilingual checkpoint for those scripts.
+#
+# USAGE
+#   Pick the model matching the script of the user's trigger text.
+#   The `default: true` model (latin) is embedded in the app;
+#   all others are downloaded on demand based on user script preference.
+#
+# =============================================================================
+
+models:
+
+  # -----------------------------------------------------------------------
+  # DETECTION (shared — script-agnostic, one model covers all alphabets)
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-multilingual-det
+    type: det
+    alphabet: all
+    default: true
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_infer.tar
+    dict_url: null   # detection models do not use a character dict
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Latin
+  # Covers: en, fr, de, es, pt, it, nl, pl, sv, ro, cs, hu, fi, ...
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-latin
+    type: rec
+    alphabet: latin
+    default: true    # embedded in app, no download needed
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/latin_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/latin_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Chinese Simplified
+  # Covers: zh-CN (Simplified Chinese + digits + punctuation)
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv4-rec-chinese-simplified
+    type: rec
+    alphabet: chinese_simplified
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv4/chinese/ch_PP-OCRv4_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/ppocr_keys_v1.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Chinese Traditional
+  # Covers: zh-TW, zh-HK
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-chinese-traditional
+    type: rec
+    alphabet: chinese_traditional
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/chinese_cht_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/chinese_cht_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Japanese
+  # Covers: hiragana, katakana, kanji (ja)
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-japanese
+    type: rec
+    alphabet: japanese
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/japan_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/japan_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Korean
+  # Covers: ko (Hangul)
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-korean
+    type: rec
+    alphabet: korean
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/korean_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/korean_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Cyrillic
+  # Covers: ru, uk, bg, sr, mk, be, ...
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-cyrillic
+    type: rec
+    alphabet: cyrillic
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/cyrillic_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/cyrillic_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Arabic
+  # Covers: ar, fa, ur, ... (right-to-left)
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-arabic
+    type: rec
+    alphabet: arabic
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/arabic_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/arabic_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Devanagari
+  # Covers: hi, mr, ne, sa, ... (Indian subcontinent)
+  # PP-OCRv4 model available for this script
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv4-rec-devanagari
+    type: rec
+    alphabet: devanagari
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv4/multilingual/devanagari_PP-OCRv4_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/devanagari_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Tamil
+  # Covers: ta
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-tamil
+    type: rec
+    alphabet: tamil
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/ta_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/ta_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Telugu
+  # Covers: te
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-telugu
+    type: rec
+    alphabet: telugu
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/te_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/te_dict.txt
+
+  # -----------------------------------------------------------------------
+  # RECOGNITION — Kannada
+  # Covers: kn
+  # -----------------------------------------------------------------------
+  - name: PP-OCRv3-rec-kannada
+    type: rec
+    alphabet: kannada
+    default: false
+    inference_url: https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/ka_PP-OCRv3_rec_infer.tar
+    dict_url: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.7/ppocr/utils/dict/ka_dict.txt
