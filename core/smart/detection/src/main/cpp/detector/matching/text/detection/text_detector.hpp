@@ -57,18 +57,18 @@ namespace smartautoclicker {
          */
         static constexpr int maxSize = 960;
 
-        /** Image normalization mean values (RGB). */
+        /** Image normalization mean values (RGB) for PP-OCRv3/v4 Multilingual. */
         static constexpr float meanVals[3] = {
-                0.485f * 255.f,
-                0.456f * 255.f,
-                0.406f * 255.f
+                127.5f,
+                127.5f,
+                127.5f
         };
 
         /** Image normalization scale values (1/std). */
         static constexpr float normVals[3] = {
-                1.f / 0.229f / 255.f,
-                1.f / 0.224f / 255.f,
-                1.f / 0.225f / 255.f
+                1.f / 127.5f,
+                1.f / 127.5f,
+                1.f / 127.5f
         };
 
         /** NCNN text detector.*/

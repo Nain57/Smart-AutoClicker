@@ -38,7 +38,7 @@ bool TextDetector::init(AAssetManager* assetManager) {
     ncnn::Extractor ex = ncnnDetector->create_extractor();
     ex.input("in0", dummy);
     ncnn::Mat out;
-    ex.extract("131", out);
+    ex.extract("out0", out);
 
     return true;
 }
@@ -123,7 +123,7 @@ void TextDetector::detectText(const cv::Mat &paddedRgb, ncnn::Mat& output) const
     ncnn::Extractor extractor = ncnnDetector->create_extractor();
     extractor.input("in0", input);
 
-    int result = extractor.extract("131", output);
+    int result = extractor.extract("out0", output);
     if (result != 0) {
         LOGE("TextDetector", "Inference failed");
         return;
@@ -134,17 +134,18 @@ cv::Mat TextDetector::processDetectionOutput(const cv::Mat& scoreMap) {
     // Convert to OpenCv format
     cv::Mat binary;
 
-    // Thresholding
-    cv::threshold(scoreMap,binary,0.5f,1.0f,cv::THRESH_BINARY);
+    // Thresholding - lowered slightly to help join character fragments
+    cv::threshold(scoreMap, binary, 0.3f, 1.0f, cv::THRESH_BINARY);
     binary.convertTo(binary, CV_8UC1, 255);
 
-    // Morphology
-    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT,cv::Size(3, 3));
-    cv::morphologyEx(binary,binary,cv::MORPH_CLOSE, kernel);
+    // Morphology Close - joins disconnected parts of the same word/character
+    cv::Mat kernelClose = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::morphologyEx(binary, binary, cv::MORPH_CLOSE, kernelClose);
 
-    // Dilate
-    cv::Mat kernelDilate = cv::getStructuringElement(cv::MORPH_RECT,cv::Size(5, 5));
-    cv::dilate(binary,binary,kernelDilate);
+    // Dilation - Smear horizontally to merge words into full sentences/lines
+    // We use a wider kernel horizontally (30) than vertically (3) to avoid merging separate lines.
+    cv::Mat kernelDilate = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(30, 3));
+    cv::dilate(binary, binary, kernelDilate);
 
     return binary;
 }
@@ -197,8 +198,9 @@ std::vector<std::vector<cv::Point>> TextDetector::filterContours(
         std::vector<std::vector<cv::Point>> poly = { shifted };
         cv::fillPoly(maskROI, poly, cv::Scalar(255));
 
-        double meanScore = cv::mean(scoreROI, maskROI)[0];
-        if (meanScore < 0.6) continue;
+        double maxScore;
+        cv::minMaxLoc(scoreROI, nullptr, &maxScore);
+        if (maxScore  < 0.5) continue;
 
         filtered.push_back(contour);
     }

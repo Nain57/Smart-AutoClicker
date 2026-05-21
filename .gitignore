@@ -84,6 +84,10 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+# Python
+scripts/**/*.pyc
+**/__pycache__/
+
 # Root directory local archives and Windows build scripts (not tracked)
 /*.zip
 /*.bat

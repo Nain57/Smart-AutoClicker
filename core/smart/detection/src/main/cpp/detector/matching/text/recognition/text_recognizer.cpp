@@ -37,8 +37,8 @@ bool TextRecognizer::init(AAssetManager* assetManager) {
 }
 
 bool TextRecognizer::loadModelParams(AAssetManager* assetManager) {
-    int paramResult = ncnnRecognizer->load_param(assetManager,"models/ch_PP_OCRv4_rec.ncnn.param");
-    int binResult = ncnnRecognizer->load_model(assetManager,"models/ch_PP_OCRv4_rec.ncnn.bin");
+    int paramResult = ncnnRecognizer->load_param(assetManager,"models/rec.ncnn.param");
+    int binResult = ncnnRecognizer->load_model(assetManager,"models/rec.ncnn.bin");
     if (paramResult != 0 || binResult != 0) {
         LOGE("TextRecognizer", "Failed to load recognition model");
         return false;
@@ -49,7 +49,7 @@ bool TextRecognizer::loadModelParams(AAssetManager* assetManager) {
 }
 
 bool TextRecognizer::loadDictionary(AAssetManager* assetManager) {
-    AAsset* asset = AAssetManager_open(assetManager,"models/ppocr_keys_v1.txt",AASSET_MODE_BUFFER);
+    AAsset* asset = AAssetManager_open(assetManager,"models/dict.txt",AASSET_MODE_BUFFER);
     if (!asset) {
         LOGE("TextRecognizer", "Failed to open dictionary");
         return false;

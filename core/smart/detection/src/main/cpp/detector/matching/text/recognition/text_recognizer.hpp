@@ -50,12 +50,6 @@ namespace smartautoclicker {
 
     private:
 
-        /** Internal structure for holding preprocessed NCNN input and its source metadata. */
-        struct RecognitionInput {
-            ncnn::Mat input;
-            cv::Rect boundingBox;
-        };
-
         /** PP-OCR normalization mean values. */
         const float meanVals[3] = {
                 127.5f,
