@@ -30,6 +30,9 @@ bool TextRecognizer::init(AAssetManager* assetManager) {
         return false;
     }
 
+    // Pre-allocate padded buffer to the maximum possible width to avoid runtime reallocations
+    paddedBuffer = cv::Mat::zeros(48, 320, CV_8UC3);
+
     return true;
 }
 
@@ -72,37 +75,31 @@ bool TextRecognizer::loadDictionary(AAssetManager* assetManager) {
 }
 
 std::vector<TextRecognizerResult> TextRecognizer::recognizeText(const std::vector<TextDetectorResult>& detectionResults) {
-    preparedInputs.clear();
-    preparedInputs.reserve(detectionResults.size());
+    std::vector<TextRecognizerResult> results;
+    results.reserve(detectionResults.size());
 
-    // Pre processing
     for (const auto& detectionResult : detectionResults) {
         cv::Mat crop = detectionResult.crop;
         if (crop.empty()) continue;
 
-        RecognitionInput prepared;
-        prepared.input = preprocess(crop);
-        prepared.boundingBox = detectionResult.boundingBox;
-        preparedInputs.push_back(std::move(prepared));
-    }
+        // 1. Preprocess using member buffers
+        // This is safe because we process one crop at a time (Sequential)
+        ncnn::Mat input = preprocess(crop);
 
-    // Inference
-    std::vector<TextRecognizerResult> results;
-    results.reserve(preparedInputs.size());
-    for (const RecognitionInput& prepared : preparedInputs) {
-
+        // 2. Inference
         ncnn::Extractor extractor = ncnnRecognizer->create_extractor();
         extractor.set_light_mode(true);
 
         ncnn::Mat output;
-        extractor.input("in0", prepared.input);
+        extractor.input("in0", input);
         int result = extractor.extract("out0", output);
         if (result != 0) {
             LOGE("TextRecognizer","Inference failed");
             continue;
         }
 
-        results.push_back(decode(prepared, output));
+        // 3. Decode
+        results.push_back(decode(detectionResult.boundingBox, output));
     }
 
     return results;
@@ -120,6 +117,7 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
     int alignedWidth = ((resizedWidth + 31) / 32) * 32;
     alignedWidth = std::min(alignedWidth, maxWidth);
 
+    // Reuse resizedBuffer header
     cv::resize(
             crop,
             resizedBuffer,
@@ -127,11 +125,16 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
             0, 0,
             cv::INTER_LINEAR);
 
-    paddedBuffer.create(targetHeight, alignedWidth, CV_8UC3);
-    paddedBuffer.setTo(cv::Scalar(0, 0, 0));
+    // Clear old data in the padded buffer region we are about to use
+    // Using a Rect view on the member buffer prevents reallocation
+    cv::Mat paddingROI = paddedBuffer(cv::Rect(0, 0, alignedWidth, targetHeight));
+    paddingROI.setTo(cv::Scalar(0, 0, 0));
 
-    resizedBuffer.copyTo(paddedBuffer(cv::Rect(0, 0, resizedWidth, targetHeight)));
+    // Copy resized image into the member buffer
+    resizedBuffer.copyTo(paddingROI(cv::Rect(0, 0, resizedWidth, targetHeight)));
 
+    // Create a ncnn wrapper pointing to the member buffer data.
+    // No allocation here.
     ncnn::Mat input = ncnn::Mat::from_pixels(
             paddedBuffer.data,
             ncnn::Mat::PIXEL_RGB,
@@ -140,10 +143,12 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
 
     input.substract_mean_normalize(meanVals, normVals);
 
+    // Return the wrapper. Since we use it immediately in the sequential loop,
+    // it will stay valid until the next crop's preprocess call.
     return input;
 }
 
-TextRecognizerResult TextRecognizer::decode(const RecognitionInput& input, const ncnn::Mat& output) {
+TextRecognizerResult TextRecognizer::decode(const cv::Rect& boundingBox, const ncnn::Mat& output) {
 
     const int numClasses = output.w;
     const int sequenceLength = output.h;
@@ -183,5 +188,5 @@ TextRecognizerResult TextRecognizer::decode(const RecognitionInput& input, const
     float confidence = confidenceCount > 0 ? totalConfidence / static_cast<float>(confidenceCount) : 0.f;
     LOGD("TextRecognizer", "\"%s\" (conf=%.3f)", recognizedText.c_str(), confidence);
 
-    return {input.boundingBox, recognizedText, confidence};
+    return {boundingBox, recognizedText, confidence};
 }

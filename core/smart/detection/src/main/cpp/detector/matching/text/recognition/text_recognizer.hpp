@@ -75,12 +75,10 @@ namespace smartautoclicker {
         /** Character dictionary used to map model indices to characters. */
         std::vector<std::string> dictionary;
 
-        /** Reusable buffer for resizing crops. */
+        /** Reusable buffers to avoid reallocations in the main loop. */
         cv::Mat resizedBuffer;
-        /** Reusable buffer for padding crops to the required aspect ratio. */
+        /** Reusable buffer for padding, pre-allocated to max size in init. */
         cv::Mat paddedBuffer;
-        /** List of inputs prepared for the next inference batch. */
-        std::vector<RecognitionInput> preparedInputs;
 
         /** Loads the NCNN model parameters and weights. */
         bool loadModelParams(AAssetManager *assetManager);
@@ -98,11 +96,11 @@ namespace smartautoclicker {
 
         /**
          * Decodes the raw output tensor from the recognizer into a string.
-         * @param input The original input metadata.
+         * @param boundingBox The original bounding box for the result.
          * @param output The raw output from the NCNN extractor.
          * @return A packaged TextRecognizerResult.
          */
-        TextRecognizerResult decode(const RecognitionInput& input, const ncnn::Mat& output);
+        TextRecognizerResult decode(const cv::Rect& boundingBox, const ncnn::Mat& output);
     };
 
 } // smartautoclicker
