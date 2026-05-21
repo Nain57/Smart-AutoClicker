@@ -172,18 +172,25 @@ def process_model(model, output_root):
 # MAIN
 # ----------------------------
 
-def main_logic(yaml_path, output_root):
+def main_logic(yaml_path, output_root, mode="all"):
     yaml_path = os.path.abspath(yaml_path)
     output_root = os.path.abspath(output_root)
 
     print("\n=== PaddleOCR Model Downloader (Clean Version) ===")
     print("[INFO] YAML:", yaml_path)
     print("[INFO] OUTPUT:", output_root)
+    print("[INFO] MODE:", mode)
 
     with open(yaml_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     models = config.get("models", [])
+
+    # Filter models based on mode
+    if mode == "default":
+        models = [m for m in models if m.get("default") == True]
+    elif mode == "language_pack":
+        models = [m for m in models if m.get("default") != True]
 
     for model in models:
         print("\n-----------------------------------")
@@ -205,9 +212,16 @@ def main():
         help="Output directory"
     )
 
+    parser.add_argument(
+        "--mode",
+        choices=["all", "default", "language_pack"],
+        default="all",
+        help="Download mode: 'default' (detection + latin), 'language_pack' (all others), or 'all' (default)"
+    )
+
     args = parser.parse_args()
 
-    main_logic(args.input, args.output)
+    main_logic(args.input, args.output, args.mode)
 
     print("\n[DONE] All models processed")
 
