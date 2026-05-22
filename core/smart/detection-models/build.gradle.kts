@@ -23,20 +23,17 @@ plugins {
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.core.processing"
+    namespace = "com.smartautoclicker.code.smart.detectionmodels"
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
-
-    implementation(project(":core:common:actions"))
+    implementation(libs.androidx.annotation)
     implementation(project(":core:common:base"))
-    implementation(project(":core:common:bitmaps"))
-    implementation(project(":core:common:display"))
-    implementation(project(":core:common:settings"))
-    implementation(project(":core:smart:detection"))
-    implementation(project(":core:smart:detection-models"))
-    implementation(project(":core:smart:domain"))
+
+    playStoreImplementation(libs.google.play.asset.delivery)
+    playStoreImplementation(libs.google.play.asset.delivery.ktx)
+    playStoreImplementation(libs.kotlinx.coroutines.play.services)
 
     testImplementation(libs.kotlinx.coroutines.test)
 }

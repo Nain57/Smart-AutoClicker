@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":core:smart:detection-models")
+
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {

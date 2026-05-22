@@ -13,6 +13,7 @@ androidGradlePlugin = "9.2.0"
 java = "21"
 kotlin = "2.3.21"
 kotlinxCoroutines = "1.10.2"
+kotlinxCoroutinesPlayServices = "1.10.2"
 ksp = "2.3.7"
 
 # Androidx
@@ -48,6 +49,7 @@ googleFirebaseCrashlyticsNdk = "20.0.5"
 googleUserMessaging = "4.0.0"
 googleGmsAds = "25.2.0"
 googlePlayReview = "2.0.2"
+googlePlayAssetDelivery = "2.3.0"
 
 # Tests only
 androidxArchCoreTesting = "2.2.0"
@@ -111,6 +113,7 @@ airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
 google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "googleDaggerHilt" }
 google-protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "googleProtobufRuntime" }
@@ -127,6 +130,8 @@ google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", versi
 google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
 google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
 google-play-review = { group = "com.google.android.play", name = "review", version.ref = "googlePlayReview" }
+google-play-asset-delivery = { group = "com.google.android.play", name = "asset-delivery", version.ref = "googlePlayAssetDelivery" }
+google-play-asset-delivery-ktx = { group = "com.google.android.play", name = "asset-delivery-ktx", version.ref = "googlePlayAssetDelivery" }
 
 # Tests only
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreTesting" }
