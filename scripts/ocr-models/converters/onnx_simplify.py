@@ -61,7 +61,7 @@ def simplify_onnx(onnx_path, sim_path, shape=None):
     cmd = ["onnxsim", onnx_path, sim_path]
 
     if shape:
-        cmd += ["--input-shape", shape]
+        cmd += ["--overwrite-input-shape", shape]
 
     print("\n=== Simplifying ONNX ===")
     run(cmd)

@@ -72,7 +72,7 @@ def convert_pnnx(onnx_path, output_dir, shape=None, fp16=True):
         cmd = ["pnnx", onnx_path]
 
         if shape:
-            cmd.append(f"input_shape=[{shape}]")
+            cmd.append(f"inputshape=[{shape}]")
 
         if fp16:
             cmd.append("fp16=1")
