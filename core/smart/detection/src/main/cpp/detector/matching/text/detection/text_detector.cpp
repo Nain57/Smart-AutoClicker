@@ -142,8 +142,11 @@ cv::Mat TextDetector::processDetectionOutput(const cv::Mat& scoreMap) {
     binary.convertTo(binary, CV_8UC1, 255);
 
     // Morphology Close - joins disconnected parts of the same word/character
-    cv::Mat kernelClose = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::Mat kernelClose = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 9));
     cv::morphologyEx(binary, binary, cv::MORPH_CLOSE, kernelClose);
+
+    cv::Mat kernelVertical = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(1, 11));
+    cv::dilate(binary, binary, kernelVertical);
 
     // Dilation - Smear horizontally to merge words into full sentences/lines
     // We use a wider kernel horizontally (30) than vertically (3) to avoid merging separate lines.
@@ -183,11 +186,12 @@ std::vector<std::vector<cv::Point>> TextDetector::filterContours(
         if (box.x >= resizedSize.width || box.y >= resizedSize.height) continue;
 
         // Expand slightly (important for game UI text edges)
-        const int margin = 2;
-        box.x = std::max(0, box.x - margin);
-        box.y = std::max(0, box.y - margin);
-        box.width = std::min(scoreMap.cols - box.x, box.width + 2 * margin);
-        box.height = std::min(scoreMap.rows - box.y, box.height + 2 * margin);
+        const int marginX = 2;
+        const int marginY = 5;
+        box.x = std::max(0, box.x - marginX);
+        box.y = std::max(0, box.y - marginY);
+        box.width  = std::min(scoreMap.cols - box.x, box.width  + 2 * marginX);
+        box.height = std::min(scoreMap.rows - box.y, box.height + 2 * marginY);
 
         // ROI views
         cv::Mat scoreROI = scoreMap(box);
@@ -230,11 +234,12 @@ std::vector<cv::Rect> TextDetector::getBoundingBoxes(
         boundingBox &= cv::Rect(0, 0, resizedSize.width, resizedSize.height);
 
         // Expand box slightly
-        const int margin = 4;
-        boundingBox.x -= margin;
-        boundingBox.y -= margin;
-        boundingBox.width += margin * 2;
-        boundingBox.height += margin * 2;
+        const int marginX = 4;
+        const int marginY = 8;   // increased: v3 multilingual has tighter vertical bounds
+        boundingBox.x -= marginX;
+        boundingBox.y -= marginY;
+        boundingBox.width  += marginX * 2;
+        boundingBox.height += marginY * 2;
 
         // Clamp again after expansion
         boundingBox &= cv::Rect(0, 0, resizedSize.width, resizedSize.height);
@@ -270,7 +275,15 @@ std::vector<TextDetectorResult> TextDetector::formatResults(
         cv::Mat crop = originalRoi(boundingBox);
 
         // Rotate vertical crops to horizontal for better recognition compatibility.
-        if (crop.rows > crop.cols) cv::rotate(crop, crop, cv::ROTATE_90_CLOCKWISE);
+        if (crop.rows > crop.cols) {
+            cv::rotate(crop, crop, cv::ROTATE_90_CLOCKWISE);
+            float scaledWidth = static_cast<float>(crop.cols) * (48.f / static_cast<float>(crop.rows));
+            if (scaledWidth > 320.f) {
+                // Crop is too wide for the recognizer — skip or split
+                LOGW("TextDetector", "Skipping crop too wide for recognizer: %dx%d", crop.cols, crop.rows);
+                continue;
+            }
+        }
 
         results.emplace_back(boundingBox, crop);
     }

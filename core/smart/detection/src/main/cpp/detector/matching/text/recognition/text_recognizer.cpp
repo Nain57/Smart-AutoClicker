@@ -106,7 +106,6 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(const std::vecto
 }
 
 ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
-
     constexpr int targetHeight = 48;
     constexpr int maxWidth = 320;
 
@@ -114,10 +113,6 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
     int resizedWidth = std::max(1, static_cast<int>(static_cast<float>(crop.cols) * scale));
     resizedWidth = std::min(resizedWidth, maxWidth);
 
-    int alignedWidth = ((resizedWidth + 31) / 32) * 32;
-    alignedWidth = std::min(alignedWidth, maxWidth);
-
-    // Reuse resizedBuffer header
     cv::resize(
             crop,
             resizedBuffer,
@@ -125,26 +120,18 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
             0, 0,
             cv::INTER_LINEAR);
 
-    // Clear old data in the padded buffer region we are about to use
-    // Using a Rect view on the member buffer prevents reallocation
-    cv::Mat paddingROI = paddedBuffer(cv::Rect(0, 0, alignedWidth, targetHeight));
-    paddingROI.setTo(cv::Scalar(0, 0, 0));
+    // Always clear and use the full 320px buffer — SVTR requires fixed width
+    paddedBuffer.setTo(cv::Scalar(0, 0, 0));
+    resizedBuffer.copyTo(paddedBuffer(cv::Rect(0, 0, resizedWidth, targetHeight)));
 
-    // Copy resized image into the member buffer
-    resizedBuffer.copyTo(paddingROI(cv::Rect(0, 0, resizedWidth, targetHeight)));
-
-    // Create a ncnn wrapper pointing to the member buffer data.
-    // No allocation here.
+    // Always pass maxWidth — SVTR attention is frozen at 320px
     ncnn::Mat input = ncnn::Mat::from_pixels(
             paddedBuffer.data,
             ncnn::Mat::PIXEL_RGB,
-            alignedWidth,
+            maxWidth,
             targetHeight);
 
     input.substract_mean_normalize(meanVals, normVals);
-
-    // Return the wrapper. Since we use it immediately in the sequential loop,
-    // it will stay valid until the next crop's preprocess call.
     return input;
 }
 
