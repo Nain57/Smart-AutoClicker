@@ -39,7 +39,7 @@ namespace smartautoclicker {
          * @param assetManager The Android Asset Manager for loading assets.
          * @return true if initialization succeeded, false otherwise.
          */
-        bool init(AAssetManager* assetManager);
+        bool init(const std::string& modelPath);
 
         /**
          * Recognizes text within the provided detection results.
@@ -75,10 +75,10 @@ namespace smartautoclicker {
         cv::Mat paddedBuffer;
 
         /** Loads the NCNN model parameters and weights. */
-        bool loadModelParams(AAssetManager *assetManager);
+        bool loadModelParams(const std::string& modelPath);
 
         /** Loads the character dictionary file. */
-        bool loadDictionary(AAssetManager *assetManager);
+        bool loadDictionary(const std::string& dictionaryPath);
 
         /**
          * Preprocesses a single image crop for the recognition model.

@@ -85,11 +85,12 @@ namespace smartautoclicker {
 
         /**
          * Initializes the underlying detector and recognizer.
-         * @param assetManager The Android Asset Manager to load models.
+         * @param detectionModelPath Path to the detection model folder.
+         * @param recognitionModelPath Path to the recognition model directory.
          *
          * @return true if both components initialized successfully.
          */
-        bool init(AAssetManager* assetManager);
+        bool init(const std::string& detectionModelPath, const std::string& recognitionModelPath);
 
         static bool isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi);
 

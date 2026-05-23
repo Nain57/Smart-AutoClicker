@@ -12,21 +12,23 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  See <http://www.gnu.org/licenses/>.
  */
 #include "text_recognizer.hpp"
 #include "../../../../logs/log.h"
 
 #include <opencv2/imgproc.hpp>
+#include <fstream>
 
 using namespace smartautoclicker;
 
-bool TextRecognizer::init(AAssetManager* assetManager) {
-    ncnnRecognizer->opt.num_threads = 2;
+bool TextRecognizer::init(const std::string& modelPath) {
+    ncnnRecognizer->opt.num_threads = 1;
     ncnnRecognizer->opt.use_packing_layout = true;
+    ncnnRecognizer->opt.lightmode = true;
 
-    if (!loadModelParams(assetManager) || !loadDictionary(assetManager)) {
-        LOGE("TextRecognizer", "Initialization failed");
+    if (!loadModelParams(modelPath) || !loadDictionary(modelPath + "/dict.txt")) {
+        LOGE("TextRecognizer", "Initialization failed for %s", modelPath.c_str());
         return false;
     }
 
@@ -36,11 +38,16 @@ bool TextRecognizer::init(AAssetManager* assetManager) {
     return true;
 }
 
-bool TextRecognizer::loadModelParams(AAssetManager* assetManager) {
-    int paramResult = ncnnRecognizer->load_param(assetManager,"models/rec.ncnn.param");
-    int binResult = ncnnRecognizer->load_model(assetManager,"models/rec.ncnn.bin");
+bool TextRecognizer::loadModelParams(const std::string& modelPath) {
+    std::string paramPath = modelPath + "/rec.ncnn.param";
+    std::string binPath = modelPath + "/rec.ncnn.bin";
+
+    LOGE("TextRecognizer", "param=%s bin=%s", paramPath.c_str(), binPath.c_str());
+    int paramResult = ncnnRecognizer->load_param(paramPath.c_str());
+    int binResult = ncnnRecognizer->load_model(binPath.c_str());
+
     if (paramResult != 0 || binResult != 0) {
-        LOGE("TextRecognizer", "Failed to load recognition model");
+        LOGE("TextRecognizer", "Failed to load recognition model from %s", modelPath.c_str());
         return false;
     }
 
@@ -48,25 +55,18 @@ bool TextRecognizer::loadModelParams(AAssetManager* assetManager) {
     return true;
 }
 
-bool TextRecognizer::loadDictionary(AAssetManager* assetManager) {
-    AAsset* asset = AAssetManager_open(assetManager,"models/dict.txt",AASSET_MODE_BUFFER);
-    if (!asset) {
-        LOGE("TextRecognizer", "Failed to open dictionary");
+bool TextRecognizer::loadDictionary(const std::string& dictionaryPath) {
+    std::ifstream file(dictionaryPath);
+    if (!file.is_open()) {
+        LOGE("TextRecognizer", "Failed to open dictionary at %s", dictionaryPath.c_str());
         return false;
     }
-
-    // Read content for dictionary file
-    size_t size = AAsset_getLength(asset);
-    std::string content(size, '\0');
-    AAsset_read(asset, content.data(), size);
-    AAsset_close(asset);
 
     dictionary.clear();
     dictionary.emplace_back(""); // index 0 = blank token for CTC
 
     std::string line;
-    std::stringstream ss(content);
-    while (std::getline(ss, line)) {
+    while (std::getline(file, line)) {
         if (!line.empty() && line.back() == '\r') line.pop_back();
         dictionary.push_back(line);
     }

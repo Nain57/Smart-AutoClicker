@@ -28,8 +28,8 @@ using namespace smartautoclicker;
 
 
 
-bool Detector::init(AAssetManager* assetManager) {
-    return textMatcher->init(assetManager);
+bool Detector::init(const std::string& detectionModelPath, const std::string& recognitionModelPath) {
+    return textMatcher->init(detectionModelPath, recognitionModelPath);
 }
 
 void Detector::setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag) {

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Rect
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
@@ -78,6 +79,7 @@ private fun ScreenCondition.Text.toTextConditionEntity() = ConditionEntity(
     threshold = threshold,
     shouldBeDetected = shouldBeDetected,
     textToDetect = text,
+    textAlphabet = alphabet.name,
     detectionAreaLeft = detectionArea.left,
     detectionAreaTop = detectionArea.top,
     detectionAreaRight = detectionArea.right,
@@ -169,6 +171,7 @@ private fun ConditionEntity.toDomainTextCondition(cleanIds: Boolean = false): Sc
         shouldBeDetected = shouldBeDetected ?: true,
         detectionArea = getDetectionArea()!!,
         text = textToDetect!!,
+        alphabet = getTextAlphabet(),
     )
 
 private fun ConditionEntity.toDomainBroadcastReceived(cleanIds: Boolean = false): TriggerCondition =
@@ -211,3 +214,10 @@ private fun ConditionEntity.getDetectionArea(): Rect? =
         Rect(detectionAreaLeft!!, detectionAreaTop!!, detectionAreaRight!!, detectionAreaBottom!!)
     else
         null
+
+private fun ConditionEntity.getTextAlphabet(): OCRAlphabet =
+    textAlphabet?.let {
+        try {
+            OCRAlphabet.valueOf(it)
+        } catch (_: IllegalArgumentException) { OCRAlphabet.LATIN }
+    } ?: OCRAlphabet.LATIN

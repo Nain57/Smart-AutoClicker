@@ -16,11 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.detection
 
-import android.content.Context
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
+import android.util.Log
 import androidx.annotation.Keep
 import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
 
@@ -52,9 +51,9 @@ class NativeDetector private constructor() : ImageDetector {
     private var isClosed: Boolean = false
     private var screenDimensions: Point = Point(0, 0)
 
-    override fun init(context: Context) {
+    override fun init(detectionModelPath: String, recognitionModelPath: String) {
         nativePtr = newDetector()
-        init(context.assets)
+        initNative(detectionModelPath, recognitionModelPath)
     }
 
 
@@ -156,7 +155,7 @@ class NativeDetector private constructor() : ImageDetector {
     /**
      *
      */
-    private external fun init(assetManager: AssetManager): Boolean
+    private external fun initNative(detectionModelPath: String, recognitionModelPath: String): Boolean
 
     /**
      * Deletes the native detector.

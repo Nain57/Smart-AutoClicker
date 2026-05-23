@@ -23,13 +23,16 @@
 
 using namespace smartautoclicker;
 
-bool TextDetector::init(AAssetManager* assetManager) {
+bool TextDetector::init(const std::string& modelPath) {
 
-    int paramResult = ncnnDetector->load_param(assetManager, "models/det.ncnn.param");
-    int binResult = ncnnDetector->load_model(assetManager, "models/det.ncnn.bin");
+    std::string paramPath = modelPath + "/det.ncnn.param";
+    std::string binPath = modelPath + "/det.ncnn.bin";
+
+    int paramResult = ncnnDetector->load_param(paramPath.c_str());
+    int binResult = ncnnDetector->load_model(binPath.c_str());
 
     if (paramResult != 0 || binResult != 0) {
-        LOGE("TextDetector", "Can't load models assets");
+        LOGE("TextDetector", "Can't load detection model from %s", modelPath.c_str());
         return false;
     }
 

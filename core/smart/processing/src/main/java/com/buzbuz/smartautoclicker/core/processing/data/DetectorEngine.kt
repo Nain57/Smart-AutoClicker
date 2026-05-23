@@ -21,6 +21,10 @@ import android.content.Intent
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.OCRModelsRepository
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -74,6 +78,7 @@ class DetectorEngine @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
     private val debuggingListener: SmartProcessingListener,
+    private val ocrModelsRepository: OCRModelsRepository,
 ) {
 
     /** Process the events conditions to detect them on the screen. */
@@ -186,9 +191,24 @@ class DetectorEngine @Inject constructor(
         Log.i(TAG, "startDetection")
 
         processingScope?.launchProcessingJob {
+            // Setup native detector
+            val ocrDetectModelPath = ocrModelsRepository.getDetectionModel()?.getOCRModelPath()
+            val ocrRecoModelPath = ocrModelsRepository.getRecognitionModel(OCRAlphabet.LATIN)?.getOCRModelPath()
+            if (ocrRecoModelPath.isNullOrEmpty() || ocrDetectModelPath.isNullOrEmpty()) {
+                Log.e(TAG, "Can't start detection, OCR models not found. " +
+                        "Detection:$ocrDetectModelPath; Recognition:$ocrRecoModelPath")
+                _state.value = DetectorState.ERROR_OCR_MODEL_NOT_FOUND
+                return@launchProcessingJob
+            }
+
+            imageDetector = detector
+            detector.init(
+                detectionModelPath = ocrDetectModelPath,
+                recognitionModelPath = ocrRecoModelPath,
+            )
+
             // Clear image cache and compute scaling info for detection
             bitmapRepository.clearCache()
-
 
             // Set the display projection to the scaled size
             displayRecorder.resizeDisplay(
@@ -205,10 +225,6 @@ class DetectorEngine @Inject constructor(
 
             Log.i(TAG, "Process scenario at ${if (frameLimit == 0) "unlimited" else frameLimit} FPS " +
                     "(${minProcessingDurationNs}ns per loop)")
-
-            // Setup native detector
-            imageDetector = detector
-            detector.init(context)
 
             // Setup listeners if needed
             if (liveDebugging || generateReport) {
@@ -383,6 +399,9 @@ class DetectorEngine @Inject constructor(
     }
 }
 
+private fun OCRModel.getOCRModelPath(): String? =
+    (state as? OCRModelState.Installed)?.path
+
 /** The different states of the [DetectorEngine]. */
 internal enum class DetectorState {
     /** The engine is created and ready to be used. */
@@ -400,6 +419,8 @@ internal enum class DetectorState {
     DESTROYED,
     /** The native lib can't be loaded and the detection can't be used. */
     ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND,
+    /** The text detection models required for this scenario are not found. */
+    ERROR_OCR_MODEL_NOT_FOUND,
 }
 
 /**

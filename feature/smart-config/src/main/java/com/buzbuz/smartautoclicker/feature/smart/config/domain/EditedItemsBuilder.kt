@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import androidx.annotation.ColorInt
 
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
@@ -163,6 +164,7 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
             text = "",
             detectionArea = Rect(),
+            alphabet = OCRAlphabet.LATIN,
         )
     }
 

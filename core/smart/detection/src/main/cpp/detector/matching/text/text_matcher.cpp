@@ -28,8 +28,9 @@ void TextMatcher::reset() {
     currentMatchingResult.reset();
 }
 
-bool TextMatcher::init(AAssetManager* assetManager) {
-    return textLocator->init(assetManager) && textRecognizer->init(assetManager);
+bool TextMatcher::init(const std::string& detectionModelPath, const std::string& recognitionModelPath) {
+    LOGD("TextMatcher", "Init with detect=%s; recognize=%s", detectionModelPath.c_str(), recognitionModelPath.c_str());
+    return textLocator->init(detectionModelPath) && textRecognizer->init(recognitionModelPath);
 }
 
 TextMatchingResult* TextMatcher::getMatchingResults() {

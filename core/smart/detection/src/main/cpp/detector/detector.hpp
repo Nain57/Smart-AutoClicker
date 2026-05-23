@@ -18,7 +18,6 @@
 #ifndef KLICK_R_DETECTOR_HPP
 #define KLICK_R_DETECTOR_HPP
 
-#include <android/asset_manager_jni.h>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "matching/color/color_matcher.hpp"
@@ -45,7 +44,7 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        bool init(AAssetManager* assetManager);
+        bool init(const std::string& detectionModelPath, const std::string& recognitionModelPath);
         void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
         TemplateMatchingResult* detectImage(

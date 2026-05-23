@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Rect
 import androidx.annotation.ColorInt
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
@@ -111,6 +112,7 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         override var priority: Int,
         val text: String,
         val detectionArea: Rect,
+        val alphabet: OCRAlphabet,
     ): ScreenCondition(), Prioritizable {
 
         /** Tells if this condition is complete and valid to be saved. */

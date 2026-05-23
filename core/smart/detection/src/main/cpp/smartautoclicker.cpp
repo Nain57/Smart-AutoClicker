@@ -37,19 +37,25 @@ extern "C" {
         return reinterpret_cast<jlong>(new Detector());
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_init(
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_initNative(
             JNIEnv* env,
             jobject self,
-            jobject assetManager
+            jstring detectionModelPath,
+            jstring recognitionModelPath
     ) {
-        AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
-        if (!mgr) return JNI_FALSE;
+        const char* nativeDetectionPath = env->GetStringUTFChars(detectionModelPath, nullptr);
+        const char* nativeRecognitionPath = env->GetStringUTFChars(recognitionModelPath, nullptr);
 
         auto detector = getDetectorFromJavaRef(env, self);
-        if (!detector) return JNI_FALSE;
+        bool result = false;
+        if (detector) {
+            result = detector->init(nativeDetectionPath, nativeRecognitionPath);
+        }
 
-        if (detector->init(mgr)) return JNI_TRUE;
-        else return JNI_FALSE;
+        env->ReleaseStringUTFChars(detectionModelPath, nativeDetectionPath);
+        env->ReleaseStringUTFChars(recognitionModelPath, nativeRecognitionPath);
+
+        return result ? JNI_TRUE : JNI_FALSE;
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_setScreenImage(

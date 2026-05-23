@@ -35,6 +35,7 @@ dependencies {
     implementation(project(":core:common:base"))
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:smart:database"))
+    implementation(project(":core:smart:detection-models"))
 
     testImplementation(libs.kotlinx.coroutines.test)
 }

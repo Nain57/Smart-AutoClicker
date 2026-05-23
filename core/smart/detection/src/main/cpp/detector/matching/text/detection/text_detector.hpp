@@ -38,9 +38,9 @@ namespace smartautoclicker {
 
         /**
          * Initialize detector and load models
-         * @param assetManager the Android Assert Manager loading the detection models.
+         * @param modelPath The path to the folder containing the detection models.
          */
-        bool init(AAssetManager* assetManager);
+        bool init(const std::string& modelPath);
 
         /**
          * Detect the text boxes within the provided crop.

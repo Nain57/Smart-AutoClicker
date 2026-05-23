@@ -378,6 +378,7 @@ internal open class CompatDeserializer : Deserializer {
             detectionAreaTop = area.top,
             detectionAreaRight = area.right,
             detectionAreaBottom = area.bottom,
+            textAlphabet = jsonCondition.getString("textAlphabet") ?: "LATIN",
         )
     }
 
