@@ -22,6 +22,8 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.domain.IRepository
+import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
@@ -52,6 +54,7 @@ import javax.inject.Inject
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
     private val smartProcessingRepository: SmartProcessingRepository,
+    smartRepository: IRepository,
     private val editionRepository: EditionRepository,
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
@@ -86,6 +89,20 @@ class MainMenuModel @Inject constructor(
     val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val switchableScenarios: StateFlow<List<Scenario>> = combine(
+        smartRepository.scenarios,
+        scenarioDbId,
+    ) { scenarios, currentScenarioId ->
+        scenarios.filter { scenario -> scenario.id.databaseId != currentScenarioId }
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    val isSwitchButtonVisible: StateFlow<Boolean> = combine(
+        detectionState,
+        isMediaProjectionStarted,
+    ) { state, isProjectionStarted ->
+        state == UiState.Idle && isProjectionStarted
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
     val isStartButtonEnabled: Flow<Boolean> = combine(

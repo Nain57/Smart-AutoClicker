@@ -121,6 +121,7 @@ class SmartAutoClickerService : AccessibilityService() {
                 settingsRepository = settingsRepository,
                 debuggingRepository = debuggingRepository,
                 onStart = ::onLocalServiceStarted,
+                onScenarioChanged = tileRepository::setTileScenario,
                 onStop = ::onLocalServiceStopped,
             )
         )

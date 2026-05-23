@@ -94,6 +94,15 @@ class ServiceNotificationController(
         )
     }
 
+    fun updateScenarioName(context: Context, scenarioName: String) {
+        val state = notificationState ?: return
+
+        updateNotificationState(
+            context,
+            state.copy(scenarioName = scenarioName)
+        )
+    }
+
     private fun updateNotification(context: Context, isNightModeEnabled: Boolean) {
         val state = notificationState ?: return
 

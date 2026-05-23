@@ -76,6 +76,13 @@
                     android:contentDescription="@string/content_desc_open_event_list" />
 
                 <ImageButton
+                    android:id="@+id/btn_switch_scenario"
+                    style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                    android:src="@drawable/ic_switch_scenario"
+                    android:visibility="gone"
+                    android:contentDescription="@string/content_desc_switch_scenario" />
+
+                <ImageButton
                     android:id="@+id/btn_move"
                     style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                     android:src="@drawable/ic_move"
