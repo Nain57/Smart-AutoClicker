@@ -94,7 +94,7 @@ class TryEventOverlayMenu(
     override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
         val bgSize = super.getWindowMaximumSize(backgroundView)
         return Size(
-            bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_text_width),
+            bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_event_try_panel_width),
             bgSize.height,
         )
     }

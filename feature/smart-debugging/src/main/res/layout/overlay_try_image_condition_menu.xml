@@ -65,7 +65,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_result"
-                android:layout_width="275dp"
+                android:layout_width="@dimen/overlay_debug_image_condition_try_panel_width"
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/margin_horizontal_small"
                 android:layout_marginEnd="@dimen/margin_horizontal_mini"
