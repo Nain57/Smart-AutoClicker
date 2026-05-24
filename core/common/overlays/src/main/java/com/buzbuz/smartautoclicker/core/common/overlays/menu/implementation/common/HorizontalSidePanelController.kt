@@ -34,6 +34,7 @@ class HorizontalSidePanelController(
     private val parent: ConstraintLayout,
     private val menuItems: View,
     private val sidePanel: View,
+    private val innerSeparator: View? = null,
 ) {
 
     var currentSide: HorizontalSidePanelSide = HorizontalSidePanelSide.RIGHT
@@ -81,7 +82,28 @@ class HorizontalSidePanelController(
 
             applyTo(parent)
         }
+        applyInnerSeparatorSide(side)
 
         currentSide = side
+    }
+
+    private fun applyInnerSeparatorSide(side: HorizontalSidePanelSide) {
+        val separator = innerSeparator ?: return
+        val sidePanelLayout = sidePanel as? ConstraintLayout ?: return
+
+        ConstraintSet().apply {
+            clone(sidePanelLayout)
+
+            clear(separator.id, ConstraintSet.START)
+            clear(separator.id, ConstraintSet.END)
+
+            if (side == HorizontalSidePanelSide.LEFT) {
+                connect(separator.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            } else {
+                connect(separator.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+            }
+
+            applyTo(sidePanelLayout)
+        }
     }
 }

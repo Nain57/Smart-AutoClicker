@@ -110,6 +110,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             parent = viewBinding.layoutDebug.parent as ConstraintLayout,
             menuItems = viewBinding.menuItems,
             sidePanel = viewBinding.layoutDebug,
+            innerSeparator = viewBinding.separatorStart,
         )
 
         return viewBinding.root
