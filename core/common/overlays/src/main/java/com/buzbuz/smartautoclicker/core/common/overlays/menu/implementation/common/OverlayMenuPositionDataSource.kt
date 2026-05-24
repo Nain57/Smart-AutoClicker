@@ -74,13 +74,13 @@ class OverlayMenuPositionDataSource @Inject constructor(
 
         lastLoadedOrientation = orientation
         lastLoadedPosition = when (orientation) {
-            Configuration.ORIENTATION_LANDSCAPE -> Point(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, 0),
+            Configuration.ORIENTATION_LANDSCAPE -> loadPosition(
+                xKey = PREFERENCE_MENU_X_LANDSCAPE_KEY,
+                yKey = PREFERENCE_MENU_Y_LANDSCAPE_KEY,
             )
-            Configuration.ORIENTATION_PORTRAIT -> Point(
-                sharedPreferences.getInt(PREFERENCE_MENU_X_PORTRAIT_KEY, 0),
-                sharedPreferences.getInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, 0),
+            Configuration.ORIENTATION_PORTRAIT -> loadPosition(
+                xKey = PREFERENCE_MENU_X_PORTRAIT_KEY,
+                yKey = PREFERENCE_MENU_Y_PORTRAIT_KEY,
             )
             else -> return null
         }
@@ -140,6 +140,15 @@ class OverlayMenuPositionDataSource @Inject constructor(
 
     fun isPositionLocked(): Boolean =
         lockedMenuPosition != null
+
+    private fun loadPosition(xKey: String, yKey: String): Point? {
+        if (!sharedPreferences.contains(xKey) || !sharedPreferences.contains(yKey)) return null
+
+        return Point(
+            sharedPreferences.getInt(xKey, 0),
+            sharedPreferences.getInt(yKey, 0),
+        )
+    }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         writer.append(prefix)
