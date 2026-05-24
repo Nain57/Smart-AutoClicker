@@ -213,12 +213,14 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         val anchorWidth = getMenuAnchorWidth(windowSize)
         val panelWidth = (windowSize.width - anchorWidth).coerceAtLeast(0)
-        val side = chooseHorizontalSidePanelSide(
-            anchorPosition = anchorPosition,
-            anchorWidth = anchorWidth,
-            panelWidth = panelWidth,
-            sidePanelController = debugSidePanelController,
-        )
+        val side = if (shouldRefreshSidePanelPlacement()) {
+            chooseHorizontalSidePanelSide(
+                anchorPosition = anchorPosition,
+                anchorWidth = anchorWidth,
+                panelWidth = panelWidth,
+                sidePanelController = debugSidePanelController,
+            )
+        } else debugSidePanelController.currentSide
 
         debugSidePanelController.applySide(side)
         return if (side == HorizontalSidePanelSide.LEFT) {

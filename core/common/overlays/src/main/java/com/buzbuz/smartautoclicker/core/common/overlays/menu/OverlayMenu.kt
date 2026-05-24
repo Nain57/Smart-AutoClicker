@@ -140,6 +140,8 @@ abstract class OverlayMenu(
     private var hideOverlayButton: ImageButton? = null
     /** The move button, if provided. */
     private var moveButton: View? = null
+    /** True while the user is dragging this overlay menu. */
+    private var moveInProgress: Boolean = false
 
     /**
      * The view to be displayed between the current activity and the overlay menu.
@@ -208,6 +210,8 @@ abstract class OverlayMenu(
         moveTouchEventHandler = OverlayMenuMoveTouchEventHandler(
             onMenuMoved = ::updateMenuPosition,
             getCurrentMenuPosition = { Point(menuAnchorPosition) },
+            onMoveStarted = { moveInProgress = true },
+            onMoveFinished = ::onMenuMoveFinished,
         )
 
         // Restore the last menu position, if any.
@@ -462,6 +466,9 @@ abstract class OverlayMenu(
             panelWidth = panelWidth,
         )
 
+    protected fun shouldRefreshSidePanelPlacement(): Boolean =
+        !moveInProgress
+
     /**
      * Change the menu view visibility.
      * @param visibility the new visibility to apply.
@@ -575,6 +582,11 @@ abstract class OverlayMenu(
         if (resizeController.isAnimating) return false
 
         return moveTouchEventHandler.onTouchEvent(menuLayout, event)
+    }
+
+    private fun onMenuMoveFinished() {
+        moveInProgress = false
+        updateMenuPosition(menuAnchorPosition)
     }
 
 

@@ -76,12 +76,12 @@ class HorizontalSidePanelControllerTests {
     }
 
     @Test
-    fun chooseSide_whenRightSideDoesNotFitButLeftSideIsWorse_returnsRight() {
+    fun chooseSide_whenRightSideFitsEvenIfLeftSideHasRoom_returnsRight() {
         val side = controller.chooseSide(
-            anchorX = 150,
+            anchorX = 300,
             anchorWidth = 100,
-            screenWidth = 260,
-            panelWidth = 120,
+            screenWidth = 800,
+            panelWidth = 200,
         )
 
         assertEquals(HorizontalSidePanelSide.RIGHT, side)

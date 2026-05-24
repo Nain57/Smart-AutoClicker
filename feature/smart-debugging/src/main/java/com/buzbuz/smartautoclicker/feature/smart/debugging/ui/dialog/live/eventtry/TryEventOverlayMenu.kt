@@ -104,12 +104,14 @@ class TryEventOverlayMenu(
     override fun onMenuAnchorPositionUpdated(anchorPosition: Point, windowSize: Size): Point {
         val anchorWidth = getMenuAnchorWidth(windowSize)
         val panelWidth = (windowSize.width - anchorWidth).coerceAtLeast(0)
-        val side = chooseHorizontalSidePanelSide(
-            anchorPosition = anchorPosition,
-            anchorWidth = anchorWidth,
-            panelWidth = panelWidth,
-            sidePanelController = debugSidePanelController,
-        )
+        val side = if (shouldRefreshSidePanelPlacement()) {
+            chooseHorizontalSidePanelSide(
+                anchorPosition = anchorPosition,
+                anchorWidth = anchorWidth,
+                panelWidth = panelWidth,
+                sidePanelController = debugSidePanelController,
+            )
+        } else debugSidePanelController.currentSide
 
         debugSidePanelController.applySide(side)
         return if (side == HorizontalSidePanelSide.LEFT) Point(anchorPosition.x - panelWidth, anchorPosition.y)
