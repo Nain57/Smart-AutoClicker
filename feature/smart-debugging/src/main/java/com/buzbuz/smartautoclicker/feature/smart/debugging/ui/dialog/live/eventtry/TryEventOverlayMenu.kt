@@ -16,12 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry
 
+import android.graphics.Point
 import android.util.Size
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -31,6 +33,8 @@ import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.HorizontalSidePanelController
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.HorizontalSidePanelSide
 import com.buzbuz.smartautoclicker.core.domain.model.event.ImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.OverlayTryEventMenuBinding
@@ -53,12 +57,19 @@ class TryEventOverlayMenu(
 
     /** Adapter upon actions being executed while in live debugging. */
     private val tryEventActionsAdapter: TryEventActionsAdapter = TryEventActionsAdapter()
+    /** Controls the position of the debug panel around the menu buttons. */
+    private lateinit var debugSidePanelController: HorizontalSidePanelController
 
     private lateinit var viewBinding: OverlayTryEventMenuBinding
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayTryEventMenuBinding.inflate(LayoutInflater.from(context))
         viewBinding.actionList.adapter = tryEventActionsAdapter
+        debugSidePanelController = HorizontalSidePanelController(
+            parent = viewBinding.layoutDebug.parent as ConstraintLayout,
+            menuItems = viewBinding.menuItems,
+            sidePanel = viewBinding.layoutDebug,
+        )
 
         return viewBinding.root
     }
@@ -85,6 +96,24 @@ class TryEventOverlayMenu(
             bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_text_width),
             bgSize.height,
         )
+    }
+
+    override fun getMenuAnchorWidth(windowSize: Size): Int =
+        viewBinding.menuItems.width.takeIf { it > 0 } ?: super.getMenuAnchorWidth(windowSize)
+
+    override fun onMenuAnchorPositionUpdated(anchorPosition: Point, windowSize: Size): Point {
+        val anchorWidth = getMenuAnchorWidth(windowSize)
+        val panelWidth = (windowSize.width - anchorWidth).coerceAtLeast(0)
+        val side = chooseHorizontalSidePanelSide(
+            anchorPosition = anchorPosition,
+            anchorWidth = anchorWidth,
+            panelWidth = panelWidth,
+            sidePanelController = debugSidePanelController,
+        )
+
+        debugSidePanelController.applySide(side)
+        return if (side == HorizontalSidePanelSide.LEFT) Point(anchorPosition.x - panelWidth, anchorPosition.y)
+        else anchorPosition
     }
 
     override fun onMenuItemClicked(viewId: Int) {
