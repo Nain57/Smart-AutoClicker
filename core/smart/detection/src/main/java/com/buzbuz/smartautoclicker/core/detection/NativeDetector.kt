@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.core.detection
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
-import android.util.Log
 import androidx.annotation.Keep
 import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
 
@@ -28,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
  * It uses OpenCv template matching algorithms to achieve condition detection on the screen.
  *
  * Debug flavour of the library is build against build artifacts of OpenCv in the debug folder.
- * Release flavour of the library is build against the sources of the OpenCv project, downloaded from github.
+ * Release flavour of the library is build against the sources of the OpenCv project, downloaded from GitHub.
  */
 class NativeDetector private constructor() : ImageDetector {
 
@@ -51,9 +50,13 @@ class NativeDetector private constructor() : ImageDetector {
     private var isClosed: Boolean = false
     private var screenDimensions: Point = Point(0, 0)
 
-    override fun init(detectionModelPath: String, recognitionModelPath: String) {
+    override fun init(detectionModelPath: String, recognitionModels: Map<String, String>) {
         nativePtr = newDetector()
-        initNative(detectionModelPath, recognitionModelPath)
+        initNative(
+            detectionModelPath = detectionModelPath,
+            recognitionModelIds = recognitionModels.keys.toTypedArray(),
+            recognitionModelsPaths = recognitionModels.values.toTypedArray(),
+        )
     }
 
 
@@ -119,16 +122,29 @@ class NativeDetector private constructor() : ImageDetector {
         return detectionResult.copy()
     }
 
-    override fun detectText(conditionText: String, detectionArea: Rect, threshold: Int, ): DetectionResult {
+    override fun detectText(
+        conditionText: String,
+        recognitionModelId: String,
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult {
+
         if (isClosed) return detectionResult.copy()
 
         try {
-            detectText(conditionText, detectionArea.left, detectionArea.top, detectionArea.width(),
-                detectionArea.height(), threshold, detectionResult)
+            detectText(
+                conditionText = conditionText,
+                recognitionModelId = recognitionModelId,
+                x = detectionArea.left,
+                y = detectionArea.top,
+                width = detectionArea.width(),
+                height = detectionArea.height(),
+                threshold, detectionResult)
         } catch (ex: Exception) {
             ex.throwWithKeys(
                 keys = mapOf(
                     "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
+                    "recognitionModelId" to recognitionModelId,
                     "conditionText" to conditionText,
                     "detectionArea" to detectionArea.toString(),
                     "threshold" to threshold.toString(),
@@ -153,15 +169,19 @@ class NativeDetector private constructor() : ImageDetector {
     private external fun newDetector(): Long
 
     /**
-     *
-     */
-    private external fun initNative(detectionModelPath: String, recognitionModelPath: String): Boolean
-
-    /**
      * Deletes the native detector.
      * Once called, this object can't be used anymore.
      */
     private external fun deleteDetector()
+
+    /**
+     *
+     */
+    private external fun initNative(
+        detectionModelPath: String,
+        recognitionModelIds: Array<String>,
+        recognitionModelsPaths: Array<String>,
+    ): Boolean
 
     /**
      * Native method for detection setup.
@@ -218,6 +238,7 @@ class NativeDetector private constructor() : ImageDetector {
      * Native method for detecting if the text is at a specific position in the current screen bitmap.
      *
      * @param conditionText the condition to detect in the screen.
+     * @param recognitionModelId the identifier of the recognition model specified with [init].
      * @param x the horizontal position of the condition.
      * @param y the vertical position of the condition.
      * @param width the width of the condition.
@@ -226,6 +247,7 @@ class NativeDetector private constructor() : ImageDetector {
      */
     private external fun detectText(
         conditionText: String,
+        recognitionModelId: String,
         x: Int,
         y: Int,
         width: Int,

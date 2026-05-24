@@ -28,9 +28,8 @@ void TextMatcher::reset() {
     currentMatchingResult.reset();
 }
 
-bool TextMatcher::init(const std::string& detectionModelPath, const std::string& recognitionModelPath) {
-    LOGD("TextMatcher", "Init with detect=%s; recognize=%s", detectionModelPath.c_str(), recognitionModelPath.c_str());
-    return textLocator->init(detectionModelPath) && textRecognizer->init(recognitionModelPath);
+bool TextMatcher::init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels) {
+    return textLocator->init(detectionModelPath) && textRecognizer->init(recognitionModels);
 }
 
 TextMatchingResult* TextMatcher::getMatchingResults() {
@@ -51,6 +50,7 @@ bool TextMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rec
 void TextMatcher::matchText(
         const ScreenImage& screenImage,
         const std::string& conditionText,
+        const std::string& recognitionModelId,
         const cv::Rect& detectionArea,
         int threshold)
 {
@@ -63,7 +63,7 @@ void TextMatcher::matchText(
     auto detectorResults = textLocator->detectText(rgbScreenCrop);
 
     // Recognize the text in the regions detected
-    auto recognizerResults = textRecognizer->recognizeText(detectorResults);
+    auto recognizerResults = textRecognizer->recognizeText(recognitionModelId, detectorResults);
 
     // Parse results and find matching candidate, if any
     for (const auto& recognizerResult: recognizerResults) {

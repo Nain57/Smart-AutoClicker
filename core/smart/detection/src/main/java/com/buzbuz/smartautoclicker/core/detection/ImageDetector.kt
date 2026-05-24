@@ -26,8 +26,16 @@ import androidx.annotation.ColorInt
  */
 interface ImageDetector : AutoCloseable {
 
-    /** Initialize the detector. Must be called on the same thread as the detection. */
-    fun init(detectionModelPath: String, recognitionModelPath: String)
+    /**
+     * Initialize the detector. Must be called on the same thread as the detection.
+     *
+     * @param detectionModelPath Path on the filesystem to the detection model folder. Must contain det.ncnn.bin &
+     * det.ncnn.param files
+     * @param recognitionModels Map of recognition model identifier to their path on the filesystem. Identifier will be
+     * used to specify the model to use when detecting with [detectText]. Each model folder must contain rec.ncnn.bin,
+     * rec.ncnn.param and dict.txt files.
+     */
+    fun init(detectionModelPath: String, recognitionModels: Map<String, String>)
 
     /**
      * Set the bitmap for the screen.
@@ -78,6 +86,7 @@ interface ImageDetector : AutoCloseable {
      * [setScreenBitmap] must have been called first with the content of the screen.
      *
      * @param conditionText the text to detect.
+     * @param recognitionModelId the identifier of the model to use, as specified during [init] call.
      * @param detectionArea the area to search for the text.
      * @param threshold the allowed error threshold allowed for the condition.
      *
@@ -85,6 +94,7 @@ interface ImageDetector : AutoCloseable {
      */
     fun detectText(
         conditionText: String,
+        recognitionModelId: String,
         detectionArea: Rect,
         threshold: Int,
     ): DetectionResult

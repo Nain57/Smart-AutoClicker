@@ -18,6 +18,7 @@
 #define KLICK_R_TEXT_MATCHER_HPP
 
 #include <opencv2/core/types.hpp>
+#include <map>
 #include <net.h>
 
 #include "text_matching_result.hpp"
@@ -90,7 +91,7 @@ namespace smartautoclicker {
          *
          * @return true if both components initialized successfully.
          */
-        bool init(const std::string& detectionModelPath, const std::string& recognitionModelPath);
+        bool init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels);
 
         static bool isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi);
 
@@ -100,12 +101,14 @@ namespace smartautoclicker {
          *
          * @param screenImage The source screen capture.
          * @param conditionText The text to look for.
+         * @param recognitionModelId The identifier of the recognition model provided with [init].
          * @param detectionArea The region of the screen to search in.
          * @param threshold Confidence threshold for the detection/recognition.
          */
         void matchText(
                 const ScreenImage& screenImage,
                 const std::string& conditionText,
+                const std::string& recognitionModelId,
                 const cv::Rect& detectionArea,
                 int threshold);
 

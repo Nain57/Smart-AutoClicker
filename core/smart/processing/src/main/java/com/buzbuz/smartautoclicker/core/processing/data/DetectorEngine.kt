@@ -21,11 +21,10 @@ import android.content.Intent
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
+
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.OCRModelsRepository
-import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
-
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
@@ -35,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.ext.getAllOCRAlphabets
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -193,10 +193,10 @@ class DetectorEngine @Inject constructor(
         processingScope?.launchProcessingJob {
             // Setup native detector
             val ocrDetectModelPath = ocrModelsRepository.getDetectionModel()?.getOCRModelPath()
-            val ocrRecoModelPath = ocrModelsRepository.getRecognitionModel(OCRAlphabet.LATIN)?.getOCRModelPath()
-            if (ocrRecoModelPath.isNullOrEmpty() || ocrDetectModelPath.isNullOrEmpty()) {
+            val ocrRecoModels = ocrModelsRepository.getTextConditionsRecognitionModels(screenEvents)
+            if (ocrDetectModelPath.isNullOrEmpty() || ocrRecoModels.isEmpty()) {
                 Log.e(TAG, "Can't start detection, OCR models not found. " +
-                        "Detection:$ocrDetectModelPath; Recognition:$ocrRecoModelPath")
+                        "Detection:$ocrDetectModelPath; Recognition:$ocrRecoModels")
                 _state.value = DetectorState.ERROR_OCR_MODEL_NOT_FOUND
                 return@launchProcessingJob
             }
@@ -204,7 +204,7 @@ class DetectorEngine @Inject constructor(
             imageDetector = detector
             detector.init(
                 detectionModelPath = ocrDetectModelPath,
-                recognitionModelPath = ocrRecoModelPath,
+                recognitionModels = ocrRecoModels,
             )
 
             // Clear image cache and compute scaling info for detection
@@ -401,6 +401,15 @@ class DetectorEngine @Inject constructor(
 
 private fun OCRModel.getOCRModelPath(): String? =
     (state as? OCRModelState.Installed)?.path
+
+private suspend fun OCRModelsRepository.getTextConditionsRecognitionModels(events: List<ScreenEvent>): Map<String, String> =
+    buildMap {
+        events.getAllOCRAlphabets().forEach { alphabet ->
+            val modelPath = getRecognitionModelPath(alphabet) ?: return@forEach
+            put(alphabet.name, modelPath)
+        }
+    }
+
 
 /** The different states of the [DetectorEngine]. */
 internal enum class DetectorState {

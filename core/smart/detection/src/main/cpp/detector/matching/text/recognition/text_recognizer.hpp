@@ -17,11 +17,12 @@
 #ifndef KLICK_R_TEXT_RECOGNIZER_HPP
 #define KLICK_R_TEXT_RECOGNIZER_HPP
 
-#include <android/asset_manager.h>
 #include <opencv2/core.hpp>
+#include <map>
 #include <net.h>
 
 #include "../detection/text_detector_result.hpp"
+#include "alphabet_recognizer.hpp"
 #include "text_recognizer_result.hpp"
 
 namespace smartautoclicker {
@@ -39,14 +40,17 @@ namespace smartautoclicker {
          * @param assetManager The Android Asset Manager for loading assets.
          * @return true if initialization succeeded, false otherwise.
          */
-        bool init(const std::string& modelPath);
+        bool init(const std::map<std::string, std::string>& recognitionModels);
 
         /**
          * Recognizes text within the provided detection results.
+         * @param recognitionModelId The identifier of the recognition model provided with [init].
          * @param detectionResults List of crops and their bounding boxes from a TextDetector.
          * @return A list of recognition results containing the text and confidence for each crop.
          */
-        std::vector<TextRecognizerResult> recognizeText(const std::vector<TextDetectorResult>& detectionResults);
+        std::vector<TextRecognizerResult> recognizeText(
+                const std::string& recognitionModelId,
+                const std::vector<TextDetectorResult>& detectionResults);
 
     private:
 
@@ -64,21 +68,12 @@ namespace smartautoclicker {
                 1.f / 127.5f
         };
 
-        /** NCNN text recognizer network. */
-        std::unique_ptr<ncnn::Net> ncnnRecognizer = std::make_unique<ncnn::Net>();
-        /** Character dictionary used to map model indices to characters. */
-        std::vector<std::string> dictionary;
+        std::map<std::string, AlphabetRecognizer> alphabetRecognizers;
 
         /** Reusable buffers to avoid reallocations in the main loop. */
         cv::Mat resizedBuffer;
         /** Reusable buffer for padding, pre-allocated to max size in init. */
         cv::Mat paddedBuffer;
-
-        /** Loads the NCNN model parameters and weights. */
-        bool loadModelParams(const std::string& modelPath);
-
-        /** Loads the character dictionary file. */
-        bool loadDictionary(const std::string& dictionaryPath);
 
         /**
          * Preprocesses a single image crop for the recognition model.
@@ -90,11 +85,15 @@ namespace smartautoclicker {
 
         /**
          * Decodes the raw output tensor from the recognizer into a string.
+         * @param dictionary list of detectable characters.
          * @param boundingBox The original bounding box for the result.
          * @param output The raw output from the NCNN extractor.
          * @return A packaged TextRecognizerResult.
          */
-        TextRecognizerResult decode(const cv::Rect& boundingBox, const ncnn::Mat& output);
+        TextRecognizerResult decode(
+                const std::vector<std::string>& dictionary,
+                const cv::Rect& boundingBox,
+                const ncnn::Mat& output);
     };
 
 } // smartautoclicker

@@ -22,6 +22,7 @@
 #include <jni.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <string>
+#include <map>
 
 #include "jni/jni.hpp"
 #include "detector/detector.hpp"
@@ -41,19 +42,37 @@ extern "C" {
             JNIEnv* env,
             jobject self,
             jstring detectionModelPath,
-            jstring recognitionModelPath
+            jobjectArray recognitionModelIds,
+            jobjectArray recognitionModelPaths
     ) {
         const char* nativeDetectionPath = env->GetStringUTFChars(detectionModelPath, nullptr);
-        const char* nativeRecognitionPath = env->GetStringUTFChars(recognitionModelPath, nullptr);
+
+        // Convert parallel arrays back to std::map<std::string, std::string>
+        std::map<std::string, std::string> recognitionModels;
+        jsize length = env->GetArrayLength(recognitionModelIds);
+
+        for (jsize i = 0; i < length; i++) {
+            jstring key = (jstring) env->GetObjectArrayElement(recognitionModelIds, i);
+            jstring value = (jstring) env->GetObjectArrayElement(recognitionModelPaths, i);
+
+            const char* nativeKey = env->GetStringUTFChars(key, nullptr);
+            const char* nativeValue = env->GetStringUTFChars(value, nullptr);
+
+            recognitionModels[nativeKey] = std::string(nativeValue);
+
+            env->ReleaseStringUTFChars(key, nativeKey);
+            env->ReleaseStringUTFChars(value, nativeValue);
+            env->DeleteLocalRef(key);
+            env->DeleteLocalRef(value);
+        }
 
         auto detector = getDetectorFromJavaRef(env, self);
         bool result = false;
         if (detector) {
-            result = detector->init(nativeDetectionPath, nativeRecognitionPath);
+            result = detector->init(nativeDetectionPath, recognitionModels);
         }
 
         env->ReleaseStringUTFChars(detectionModelPath, nativeDetectionPath);
-        env->ReleaseStringUTFChars(recognitionModelPath, nativeRecognitionPath);
 
         return result ? JNI_TRUE : JNI_FALSE;
     }
@@ -145,6 +164,7 @@ extern "C" {
             JNIEnv *env,
             jobject self,
             jstring conditionText,
+            jstring recognitionModelId,
             jint x,
             jint y,
             jint width,
@@ -156,11 +176,15 @@ extern "C" {
         if (!detector) return;
 
         const char* nativeConditionText = env->GetStringUTFChars(conditionText, nullptr);
-        if (conditionText == nullptr) return;
+        if (nativeConditionText == nullptr) return;
+
+        const char* nativeRecognitionModelId = env->GetStringUTFChars(recognitionModelId, nullptr);
+        if (nativeRecognitionModelId == nullptr) return;
 
         try {
             setDetectionResult(env,result,detector->detectText(
                     nativeConditionText,
+                    nativeRecognitionModelId,
                     cv::Rect(x, y, width, height),
                     threshold));
         } catch (...) {
@@ -171,6 +195,8 @@ extern "C" {
         }
 
         env->ReleaseStringUTFChars(conditionText, nativeConditionText);
+        env->ReleaseStringUTFChars(recognitionModelId, nativeRecognitionModelId);
+
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_releaseScreenImage(

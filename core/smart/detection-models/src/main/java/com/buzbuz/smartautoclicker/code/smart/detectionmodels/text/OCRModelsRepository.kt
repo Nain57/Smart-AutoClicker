@@ -30,5 +30,7 @@ interface OCRModelsRepository {
 
     suspend fun getRecognitionModel(alphabet: OCRAlphabet): OCRModel.Recognition?
 
+    suspend fun getRecognitionModelPath(alphabet: OCRAlphabet): String?
+
     suspend fun downloadRecognitionModel(alphabet: OCRAlphabet)
 }

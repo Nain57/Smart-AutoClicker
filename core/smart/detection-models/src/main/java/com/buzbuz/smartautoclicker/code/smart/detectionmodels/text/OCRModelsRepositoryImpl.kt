@@ -53,16 +53,25 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getRecognitionModel(alphabet: OCRAlphabet): OCRModel.Recognition? {
+    override suspend fun getRecognitionModel(alphabet: OCRAlphabet): OCRModel.Recognition {
         if (!localDataSource.isRecognitionModelAvailable(alphabet)) {
             Log.e(TAG, "Can't get model $alphabet, it is not downloaded.")
-            return null
+            return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloadable)
         }
 
         return OCRModel.Recognition(
             alphabet = alphabet,
             state = OCRModelState.Installed(path = localDataSource.getRecognitionModelDir(alphabet).path),
         )
+    }
+
+    override suspend fun getRecognitionModelPath(alphabet: OCRAlphabet): String? {
+        if (!localDataSource.isRecognitionModelAvailable(alphabet)) {
+            Log.e(TAG, "Can't get model path for $alphabet, it is not downloaded.")
+            return null
+        }
+
+        return localDataSource.getRecognitionModelDir(alphabet).path
     }
 
     override suspend fun downloadRecognitionModel(alphabet: OCRAlphabet) {

@@ -22,14 +22,19 @@
 
 using namespace smartautoclicker;
 
-bool TextRecognizer::init(const std::string& modelPath) {
-    ncnnRecognizer->opt.num_threads = 1;
-    ncnnRecognizer->opt.use_packing_layout = true;
-    ncnnRecognizer->opt.lightmode = true;
+bool TextRecognizer::init(const std::map<std::string, std::string>& models) {
+    alphabetRecognizers.clear();
 
-    if (!loadModelParams(modelPath) || !loadDictionary(modelPath + "/dict.txt")) {
-        LOGE("TextRecognizer", "Initialization failed for %s", modelPath.c_str());
-        return false;
+    for (auto const& [id, path] : models) {
+        AlphabetRecognizer recognizer;
+
+        if (!recognizer.loadModel(id, path)) {
+            LOGE("TextRecognizer", "Can't load model %s");
+            alphabetRecognizers.clear();
+            return false;
+        }
+
+        alphabetRecognizers[id] = std::move(recognizer);
     }
 
     // Pre-allocate padded buffer to the maximum possible width to avoid runtime reallocations
@@ -38,45 +43,14 @@ bool TextRecognizer::init(const std::string& modelPath) {
     return true;
 }
 
-bool TextRecognizer::loadModelParams(const std::string& modelPath) {
-    std::string paramPath = modelPath + "/rec.ncnn.param";
-    std::string binPath = modelPath + "/rec.ncnn.bin";
-
-    LOGE("TextRecognizer", "param=%s bin=%s", paramPath.c_str(), binPath.c_str());
-    int paramResult = ncnnRecognizer->load_param(paramPath.c_str());
-    int binResult = ncnnRecognizer->load_model(binPath.c_str());
-
-    if (paramResult != 0 || binResult != 0) {
-        LOGE("TextRecognizer", "Failed to load recognition model from %s", modelPath.c_str());
-        return false;
-    }
-
-    LOGI("TextRecognizer", "Recognition model loaded");
-    return true;
-}
-
-bool TextRecognizer::loadDictionary(const std::string& dictionaryPath) {
-    std::ifstream file(dictionaryPath);
-    if (!file.is_open()) {
-        LOGE("TextRecognizer", "Failed to open dictionary at %s", dictionaryPath.c_str());
-        return false;
-    }
-
-    dictionary.clear();
-    dictionary.emplace_back(""); // index 0 = blank token for CTC
-
-    std::string line;
-    while (std::getline(file, line)) {
-        if (!line.empty() && line.back() == '\r') line.pop_back();
-        dictionary.push_back(line);
-    }
-
-    return true;
-}
-
-std::vector<TextRecognizerResult> TextRecognizer::recognizeText(const std::vector<TextDetectorResult>& detectionResults) {
+std::vector<TextRecognizerResult> TextRecognizer::recognizeText(
+        const std::string& recognitionModelId,
+        const std::vector<TextDetectorResult>& detectionResults)
+{
     std::vector<TextRecognizerResult> results;
     results.reserve(detectionResults.size());
+
+    auto& recognizer = alphabetRecognizers[recognitionModelId];
 
     for (const auto& detectionResult : detectionResults) {
         cv::Mat crop = detectionResult.crop;
@@ -87,7 +61,7 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(const std::vecto
         ncnn::Mat input = preprocess(crop);
 
         // 2. Inference
-        ncnn::Extractor extractor = ncnnRecognizer->create_extractor();
+        ncnn::Extractor extractor = recognizer.create_extractor();
         extractor.set_light_mode(true);
 
         ncnn::Mat output;
@@ -99,7 +73,7 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(const std::vecto
         }
 
         // 3. Decode
-        results.push_back(decode(detectionResult.boundingBox, output));
+        results.push_back(decode(recognizer.getDictionary(), detectionResult.boundingBox, output));
     }
 
     return results;
@@ -135,7 +109,11 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
     return input;
 }
 
-TextRecognizerResult TextRecognizer::decode(const cv::Rect& boundingBox, const ncnn::Mat& output) {
+TextRecognizerResult TextRecognizer::decode(
+        const std::vector<std::string>& dictionary,
+        const cv::Rect& boundingBox,
+        const ncnn::Mat& output)
+{
 
     const int numClasses = output.w;
     const int sequenceLength = output.h;

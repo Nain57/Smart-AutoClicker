@@ -210,6 +210,7 @@ internal class ConditionsVerifier(
 
         val detectionResult = imageDetector.detectText(
             conditionText = condition.text.replaceCounterReferences(counters),
+            recognitionModelId = condition.alphabet.name,
             detectionArea = conditionScalingInfo.detectionArea,
             threshold = condition.threshold,
         )

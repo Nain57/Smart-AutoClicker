@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.ext
 
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 
 fun List<Event>.getAllCounterNames(): Set<String> = buildSet {
@@ -35,3 +38,12 @@ fun List<Event>.getAllCounterNames(): Set<String> = buildSet {
         }
     }
 }
+
+fun List<Event>.getAllOCRAlphabets(): Set<OCRAlphabet> =
+    buildSet {
+        this@getAllOCRAlphabets.forEach { event ->
+            (event as? ScreenEvent)?.conditions?.forEach { condition ->
+                if (condition is ScreenCondition.Text) add(condition.alphabet)
+            }
+        }
+    }

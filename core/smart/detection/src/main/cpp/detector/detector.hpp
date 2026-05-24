@@ -19,6 +19,7 @@
 #define KLICK_R_DETECTOR_HPP
 
 #include <opencv2/imgproc/imgproc.hpp>
+#include <map>
 
 #include "matching/color/color_matcher.hpp"
 #include "matching/color/color_matching_result.hpp"
@@ -44,7 +45,7 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        bool init(const std::string& detectionModelPath, const std::string& recognitionModelPath);
+        bool init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels);
         void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
         TemplateMatchingResult* detectImage(
@@ -59,7 +60,11 @@ namespace smartautoclicker {
                 const cv::Rect& roi,
                 int threshold);
 
-        TextMatchingResult *detectText(const char *textCondition, const cv::Rect &roi, int threshold);
+        TextMatchingResult* detectText(
+                const char* textCondition,
+                const char* recognitionModelId,
+                const cv::Rect &roi,
+                int threshold);
     };
 }
 
