@@ -31,7 +31,7 @@ import dependency_checker
 # Model Processor
 # ----------------------------
 
-def process_model(model, output_root):
+def process_model(model, output_root, mode):
     name = model["name"]
     mtype = model["type"]
     alphabet = model.get("alphabet", "all")
@@ -55,18 +55,30 @@ def process_model(model, output_root):
     
     ncnn_extensions = [".ncnn.param", ".ncnn.bin"]
     allowed_files = ["dict.txt"]
+    final_files = []
 
     for f in os.listdir(model_dir):
         file_path = os.path.join(model_dir, f)
         
         # Keep dictionary and the newly generated NCNN files
         if f in allowed_files or any(f.endswith(ext) for ext in ncnn_extensions):
+            final_files.append(f)
             continue
 
         if os.path.isfile(file_path):
             os.remove(file_path)
         elif os.path.isdir(file_path):
             shutil.rmtree(file_path)
+
+    # 3. Zip if in language_pack mode
+    if mode == "language_pack" and mtype == "rec":
+        print(f"\n>>> [STEP] Creating archive for {alphabet}")
+        zip_path = os.path.join(output_root, "rec", f"{alphabet}.zip")
+        
+        import zipfile
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for f in final_files:
+                zipf.write(os.path.join(model_dir, f), f)
 
 
 # ----------------------------
@@ -108,7 +120,7 @@ def main():
 
     # 3. Process each model
     for model in models:
-        process_model(model, output_root)
+        process_model(model, output_root, args.mode)
 
     print("\n\n[SUCCESS] All models downloaded and converted to NCNN.")
 
