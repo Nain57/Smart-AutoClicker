@@ -20,12 +20,12 @@ import android.content.Context
 import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
-import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -126,6 +126,7 @@ class TextConditionViewModel @Inject constructor(
             detectionAreaDescription = detectionArea.toDetectionAreaDisplayText(context),
             detectionAreaError = detectionArea.isEmpty,
             detectionThreshold = threshold,
+            alphabetDesc = context.getString(alphabet.getDisplayNameResId()),
         )
 
     private fun Rect.toDetectionAreaDisplayText(context: Context): String =

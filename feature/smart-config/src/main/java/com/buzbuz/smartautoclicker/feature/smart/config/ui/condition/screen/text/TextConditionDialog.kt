@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 
-import android.graphics.Rect
 import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
@@ -55,6 +54,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
@@ -120,6 +120,11 @@ class TextConditionDialog(
             }
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
+            fieldAlphabet.apply {
+                setTitle(context.getString(R.string.field_text_detection_alphabet_title))
+                setOnClickListener { showAlphabetSelectionDialog() }
+            }
+
             fieldSelectArea.apply {
                 setTitle(context.getString(R.string.field_text_detection_area_title))
                 setOnClickListener { showDetectionAreaSelector() }
@@ -184,6 +189,7 @@ class TextConditionDialog(
 
             if (fieldTextToSearch.textField.text.isNullOrEmpty()) fieldTextToSearch.setTextValue(uiState.textToSearch)
 
+            fieldAlphabet.setDescription(uiState.alphabetDesc)
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
             fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
@@ -225,6 +231,14 @@ class TextConditionDialog(
             newOverlay = ConditionAreaSelectorMenu(
                 onAreaSelected = viewModel::setDetectionArea,
             ),
+            hideCurrent = true,
+        )
+    }
+
+    private fun showAlphabetSelectionDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = AlphabetSelectionDialog(),
             hideCurrent = true,
         )
     }

@@ -233,6 +233,36 @@
     <string name="field_text_detection_area_desc_empty">Click here to select an area</string>
     <string name="field_text_detection_area_desc" translatable="false">[%1$d - %2$d; %3$d - %4$d]</string>
 
+    <string name="field_text_detection_alphabet_title">Alphabet</string>
+
+
+    <!-- Dialog Alphabet selection ================================================================================= -->
+
+    <string name="item_alphabet_selection_header">In order to use text detection in your scenario, you need to download the relevant alphabet model.\n\nEach model can take up to 5MB.</string>
+    <string name="item_alphabet_name_arabic">Arabic</string>
+    <string name="item_alphabet_name_chinese_simplified">Chinese simplified</string>
+    <string name="item_alphabet_name_chinese_traditional">Chinese traditional</string>
+    <string name="item_alphabet_name_cyrillic">Cyrillic</string>
+    <string name="item_alphabet_name_devanagari">Devanagari</string>
+    <string name="item_alphabet_name_japanese">Japanese</string>
+    <string name="item_alphabet_name_kannada">Kannada</string>
+    <string name="item_alphabet_name_korean">Korean</string>
+    <string name="item_alphabet_name_latin">Latin</string>
+    <string name="item_alphabet_name_tamil">Tamil</string>
+    <string name="item_alphabet_name_telugu">Telugu</string>
+
+    <string name="item_alphabet_name_arabic_desc" translatable="false">أبج</string>
+    <string name="item_alphabet_name_chinese_simplified_desc" translatable="false">汉字</string>
+    <string name="item_alphabet_name_chinese_traditional_desc" translatable="false">漢字</string>
+    <string name="item_alphabet_name_cyrillic_desc" translatable="false">АБВ</string>
+    <string name="item_alphabet_name_devanagari_desc" translatable="false">अआइ</string>
+    <string name="item_alphabet_name_japanese_desc" translatable="false">あア日</string>
+    <string name="item_alphabet_name_kannada_desc" translatable="false">ಅಆಇ</string>
+    <string name="item_alphabet_name_korean_desc" translatable="false">가나다</string>
+    <string name="item_alphabet_name_latin_desc" translatable="false">ABC</string>
+    <string name="item_alphabet_name_tamil_desc" translatable="false">அஆஇ</string>
+    <string name="item_alphabet_name_telugu_desc" translatable="false">అఆఇ</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 

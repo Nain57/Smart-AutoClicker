@@ -16,13 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.data
 
+import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
+import java.io.InputStream
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,22 +35,31 @@ import javax.inject.Singleton
 @Singleton
 internal class DirectDownloadModelRemoteDataSource @Inject constructor(
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val localDataSource: OCRModelLocalDataSource,
 ): RecognitionModelsRemoteDataSource {
 
-    override suspend fun downloadRecognitionModel(alphabet: OCRAlphabet) {
-        downloadAndSave("${GITHUB_BASE_URL}${alphabet.name.lowercase()}.tar.gz", alphabet)
+    private val _currentlyDownloading: MutableStateFlow<Set<OCRAlphabet>> = MutableStateFlow(emptySet())
+    override val currentlyDownloading: StateFlow<Set<OCRAlphabet>> = _currentlyDownloading
+
+    override suspend fun downloadRecognitionModel(alphabet: OCRAlphabet, closure: (InputStream) -> Unit) {
+        downloadAndSave("${GITHUB_BASE_URL}${alphabet.name.lowercase()}.zip", alphabet, closure)
     }
 
-    private suspend fun downloadAndSave(url: String, alphabet: OCRAlphabet) {
+    private suspend fun downloadAndSave(url: String, alphabet: OCRAlphabet, closure: (InputStream) -> Unit) {
         withContext(ioDispatcher) {
-            val connection = URL(url).openConnection()
-            connection.connect()
-            connection.getInputStream().use { input ->
-                localDataSource.saveAndExtractModel(alphabet, input)
+            _currentlyDownloading.update { old -> old + alphabet }
+
+            try {
+                val connection = URL(url).openConnection()
+                connection.connect()
+                connection.getInputStream().use { input -> closure(input) }
+            } catch (ex: Exception) {
+                Log.w(TAG, "Error while downloading model for $alphabet", ex)
+            } finally {
+                _currentlyDownloading.update { old -> old - alphabet }
             }
         }
     }
 }
 
-private const val GITHUB_BASE_URL = "https://github.com/placeholder/models/releases/download/v1.0.0/"
+private const val GITHUB_BASE_URL = "https://github.com/Nain57/Smart-AutoClicker/releases/download/test-recognition-models/"
+private const val TAG = "DirectDownloadModelRemoteDataSource"

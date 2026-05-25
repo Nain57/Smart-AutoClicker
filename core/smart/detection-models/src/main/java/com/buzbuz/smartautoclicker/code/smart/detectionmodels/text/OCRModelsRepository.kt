@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface OCRModelsRepository {
 
-    val models: Flow<Set<OCRModel>>
+    val recognitionModels: Flow<Set<OCRModel.Recognition>>
 
     fun refreshOcrModels()
 

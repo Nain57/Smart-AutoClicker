@@ -51,11 +51,11 @@ internal class OCRModelLocalDataSource @Inject constructor(
     private val textModelDataDir: File = File(context.filesDir, OCR_MODELS_DATA_DIR)
     private val refresh: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 1)
 
-
-    val trainingDataFiles: Flow<Map<OCRAlphabet, String>> = refresh
+    val recognitionModelsFiles: Flow<Map<OCRAlphabet, String>> = refresh
         .onStart { emit(Unit) }
-        .map { listLocalModels() }
+        .map { listRecognitionModels() }
         .flowOn(ioDispatcher)
+
 
     init {
         coroutineScopeIo.launch {
@@ -158,11 +158,13 @@ internal class OCRModelLocalDataSource @Inject constructor(
         }
     }
 
-    private fun listLocalModels(): Map<OCRAlphabet, String> {
-        if (!textModelDataDir.exists()) return emptyMap()
+    private fun listRecognitionModels(): Map<OCRAlphabet, String> {
+        val recognitionModelsDir = File(textModelDataDir, OCR_RECOGNITION_MODEL_DIR)
+        println("TOTO: modelDir=$recognitionModelsDir")
+        if (!recognitionModelsDir.exists()) return emptyMap()
 
         return buildMap {
-            textModelDataDir.listFiles()?.forEach { file ->
+            recognitionModelsDir.listFiles()?.forEach { file ->
                 if (!file.isDirectory) return@forEach
                 try {
                     val alphabet = OCRAlphabet.valueOf(file.name.uppercase())

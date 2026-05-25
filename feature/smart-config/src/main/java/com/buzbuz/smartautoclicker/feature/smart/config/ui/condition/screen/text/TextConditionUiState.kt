@@ -25,4 +25,5 @@ data class TextConditionUiState(
     val detectionAreaDescription: String,
     val detectionAreaError: Boolean,
     val detectionThreshold: Int,
+    val alphabetDesc: String,
 )

@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRMod
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,8 +35,10 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
     private val remoteDataSource: RecognitionModelsRemoteDataSource,
 ) : OCRModelsRepository {
 
-    override val models: Flow<Set<OCRModel>> = localDataSource.trainingDataFiles
-        .map { files -> files.toModel() }
+    override val recognitionModels: Flow<Set<OCRModel.Recognition>> = localDataSource.recognitionModelsFiles
+        .combine(remoteDataSource.currentlyDownloading) { installed, downloading ->
+            installed.toModel(downloading)
+        }
 
     override fun refreshOcrModels() {
         localDataSource.refreshModelsFiles()
@@ -59,6 +61,11 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
             return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloadable)
         }
 
+        if (remoteDataSource.currentlyDownloading.value.contains(alphabet)) {
+            Log.w(TAG, "Can't get model $alphabet, it is downloading")
+            return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloading)
+        }
+
         return OCRModel.Recognition(
             alphabet = alphabet,
             state = OCRModelState.Installed(path = localDataSource.getRecognitionModelDir(alphabet).path),
@@ -75,15 +82,19 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun downloadRecognitionModel(alphabet: OCRAlphabet) {
-        remoteDataSource.downloadRecognitionModel(alphabet)
+        remoteDataSource.downloadRecognitionModel(alphabet) { archiveStream ->
+            localDataSource.saveAndExtractModel(alphabet, archiveStream)
+        }
     }
 
-    private fun Map<OCRAlphabet, String>.toModel(): Set<OCRModel> =
+    private fun Map<OCRAlphabet, String>.toModel(downloading: Set<OCRAlphabet>): Set<OCRModel.Recognition> =
         OCRAlphabet.entries.map { alphabet ->
             val path = get(alphabet)
-            val state =
-                if (path != null) OCRModelState.Installed(path)
-                else OCRModelState.Downloadable
+            val state = when {
+                downloading.contains(alphabet) -> OCRModelState.Downloading
+                path != null -> OCRModelState.Installed(path)
+                else -> OCRModelState.Downloadable
+            }
 
             OCRModel.Recognition(
                 alphabet = alphabet,
