@@ -61,9 +61,10 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
             return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloadable)
         }
 
-        if (remoteDataSource.currentlyDownloading.value.contains(alphabet)) {
+        val downloadState = remoteDataSource.currentlyDownloading.value[alphabet]
+        if (downloadState != null) {
             Log.w(TAG, "Can't get model $alphabet, it is downloading")
-            return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloading)
+            return OCRModel.Recognition(alphabet = alphabet, state = OCRModelState.Downloading(downloadState))
         }
 
         return OCRModel.Recognition(
@@ -82,16 +83,17 @@ internal class OCRModelsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun downloadRecognitionModel(alphabet: OCRAlphabet) {
-        remoteDataSource.downloadRecognitionModel(alphabet) { archiveStream ->
-            localDataSource.saveAndExtractModel(alphabet, archiveStream)
+        remoteDataSource.downloadRecognitionModel(alphabet) {
+            localDataSource.refreshModelsFiles()
         }
     }
 
-    private fun Map<OCRAlphabet, String>.toModel(downloading: Set<OCRAlphabet>): Set<OCRModel.Recognition> =
+    private fun Map<OCRAlphabet, String>.toModel(downloading: Map<OCRAlphabet, Int>): Set<OCRModel.Recognition> =
         OCRAlphabet.entries.map { alphabet ->
             val path = get(alphabet)
+            val downloadProgress = downloading[alphabet]
             val state = when {
-                downloading.contains(alphabet) -> OCRModelState.Downloading
+                downloadProgress != null -> OCRModelState.Downloading(downloadProgress)
                 path != null -> OCRModelState.Installed(path)
                 else -> OCRModelState.Downloadable
             }

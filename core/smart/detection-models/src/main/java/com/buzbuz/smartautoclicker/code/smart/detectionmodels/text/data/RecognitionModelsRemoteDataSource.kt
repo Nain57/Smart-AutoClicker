@@ -18,16 +18,15 @@ package com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.data
 
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import kotlinx.coroutines.flow.StateFlow
-import java.io.InputStream
 
 /** Handle remote access to recognition models. Implementation is flavour dependent. */
 internal interface RecognitionModelsRemoteDataSource {
 
-    val currentlyDownloading: StateFlow<Set<OCRAlphabet>>
+    val currentlyDownloading: StateFlow<Map<OCRAlphabet, Int>>
 
     /**
      * Download and extract a recognition model for an alphabet.
      * @param alphabet the alphabet for the model.
      */
-    suspend fun downloadRecognitionModel(alphabet: OCRAlphabet, closure: (InputStream) -> Unit)
+    suspend fun downloadRecognitionModel(alphabet: OCRAlphabet, onSuccess: () -> Unit)
 }

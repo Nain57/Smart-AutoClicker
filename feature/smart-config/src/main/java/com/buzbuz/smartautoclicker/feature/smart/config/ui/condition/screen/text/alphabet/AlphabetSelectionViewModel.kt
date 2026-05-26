@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDescriptionResId
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
-import kotlinx.coroutines.FlowPreview
 
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -103,6 +103,6 @@ private fun OCRModel.Recognition.toUiState(selected: Boolean): AlphabetSelection
 private fun OCRModelState.toDownloadState(): AlphabetDownloadUiState =
     when (this) {
         OCRModelState.Downloadable -> AlphabetDownloadUiState.NotDownloaded
-        OCRModelState.Downloading -> AlphabetDownloadUiState.Downloading("0")
+        is OCRModelState.Downloading -> AlphabetDownloadUiState.Downloading("$progress%")
         is OCRModelState.Installed -> AlphabetDownloadUiState.Downloaded
     }

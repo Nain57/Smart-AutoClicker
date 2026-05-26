@@ -35,9 +35,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 import java.io.File
-import java.io.InputStream
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -48,8 +45,10 @@ internal class OCRModelLocalDataSource @Inject constructor(
 ) {
 
     private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
-    private val textModelDataDir: File = File(context.filesDir, OCR_MODELS_DATA_DIR)
     private val refresh: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 1)
+
+    private val detectionModelDataDir: File = context.detectionModelDataDir()
+    private val recognitionModelsDataDir: File = context.recognitionModelsDataDir()
 
     val recognitionModelsFiles: Flow<Map<OCRAlphabet, String>> = refresh
         .onStart { emit(Unit) }
@@ -70,51 +69,22 @@ internal class OCRModelLocalDataSource @Inject constructor(
         }
     }
 
-    /**
-     * Get the directory for the detection model.
-     * @return the directory.
-     */
     fun getDetectionModelDir(): File =
-        File(textModelDataDir, OCR_DETECTION_MODEL_DIR)
+        detectionModelDataDir
 
-    /**
-     * Check if the detection model is available.
-     * @return true if the detection model files are present, false otherwise.
-     */
     fun isDetectionModelAvailable(): Boolean {
-        val detDir = getDetectionModelDir()
-        return File(detDir, OCR_DETECTION_MODEL_FILE).exists() &&
-                File(detDir, OCR_DETECTION_MODEL_PARAMS_FILE).exists()
+        return File(detectionModelDataDir, OCR_DETECTION_MODEL_FILE).exists() &&
+                File(detectionModelDataDir, OCR_DETECTION_MODEL_PARAMS_FILE).exists()
     }
 
-    /**
-     * Get the directory for an alphabet model.
-     * @param alphabet the alphabet.
-     * @return the directory.
-     */
     fun getRecognitionModelDir(alphabet: OCRAlphabet): File =
-        File(textModelDataDir, alphabet.recognitionModelDataDir())
+        recognitionModelsDataDir.recognitionModelDataDir(alphabet)
 
-    /**
-     * Check if a model is already downloaded and extracted for an alphabet.
-     * @param alphabet the alphabet to check.
-     * @return true if the model files are present, false otherwise.
-     */
     fun isRecognitionModelAvailable(alphabet: OCRAlphabet): Boolean {
         val alphabetDir = getRecognitionModelDir(alphabet)
         return File(alphabetDir, OCR_RECOGNITION_MODEL_FILE).exists() &&
                 File(alphabetDir, OCR_RECOGNITION_MODEL_PARAMS_FILE).exists() &&
                 File(alphabetDir, OCR_RECOGNITION_MODEL_DICTIONARY_FILE).exists()
-    }
-
-    /**
-     * Save and extract a model archive for an alphabet.
-     * @param alphabet the alphabet for this model.
-     * @param archiveStream the input stream of the .tar.gz archive.
-     */
-    fun saveAndExtractModel(alphabet: OCRAlphabet, archiveStream: InputStream) {
-        saveAndExtract(getRecognitionModelDir(alphabet), archiveStream)
-        refreshModelsFiles()
     }
 
     /** Ensure that models bundled in the APK assets are extracted to the local storage. */
@@ -127,44 +97,17 @@ internal class OCRModelLocalDataSource @Inject constructor(
         }
         if (!isRecognitionModelAvailable(OCRAlphabet.LATIN)) {
             context.extractAssetModel(
-                assetDir = "$OCR_MODELS_ASSET_DIR/${OCRAlphabet.LATIN.recognitionModelDataDir()}",
+                assetDir = "$OCR_MODELS_ASSET_DIR/$OCR_RECOGNITION_MODEL_DIR/${OCRAlphabet.LATIN.toRecognitionModelDataDirName()}",
                 targetDir = getRecognitionModelDir(OCRAlphabet.LATIN),
             )
         }
     }
 
-    private fun saveAndExtract(targetDir: File, archiveStream: InputStream) {
-        if (targetDir.exists()) targetDir.deleteRecursively()
-        targetDir.mkdirs()
-
-        try {
-            ZipInputStream(archiveStream).use { zipInput ->
-                var entry: ZipEntry? = zipInput.nextEntry
-                while (entry != null) {
-                    if (!entry.isDirectory) {
-                        val filename = entry.name.substringAfterLast("/")
-                        val targetFile = File(targetDir, filename)
-                        targetFile.outputStream().use { output ->
-                            zipInput.copyTo(output)
-                        }
-                    }
-                    entry = zipInput.nextEntry
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to extract model into ${targetDir.path}", e)
-            targetDir.deleteRecursively()
-            throw e
-        }
-    }
-
     private fun listRecognitionModels(): Map<OCRAlphabet, String> {
-        val recognitionModelsDir = File(textModelDataDir, OCR_RECOGNITION_MODEL_DIR)
-        println("TOTO: modelDir=$recognitionModelsDir")
-        if (!recognitionModelsDir.exists()) return emptyMap()
+        if (!recognitionModelsDataDir.exists()) return emptyMap()
 
         return buildMap {
-            recognitionModelsDir.listFiles()?.forEach { file ->
+            recognitionModelsDataDir.listFiles()?.forEach { file ->
                 if (!file.isDirectory) return@forEach
                 try {
                     val alphabet = OCRAlphabet.valueOf(file.name.uppercase())

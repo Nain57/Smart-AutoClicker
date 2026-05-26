@@ -16,7 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.data
 
+import android.content.Context
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
+import java.io.File
+
 
 internal const val OCR_MODELS_ASSET_DIR = "models/text"
 internal const val OCR_MODELS_DATA_DIR = "models/text"
@@ -25,11 +28,30 @@ internal const val OCR_DETECTION_MODEL_DIR = "detect"
 internal const val OCR_DETECTION_MODEL_FILE = "det.ncnn.bin"
 internal const val OCR_DETECTION_MODEL_PARAMS_FILE = "det.ncnn.param"
 
+internal const val ASSET_PACK_RECOGNITION_MODEL_PREFIX = "text_model_rec_"
 internal const val OCR_RECOGNITION_MODEL_DIR = "recognize"
 internal const val OCR_RECOGNITION_MODEL_FILE = "rec.ncnn.bin"
 internal const val OCR_RECOGNITION_MODEL_PARAMS_FILE = "rec.ncnn.param"
 internal const val OCR_RECOGNITION_MODEL_DICTIONARY_FILE = "dict.txt"
 
-internal fun OCRAlphabet.recognitionModelDataDir(): String =
-    "${OCR_RECOGNITION_MODEL_DIR}/${name.lowercase()}"
 
+internal fun Context.detectionModelDataDir(): File =
+    File(filesDir, "$OCR_MODELS_DATA_DIR/$OCR_DETECTION_MODEL_DIR")
+
+internal fun Context.recognitionModelsDataDir(): File =
+    File(filesDir, "$OCR_MODELS_DATA_DIR/$OCR_RECOGNITION_MODEL_DIR")
+
+internal fun OCRAlphabet.toRecognitionModelDataDirName(): String =
+    name.lowercase()
+
+internal fun File.recognitionModelDataDir(alphabet: OCRAlphabet): File =
+    File(this, alphabet.toRecognitionModelDataDirName())
+
+internal fun OCRAlphabet.recognitionModelDataDirPath(): String =
+    "$OCR_MODELS_DATA_DIR/${OCR_RECOGNITION_MODEL_DIR}/${toRecognitionModelDataDirName()}"
+
+internal fun OCRAlphabet.recognitionModelAssetPackName(): String =
+    "$ASSET_PACK_RECOGNITION_MODEL_PREFIX${toRecognitionModelDataDirName()}"
+
+internal fun OCRAlphabet.recognitionModelAssetDir(): String =
+    "$OCR_MODELS_ASSET_DIR/${OCR_RECOGNITION_MODEL_DIR}/${toRecognitionModelDataDirName()}"

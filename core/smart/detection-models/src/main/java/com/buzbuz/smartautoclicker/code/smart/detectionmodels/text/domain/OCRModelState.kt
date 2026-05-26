@@ -19,6 +19,6 @@ package com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain
 sealed class OCRModelState {
 
     data object Downloadable : OCRModelState()
-    data object Downloading : OCRModelState()
+    data class Downloading(val progress: Int) : OCRModelState()
     data class Installed(val path: String) : OCRModelState()
 }
