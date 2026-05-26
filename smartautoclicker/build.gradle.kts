@@ -76,14 +76,32 @@ android {
             keyPassword = buildParameters.signingKeyPassword.typedValue
         }
     }
+
+    // Text recognition alphabet models downloaded with PlayAssetDelivery
+    if (project.isBuildForVariant(KlickrFlavour.PLAY_STORE)) {
+        assetPacks.addAll(
+            listOf(
+                ":core:smart:detection-models:models:text:arabic",
+                ":core:smart:detection-models:models:text:chinese_simplified",
+                ":core:smart:detection-models:models:text:chinese_traditional",
+                ":core:smart:detection-models:models:text:cyrillic",
+                ":core:smart:detection-models:models:text:devanagari",
+                ":core:smart:detection-models:models:text:japanese",
+                ":core:smart:detection-models:models:text:kannada",
+                ":core:smart:detection-models:models:text:korean",
+                ":core:smart:detection-models:models:text:tamil",
+                ":core:smart:detection-models:models:text:telugu",
+            )
+        )
+    }
 }
 
 // Apply signature convention after declaring the signingConfigs
-apply { plugin(libs.plugins.buzbuz.androidSigning.get().pluginId) }
+apply(plugin = libs.plugins.buzbuz.androidSigning.get().pluginId)
 
 // Only apply gms/firebase plugins if we are building for the play store
 if (project.isBuildForVariant(KlickrFlavour.PLAY_STORE, KlickrBuildType.RELEASE)) {
-    apply { plugin(libs.plugins.buzbuz.crashlytics.get().pluginId) }
+    apply(plugin = libs.plugins.buzbuz.crashlytics.get().pluginId)
 }
 
 dependencies {
