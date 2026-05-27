@@ -29,7 +29,7 @@ bool TextRecognizer::init(const std::map<std::string, std::string>& models) {
         AlphabetRecognizer recognizer;
 
         if (!recognizer.loadModel(id, path)) {
-            LOGE("TextRecognizer", "Can't load model %s");
+            LOGE("TextRecognizer", "Can't load model %s", id.c_str());
             alphabetRecognizers.clear();
             return false;
         }
@@ -39,6 +39,7 @@ bool TextRecognizer::init(const std::map<std::string, std::string>& models) {
 
     // Pre-allocate padded buffer to the maximum possible width to avoid runtime reallocations
     paddedBuffer = cv::Mat::zeros(48, 320, CV_8UC3);
+    resizedBuffer = cv::Mat::zeros(48, 320, CV_8UC3);
 
     return true;
 }
@@ -50,7 +51,12 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(
     std::vector<TextRecognizerResult> results;
     results.reserve(detectionResults.size());
 
-    auto& recognizer = alphabetRecognizers[recognitionModelId];
+    auto it = alphabetRecognizers.find(recognitionModelId);
+    if (it == alphabetRecognizers.end()) {
+        LOGE("TextRecognizer", "Unknown model id: %s", recognitionModelId.c_str());
+        return {};
+    }
+    auto& recognizer = it->second;
 
     for (const auto& detectionResult : detectionResults) {
         cv::Mat crop = detectionResult.crop;
@@ -100,9 +106,6 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop, bool isRtlAlphabet) {
 
     // Always clear and use the full 320px buffer — SVTR requires fixed width
     paddedBuffer.setTo(cv::Scalar(0, 0, 0));
-    resizedBuffer.copyTo(paddedBuffer(cv::Rect(0, 0, resizedWidth, targetHeight)));
-
-    paddedBuffer.setTo(cv::Scalar(0, 0, 0));
     int xOffset = isRtlAlphabet ? (maxWidth - resizedWidth) : 0;
     resizedBuffer.copyTo(paddedBuffer(cv::Rect(xOffset, 0, resizedWidth, targetHeight)));
 
@@ -131,9 +134,7 @@ TextRecognizerResult TextRecognizer::decode(
     int confidenceCount = 0;
     int previousIndex = 0;
 
-    // Collect tokens first, then join in reverse
-    std::vector<std::string> tokens;
-
+    tokens.clear();
     for (int t = 0; t < sequenceLength; t++) {
         const float* scores = output.row(t);
         int bestIndex = 0;
@@ -146,7 +147,7 @@ TextRecognizerResult TextRecognizer::decode(
             }
         }
 
-        if (bestIndex == 0) {
+        if (bestIndex == 0) { // blank token
             previousIndex = 0;
             continue;
         }
@@ -154,7 +155,7 @@ TextRecognizerResult TextRecognizer::decode(
         if (bestIndex == previousIndex) continue;
         previousIndex = bestIndex;
 
-        if (bestIndex < dictionary.size()) {
+        if (bestIndex >= 0 && static_cast<size_t>(bestIndex) < dictionary.size()) {
             tokens.push_back(dictionary[bestIndex]);
             totalConfidence += bestScore;
             confidenceCount++;
@@ -165,6 +166,9 @@ TextRecognizerResult TextRecognizer::decode(
     if (isRtlAlphabet) std::reverse(tokens.begin(), tokens.end());
 
     std::string recognizedText;
+    size_t totalLen = 0;
+    for (const auto& t : tokens) totalLen += t.size();
+    recognizedText.reserve(totalLen);
     for (const auto& token : tokens) {
         recognizedText += token;
     }

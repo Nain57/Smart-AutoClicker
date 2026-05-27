@@ -55,14 +55,14 @@ namespace smartautoclicker {
     private:
 
         /** PP-OCR normalization mean values. */
-        const float meanVals[3] = {
+        static constexpr float meanVals[3] = {
                 127.5f,
                 127.5f,
                 127.5f
         };
 
         /** PP-OCR normalization scale values. */
-        const float normVals[3] = {
+        static constexpr float normVals[3] = {
                 1.f / 127.5f,
                 1.f / 127.5f,
                 1.f / 127.5f
@@ -74,6 +74,8 @@ namespace smartautoclicker {
         cv::Mat resizedBuffer;
         /** Reusable buffer for padding, pre-allocated to max size in init. */
         cv::Mat paddedBuffer;
+        /** Reusable buffer for text tokens.*/
+        std::vector<std::string> tokens;
 
         /**
          * Preprocesses a single image crop for the recognition model.

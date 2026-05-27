@@ -36,13 +36,6 @@ bool TextDetector::init(const std::string& modelPath) {
         return false;
     }
 
-    // Dummy extraction to warmup the lib
-    ncnn::Mat dummy(32, 32, 3);
-    ncnn::Extractor ex = ncnnDetector->create_extractor();
-    ex.input("in0", dummy);
-    ncnn::Mat out;
-    ex.extract("out0", out);
-
     return true;
 }
 
@@ -60,7 +53,7 @@ std::vector<TextDetectorResult> TextDetector::detectText(const cv::Mat& rgbScree
     // Run text detection
     ncnn::Mat detectionOutput;
     detectText(padded, detectionOutput);
-    LOGD("TextDetector", "Output shape: w=%d h=%d c=%d", detectionOutput.w, detectionOutput.h, detectionOutput.c);
+    if (detectionOutput.empty()) return {};
 
     // Process results and get the textboxes
     cv::Mat scoreMap(detectionOutput.h, detectionOutput.w, CV_32FC1, (void*)detectionOutput.data);
@@ -142,15 +135,11 @@ cv::Mat TextDetector::processDetectionOutput(const cv::Mat& scoreMap) {
     binary.convertTo(binary, CV_8UC1, 255);
 
     // Morphology Close - joins disconnected parts of the same word/character
-    cv::Mat kernelClose = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 9));
     cv::morphologyEx(binary, binary, cv::MORPH_CLOSE, kernelClose);
-
-    cv::Mat kernelVertical = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(1, 11));
-    cv::dilate(binary, binary, kernelVertical);
 
     // Dilation - Smear horizontally to merge words into full sentences/lines
     // We use a wider kernel horizontally (30) than vertically (3) to avoid merging separate lines.
-    cv::Mat kernelDilate = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(30, 3));
+    cv::dilate(binary, binary, kernelVertical);
     cv::dilate(binary, binary, kernelDilate);
 
     return binary;
@@ -171,7 +160,6 @@ std::vector<std::vector<cv::Point>> TextDetector::filterContours(
 
     std::vector<std::vector<cv::Point>> filtered;
     filtered.reserve(contours.size());
-    cv::Mat mask = cv::Mat::zeros(scoreMap.size(), CV_8UC1);
 
     for (const auto& contour : contours) {
         cv::Rect box = cv::boundingRect(contour);

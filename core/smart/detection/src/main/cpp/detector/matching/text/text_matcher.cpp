@@ -38,7 +38,7 @@ TextMatchingResult* TextMatcher::getMatchingResults() {
 
 bool TextMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi) {
     if (!isRoiContainsOrEquals(screenRoi, roi)) {
-        LOGD("TextMatcher", "Can't detect color, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
+        LOGD("TextMatcher", "Can't detect text, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
              roi.x, roi.y, roi.width, roi.height,
              screenRoi.width, screenRoi.height);
         return false;
@@ -58,6 +58,10 @@ void TextMatcher::matchText(
     cv::Mat screenCrop = screenImage.cropColor(detectionArea);
     cv::Mat rgbScreenCrop;
     cv::cvtColor(screenCrop, rgbScreenCrop, cv::COLOR_RGBA2RGB);
+    if (rgbScreenCrop.empty()) {
+        LOGE("TextMatcher", "Can't get rgb screen crop");
+        return;
+    }
 
     // Find all regions containing text within the screen crop
     auto detectorResults = textLocator->detectText(rgbScreenCrop);
@@ -73,7 +77,7 @@ void TextMatcher::matchText(
         if (score < currentMatchingResult.getResultConfidence()) continue;
 
         currentMatchingResult.updateResults(detectionArea, recognizerResult.boundingBox, score);
-        if ((int)(score * 100) >= threshold) {
+        if ((int) score >= threshold) {
             currentMatchingResult.markResultAsDetected();
             break;
         }
@@ -171,12 +175,5 @@ float TextMatcher::similarity(const std::string &recognized, const std::string &
 
 char TextMatcher::normalizeChar(char c) {
     if (c >= 'A' && c <= 'Z') return static_cast<char>(c + 32);
-
-    // OCR normalization
-    switch (c) {
-        case '0': return 'o';
-        case '1': return 'l';
-        case '5': return 's';
-        default: return c;
-    }
+    return c;
 }
