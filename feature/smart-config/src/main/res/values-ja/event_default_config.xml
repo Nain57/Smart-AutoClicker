@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+-->
+<resources>
+    <string name="default_event_name">既定のイベント</string>
+    <string name="default_click_name">クリック</string>
+    <string name="default_swipe_name">スワイプ</string>
+    <string name="default_pause_name">待機</string>
+    <string name="default_intent_name">インテント</string>
+    <string name="default_toggle_event_name">イベントの切り替え</string>
+    <string name="default_condition_name">既定の条件</string>
+    <string name="default_change_counter_name">カウンター変更</string>
+    <string name="default_notification_name">通知</string>
+    <string name="default_system_action_name">システム操作</string>
+    <string name="default_set_text_name">テキスト入力</string>
+</resources>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="notification_title">情境：%1$s</string>
+    <string name="notification_message">輕觸即可變更情境</string>
+    <string name="notification_button_play_and_hide">開始並隱藏</string>
+    <string name="notification_button_pause_and_show">暫停並顯示</string>
+    <string name="notification_button_toggle_menu">顯示／隱藏</string>
+    <string name="notification_button_stop">停止</string>
+
+    <string name="activity_scenario_title">情境</string>
+    <string name="accessibility_service_description">本應用程式需要此服務，以便在偵測到條件後，將您建立的點擊操作注入其他應用程式。\n\n本應用程式不會蒐集任何資料。歡迎前往我們的 GitHub 存放庫，原始碼為開放授權。</string>
+
+    <string name="dialog_title_add_scenario">新增情境</string>
+    <string name="dialog_title_copy_scenario">複製情境</string>
+
+    <string name="menu_item_title_export">匯出</string>
+    <string name="menu_item_title_import">匯入</string>
+    <string name="menu_item_title_select_all">全選</string>
+    <string name="menu_item_title_cancel">取消</string>
+    <string name="menu_item_title_search">搜尋</string>
+    <string name="menu_item_title_settings">設定</string>
+
+    <string name="item_scenario_filter_by_name">名稱</string>
+    <string name="item_scenario_filter_by_recent">最近使用</string>
+    <string name="item_scenario_filter_by_favorite">收藏</string>
+
+    <string name="item_desc_dumb_scenario">一般自動點擊體驗。\n於螢幕上設定點擊與滑動即可。</string>
+    <string name="item_desc_dumb_scenario_max_duration">於 %1$s 後停止</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">無最長持續時間</string>
+    <string name="item_desc_dumb_scenario_repeat_count">重複 %1$d 次</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">無限重複</string>
+    <string name="item_desc_smart_scenario">運用影像辨識建立複雜使用情境。</string>
+    <string name="item_desc_smart_scenario_pro_mode">須觀看廣告或購買專業版</string>
+    <string name="item_title_dumb_scenario">簡易</string>
+    <string name="item_title_smart_scenario">智慧</string>
+
+    <string name="message_empty_scenario_list">請建立第一個情境，開始於手機上自動化工作</string>
+
+    <string name="message_delete_scenario">將刪除「%1$s」。是否確認？</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的裝置未提供標準的 Android 螢幕擷取權限對話方塊，Klick\'r 無法於此裝置上執行。</string>
+
+    <string name="section_title_scenario_type_title">情境類型</string>
+
+    <string name="toast_denied_screen_sharing_permission">使用者已拒絕螢幕共用權限</string>
+    <string name="toast_denied_foreground_permission">使用者已拒絕前景服務權限</string>
+
+    <string name="button_text_create_scenario">建立情境</string>
+
+    <string name="content_desc_add_scenario">建立新情境</string>
+
+    <string name="default_scenario_name">預設名稱</string>
+    <string name="message_empty_image_events_scenario_list">尚無影像事件</string>
+
+    <string name="activity_settings_title">設定</string>
+
+    <string name="field_show_scenario_filters_ui_title">顯示情境篩選</string>
+    <string name="field_show_scenario_filters_ui_desc">於情境清單畫面顯示或隱藏篩選器。</string>
+
+    <string name="field_legacy_action_ui_title">經典操作介面</string>
+    <string name="field_legacy_action_ui_desc">以清單方式顯示操作，適用於複雜情境。</string>
+
+    <string name="field_legacy_notification_ui_title">經典通知介面</string>
+    <string name="field_legacy_notification_ui_desc">於通知中使用系統按鈕，而非圖示按鈕。</string>
+
+    <string name="field_force_entire_screen_title">強制全螢幕</string>
+    <string name="field_force_entire_screen_desc">將螢幕擷取選擇器固定為「整個螢幕」。視裝置而定，可能無法生效。</string>
+
+    <string name="field_input_block_workaround_title">解除觸控阻塞</string>
+    <string name="field_input_block_workaround_desc">於部分搭載 Android 15 的 Pixel 裝置上，使用自動點擊器可能導致觸控暫時無回應。\n可同時以多指觸碰螢幕以恢復。本設定將嘗試每 10 秒模擬該操作。</string>
+
+    <string name="field_privacy">隱私權設定</string>
+    <string name="field_remove_ads">移除廣告</string>
+    <string name="field_troubleshooting">疑難排解</string>
+
+    <string name="dialog_condition_migration_title">移轉</string>
+
+    <string name="message_condition_migration_desc">Klick\'r 的影像格式已變更，您的情境須予更新。所需時間視待移轉條件數量而定，可能需數分鐘。</string>
+    <string name="message_condition_migration_count">待移轉影像條件：%1$d 項</string>
+    <string name="message_condition_migration_success">全部影像條件已移轉完成。</string>
+    <string name="message_condition_migration_error">部分條件未能移轉，請檢查您的情境。</string>
+
+    <string name="button_condition_migration_start">開始移轉</string>
+    <string name="button_condition_migration_running">正在移轉</string>
+    <string name="button_condition_migration_finished">確定</string>
+
+</resources>

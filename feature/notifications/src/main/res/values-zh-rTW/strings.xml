@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_title">情境：%1$s</string>
+    <string name="notification_message">輕觸即可變更情境</string>
+    <string name="notification_button_play">開始</string>
+    <string name="notification_button_pause">暫停</string>
+    <string name="notification_button_show">顯示</string>
+    <string name="notification_button_hide">隱藏</string>
+    <string name="notification_button_stop">停止</string>
+    <string name="notification_button_config">設定</string>
+</resources>

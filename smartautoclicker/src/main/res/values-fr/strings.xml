@@ -28,7 +28,7 @@
     <string name="activity_scenario_title">Scénarios</string>
     <string name="accessibility_service_description">Cette application à besoin de ce service pour injecter les clics
         que vous avez créé dans les autres applications une fois que les conditions ont été détectées.\n\nAucune donnée
-        n\'est collectée par cette application. N\hésitez pas à visiter notre GitHub, le projet est open source !</string>
+        n\'est collectée par cette application. N\'hésitez pas à visiter notre GitHub, le projet est open source !</string>
 
     <!--
       - Titles for the dialogs displayed from the activity.

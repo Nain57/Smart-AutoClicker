@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label_start_scenario">启动 Klick\'r</string>
+    <string name="tile_label_stop_scenario">停止 Klick\'r</string>
+    <string name="tile_subtext_unavailable">尚未定义场景</string>
+</resources>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Debug Report root dialog ================================================================================== -->
+
+    <string name="dialog_overlay_title_debug_report">Reporte de la depuración</string>
+    <string name="menu_item_debug_report_overview">Descripción general</string>
+    <string name="menu_item_debug_report_timeline">Línea de tiempo</string>
+
+    <!-- Debug Report Overview Tab-->
+    <string name="item_title_report_total_duration">Duración total</string>
+    <string name="item_title_report_frame_processed">Marcos procesados</string>
+    <string name="item_title_report_avg_image_processing_duration">Duración de procesamiento media</string>
+    <string name="item_title_report_image_event_fulfilled">ImagenEventos cumplidos</string>
+    <string name="item_title_report_trigger_event_fulfilled">TriggerEvents cumplidos</string>
+
+    <!-- Debug Report Timeline Tab -->
+    <string name="title_event_occurrence_empty">Sin eventos</string>
+    <string name="desc_event_occurrence_empty">No se ejecutó ningún evento durante la última sesión del escenario.</string>
+    <string name="item_event_occurrence_frame_number">Marco #%1$d</string>
+    <string name="item_event_occurrence_trigger">Desencadenar</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">Cumplido: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d condiciones procesadas</string>
+
+
+    <!-- Debug Report Timeline filters dialog ====================================================================== -->
+
+    <string name="dialog_overlay_title_timeline_filters">Filtros de línea de tiempo</string>
+
+    <string name="field_debug_filter_image_events_title">Eventos de imagen</string>
+    <string name="field_debug_filter_image_events_show_desc_on">Mostrar ocurrencias de eventos de imagen en la línea de tiempo</string>
+    <string name="field_debug_filter_image_events_show_desc_off">Ocultar todas las apariciones de eventos de imagen en la línea de tiempo</string>
+
+    <string name="field_debug_filter_trigger_events_title">Eventos desencadenantes</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">Mostrar ocurrencias de eventos desencadenantes en la línea de tiempo</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">Ocultar todas las ocurrencias de eventos desencadenantes en la línea de tiempo</string>
+
+    <string name="field_debug_filter_events_show_title">Filtros</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d eventos</string>
+    <string name="field_debug_filter_events_show_select_desc_none">Sin eventos</string>
+
+
+    <!-- Debug Report Event Occurrence dialog ====================================================================== -->
+
+    <string name="menu_item_debug_event_occurrence_conditions">Condiciones</string>
+    <string name="menu_item_debug_event_occurrence_counters">Contadores</string>
+    <string name="menu_item_debug_event_occurrence_events_state">Estados</string>
+
+    <!-- Debug Report Event Occurrence conditions Tab -->
+    <string name="item_event_occurrence_details_header_title">Operador de condición</string>
+    <string name="item_event_occurrence_details_image_confidence">Confianza: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">¿Debería detectarse?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">¿Se cumple?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Transmisión recibida: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Temporizador alcanzado: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Contador alcanzado: %1$s %2$s %3$s</string>
+
+    <!-- Debug Report Event Occurrence counters Tab -->
+    <string name="title_event_occurrence_counters_empty">Sin contadores</string>
+    <string name="desc_event_occurrence_counters_empty">No se definieron contadores para este escenario.</string>
+
+    <!-- Debug Report Event Occurrence events state Tab -->
+    <string name="item_event_state_header_image">Eventos de imagen</string>
+    <string name="item_event_state_header_trigger">Eventos desencadenantes</string>
+
+
+    <!-- Overlay texts ============================================================================================ -->
+
+    <string name="overlay_title_results">Resultados</string>
+    <string name="overlay_title_threshold">Límite</string>
+
+    <!-- Not translatable =========================================================================================
+      - The following strings should be kept the same in all languages. No need to copy them in other language files.
+      - DO NOT TRANSLATE.
+      -->
+    <string name="event_state_changed_separator" translatable="false">"  »  "</string>
+    <string name="item_counter_state_value_same" translatable="false">%1$d</string>
+    <string name="item_counter_state_value_changed" translatable="false">%1$d » %2$d</string>
+
+
+</resources>

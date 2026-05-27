@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">خدمة إمكانية الوصول</string>
+    <string name="dialog_title_permission_notification">إشعار</string>
+    <string name="dialog_title_permission_mandatory_denied">تم رفض الإذن</string>
+    <string name="dialog_title_permission_overlay">تراكب</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">إذن التراكب مطلوب لإظهار Klick\'r
+        واجهة على التطبيقات التي تريد أتمتتها، مما يسمح لك بتكوين السيناريو الخاص بك دون توقف
+        التطبيق الآخر.</string>
+    <string name="message_permission_desc_accessibility">يسمح إذن خدمة الوصول بـ Klick\'r
+        لأداء الإيماءات على شاشة جهازك. هذا الإذن مطلوب من أجل تنفيذ النقرات والضربات الشديدة
+        التي ستقوم بإنشائها في سيناريوهات التنفيذ التلقائي الخاصة بك.\n\nلا يتم جمع أي بيانات عن طريق النقر\'r\n\nلمنح إمكانية الوصول
+        إذن الخدمة، انقر على الزر أدناه.</string>
+    <string name="message_permission_desc_notification">اختياري: يعرض الإشعار أثناء تشغيل التطبيق بالترتيب
+        للعودة بسهولة إلى شاشة اختيار السيناريو.</string>
+    <string name="message_permission_mandatory_denied">هذا الإذن إلزامي لـ Klick\'r.
+        لن يتمكن من العمل بشكل صحيح بدونه.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">طلب إذن</string>
+    <string name="button_deny">ينكر</string>
+
+</resources>

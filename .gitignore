@@ -83,3 +83,8 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# Root directory local archives and Windows build scripts (not tracked)
+/*.zip
+/*.bat
+/*.ps1

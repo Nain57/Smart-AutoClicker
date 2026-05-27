@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_overlay_title_dumb_action_type">操作の種類</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">シナリオ</string>
+    <string name="menu_item_title_dumb_actions">操作</string>
+    <string name="menu_item_title_dumb_config">設定</string>
+    <string name="item_desc_dumb_action_duration">%1$s 間</string>
+    <string name="item_desc_dumb_click">画面上の任意の位置をタップします</string>
+    <string name="item_desc_dumb_click_details">[%2$d, %3$d] で %1$s 間</string>
+    <string name="item_desc_dumb_click_on_position">%1$d, %2$d をタップ</string>
+    <string name="item_desc_dumb_pause">実行を一時停止します</string>
+    <string name="item_desc_dumb_pause_details">%1$s 間</string>
+    <string name="item_desc_dumb_repeat_count">%1$d 回繰り返す</string>
+    <string name="item_desc_dumb_repeat_infinite">無限に繰り返す</string>
+    <string name="item_desc_dumb_swipe">画面上の一点から別の点へスワイプします</string>
+    <string name="item_desc_dumb_swipe_details">[%2$d, %3$d] から [%4$d, %5$d] へ %1$s 間</string>
+    <string name="item_desc_dumb_swipe_positions">%1$d, %2$d から %3$d, %4$d へスワイプ</string>
+    <string name="item_title_dumb_click">タップ</string>
+    <string name="item_title_dumb_pause">待機</string>
+    <string name="item_title_dumb_swipe">スワイプ</string>
+    <string name="item_title_no_dumb_actions">操作なし</string>
+    <string name="item_title_dumb_action_copy">コピー</string>
+    <string name="item_desc_dumb_action_copy">任意のシナリオから既存の操作をコピーします</string>
+    <string name="message_empty_dumb_action_list">操作がまだありません。</string>
+    <string name="message_empty_secondary_dumb_action_list">シナリオを実行するには操作が 1 つ以上必要です</string>
+    <string name="message_dumb_brief_empty_action_list">シナリオを実行するには操作が 1 つ以上必要です</string>
+    <string name="list_header_copy_dumb_action_this">このシナリオの操作</string>
+    <string name="list_header_copy_dumb_action_all">すべてのシナリオの操作</string>
+    <string name="search_view_hint_dumb_action_copy">操作名で検索</string>
+    <string name="input_field_label_maximum_duration">最大時間（分）</string>
+    <string name="input_field_label_repeat_count">繰り返し回数</string>
+    <string name="input_field_label_repeat_delay">繰り返し間隔（ミリ秒）</string>
+    <string name="content_desc_add_action">シナリオに新しい操作を追加します</string>
+    <string name="content_desc_show_actions">作成した操作の表示／非表示を切り替えます</string>
+    <string name="content_desc_open_action_list">操作一覧を開きます</string>
+</resources>

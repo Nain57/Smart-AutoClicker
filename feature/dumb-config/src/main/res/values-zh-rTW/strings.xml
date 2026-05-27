@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_overlay_title_dumb_action_type">動作類型</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">情境</string>
+    <string name="menu_item_title_dumb_actions">動作</string>
+    <string name="menu_item_title_dumb_config">設定</string>
+    <string name="item_desc_dumb_action_duration">持續 %1$s</string>
+    <string name="item_desc_dumb_click">於螢幕上某處點擊</string>
+    <string name="item_desc_dumb_click_details">於 [%2$d, %3$d] 持續 %1$s</string>
+    <string name="item_desc_dumb_click_on_position">於 %1$d, %2$d 點擊</string>
+    <string name="item_desc_dumb_pause">暫停執行</string>
+    <string name="item_desc_dumb_pause_details">持續 %1$s</string>
+    <string name="item_desc_dumb_repeat_count">重複 %1$d 次</string>
+    <string name="item_desc_dumb_repeat_infinite">無限重複</string>
+    <string name="item_desc_dumb_swipe">自螢幕上一點滑動至另一點</string>
+    <string name="item_desc_dumb_swipe_details">自 [%2$d, %3$d] 至 [%4$d, %5$d]，持續 %1$s</string>
+    <string name="item_desc_dumb_swipe_positions">自 %1$d, %2$d 滑動至 %3$d, %4$d</string>
+    <string name="item_title_dumb_click">點擊</string>
+    <string name="item_title_dumb_pause">等待</string>
+    <string name="item_title_dumb_swipe">滑動</string>
+    <string name="item_title_no_dumb_actions">無動作</string>
+    <string name="item_title_dumb_action_copy">複製</string>
+    <string name="item_desc_dumb_action_copy">自任意情境複製既有動作</string>
+    <string name="message_empty_dumb_action_list">尚未建立動作！</string>
+    <string name="message_empty_secondary_dumb_action_list">至少需要一個動作方可執行情境</string>
+    <string name="message_dumb_brief_empty_action_list">至少需要一個動作方可執行情境</string>
+    <string name="list_header_copy_dumb_action_this">本情境的動作</string>
+    <string name="list_header_copy_dumb_action_all">所有情境的動作</string>
+    <string name="search_view_hint_dumb_action_copy">依動作名稱搜尋</string>
+    <string name="input_field_label_maximum_duration">最長持續時間（分鐘）</string>
+    <string name="input_field_label_repeat_count">重複次數</string>
+    <string name="input_field_label_repeat_delay">重複間隔（毫秒）</string>
+    <string name="content_desc_add_action">向情境新增動作</string>
+    <string name="content_desc_show_actions">顯示或隱藏已建立的動作</string>
+    <string name="content_desc_open_action_list">開啟動作清單</string>
+</resources>

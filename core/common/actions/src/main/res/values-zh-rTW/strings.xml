@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_scenario_channel_group_name">Klick\'r 情境</string>
+    <string name="notification_scenario_channel_low_name">低</string>
+    <string name="notification_scenario_channel_default_name">一般</string>
+    <string name="notification_scenario_channel_high_name">高</string>
+</resources>

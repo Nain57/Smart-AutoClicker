@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="dialog_overlay_title_copy_from">コピー元</string>
+    <string name="dialog_overlay_title_warning">警告</string>
+    <string name="dialog_title_tutorial">チュートリアル</string>
+    <string name="field_click_position_title">タップ位置</string>
+    <string name="field_swipe_positions_title">スワイプ位置</string>
+    <string name="item_title_try_element">%1$s を試す</string>
+    <string name="item_error_action_invalid_generic">この操作は無効です</string>
+    <string name="message_empty_copy">コピーできる項目がありません</string>
+    <string name="message_tutorial_volume_down_stop">シナリオのタップ間隔が短すぎると、メニューから停止できない場合があります。\n\nそのときは端末の物理キー「音量下」で実行中のシナリオを停止できます。</string>
+    <string name="message_dont_show_again">今後表示しない</string>
+    <string name="button_understood">了解しました</string>
+    <string name="input_field_label_anti_detection">検出回避</string>
+    <string name="input_field_label_click_press_duration">押下時間（ミリ秒）</string>
+    <string name="input_field_label_name">名前</string>
+    <string name="input_field_label_pause_duration">待機時間</string>
+    <string name="input_field_label_scenario_name">シナリオ名</string>
+    <string name="input_field_label_swipe_duration">スワイプ時間（ミリ秒）</string>
+    <string name="input_field_error_required">必須です</string>
+    <string name="dropdown_item_title_anti_detection_enabled">有効</string>
+    <string name="dropdown_item_title_anti_detection_disabled">オフ</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">タップ・スワイプ・待機の座標と時間にわずかなランダム差を加えます</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">設定どおりに実行します</string>
+    <string name="dropdown_label_time_unit_ms">ミリ秒</string>
+    <string name="dropdown_label_time_unit_s">秒</string>
+    <string name="dropdown_label_time_unit_min">分</string>
+    <string name="dropdown_label_time_unit_h">時間</string>
+    <string name="dropdown_label_time_unit">時間の単位</string>
+    <string name="toast_configure_single_click">タップする位置に触れてください</string>
+    <string name="toast_configure_swipe_from">スワイプの開始位置に触れてください</string>
+    <string name="toast_configure_swipe_to">スワイプの終了位置に触れてください</string>
+    <string name="content_desc_action_icon">操作の種類を示すアイコン</string>
+    <string name="content_desc_add_button">要素を新規作成するボタン</string>
+    <string name="content_desc_copy_button">既存の要素からコピーを作成するボタン</string>
+    <string name="content_desc_move_menu">フローティング メニューを移動します</string>
+    <string name="content_desc_drag_and_drop">ドラッグして並べ替えます</string>
+    <string name="content_desc_play_pause_scenario">シナリオの再生または一時停止</string>
+    <string name="content_desc_stop_clicker">Klick\'r を停止します</string>
+    <string name="content_desc_confirm">確定</string>
+    <string name="content_desc_go_back">前のダイアログに戻ります</string>
+</resources>

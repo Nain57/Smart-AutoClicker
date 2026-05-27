@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_move_to_title">移動先</string>
+    <string name="dialog_move_to_position_label">インデックス</string>
+    <string name="overlay_instructions_gesture_record">ジェスチャを記録しています…</string>
+</resources>

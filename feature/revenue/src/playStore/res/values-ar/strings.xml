@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="dialog_title_billing" translatable="false">Klick\'r Pro</string>
+
+    <string name="header_billing" translatable="false">Klick\'r Pro</string>
+    <string name="header_starting_detection">بدء الكشف</string>
+
+    <string name="message_billing">هذا التطبيق مفتوح المصدر وتم تصميمه بكل حب من قبل أشخاص يعملون في أوقات فراغهم.\n\n
+        ادعم التطوير من خلال مشاهدة إعلان، أو شراء Klick\'r Pro لإزالة الإعلانات إلى الأبد!</string>
+    <string name="message_billing_success">شكرًا لك على شراء\nKlick\'r Pro!</string>
+
+    <string name="button_text_watch_ad_loading">جارٍ تحميل الإعلان</string>
+    <string name="button_text_watch_ad">مشاهدة إعلان</string>
+    <string name="button_text_watch_ad_error">خطأ في الإعلان</string>
+    <string name="button_text_buy_pro_loading">شراء برو</string>
+    <string name="button_text_buy_pro">شراء برو (%1$s)</string>
+    <string name="button_text_understood">مفهوم</string>
+    <string name="button_text_buy_pro_error">لا يمكن الشراء</string>
+    <string name="button_text_visit_github">قم بزيارة جيثب لدينا</string>
+    <string name="button_text_trial">%1$d دقيقة تجريبية</string>
+    <string name="button_text_buy_pro_pending">المعاملة المعلقة</string>
+
+</resources>
