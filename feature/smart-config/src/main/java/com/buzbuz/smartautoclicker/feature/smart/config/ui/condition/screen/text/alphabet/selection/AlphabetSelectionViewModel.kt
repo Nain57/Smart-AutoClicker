@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -24,7 +25,11 @@ import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlp
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetDownloadUiState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.toUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDescriptionResId
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
 
@@ -64,7 +69,7 @@ class AlphabetSelectionViewModel @Inject constructor (
     val items: Flow<List<AlphabetSelectionItem>> = alphabetItems
         .map { models ->
             buildList {
-                add(AlphabetSelectionItem.Header)
+                add(AlphabetSelectionItem.Header(R.string.item_alphabet_selection_header))
                 addAll(models.sortedByState())
             }
         }
@@ -90,19 +95,3 @@ private fun List<AlphabetSelectionItem.Alphabet>.sortedByState() =
             it.downloadState != AlphabetDownloadUiState.Downloaded
         }.thenBy { it.alphabet.name }
     )
-
-private fun OCRModel.Recognition.toUiState(selected: Boolean): AlphabetSelectionItem.Alphabet =
-    AlphabetSelectionItem.Alphabet(
-        alphabet = alphabet,
-        alphabetName = alphabet.getDisplayNameResId(),
-        alphabetDesc = alphabet.getDescriptionResId(),
-        downloadState = state.toDownloadState(),
-        selected = selected,
-    )
-
-private fun OCRModelState.toDownloadState(): AlphabetDownloadUiState =
-    when (this) {
-        OCRModelState.Downloadable -> AlphabetDownloadUiState.NotDownloaded
-        is OCRModelState.Downloading -> AlphabetDownloadUiState.Downloading("$progress%")
-        is OCRModelState.Installed -> AlphabetDownloadUiState.Downloaded
-    }

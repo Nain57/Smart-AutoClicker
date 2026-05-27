@@ -18,14 +18,17 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.tex
 
 import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
-import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDescriptionResId
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
 
 
 sealed class AlphabetSelectionItem {
 
-    data object Header : AlphabetSelectionItem() {
-        @field:StringRes val text: Int = R.string.item_alphabet_selection_header
-    }
+    data class Header(
+        @field:StringRes val text: Int,
+    ) : AlphabetSelectionItem()
 
     data class Alphabet(
         @field:StringRes val alphabetName: Int,
@@ -33,6 +36,7 @@ sealed class AlphabetSelectionItem {
         val downloadState: AlphabetDownloadUiState,
         val alphabet: OCRAlphabet,
         val selected: Boolean,
+        val selectableWhenInstalled: Boolean = true,
     ): AlphabetSelectionItem()
 }
 
@@ -42,3 +46,21 @@ sealed class AlphabetDownloadUiState {
     data object Downloaded: AlphabetDownloadUiState()
     data object Error: AlphabetDownloadUiState()
 }
+
+
+internal fun OCRModel.Recognition.toUiState(selected: Boolean, selectable: Boolean = true): AlphabetSelectionItem.Alphabet =
+    AlphabetSelectionItem.Alphabet(
+        alphabet = alphabet,
+        alphabetName = alphabet.getDisplayNameResId(),
+        alphabetDesc = alphabet.getDescriptionResId(),
+        downloadState = state.toDownloadState(),
+        selected = selected,
+        selectableWhenInstalled = selectable,
+    )
+
+internal fun OCRModelState.toDownloadState(): AlphabetDownloadUiState =
+    when (this) {
+        OCRModelState.Downloadable -> AlphabetDownloadUiState.NotDownloaded
+        is OCRModelState.Downloading -> AlphabetDownloadUiState.Downloading("$progress%")
+        is OCRModelState.Installed -> AlphabetDownloadUiState.Downloaded
+    }

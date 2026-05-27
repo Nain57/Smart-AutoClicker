@@ -239,6 +239,8 @@
     <!-- Dialog Alphabet selection ================================================================================= -->
 
     <string name="item_alphabet_selection_header">In order to use text detection in your scenario, you need to download the relevant alphabet model.\n\nEach model can take up to 5MB.</string>
+    <string name="item_alphabet_required_header">In order to run this scenario, you need to download the following alphabet models.\n\nEach model can take up to 5MB.</string>
+
     <string name="item_alphabet_name_arabic">Arabic</string>
     <string name="item_alphabet_name_chinese_simplified">Chinese simplified</string>
     <string name="item_alphabet_name_chinese_traditional">Chinese traditional</string>

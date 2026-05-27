@@ -22,8 +22,8 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
+import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
@@ -32,15 +32,19 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.AreRequiredAlphabetModelsInstalledUseCase
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -57,6 +61,7 @@ class MainMenuModel @Inject constructor(
     private val revenueRepository: IRevenueRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val debuggingRepository: DebuggingRepository,
+    areRequiredAlphabetModelsInstalledUseCase: AreRequiredAlphabetModelsInstalledUseCase,
 ) : ViewModel() {
 
     private val scenarioDbId: StateFlow<Long?> = smartProcessingRepository.scenarioId
@@ -85,6 +90,14 @@ class MainMenuModel @Inject constructor(
 
     val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    /** The condition being configured by the user. */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val allModelsInstalled: StateFlow<Boolean> = scenarioDbId
+        .flatMapLatest { identifier ->
+            identifier?.let { dbId -> areRequiredAlphabetModelsInstalledUseCase(dbId) } ?: flowOf(true)
+        }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
@@ -191,6 +204,9 @@ class MainMenuModel @Inject constructor(
             detach(MonitoredViewType.MAIN_MENU_BUTTON_CONFIG)
         }
     }
+
+    fun shouldDownloadModels(): Boolean =
+        !allModelsInstalled.value
 
     fun shouldRestartMediaProjection(): Boolean =
         !isMediaProjectionStarted.value

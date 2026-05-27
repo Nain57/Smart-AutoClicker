@@ -93,6 +93,7 @@ sealed class AlphabetSelectionViewHolder(viewBinding: ViewBinding) : RecyclerVie
                         textDownloadProgress.visibility = View.GONE
                         buttonEnabledState.visibility = View.GONE
                         buttonDownload.visibility = View.VISIBLE
+                        imageInstalled.visibility = View.GONE
                     }
 
                     is AlphabetDownloadUiState.Downloading -> {
@@ -100,13 +101,21 @@ sealed class AlphabetSelectionViewHolder(viewBinding: ViewBinding) : RecyclerVie
                         textDownloadProgress.text = item.downloadState.progressText
                         buttonEnabledState.visibility = View.GONE
                         buttonDownload.visibility = View.GONE
+                        imageInstalled.visibility = View.GONE
                     }
 
                     AlphabetDownloadUiState.Downloaded -> {
                         textDownloadProgress.visibility = View.GONE
-                        buttonEnabledState.visibility = View.VISIBLE
-                        buttonEnabledState.isChecked = item.selected
                         buttonDownload.visibility = View.GONE
+
+                        if (item.selectableWhenInstalled) {
+                            buttonEnabledState.visibility = View.VISIBLE
+                            buttonEnabledState.isChecked = item.selected
+                            imageInstalled.visibility = View.GONE
+                        } else {
+                            buttonEnabledState.visibility = View.GONE
+                            imageInstalled.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
