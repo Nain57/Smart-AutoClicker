@@ -58,7 +58,7 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(
 
         // 1. Preprocess using member buffers
         // This is safe because we process one crop at a time (Sequential)
-        ncnn::Mat input = preprocess(crop);
+        ncnn::Mat input = preprocess(crop, recognizer.isRtlAlphabet());
 
         // 2. Inference
         ncnn::Extractor extractor = recognizer.create_extractor();
@@ -73,13 +73,17 @@ std::vector<TextRecognizerResult> TextRecognizer::recognizeText(
         }
 
         // 3. Decode
-        results.push_back(decode(recognizer.getDictionary(), detectionResult.boundingBox, output));
+        results.push_back(decode(
+                recognizer.getDictionary(),
+                detectionResult.boundingBox,
+                recognizer.isRtlAlphabet(),
+                output));
     }
 
     return results;
 }
 
-ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
+ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop, bool isRtlAlphabet) {
     constexpr int targetHeight = 48;
     constexpr int maxWidth = 320;
 
@@ -98,6 +102,10 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
     paddedBuffer.setTo(cv::Scalar(0, 0, 0));
     resizedBuffer.copyTo(paddedBuffer(cv::Rect(0, 0, resizedWidth, targetHeight)));
 
+    paddedBuffer.setTo(cv::Scalar(0, 0, 0));
+    int xOffset = isRtlAlphabet ? (maxWidth - resizedWidth) : 0;
+    resizedBuffer.copyTo(paddedBuffer(cv::Rect(xOffset, 0, resizedWidth, targetHeight)));
+
     // Always pass maxWidth — SVTR attention is frozen at 320px
     ncnn::Mat input = ncnn::Mat::from_pixels(
             paddedBuffer.data,
@@ -112,16 +120,19 @@ ncnn::Mat TextRecognizer::preprocess(const cv::Mat& crop) {
 TextRecognizerResult TextRecognizer::decode(
         const std::vector<std::string>& dictionary,
         const cv::Rect& boundingBox,
+        bool isRtlAlphabet,
         const ncnn::Mat& output)
 {
 
     const int numClasses = output.w;
     const int sequenceLength = output.h;
-    std::string recognizedText;
 
     float totalConfidence = 0.f;
     int confidenceCount = 0;
     int previousIndex = 0;
+
+    // Collect tokens first, then join in reverse
+    std::vector<std::string> tokens;
 
     for (int t = 0; t < sequenceLength; t++) {
         const float* scores = output.row(t);
@@ -144,10 +155,18 @@ TextRecognizerResult TextRecognizer::decode(
         previousIndex = bestIndex;
 
         if (bestIndex < dictionary.size()) {
-            recognizedText += dictionary[bestIndex];
+            tokens.push_back(dictionary[bestIndex]);
             totalConfidence += bestScore;
             confidenceCount++;
         }
+    }
+
+    // Reverse token order for RTL alphabets
+    if (isRtlAlphabet) std::reverse(tokens.begin(), tokens.end());
+
+    std::string recognizedText;
+    for (const auto& token : tokens) {
+        recognizedText += token;
     }
 
     float confidence = confidenceCount > 0 ? totalConfidence / static_cast<float>(confidenceCount) : 0.f;

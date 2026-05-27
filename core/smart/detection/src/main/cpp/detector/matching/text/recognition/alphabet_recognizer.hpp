@@ -29,9 +29,11 @@ namespace smartautoclicker {
         /** */
         bool loadModel(const std::string& modelId, const std::string &modelPath);
 
-        ncnn::Extractor create_extractor() const;
+        [[nodiscard]] ncnn::Extractor create_extractor() const;
 
-        std::vector<std::string> getDictionary() const;
+        [[nodiscard]] std::vector<std::string> getDictionary() const;
+
+        [[nodiscard]] bool isRtlAlphabet() const;
 
     private:
         /** Unique identifier for the recognition model. */

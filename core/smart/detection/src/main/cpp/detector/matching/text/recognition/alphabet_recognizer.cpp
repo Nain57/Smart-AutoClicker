@@ -77,3 +77,8 @@ ncnn::Extractor AlphabetRecognizer::create_extractor() const {
 std::vector<std::string> AlphabetRecognizer::getDictionary() const {
     return dictionary;
 }
+
+bool AlphabetRecognizer::isRtlAlphabet() const {
+    if (modelIdentifier == "ARABIC") return true;
+    return false;
+}

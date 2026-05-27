@@ -79,20 +79,23 @@ namespace smartautoclicker {
          * Preprocesses a single image crop for the recognition model.
          * Handles resizing and normalization.
          * @param crop The RGB image crop containing text.
+         * @param isRtlAlphabet true if the text is right to left, false if not.
          * @return An NCNN Mat ready for input.
          */
-        ncnn::Mat preprocess(const cv::Mat& crop);
+        ncnn::Mat preprocess(const cv::Mat& crop, bool isRtlAlphabet);
 
         /**
          * Decodes the raw output tensor from the recognizer into a string.
          * @param dictionary list of detectable characters.
          * @param boundingBox The original bounding box for the result.
+         * @param isRtlAlphabet true if the text is right to left, false if not.
          * @param output The raw output from the NCNN extractor.
          * @return A packaged TextRecognizerResult.
          */
         TextRecognizerResult decode(
                 const std::vector<std::string>& dictionary,
                 const cv::Rect& boundingBox,
+                bool isRtlAlphabet,
                 const ncnn::Mat& output);
     };
 
