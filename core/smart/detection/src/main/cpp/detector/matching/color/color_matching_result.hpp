@@ -41,6 +41,8 @@ namespace smartautoclicker {
         [[nodiscard]] cv::Rect getResultArea() const override;
         [[nodiscard]] int getResultAreaCenterX() const override;
         [[nodiscard]] int getResultAreaCenterY() const override;
+        [[nodiscard]] int getResultAreaWidth() const override;
+        [[nodiscard]] int getResultAreaHeight() const override;
     };
 } // smartautoclicker
 

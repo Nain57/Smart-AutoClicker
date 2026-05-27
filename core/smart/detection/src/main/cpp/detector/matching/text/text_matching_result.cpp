@@ -65,3 +65,12 @@ int TextMatchingResult::getResultAreaCenterX() const {
 int TextMatchingResult::getResultAreaCenterY() const {
     return centerY;
 }
+
+int TextMatchingResult::getResultAreaWidth() const {
+    return area.width;
+}
+
+int TextMatchingResult::getResultAreaHeight() const {
+    return area.height;
+}
+

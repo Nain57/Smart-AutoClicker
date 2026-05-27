@@ -23,11 +23,12 @@ import androidx.annotation.Keep
  * The results of a condition detection.
  * @param isDetected true if the condition have been detected. false if not.
  * @param position contains the center of the detected condition in screen coordinates.
- * @param confidenceRate
+ * @param confidenceRate confidence rate of the algorithm for this result
  */
 data class DetectionResult(
     var isDetected: Boolean = false,
     val position: Point = Point(),
+    val size: Point = Point(),
     var confidenceRate: Double = 0.0
 ) {
 
@@ -36,9 +37,10 @@ data class DetectionResult(
      * Used by native code only.
      */
     @Keep
-    fun setResults(isDetected: Boolean, centerX: Int, centerY: Int, confidenceRate: Double) {
+    fun setResults(isDetected: Boolean, centerX: Int, centerY: Int, width: Int, height: Int, confidenceRate: Double) {
         this.isDetected = isDetected
         position.set(centerX, centerY)
+        size.set(width, height)
         this.confidenceRate = confidenceRate
     }
 }

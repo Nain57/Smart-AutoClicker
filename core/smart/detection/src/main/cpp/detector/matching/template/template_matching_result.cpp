@@ -84,3 +84,12 @@ int TemplateMatchingResult::getResultAreaCenterX() const {
 int TemplateMatchingResult::getResultAreaCenterY() const {
     return centerY;
 }
+
+int TemplateMatchingResult::getResultAreaWidth() const {
+    return area.width;
+}
+
+int TemplateMatchingResult::getResultAreaHeight() const {
+    return area.height;
+}
+

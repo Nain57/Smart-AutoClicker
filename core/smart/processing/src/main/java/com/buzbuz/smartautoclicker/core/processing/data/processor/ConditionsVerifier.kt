@@ -150,8 +150,9 @@ internal class ConditionsVerifier(
             isFulfilled = detectionResult.isDetected == condition.shouldBeDetected,
             haveBeenDetected = detectionResult.isDetected,
             condition = condition,
-            position = scalingManager.scaleUpDetectionResult(detectionResult.position),
             confidenceRate = detectionResult.confidenceRate,
+            position = scalingManager.scaleUpDetectionResult(detectionResult.position),
+            size = scalingManager.scaleUpDetectionResult(detectionResult.size),
         )
 
         progressListener?.onScreenConditionProcessingCompleted(result)
@@ -186,6 +187,7 @@ internal class ConditionsVerifier(
                 condition = condition,
                 position = scalingManager.scaleUpDetectionResult(detectionResult.position),
                 confidenceRate = detectionResult.confidenceRate,
+                size = scalingManager.scaleUpDetectionResult(detectionResult.size),
             )
         } ?: condition.toInvalidConditionResult()
 
@@ -221,6 +223,7 @@ internal class ConditionsVerifier(
             condition = condition,
             position = scalingManager.scaleUpDetectionResult(detectionResult.position),
             confidenceRate = detectionResult.confidenceRate,
+            size = scalingManager.scaleUpDetectionResult(detectionResult.size),
         )
 
         progressListener?.onScreenConditionProcessingCompleted(result)
@@ -234,6 +237,7 @@ internal class ConditionsVerifier(
             condition = this,
             confidenceRate = 0.0,
             position = null,
+            size = null,
         )
 
     private fun TriggerCondition.toConditionResult(positive: Boolean): ProcessedConditionResult.Trigger =

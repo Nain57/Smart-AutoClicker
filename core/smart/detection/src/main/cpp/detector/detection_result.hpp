@@ -28,6 +28,8 @@ namespace smartautoclicker {
          [[nodiscard]] virtual cv::Rect getResultArea() const = 0;
          [[nodiscard]] virtual int getResultAreaCenterX() const = 0;
          [[nodiscard]] virtual int getResultAreaCenterY() const = 0;
+         [[nodiscard]] virtual int getResultAreaWidth() const = 0;
+         [[nodiscard]] virtual int getResultAreaHeight() const = 0;
      };
 }
 #endif //KLICK_R_DETECTION_RESULT_HPP

@@ -69,3 +69,11 @@ int ColorMatchingResult::getResultAreaCenterX() const {
 int ColorMatchingResult::getResultAreaCenterY() const {
     return centerY;
 }
+
+int ColorMatchingResult::getResultAreaWidth() const {
+    return area.width;
+}
+
+int ColorMatchingResult::getResultAreaHeight() const {
+    return area.height;
+}

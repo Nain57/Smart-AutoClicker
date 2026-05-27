@@ -23,10 +23,11 @@ void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result) {
     if (!cls)
         env->FatalError("GetObjectClass failed");
 
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIID)V");
+    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIIIID)V");
 
     env->CallVoidMethod(self, methodId,
                         result->isDetected(),
                         (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
+                        (int) result->getResultAreaWidth(), (int) result->getResultAreaHeight(),
                         result->getResultConfidence());
 }

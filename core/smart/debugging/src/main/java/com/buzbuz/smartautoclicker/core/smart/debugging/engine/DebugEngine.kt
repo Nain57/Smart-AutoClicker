@@ -316,13 +316,16 @@ internal class DebugEngine @Inject constructor(
 
 private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
     val pos = position ?: return null
+    val size = size ?: return null
+
     val halfSize = when (val cond = condition) {
         is ScreenCondition.Color ->
             Size(cond.detectionArea.width() / 2, cond.detectionArea.height() / 2)
+
         is ScreenCondition.Image ->
-            Size(cond.area.width() / 2,  cond.area.height() / 2)
+            Size(size.x / 2,  size.y / 2)
         is ScreenCondition.Text ->
-            Size(cond.detectionArea.width() / 2, cond.detectionArea.height() / 2)
+            Size(size.x / 2,  size.y / 2)
     }
 
     return if (pos.x == 0 && pos.y == 0) Rect()

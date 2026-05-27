@@ -40,6 +40,7 @@ sealed class ProcessedConditionResult {
         val condition: ScreenCondition,
         val confidenceRate: Double,
         val position: Point?,
+        val size: Point?,
     ) : ProcessedConditionResult()
 
     /**
