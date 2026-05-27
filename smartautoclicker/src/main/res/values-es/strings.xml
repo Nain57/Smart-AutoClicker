@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name" translatable="false">Klick\'r</string>
+    <string name="notification_channel_name" translatable="false">Klick\'r</string>
+
+    <!-- Application wide texts. -->
+    <string name="notification_title">Guión: %1$s</string>
+    <string name="notification_message">Presiona para cambiar el guión</string>
+    <string name="notification_button_play_and_hide">jugar y esconderse</string>
+    <string name="notification_button_pause_and_show">Pausa y muestra</string>
+    <string name="notification_button_toggle_menu">Mostrar/Ocultar</string>
+    <string name="notification_button_stop">Detener</string>
+
+
+    <string name="activity_scenario_title">Escenarios</string>
+    <string name="accessibility_service_description">Esta aplicación necesita este permiso para inyectar los clicks que hayas creado
+        en otras aplicaciones una vez que las condiciones se hayan detectado.\n\nNo se recogerán datos de esa aplicación.
+        Puedes visitar nuestro github, ¡el código es libre !</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">Nuevo guión</string>
+    <string name="dialog_title_copy_scenario">Copiar escenario</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">Exportar</string>
+    <string name="menu_item_title_import">Importar</string>
+    <string name="menu_item_title_select_all">Seleccionar todo</string>
+    <string name="menu_item_title_cancel">Cancelar</string>
+    <string name="menu_item_title_search">Buscar</string>
+    <string name="menu_item_title_settings">Ajustes</string>
+
+    <string name="item_scenario_filter_by_name">Nombre</string>
+    <string name="item_scenario_filter_by_recent">Reciente</string>
+    <string name="item_scenario_filter_by_favorite">Favorito</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">La experiencia normal de clic automático.\nSimplemente haga clic y deslice el dedo en la pantalla.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Detener después de %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Sin duración máxima</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Repetir %1$d veces</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">repetición infinita</string>
+    <string name="item_desc_smart_scenario">Utilice la detección de imágenes para crear casos de uso complejos.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Requiere ver un anuncio o comprar el modo profesional</string>
+    <string name="item_title_dumb_scenario">Simple</string>
+    <string name="item_title_smart_scenario">Elegante</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">Crea tu primer guión y empieza a automatizar tareas en tu teléfono</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">Esto eliminará %1$s. Estás seguro ?</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Tu dispositivo no provee el diálogo de
+        capturar pantalla estándar de Android. Smart AutoClicker no podrá ejecutarse.</string>
+
+    <!--
+      - Section titles.
+      - Should be short and concise.
+      -->
+    <string name="section_title_scenario_type_title">Tipo de escenario</string>
+
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_screen_sharing_permission">El usuario ha denegado el permiso de capturar pantalla</string>
+    <string name="toast_denied_foreground_permission">El usuario ha denegado el permiso de aplicación en primer plano</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">Crear un guión</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">Crear un nuevo guión</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">Nombre predeterminado</string>
+    <string name="message_empty_image_events_scenario_list">Sin eventos de imagen</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">Ajustes</string>
+
+    <string name="field_show_scenario_filters_ui_title">Mostrar filtros de escenarios</string>
+    <string name="field_show_scenario_filters_ui_desc">Muestra u oculta los filtros en la pantalla de lista de escenarios.</string>
+
+    <string name="field_legacy_action_ui_title">IU de acción heredada</string>
+    <string name="field_legacy_action_ui_desc">Cambie la visualización de acciones por una lista. Útil para escenarios complejos.</string>
+
+    <string name="field_legacy_notification_ui_title">UI de notificación heredada</string>
+    <string name="field_legacy_notification_ui_desc">Utilice los botones del sistema en lugar de los botones de iconos en la notificación.</string>
+
+    <string name="field_force_entire_screen_title">Forzar pantalla completa</string>
+    <string name="field_force_entire_screen_desc">Fuerce el selector de captura de pantalla a \"Pantalla completa\". Puede que no funcione dependiendo de su dispositivo</string>
+
+    <string name="field_input_block_workaround_title">Desbloquear pantalla táctil</string>
+    <string name="field_input_block_workaround_desc">En dispositivos Pixel con Android 15, el uso de un control automático puede bloquear la pantalla táctil.\nPara desbloquearla, debes tocar la pantalla con varios dedos al mismo tiempo. Esta configuración intenta simular esto cada 10 segundos.</string>
+
+    <string name="field_privacy">Configuración de privacidad</string>
+    <string name="field_remove_ads">Quitar anuncios</string>
+    <string name="field_troubleshooting">Solución de problemas</string>
+
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">Migración</string>
+
+    <string name="message_condition_migration_desc">El formato de las imágenes de Klick\'r ha cambiado y es necesario actualizar su escenario.         Esto puede tardar unos minutos dependiendo de la cantidad de condiciones para migrar.</string>
+    <string name="message_condition_migration_count">%1$d Imagen Condiciones para migrar.</string>
+    <string name="message_condition_migration_success">Todas las condiciones de imagen migraron.</string>
+    <string name="message_condition_migration_error">Algunas condiciones no se pudieron migrar. Por favor revise sus escenarios.</string>
+
+    <string name="button_condition_migration_start">Emigrar</string>
+    <string name="button_condition_migration_running">Migrar</string>
+    <string name="button_condition_migration_finished">DE ACUERDO</string>
+
+</resources>

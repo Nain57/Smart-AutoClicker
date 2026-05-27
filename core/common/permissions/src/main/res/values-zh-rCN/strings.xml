@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_accessibility">无障碍服务</string>
+    <string name="dialog_title_permission_notification">通知</string>
+    <string name="dialog_title_permission_mandatory_denied">权限已拒绝</string>
+    <string name="dialog_title_permission_overlay">悬浮窗</string>
+
+    <string name="message_permission_desc_overlay">需要悬浮窗权限，方可在您要自动化的应用之上显示 Klick\'r 界面，以便在不退出其他应用的情况下配置场景。</string>
+    <string name="message_permission_desc_accessibility">无障碍服务权限允许 Klick\'r 在屏幕上执行手势操作。执行自动化场景中的点击与滑动须授予此权限。\n\nKlick\'r 不会收集任何数据。\n\n请点击下方按钮以授予无障碍服务权限。</string>
+    <string name="message_permission_desc_notification">可选：在应用运行时显示通知，便于返回场景选择界面。</string>
+    <string name="message_permission_mandatory_denied">此权限为 Klick\'r 所必需。未授予则无法正常工作。</string>
+
+    <string name="button_request_permission">请求权限</string>
+    <string name="button_deny">拒绝</string>
+</resources>

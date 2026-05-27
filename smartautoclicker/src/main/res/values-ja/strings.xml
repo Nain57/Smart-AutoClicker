@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="notification_title">シナリオ：%1$s</string>
+    <string name="notification_message">タップしてシナリオを変更します</string>
+    <string name="notification_button_play_and_hide">再生して非表示</string>
+    <string name="notification_button_pause_and_show">一時停止して表示</string>
+    <string name="notification_button_toggle_menu">表示／非表示</string>
+    <string name="notification_button_stop">停止</string>
+
+    <string name="activity_scenario_title">シナリオ</string>
+    <string name="accessibility_service_description">本アプリは、条件が検出された際に、お客様が作成したタップ操作を他のアプリへ注入するために本サービスを必要とします。\n\n本アプリによるデータの収集は行いません。ソースコードは公開されておりますので、GitHub をご参照ください。</string>
+
+    <string name="dialog_title_add_scenario">新規シナリオ</string>
+    <string name="dialog_title_copy_scenario">シナリオのコピー</string>
+
+    <string name="menu_item_title_export">エクスポート</string>
+    <string name="menu_item_title_import">インポート</string>
+    <string name="menu_item_title_select_all">すべて選択</string>
+    <string name="menu_item_title_cancel">キャンセル</string>
+    <string name="menu_item_title_search">検索</string>
+    <string name="menu_item_title_settings">設定</string>
+
+    <string name="item_scenario_filter_by_name">名前</string>
+    <string name="item_scenario_filter_by_recent">最近使用</string>
+    <string name="item_scenario_filter_by_favorite">お気に入り</string>
+
+    <string name="item_desc_dumb_scenario">一般的な自動タップの使い方です。\n画面上にタップおよびスワイプを配置します。</string>
+    <string name="item_desc_dumb_scenario_max_duration">%1$s 後に停止</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">最大時間なし</string>
+    <string name="item_desc_dumb_scenario_repeat_count">%1$d 回繰り返す</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">無限に繰り返す</string>
+    <string name="item_desc_smart_scenario">画像検出により、複雑な用途を作成できます。</string>
+    <string name="item_desc_smart_scenario_pro_mode">広告の視聴またはプロ版の購入が必要です</string>
+    <string name="item_title_dumb_scenario">シンプル</string>
+    <string name="item_title_smart_scenario">スマート</string>
+
+    <string name="message_empty_scenario_list">最初のシナリオを作成し、端末上の作業を自動化しましょう</string>
+
+    <string name="message_delete_scenario">「%1$s」を削除します。よろしいですか。</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">お使いの端末は、標準の Android 画面キャプチャ権限ダイアログを提供していません。Klick\'r はこの端末では動作しません。</string>
+
+    <string name="section_title_scenario_type_title">シナリオの種類</string>
+
+    <string name="toast_denied_screen_sharing_permission">画面共有の権限が拒否されました</string>
+    <string name="toast_denied_foreground_permission">フォアグラウンド サービスの権限が拒否されました</string>
+
+    <string name="button_text_create_scenario">シナリオを作成</string>
+
+    <string name="content_desc_add_scenario">新しいシナリオを作成します</string>
+
+    <string name="default_scenario_name">既定の名前</string>
+    <string name="message_empty_image_events_scenario_list">画像イベントはありません</string>
+
+    <string name="activity_settings_title">設定</string>
+
+    <string name="field_show_scenario_filters_ui_title">シナリオのフィルターを表示</string>
+    <string name="field_show_scenario_filters_ui_desc">シナリオ一覧画面でフィルターの表示／非表示を切り替えます。</string>
+
+    <string name="field_legacy_action_ui_title">従来の操作 UI</string>
+    <string name="field_legacy_action_ui_desc">操作を一覧で表示します。複雑なシナリオに適しています。</string>
+
+    <string name="field_legacy_notification_ui_title">従来の通知 UI</string>
+    <string name="field_legacy_notification_ui_desc">通知でアイコンではなくシステムのボタンを使用します。</string>
+
+    <string name="field_force_entire_screen_title">画面全体を強制</string>
+    <string name="field_force_entire_screen_desc">画面キャプチャの選択を「画面全体」に固定します。端末により動作しない場合があります。</string>
+
+    <string name="field_input_block_workaround_title">タッチ画面のブロック解除</string>
+    <string name="field_input_block_workaround_desc">Android 15 を搭載した一部の Pixel 端末では、自動タップの使用によりタッチが反応しなくなることがあります。\n複数指で画面に触れると回復します。本設定は 10 秒ごとにその操作を試みます。</string>
+
+    <string name="field_privacy">プライバシー設定</string>
+    <string name="field_remove_ads">広告を削除</string>
+    <string name="field_troubleshooting">トラブルシューティング</string>
+
+    <string name="dialog_condition_migration_title">移行</string>
+
+    <string name="message_condition_migration_desc">Klick\'r の画像形式が変更されたため、シナリオの更新が必要です。移行する条件の数により、数分かかる場合があります。</string>
+    <string name="message_condition_migration_count">移行対象の画像条件：%1$d 件</string>
+    <string name="message_condition_migration_success">すべての画像条件を移行しました。</string>
+    <string name="message_condition_migration_error">一部の条件を移行できませんでした。シナリオをご確認ください。</string>
+
+    <string name="button_condition_migration_start">移行する</string>
+    <string name="button_condition_migration_running">移行中</string>
+    <string name="button_condition_migration_finished">OK</string>
+
+</resources>

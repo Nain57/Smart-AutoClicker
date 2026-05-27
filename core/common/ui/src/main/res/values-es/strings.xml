@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+
+    <!--
+      - Titles for the dialogs displayed as overlay.
+      - Allowed characters can be small due to save/delete/close buttons.
+      -->
+    <string name="dialog_overlay_title_warning">Atención</string>
+    <string name="dialog_overlay_title_copy_from">Copiar de</string>
+    <string name="dialog_title_tutorial">Tutorial</string>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="field_click_position_title">Posición de clic</string>
+    <string name="field_swipe_positions_title">Posiciones de deslizamiento</string>
+    <string name="item_title_try_element">Prueba tu %1$s</string>
+    <string name="item_error_action_invalid_generic">Esta acción no es válida</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_copy">nada que copiar</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_tutorial_volume_down_stop">Si su escenario hace clic demasiado rápido, puede
+        bloquearle el uso del menú Klick\'r para detenerlo.\n\nEn ese caso, puede presionar el botón
+        botón físico \"Bajar volumen\" de su dispositivo para detener el escenario en ejecución.</string>
+    <string name="message_dont_show_again">No mostrar este mensaje nuevamente</string>
+
+
+    <string name="button_understood">Comprendido</string>
+
+
+
+    <!--
+      - Text input fields labels and error messages.
+      - Should be short and concise.
+      -->
+    <string name="input_field_label_anti_detection">Anti-detección</string>
+    <string name="input_field_label_click_press_duration">Duración de la pulsación (ms)</string>
+    <string name="input_field_label_name">Nombre</string>
+    <string name="input_field_label_pause_duration">Duración de la pausa</string>
+    <string name="input_field_label_scenario_name">Nombre del escenario</string>
+    <string name="input_field_label_swipe_duration">Duración del deslizamiento (ms)</string>
+    <string name="input_field_error_required">Requerido</string>
+
+
+    <!--
+      - Dropdown input fields texts.
+      - Those fields are made of:
+      - * a label, describing the meaning of the field. Should be short and concise.
+      - * a set of items, made of:
+      -     * a title, displayed in the dropdown list and in the field if selected. Should be short and concise.
+      -     * a helper text (if needed), displayed bellow the field and changed with the selected item. Max 2 lines.
+      -->
+    <!-- Dropdown field for selecting anti bot state -->
+    <string name="dropdown_item_title_anti_detection_enabled">Activado</string>
+    <string name="dropdown_item_title_anti_detection_disabled">Desactivado</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Aleatorice las posiciones y duraciones de deslizamiento y pausa del clic mediante un pequeño desplazamiento aleatorio</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Ejecutar todas las acciones según lo declarado.</string>
+
+    <string name="dropdown_label_time_unit_ms">EM</string>
+    <string name="dropdown_label_time_unit_s">s</string>
+    <string name="dropdown_label_time_unit_min">mín.</string>
+    <string name="dropdown_label_time_unit_h">h</string>
+    <string name="dropdown_label_time_unit">Unidad de tiempo</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_configure_single_click">Toque la posición para hacer clic</string>
+    <string name="toast_configure_swipe_from">Toque la posición para iniciar el deslizamiento desde</string>
+    <string name="toast_configure_swipe_to">Toque la posición para finalizar el deslizamiento para</string>
+
+    <!--
+      - Universal values, DO NOT TRANSLATE
+      - No need to copy them in other language files
+      -->
+    <string name="condition_operator_and" translatable="false">AND</string>
+    <string name="condition_operator_or" translatable="false">"OR "</string>
+    <string name="comparison_operator_greater_or_equals" translatable="false">≥</string>
+    <string name="comparison_operator_greater" translatable="false"><![CDATA[>]]></string>
+    <string name="comparison_operator_equals" translatable="false">=</string>
+    <string name="comparison_operator_lower_or_equals" translatable="false">≤</string>
+    <string name="comparison_operator_lower" translatable="false"><![CDATA[<]]></string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_action_icon">El icono que muestra el tipo de acción.</string>
+    <string name="content_desc_add_button">El botón para crear un elemento</string>
+    <string name="content_desc_copy_button">El botón para duplicar un elemento existente</string>
+    <string name="content_desc_drag_and_drop">Arrastra y suelta para reordenar los elementos.</string>
+    <string name="content_desc_move_menu">Mover el menú flotante</string>
+    <string name="content_desc_play_pause_scenario">Reproducir o pausar el escenario</string>
+    <string name="content_desc_stop_clicker">Detener Klick\'r</string>
+    <string name="content_desc_confirm">Confirmar</string>
+    <string name="content_desc_go_back">Volver al diálogo</string>
+
+</resources>

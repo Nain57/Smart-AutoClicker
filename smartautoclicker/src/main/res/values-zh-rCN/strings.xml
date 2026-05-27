@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="notification_title">场景：%1$s</string>
+    <string name="notification_message">点按即可更换场景</string>
+    <string name="notification_button_play_and_hide">开始并隐藏</string>
+    <string name="notification_button_pause_and_show">暂停并显示</string>
+    <string name="notification_button_toggle_menu">显示／隐藏</string>
+    <string name="notification_button_stop">停止</string>
+
+    <string name="activity_scenario_title">场景</string>
+    <string name="accessibility_service_description">本应用需要此服务，以便在检测到条件后，将您创建的点击操作注入其他应用。\n\n本应用不会收集任何数据。欢迎访问我们的 GitHub 仓库，代码为开源。</string>
+
+    <string name="dialog_title_add_scenario">新建场景</string>
+    <string name="dialog_title_copy_scenario">复制场景</string>
+
+    <string name="menu_item_title_export">导出</string>
+    <string name="menu_item_title_import">导入</string>
+    <string name="menu_item_title_select_all">全选</string>
+    <string name="menu_item_title_cancel">取消</string>
+    <string name="menu_item_title_search">搜索</string>
+    <string name="menu_item_title_settings">设置</string>
+
+    <string name="item_scenario_filter_by_name">名称</string>
+    <string name="item_scenario_filter_by_recent">最近使用</string>
+    <string name="item_scenario_filter_by_favorite">收藏</string>
+
+    <string name="item_desc_dumb_scenario">常规自动点击体验。\n在屏幕上放置点击与滑动即可。</string>
+    <string name="item_desc_dumb_scenario_max_duration">%1$s 后停止</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">无最长持续时间</string>
+    <string name="item_desc_dumb_scenario_repeat_count">重复 %1$d 次</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">无限重复</string>
+    <string name="item_desc_smart_scenario">使用图像识别创建复杂用例。</string>
+    <string name="item_desc_smart_scenario_pro_mode">需观看广告或购买专业版</string>
+    <string name="item_title_dumb_scenario">简单</string>
+    <string name="item_title_smart_scenario">智能</string>
+
+    <string name="message_empty_scenario_list">请创建首个场景，开始在手机上自动化任务</string>
+
+    <string name="message_delete_scenario">将删除「%1$s」。是否确认？</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的设备未提供标准的 Android 屏幕捕获权限对话框，Klick\'r 无法在此设备上运行。</string>
+
+    <string name="section_title_scenario_type_title">场景类型</string>
+
+    <string name="toast_denied_screen_sharing_permission">用户已拒绝屏幕共享权限</string>
+    <string name="toast_denied_foreground_permission">用户已拒绝前台服务权限</string>
+
+    <string name="button_text_create_scenario">创建场景</string>
+
+    <string name="content_desc_add_scenario">新建场景</string>
+
+    <string name="default_scenario_name">默认名称</string>
+    <string name="message_empty_image_events_scenario_list">暂无图像事件</string>
+
+    <string name="activity_settings_title">设置</string>
+
+    <string name="field_show_scenario_filters_ui_title">显示场景筛选</string>
+    <string name="field_show_scenario_filters_ui_desc">在场景列表界面显示或隐藏筛选器。</string>
+
+    <string name="field_legacy_action_ui_title">经典操作界面</string>
+    <string name="field_legacy_action_ui_desc">以列表方式显示操作，适用于复杂场景。</string>
+
+    <string name="field_legacy_notification_ui_title">经典通知界面</string>
+    <string name="field_legacy_notification_ui_desc">在通知中使用系统按钮，而非图标按钮。</string>
+
+    <string name="field_force_entire_screen_title">强制全屏</string>
+    <string name="field_force_entire_screen_desc">将屏幕捕获选择器固定为「整个屏幕」。视设备而定，可能无法生效。</string>
+
+    <string name="field_input_block_workaround_title">解除触控阻塞</string>
+    <string name="field_input_block_workaround_desc">在运行 Android 15 的部分 Pixel 设备上，使用自动点击器可能导致触控暂时无响应。\n可同时以多指触摸屏幕以恢复。本设置将尝试每 10 秒模拟该操作。</string>
+
+    <string name="field_privacy">隐私设置</string>
+    <string name="field_remove_ads">移除广告</string>
+    <string name="field_troubleshooting">疑难解答</string>
+
+    <string name="dialog_condition_migration_title">迁移</string>
+
+    <string name="message_condition_migration_desc">Klick\'r 的图像格式已变更，您的场景需要更新。所需时间取决于待迁移条件数量，可能需要数分钟。</string>
+    <string name="message_condition_migration_count">待迁移图像条件：%1$d 项</string>
+    <string name="message_condition_migration_success">全部图像条件已迁移完成。</string>
+    <string name="message_condition_migration_error">部分条件未能迁移，请检查您的场景。</string>
+
+    <string name="button_condition_migration_start">开始迁移</string>
+    <string name="button_condition_migration_running">正在迁移</string>
+    <string name="button_condition_migration_finished">确定</string>
+
+</resources>

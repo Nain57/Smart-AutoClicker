@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Generic =================================================================================================== -->
+    <!-- Those values are shared between several dialogs due to their generic meaning, such as name -->
+
+    <string name="generic_name">اسم</string>
+    <string name="generic_select_the_position">حدد الموقف</string>
+    <string name="generic_config">التكوين</string>
+    <string name="generic_counters">عدادات</string>
+    <string name="generic_modify">يُعدِّل</string>
+
+
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_event_desc_enabled_children">ممكّن</string>
+    <string name="item_event_desc_disabled_children">عاجز</string>
+
+    <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">الفرق: %1$d%%</string>
+
+    <string name="item_image_condition_visible">مرئي</string>
+    <string name="item_image_condition_not_visible">غير مرئية</string>
+
+    <string name="item_counter_reached_title">على العداد وصلت</string>
+    <string name="item_counter_reached_desc">التحقق من قيمة العداد المعدل بواسطة الإجراء</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
+
+    <string name="item_timer_reached_title">على الموقت وصلت</string>
+    <string name="item_timer_reached_desc">يتم استيفاؤه بعد فترة زمنية محددة من تفعيل هذا الزناد</string>
+    <string name="item_timer_reached_details">%1$s بعد تمكين الحدث</string>
+
+    <string name="item_broadcast_received_title">على البث وردت</string>
+    <string name="item_broadcast_received_desc">يتم استيفاؤه عند استلام البث</string>
+    <string name="item_broadcast_received_details">تم استلام %1$s</string>
+
+    <string name="item_copy_title">ينسخ</string>
+    <string name="item_copy_desc">انسخ إجراءً موجودًا من أي سيناريوهات</string>
+
+    <string name="item_click_title">انقر</string>
+    <string name="item_click_desc">انقر في مكان ما على الشاشة</string>
+    <string name="item_click_details_on_condition">خلال %1$s على %2$s</string>
+    <string name="item_click_details_at_position">خلال %1$s</string>
+
+    <string name="item_swipe_title">انتقد</string>
+    <string name="item_swipe_desc">اسحب من موضع على الشاشة إلى آخر</string>
+    <string name="item_swipe_details">خلال %1$s</string>
+
+    <string name="item_pause_title">انتظر</string>
+    <string name="item_pause_desc">إيقاف تنفيذ الكشف مؤقتًا</string>
+    <string name="item_pause_details">خلال %1$s</string>
+
+    <string name="item_change_counter_title">تغيير العداد</string>
+    <string name="item_change_counter_desc">قم بتغيير القيمة للتحقق منها لاحقًا</string>
+    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
+    <string name="item_change_counter_details_error">العداد غير صالح</string>
+
+    <string name="item_toggle_event_title">تغيير حالة الحدث</string>
+    <string name="item_toggle_event_desc">تغيير الحالة الممكنة للحدث</string>
+    <string name="item_toggle_event_details_enable_all">تمكين الكل</string>
+    <string name="item_toggle_event_details_disable_all">تعطيل الكل</string>
+    <string name="item_toggle_event_details_invert_all">عكس الكل</string>
+    <string name="item_toggle_event_details_manual">تغيير %1$d الأحداث</string>
+    <string name="item_toggle_event_details_error">لم يتم العثور على الحدث المستهدف</string>
+
+    <string name="item_intent_title">نية</string>
+    <string name="item_intent_desc">التفاعل مع تطبيق آخر</string>
+    <string name="item_intent_details">إرسال %1$s</string>
+    <string name="item_intent_details_component_name">أرسل %1$s إلى %2$s</string>
+    <string name="item_intent_details_start_activity">ابدأ %1$s</string>
+
+    <string name="item_notification_title">إشعار</string>
+    <string name="item_notification_desc">إرسال إشعار إلى جهازك</string>
+    <string name="item_notification_details_text">أرسل \"%1$s\"</string>
+    <string name="item_notification_details_counter">أرسل قيمة %1$s</string>
+
+    <string name="item_system_action_title">عمل النظام</string>
+    <string name="item_system_action_desc">استخدام إجراء نظام Android (العودة أو المنزل أو التطبيقات الحديثة)</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">اكتب النص</string>
+    <string name="item_set_text_desc">اكتب نصًا في العرض الذي يتم التركيز عليه حاليًا</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">مسح النص</string>
+
+    <!-- Dialog Copy =============================================================================================== -->
+
+    <string name="search_view_hint_event_copy">البحث حسب اسم الحدث</string>
+    <string name="search_view_hint_action_copy">البحث حسب اسم الإجراء</string>
+    <string name="search_view_hint_condition_copy">البحث حسب اسم الشرط</string>
+
+    <string name="list_header_copy_conditions_this">الشروط من هذا الحدث</string>
+    <string name="list_header_copy_conditions_all">الشروط من جميع الأحداث</string>
+
+    <string name="list_header_copy_action_this">الإجراءات من هذا الحدث</string>
+    <string name="list_header_copy_action_all">إجراءات من أحداث أخرى</string>
+
+    <string name="list_header_copy_event_this">الأحداث من هذا السيناريو</string>
+    <string name="list_header_copy_event_all">الأحداث من جميع السيناريوهات</string>
+
+
+    <!-- Dialog Scenario =========================================================================================== -->
+
+    <string name="dialog_title_scenario_config">سيناريو</string>
+
+    <string name="message_empty_screen_event_title">لا توجد أحداث الشاشة!</string>
+    <string name="message_empty_screen_event_desc">يحتوي حدث الشاشة على مجموعة من الإجراءات التي يتم تنفيذها عند اكتشاف حالة معينة على الشاشة.\nتحتاج إلى شاشة واحدة أو حدث تشغيل واحد على الأقل في السيناريو الخاص بك لتنفيذه.</string>
+    <string name="message_empty_trigger_event_list_title">لا توجد أحداث الزناد!</string>
+    <string name="message_empty_trigger_event_list_desc">يحتوي حدث التشغيل على مجموعة من الإجراءات التي يتم تنفيذها عند استيفاء مجموعة من الشروط المخصصة.\nتحتاج إلى شاشة واحدة أو حدث تشغيل واحد على الأقل في السيناريو الخاص بك لتنفيذه.</string>
+
+    <string name="menu_item_title_image_events">شاشة</string>
+    <string name="menu_item_title_trigger_events">المشغلات</string>
+    <string name="menu_item_title_more">أكثر</string>
+
+    <string name="field_scenario_keep_screen_on_title">إبقاء الشاشة قيد التشغيل</string>
+    <string name="field_scenario_keep_screen_on_enabled">أبقِ شاشة الجهاز قيد التشغيل أثناء الكشف.</string>
+    <string name="field_scenario_keep_screen_on_disabled">استخدم سلوك شاشة الجهاز العادي.</string>
+
+    <string name="field_scenario_quality_title">دقة الكشف</string>
+    <string name="field_scenario_quality_description">لتحقيق اكتشاف أسرع، يقوم Klick\'r بتصغير حجم الصور قبل الكشف.\n\nإذا قمت بزيادة الدقة، فسيكون الاكتشاف أبطأ، ولكنه أكثر دقة. إذا قمت بتقليل الدقة، فسيكون الاكتشاف أسرع، ولكن أقل دقة. ابحث عن النسبة الجيدة بين دقة الكشف وحدود الشروط للحصول على أفضل السيناريوهات الخاصة بك!</string>
+    <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>
+
+
+    <string name="field_show_debug_view_title">عرض عرض التصحيح</string>
+    <string name="field_show_debug_view_desc">عرض الأحداث التي تم إطلاقها أثناء الكشف.</string>
+    <string name="item_title_debug_generate_report">إنشاء تقرير</string>
+    <string name="item_desc_debug_generate_report">التقط سلوك السيناريو الخاص بك أثناء الكشف لإنشاء تقرير.</string>
+
+    <string name="field_show_debug_report_title">عرض التقرير</string>
+    <string name="field_show_debug_report_desc_available">تقرير التصحيح متاح</string>
+    <string name="field_show_debug_report_desc_not_available">لا يتوفر تقرير تصحيح</string>
+
+    <string name="field_tutorial_title">درس تعليمي</string>
+    <string name="field_tutorial_desc">تعلم كيفية استخدام Klick\'r</string>
+
+
+    <!-- Dialog Event ============================================================================================== -->
+
+    <string name="dialog_title_image_event">حدث الشاشة</string>
+    <string name="dialog_title_trigger_event">مشغل</string>
+    <string name="dialog_title_action_type">نوع العمل</string>
+    <string name="dialog_title_trigger_condition_type">نوع الزناد</string>
+
+    <string name="field_condition_selector_desc">%1$d الشروط</string>
+    <string name="message_empty_screen_condition_list_title">لا توجد شروط الشاشة!</string>
+    <string name="message_empty_screen_condition_list_desc">حالة الشاشة هي جزء من لقطة الشاشة التي سيتم البحث عنها في كل الإطارات التي تعرضها شاشة هاتفك.</string>
+    <string name="message_empty_trigger_condition_list_title">لا توجد شروط!</string>
+    <string name="message_empty_trigger_condition_list_desc">الشرط هو معايير مخصصة لبدء الإجراء.</string>
+    <string name="message_empty_action_list_title">لا توجد إجراءات!</string>
+    <string name="message_empty_action_list_desc">الإجراء هو تفاعل (نقر، تمرير...) مع هاتفك يتم تشغيله عند استيفاء الشروط التي تم إنشاؤها.</string>
+
+    <string name="menu_item_title_conditions">شروط</string>
+    <string name="menu_item_title_actions">الإجراءات</string>
+
+    <string name="field_event_state_title">ولاية</string>
+    <string name="field_event_state_desc_enabled">سيتم تفسير هذا الحدث بشكل طبيعي عند تشغيل السيناريو</string>
+    <string name="field_event_state_desc_disabled">يحتاج هذا الحدث إلى تمكينه من خلال إجراء ليتم تفسيره عند تشغيل السيناريو</string>
+
+    <string name="field_event_keep_detecting_title">استمر في التنفيذ</string>
+    <string name="field_event_keep_detecting_desc_enabled">عند تشغيل هذا الحدث، تابع التنفيذ من الحدث التالي في القائمة</string>
+    <string name="field_event_keep_detecting_desc_disabled">عند تشغيل هذا الحدث، أعد تشغيل التنفيذ من الحدث الأول في القائمة</string>
+
+    <string name="field_operator_title">المشغل</string>
+    <string name="field_operator_desc_or">يجب استيفاء شرط واحد فقط لبدء الإجراءات</string>
+    <string name="field_operator_desc_and">يجب استيفاء جميع الشروط لبدء الإجراءات</string>
+
+
+    <!-- Brief overlays ============================================================================================ -->
+
+    <string name="brief_empty_actions">لا توجد إجراءات. تحتاج إلى إجراء واحد على الأقل لإنشاء حدث صالح</string>
+    <string name="brief_empty_image_conditions">لا توجد حالة الشاشة. أنت بحاجة إلى شرط واحد على الأقل لإنشاء حدث صالح</string>
+
+
+    <!-- Dialog Condition Image ==================================================================================== -->
+
+    <string name="dialog_title_condition_config">حالة</string>
+
+    <string name="field_condition_visibility_title">الرؤية</string>
+    <string name="field_condition_visibility_desc_present">يجب الكشف عن الحالة</string>
+    <string name="field_condition_visibility_desc_absent">يجب ألا يتم اكتشاف الحالة</string>
+
+    <string name="field_detection_type_title">نوع الكشف</string>
+    <string name="field_detection_type_desc_exact">الكشف في الموقع الذي تم التقاطه</string>
+    <string name="field_detection_type_desc_screen">الكشف على الشاشة بأكملها</string>
+    <string name="field_detection_type_desc_area">الكشف على منطقة مختارة</string>
+
+    <string name="field_select_detection_area_title">منطقة الكشف</string>
+    <string name="field_select_detection_area_desc">في [%1$d، %2$d، %3$d، %4$d]</string>
+
+    <string name="field_title_condition_threshold">الفرق المسموح به</string>
+
+
+    <!-- Dialog Condition Counter Reached ========================================================================== -->
+
+    <string name="dialog_title_counter_reached">قيمة العداد</string>
+
+    <string name="field_counter_name_label">اسم العداد</string>
+
+    <string name="field_counter_comparison_value_label">قيمة</string>
+
+    <string name="dropdown_comparison_operator_label">المشغل</string>
+
+    <!-- Dialog Condition Timer Reached ============================================================================ -->
+
+    <string name="dialog_title_timer_reached">وصل الموقت</string>
+
+    <string name="input_field_label_timer_duration_no_unit">بعد</string>
+
+    <string name="field_timer_restart_title">أعد التشغيل عند الوصول</string>
+    <string name="field_timer_restart_desc_on">بمجرد الوصول إلى ذلك، سيتم إعادة تشغيل المؤقت، مما يسمح بتحقيق هذا الشرط مرة أخرى</string>
+    <string name="field_timer_restart_desc_off">بمجرد الوصول إلى المؤقت، لن يتم إعادة تشغيله، مما يعني أنه يمكن تحقيق هذا الشرط مرة واحدة فقط</string>
+
+
+    <!-- Dialog Condition broadcast received ======================================================================= -->
+
+    <string name="dialog_title_broadcast_received">تم استلام البث</string>
+
+
+    <!-- Dialog Action Click ======================================================================================= -->
+
+    <string name="dialog_title_click">انقر</string>
+    <string name="dialog_title_condition_selection">حدد شرطًا</string>
+
+    <string name="field_click_type_title">انقر فوق</string>
+    <string name="field_click_type_desc_on_condition">انقر على الحالة المكتشفة</string>
+    <string name="field_click_type_desc_on_position">انقر على الموضع المحدد</string>
+
+    <string name="field_condition_selection_title_and_operator">انقر على شرط</string>
+    <string name="field_condition_selection_desc_and_operator">%1$s</string>
+    <string name="field_condition_selection_desc_and_operator_not_found">لم يتم تحديد أي شرط</string>
+
+    <string name="field_condition_selection_title_or_operator">انقر على أول حالة تم اكتشافها</string>
+    <string name="field_condition_selection_desc_or_operator">تم ضبط الحدث على "شرط واحد"، ولا يمكنك تحديد شرط محدد</string>
+
+    <string name="field_click_position_desc">انقر على %1$d، %2$d</string>
+
+    <string name="field_click_offset_title">انقر فوق تعويض</string>
+    <string name="field_click_offset_desc_none">لا أحد</string>
+    <string name="field_click_offset_desc" translatable="false">X=%1$d Y=%2$d</string>
+    <string name="field_click_offset_x" translatable="false">X</string>
+    <string name="field_click_offset_y" translatable="false">Y</string>
+
+
+    <!-- Dialog Action Swipe ======================================================================================= -->
+
+    <string name="dialog_title_swipe">انتقد</string>
+
+    <string name="field_swipe_positions_title">انتقاد المواقف</string>
+    <string name="field_swipe_positions_desc">اسحب من %1$d، %2$d إلى %3$d، %4$d</string>
+
+
+    <!-- Dialog Action Pause ======================================================================================= -->
+
+    <string name="dialog_title_pause">انتظر</string>
+
+
+    <!-- Dialog Action Intent ====================================================================================== -->
+
+    <string name="dialog_title_intent" translatable="false">Intent</string>
+    <string name="dialog_title_intent_flags" translatable="false">Flags</string>
+    <string name="dialog_title_intent_actions" translatable="false">Intent Actions</string>
+    <string name="dialog_title_intent_component_name" translatable="false">Component name</string>
+    <string name="dialog_title_application_selection">حدد تطبيقًا</string>
+
+    <string name="menu_item_title_advanced">متقدم</string>
+    <string name="menu_item_title_simple">بسيط</string>
+
+    <string name="field_application_selection_title">حدد تطبيقًا</string>
+    <string name="field_application_selection_desc">بدء تشغيل التطبيق عند تنفيذ هذا الإجراء</string>
+
+    <string name="dropdown_intent_sending_type_label">يكتب</string>
+    <string name="dropdown_intent_sending_type_item_activity" translatable="false">Start Activity</string>
+    <string name="dropdown_intent_sending_type_item_broadcast" translatable="false">Send Broadcast</string>
+
+    <string name="field_intent_action_label" translatable="false">Action</string>
+    <string name="field_intent_broadcast_action_label" translatable="false">Broadcast Action</string>
+    <string name="field_intent_flags_label" translatable="false">Flags</string>
+    <string name="field_intent_component_name_label" translatable="false">Component name</string>
+
+    <string name="field_intent_extra_title" translatable="false">Extras</string>
+
+
+    <!-- Dialogs Intent Extras ===================================================================================== -->
+
+    <string name="dialog_intent_extra_title" translatable="false">Extra</string>
+
+    <string name="field_intent_extra_key_label">مفتاح</string>
+    <string name="field_intent_extra_value_title">قيمة</string>
+
+    <string name="dropdown_intent_extra_type_title">نوع القيمة</string>
+    <string name="dropdown_intent_extra_type_item_boolean" translatable="false">Boolean</string>
+    <string name="dropdown_intent_extra_type_item_byte" translatable="false">Byte</string>
+    <string name="dropdown_intent_extra_type_item_char" translatable="false">Char</string>
+    <string name="dropdown_intent_extra_type_item_double" translatable="false">Double</string>
+    <string name="dropdown_intent_extra_type_item_int" translatable="false">Integer</string>
+    <string name="dropdown_intent_extra_type_item_float" translatable="false">Float</string>
+    <string name="dropdown_intent_extra_type_item_short" translatable="false">Short</string>
+    <string name="dropdown_intent_extra_type_item_string" translatable="false">String</string>
+
+    <string name="dropdown_extra_boolean_item_true" translatable="false">True</string>
+    <string name="dropdown_extra_boolean_item_false" translatable="false">False</string>
+
+
+    <!-- Dialog Action Change Counter ============================================================================== -->
+
+    <string name="dialog_title_change_counter">تغيير العداد</string>
+
+    <string name="message_empty_counter_name_list_title">لم يتم تعريف العداد</string>
+    <string name="message_empty_counter_name_list_desc">يتم إنشاء العدادات باستخدام إجراء العداد التغييري أو حالة الوصول إلى العداد</string>
+
+    <string name="field_counter_operation_value_label">قيمة</string>
+
+    <string name="dropdown_counter_operation_label">عملية</string>
+    <string name="dropdown_counter_operation_item_add" translatable="false">+</string>
+    <string name="dropdown_counter_operation_item_set" translatable="false">=</string>
+    <string name="dropdown_counter_operation_item_minus" translatable="false">-</string>
+
+
+    <!-- Dialogs Action ToggleEvent ================================================================================ -->
+
+    <string name="dialog_title_toggle_event">حالة الحدث</string>
+    <string name="dialog_title_events_toggle">تبديل الأحداث</string>
+
+    <string name="list_header_image_events">أحداث الشاشة</string>
+    <string name="list_header_trigger_events">أحداث الزناد</string>
+
+    <string name="field_change_all_title">تغيير الكل</string>
+    <string name="field_change_all_desc_manual">تحديد الأحداث لتغييرها يدويا</string>
+    <string name="field_change_all_desc_enable_all">تمكين كافة الأحداث في هذا السيناريو</string>
+    <string name="field_change_all_desc_invert_all">عكس حالة كافة الأحداث في هذا السيناريو</string>
+    <string name="field_change_all_desc_disable_all">تعطيل كافة الأحداث في هذا السيناريو. عند تعطيل كافة الأحداث، يتم إيقاف السيناريو تلقائيًا.</string>
+
+    <string name="field_select_toggle_events_title">%1$d التغييرات</string>
+    <string name="field_select_toggle_events_title_empty">لا تغييرات</string>
+    <string name="field_select_toggle_events_desc_empty">حدد حدثًا واحدًا على الأقل لتغيير حالته</string>
+
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">إشعار</string>
+
+    <string name="field_notification_title_label">عنوان</string>
+
+    <string name="field_notification_message_title">رسالة</string>
+    <string name="field_dropdown_notification_message_type_title">يكتب</string>
+    <string name="field_dropdown_item_notification_message_type_text">نص</string>
+    <string name="field_dropdown_item_notification_message_type_counter">قيمة العداد</string>
+    <string name="field_notification_message_text_label">محتوى</string>
+    <string name="field_notification_message_counter_label">اسم العداد</string>
+
+    <string name="field_dropdown_notification_importance_title">أهمية</string>
+    <string name="field_dropdown_item_notification_importance_type_low">قليل</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">لا يصدر أي صوت.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">طبيعي</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">يصدر صوتا.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">عالي</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">يُصدر صوتًا ويظهر على شكل تنبيه.</string>
+
+    <string name="button_notification_config">افتح الإعدادات</string>
+    <string name="message_notification_config">يعتمد سلوك الإشعارات على نظام تشغيل جهازك. يمكنك تكوين كيفية التعامل مع الإشعارات في إعدادات جهازك.</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">عمل النظام</string>
+
+    <string name="field_dropdown_system_action_type_title">يكتب</string>
+    <string name="field_dropdown_system_action_type_back">خلف</string>
+    <string name="field_dropdown_system_action_type_home">بيت</string>
+    <string name="field_dropdown_system_action_type_recent_apps">التطبيقات الحديثة</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">اكتب النص</string>
+
+    <string name="field_input_set_text_text_to_write_title">نص</string>
+    <string name="field_set_text_validate_title">التحقق من صحة النص</string>
+    <string name="field_set_text_validate_desc_enabled">اضغط على "أدخل" بعد كتابة النص</string>
+    <string name="field_set_text_validate_desc_disabled">فقط اكتب النص</string>
+    <string name="message_set_text_focus">لكتابة النص في المكان المطلوب، عليك التركيز على حقل النص أولاً
+        بالنقر عليه.\n\nيُرجى ملاحظة أنه اعتمادًا على التطبيق، قد تحتاج إلى الانتظار قليلاً بعد ذلك
+        النقر، أو ستتم كتابة النص في وقت مبكر جدًا.\n\nقد لا تكون هذه أيضًا تطبيقات عاملة
+        لا تدعم كتابة النص القياسية، لذا اختبر دائمًا الإجراء الخاص بك أولاً!</string>
+
+
+    <!-- Dialogs warning/error ===================================================================================== -->
+
+    <string name="warning_dialog_message_toggle_action_from_another_scenario">يحتوي هذا الحدث على إجراء حدث تبديل واحد أو أكثر يشير إلى حدث من سيناريو آخر.\nسيتعين عليك تحديث الأحداث المستهدفة قبل حفظ السيناريو الخاص بك.</string>
+    <string name="warning_dialog_message_event_delete_associated_action">يحتوي هذا الحدث على إجراء واحد أو أكثر يشير إليه. سيؤدي حذف هذا الحدث إلى حذف الإجراءات المقترنة به أيضًا.\nهل أنت متأكد؟</string>
+    <string name="warning_dialog_message_condition_delete_associated_action">يحتوي هذا الشرط على إجراء واحد أو أكثر يشير إليه. سيؤدي حذف هذا الشرط إلى حذف الإجراءات المقترنة به أيضًا.\nهل أنت متأكد؟</string>
+    <string name="warning_dialog_message_close_without_saving">لديك تعديلات غير محفوظة، هل تريد تجاهلها؟</string>
+
+
+    <string name="error_dialog_message_scenario_saving">لا يمكن حفظ السيناريو الخاص بك بسبب خطأ داخلي.\nهل تريد تعديله أو إلغاء كافة التعديلات؟</string>
+    <string name="error_dialog_message_error_native_lib">تم تثبيت Klick\'r بشكل غير صحيح ولا يمكنه بدء الاكتشاف.\n\nإذا قمت بتثبيته من متجر تطبيقات شرعي، فيرجى الاتصال بنا على GitHub، حيث سيساعدنا ذلك في حل هذه المشكلة.</string>
+
+
+    <!-- Content description ======================================================================================= -->
+    <!--They are use as accessibility texts for visually impaired people. They will not be displayed but spoken. -->
+
+    <string name="content_desc_event_state">حالة الحدث</string>
+    <string name="content_desc_conditions_count">عدد الشروط في هذا الحدث</string>
+    <string name="content_desc_actions_count">عدد الإجراءات في هذا الحدث</string>
+    <string name="content_desc_image_condition">الصورة المراد اكتشافها</string>
+    <string name="content_desc_open_event_list">افتح قائمة الأحداث</string>
+    <string name="content_desc_application_icon">أيقونة التطبيق للبدء.</string>
+
+</resources>

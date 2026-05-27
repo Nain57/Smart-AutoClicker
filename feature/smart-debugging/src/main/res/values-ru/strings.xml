@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Debug Report root dialog ================================================================================== -->
+
+    <string name="dialog_overlay_title_debug_report">Отладочный отчёт</string>
+    <string name="menu_item_debug_report_overview">Обзор</string>
+    <string name="menu_item_debug_report_timeline">Хронология</string>
+
+    <!-- Debug Report Overview Tab-->
+    <string name="item_title_report_total_duration">Общая длительность</string>
+    <string name="item_title_report_frame_processed">Обработано кадров</string>
+    <string name="item_title_report_avg_image_processing_duration">Средняя длительность обработки</string>
+    <string name="item_title_report_image_event_fulfilled">События изображения выполнены</string>
+    <string name="item_title_report_trigger_event_fulfilled">Триггерные события выполнены</string>
+
+    <!-- Debug Report Timeline Tab -->
+    <string name="title_event_occurrence_empty">Нет событий</string>
+    <string name="desc_event_occurrence_empty">Во время последнего сеанса сценария не было выполнено ни одного события.</string>
+    <string name="item_event_occurrence_frame_number">Кадр №%1$d</string>
+    <string name="item_event_occurrence_trigger">Курок</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">Выполнено: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d условий обработано</string>
+
+
+    <!-- Debug Report Timeline filters dialog ====================================================================== -->
+
+    <string name="dialog_overlay_title_timeline_filters">Фильтры временной шкалы</string>
+
+    <string name="field_debug_filter_image_events_title">События изображения</string>
+    <string name="field_debug_filter_image_events_show_desc_on">Показывать события изображений на временной шкале</string>
+    <string name="field_debug_filter_image_events_show_desc_off">Скрыть все события изображения на временной шкале</string>
+
+    <string name="field_debug_filter_trigger_events_title">Триггерные события</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">Показывать триггерные события на временной шкале</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">Скрыть все триггерные события на временной шкале</string>
+
+    <string name="field_debug_filter_events_show_title">Фильтры</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d событий</string>
+    <string name="field_debug_filter_events_show_select_desc_none">Нет событий</string>
+
+
+    <!-- Debug Report Event Occurrence dialog ====================================================================== -->
+
+    <string name="menu_item_debug_event_occurrence_conditions">Условия</string>
+    <string name="menu_item_debug_event_occurrence_counters">Счетчики</string>
+    <string name="menu_item_debug_event_occurrence_events_state">Штаты</string>
+
+    <!-- Debug Report Event Occurrence conditions Tab -->
+    <string name="item_event_occurrence_details_header_title">Оператор условия</string>
+    <string name="item_event_occurrence_details_image_confidence">Доверие: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">Должно быть обнаружено?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">Выполнено?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Трансляция получена: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Таймер достиг: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Достигнут счетчик: %1$s %2$s %3$s</string>
+
+    <!-- Debug Report Event Occurrence counters Tab -->
+    <string name="title_event_occurrence_counters_empty">Нет счетчиков</string>
+    <string name="desc_event_occurrence_counters_empty">Для этого сценария не были определены счетчики.</string>
+
+    <!-- Debug Report Event Occurrence events state Tab -->
+    <string name="item_event_state_header_image">События изображения</string>
+    <string name="item_event_state_header_trigger">Триггерные события</string>
+
+
+    <!-- Overlay texts ============================================================================================ -->
+
+    <string name="overlay_title_results">Результаты</string>
+    <string name="overlay_title_threshold">Порог</string>
+
+    <!-- Not translatable =========================================================================================
+      - The following strings should be kept the same in all languages. No need to copy them in other language files.
+      - DO NOT TRANSLATE.
+      -->
+    <string name="event_state_changed_separator" translatable="false">"  »  "</string>
+    <string name="item_counter_state_value_same" translatable="false">%1$d</string>
+    <string name="item_counter_state_value_changed" translatable="false">%1$d » %2$d</string>
+
+
+</resources>
