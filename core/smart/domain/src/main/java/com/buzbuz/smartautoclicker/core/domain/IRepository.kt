@@ -75,7 +75,7 @@ interface IRepository {
      * @param copyName the name for the copy.
      * @param onCopyCompleted called when the copy operation is completed.
      */
-    fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: () -> Unit)
+    fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: (success: Boolean) -> Unit)
 
     /**
      * Update a scenario.

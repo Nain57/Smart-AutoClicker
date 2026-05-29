@@ -131,6 +131,10 @@ class ScenarioCopyDialog : DialogFragment() {
     }
 
     private fun onConfirm() {
+        (dialog as? AlertDialog)
+            ?.getButton(AlertDialog.BUTTON_POSITIVE)
+            ?.isEnabled = false
+
         viewModel.copyScenario(scenarioId, isSmartScenario) {
             dismiss()
         }

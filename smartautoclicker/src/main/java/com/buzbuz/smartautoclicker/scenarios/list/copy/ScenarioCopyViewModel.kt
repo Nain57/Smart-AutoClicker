@@ -51,13 +51,20 @@ class ScenarioCopyViewModel @Inject constructor(
         val name = copyName.value
         if (name.isNullOrEmpty()) return
 
-        val onCopyCompleted = {
+        if (isSmart) {
+            smartRepository.addScenarioCopy(scenarioId, name) { onSuccess ->
+                viewModelScope.launch(mainDispatcher) {
+                    onCompleted()
+                }
+            }
+
+            return
+        }
+
+        dumbRepository.addDumbScenarioCopy(scenarioId, name) {
             viewModelScope.launch(mainDispatcher) {
                 onCompleted()
             }
         }
-
-        if (isSmart) smartRepository.addScenarioCopy(scenarioId, name, onCopyCompleted)
-        else dumbRepository.addDumbScenarioCopy(scenarioId, name, onCopyCompleted)
     }
 }
