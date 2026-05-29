@@ -32,6 +32,10 @@ bool TextMatcher::init(const std::string& detectionModelPath, const std::map<std
     return textLocator->init(detectionModelPath) && textRecognizer->init(recognitionModels);
 }
 
+bool TextMatcher::isInitialized() const {
+    return textLocator->isInitialized && textRecognizer->isInitialized;
+}
+
 TextMatchingResult* TextMatcher::getMatchingResults() {
     return &currentMatchingResult;
 }

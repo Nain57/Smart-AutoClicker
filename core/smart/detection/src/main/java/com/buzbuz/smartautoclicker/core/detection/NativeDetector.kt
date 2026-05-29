@@ -50,15 +50,9 @@ class NativeDetector private constructor() : ImageDetector {
     private var isClosed: Boolean = false
     private var screenDimensions: Point = Point(0, 0)
 
-    override fun init(detectionModelPath: String, recognitionModels: Map<String, String>) {
+    override fun init() {
         nativePtr = newDetector()
-        initNative(
-            detectionModelPath = detectionModelPath,
-            recognitionModelIds = recognitionModels.keys.toTypedArray(),
-            recognitionModelsPaths = recognitionModels.values.toTypedArray(),
-        )
     }
-
 
     override fun close() {
         if (isClosed) return
@@ -66,6 +60,17 @@ class NativeDetector private constructor() : ImageDetector {
         isClosed = true
         deleteDetector()
     }
+
+    override fun loadTextDetectionModels(detectionModelPath: String, recognitionModels: Map<String, String>): Boolean {
+        if (isClosed) return false
+
+        return loadDetectionModels(
+            detectionModelPath = detectionModelPath,
+            recognitionModelIds = recognitionModels.keys.toTypedArray(),
+            recognitionModelsPaths = recognitionModels.values.toTypedArray(),
+        )
+    }
+
 
     override fun setScreenBitmap(screenBitmap: Bitmap, metadata: String) {
         if (isClosed) return
@@ -177,7 +182,7 @@ class NativeDetector private constructor() : ImageDetector {
     /**
      *
      */
-    private external fun initNative(
+    private external fun loadDetectionModels(
         detectionModelPath: String,
         recognitionModelIds: Array<String>,
         recognitionModelsPaths: Array<String>,

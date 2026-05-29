@@ -35,6 +35,9 @@ namespace smartautoclicker {
     class TextRecognizer {
 
     public:
+
+        bool isInitialized = false;
+
         /**
          * Initialize the recognizer and load models/dictionary.
          * @param assetManager The Android Asset Manager for loading assets.

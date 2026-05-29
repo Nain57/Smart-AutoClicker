@@ -31,6 +31,7 @@ bool TextRecognizer::init(const std::map<std::string, std::string>& models) {
         if (!recognizer.loadModel(id, path)) {
             LOGE("TextRecognizer", "Can't load model %s", id.c_str());
             alphabetRecognizers.clear();
+            isInitialized = false;
             return false;
         }
 
@@ -41,6 +42,7 @@ bool TextRecognizer::init(const std::map<std::string, std::string>& models) {
     paddedBuffer = cv::Mat::zeros(48, 320, CV_8UC3);
     resizedBuffer = cv::Mat::zeros(48, 320, CV_8UC3);
 
+    isInitialized = true;
     return true;
 }
 

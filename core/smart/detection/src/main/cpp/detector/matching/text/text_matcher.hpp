@@ -93,6 +93,8 @@ namespace smartautoclicker {
          */
         bool init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels);
 
+        bool isInitialized() const;
+
         static bool isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi);
 
         /**

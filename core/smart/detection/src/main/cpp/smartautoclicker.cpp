@@ -38,7 +38,7 @@ extern "C" {
         return reinterpret_cast<jlong>(new Detector());
     }
 
-    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_initNative(
+    JNIEXPORT jboolean JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_loadDetectionModels(
             JNIEnv* env,
             jobject self,
             jstring detectionModelPath,
@@ -69,7 +69,7 @@ extern "C" {
         auto detector = getDetectorFromJavaRef(env, self);
         bool result = false;
         if (detector) {
-            result = detector->init(nativeDetectionPath, recognitionModels);
+            result = detector->loadModels(nativeDetectionPath, recognitionModels);
         }
 
         env->ReleaseStringUTFChars(detectionModelPath, nativeDetectionPath);

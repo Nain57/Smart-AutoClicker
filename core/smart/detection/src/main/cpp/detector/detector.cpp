@@ -27,8 +27,7 @@ using namespace cv;
 using namespace smartautoclicker;
 
 
-
-bool Detector::init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels) {
+bool Detector::loadModels(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels) {
     return textMatcher->init(detectionModelPath, recognitionModels);
 }
 
@@ -92,6 +91,11 @@ ColorMatchingResult* Detector::detectColor(int colorCondition, const cv::Rect& r
 
 TextMatchingResult* Detector::detectText(const char* textCondition, const char* recognitionModelId, const cv::Rect& roi, int threshold) {
     textMatcher->reset();
+
+    // Ensure model initialization
+    if (!textMatcher->isInitialized()) {
+        return textMatcher->getMatchingResults();
+    }
 
     // Verify area validity
     if (!TextMatcher::isRoiValidForMatching(screenImage->getRoi(), roi)) {

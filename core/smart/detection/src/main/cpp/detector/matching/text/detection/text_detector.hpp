@@ -36,11 +36,14 @@ namespace smartautoclicker {
 
     public:
 
+        bool isInitialized = false;
+
         /**
          * Initialize detector and load models
          * @param modelPath The path to the folder containing the detection models.
          */
         bool init(const std::string& modelPath);
+
 
         /**
          * Detect the text boxes within the provided crop.

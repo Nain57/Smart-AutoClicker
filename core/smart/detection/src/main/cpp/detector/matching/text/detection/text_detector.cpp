@@ -33,9 +33,11 @@ bool TextDetector::init(const std::string& modelPath) {
 
     if (paramResult != 0 || binResult != 0) {
         LOGE("TextDetector", "Can't load detection model from %s", modelPath.c_str());
+        isInitialized = false;
         return false;
     }
 
+    isInitialized = true;
     return true;
 }
 

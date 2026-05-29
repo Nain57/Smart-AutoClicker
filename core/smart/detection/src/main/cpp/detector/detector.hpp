@@ -45,7 +45,7 @@ namespace smartautoclicker {
 
         Detector() = default;
 
-        bool init(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels);
+        bool loadModels(const std::string& detectionModelPath, const std::map<std::string, std::string>& recognitionModels);
         void setScreenImage(std::unique_ptr<cv::Mat> screenColorMat, const char* metricsTag);
 
         TemplateMatchingResult* detectImage(

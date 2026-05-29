@@ -111,7 +111,10 @@ internal class OCRModelLocalDataSource @Inject constructor(
                 if (!file.isDirectory) return@forEach
                 try {
                     val alphabet = OCRAlphabet.valueOf(file.name.uppercase())
-                    if (isRecognitionModelAvailable(alphabet)) put(alphabet, file.path)
+                    if (isRecognitionModelAvailable(alphabet)) {
+                        Log.d(TAG, "Recognition model found: $alphabet ${file.path}")
+                        put(alphabet, file.path)
+                    }
                 } catch (_ : IllegalArgumentException) {}
             }
         }

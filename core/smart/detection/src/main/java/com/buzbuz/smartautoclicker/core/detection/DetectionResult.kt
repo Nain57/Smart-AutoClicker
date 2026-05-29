@@ -26,11 +26,14 @@ import androidx.annotation.Keep
  * @param confidenceRate confidence rate of the algorithm for this result
  */
 data class DetectionResult(
-    var isDetected: Boolean = false,
+    private var _isDetected: Boolean = false,
+    private var _confidenceRate: Double = 0.0,
     val position: Point = Point(),
-    val size: Point = Point(),
-    var confidenceRate: Double = 0.0
+    val size: Point = Point()
 ) {
+
+    val isDetected: Boolean get() = _isDetected
+    val confidenceRate: Double get() = _confidenceRate
 
     /**
      * Set the results of the detection.
@@ -38,9 +41,9 @@ data class DetectionResult(
      */
     @Keep
     fun setResults(isDetected: Boolean, centerX: Int, centerY: Int, width: Int, height: Int, confidenceRate: Double) {
-        this.isDetected = isDetected
+        _isDetected = isDetected
         position.set(centerX, centerY)
         size.set(width, height)
-        this.confidenceRate = confidenceRate
+        _confidenceRate = confidenceRate
     }
 }

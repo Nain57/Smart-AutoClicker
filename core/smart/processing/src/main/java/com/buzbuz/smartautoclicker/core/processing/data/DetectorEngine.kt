@@ -23,6 +23,7 @@ import android.media.projection.MediaProjectionManager
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.OCRModelsRepository
+import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
@@ -192,20 +193,17 @@ class DetectorEngine @Inject constructor(
 
         processingScope?.launchProcessingJob {
             // Setup native detector
-            val ocrDetectModelPath = ocrModelsRepository.getDetectionModel()?.getOCRModelPath()
-            val ocrRecoModels = ocrModelsRepository.getTextConditionsRecognitionModels(screenEvents)
-            if (ocrDetectModelPath.isNullOrEmpty() || ocrRecoModels.isEmpty()) {
-                Log.e(TAG, "Can't start detection, OCR models not found. " +
-                        "Detection:$ocrDetectModelPath; Recognition:$ocrRecoModels")
-                _state.value = DetectorState.ERROR_OCR_MODEL_NOT_FOUND
-                return@launchProcessingJob
-            }
-
             imageDetector = detector
-            detector.init(
-                detectionModelPath = ocrDetectModelPath,
-                recognitionModels = ocrRecoModels,
-            )
+            detector.init()
+
+            // Setup text detection models if needed
+            val requiredAlphabets = screenEvents.getAllOCRAlphabets()
+            if (requiredAlphabets.isNotEmpty()) {
+                if (!detector.loadOcrModels(requiredAlphabets)) {
+                    _state.value = DetectorState.ERROR_OCR_MODEL_NOT_FOUND
+                    return@launchProcessingJob
+                }
+            }
 
             // Clear image cache and compute scaling info for detection
             bitmapRepository.clearCache()
@@ -397,14 +395,26 @@ class DetectorEngine @Inject constructor(
         )
         processingJob?.start()
     }
+
+    private suspend fun ImageDetector.loadOcrModels(required: Set<OCRAlphabet>): Boolean {
+        val ocrDetectModelPath = ocrModelsRepository.getDetectionModel()?.getOCRModelPath()
+        val ocrRecoModels = ocrModelsRepository.getTextConditionsRecognitionModels(required)
+        if (ocrDetectModelPath.isNullOrEmpty() || ocrRecoModels.size != required.size) {
+            Log.e(TAG, "Can't start detection, OCR models config is invalid. " +
+                    "Detection:$ocrDetectModelPath; Recognition:$ocrRecoModels")
+            return false
+        }
+
+        return loadTextDetectionModels(ocrDetectModelPath, ocrRecoModels)
+    }
 }
 
 private fun OCRModel.getOCRModelPath(): String? =
     (state as? OCRModelState.Installed)?.path
 
-private suspend fun OCRModelsRepository.getTextConditionsRecognitionModels(events: List<ScreenEvent>): Map<String, String> =
+private suspend fun OCRModelsRepository.getTextConditionsRecognitionModels(required: Set<OCRAlphabet>): Map<String, String> =
     buildMap {
-        events.getAllOCRAlphabets().forEach { alphabet ->
+        required.forEach { alphabet ->
             val modelPath = getRecognitionModelPath(alphabet) ?: return@forEach
             put(alphabet.name, modelPath)
         }
