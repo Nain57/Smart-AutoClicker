@@ -128,13 +128,15 @@ internal class Repository @Inject internal constructor(
         return dataSource.addCompleteScenario(scenario, events, ::clearRemovedConditionsBitmaps)
     }
 
-    override fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: () -> Unit) {
+    override fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: (Boolean) -> Unit) {
         coroutineScopeIo.launch {
-            val (scenario, events) = dataSource.getCompleteScenario(scenarioId)
-                ?.toDomain(cleanIds = true) ?: return@launch
+            val (scenario, events) = dataSource.getCompleteScenario(scenarioId)?.toDomain(cleanIds = true) ?: run {
+                onCopyCompleted(false)
+                return@launch
+            }
 
             dataSource.addCompleteScenario(scenario.copy(name = copyName), events, ::clearRemovedConditionsBitmaps)
-            onCopyCompleted()
+            onCopyCompleted(true)
         }
     }
 
