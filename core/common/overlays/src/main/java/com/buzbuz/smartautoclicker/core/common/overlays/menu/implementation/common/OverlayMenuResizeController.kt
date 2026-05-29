@@ -94,6 +94,11 @@ internal class OverlayMenuResizeController(
     }
 
     init {
+        backgroundViewGroup.layoutTransition?.setAnimateParentHierarchy(false)
+        (backgroundViewGroup.getChildAt(0) as? ViewGroup)
+            ?.layoutTransition
+            ?.setAnimateParentHierarchy(false)
+        resizedContainer.layoutTransition?.setAnimateParentHierarchy(false)
         resizedContainer.layoutTransition?.addTransitionListener(transitionListener)
     }
 
