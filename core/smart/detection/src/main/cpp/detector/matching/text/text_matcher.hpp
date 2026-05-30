@@ -20,6 +20,7 @@
 #include <opencv2/core/types.hpp>
 #include <map>
 #include <net.h>
+#include <limits>
 
 #include "text_matching_result.hpp"
 #include "detection/text_detector.hpp"
@@ -50,6 +51,36 @@ namespace smartautoclicker {
 
         /** Stores the result of the most recent match operation. */
         TextMatchingResult currentMatchingResult;
+
+        /** Identifier of the first loaded recognition model, used for generic matching (like numbers). */
+        std::string defaultRecognitionModelId;
+
+        /**
+         * Checks if the provided text represents a numeric value.
+         * @param text The text to check.
+         * @return true if it is a number, false otherwise.
+         */
+        static bool isNumber(const std::string& text);
+
+        /**
+         * Parses a string into a double, removing spaces and handling commas.
+         * @param text The text to parse.
+         * @return The double value, or std::numeric_limits<double>::lowest() on failure.
+         */
+        static double stringToDouble(const std::string& text);
+
+        /**
+         * Runs the text detection and recognition on a specific area of the screen.
+         * @param screenImage The source screen capture.
+         * @param detectionArea The region of the screen to search in.
+         * @param recognitionModelId The identifier of the recognition model to use.
+         *
+         * @return A list of recognition results containing the text and confidence for each detected block.
+         */
+        std::vector<TextRecognizerResult> recognizeText(
+                const ScreenImage& screenImage,
+                const cv::Rect& detectionArea,
+                const std::string& recognitionModelId);
 
         /**
          * Calculates the similarity between two strings.
@@ -82,7 +113,7 @@ namespace smartautoclicker {
 
     public:
         /** Resets the matcher state for a new search. */
-        void reset();
+        void clearResults();
 
         /**
          * Initializes the underlying detector and recognizer.
@@ -107,15 +138,25 @@ namespace smartautoclicker {
          * @param detectionArea The region of the screen to search in.
          * @param threshold Confidence threshold for the detection/recognition.
          */
-        void matchText(
+        TextMatchingResult* matchText(
                 const ScreenImage& screenImage,
                 const std::string& conditionText,
                 const std::string& recognitionModelId,
                 const cv::Rect& detectionArea,
                 int threshold);
 
-        /** @return A pointer to the results of the last matching operation. */
-        TextMatchingResult* getMatchingResults();
+        /**
+         * Performs text detection and recognition on a specific area of the screen to find a number.
+         * Results are stored internally and can be retrieved with getMatchingResults().
+         *
+         * @param screenImage The source screen capture.
+         * @param detectionArea The region of the screen to search in.
+         * @param threshold Confidence threshold for the detection/recognition.
+         */
+        TextMatchingResult* matchNumber(
+                const ScreenImage& screenImage,
+                const cv::Rect& detectionArea,
+                int threshold);
     };
 }
 

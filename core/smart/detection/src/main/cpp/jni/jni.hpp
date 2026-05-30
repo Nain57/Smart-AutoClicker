@@ -38,6 +38,6 @@ Detector* getDetectorFromJavaRef(JNIEnv *env, jobject self);
 std::unique_ptr<cv::Mat> loadMatFromRGBA8888Bitmap(JNIEnv *env, jobject bitmap);
 void releaseBitmapLock(JNIEnv *env, jobject bitmap);
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result);
+jdoubleArray toJniResult(JNIEnv *env, DetectionResult* result);
 
 #endif //KLICK_R_JNI_HPP

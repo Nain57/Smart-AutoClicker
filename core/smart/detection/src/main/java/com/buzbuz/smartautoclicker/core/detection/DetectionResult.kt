@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,33 +17,33 @@
 package com.buzbuz.smartautoclicker.core.detection
 
 import android.graphics.Point
-import androidx.annotation.Keep
 
 /**
  * The results of a condition detection.
  * @param isDetected true if the condition have been detected. false if not.
- * @param position contains the center of the detected condition in screen coordinates.
  * @param confidenceRate confidence rate of the algorithm for this result
+ * @param position contains the center of the detected condition in screen coordinates.
+ * @param size size of the detected condition.
+ * @param numberDetected defined only for a positive number capture request, null for others.
  */
 data class DetectionResult(
-    private var _isDetected: Boolean = false,
-    private var _confidenceRate: Double = 0.0,
+    val isDetected: Boolean = false,
+    val confidenceRate: Double = 0.0,
     val position: Point = Point(),
-    val size: Point = Point()
-) {
+    val size: Point = Point(),
+    val numberDetected: Double? = null,
+)
 
-    val isDetected: Boolean get() = _isDetected
-    val confidenceRate: Double get() = _confidenceRate
+/** Build the detection result object from a native call returned value. */
+internal fun DoubleArray?.toDetectionResult(): DetectionResult {
+    if (this == null || size < 7) return DetectionResult()
 
-    /**
-     * Set the results of the detection.
-     * Used by native code only.
-     */
-    @Keep
-    fun setResults(isDetected: Boolean, centerX: Int, centerY: Int, width: Int, height: Int, confidenceRate: Double) {
-        _isDetected = isDetected
-        position.set(centerX, centerY)
-        size.set(width, height)
-        _confidenceRate = confidenceRate
-    }
+    val numberDetected = this[6]
+    return DetectionResult(
+        isDetected = this[0] > 0.5,
+        position = Point(this[1].toInt(), this[2].toInt()),
+        size = Point(this[3].toInt(), this[4].toInt()),
+        confidenceRate = this[5],
+        numberDetected = if(numberDetected == Double.MIN_VALUE) null else numberDetected,
+    )
 }

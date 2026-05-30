@@ -25,17 +25,21 @@ namespace smartautoclicker {
 
     class TextMatchingResult: public DetectionResult {
     private:
+        static constexpr double invalidNumber = std::numeric_limits<double>::lowest();
+
         bool detected;
         int centerX;
         int centerY;
         cv::Rect area;
         float recognizerConfidence;
+        double recognizedNumber = invalidNumber;
 
     public:
         void updateResults(
                 const cv::Rect& detectionArea,
                 const cv::Rect& boundingBox,
-                float confidence);
+                float confidence,
+                double numberRecognized = invalidNumber);
         void markResultAsDetected();
         void reset();
 
@@ -46,6 +50,7 @@ namespace smartautoclicker {
         [[nodiscard]] int getResultAreaCenterY() const override;
         [[nodiscard]] int getResultAreaWidth() const override;
         [[nodiscard]] int getResultAreaHeight() const override;
+        [[nodiscard]] double getRecognizedNumber() const;
     };
 } // smartautoclicker
 

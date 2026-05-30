@@ -90,24 +90,14 @@ ColorMatchingResult* Detector::detectColor(int colorCondition, const cv::Rect& r
 }
 
 TextMatchingResult* Detector::detectText(const char* textCondition, const char* recognitionModelId, const cv::Rect& roi, int threshold) {
-    textMatcher->reset();
-
-    // Ensure model initialization
-    if (!textMatcher->isInitialized()) {
-        return textMatcher->getMatchingResults();
-    }
-
-    // Verify area validity
-    if (!TextMatcher::isRoiValidForMatching(screenImage->getRoi(), roi)) {
-        return textMatcher->getMatchingResults();
-    }
-
-    textMatcher->matchText(
+    return textMatcher->matchText(
             *screenImage,
             std::string(textCondition),
             std::string(recognitionModelId),
             roi,
             threshold);
+}
 
-    return textMatcher->getMatchingResults();
+TextMatchingResult* Detector::detectNumber(const cv::Rect& roi, int threshold) {
+    return textMatcher->matchNumber(*screenImage, roi, threshold);
 }

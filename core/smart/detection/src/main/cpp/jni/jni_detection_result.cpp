@@ -17,17 +17,29 @@
 
 #include "jni.hpp"
 #include "../detector/detection_result.hpp"
+#include "../detector/matching/text/text_matching_result.hpp"
+#include <limits>
 
-void setDetectionResult(JNIEnv *env, jobject self, DetectionResult* result) {
-    jclass cls = env->GetObjectClass(self);
-    if (!cls)
-        env->FatalError("GetObjectClass failed");
+jdoubleArray toJniResult(JNIEnv *env, DetectionResult* result) {
+    if (result == nullptr) return nullptr;
 
-    jmethodID methodId = env->GetMethodID(cls, "setResults", "(ZIIIID)V");
+    jdouble detectedNumber = std::numeric_limits<double>::lowest();
+    auto* textResult = dynamic_cast<TextMatchingResult*>(result);
+    if (textResult != nullptr) {
+        detectedNumber = textResult->getRecognizedNumber();
+    }
 
-    env->CallVoidMethod(self, methodId,
-                        result->isDetected(),
-                        (int) result->getResultAreaCenterX(), (int) result->getResultAreaCenterY(),
-                        (int) result->getResultAreaWidth(), (int) result->getResultAreaHeight(),
-                        result->getResultConfidence());
+    jdoubleArray out = env->NewDoubleArray(7);
+    jdouble buffer[7] = {
+            result->isDetected() ? 1.0 : 0.0,
+            (double) result->getResultAreaCenterX(),
+            (double) result->getResultAreaCenterY(),
+            (double) result->getResultAreaWidth(),
+            (double) result->getResultAreaHeight(),
+            result->getResultConfidence(),
+            detectedNumber
+    };
+
+    env->SetDoubleArrayRegion(out, 0, 7, buffer);
+    return out;
 }

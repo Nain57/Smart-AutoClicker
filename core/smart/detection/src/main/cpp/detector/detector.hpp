@@ -65,6 +65,8 @@ namespace smartautoclicker {
                 const char* recognitionModelId,
                 const cv::Rect &roi,
                 int threshold);
+
+        TextMatchingResult* detectNumber(const cv::Rect& roi, int threshold);
     };
 }
 

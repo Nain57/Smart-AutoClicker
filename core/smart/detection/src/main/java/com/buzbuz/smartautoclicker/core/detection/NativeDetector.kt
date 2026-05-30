@@ -40,9 +40,6 @@ class NativeDetector private constructor() : ImageDetector {
         }
     }
 
-    /** The results of the detection. Modified by native code. */
-    @Keep
-    private val detectionResult = DetectionResult()
     /** Native pointer of the detector object. */
     @Keep
     private var nativePtr: Long = -1
@@ -87,11 +84,19 @@ class NativeDetector private constructor() : ImageDetector {
         detectionArea: Rect,
         threshold: Int,
     ): DetectionResult {
-        if (isClosed) return detectionResult.copy()
+        if (isClosed) return DetectionResult()
 
-        try {
-            detectImage(conditionBitmap, conditionWidth, conditionHeight, detectionArea.left, detectionArea.top,
-                detectionArea.width(), detectionArea.height(), threshold, detectionResult)
+        return try {
+            detectImageNative(
+                conditionBitmap,
+                conditionWidth,
+                conditionHeight,
+                detectionArea.left,
+                detectionArea.top,
+                detectionArea.width(),
+                detectionArea.height(),
+                threshold
+            ).toDetectionResult()
         } catch (ex: Exception) {
             ex.throwWithKeys(
                 keys = mapOf(
@@ -102,17 +107,22 @@ class NativeDetector private constructor() : ImageDetector {
                     "threshold" to threshold.toString(),
                 ),
             )
+            DetectionResult()
         }
-
-        return detectionResult.copy()
     }
 
     override fun detectColor(conditionColor: Int, detectionArea: Rect, threshold: Int): DetectionResult {
-        if (isClosed) return detectionResult.copy()
+        if (isClosed) return DetectionResult()
 
-        try {
-            detectColor(conditionColor, detectionArea.left, detectionArea.top, detectionArea.width(),
-                detectionArea.height(), threshold, detectionResult)
+        return try {
+            detectColorNative(
+                conditionColor,
+                detectionArea.left,
+                detectionArea.top,
+                detectionArea.width(),
+                detectionArea.height(),
+                threshold
+            ).toDetectionResult()
         } catch (ex: Exception) {
             ex.throwWithKeys(
                 keys = mapOf(
@@ -122,9 +132,8 @@ class NativeDetector private constructor() : ImageDetector {
                     "threshold" to threshold.toString(),
                 ),
             )
+            DetectionResult()
         }
-
-        return detectionResult.copy()
     }
 
     override fun detectText(
@@ -134,17 +143,18 @@ class NativeDetector private constructor() : ImageDetector {
         threshold: Int,
     ): DetectionResult {
 
-        if (isClosed) return detectionResult.copy()
+        if (isClosed) return DetectionResult()
 
-        try {
-            detectText(
+        return try {
+            detectTextNative(
                 conditionText = conditionText,
                 recognitionModelId = recognitionModelId,
                 x = detectionArea.left,
                 y = detectionArea.top,
                 width = detectionArea.width(),
                 height = detectionArea.height(),
-                threshold, detectionResult)
+                threshold
+            ).toDetectionResult()
         } catch (ex: Exception) {
             ex.throwWithKeys(
                 keys = mapOf(
@@ -155,9 +165,31 @@ class NativeDetector private constructor() : ImageDetector {
                     "threshold" to threshold.toString(),
                 ),
             )
+            DetectionResult()
         }
+    }
 
-        return detectionResult.copy()
+    override fun detectNumber(detectionArea: Rect, threshold: Int): DetectionResult {
+        if (isClosed) return DetectionResult()
+
+        return try {
+            detectNumberNative(
+                x = detectionArea.left,
+                y = detectionArea.top,
+                width = detectionArea.width(),
+                height = detectionArea.height(),
+                threshold
+            ).toDetectionResult()
+        } catch (ex: Exception) {
+            ex.throwWithKeys(
+                keys = mapOf(
+                    "screenSize" to "${screenDimensions.x}x${screenDimensions.y}",
+                    "detectionArea" to detectionArea.toString(),
+                    "threshold" to threshold.toString(),
+                ),
+            )
+            DetectionResult()
+        }
     }
 
     override fun releaseScreenBitmap(screenBitmap: Bitmap) {
@@ -207,7 +239,7 @@ class NativeDetector private constructor() : ImageDetector {
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      */
-    private external fun detectImage(
+    private external fun detectImageNative(
         conditionBitmap: Bitmap,
         conditionWidth: Int,
         conditionHeight: Int,
@@ -216,8 +248,7 @@ class NativeDetector private constructor() : ImageDetector {
         width: Int,
         height: Int,
         threshold: Int,
-        result: DetectionResult,
-    )
+    ): DoubleArray?
 
     /**
      * Native method for detecting if the color is at a specific position in the current screen bitmap.
@@ -229,15 +260,14 @@ class NativeDetector private constructor() : ImageDetector {
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      */
-    private external fun detectColor(
+    private external fun detectColorNative(
         conditionColor: Int,
         x: Int,
         y: Int,
         width: Int,
         height: Int,
         threshold: Int,
-        result: DetectionResult,
-    )
+    ): DoubleArray?
 
     /**
      * Native method for detecting if the text is at a specific position in the current screen bitmap.
@@ -250,7 +280,7 @@ class NativeDetector private constructor() : ImageDetector {
      * @param height the height of the condition.
      * @param threshold the allowed error threshold allowed for the condition.
      */
-    private external fun detectText(
+    private external fun detectTextNative(
         conditionText: String,
         recognitionModelId: String,
         x: Int,
@@ -258,8 +288,24 @@ class NativeDetector private constructor() : ImageDetector {
         width: Int,
         height: Int,
         threshold: Int,
-        result: DetectionResult,
-    )
+    ): DoubleArray?
+
+    /**
+     * Native method for detecting if a number is at a specific position in the current screen bitmap.
+     *
+     * @param x the horizontal position of the condition.
+     * @param y the vertical position of the condition.
+     * @param width the width of the condition.
+     * @param height the height of the condition.
+     * @param threshold the allowed error threshold allowed for the condition.
+     */
+    private external fun detectNumberNative(
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        threshold: Int,
+    ): DoubleArray?
 
     /** Native method for releasing the screen image resources set with [setScreenImage]. */
     private external fun releaseScreenImage(screenBitmap: Bitmap)

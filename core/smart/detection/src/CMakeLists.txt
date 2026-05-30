@@ -67,8 +67,8 @@ add_library( # Sets the name of the library.
         main/cpp/detector/matching/text/text_matching_result.hpp
         main/cpp/jni/jni.hpp
         main/cpp/jni/jni_bitmap.cpp
-        main/cpp/jni/jni_detector.cpp
         main/cpp/jni/jni_detection_result.cpp
+        main/cpp/jni/jni_detector.cpp
         main/cpp/logs/log.cpp
         main/cpp/logs/log.h
         main/cpp/utils/correction.hpp

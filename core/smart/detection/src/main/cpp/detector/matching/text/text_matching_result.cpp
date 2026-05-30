@@ -22,7 +22,12 @@
 using namespace smartautoclicker;
 
 
-void TextMatchingResult::updateResults(const cv::Rect& detectionArea, const cv::Rect& boundingBox, float confidence) {
+void TextMatchingResult::updateResults(
+        const cv::Rect& detectionArea,
+        const cv::Rect& boundingBox,
+        float confidence,
+        double numberRecognized
+) {
     area.x = detectionArea.x + boundingBox.x;
     area.y = detectionArea.y + boundingBox.y;
     area.width = boundingBox.width;
@@ -30,6 +35,7 @@ void TextMatchingResult::updateResults(const cv::Rect& detectionArea, const cv::
     centerX = area.x + ((int) (area.width / 2));
     centerY = area.y + ((int) (area.height / 2));
     recognizerConfidence = confidence;
+    recognizedNumber = numberRecognized;
 }
 
 void TextMatchingResult::markResultAsDetected() {
@@ -72,5 +78,9 @@ int TextMatchingResult::getResultAreaWidth() const {
 
 int TextMatchingResult::getResultAreaHeight() const {
     return area.height;
+}
+
+double TextMatchingResult::getRecognizedNumber() const {
+    return recognizedNumber;
 }
 

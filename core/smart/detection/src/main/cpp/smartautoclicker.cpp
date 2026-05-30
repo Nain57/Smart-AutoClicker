@@ -52,8 +52,8 @@ extern "C" {
         jsize length = env->GetArrayLength(recognitionModelIds);
 
         for (jsize i = 0; i < length; i++) {
-            jstring key = (jstring) env->GetObjectArrayElement(recognitionModelIds, i);
-            jstring value = (jstring) env->GetObjectArrayElement(recognitionModelPaths, i);
+            auto key = (jstring) env->GetObjectArrayElement(recognitionModelIds, i);
+            auto value = (jstring) env->GetObjectArrayElement(recognitionModelPaths, i);
 
             const char* nativeKey = env->GetStringUTFChars(key, nullptr);
             const char* nativeValue = env->GetStringUTFChars(value, nullptr);
@@ -96,7 +96,7 @@ extern "C" {
         env->ReleaseStringUTFChars(metricsTag, nativeMetricsTag);
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectImage(
+    JNIEXPORT jdoubleArray JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectImageNative(
             JNIEnv *env,
             jobject self,
             jobject conditionBitmap,
@@ -106,17 +106,17 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jint threshold,
-            jobject result
+            jint threshold
     ) {
         auto detector = getDetectorFromJavaRef(env, self);
-        if (!detector) return;
+        if (!detector) return nullptr;
 
         std::unique_ptr<cv::Mat> conditionMat = loadMatFromRGBA8888Bitmap(env, conditionBitmap);
-        if (!conditionMat) return;
+        if (!conditionMat) return nullptr;
 
+        jdoubleArray result = nullptr;
         try {
-            setDetectionResult(env,result,detector->detectImage(
+            result = toJniResult(env, detector->detectImage(
                     std::move(conditionMat),
                     conditionWidth,
                     conditionHeight,
@@ -127,13 +127,13 @@ extern "C" {
             env->ThrowNew(
                     env->FindClass("java/lang/RuntimeException"),
                     "Invalid detection arguments for image detection");
-            return;
         }
 
         releaseBitmapLock(env, conditionBitmap);
+        return result;
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectColor(
+    JNIEXPORT jdoubleArray JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectColorNative(
             JNIEnv *env,
             jobject self,
             jint conditionColor,
@@ -141,14 +141,13 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jint threshold,
-            jobject result
+            jint threshold
     ) {
         auto detector = getDetectorFromJavaRef(env, self);
-        if (!detector) return;
+        if (!detector) return nullptr;
 
         try {
-            setDetectionResult(env,result,detector->detectColor(
+            return toJniResult(env, detector->detectColor(
                     conditionColor,
                     cv::Rect(x, y, width, height),
                     threshold));
@@ -156,11 +155,11 @@ extern "C" {
             env->ThrowNew(
                     env->FindClass("java/lang/RuntimeException"),
                     "Invalid detection arguments for color detection");
-            return;
+            return nullptr;
         }
     }
 
-    JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectText(
+    JNIEXPORT jdoubleArray JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectTextNative(
             JNIEnv *env,
             jobject self,
             jstring conditionText,
@@ -169,20 +168,18 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jint threshold,
-            jobject result
+            jint threshold
     ) {
         auto detector = getDetectorFromJavaRef(env, self);
-        if (!detector) return;
+        if (!detector) return nullptr;
 
         const char* nativeConditionText = env->GetStringUTFChars(conditionText, nullptr);
-        if (nativeConditionText == nullptr) return;
-
         const char* nativeRecognitionModelId = env->GetStringUTFChars(recognitionModelId, nullptr);
-        if (nativeRecognitionModelId == nullptr) return;
+        if (nativeConditionText == nullptr || nativeRecognitionModelId == nullptr) return nullptr;
 
+        jdoubleArray result = nullptr;
         try {
-            setDetectionResult(env,result,detector->detectText(
+            result = toJniResult(env, detector->detectText(
                     nativeConditionText,
                     nativeRecognitionModelId,
                     cv::Rect(x, y, width, height),
@@ -190,13 +187,35 @@ extern "C" {
         } catch (...) {
             env->ThrowNew(
                     env->FindClass("java/lang/RuntimeException"),
-                    "Invalid detection arguments for color detection");
-            return;
+                    "Invalid detection arguments for text detection");
         }
 
         env->ReleaseStringUTFChars(conditionText, nativeConditionText);
         env->ReleaseStringUTFChars(recognitionModelId, nativeRecognitionModelId);
+        return result;
+    }
 
+    JNIEXPORT jdoubleArray JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_detectNumberNative(
+            JNIEnv *env,
+            jobject self,
+            jint x,
+            jint y,
+            jint width,
+            jint height,
+            jint threshold
+    ) {
+        auto detector = getDetectorFromJavaRef(env, self);
+        if (!detector) return nullptr;
+
+        try {
+            return toJniResult(env, detector->detectNumber(cv::Rect(x, y, width, height), threshold));
+        } catch (...) {
+            env->ThrowNew(
+                    env->FindClass("java/lang/RuntimeException"),
+                    "Invalid detection arguments for number detection");
+        }
+
+        return nullptr;
     }
 
     JNIEXPORT void JNICALL Java_com_buzbuz_smartautoclicker_core_detection_NativeDetector_releaseScreenImage(
@@ -214,6 +233,6 @@ extern "C" {
         auto detector = getDetectorFromJavaRef(env, self);
         if (!detector) return;
 
-        delete getDetectorFromJavaRef(env, self);
+        delete detector;
     }
 }

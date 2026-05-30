@@ -103,6 +103,20 @@ interface ImageDetector : AutoCloseable {
         threshold: Int,
     ): DetectionResult
 
+    /**
+     * Detect if a number is visible in the provided area.
+     * [setScreenBitmap] must have been called first with the content of the screen.
+     *
+     * @param detectionArea the area to search for the number.
+     * @param threshold the allowed error threshold allowed for the condition.
+     *
+     * @return the numeric value detected, or Double.MIN_VALUE if none.
+     */
+    fun detectNumber(
+        detectionArea: Rect,
+        threshold: Int,
+    ): DetectionResult
+
     /** Release the resources of the screen image set with [setScreenBitmap]. */
     fun releaseScreenBitmap(screenBitmap: Bitmap)
 }
