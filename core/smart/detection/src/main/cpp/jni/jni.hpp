@@ -40,4 +40,6 @@ void releaseBitmapLock(JNIEnv *env, jobject bitmap);
 
 jdoubleArray toJniResult(JNIEnv *env, DetectionResult* result);
 
+void throwRuntimeException(JNIEnv *env, const char *message);
+
 #endif //KLICK_R_JNI_HPP

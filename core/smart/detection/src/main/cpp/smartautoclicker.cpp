@@ -124,9 +124,7 @@ extern "C" {
                     threshold));
         } catch (...) {
             releaseBitmapLock(env, conditionBitmap);
-            env->ThrowNew(
-                    env->FindClass("java/lang/RuntimeException"),
-                    "Invalid detection arguments for image detection");
+            throwRuntimeException(env, "Invalid detection arguments for image detection");
         }
 
         releaseBitmapLock(env, conditionBitmap);
@@ -152,9 +150,7 @@ extern "C" {
                     cv::Rect(x, y, width, height),
                     threshold));
         } catch (...) {
-            env->ThrowNew(
-                    env->FindClass("java/lang/RuntimeException"),
-                    "Invalid detection arguments for color detection");
+            throwRuntimeException(env, "Invalid detection arguments for color detection");
             return nullptr;
         }
     }
@@ -185,9 +181,7 @@ extern "C" {
                     cv::Rect(x, y, width, height),
                     threshold));
         } catch (...) {
-            env->ThrowNew(
-                    env->FindClass("java/lang/RuntimeException"),
-                    "Invalid detection arguments for text detection");
+            throwRuntimeException(env, "Invalid detection arguments for text detection");
         }
 
         env->ReleaseStringUTFChars(conditionText, nativeConditionText);
@@ -210,9 +204,7 @@ extern "C" {
         try {
             return toJniResult(env, detector->detectNumber(cv::Rect(x, y, width, height), threshold));
         } catch (...) {
-            env->ThrowNew(
-                    env->FindClass("java/lang/RuntimeException"),
-                    "Invalid detection arguments for number detection");
+            throwRuntimeException(env, "Invalid detection arguments for number detection");
         }
 
         return nullptr;
