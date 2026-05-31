@@ -18,10 +18,10 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.co
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.*
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository

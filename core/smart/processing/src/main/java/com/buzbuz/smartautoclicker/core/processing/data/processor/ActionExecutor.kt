@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationR
 import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click

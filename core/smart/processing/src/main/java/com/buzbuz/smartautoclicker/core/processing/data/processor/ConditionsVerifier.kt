@@ -23,11 +23,12 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterRefere
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
@@ -83,6 +84,7 @@ internal class ConditionsVerifier(
             is ScreenCondition.Color -> verifyColorCondition(condition)
             is ScreenCondition.Image -> verifyImageCondition(condition)
             is ScreenCondition.Text -> verifyTextCondition(condition)
+            is ScreenCondition.Number -> TODO()
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
         }
 
@@ -105,20 +107,11 @@ internal class ConditionsVerifier(
             }
 
             when (condition.comparisonOperation) {
-                TriggerCondition.OnCounterCountReached.ComparisonOperation.GREATER ->
-                    counterValue > operandValue
-
-                TriggerCondition.OnCounterCountReached.ComparisonOperation.GREATER_OR_EQUALS ->
-                    counterValue >= operandValue
-
-                TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS ->
-                    counterValue == operandValue
-
-                TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER_OR_EQUALS ->
-                    counterValue <= operandValue
-
-                TriggerCondition.OnCounterCountReached.ComparisonOperation.LOWER ->
-                    counterValue < operandValue
+                ComparisonOperation.GREATER -> counterValue > operandValue
+                ComparisonOperation.GREATER_OR_EQUALS -> counterValue >= operandValue
+                ComparisonOperation.EQUALS -> counterValue == operandValue
+                ComparisonOperation.LOWER_OR_EQUALS -> counterValue <= operandValue
+                ComparisonOperation.LOWER -> counterValue < operandValue
             }
         } ?: false
 

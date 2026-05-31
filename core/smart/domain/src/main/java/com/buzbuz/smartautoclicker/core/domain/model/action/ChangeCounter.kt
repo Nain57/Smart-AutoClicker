@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 data class ChangeCounter(
     override val id: Identifier,

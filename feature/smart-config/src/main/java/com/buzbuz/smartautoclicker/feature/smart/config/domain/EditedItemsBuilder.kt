@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.bitmaps.CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.bitmaps.TUTORIAL_CONDITION_FILE_PREFIX
 import com.buzbuz.smartautoclicker.core.domain.IRepository
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click

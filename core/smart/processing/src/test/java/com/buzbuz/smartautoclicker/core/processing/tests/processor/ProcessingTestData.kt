@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.normalizePriorities
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action

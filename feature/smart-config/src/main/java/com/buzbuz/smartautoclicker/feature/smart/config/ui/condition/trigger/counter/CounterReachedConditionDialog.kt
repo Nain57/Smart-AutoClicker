@@ -39,7 +39,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener

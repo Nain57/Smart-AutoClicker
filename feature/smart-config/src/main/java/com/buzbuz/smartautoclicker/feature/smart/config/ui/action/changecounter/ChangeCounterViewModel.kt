@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem

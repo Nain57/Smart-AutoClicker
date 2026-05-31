@@ -21,7 +21,7 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData

@@ -20,7 +20,7 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.*
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.*
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 

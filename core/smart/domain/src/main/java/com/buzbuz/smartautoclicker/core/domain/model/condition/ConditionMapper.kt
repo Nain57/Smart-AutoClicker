@@ -20,10 +20,11 @@ import android.graphics.Rect
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 
 internal fun Condition.toEntity() = when (this) {
     is ScreenCondition.Color -> toColorConditionEntity()
@@ -205,9 +206,6 @@ private fun ConditionEntity.toDomainTimerReached(cleanIds: Boolean = false): Tri
         durationMs = timerValueMs!!,
         restartWhenReached = restartWhenReached!!,
     )
-
-private fun CounterComparisonOperation.toDomain(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
-    TriggerCondition.OnCounterCountReached.ComparisonOperation.valueOf(name)
 
 private fun ConditionEntity.getDetectionArea(): Rect? =
     if (detectionAreaLeft != null && detectionAreaTop != null && detectionAreaRight != null && detectionAreaBottom != null)

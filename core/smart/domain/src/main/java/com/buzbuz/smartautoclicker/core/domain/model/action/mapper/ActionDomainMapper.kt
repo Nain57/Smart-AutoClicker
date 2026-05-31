@@ -10,7 +10,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click

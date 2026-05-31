@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.action.mapper
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click

@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getClickPressDurationConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
@@ -89,8 +90,8 @@ internal class EditionDefaultValues(private val scenarioRepository: IRepository)
     fun setTextName(context: Context): String =
         context.getString(R.string.default_set_text_name)
 
-    fun counterComparisonOperation(): TriggerCondition.OnCounterCountReached.ComparisonOperation =
-        TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
+    fun counterComparisonOperation(): ComparisonOperation =
+        ComparisonOperation.EQUALS
 
     private fun isTutorialModeEnabled(): Boolean =
         scenarioRepository.isTutorialModeEnabled()

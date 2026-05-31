@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.count
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.domain.model.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
