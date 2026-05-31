@@ -52,6 +52,9 @@ class SQLiteQueryResult internal constructor(
         fun getLong(columnName: String): Long = columnsNamesToInfo[columnName]?.second?.let(cursor::getLong)
             ?: throw IllegalArgumentException("Can't get Long value, column $columnName doesn't exist")
 
+        fun getDouble(columnName: String): Double = columnsNamesToInfo[columnName]?.second?.let(cursor::getDouble)
+            ?: throw IllegalArgumentException("Can't get Double value, column $columnName doesn't exist")
+
         fun getString(columnName: String): String = columnsNamesToInfo[columnName]?.second?.let(cursor::getString)
             ?: throw IllegalArgumentException("Can't get String value, column $columnName doesn't exist")
 
@@ -61,13 +64,14 @@ class SQLiteQueryResult internal constructor(
 
         inline fun <reified ColumnType : Any> getValue(column: SQLiteColumn<ColumnType>): ColumnType =
             when (column) {
-                is SQLiteColumn.Boolean -> getBoolean(column.name) as ColumnType
-                is SQLiteColumn.Text -> getString(column.name) as ColumnType
-                is SQLiteColumn.Int -> getInt(column.name) as ColumnType
+                is SQLiteColumn.Boolean -> getBoolean(column.name)
+                is SQLiteColumn.Text -> getString(column.name)
+                is SQLiteColumn.Int -> getInt(column.name)
                 is SQLiteColumn.PrimaryKey,
                 is SQLiteColumn.ForeignKey,
-                is SQLiteColumn.Long -> getLong(column.name) as ColumnType
-            }
+                is SQLiteColumn.Long -> getLong(column.name)
+                is SQLiteColumn.Double -> getDouble(column.name)
+            } as ColumnType
     }
 }
 

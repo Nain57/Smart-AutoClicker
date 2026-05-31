@@ -89,7 +89,7 @@ data class ConditionEntity(
     @ColumnInfo(name = "counter_name") val counterName: String? = null,
     @ColumnInfo(name = "counter_comparison_operation") val counterComparisonOperation: CounterComparisonOperation? = null,
     @ColumnInfo(name = "counter_operation_value_type") val counterOperationValueType: CounterOperationValueType? = null,
-    @ColumnInfo(name = "counter_value") val counterValue: Int? = null,
+    @ColumnInfo(name = "counter_value") val counterValue: Double? = null,
     @ColumnInfo(name = "counter_value_counter_name") val counterOperationCounterName: String? = null,
 
     // ConditionType.ON_TIMER_REACHED
@@ -98,6 +98,12 @@ data class ConditionEntity(
 
     // ConditionType.ON_COLOR_DETECTED
     @ColumnInfo(name = "color_rgba") val colorRgba: Int? = null,
+
+    // ConditionType.ON_NUMBER_DETECTED
+    @ColumnInfo(name = "number_counter_comparison_operation") val numberCounterComparisonOperation: CounterComparisonOperation? = null,
+    @ColumnInfo(name = "number_counter_operation_value_type") val numberCounterOperationValueType: CounterOperationValueType? = null,
+    @ColumnInfo(name = "number_counter_value") val numberCounterValue: Double? = null,
+    @ColumnInfo(name = "number_counter_value_counter_name") val numberCounterOperationCounterName: String? = null,
 
     // ConditionType.ON_TEXT_DETECTED
     @ColumnInfo(name = "text_to_detect") val textToDetect: String? = null,

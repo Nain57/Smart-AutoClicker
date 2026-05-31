@@ -26,6 +26,6 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report
  */
 data class DebugEventOccurrenceCounterState(
     val counterName: String,
-    val currentValue: Int,
-    val previousValue: Int? = null,
+    val currentValue: Double,
+    val previousValue: Double? = null,
 )

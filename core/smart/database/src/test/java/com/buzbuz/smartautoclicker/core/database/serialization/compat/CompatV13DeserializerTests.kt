@@ -353,13 +353,13 @@ class CompatV13DeserializerTests {
     fun migrate_end_condition() {
         // Given
         val eventId = 1L
-        val executions = 10
+        val executions = 10.0
         val eventJson = createJsonCompleteEvent(
             eventJson = createJsonEvent(id = eventId),
             completeActionsJson = listOf(createJsonCompleteAction(createJsonActionPause(eventId = eventId))),
             conditionsJson = listOf(createJsonCondition(eventId = eventId)),
         )
-        val endConditionJson = createJsonEndCondition(eventId = eventId, executions = executions)
+        val endConditionJson = createJsonEndCondition(eventId = eventId, executions = executions.toInt())
         val scenarioJson = createJsonCompleteScenario(
             completeEventsJson = listOf(eventJson),
             endConditionJson = listOf(endConditionJson)
@@ -392,7 +392,7 @@ class CompatV13DeserializerTests {
         val counterAction = monitoredEvent!!.actions.find { it.action.type == ActionType.CHANGE_COUNTER }
         assertNotNull(counterAction)
         assertEquals(ChangeCounterOperationType.ADD, counterAction!!.action.counterOperation)
-        assertEquals(1, counterAction.action.counterOperationValue)
+        assertEquals(1.0, counterAction.action.counterOperationValue)
         assertEquals(stopCondition.counterName, counterAction.action.counterName)
     }
 }

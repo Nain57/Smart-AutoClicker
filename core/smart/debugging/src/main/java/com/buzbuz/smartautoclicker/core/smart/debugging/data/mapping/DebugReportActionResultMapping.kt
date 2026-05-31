@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.Debu
 internal fun DebugReportActionResult.CounterChange.toProtobuf(): CounterStateChange =
     counterStateChange {
         counterName = this@toProtobuf.counterName
-        counterOldValue = this@toProtobuf.previousValue
-        counterNewValue = this@toProtobuf.newValue
+        oldValue = this@toProtobuf.previousValue
+        newValue = this@toProtobuf.newValue
     }
 
 internal fun DebugReportActionResult.EventStateChange.toProtobuf(): EventStateChange =
@@ -37,12 +37,20 @@ internal fun DebugReportActionResult.EventStateChange.toProtobuf(): EventStateCh
     }
 
 
-internal fun CounterStateChange.toDomain(): DebugReportActionResult.CounterChange =
-    DebugReportActionResult.CounterChange(
+@Suppress("DEPRECATION") // legacy format support
+internal fun CounterStateChange.toDomain(): DebugReportActionResult.CounterChange {
+    val (prev, next) = if (oldValue != 0.0 || newValue != 0.0) {
+        oldValue to newValue
+    } else {
+        counterOldValue.toDouble() to counterNewValue.toDouble()
+    }
+
+    return DebugReportActionResult.CounterChange(
         counterName = counterName,
-        previousValue = counterOldValue,
-        newValue = counterNewValue,
+        previousValue = prev,
+        newValue = next,
     )
+}
 
 internal fun EventStateChange.toDomain(): DebugReportActionResult.EventStateChange =
     DebugReportActionResult.EventStateChange(

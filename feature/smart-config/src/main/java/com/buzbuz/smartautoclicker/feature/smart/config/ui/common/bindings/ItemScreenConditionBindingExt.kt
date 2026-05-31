@@ -72,6 +72,8 @@ fun IncludeScreenConditionCardBinding.bind(
             }
         }
 
+        is ScreenCondition.Number -> TODO()
+
         is ScreenCondition.Text ->  {
             conditionDetectionType.visibility = View.GONE
             conditionImage.visibility = View.GONE

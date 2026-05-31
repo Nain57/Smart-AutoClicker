@@ -193,6 +193,7 @@ class EditedItemsBuilder internal constructor(
         when (condition) {
             is ScreenCondition.Color -> createNewColorConditionFrom(condition, eventId)
             is ScreenCondition.Image -> createNewImageConditionFrom(condition, eventId)
+            is ScreenCondition.Number -> TODO()
             is ScreenCondition.Text -> createNewTextConditionFrom(condition, eventId)
         }
 
@@ -234,7 +235,7 @@ class EditedItemsBuilder internal constructor(
             name = defaultValues.conditionName(context),
             counterName = "",
             comparisonOperation = defaultValues.counterComparisonOperation(),
-            counterValue = CounterOperationValue.Number(0)
+            counterValue = CounterOperationValue.Number(0.0)
         )
 
     fun createNewOnTimerReached(context: Context): TriggerCondition.OnTimerReached =
@@ -351,7 +352,7 @@ class EditedItemsBuilder internal constructor(
             name = defaultValues.changeCounterName(context),
             counterName = "",
             operation = ChangeCounter.OperationType.ADD,
-            operationValue = CounterOperationValue.Number(0),
+            operationValue = CounterOperationValue.Number(0.0),
             priority = 0,
         )
 

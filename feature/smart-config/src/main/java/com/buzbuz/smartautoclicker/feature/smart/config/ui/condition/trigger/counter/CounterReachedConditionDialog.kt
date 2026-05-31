@@ -127,8 +127,8 @@ class CounterReachedConditionDialog(
                     viewModel.setOperationValue(
                         if (checkedId == 0) {
                             CounterOperationValue.Number(
-                                if (editValueLayout.textField.text.isNullOrEmpty()) 0
-                                else editValueLayout.textField.text.toString().toInt()
+                                if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
+                                else editValueLayout.textField.text.toString().toDouble()
                             )
                         } else {
                             CounterOperationValue.Counter(
@@ -146,8 +146,8 @@ class CounterReachedConditionDialog(
                 setOnTextChangedListener {
                     viewModel.setOperationValue(
                         CounterOperationValue.Number(
-                            if (editValueLayout.textField.text.isNullOrEmpty()) 0
-                            else editValueLayout.textField.text.toString().toInt()
+                            if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
+                            else editValueLayout.textField.text.toString().toDouble()
                         )
                     )
                 }

@@ -20,8 +20,8 @@ sealed class DebugReportActionResult {
 
     data class CounterChange(
         val counterName: String,
-        val previousValue: Int,
-        val newValue: Int,
+        val previousValue: Double,
+        val newValue: Double,
     ) : DebugReportActionResult()
 
     data class EventStateChange(

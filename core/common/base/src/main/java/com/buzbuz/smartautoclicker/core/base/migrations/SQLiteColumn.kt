@@ -42,6 +42,14 @@ sealed class SQLiteColumn<T : Any> {
         override val typeSQLLite: String = "INTEGER"
     }
 
+    data class Double(
+        override val name: String,
+        override val isNotNull: kotlin.Boolean = true,
+        override val defaultValue: String? = null,
+    ) : Default<kotlin.Long>() {
+        override val typeSQLLite: String = "REAL"
+    }
+
     data class Boolean(
         override val name: String,
         override val isNotNull: kotlin.Boolean = true,

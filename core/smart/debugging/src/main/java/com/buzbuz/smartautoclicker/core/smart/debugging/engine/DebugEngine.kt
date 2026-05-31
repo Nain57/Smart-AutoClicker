@@ -207,7 +207,7 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
-    override fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) {
+    override fun onCounterValueChanged(counterName: String, previousValue: Double, newValue: Double) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
             counterValuesRecorder.onCounterValueChanged(counterName, previousValue, newValue)
@@ -322,9 +322,9 @@ private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
         is ScreenCondition.Color ->
             Size(cond.detectionArea.width() / 2, cond.detectionArea.height() / 2)
 
-        is ScreenCondition.Image ->
-            Size(size.x / 2,  size.y / 2)
-        is ScreenCondition.Text ->
+        is ScreenCondition.Image,
+        is ScreenCondition.Text,
+        is ScreenCondition.Number ->
             Size(size.x / 2,  size.y / 2)
     }
 

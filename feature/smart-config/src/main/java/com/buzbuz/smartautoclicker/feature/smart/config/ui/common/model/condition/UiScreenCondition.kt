@@ -80,4 +80,5 @@ private fun ScreenCondition.getDetectionTypeIconRes(): Int =
         }
 
         is ScreenCondition.Text -> R.drawable.ic_detect_in_area
+        is ScreenCondition.Number -> TODO()
     }

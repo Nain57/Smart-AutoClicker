@@ -93,7 +93,7 @@ interface SmartProcessingListener {
      * @param previousValue the value of the counter before the change
      * @param newValue the value of the counter after the change.
      */
-    fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) = Unit
+    fun onCounterValueChanged(counterName: String, previousValue: Double, newValue: Double) = Unit
 
     /**
      * The state of an event has been changed.

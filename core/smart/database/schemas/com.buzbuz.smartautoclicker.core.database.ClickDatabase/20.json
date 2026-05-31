@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 19,
-    "identityHash": "6bd2132223ff5a9c2b8cbf49ed99ee16",
+    "version": 20,
+    "identityHash": "9ca19b40cd09629ff53e7f3c773963e8",
     "entities": [
       {
         "tableName": "action_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` INTEGER, `counter_operation_counter_name` TEXT, `notification_message_type` TEXT, `notification_message_text` TEXT, `notification_message_counter_name` TEXT, `notification_importance` INTEGER, `system_action_type` TEXT, `text_value` TEXT, `text_validate_input` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` REAL, `counter_operation_counter_name` TEXT, `notification_message_type` TEXT, `notification_message_text` TEXT, `notification_message_counter_name` TEXT, `notification_importance` INTEGER, `system_action_type` TEXT, `text_value` TEXT, `text_validate_input` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -156,7 +156,7 @@
           {
             "fieldPath": "counterOperationValue",
             "columnName": "counter_operation_value",
-            "affinity": "INTEGER"
+            "affinity": "REAL"
           },
           {
             "fieldPath": "counterOperationCounterName",
@@ -387,7 +387,7 @@
       },
       {
         "tableName": "condition_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `priority` INTEGER NOT NULL DEFAULT 0, `shouldBeDetected` INTEGER, `path` TEXT, `area_left` INTEGER, `area_top` INTEGER, `area_right` INTEGER, `area_bottom` INTEGER, `threshold` INTEGER, `detection_type` INTEGER, `detection_area_left` INTEGER, `detection_area_top` INTEGER, `detection_area_right` INTEGER, `detection_area_bottom` INTEGER, `broadcast_action` TEXT, `counter_name` TEXT, `counter_comparison_operation` TEXT, `counter_operation_value_type` TEXT, `counter_value` INTEGER, `counter_value_counter_name` TEXT, `timer_value_ms` INTEGER, `timer_restart_when_reached` INTEGER, `color_rgba` INTEGER, `number_counter_comparison_operation` TEXT, `number_counter_operation_value_type` TEXT, `number_counter_value` REAL, `number_counter_value_counter_name` TEXT, `text_to_detect` TEXT, `text_alphabet` TEXT, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `priority` INTEGER NOT NULL DEFAULT 0, `shouldBeDetected` INTEGER, `path` TEXT, `area_left` INTEGER, `area_top` INTEGER, `area_right` INTEGER, `area_bottom` INTEGER, `threshold` INTEGER, `detection_type` INTEGER, `detection_area_left` INTEGER, `detection_area_top` INTEGER, `detection_area_right` INTEGER, `detection_area_bottom` INTEGER, `broadcast_action` TEXT, `counter_name` TEXT, `counter_comparison_operation` TEXT, `counter_operation_value_type` TEXT, `counter_value` REAL, `counter_value_counter_name` TEXT, `timer_value_ms` INTEGER, `timer_restart_when_reached` INTEGER, `color_rgba` INTEGER, `number_counter_comparison_operation` TEXT, `number_counter_operation_value_type` TEXT, `number_counter_value` REAL, `number_counter_value_counter_name` TEXT, `text_to_detect` TEXT, `text_alphabet` TEXT, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -503,7 +503,7 @@
           {
             "fieldPath": "counterValue",
             "columnName": "counter_value",
-            "affinity": "INTEGER"
+            "affinity": "REAL"
           },
           {
             "fieldPath": "counterOperationCounterName",
@@ -796,7 +796,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6bd2132223ff5a9c2b8cbf49ed99ee16')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ca19b40cd09629ff53e7f3c773963e8')"
     ]
   }
 }

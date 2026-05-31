@@ -153,7 +153,7 @@ data class ActionEntity(
     @ColumnInfo(name = "counter_name") var counterName: String? = null,
     @ColumnInfo(name = "counter_operation") val counterOperation: ChangeCounterOperationType? = null,
     @ColumnInfo(name = "counter_operation_value_type") val counterOperationValueType: CounterOperationValueType? = null,
-    @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Int? = null,
+    @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Double? = null,
     @ColumnInfo(name = "counter_operation_counter_name") val counterOperationCounterName: String? = null,
 
     // ActionType.NOTIFICATION

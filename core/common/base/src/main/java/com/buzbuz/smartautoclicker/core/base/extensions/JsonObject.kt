@@ -25,6 +25,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.double
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.long
@@ -124,6 +125,25 @@ fun JsonObject.getLong(key: String, shouldLogError: Boolean = false): Long? =
     getValue(key, shouldLogError)?.let {
         try {
             it.jsonPrimitive.long
+        } catch (iaEx: IllegalArgumentException) {
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
+            null
+        } catch (nfEx: NumberFormatException) {
+            if (shouldLogError) Log.w(TAG, "Value for $key is not a long")
+            null
+        }
+    }
+
+/**
+ * Safely get the double child value
+ * @param key the key for the expected value
+ * @param shouldLogError true if any error should be logged, false if not.
+ * @return the child value for the given key, or null if not found.
+ */
+fun JsonObject.getDouble(key: String, shouldLogError: Boolean = false): Double? =
+    getValue(key, shouldLogError)?.let {
+        try {
+            it.jsonPrimitive.double
         } catch (iaEx: IllegalArgumentException) {
             if (shouldLogError) Log.w(TAG, "Value for $key is not a primitive")
             null

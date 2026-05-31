@@ -29,6 +29,6 @@ sealed class DebugCounterStateContentUiState {
 
 data class CounterStateItem(
     val counterName: String,
-    val currentCounterValue: Int,
-    val oldCounterValue: Int?,
+    val currentCounterValue: Double,
+    val oldCounterValue: Double?,
 )

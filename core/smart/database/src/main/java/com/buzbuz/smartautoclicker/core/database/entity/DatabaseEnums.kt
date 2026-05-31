@@ -95,6 +95,8 @@ enum class ConditionType {
     ON_COUNTER_REACHED,
     /** Condition fulfilled upon image detected. */
     ON_IMAGE_DETECTED,
+    /** Condition fulfilled upon detection of a number matching a predicate. */
+    ON_NUMBER_DETECTED,
     /** Condition fulfilled upon text detected. */
     ON_TEXT_DETECTED,
     /** Toggle the enabled state of an event. */
@@ -133,7 +135,7 @@ enum class CounterComparisonOperation {
 
 /**
  * Type of counter value to apply to the [CounterComparisonOperation] or [ChangeCounterOperationType].
- * This allow to perform either an operation or a comparison with a numeral value or the value contained in another counter.
+ * This allows to perform either an operation or a comparison with a numeral value or the value contained in another counter.
  */
 enum class CounterOperationValueType {
     /** The operand is a numeral value. */

@@ -59,6 +59,8 @@ class ConditionAreaSelectorViewModel @Inject constructor(
                     minimalArea = area,
                 )
 
+            is ScreenCondition.Number -> TODO()
+
             is ScreenCondition.Text -> {
                 val screenSize = displayConfigManager.displayConfig.sizePx
                 SelectorUiState(

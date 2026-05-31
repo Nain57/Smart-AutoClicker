@@ -39,7 +39,7 @@ fun String.findCounterReferences(): List<String> {
     return counterReferences
 }
 
-fun String.replaceCounterReferences(counterToValueMap: Map<String, Int>): String {
+fun String.replaceCounterReferences(counterToValueMap: Map<String, Double>): String {
     var result = this
     counterToValueMap.entries.forEach { (counterName, counterValue) ->
         result = result.replace(

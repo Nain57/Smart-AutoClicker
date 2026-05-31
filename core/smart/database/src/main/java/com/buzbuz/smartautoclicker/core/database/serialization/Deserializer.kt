@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatDeserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV11Deserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV13Deserializer
+import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV20Deserializer
 
 import kotlinx.serialization.json.JsonObject
 
@@ -38,6 +39,7 @@ object DeserializerFactory {
 
             databaseVersion < VERSION_DETECTION_QUALITY_UPDATE -> CompatV11Deserializer()
             databaseVersion < VERSION_ADVANCED_AUTOMATION_UPDATE -> CompatV13Deserializer()
+            databaseVersion < VERSION_TEXT_DETECTION_UPDATE -> CompatV20Deserializer()
             databaseVersion < VERSION_UP_TO_DATE -> CompatDeserializer()
             databaseVersion == VERSION_UP_TO_DATE -> KotlinDeserializer()
 
@@ -49,6 +51,8 @@ object DeserializerFactory {
 
     /** Maximum json object version supported. */
     private const val VERSION_UP_TO_DATE = CLICK_DATABASE_VERSION
+    /** Number & Text detection update. */
+    private const val VERSION_TEXT_DETECTION_UPDATE = 20
     /** Trigger events update version. */
     private const val VERSION_ADVANCED_AUTOMATION_UPDATE = 13
     /** Scenario detection quality revision update version. */

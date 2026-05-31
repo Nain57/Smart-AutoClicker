@@ -40,7 +40,7 @@ internal class CounterValuesRecorder @Inject constructor() {
         _eventCounterChanges.clear()
     }
 
-    fun onCounterValueChanged(counterName: String, previousValue: Int, newValue: Int) {
+    fun onCounterValueChanged(counterName: String, previousValue: Double, newValue: Double) {
         _eventCounterChanges.add(
             DebugReportActionResult.CounterChange(
                 counterName = counterName,

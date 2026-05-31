@@ -24,6 +24,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Prioritizable
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 /** Conditions verified upon the screen content. */
 sealed class ScreenCondition : Condition(), Prioritizable {
@@ -42,6 +44,7 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         when (this) {
             is Color -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
             is Image -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
+            is Number -> copy(eventId = eventId, priority = priority, threshold = threshold)
             is Text -> copy(eventId = eventId, priority = priority, threshold = threshold, shouldBeDetected = shouldBeDetected)
         }
 
@@ -101,6 +104,28 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         override fun hashCodeNoIds(): Int =
             name.hashCode() + path.hashCode() + area.hashCode() + threshold.hashCode() + detectionType.hashCode() +
                     shouldBeDetected.hashCode() + detectionArea.hashCode() + priority.hashCode()
+    }
+
+    data class Number(
+        override val id: Identifier,
+        override val eventId: Identifier,
+        override val name: String,
+        override val threshold: Int,
+        override val shouldBeDetected: Boolean = true,
+        override var priority: Int,
+        val detectionArea: Rect,
+        val comparisonOperation: ComparisonOperation,
+        val counterValue: CounterOperationValue,
+    ): ScreenCondition(), Prioritizable {
+
+        /** Tells if this condition is complete and valid to be saved. */
+        override fun isComplete(): Boolean =
+            super.isComplete() && counterValue.isComplete() && !detectionArea.isEmpty
+
+        override fun hashCodeNoIds(): Int =
+            name.hashCode() + counterValue.hashCode() + threshold.hashCode() + shouldBeDetected.hashCode() +
+                    detectionArea.hashCode() + priority.hashCode() + comparisonOperation.hashCode()
+
     }
 
     data class Text(

@@ -26,8 +26,14 @@ message CounterStateChange {
     string counterName = 1;
 
     /** The value of the counter before the change.*/
-    int32 counterOldValue = 2;
+    int32 counterOldValue = 2 [deprecated = true];
 
     /** The value of the counter after the change. */
-    int32 counterNewValue = 3;
+    int32 counterNewValue = 3 [deprecated = true] ;
+
+    /** The value of the counter before the change.*/
+    double oldValue = 4;
+
+    /** The value of the counter after the change. */
+    double newValue = 5;
 }

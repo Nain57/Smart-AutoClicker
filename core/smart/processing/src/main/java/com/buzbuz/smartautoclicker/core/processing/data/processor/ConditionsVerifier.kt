@@ -102,7 +102,7 @@ internal class ConditionsVerifier(
         state.getCounterValue(condition.counterName)?.let { counterValue ->
 
             val operandValue = when (val operationValue = condition.counterValue) {
-                is CounterOperationValue.Counter -> state.getCounterValue(operationValue.value) ?: 0
+                is CounterOperationValue.Counter -> state.getCounterValue(operationValue.value) ?: 0.0
                 is CounterOperationValue.Number -> operationValue.value
             }
 

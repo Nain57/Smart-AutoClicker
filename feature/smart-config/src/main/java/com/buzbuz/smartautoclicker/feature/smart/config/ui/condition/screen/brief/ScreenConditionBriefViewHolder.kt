@@ -86,6 +86,8 @@ class ScreenConditionBriefViewHolder(
                     icon.setImageResource(details.detectionTypeIconRes)
                 }
 
+                is ScreenCondition.Number -> TODO()
+
                 is ScreenCondition.Text -> {
                     icon.setIconTintColor(
                         MaterialColors.getColor(

@@ -41,7 +41,7 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
 /** Deserializer for all Json object version below 13. */
-internal open class CompatV13Deserializer : CompatDeserializer() {
+internal open class CompatV13Deserializer : CompatV20Deserializer() {
 
     private companion object {
         /** Operators lower bound on compat deserialization. */
@@ -208,7 +208,7 @@ internal open class CompatV13Deserializer : CompatDeserializer() {
                     type = ConditionType.ON_COUNTER_REACHED,
                     counterName = endConditionCounterName,
                     counterComparisonOperation = CounterComparisonOperation.GREATER_OR_EQUALS,
-                    counterValue = legacyEndCondition.executions,
+                    counterValue = legacyEndCondition.executions.toDouble(),
                     priority = 0,
                 )
             )
@@ -222,7 +222,7 @@ internal open class CompatV13Deserializer : CompatDeserializer() {
                 type = ActionType.CHANGE_COUNTER,
                 counterName = endConditionCounterName,
                 counterOperation = ChangeCounterOperationType.ADD,
-                counterOperationValue = 1,
+                counterOperationValue = 1.0,
             )
         }
 

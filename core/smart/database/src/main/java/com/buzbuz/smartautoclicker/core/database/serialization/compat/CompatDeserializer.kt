@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.base.extensions.getBoolean
+import com.buzbuz.smartautoclicker.core.base.extensions.getDouble
 import com.buzbuz.smartautoclicker.core.base.extensions.getEnum
 import com.buzbuz.smartautoclicker.core.base.extensions.getInt
 import com.buzbuz.smartautoclicker.core.base.extensions.getJsonArray
@@ -247,6 +248,7 @@ internal open class CompatDeserializer : Deserializer {
             ConditionType.ON_COLOR_DETECTED -> deserializeConditionColorDetected(jsonCondition)
             ConditionType.ON_COUNTER_REACHED -> deserializeConditionCounterReached(jsonCondition)
             ConditionType.ON_IMAGE_DETECTED -> deserializeConditionImageDetected(jsonCondition)
+            ConditionType.ON_NUMBER_DETECTED -> deserializeConditionNumberDetected(jsonCondition)
             ConditionType.ON_TEXT_DETECTED -> deserializeConditionTextDetected(jsonCondition)
             ConditionType.ON_TIMER_REACHED -> deserializeConditionTimerReached(jsonCondition)
             null -> null
@@ -283,6 +285,37 @@ internal open class CompatDeserializer : Deserializer {
             detectionAreaTop = jsonCondition.getInt("detectionAreaTop"),
             detectionAreaRight = jsonCondition.getInt("detectionAreaRight"),
             detectionAreaBottom = jsonCondition.getInt("detectionAreaBottom"),
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeConditionNumberDetected(jsonCondition: JsonObject): ConditionEntity? {
+        val id = jsonCondition.getLong("id", true) ?: return null
+        val eventId = jsonCondition.getLong("eventId", true) ?: return null
+        val area = jsonCondition.getRect("detectionAreaLeft", "detectionAreaTop", "detectionAreaRight", "detectionAreaBottom")
+            ?: return null
+
+        val counterComparisonOperation = jsonCondition.getEnum<CounterComparisonOperation>("numberCounterComparisonOperation")
+            ?: return null
+        val counterOperationValueType = jsonCondition.getEnum<CounterOperationValueType>("numberCounterOperationValueType")
+            ?: CounterOperationValueType.NUMBER
+        val counterOperationValue = jsonCondition.getDouble("numberCounterValue") ?: 0.0
+        val counterOperationCounterName = jsonCondition.getString("numberCounterOperationCounterName") ?: ""
+
+        return ConditionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonCondition.getString("name") ?: "",
+            priority = 0,
+            type = ConditionType.ON_NUMBER_DETECTED,
+            detectionAreaLeft = area.left,
+            detectionAreaTop = area.top,
+            detectionAreaRight = area.right,
+            detectionAreaBottom = area.bottom,
+            numberCounterComparisonOperation = counterComparisonOperation,
+            numberCounterOperationValueType = counterOperationValueType,
+            numberCounterValue = counterOperationValue,
+            numberCounterOperationCounterName = counterOperationCounterName,
         )
     }
 
@@ -338,7 +371,6 @@ internal open class CompatDeserializer : Deserializer {
 
         val counterOperationValueType = jsonCondition.getEnum<CounterOperationValueType>("counterOperationValueType")
             ?: CounterOperationValueType.NUMBER
-        val counterOperationValue = jsonCondition.getInt("counterValue") ?: 0
         val counterOperationCounterName = jsonCondition.getString("counterOperationCounterName") ?: ""
 
         return ConditionEntity(
@@ -350,7 +382,7 @@ internal open class CompatDeserializer : Deserializer {
             counterName = counterName,
             counterComparisonOperation = counterComparisonOperation,
             counterOperationValueType = counterOperationValueType,
-            counterValue = counterOperationValue,
+            counterValue = deserializeCounterConditionValue(jsonCondition),
             counterOperationCounterName = counterOperationCounterName,
         )
     }
@@ -572,7 +604,6 @@ internal open class CompatDeserializer : Deserializer {
 
         val counterOperationValueType = jsonChangeCounter.getEnum<CounterOperationValueType>("counterOperationValueType")
             ?: CounterOperationValueType.NUMBER
-        val counterOperationValue = jsonChangeCounter.getInt("counterOperationValue") ?: 0
         val counterOperationCounterName = jsonChangeCounter.getString("counterOperationCounterName") ?: ""
 
         return ActionEntity(
@@ -584,7 +615,7 @@ internal open class CompatDeserializer : Deserializer {
             counterName = counterName,
             counterOperation = counterOperation,
             counterOperationValueType = counterOperationValueType,
-            counterOperationValue = counterOperationValue,
+            counterOperationValue = deserializeCounterActionValue(jsonChangeCounter),
             counterOperationCounterName = counterOperationCounterName,
         )
     }
@@ -680,4 +711,15 @@ internal open class CompatDeserializer : Deserializer {
 
         return EventToggleEntity(id, actionId, type, toggleEventId)
     }
+
+    // ======================= COMPAT METHODS
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeCounterConditionValue(jsonCounterCondition: JsonObject): Double =
+        jsonCounterCondition.getDouble("counterValue") ?: 0.0
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    open fun deserializeCounterActionValue(jsonCounterCondition: JsonObject): Double =
+        jsonCounterCondition.getDouble("counterOperationValue") ?: 0.0
+
 }

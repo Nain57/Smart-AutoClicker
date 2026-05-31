@@ -23,7 +23,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
 import com.buzbuz.smartautoclicker.core.domain.utils.asIdentifier
 
@@ -45,7 +46,7 @@ internal object ConditionTestsData {
 
     const val CONDITION_COUNTER_NAME = "tototutu"
     val CONDITION_COUNTER_OPERATION = ComparisonOperation.GREATER_OR_EQUALS
-    const val CONDITION_COUNTER_VALUE = 10
+    const val CONDITION_COUNTER_VALUE = 10.0
 
     const val CONDITION_TIMER_MS = 500L
 
@@ -120,7 +121,7 @@ internal object ConditionTestsData {
         name: String = CONDITION_NAME,
         counterName: String = CONDITION_COUNTER_NAME,
         counterOperator: ComparisonOperation = CONDITION_COUNTER_OPERATION,
-        counterValue: Int = CONDITION_COUNTER_VALUE,
+        counterValue: Double = CONDITION_COUNTER_VALUE,
         eventId: Long
     ) = ConditionEntity(id, eventId, name, ConditionType.ON_COUNTER_REACHED, counterName = counterName,
         counterComparisonOperation = counterOperator.toEntity(), priority = 0, counterValue = counterValue,
@@ -132,7 +133,7 @@ internal object ConditionTestsData {
         name: String = CONDITION_NAME,
         counterName: String = CONDITION_COUNTER_NAME,
         counterOperator: ComparisonOperation = CONDITION_COUNTER_OPERATION,
-        counterValue: Int = CONDITION_COUNTER_VALUE,
+        counterValue: Double = CONDITION_COUNTER_VALUE,
         eventId: Long
     ) = TriggerCondition.OnCounterCountReached(id.asIdentifier(), eventId.asIdentifier(), name, counterName,
         counterOperator, CounterOperationValue.Number(counterValue))

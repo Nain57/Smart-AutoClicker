@@ -92,6 +92,7 @@ class ScalingManager @Inject constructor(
             conditionScalingInfo[screenCondition.id.databaseId] = when (screenCondition) {
                 is ScreenCondition.Color -> screenCondition.toColorScalingInfo(scaledScreenSize)
                 is ScreenCondition.Image -> screenCondition.toImageScalingInfo(scaledScreenSize)
+                is ScreenCondition.Number -> TODO()
                 is ScreenCondition.Text -> screenCondition.toTextScalingInfo(scaledScreenSize)
             }
         }

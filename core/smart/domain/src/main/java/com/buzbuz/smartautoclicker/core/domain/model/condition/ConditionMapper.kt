@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 internal fun Condition.toEntity() = when (this) {
     is ScreenCondition.Color -> toColorConditionEntity()
     is ScreenCondition.Image -> toImageConditionEntity()
+    is ScreenCondition.Number -> toNumberConditionEntity()
     is ScreenCondition.Text -> toTextConditionEntity()
     is TriggerCondition.OnBroadcastReceived -> toBroadcastReceivedEntity()
     is TriggerCondition.OnCounterCountReached -> toCounterReachedEntity()
@@ -70,6 +71,28 @@ private fun ScreenCondition.Image.toImageConditionEntity() = ConditionEntity(
     detectionAreaRight = detectionArea?.right,
     detectionAreaBottom = detectionArea?.bottom,
 )
+
+private fun ScreenCondition.Number.toNumberConditionEntity(): ConditionEntity {
+    val isNumberValue = counterValue is CounterOperationValue.Number
+
+    return ConditionEntity(
+        id = id.databaseId,
+        eventId = eventId.databaseId,
+        name = name,
+        priority = priority,
+        type = ConditionType.ON_NUMBER_DETECTED,
+        threshold = threshold,
+        shouldBeDetected = true,
+        detectionAreaLeft = detectionArea.left,
+        detectionAreaTop = detectionArea.top,
+        detectionAreaRight = detectionArea.right,
+        detectionAreaBottom = detectionArea.bottom,
+        numberCounterComparisonOperation = comparisonOperation.toEntity(),
+        numberCounterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
+        numberCounterValue = if (isNumberValue) counterValue.value else null,
+        numberCounterOperationCounterName = if (isNumberValue) null else counterValue.value as String,
+    )
+}
 
 private fun ScreenCondition.Text.toTextConditionEntity() = ConditionEntity(
     id = id.databaseId,
@@ -132,6 +155,7 @@ internal fun ConditionEntity.toDomain(cleanIds: Boolean = false): Condition =
         ConditionType.ON_COLOR_DETECTED -> toDomainColorCondition(cleanIds)
         ConditionType.ON_COUNTER_REACHED -> toDomainCounterReached(cleanIds)
         ConditionType.ON_IMAGE_DETECTED -> toDomainImageCondition(cleanIds)
+        ConditionType.ON_NUMBER_DETECTED -> toDomainNumberCondition(cleanIds)
         ConditionType.ON_TEXT_DETECTED -> toDomainTextCondition(cleanIds)
         ConditionType.ON_TIMER_REACHED -> toDomainTimerReached(cleanIds)
     }
@@ -160,6 +184,22 @@ private fun ConditionEntity.toDomainImageCondition(cleanIds: Boolean = false): S
         detectionType = detectionType!!,
         detectionArea = getDetectionArea(),
         shouldBeDetected = shouldBeDetected ?: true,
+    )
+
+private fun ConditionEntity.toDomainNumberCondition(cleanIds: Boolean = false): ScreenCondition.Number =
+    ScreenCondition.Number(
+        id = Identifier(id = id, asTemporary = cleanIds),
+        eventId = Identifier(id = eventId, asTemporary = cleanIds),
+        name = name,
+        priority = priority,
+        threshold = threshold!!,
+        detectionArea = getDetectionArea()!!,
+        comparisonOperation = counterComparisonOperation!!.toDomain(),
+        counterValue = CounterOperationValue.getCounterOperationValue(
+            type = counterOperationValueType,
+            numberValue = counterValue,
+            counterName = counterOperationCounterName,
+        ),
     )
 
 private fun ConditionEntity.toDomainTextCondition(cleanIds: Boolean = false): ScreenCondition.Text =
