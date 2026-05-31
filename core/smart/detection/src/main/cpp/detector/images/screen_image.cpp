@@ -25,18 +25,19 @@ using namespace smartautoclicker;
 void ScreenImage::processNewData(std::unique_ptr<cv::Mat> newData, const char* metricsTag) {
     if (!newData || newData->empty() || requiresCorrection(metricsTag)) return;
 
-    this->colorMat = std::move(newData);
-    cv::cvtColor(*colorMat, *grayMat, cv::COLOR_RGBA2GRAY);
+    this->colorMat = std::move(*newData);
+    grayValid = false;
 }
 
 cv::Mat ScreenImage::cropColor(const cv::Rect &roi) const {
-    if (!this->colorMat || this->colorMat->empty()) return {};
-    return cropMat(*this->colorMat, roi);
+    if (this->colorMat.empty()) return {};
+    return cropMat(this->colorMat, roi);
 }
 
 cv::Mat ScreenImage::cropGray(const cv::Rect &roi) const {
-    if (!this->grayMat || this->grayMat->empty()) return {};
-    return cropMat(*this->grayMat, roi);
+    const cv::Mat& gray = getGrayMat();
+    if (gray.empty()) return {};
+    return cropMat(gray, roi);
 }
 
 cv::Mat ScreenImage::cropMat(const cv::Mat& mat, const cv::Rect& roi) {

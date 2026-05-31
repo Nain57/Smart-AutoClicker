@@ -73,15 +73,15 @@ void TemplateMatcher::matchTemplate(
 
     // Initialize result mat
     cv::Mat newResultsMat = cv::Mat(
-            std::max(screenCroppedGrayMat.rows - condition.getGrayMat()->rows + 1, 0),
-            std::max(screenCroppedGrayMat.cols - condition.getGrayMat()->cols + 1, 0),
+            std::max(screenCroppedGrayMat.rows - condition.getGrayMat().rows + 1, 0),
+            std::max(screenCroppedGrayMat.cols - condition.getGrayMat().cols + 1, 0),
             CV_32F);
 
     try {
         // Run OpenCv template matching
         cv::matchTemplate(
                 screenCroppedGrayMat,
-                *condition.getGrayMat(),
+                condition.getGrayMat(),
                 newResultsMat,
                 cv::TM_CCOEFF_NORMED);
     } catch (const cv::Exception& e) {
@@ -112,14 +112,14 @@ void TemplateMatcher::parseMatchingResult(
         // Mark previous results as invalid, if any
         if (!currentMatchingResult.getResultArea().empty()) {
             currentMatchingResult.invalidateCurrentResult(
-                    *condition.getGrayMat(),
+                    condition.getGrayMat(),
                     matchingResult);
         }
 
         // Look for new best match
         currentMatchingResult.updateResults(
                 detectionArea,
-                *condition.getGrayMat(),
+                condition.getGrayMat(),
                 matchingResult);
 
         // Check if the highest result is above threshold. If not, we will never find.

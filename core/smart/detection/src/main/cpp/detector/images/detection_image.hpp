@@ -25,13 +25,17 @@ namespace smartautoclicker {
     class DetectionImage {
 
     protected:
-        std::unique_ptr<cv::Mat> colorMat = std::make_unique<cv::Mat>();
-        std::unique_ptr<cv::Mat> grayMat = std::make_unique<cv::Mat>();
+        cv::Mat colorMat;
+        mutable cv::Mat grayMat;
+        mutable bool grayValid = false;
 
     public:
-        [[nodiscard]] const cv::Mat* getColorMat() const;
-        [[nodiscard]] const cv::Mat* getGrayMat() const;
+        virtual ~DetectionImage() = default;
+
+        [[nodiscard]] const cv::Mat& getColorMat() const;
+        [[nodiscard]] const cv::Mat& getGrayMat() const;
         [[nodiscard]] cv::Rect getRoi() const;
+        [[nodiscard]] bool empty() const;
     };
 }
 

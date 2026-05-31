@@ -21,14 +21,22 @@
 using namespace smartautoclicker;
 
 
-const cv::Mat* DetectionImage::getColorMat() const {
-    return colorMat.get();
+const cv::Mat& DetectionImage::getColorMat() const {
+    return colorMat;
 }
 
-const cv::Mat* DetectionImage::getGrayMat() const {
-    return grayMat.get();
+const cv::Mat& DetectionImage::getGrayMat() const {
+    if (!grayValid && !colorMat.empty()) {
+        cv::cvtColor(colorMat, grayMat, cv::COLOR_RGBA2GRAY);
+        grayValid = true;
+    }
+    return grayMat;
 }
 
 cv::Rect DetectionImage::getRoi() const {
-    return {0, 0, colorMat->cols, colorMat->rows};
+    return {0, 0, colorMat.cols, colorMat.rows};
+}
+
+bool DetectionImage::empty() const {
+    return colorMat.empty();
 }
