@@ -158,6 +158,7 @@ class ActionExecutorTests {
                 haveBeenDetected = true,
                 condition = condition,
                 position = Point(15, 15),
+                size = Point(10, 10),
                 confidenceRate = 100.0
             )
         )
@@ -188,6 +189,7 @@ class ActionExecutorTests {
                 haveBeenDetected = true,
                 condition = conditionValid,
                 position = Point(15, 15),
+                size = Point(10, 10),
                 confidenceRate = 100.0
             )
         )
@@ -198,6 +200,7 @@ class ActionExecutorTests {
                 haveBeenDetected = false,
                 condition = conditionOther,
                 position = Point(45, 45),
+                size = Point(10, 10),
                 confidenceRate = 98.0
             )
         )

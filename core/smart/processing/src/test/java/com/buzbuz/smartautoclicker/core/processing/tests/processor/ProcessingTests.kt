@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation.EQUALS
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.EQUALS
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
@@ -313,22 +313,22 @@ class ProcessingTests {
             eventId = eventId1,
             scenarioId = scenarioId,
             enabledOnStart = true,
-            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0)),
-            actions = listOf(testsData.newCounterAction(eventId1, "A", OperationType.ADD, 0)),
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0.0)),
+            actions = listOf(testsData.newCounterAction(eventId1, "A", OperationType.ADD, 0.0)),
         )
         val testEvent2 = testsData.newTestTriggerEvent(
             eventId = eventId2,
             scenarioId = scenarioId,
             enabledOnStart = true,
-            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "B", EQUALS, 10)),
-            actions = listOf(testsData.newCounterAction(eventId1, "B", OperationType.ADD, 0)),
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "B", EQUALS, 10.0)),
+            actions = listOf(testsData.newCounterAction(eventId1, "B", OperationType.ADD, 0.0)),
         )
         val testEvent3 = testsData.newTestTriggerEvent(
             eventId = eventId3,
             scenarioId = scenarioId,
             enabledOnStart = true,
-            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId3, "C", EQUALS, 0)),
-            actions = listOf(testsData.newCounterAction(eventId1, "C", OperationType.ADD, 0)),
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId3, "C", EQUALS, 0.0)),
+            actions = listOf(testsData.newCounterAction(eventId1, "C", OperationType.ADD, 0.0)),
         )
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
@@ -430,7 +430,7 @@ class ProcessingTests {
             eventId = eventId1,
             scenarioId = scenarioId,
             enabledOnStart = true,
-            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0)),
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId1, "A", EQUALS, 0.0)),
             actions = listOf(
                 testsData.newToggleEventAction(
                     eventId = eventId1,
@@ -444,8 +444,8 @@ class ProcessingTests {
             eventId = eventId2,
             scenarioId = scenarioId,
             enabledOnStart = true,
-            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "A", EQUALS, 0)),
-            actions = listOf(testsData.newCounterAction(eventId2, "A", OperationType.ADD, 10)),
+            conditions = listOf(testsData.newTestCounterTriggerCondition(eventId2, "A", EQUALS, 0.0)),
+            actions = listOf(testsData.newCounterAction(eventId2, "A", OperationType.ADD, 10.0)),
         )
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,

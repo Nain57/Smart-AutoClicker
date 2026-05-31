@@ -84,7 +84,7 @@ internal class ConditionsVerifier(
             is ScreenCondition.Color -> verifyColorCondition(condition)
             is ScreenCondition.Image -> verifyImageCondition(condition)
             is ScreenCondition.Text -> verifyTextCondition(condition)
-            is ScreenCondition.Number -> TODO()
+            is ScreenCondition.Number -> verifyNumberCondition(condition)
             is TriggerCondition -> condition.toConditionResult(verifyTriggerCondition(condition))
         }
 
@@ -183,6 +183,49 @@ internal class ConditionsVerifier(
                 size = scalingManager.scaleUpDetectionResult(detectionResult.size),
             )
         } ?: condition.toInvalidConditionResult()
+
+        progressListener?.onScreenConditionProcessingCompleted(result)
+        return result
+    }
+
+    private fun verifyNumberCondition(condition: ScreenCondition.Number): ProcessedConditionResult.Screen {
+        progressListener?.onScreenConditionProcessingStarted()
+
+        val conditionScalingInfo = scalingManager
+            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Text
+            ?: return condition.toInvalidConditionResult()
+
+        val detectionResult = imageDetector.detectNumber(
+            detectionArea = conditionScalingInfo.detectionArea,
+            threshold = condition.threshold,
+        )
+
+        val numberDetected: Double? = detectionResult.numberDetected
+        val result =
+            if (!detectionResult.isDetected || numberDetected == null) condition.toInvalidConditionResult()
+            else {
+                val operandValue = when (val operationValue = condition.counterValue) {
+                    is CounterOperationValue.Counter -> state.getCounterValue(operationValue.value) ?: 0.0
+                    is CounterOperationValue.Number -> operationValue.value
+                }
+
+                val comparisonResult = when (condition.comparisonOperation) {
+                    ComparisonOperation.GREATER -> numberDetected > operandValue
+                    ComparisonOperation.GREATER_OR_EQUALS -> numberDetected >= operandValue
+                    ComparisonOperation.EQUALS -> numberDetected == operandValue
+                    ComparisonOperation.LOWER_OR_EQUALS -> numberDetected <= operandValue
+                    ComparisonOperation.LOWER -> numberDetected < operandValue
+                }
+
+                ProcessedConditionResult.Screen(
+                    isFulfilled = comparisonResult,
+                    haveBeenDetected = true,
+                    condition = condition,
+                    position = scalingManager.scaleUpDetectionResult(detectionResult.position),
+                    confidenceRate = detectionResult.confidenceRate,
+                    size = scalingManager.scaleUpDetectionResult(detectionResult.size),
+                )
+            }
 
         progressListener?.onScreenConditionProcessingCompleted(result)
         return result

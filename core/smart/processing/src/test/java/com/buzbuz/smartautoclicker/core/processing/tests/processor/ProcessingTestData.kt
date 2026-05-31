@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition.OnCounterCountReached.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -193,7 +193,7 @@ internal object ProcessingTestData {
         eventId: Identifier,
         counterName: String,
         operator: ComparisonOperation,
-        value: Int = 0,
+        value: Double = 0.0,
     ) = TriggerCondition.OnCounterCountReached(
             id = newConditionId(),
             eventId = eventId,
@@ -216,7 +216,7 @@ internal object ProcessingTestData {
         eventId: Identifier,
         counterName: String,
         operator: ChangeCounter.OperationType,
-        value: Int = 0,
+        value: Double = 0.0,
     ) = ChangeCounter(
             id = newActionId(),
             eventId = eventId,

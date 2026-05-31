@@ -51,6 +51,7 @@ internal fun TestImageCondition.expectedResult(detected: Boolean) = ProcessedCon
     condition = imageCondition,
     position = Point(0, 0),
     confidenceRate = 0.0,
+    size = Point(0, 0),
 )
 
 internal fun TriggerEvent.expectedResult(detected: Boolean): List<ProcessedConditionResult.Trigger> =
