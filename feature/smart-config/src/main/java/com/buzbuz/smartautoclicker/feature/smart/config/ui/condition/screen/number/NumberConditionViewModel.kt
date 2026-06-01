@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullName
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullNameRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
 
@@ -132,12 +132,12 @@ class NumberConditionViewModel @Inject constructor(
         when (this) {
             is CounterOperationValue.Counter -> context.getString(
                 R.string.message_number_condition_counter_value_desc,
-                context.getString(operation.toFullName()),
+                context.getString(operation.toFullNameRes()),
                 value,
             )
             is CounterOperationValue.Number -> context.getString(
                 R.string.message_number_condition_static_value_desc,
-                context.getString(operation.toFullName()),
+                context.getString(operation.toFullNameRes()),
                 value.toString(),
             )
         }

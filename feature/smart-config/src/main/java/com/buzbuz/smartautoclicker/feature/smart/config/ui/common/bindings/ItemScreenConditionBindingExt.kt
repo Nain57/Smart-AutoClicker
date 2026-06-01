@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeScreenConditionCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toOperationText
 
 import kotlinx.coroutines.Job
 
@@ -74,10 +75,11 @@ fun IncludeScreenConditionCardBinding.bind(
 
         is ScreenCondition.Number -> {
             conditionDetectionType.visibility = View.GONE
-            conditionImage.visibility = View.VISIBLE
-            conditionText.visibility = View.GONE
+            conditionImage.visibility = View.GONE
+            conditionText.visibility = View.VISIBLE
 
-            conditionImage.setImageResource(R.drawable.ic_number_condition)
+            conditionText.text = condition.comparisonOperation
+                .toOperationText(root.context, condition.counterValue.value.toString())
             null
         }
 

@@ -50,7 +50,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditi
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toName
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNameRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toOperationText
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -269,10 +270,6 @@ private fun ScreenCondition.Text.toTextItemDescription(): TextConditionDescripti
 
 private fun ScreenCondition.Number.toTextItemDescription(context: Context): TextConditionDescription =
     TextConditionDescription(
-        conditionText = context.getString(
-            R.string.brief_overlay_number_condition_format,
-            context.getString(comparisonOperation.toName()),
-            counterValue.value.toString()
-        ),
+        conditionText = comparisonOperation.toOperationText(context, counterValue.value.toString()),
         conditionDetectionArea = detectionArea,
     )

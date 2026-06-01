@@ -19,10 +19,10 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toName
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNameRes
 
 sealed class CounterOperatorDropdownItem(title: Int) : DropdownItem(title) {
-    data object GreaterItem : CounterOperatorDropdownItem(ComparisonOperation.GREATER.toName())
+    data object GreaterItem : CounterOperatorDropdownItem(ComparisonOperation.GREATER.toNameRes())
     data object GreaterOrEqualsItem : CounterOperatorDropdownItem(R.string.comparison_operator_greater_or_equals)
     data object EqualsItem : CounterOperatorDropdownItem(R.string.comparison_operator_equals)
     data object LowerOrEqualsItem : CounterOperatorDropdownItem(R.string.comparison_operator_lower_or_equals)

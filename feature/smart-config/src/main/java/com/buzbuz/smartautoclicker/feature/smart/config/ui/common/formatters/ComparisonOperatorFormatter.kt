@@ -16,12 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters
 
+import android.content.Context
 import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 @StringRes
-internal fun ComparisonOperation.toName(): Int =
+internal fun ComparisonOperation.toNameRes(): Int =
     when (this) {
         ComparisonOperation.GREATER -> R.string.comparison_operator_greater
         ComparisonOperation.GREATER_OR_EQUALS -> R.string.comparison_operator_greater_or_equals
@@ -31,7 +32,7 @@ internal fun ComparisonOperation.toName(): Int =
     }
 
 @StringRes
-internal fun ComparisonOperation.toFullName(): Int =
+internal fun ComparisonOperation.toFullNameRes(): Int =
     when (this) {
         ComparisonOperation.GREATER -> R.string.comparison_operator_greater_full
         ComparisonOperation.GREATER_OR_EQUALS -> R.string.comparison_operator_greater_or_equals_full
@@ -39,3 +40,10 @@ internal fun ComparisonOperation.toFullName(): Int =
         ComparisonOperation.LOWER_OR_EQUALS -> R.string.comparison_operator_lower_or_equals_full
         ComparisonOperation.LOWER -> R.string.comparison_operator_lower_full
     }
+
+fun ComparisonOperation.toOperationText(context: Context, operand: String) =
+    context.getString(
+        R.string.brief_overlay_number_condition_format,
+        context.getString(toNameRes()),
+        operand,
+    )

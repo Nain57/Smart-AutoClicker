@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.scenarios.list.adapter
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.core.content.ContextCompat
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toOperationText
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState.Item.ScenarioItem.Valid.Smart.EventItem
 
 import kotlinx.coroutines.Job
@@ -76,26 +78,43 @@ class EventCardViewHolder(
             eventActionsCount.text = item.actionsCount.toString()
             eventConditionsCount.text = item.conditionsCount.toString()
 
-            if (item.firstCondition == null) {
+            val condition = item.firstCondition
+            if (condition == null) {
                 setErrorBitmap()
                 return
             }
 
-            when (item.firstCondition) {
-                is ScreenCondition.Color -> conditionImage.setColorIndicatorDrawable(item.firstCondition.color)
-                is ScreenCondition.Image -> bitmapJob = bitmapProvider(item.firstCondition) { bitmap ->
-                    if (bitmap != null) {
-                        conditionImage.setImageBitmap(bitmap)
-                    } else {
-                        setErrorBitmap()
+            when (condition) {
+                is ScreenCondition.Color -> {
+                    conditionImage.visibility = View.VISIBLE
+                    conditionText.visibility = View.GONE
+                    conditionImage.setColorIndicatorDrawable(condition.color)
+                }
+                is ScreenCondition.Image -> {
+                    conditionImage.visibility = View.VISIBLE
+                    conditionText.visibility = View.GONE
+                    bitmapJob = bitmapProvider(condition) { bitmap ->
+                        if (bitmap != null) {
+                            conditionImage.setImageBitmap(bitmap)
+                        } else {
+                            setErrorBitmap()
+                        }
                     }
                 }
 
-                is ScreenCondition.Number ->
-                    conditionImage.setImageResource(R.drawable.ic_number_condition)
+                is ScreenCondition.Number -> {
+                    conditionImage.visibility = View.GONE
+                    conditionText.visibility = View.VISIBLE
+
+                    conditionText.text = condition.comparisonOperation
+                        .toOperationText(root.context, condition.counterValue.value.toString())
+                }
 
                 is ScreenCondition.Text -> {
-                    conditionImage.setImageResource(R.drawable.ic_text_condition)
+                    conditionImage.visibility = View.GONE
+                    conditionText.visibility = View.VISIBLE
+
+                    conditionText.text = condition.text
                 }
             }
         }
