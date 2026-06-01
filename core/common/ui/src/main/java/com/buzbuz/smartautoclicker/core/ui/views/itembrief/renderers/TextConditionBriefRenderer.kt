@@ -17,10 +17,13 @@
 package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.Shader
 import android.view.View
 
 import androidx.annotation.ColorInt
@@ -60,6 +63,10 @@ internal class TextConditionBriefRenderer(
         color = viewStyle.selectorColor
         textAlign = Paint.Align.CENTER
     }
+    private val gradientPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL
+    }
 
     private var detectionBorderRect: RectF? = null
     private val backgroundPath = Path().apply {
@@ -80,6 +87,7 @@ internal class TextConditionBriefRenderer(
         detectionBorderRect = null
         backgroundPath.reset()
         textToShow = null
+        gradientPaint.shader = null
 
         // Nothing to display ? Exit early
         val description = briefDescription ?: return
@@ -113,12 +121,25 @@ internal class TextConditionBriefRenderer(
         textX = borderRect.centerX()
         textY = borderRect.centerY() - (textPaint.descent() + textPaint.ascent()) / 2
         textToShow = text
+
+        gradientPaint.shader = LinearGradient(
+            borderRect.centerX(), borderRect.top,
+            borderRect.centerX(), borderRect.bottom,
+            intArrayOf(Color.TRANSPARENT, Color.argb(160, 0, 0, 0), Color.TRANSPARENT),
+            null,
+            Shader.TileMode.CLAMP
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
         val borderRect = detectionBorderRect ?: return
 
         canvas.drawPath(backgroundPath, backgroundPaint)
+
+        textToShow?.let {
+            canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, gradientPaint)
+        }
+
         canvas.drawRoundRect(borderRect, viewStyle.cornerRadiusPx, viewStyle.cornerRadiusPx, selectorPaint)
 
         textToShow?.let { text ->
