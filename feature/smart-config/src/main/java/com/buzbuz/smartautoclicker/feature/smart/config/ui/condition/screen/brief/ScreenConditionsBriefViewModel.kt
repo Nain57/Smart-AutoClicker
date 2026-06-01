@@ -47,8 +47,10 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toName
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -99,7 +101,8 @@ class ScreenConditionsBriefViewModel @Inject constructor(
                 condition.toColorItemDescription()
             is ScreenCondition.Image ->
                 condition.toImageItemDescription(displayConfigManager.displayConfig.sizePx, focusedCondition.second)
-            is ScreenCondition.Number -> TODO()
+            is ScreenCondition.Number ->
+                condition.toTextItemDescription(context)
             is ScreenCondition.Text ->
                 condition.toTextItemDescription()
             null -> null
@@ -199,6 +202,13 @@ class ScreenConditionsBriefViewModel @Inject constructor(
         }
     }
 
+    fun createNumberCondition(context: Context, completed: (ScreenCondition.Number) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val condition = editionRepository.editedItemsBuilder.createNewNumberCondition(context)
+            withContext(Dispatchers.Main) { completed(condition) }
+        }
+    }
+
     fun monitorBriefFirstItemView(briefItemView: View) {
         monitoredViewsManager.attach(
             MonitoredViewType.CONDITIONS_BRIEF_FIRST_ITEM,
@@ -254,5 +264,15 @@ private fun ScreenCondition.Image.toImageItemDescription(screenArea: Point, bitm
 private fun ScreenCondition.Text.toTextItemDescription(): TextConditionDescription =
     TextConditionDescription(
         conditionText = text,
+        conditionDetectionArea = detectionArea,
+    )
+
+private fun ScreenCondition.Number.toTextItemDescription(context: Context): TextConditionDescription =
+    TextConditionDescription(
+        conditionText = context.getString(
+            R.string.brief_overlay_number_condition_format,
+            context.getString(comparisonOperation.toName()),
+            counterValue.value.toString()
+        ),
         conditionDetectionArea = detectionArea,
     )

@@ -59,7 +59,20 @@ class ConditionAreaSelectorViewModel @Inject constructor(
                     minimalArea = area,
                 )
 
-            is ScreenCondition.Number -> TODO()
+            is ScreenCondition.Number-> {
+                val screenSize = displayConfigManager.displayConfig.sizePx
+                SelectorUiState(
+                    initialArea =
+                        if (!detectionArea.isEmpty) detectionArea
+                        else Rect(
+                            (screenSize.x / 2) - 64,
+                            (screenSize.y / 2) - 64,
+                            (screenSize.x / 2) + 64,
+                            (screenSize.y / 2) + 64,
+                        ),
+                    minimalArea = Rect(0, 0, MIN_TEXT_DETECTION_WIDTH, MIN_TEXT_DETECTION_HEIGHT),
+                )
+            }
 
             is ScreenCondition.Text -> {
                 val screenSize = displayConfigManager.displayConfig.sizePx

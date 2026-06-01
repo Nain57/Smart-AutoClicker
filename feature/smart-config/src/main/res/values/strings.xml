@@ -17,13 +17,19 @@
 <resources>
 
     <!-- Generic =================================================================================================== -->
-    <!-- Those values are shared between several dialogs due to their generic meaning, such as name -->
+    <!-- Those values are shared between several dialogs due to their generic meaning, such as name or formatting -->
 
     <string name="generic_name">Name</string>
     <string name="generic_select_the_position">Select the position</string>
     <string name="generic_config">Config</string>
     <string name="generic_counters">Counters</string>
     <string name="generic_modify">Modify</string>
+
+    <string name="generic_detection_area_title">Detection area</string>
+    <string name="generic_detection_area_desc_empty">You must define a detection area. Click here to define one</string>
+    <string name="generic_condition_threshold_title">Tolerated difference</string>
+
+    <string name="generic_area_desc" translatable="false">[%1$d - %2$d; %3$d - %4$d]</string>
 
 
     <!-- Scenario Items ============================================================================================ -->
@@ -57,6 +63,9 @@
 
     <string name="item_text_condition_title">On text detected</string>
     <string name="item_text_condition_desc">Fulfilled when a text is visible somewhere on the screen</string>
+
+    <string name="item_number_condition_title">On number detected</string>
+    <string name="item_number_condition_desc">Fulfilled when a number is visible somewhere on the screen</string>
 
     <string name="item_copy_title">Copy</string>
     <string name="item_copy_desc">Copy an existing Action from any Scenarios</string>
@@ -197,7 +206,7 @@
 
     <string name="brief_empty_actions">No Actions. You need at least one Action to create a valid Event</string>
     <string name="brief_empty_image_conditions">No Screen Condition. You need at least one Condition to create a valid Event</string>
-
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string><!-- Ex: "= Hello!"; "< 18" -->
 
     <!-- Dialog Condition Color ==================================================================================== -->
 
@@ -221,19 +230,27 @@
     <string name="field_select_detection_area_title">Detection Area</string>
     <string name="field_select_detection_area_desc">In [%1$d, %2$d, %3$d, %4$d]</string>
 
-    <string name="field_title_condition_threshold">Tolerated difference</string>
 
 
 
     <!-- Dialog Condition Text ==================================================================================== -->
 
     <string name="field_text_to_detect_label">Text to detect</string>
-
-    <string name="field_text_detection_area_title">Detection area</string>
-    <string name="field_text_detection_area_desc_empty">Click here to select an area</string>
-    <string name="field_text_detection_area_desc" translatable="false">[%1$d - %2$d; %3$d - %4$d]</string>
-
     <string name="field_text_detection_alphabet_title">Alphabet</string>
+
+
+    <!-- Dialog Condition Number ==================================================================================== -->
+
+    <!--Ex: The detected number must be greater than 10 -->
+    <string name="message_number_condition_static_value_desc">The detected number must be %1$s %2$s</string>
+    <!--Ex: The detected number must be greater than counter "My counter" value -->
+    <string name="message_number_condition_counter_value_desc">The detected number must be %1$s counter \"%2$s\" value</string>
+
+    <string name="comparison_operator_greater_or_equals_full">greater or equals to</string>
+    <string name="comparison_operator_greater_full">greater than</string>
+    <string name="comparison_operator_equals_full">equals to</string>
+    <string name="comparison_operator_lower_or_equals_full">lower or equals to</string>
+    <string name="comparison_operator_lower_full">lower than</string>
 
 
     <!-- Dialog Alphabet selection ================================================================================= -->

@@ -198,7 +198,7 @@
     <string name="field_select_detection_area_title">Área de detecção</string>
     <string name="field_select_detection_area_desc">Em [%1$d, %2$d, %3$d, %4$d]</string>
 
-    <string name="field_title_condition_threshold">Diferença tolerada</string>
+    <string name="generic_condition_threshold_title">Diferença tolerada</string>
 
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->

@@ -178,7 +178,7 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="field_title_condition_threshold">允許差異</string>
+    <string name="generic_condition_threshold_title">允許差異</string>
     <string name="field_scenario_quality_title">檢測解析度</string>
     <string name="field_intent_extra_value_title">參數值</string>
     <string name="field_tutorial_title">教程</string>

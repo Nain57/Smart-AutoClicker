@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.imag
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number.NumberConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionViewModel
@@ -97,6 +98,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun liveDebuggingViewModel(): LiveDebuggingViewModel
     fun mainMenuViewModel(): MainMenuModel
     fun moreViewModel(): MoreViewModel
+    fun numberConditionViewModel(): NumberConditionViewModel
     fun notificationViewModel(): NotificationViewModel
     fun pauseViewModel(): PauseViewModel
     fun requiredAlphabetViewModel(): RequiredAlphabetViewModel

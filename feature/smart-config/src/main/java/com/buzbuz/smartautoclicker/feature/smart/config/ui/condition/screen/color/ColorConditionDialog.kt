@@ -119,7 +119,7 @@ class ColorConditionDialog(
             }
 
             fieldSliderThreshold.apply {
-                setTitle(context.getString(R.string.field_title_condition_threshold))
+                setTitle(context.getString(R.string.generic_condition_threshold_title))
                 setValueLabelState(isEnabled = true, prefix = "%")
                 setSliderRange(0f, MAX_THRESHOLD)
                 setOnValueChangedFromUserListener { value -> viewModel.setThreshold(value.roundToInt()) }

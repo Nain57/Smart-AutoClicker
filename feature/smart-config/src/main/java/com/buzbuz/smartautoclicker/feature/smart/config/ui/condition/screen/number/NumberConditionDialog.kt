@@ -14,22 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number
 
 import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
@@ -44,9 +52,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
+import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTextBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionNumberBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
@@ -54,28 +62,27 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.math.roundToInt
 
-class TextConditionDialog(
+class NumberConditionDialog(
     private val listener: OnConditionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: TextConditionViewModel by viewModels(
+    private val viewModel: NumberConditionViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { textConditionViewModel() },
+        creator = { numberConditionViewModel() },
     )
 
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogConfigConditionTextBinding
+    private lateinit var viewBinding: DialogConfigConditionNumberBinding
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogConfigConditionTextBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogConfigConditionNumberBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_config)
 
@@ -102,43 +109,70 @@ class TextConditionDialog(
             }
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
-            fieldTextToSearch.apply {
+            comparisonOperatorField.setItems(
+                label = context.getString(R.string.dropdown_comparison_operator_label),
+                items = viewModel.operatorDropdownItems,
+                onItemSelected = viewModel::setComparisonOperator,
+            )
+
+            valueTypeMultiStateButton.apply {
                 setup(
-                    label = R.string.field_text_to_detect_label,
-                    icon = R.drawable.ic_search,
-                    disableInputWithCheckbox = false,
+                    MultiStateButtonConfig(
+                        icons = listOf(R.drawable.ic_numbers, R.drawable.ic_change_counter),
+                        singleSelection = true,
+                        selectionRequired = true,
+                    )
                 )
-                textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(
-                    context.resources.getInteger(R.integer.text_condition_max_length)
-                ))
-                setOnTextChangedListener { viewModel.setTextToDetect(it.toString()) }
+                setOnCheckedListener { checkedId ->
+                    viewModel.setOperationValue(
+                        if (checkedId == 0) {
+                            CounterOperationValue.Number(
+                                if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
+                                else editValueLayout.textField.text.toString().toDouble()
+                            )
+                        } else {
+                            CounterOperationValue.Counter(
+                                if (editValueCounterName.textField.text.isNullOrEmpty()) ""
+                                else editValueCounterName.textField.text.toString()
+                            )
+                        }
+                    )
+                }
+            }
+
+            editValueLayout.apply {
+                textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
+                setLabel(R.string.field_counter_operation_value_label)
+                setOnTextChangedListener {
+                    viewModel.setOperationValue(
+                        CounterOperationValue.Number(
+                            if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
+                            else editValueLayout.textField.text.toString().toDouble()
+                        )
+                    )
+                }
+            }
+            hideSoftInputOnFocusLoss(editValueLayout.textField)
+
+            editValueCounterName.apply {
+                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
+                setOnTextChangedListener {
+                    viewModel.setOperationValue(CounterOperationValue.Counter(it.toString()))
+                }
+                textField.filters = arrayOf<InputFilter>(
+                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                )
                 setOnCheckboxClickedListener {
                     showCounterSelectionDialog { counterName ->
-                        setTextValue(viewModel.appendCounterReferenceToTextToWrite(counterName))
+                        viewModel.setOperationValue(CounterOperationValue.Counter(counterName))
                     }
                 }
             }
-            hideSoftInputOnFocusLoss(fieldEditName.textField)
-
-            fieldAlphabet.apply {
-                setTitle(context.getString(R.string.field_text_detection_alphabet_title))
-                setOnClickListener { showAlphabetSelectionDialog() }
-            }
+            hideSoftInputOnFocusLoss(editValueCounterName.textField)
 
             fieldSelectArea.apply {
                 setTitle(context.getString(R.string.generic_detection_area_title))
                 setOnClickListener { showDetectionAreaSelector() }
-            }
-
-            fieldShouldAppear.apply {
-                setTitle(context.getString(R.string.field_condition_visibility_title))
-                setupDescriptions(
-                    listOf(
-                        context.getString(R.string.field_condition_visibility_desc_absent),
-                        context.getString(R.string.field_condition_visibility_desc_present),
-                    )
-                )
-                setOnClickListener { viewModel.toggleShouldBeDetected() }
             }
 
             fieldSliderThreshold.apply {
@@ -179,7 +213,7 @@ class TextConditionDialog(
         super.back()
     }
 
-    private fun updateUi(uiState: TextConditionUiState?) {
+    private fun updateUi(uiState: NumberConditionUiState?) {
         if (uiState == null) return
 
         viewBinding.apply {
@@ -187,12 +221,37 @@ class TextConditionDialog(
             if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.name)
             fieldEditName.setError(uiState.nameError)
 
-            if (fieldTextToSearch.textField.text.isNullOrEmpty()) fieldTextToSearch.setTextValue(uiState.textToSearch)
+            comparisonOperatorField.setSelectedItem(uiState.selectorOperatorDropdownItem)
+            updateCounterValueLayout(uiState)
 
-            fieldAlphabet.setDescription(uiState.alphabetDesc)
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
-            fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
+        }
+    }
+
+    private fun updateCounterValueLayout(uiState: NumberConditionUiState) {
+        viewBinding.apply {
+            val typeChanged = editValueLayout.root.isVisible != uiState.isNumberValue
+
+            if (uiState.isNumberValue) {
+                editValueCounterName.root.visibility = View.GONE
+                editValueLayout.root.visibility = View.VISIBLE
+                valueTypeMultiStateButton.setChecked(0)
+
+                if (typeChanged || editValueLayout.textField.text.isNullOrEmpty()) {
+                    viewBinding.editValueLayout.setText(uiState.valueText, InputType.TYPE_CLASS_NUMBER)
+                }
+            } else {
+                editValueCounterName.root.visibility = View.VISIBLE
+                editValueLayout.root.visibility = View.GONE
+                valueTypeMultiStateButton.setChecked(1)
+
+                if (typeChanged || editValueCounterName.textField.text.isNullOrEmpty()) {
+                    viewBinding.editValueCounterName.setTextValue(uiState.valueText)
+                }
+            }
+
+            textConditionOperation.text = uiState.conditionEffectDesc
         }
     }
 
@@ -234,14 +293,6 @@ class TextConditionDialog(
             hideCurrent = true,
         )
     }
-
-    private fun showAlphabetSelectionDialog() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = AlphabetSelectionDialog(),
-            hideCurrent = true,
-        )
-    }
 }
 
-private const val TAG = "TextConditionDialog"
+private const val TAG = "NumberConditionDialog"

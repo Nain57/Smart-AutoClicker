@@ -83,7 +83,8 @@ class EventOccurrenceConditionScreenViewHolder private constructor(
                     }
                 }
 
-                is ScreenCondition.Number -> TODO()
+                is ScreenCondition.Number ->
+                    conditionImage.setImageResource(R.drawable.ic_number_condition)
 
                 is ScreenCondition.Text -> {
                     conditionImage.setImageResource(R.drawable.ic_text_condition)

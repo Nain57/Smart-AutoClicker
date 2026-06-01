@@ -20,8 +20,8 @@ import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDescriptionResId
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getDescriptionResId
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getDisplayNameResId
 
 
 sealed class AlphabetSelectionItem {

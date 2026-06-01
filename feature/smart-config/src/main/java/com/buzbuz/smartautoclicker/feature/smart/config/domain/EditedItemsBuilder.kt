@@ -45,6 +45,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventTog
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
@@ -152,6 +153,22 @@ class EditedItemsBuilder internal constructor(
         )
     }
 
+    fun createNewNumberCondition(context: Context): ScreenCondition.Number {
+        val id = conditionsIdCreator.generateNewIdentifier()
+
+        return ScreenCondition.Number(
+            id = id,
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.conditionName(context),
+            threshold = defaultValues.conditionThreshold(context),
+            shouldBeDetected = defaultValues.conditionShouldBeDetected(),
+            priority = 0,
+            detectionArea = Rect(),
+            comparisonOperation = ComparisonOperation.EQUALS,
+            counterValue = CounterOperationValue.Number(0.0),
+        )
+    }
+
     fun createNewTextCondition(context: Context): ScreenCondition.Text {
         val id = conditionsIdCreator.generateNewIdentifier()
 
@@ -193,7 +210,7 @@ class EditedItemsBuilder internal constructor(
         when (condition) {
             is ScreenCondition.Color -> createNewColorConditionFrom(condition, eventId)
             is ScreenCondition.Image -> createNewImageConditionFrom(condition, eventId)
-            is ScreenCondition.Number -> TODO()
+            is ScreenCondition.Number -> createNewNumberConditionFrom(condition, eventId)
             is ScreenCondition.Text -> createNewTextConditionFrom(condition, eventId)
         }
 
@@ -210,6 +227,13 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + condition.name,
             path = "" + condition.path,
+        )
+
+    fun createNewNumberConditionFrom(condition: ScreenCondition.Number, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Number =
+        condition.copy(
+            id = conditionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + condition.name,
         )
 
     fun createNewTextConditionFrom(condition: ScreenCondition.Text, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Text =

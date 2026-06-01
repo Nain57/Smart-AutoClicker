@@ -86,7 +86,19 @@ class ScreenConditionBriefViewHolder(
                     icon.setImageResource(details.detectionTypeIconRes)
                 }
 
-                is ScreenCondition.Number -> TODO()
+                is ScreenCondition.Number -> {
+                    icon.setIconTintColor(
+                        MaterialColors.getColor(
+                            ContextThemeWrapper(
+                                root.context,
+                                R.style.AppTheme,
+                            ),
+                            com.google.android.material.R.attr.colorOnPrimaryContainer,
+                            Color.WHITE,
+                        )
+                    )
+                    icon.setImageResource(R.drawable.ic_number_condition)
+                }
 
                 is ScreenCondition.Text -> {
                     icon.setIconTintColor(

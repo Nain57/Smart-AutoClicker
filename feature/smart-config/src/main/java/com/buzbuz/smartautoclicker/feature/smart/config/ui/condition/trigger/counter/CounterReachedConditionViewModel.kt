@@ -21,10 +21,11 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.*
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -43,12 +44,6 @@ import javax.inject.Inject
 class CounterReachedConditionViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
-
-    private val greaterItem = DropdownItem(R.string.comparison_operator_greater)
-    private val greaterOrEqualsItem = DropdownItem(R.string.comparison_operator_greater_or_equals)
-    private val equalsItem = DropdownItem(R.string.comparison_operator_equals)
-    private val lowerOrEqualsItem = DropdownItem(R.string.comparison_operator_lower_or_equals)
-    private val lowerItem = DropdownItem(R.string.comparison_operator_lower)
 
     /** The condition being configured by the user. */
     private val configuredCondition: Flow<TriggerCondition.OnCounterCountReached> =
@@ -89,17 +84,9 @@ class CounterReachedConditionViewModel @Inject constructor(
         .map { it.value }
         .take(1)
 
-    val operatorDropdownItems = listOf(greaterItem, greaterOrEqualsItem, equalsItem, lowerOrEqualsItem, lowerItem)
-    val operatorDropdownState: Flow<DropdownItem> = configuredCondition
-        .map { condition ->
-            when (condition.comparisonOperation) {
-                GREATER -> greaterItem
-                GREATER_OR_EQUALS -> greaterOrEqualsItem
-                EQUALS -> equalsItem
-                LOWER_OR_EQUALS -> lowerOrEqualsItem
-                LOWER -> lowerItem
-            }
-        }
+    val operatorDropdownItems = allCounterOperatorDropdownItems()
+    val operatorDropdownState: Flow<CounterOperatorDropdownItem> = configuredCondition
+        .map { condition -> condition.comparisonOperation.toCounterOperatorDropdownItem() }
 
     /** Tells if the configured condition is valid and can be saved. */
     val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
@@ -117,19 +104,8 @@ class CounterReachedConditionViewModel @Inject constructor(
         updateEditedCondition { old -> old.copy(counterName = "" + counterName) }
     }
 
-    fun setComparisonOperator(item: DropdownItem) {
-        updateEditedCondition { old ->
-            old.copy(
-                comparisonOperation = when (item) {
-                    greaterItem -> GREATER
-                    greaterOrEqualsItem -> GREATER_OR_EQUALS
-                    equalsItem -> EQUALS
-                    lowerOrEqualsItem -> LOWER_OR_EQUALS
-                    lowerItem -> LOWER
-                    else -> return@updateEditedCondition null
-                }
-            )
-        }
+    fun setComparisonOperator(item: CounterOperatorDropdownItem) {
+        updateEditedCondition { old -> old.copy(comparisonOperation = item.toComparisonOperation()) }
     }
 
     fun setOperationValue(value: CounterOperationValue) {

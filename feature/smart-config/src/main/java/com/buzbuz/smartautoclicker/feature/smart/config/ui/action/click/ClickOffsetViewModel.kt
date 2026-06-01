@@ -89,7 +89,7 @@ class ClickOffsetViewModel @Inject constructor(
             when (screenCondition) {
                 is ScreenCondition.Color -> context.createColorIndicatorDrawable(screenCondition.color)
                 is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(screenCondition)
-                is ScreenCondition.Number -> TODO()
+                is ScreenCondition.Number -> ContextCompat.getDrawable(context, R.drawable.ic_number_condition)
                 is ScreenCondition.Text -> ContextCompat.getDrawable(context, R.drawable.ic_text_condition)
                 null -> null
             }

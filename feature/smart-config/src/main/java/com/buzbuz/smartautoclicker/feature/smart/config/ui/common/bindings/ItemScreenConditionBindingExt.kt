@@ -72,7 +72,14 @@ fun IncludeScreenConditionCardBinding.bind(
             }
         }
 
-        is ScreenCondition.Number -> TODO()
+        is ScreenCondition.Number -> {
+            conditionDetectionType.visibility = View.GONE
+            conditionImage.visibility = View.VISIBLE
+            conditionText.visibility = View.GONE
+
+            conditionImage.setImageResource(R.drawable.ic_number_condition)
+            null
+        }
 
         is ScreenCondition.Text ->  {
             conditionDetectionType.visibility = View.GONE

@@ -194,11 +194,11 @@ private fun ConditionEntity.toDomainNumberCondition(cleanIds: Boolean = false): 
         priority = priority,
         threshold = threshold!!,
         detectionArea = getDetectionArea()!!,
-        comparisonOperation = counterComparisonOperation!!.toDomain(),
+        comparisonOperation = numberCounterComparisonOperation!!.toDomain(),
         counterValue = CounterOperationValue.getCounterOperationValue(
-            type = counterOperationValueType,
-            numberValue = counterValue,
-            counterName = counterOperationCounterName,
+            type = numberCounterOperationValueType,
+            numberValue = numberCounterValue,
+            counterName = numberCounterOperationCounterName,
         ),
     )
 

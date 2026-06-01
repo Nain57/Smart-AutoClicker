@@ -16,22 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.OCRModelsRepository
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
-import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModel
-import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetDownloadUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.toUiState
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDescriptionResId
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getDisplayNameResId
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

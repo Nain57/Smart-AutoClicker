@@ -123,7 +123,7 @@
     <string name="field_detection_type_desc_area">選択した領域の検出</string>
     <string name="field_select_detection_area_title">検知エリア</string>
     <string name="field_select_detection_area_desc">[%1$d、%2$d、%3$d、%4$d] で</string>
-    <string name="field_title_condition_threshold">許容する差異</string>
+    <string name="generic_condition_threshold_title">許容する差異</string>
     <string name="dialog_title_counter_reached">カウンターの値</string>
     <string name="field_counter_name_label">カウンター名</string>
     <string name="field_counter_comparison_value_label">値</string>

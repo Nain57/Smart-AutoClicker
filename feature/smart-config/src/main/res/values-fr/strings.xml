@@ -179,7 +179,7 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="field_title_condition_threshold">Différence tolérée</string>
+    <string name="generic_condition_threshold_title">Différence tolérée</string>
     <string name="field_scenario_quality_title">Résolution de détection</string>
     <string name="field_intent_extra_value_title">Valeur</string>
     <string name="field_tutorial_title">Tutoriel</string>

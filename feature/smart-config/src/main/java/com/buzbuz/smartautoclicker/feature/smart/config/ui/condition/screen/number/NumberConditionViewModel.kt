@@ -14,18 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number
 
 import android.content.Context
 import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getDisplayNameResId
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullName
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -40,7 +46,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-class TextConditionViewModel @Inject constructor(
+class NumberConditionViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
@@ -48,15 +54,15 @@ class TextConditionViewModel @Inject constructor(
     /** The condition being configured by the user. */
     private val configuredCondition = editionRepository.editionState.editedScreenConditionState
         .mapNotNull { it.value }
-        .filterIsInstance<ScreenCondition.Text>()
+        .filterIsInstance<ScreenCondition.Number>()
 
     private val editedConditionHasChanged: StateFlow<Boolean> =
         editionRepository.editionState.editedScreenConditionState
             .map { it.hasChanged }
             .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    val uiState: StateFlow<TextConditionUiState?> = configuredCondition
-        .map { colorCondition -> colorCondition.toUiState(context) }
+    val uiState: StateFlow<NumberConditionUiState?> = configuredCondition
+        .map { numberCondition -> numberCondition.toUiState(context) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
@@ -64,6 +70,8 @@ class TextConditionViewModel @Inject constructor(
     val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
         .distinctUntilChanged()
         .debounce(1000)
+
+    val operatorDropdownItems = allCounterOperatorDropdownItems()
 
 
     fun hasUnsavedModifications(): Boolean =
@@ -76,13 +84,13 @@ class TextConditionViewModel @Inject constructor(
         updateEditedCondition { it.copy(name = name) }
     }
 
-    fun setTextToDetect(text: String) {
-        updateEditedCondition { it.copy(text = text) }
+    fun setComparisonOperator(item: CounterOperatorDropdownItem) {
+        updateEditedCondition { old -> old.copy(comparisonOperation = item.toComparisonOperation()) }
     }
 
-    fun toggleShouldBeDetected() {
-        updateEditedCondition { oldCondition ->
-            oldCondition.copy(shouldBeDetected = !oldCondition.shouldBeDetected)
+    fun setOperationValue(value: CounterOperationValue) {
+        updateEditedCondition { old ->
+            old.copy(counterValue = value)
         }
     }
 
@@ -98,34 +106,39 @@ class TextConditionViewModel @Inject constructor(
         }
     }
 
-    fun appendCounterReferenceToTextToWrite(counterName: String): String {
-        editionRepository.editionState.getEditedCondition<ScreenCondition.Text>()?.let { condition ->
-            val newValue = condition.text.appendCounterReference(counterName)
-            editionRepository.updateEditedCondition(condition.copy(text = newValue))
-            return newValue
-        }
-
-        return ""
-    }
-
-    private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Text) -> ScreenCondition.Text?) {
-        editionRepository.editionState.getEditedCondition<ScreenCondition.Text>()?.let { condition ->
+    private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Number) -> ScreenCondition.Number?) {
+        editionRepository.editionState.getEditedCondition<ScreenCondition.Number>()?.let { condition ->
             closure(condition)?.let { newValue ->
                 editionRepository.updateEditedCondition(newValue)
             }
         }
     }
 
-    private fun ScreenCondition.Text.toUiState(context: Context): TextConditionUiState =
-        TextConditionUiState(
+    private fun ScreenCondition.Number.toUiState(context: Context): NumberConditionUiState =
+        NumberConditionUiState(
             canBeSaved = isComplete(),
             name = name,
             nameError = name.isEmpty(),
-            textToSearch = text,
-            shouldBeDetectedChecked = shouldBeDetected,
             detectionAreaDescription = detectionArea.toAreaDisplayText(context),
             detectionAreaError = detectionArea.isEmpty,
             detectionThreshold = threshold,
-            alphabetDesc = context.getString(alphabet.getDisplayNameResId()),
+            selectorOperatorDropdownItem = comparisonOperation.toCounterOperatorDropdownItem(),
+            isNumberValue = counterValue is CounterOperationValue.Number,
+            valueText = counterValue.value.toString(),
+            conditionEffectDesc = counterValue.toEffectDescription(context, comparisonOperation),
         )
+
+    private fun CounterOperationValue.toEffectDescription(context: Context, operation: ComparisonOperation): String =
+        when (this) {
+            is CounterOperationValue.Counter -> context.getString(
+                R.string.message_number_condition_counter_value_desc,
+                context.getString(operation.toFullName()),
+                value,
+            )
+            is CounterOperationValue.Number -> context.getString(
+                R.string.message_number_condition_static_value_desc,
+                context.getString(operation.toFullName()),
+                value.toString(),
+            )
+        }
 }

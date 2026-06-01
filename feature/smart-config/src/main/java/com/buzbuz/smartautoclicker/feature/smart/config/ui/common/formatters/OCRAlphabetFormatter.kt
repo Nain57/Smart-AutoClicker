@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.utils
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters
 
 import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 @StringRes
-fun OCRAlphabet.getDisplayNameResId(): Int =
+internal fun OCRAlphabet.getDisplayNameResId(): Int =
     when (this) {
         OCRAlphabet.ARABIC -> R.string.item_alphabet_name_arabic
         OCRAlphabet.CHINESE_SIMPLIFIED -> R.string.item_alphabet_name_chinese_simplified
@@ -37,7 +37,7 @@ fun OCRAlphabet.getDisplayNameResId(): Int =
     }
 
 @StringRes
-fun OCRAlphabet.getDescriptionResId(): Int =
+internal fun OCRAlphabet.getDescriptionResId(): Int =
     when (this) {
         OCRAlphabet.ARABIC -> R.string.item_alphabet_name_arabic_desc
         OCRAlphabet.CHINESE_SIMPLIFIED -> R.string.item_alphabet_name_chinese_simplified_desc
