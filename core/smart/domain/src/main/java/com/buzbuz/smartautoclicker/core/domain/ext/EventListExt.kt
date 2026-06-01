@@ -44,6 +44,7 @@ fun List<Event>.getAllOCRAlphabets(): Set<OCRAlphabet> =
         this@getAllOCRAlphabets.forEach { event ->
             (event as? ScreenEvent)?.conditions?.forEach { condition ->
                 if (condition is ScreenCondition.Text) add(condition.alphabet)
+                if (condition is ScreenCondition.Number) add(OCRAlphabet.LATIN)
             }
         }
     }

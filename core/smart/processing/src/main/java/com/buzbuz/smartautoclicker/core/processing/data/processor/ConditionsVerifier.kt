@@ -192,7 +192,7 @@ internal class ConditionsVerifier(
         progressListener?.onScreenConditionProcessingStarted()
 
         val conditionScalingInfo = scalingManager
-            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Text
+            .getScreenConditionScalingInfo(condition) as? ScreenConditionScalingInfo.Number
             ?: return condition.toInvalidConditionResult()
 
         val detectionResult = imageDetector.detectNumber(

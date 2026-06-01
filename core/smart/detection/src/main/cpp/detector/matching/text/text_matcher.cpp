@@ -49,12 +49,13 @@ TextMatchingResult* TextMatcher::matchText(
         const cv::Rect& detectionArea,
         int threshold)
 {
+    clearResults();
+
     if (!isInitialized() || !isRoiValidForMatching(screenImage.getRoi(), detectionArea)) {
-        LOGE("TextMatcher", "Can't match text, invalid state or RoI");
+        LOGE("TextMatcher", "Can't match text, invalid state or RoI (x=%d, y=%d, w=%d, h=%d)",
+             detectionArea.x, detectionArea.y, detectionArea.width, detectionArea.height);
         return &currentMatchingResult;
     }
-
-    clearResults();
 
     // Recognize the text in the regions detected
     auto recognizerResults = recognizeText(screenImage, detectionArea, recognitionModelId);
@@ -84,7 +85,8 @@ TextMatchingResult* TextMatcher::matchNumber(
     clearResults();
 
     if (!isInitialized() || !isRoiValidForMatching(screenImage.getRoi(), detectionArea)) {
-        LOGE("TextMatcher", "Can't match number, invalid state or RoI");
+        LOGE("TextMatcher", "Can't match text, invalid state or RoI (x=%d, y=%d, w=%d, h=%d)",
+             detectionArea.x, detectionArea.y, detectionArea.width, detectionArea.height);
         return &currentMatchingResult;
     }
 
