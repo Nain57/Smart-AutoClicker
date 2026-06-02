@@ -71,6 +71,7 @@ object Migration10to11 : Migration(10, 11) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference(SCENARIO_TABLE).apply {
             forEachScenario { id, oldQuality ->
+                if (id == null || oldQuality == null) return@forEachScenario
                 updateDetectionQuality(
                     id,
                     (oldQuality + DETECTION_QUALITY_INCREASE).coerceAtMost(DETECTION_QUALITY_NEW_MAX)
@@ -84,6 +85,8 @@ object Migration10to11 : Migration(10, 11) {
 
         newActionTable.copyAllActionsExceptChangedParams()
         oldActionTable.forEachClick { id, eventId, clickOnCondition ->
+            if (id == null || eventId == null || clickOnCondition == null) return@forEachClick
+
             newActionTable.apply {
                 if (clickOnCondition) {
                     updateClickOnConditionToId(id, conditionTable.getEventFirstValidConditionId(eventId))
@@ -133,13 +136,13 @@ object Migration10to11 : Migration(10, 11) {
             )
         }
 
-    private fun SQLiteTable.forEachScenario(closure: (id: Long, detectionQuality: Int) -> Unit): Unit =
-        forEachRow(null, scenarioIdColumn, scenarioDetectionQualityColumn, closure)
+    private fun SQLiteTable.forEachScenario(closure: (id: Long?, detectionQuality: Int?) -> Unit): Unit =
+        forEachRow(null, columnA = scenarioIdColumn, columnB = scenarioDetectionQualityColumn, closure = closure)
 
-    private fun SQLiteTable.forEachClick(closure: (id: Long, eventId: Long, clickOnCondition: Boolean) -> Unit): Unit =
+    private fun SQLiteTable.forEachClick(closure: (id: Long?, eventId: Long?, clickOnCondition: Boolean?) -> Unit): Unit =
         forEachRow(
             extraClause = "WHERE `type` = \"${ActionType.CLICK}\"",
-            actionIdColumn, actionEventIdColumn, actionTypeColumn, actionOldClickOnConditionColumn,
+            columnA = actionIdColumn, columnB = actionEventIdColumn, columnC = actionTypeColumn, columnD = actionOldClickOnConditionColumn,
         ) { id, eventId, _, clickOnCondition -> closure(id, eventId, clickOnCondition) }
 
     private fun SQLiteTable.copyAllActionsExceptChangedParams() = insertIntoSelect(
@@ -161,10 +164,10 @@ object Migration10to11 : Migration(10, 11) {
 
         forEachRow(
             extraClause = "WHERE `eventId` = $eventId AND `shouldBeDetected` = 1",
-            conditionIdColumn, conditionShouldBeDetectedColumn,
+            columnA = conditionIdColumn, columnB =  conditionShouldBeDetectedColumn,
         ) { id, shouldBeDetected ->
 
-            if (validConditionId == null && shouldBeDetected) {
+            if (validConditionId == null && shouldBeDetected == true) {
                 validConditionId = id
             }
         }

@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
+import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
@@ -110,11 +111,26 @@ internal open class CompatDeserializer : Deserializer {
             deserializeCompleteEvents(jsonEvents)
         } ?: emptyList()
 
+
+        val counters = jsonCompleteScenario.getJsonArray("counters")?.let { jsonCounters ->
+            deserializeCounters(jsonCounters)
+        } ?: emptyList()
+
         return CompleteScenario(
             scenario = scenarioEntity,
             events =  jsonCompleteEvents,
+            counters = counters,
         )
     }
+
+    open fun deserializeCounters(jsonCounters: JsonArray): List<CountersEntity> =
+        jsonCounters.mapNotNull { jsonCounter ->
+            CountersEntity(
+                name = jsonCounter.jsonObject.getString("name") ?: return@mapNotNull null,
+                scenarioId = jsonCounter.jsonObject.getLong("scenarioId") ?: return@mapNotNull null,
+                startingValue = jsonCounter.jsonObject.getDouble("startingValue") ?: return@mapNotNull null,
+            )
+        }
 
     open fun deserializeCompleteEvents(jsonCompleteEvents: JsonArray): List<CompleteEventEntity> {
         val eventEntityList = mutableListOf<EventEntity>()

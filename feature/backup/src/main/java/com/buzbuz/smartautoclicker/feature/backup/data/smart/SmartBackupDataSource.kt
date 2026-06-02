@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.backup.data.smart
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
+import com.buzbuz.smartautoclicker.core.database.DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
@@ -77,7 +77,7 @@ internal class SmartBackupDataSource(
             scenario = scenario,
             screenWidth = screenSize.x,
             screenHeight = screenSize.y,
-            version = CLICK_DATABASE_VERSION,
+            version = DATABASE_VERSION,
         )
 
     override fun verifyExtractedBackup(backup: ScenarioBackup, screenSize: Point): CompleteScenario? {

@@ -62,12 +62,14 @@ internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
         val version = jsonBackup.getInt("version", true) ?: -1
 
         val scenario = jsonBackup.getJsonObject("scenario", true)?.let { scenario ->
-            DeserializerFactory.create(version)
-                ?.deserializeCompleteScenario(scenario)
-        } ?:let {
+            DeserializerFactory.create(version)?.deserializeCompleteScenario(scenario)
+        }
+        if (scenario == null) {
             Log.w(TAG, "Can't deserialize scenario.")
             return null
         }
+
+
 
         return ScenarioBackup(
             version = version,

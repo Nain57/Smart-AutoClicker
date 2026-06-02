@@ -52,6 +52,7 @@ object Migration9to10 : Migration(9, 10) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.getSQLiteTableReference(ACTION_TABLE).apply {
             forEachClicksAndSwipes { id, type, pressDuration, swipeDuration ->
+                if (id == null || type == null || pressDuration == null || swipeDuration == null) return@forEachClicksAndSwipes
                 when (ActionType.valueOf(type)) {
                     ActionType.CLICK -> updateClickPressDuration(id, pressDuration.toLimitedDuration())
                     ActionType.SWIPE -> updateSwipeDuration(id, swipeDuration.toLimitedDuration())
@@ -61,13 +62,13 @@ object Migration9to10 : Migration(9, 10) {
         }
     }
 
-    private fun SQLiteTable.forEachClicksAndSwipes(closure: (Long, String, Long, Long) -> Unit) {
+    private fun SQLiteTable.forEachClicksAndSwipes(closure: (Long?, String?, Long?, Long?) -> Unit) {
         forEachRow(
             extraClause = "WHERE `type` = \"${ActionType.CLICK}\" OR `type` = \"${ActionType.SWIPE}\"",
-            actionIdColumn,
-            actionTypeColumn,
-            actionPressDurationColumn,
-            actionSwipeDurationColumn,
+            columnA = actionIdColumn,
+            columnB = actionTypeColumn,
+            columnC = actionPressDurationColumn,
+            columnD = actionSwipeDurationColumn,
             closure = closure,
         )
     }

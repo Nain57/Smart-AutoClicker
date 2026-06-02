@@ -53,7 +53,9 @@ object Migration4to5 : Migration(4, 5) {
         db.getSQLiteTableReference(CONDITION_TABLE).apply {
             addConditionsColumns()
 
-            forEachRow(null, conditionIdColumn, conditionThresholdColumn) { id, threshold ->
+            forEachRow(null, columnA = conditionIdColumn, columnB = conditionThresholdColumn) { id, threshold ->
+                if (id == null || threshold == null) return@forEachRow
+
                 updateThreshold(
                     id = id,
                     threshold = (threshold + THRESHOLD_INCREASE).coerceAtMost(THRESHOLD_MAX_VALUE),

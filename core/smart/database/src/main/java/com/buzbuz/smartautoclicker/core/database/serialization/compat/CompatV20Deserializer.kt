@@ -17,15 +17,44 @@
 package com.buzbuz.smartautoclicker.core.database.serialization.compat
 
 import com.buzbuz.smartautoclicker.core.base.extensions.getInt
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import kotlinx.serialization.json.JsonObject
 
 
 /** Deserializer for all Json object version below 20. */
 internal open class CompatV20Deserializer : CompatDeserializer() {
 
+    override fun deserializeCompleteScenario(jsonCompleteScenario: JsonObject): CompleteScenario =
+        super.deserializeCompleteScenario(jsonCompleteScenario)
+            .migrateToCounterTable()
+
     override fun deserializeCounterConditionValue(jsonCounterCondition: JsonObject): Double =
         jsonCounterCondition.getInt("counterValue")?.toDouble() ?: 0.0
 
     override fun deserializeCounterActionValue(jsonCounterCondition: JsonObject): Double =
         jsonCounterCondition.getInt("counterOperationValue")?.toDouble() ?: 0.0
+
+    private fun CompleteScenario.migrateToCounterTable(): CompleteScenario =
+        copy(
+            counters = buildMap {
+                events.forEach { (event, actions, conditions) ->
+                    actions.forEach { actionItem ->
+                        putIfValidCounter(event.scenarioId, actionItem.action.counterName)
+                        putIfValidCounter(event.scenarioId, actionItem.action.counterOperationCounterName)
+                        putIfValidCounter(event.scenarioId, actionItem.action.notificationMessageCounterName)
+                    }
+
+                    conditions.forEach { conditionItem ->
+                        putIfValidCounter(event.scenarioId, conditionItem.counterName)
+                        putIfValidCounter(event.scenarioId, conditionItem.counterOperationCounterName)
+                        putIfValidCounter(event.scenarioId, conditionItem.numberCounterOperationCounterName)
+                    }
+                }
+            }.values.toList()
+        )
+
+    private fun MutableMap<String, CountersEntity>.putIfValidCounter(scenarioId: Long, name: String?) {
+        if (name != null) put(name, CountersEntity(name = name, scenarioId = scenarioId, startingValue = 0.0))
+    }
 }

@@ -120,9 +120,9 @@ class SQLiteTable internal constructor(
         """.trimIndent()
     )
 
-    fun select(extraClause: String? = null, vararg columns: SQLiteColumn<*>) : SQLiteQueryResult = SQLiteQueryResult(
+    fun select(extraClause: String? = null, distinct: Boolean, vararg columns: SQLiteColumn<*>) : SQLiteQueryResult = SQLiteQueryResult(
         cursor = querySQLite("""
-            SELECT ${columns.map { it.name }.formatAsSQLiteList()}
+            SELECT${if (distinct) " DISTINCT " else " "}${columns.map { it.name }.formatAsSQLiteList()}
             FROM `$tableName`
             ${extraClause.formatAsOptionalClause()}
         """.trimIndent()),

@@ -172,6 +172,7 @@ object Migration12to13 : Migration(12, 13) {
             var currentAggregatorId: Long // Id of the action used to regroup the other actions in the same event
             val aggregation = mutableMapOf<Long, Long>() // Key is the event id, Value the aggregator action id.
             forEachToggleEventAction { id, eventId, toggleEventId, toggleType ->
+                if (id == null || eventId == null || toggleEventId == null || toggleType == null) return@forEachToggleEventAction
 
                 // If that's the first action from the event, use it as aggregator
                 // Otherwise, use the one available
@@ -210,6 +211,8 @@ object Migration12to13 : Migration(12, 13) {
     ) = getSQLiteTableReference(END_CONDITION_TABLE).apply {
 
             preScenarioTable.forEachScenarioWithEndCondition { scenarioId, endConditionOperator ->
+                if (scenarioId == null || endConditionOperator == null) return@forEachScenarioWithEndCondition
+
                 // For each scenario with end conditions, create a trigger event that will stop the scenario
                 val endConditionEventId = postEventTable.insertIntoValues(
                     ContentValues().apply {
@@ -236,6 +239,8 @@ object Migration12to13 : Migration(12, 13) {
 
                 // For each end condition in this scenario, creates a counter reached condition and a change counter action
                 forEachEndCondition(scenarioId) { targetEventId, executions ->
+                    if (targetEventId == null || executions == null) return@forEachEndCondition
+
                     val endConditionCounterName = "\"Stop Scenario $targetEventId\""
 
                     // First, create a counter action for this event
@@ -268,30 +273,32 @@ object Migration12to13 : Migration(12, 13) {
             dropTable()
         }
 
-    private fun SQLiteTable.forEachToggleEventAction(closure: (Long, Long, Long, String) -> Unit) =
+    private fun SQLiteTable.forEachToggleEventAction(closure: (Long?, Long?, Long?, String?) -> Unit) =
         forEachRow(
             extraClause = "WHERE `type` =\"${ActionType.TOGGLE_EVENT}\" ORDER BY `priority` ASC",
-            SQLiteColumn.PrimaryKey("id"),
-            SQLiteColumn.Long("eventId"),
-            actionOldToggleEventIdColumn, actionOldToggleTypeColumn, closure,
+            columnA = SQLiteColumn.PrimaryKey("id"),
+            columnB = SQLiteColumn.Long("eventId"),
+            columnC = actionOldToggleEventIdColumn,
+            columnD = actionOldToggleTypeColumn,
+            closure = closure,
         )
 
-    private fun SQLiteTable.forEachScenarioWithEndCondition(closure: (Long, Int) -> Unit) =
+    private fun SQLiteTable.forEachScenarioWithEndCondition(closure: (Long?, Int?) -> Unit) =
         forEachRow(
             extraClause = """
                 JOIN `${END_CONDITION_TABLE}` ON $tableName.id = ${END_CONDITION_TABLE}.scenario_id
                 GROUP BY $END_CONDITION_TABLE.scenario_id
             """.trimIndent(),
-            SQLiteColumn.Long("$END_CONDITION_TABLE.scenario_id"),
-            scenarioEndConditionOperatorColumn,
-            closure,
+            columnA = SQLiteColumn.Long("$END_CONDITION_TABLE.scenario_id"),
+            columnB = scenarioEndConditionOperatorColumn,
+            closure = closure,
         )
 
-    private fun SQLiteTable.forEachEndCondition(scenarioId: Long, closure: (Long, Int) -> Unit) =
+    private fun SQLiteTable.forEachEndCondition(scenarioId: Long, closure: (Long?, Int?) -> Unit) =
         forEachRow(
             extraClause = "WHERE `scenario_id` = $scenarioId",
-            SQLiteColumn.Long("event_id"),
-            SQLiteColumn.Int("executions"),
-            closure,
+            columnA = SQLiteColumn.Long("event_id"),
+            columnB = SQLiteColumn.Int("executions"),
+            closure = closure,
         )
 }

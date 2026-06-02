@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.database
 import androidx.room.RoomDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.CountersDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 
@@ -32,5 +33,6 @@ abstract class ScenarioDatabase : RoomDatabase() {
     abstract fun conditionDao(): ConditionDao
     /** The data access object for the actions in the database. */
     abstract fun actionDao(): ActionDao
-
+    /** The data access object for the counters in the database. */
+    abstract fun countersDao(): CountersDao
 }

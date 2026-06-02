@@ -20,7 +20,7 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.database.CLICK_DATABASE_VERSION
+import com.buzbuz.smartautoclicker.core.database.DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.*
 import com.buzbuz.smartautoclicker.core.database.utils.encodeToJsonObject
 
@@ -73,7 +73,7 @@ class DeserializerTests {
 
     @Test
     fun deserialization_invalidVersion_higher() {
-        assertNull(DeserializerFactory.create(CLICK_DATABASE_VERSION + 1))
+        assertNull(DeserializerFactory.create(DATABASE_VERSION + 1))
     }
 
     @Test
@@ -82,7 +82,7 @@ class DeserializerTests {
         val jsonScenario = DEFAULT_COMPLETE_SCENARIO.encodeToJsonObject()
 
         // When
-        val deserializedScenario = DeserializerFactory.create(CLICK_DATABASE_VERSION)
+        val deserializedScenario = DeserializerFactory.create(DATABASE_VERSION)
             ?.deserializeCompleteScenario(jsonScenario)
 
         // Then

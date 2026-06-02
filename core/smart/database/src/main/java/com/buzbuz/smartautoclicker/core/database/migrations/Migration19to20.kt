@@ -26,6 +26,8 @@ import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
 import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
+import com.buzbuz.smartautoclicker.core.database.COUNTERS_TABLE
+import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 
@@ -34,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
  *
  * Klick'r 4.0.0 release migration:
  * * Counter values are now stored as REAL (Double)
+ * * Counter are now stored in database (table has been created during previous migration, but it is empty)
  */
 object Migration19to20 : Migration(19, 20) {
 
@@ -48,15 +51,20 @@ object Migration19to20 : Migration(19, 20) {
     private val actionCounterValueNewColumn = SQLiteColumn.Double("counter_operation_value", isNotNull = false)
 
     override fun migrate(db: SupportSQLiteDatabase) {
-        db.migrateConditions()
-        db.migrateActions()
+        // Migrate counters types from Int to Double
+        db.migrateConditionsCounterValueType()
+        db.migrateActionsCounterValueType()
+
+        // Populate counters table with all existing counters
+        db.populateCountersTable()
     }
 
-    private fun SupportSQLiteDatabase.migrateConditions() {
+    private fun SupportSQLiteDatabase.migrateConditionsCounterValueType() {
         getSQLiteTableReference(CONDITION_TABLE).apply {
             // Get the current counter reached condition counter values
             val counterReachedValues = buildMap {
                 forEachCounterReachedCondition { id, type, counterValue ->
+                    if (id == null || type == null || counterValue == null) return@forEachCounterReachedCondition
                     if (ConditionType.valueOf(type) == ConditionType.ON_COUNTER_REACHED) put(id, counterValue)
                 }
             }
@@ -72,28 +80,12 @@ object Migration19to20 : Migration(19, 20) {
         }
     }
 
-    private fun SQLiteTable.forEachCounterReachedCondition(closure: (Long, String, Int) -> Unit) {
-        forEachRow(
-            extraClause = "WHERE `type` = \"${ConditionType.ON_COUNTER_REACHED}\"",
-            columnA = conditionIdColumn,
-            columnB = conditionTypeColumn,
-            columnC = conditionCounterValuesOldColumn,
-            closure = closure,
-        )
-    }
-
-    private fun SQLiteTable.restoreConditionCounterValue(conditionId: Long, counterValue: Double) = update(
-        extraClause = "WHERE `id` = $conditionId",
-        contentValues = ContentValues().apply {
-            put(conditionCounterValuesNewColumn.name, counterValue)
-        },
-    )
-
-    private fun SupportSQLiteDatabase.migrateActions() {
+    private fun SupportSQLiteDatabase.migrateActionsCounterValueType() {
         getSQLiteTableReference(ACTION_TABLE).apply {
             // Get the current counter action values
             val counterValues = buildMap {
                 forEachChangeCounterAction { id, type, counterValue ->
+                    if (id == null || type == null || counterValue == null) return@forEachChangeCounterAction
                     if (ActionType.valueOf(type) == ActionType.CHANGE_COUNTER) put(id, counterValue)
                 }
             }
@@ -109,7 +101,50 @@ object Migration19to20 : Migration(19, 20) {
         }
     }
 
-    private fun SQLiteTable.forEachChangeCounterAction(closure: (Long, String, Int) -> Unit) {
+    private fun SupportSQLiteDatabase.populateCountersTable() {
+        val countersFound = mutableSetOf<Pair<String, Long>>()
+        getSQLiteTableReference(ACTION_TABLE).apply {
+            forEachActionCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
+                if (scenarioId == null) return@forEachActionCounterMention
+                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+            }
+        }
+        getSQLiteTableReference(CONDITION_TABLE).apply {
+            forEachConditionsCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
+                if (scenarioId == null) return@forEachConditionsCounterMention
+                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+            }
+        }
+
+        // Insert into counters_table
+        getSQLiteTableReference(COUNTERS_TABLE).apply {
+            countersFound.forEach { (name, scenarioId) ->
+                insertIntoValues(
+                    ContentValues().apply {
+                        put("counterName", name)
+                        put("scenarioId", scenarioId)
+                        put("startingValue", 0)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun SQLiteTable.forEachCounterReachedCondition(closure: (Long?, String?, Int?) -> Unit) {
+        forEachRow(
+            extraClause = "WHERE `type` = \"${ConditionType.ON_COUNTER_REACHED}\"",
+            columnA = conditionIdColumn,
+            columnB = conditionTypeColumn,
+            columnC = conditionCounterValuesOldColumn,
+            closure = closure,
+        )
+    }
+
+    private fun SQLiteTable.forEachChangeCounterAction(closure: (Long?, String?, Int?) -> Unit) {
         forEachRow(
             extraClause = "WHERE `type` = \"${ActionType.CHANGE_COUNTER}\"",
             columnA = actionIdColumn,
@@ -118,6 +153,49 @@ object Migration19to20 : Migration(19, 20) {
             closure = closure,
         )
     }
+
+    private fun SQLiteTable.forEachActionCounterMention(closure: (String?, String?, String?, Long?) -> Unit) {
+        forEachRow(
+            distinct = true,
+            extraClause = """
+                AS actions JOIN $EVENT_TABLE AS events 
+                ON actions.eventId = events.id 
+                WHERE actions.counter_name IS NOT NULL
+                OR actions.counter_operation_counter_name IS NOT NULL
+                OR actions.notification_message_counter_name IS NOT NULL
+            """.trimIndent(),
+            columnA = SQLiteColumn.Text("actions.counter_name"),
+            columnB = SQLiteColumn.Text("actions.counter_operation_counter_name"),
+            columnC = SQLiteColumn.Text("actions.notification_message_counter_name"),
+            columnD = SQLiteColumn.Long("events.scenario_id"),
+            closure = closure,
+        )
+    }
+
+    private fun SQLiteTable.forEachConditionsCounterMention(closure: (String?, String?, String?, Long?) -> Unit) {
+        forEachRow(
+            distinct = true,
+            extraClause = """
+                AS conditions JOIN $EVENT_TABLE AS events 
+                ON conditions.eventId = events.id 
+                WHERE conditions.counter_name IS NOT NULL
+                OR conditions.counter_value_counter_name IS NOT NULL
+                OR conditions.number_counter_value_counter_name IS NOT NULL
+            """.trimIndent(),
+            columnA = SQLiteColumn.Text("conditions.counter_name"),
+            columnB = SQLiteColumn.Text("conditions.counter_value_counter_name"),
+            columnC = SQLiteColumn.Text("conditions.number_counter_value_counter_name"),
+            columnD = SQLiteColumn.Long("events.scenario_id"),
+            closure = closure,
+        )
+    }
+
+    private fun SQLiteTable.restoreConditionCounterValue(conditionId: Long, counterValue: Double) = update(
+        extraClause = "WHERE `id` = $conditionId",
+        contentValues = ContentValues().apply {
+            put(conditionCounterValuesNewColumn.name, counterValue)
+        },
+    )
 
     private fun SQLiteTable.restoreActionCounterValue(actionId: Long, counterValue: Double) = update(
         extraClause = "WHERE `id` = $actionId",

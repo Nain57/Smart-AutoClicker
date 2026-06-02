@@ -22,6 +22,7 @@ import androidx.room.Database
 import com.buzbuz.smartautoclicker.core.database.dao.TutorialDao
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
@@ -41,8 +42,9 @@ import javax.inject.Singleton
         EventToggleEntity::class,
         TutorialSuccessEntity::class,
         ScenarioStatsEntity::class,
+        CountersEntity::class,
     ],
-    version = TUTORIAL_DATABASE_VERSION,
+    version = DATABASE_VERSION,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 11, to = 12),
@@ -58,6 +60,3 @@ abstract class TutorialDatabase : ScenarioDatabase() {
 
     abstract fun tutorialDao(): TutorialDao
 }
-
-/** Current version of the database. */
-const val TUTORIAL_DATABASE_VERSION = CLICK_DATABASE_VERSION

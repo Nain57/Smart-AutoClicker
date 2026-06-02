@@ -49,7 +49,7 @@ internal class SQLiteTableDetails private constructor(
                 columnA = SQLiteColumn.Text("sql")
             ) { rawSql ->
 
-                val sql = rawSql.trim()
+                val sql = rawSql?.trim() ?: return@forEachRow
                 when {
                     // This is the table creation
                     sql.startsWith("CREATE TABLE") -> {

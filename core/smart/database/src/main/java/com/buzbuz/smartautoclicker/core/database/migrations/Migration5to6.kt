@@ -51,7 +51,9 @@ object Migration5to6 : Migration(5, 6) {
             getSQLiteTableReference(ACTION_TABLE).apply {
                 alterTableAddColumn(actionClickOnConditionColumn)
 
-                forEachRow(null, actionIdColumn, actionTypeColumn) { actionId, actionType ->
+                forEachRow(null, columnA = actionIdColumn, columnB = actionTypeColumn) { actionId, actionType ->
+                    if (actionId == null || actionType == null) return@forEachRow
+
                     if (ActionType.valueOf(actionType) == ActionType.CLICK)
                         updateClickOnCondition(actionId, 0)
                 }

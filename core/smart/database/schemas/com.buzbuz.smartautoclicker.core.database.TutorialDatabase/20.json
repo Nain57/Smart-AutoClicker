@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 20,
-    "identityHash": "a12bd4e301966a6b38faeb9cc6020ca3",
+    "identityHash": "9e67e76e64d84df0414e5e01bebb6c36",
     "entities": [
       {
         "tableName": "action_table",
@@ -840,11 +840,66 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "counters_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`counterName` TEXT NOT NULL, `scenarioId` INTEGER NOT NULL, `startingValue` REAL NOT NULL, PRIMARY KEY(`counterName`, `scenarioId`), FOREIGN KEY(`scenarioId`) REFERENCES `scenario_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "counterName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scenarioId",
+            "columnName": "scenarioId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startingValue",
+            "columnName": "startingValue",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "counterName",
+            "scenarioId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_counters_table_scenarioId",
+            "unique": false,
+            "columnNames": [
+              "scenarioId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_counters_table_scenarioId` ON `${TABLE_NAME}` (`scenarioId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "scenario_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "scenarioId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a12bd4e301966a6b38faeb9cc6020ca3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9e67e76e64d84df0414e5e01bebb6c36')"
     ]
   }
 }

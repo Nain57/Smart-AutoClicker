@@ -86,10 +86,18 @@ data class ScenarioWithEvents(
 @Serializable
 data class CompleteScenario(
     @Embedded val scenario: ScenarioEntity,
+
     @Relation(
         entity = EventEntity::class,
         parentColumn = "id",
         entityColumn = "scenario_id"
     )
     val events: List<CompleteEventEntity>,
+
+    @Relation(
+        entity = CountersEntity::class,
+        parentColumn = "id",
+        entityColumn = "scenarioId"
+    )
+    val counters: List<CountersEntity>,
 )

@@ -162,7 +162,8 @@ internal open class CompatV13Deserializer : CompatV20Deserializer() {
                         } else completeActionEntity
                     }
                 )
-            }
+            },
+            counters = emptyList(),
         )
 
     private fun CompleteScenario.migrateLegacyEndConditions(jsonCompleteScenario: JsonObject): CompleteScenario {
@@ -252,6 +253,7 @@ internal open class CompatV13Deserializer : CompatV20Deserializer() {
         return CompleteScenario(
             scenario = scenario,
             events = newEventList,
+            counters = emptyList(),
         )
     }
 
