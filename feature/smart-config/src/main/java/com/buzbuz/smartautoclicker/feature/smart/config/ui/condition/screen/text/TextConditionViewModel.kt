@@ -21,7 +21,6 @@ import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getDisplayNameResId
@@ -96,16 +95,6 @@ class TextConditionViewModel @Inject constructor(
         updateEditedCondition { oldCondition ->
             oldCondition.copy(threshold = value)
         }
-    }
-
-    fun appendCounterReferenceToTextToWrite(counterName: String): String {
-        editionRepository.editionState.getEditedCondition<ScreenCondition.Text>()?.let { condition ->
-            val newValue = condition.text.appendCounterReference(counterName)
-            editionRepository.updateEditedCondition(condition.copy(text = newValue))
-            return newValue
-        }
-
-        return ""
     }
 
     private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Text) -> ScreenCondition.Text?) {

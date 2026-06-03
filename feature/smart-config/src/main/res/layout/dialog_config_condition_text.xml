@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/include_field_text_input_with_checkbox"
+                    <include layout="@layout/include_field_text_input"
                         android:id="@+id/field_text_to_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

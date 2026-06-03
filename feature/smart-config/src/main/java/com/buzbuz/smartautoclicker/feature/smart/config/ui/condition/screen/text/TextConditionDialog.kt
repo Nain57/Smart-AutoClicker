@@ -33,22 +33,18 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnValueChangedFromUserListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderRange
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionTextBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
@@ -103,20 +99,11 @@ class TextConditionDialog(
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
             fieldTextToSearch.apply {
-                setup(
-                    label = R.string.field_text_to_detect_label,
-                    icon = R.drawable.ic_search,
-                    disableInputWithCheckbox = false,
-                )
+                setLabel(R.string.field_text_to_detect_label)
                 textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(
                     context.resources.getInteger(R.integer.text_condition_max_length)
                 ))
                 setOnTextChangedListener { viewModel.setTextToDetect(it.toString()) }
-                setOnCheckboxClickedListener {
-                    showCounterSelectionDialog { counterName ->
-                        setTextValue(viewModel.appendCounterReferenceToTextToWrite(counterName))
-                    }
-                }
             }
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
@@ -187,7 +174,7 @@ class TextConditionDialog(
             if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.name)
             fieldEditName.setError(uiState.nameError)
 
-            if (fieldTextToSearch.textField.text.isNullOrEmpty()) fieldTextToSearch.setTextValue(uiState.textToSearch)
+            if (fieldTextToSearch.textField.text.isNullOrEmpty()) fieldTextToSearch.setText(uiState.textToSearch)
 
             fieldAlphabet.setDescription(uiState.alphabetDesc)
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
@@ -215,14 +202,6 @@ class TextConditionDialog(
             Log.e(TAG, "Closing ConditionDialog because there is no condition edited")
             finish()
         }
-    }
-
-    private fun showCounterSelectionDialog(onCounterSelected: (String) -> Unit) {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = CounterNameSelectionDialog(onCounterSelected),
-            hideCurrent = true,
-        )
     }
 
     private fun showDetectionAreaSelector() {
