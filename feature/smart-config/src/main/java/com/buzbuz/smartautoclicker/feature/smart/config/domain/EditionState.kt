@@ -28,10 +28,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.EventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.ScreenEventsEditor
 import com.buzbuz.smartautoclicker.feature.smart.config.data.events.TriggerEventsEditor
@@ -44,13 +46,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class EditionState internal constructor(
     repository: IRepository,
-    private val editor: com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor,
+    private val editor: ScenarioEditor,
 ) : IEditionState {
 
     override val scenarioCompleteState: Flow<EditedElementState<EditedScenarioState>> =
@@ -81,6 +84,12 @@ internal class EditionState internal constructor(
 
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
         editor.editedTriggerEventListState
+
+    override val allEditedCounters: Flow<List<Counter>> =
+        editor.allEditedCounters.filterNotNull()
+
+    override val editedCountersState: Flow<EditedListState<Counter>> =
+        editor.editedCountersListState
 
     override val editedScreenEventState: Flow<EditedElementState<ScreenEvent>> =
         editor.editedScreenEventState

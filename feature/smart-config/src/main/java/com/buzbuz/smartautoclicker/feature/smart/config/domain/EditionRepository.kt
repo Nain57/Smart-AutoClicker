@@ -19,6 +19,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import android.util.Log
+import androidx.core.graphics.scaleMatrix
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
 import com.buzbuz.smartautoclicker.core.domain.IRepository
@@ -26,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -94,6 +96,7 @@ class EditionRepository @Inject constructor(
             scenario = scenario,
             screenEvents = repository.getScreenEvents(scenarioId),
             triggerEvents = repository.getTriggerEvents(scenarioId),
+            counters = repository.getCounters(scenarioId),
         )
         return true
     }
@@ -105,6 +108,7 @@ class EditionRepository @Inject constructor(
         val updateResult = repository.updateScenario(
             scenario = scenarioEditor.editedScenario.value ?: return false,
             events = scenarioEditor.getAllEditedEvents(),
+            counters = scenarioEditor.allEditedCounters.value ?: emptyList(),
         )
 
         // In case of error, do not stop the edition
@@ -131,6 +135,18 @@ class EditionRepository @Inject constructor(
         scenarioEditor.updateImageEventsOrder(
             newEvents.mapIndexed { index, event -> event.copy(priority = index) }
         )
+    }
+
+    fun addNewCounter(counter: Counter) {
+        scenarioEditor.addCounter(counter)
+    }
+
+    fun updateCounter(counter: Counter) {
+        scenarioEditor.updateCounter(counter)
+    }
+
+    fun deleteCounter(counter: Counter) {
+        scenarioEditor.deleteCounter(counter)
     }
 
     // --- EVENT

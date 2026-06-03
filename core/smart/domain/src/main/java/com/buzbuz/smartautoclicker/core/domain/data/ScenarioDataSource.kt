@@ -201,9 +201,10 @@ internal class ScenarioDataSource @Inject constructor(
                     onImageConditionsRemoved = onImageConditionsRemoved,
                 )
 
-                counters.forEach { counter ->
-                    currentDatabase.value.countersDao().upsertCounter(counter.toEntity())
-                }
+                updateCounters(
+                    scenarioDbId = scenarioId.databaseId,
+                    newCounters = counters,
+                )
 
                 scenarioId.databaseId
             }
@@ -232,9 +233,10 @@ internal class ScenarioDataSource @Inject constructor(
                     onImageConditionsRemoved = onImageConditionsRemoved,
                 )
                 // Update counters
-                counters.forEach { counter ->
-                    currentDatabase.value.countersDao().upsertCounter(counter.toEntity())
-                }
+                updateCounters(
+                    scenarioDbId = scenario.id.databaseId,
+                    newCounters = counters,
+                )
             }
 
             true
@@ -488,6 +490,26 @@ internal class ScenarioDataSource @Inject constructor(
                 updateList = actionDao::updateEventToggles,
                 removeList = actionDao::deleteEventToggles,
             )
+        }
+    }
+
+    private suspend fun updateCounters(scenarioDbId: Long, newCounters: List<Counter>) {
+        val toBeRemoved = currentDatabase.value.countersDao()
+            .getScenarioCounters(scenarioDbId)
+            .toMutableList()
+
+        newCounters.forEach { counter ->
+            // Discard all items added/updated from the to be removed list
+            val oldIndex = toBeRemoved.indexOfFirst { oldCounter -> oldCounter.name == counter.counterName }
+            if (oldIndex in toBeRemoved.indices) toBeRemoved.remove(toBeRemoved[oldIndex])
+
+            currentDatabase.value.countersDao().upsertCounter(
+                counter.toEntity().copy(scenarioId = scenarioDbId)
+            )
+        }
+
+        toBeRemoved.forEach { counter ->
+            currentDatabase.value.countersDao().deleteCounter(counter.name)
         }
     }
 

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.domain.model.counter
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 /**
  * Configuration for a counter.
@@ -26,4 +27,8 @@ data class Counter(
     val counterName: String,
     val defaultValue: Double,
     val scenarioId: Identifier,
-)
+): Completable {
+
+    override fun isComplete(): Boolean =
+        counterName.isNotEmpty()
+}

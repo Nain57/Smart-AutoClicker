@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -40,6 +41,8 @@ interface IEditionState {
     val allEditedEvents: Flow<List<Event>>
     val editedScreenEventsState: Flow<EditedListState<ScreenEvent>>
     val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>>
+    val allEditedCounters: Flow<List<Counter>>
+    val editedCountersState: Flow<EditedListState<Counter>>
 
     // Edited Event
     val editedEventState: Flow<EditedElementState<Event>>
