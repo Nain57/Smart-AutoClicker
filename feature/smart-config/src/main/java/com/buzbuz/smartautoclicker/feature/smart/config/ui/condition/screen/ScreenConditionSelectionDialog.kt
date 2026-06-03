@@ -33,7 +33,7 @@ import com.buzbuz.smartautoclicker.core.ui.di.UiEntryPoint
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
@@ -54,7 +54,7 @@ class ScreenConditionSelectionDialog(
         EntryPoints.get(context.applicationContext, UiEntryPoint::class.java).monitoredViewManager()
     }
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogBaseSelectionBinding
+    private lateinit var viewBinding: DialogBaseListBinding
 
     /** Adapter for the list of condition. */
     private val conditionsAdapter = ImageConditionsAdapter(
@@ -64,7 +64,7 @@ class ScreenConditionSelectionDialog(
     )
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_selection)
                 buttonSave.visibility = View.GONE

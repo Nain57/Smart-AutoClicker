@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -45,12 +45,12 @@ class CounterNameSelectionDialog(
         creator = { counterNameSelectionViewModel() },
     )
     /** ViewBinding containing the views for this dialog. */
-    private lateinit var viewBinding: DialogBaseSelectionBinding
+    private lateinit var viewBinding: DialogBaseListBinding
 
     private lateinit var counterNameAdapter: CounterNameSelectionAdapter
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.generic_counters)
                 buttonDismiss.setDebouncedOnClickListener { back() }

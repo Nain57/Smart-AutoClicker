@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetDownloadUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetModelItemAdapter
@@ -49,11 +49,11 @@ class AlphabetSelectionDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private val alphabetAdapter: AlphabetModelItemAdapter = AlphabetModelItemAdapter(::onItemClicked)
 
-    private lateinit var viewBinding: DialogBaseSelectionBinding
+    private lateinit var viewBinding: DialogBaseListBinding
 
 
     override fun onCreateView(): ViewGroup {
-        viewBinding = DialogBaseSelectionBinding.inflate(LayoutInflater.from(context)).apply {
+        viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_selection)
                 buttonSave.visibility = View.GONE
