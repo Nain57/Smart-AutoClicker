@@ -16,8 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.counter
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 
+
+internal fun Counter.toEntity(): CountersEntity =
+    CountersEntity(
+        name = counterName,
+        scenarioId = scenarioId.databaseId,
+        startingValue = defaultValue,
+    )
 
 internal fun ComparisonOperation.toEntity(): CounterComparisonOperation =
     when (this) {
@@ -27,6 +36,13 @@ internal fun ComparisonOperation.toEntity(): CounterComparisonOperation =
         ComparisonOperation.GREATER -> CounterComparisonOperation.GREATER
         ComparisonOperation.GREATER_OR_EQUALS -> CounterComparisonOperation.GREATER_OR_EQUALS
     }
+
+internal fun CountersEntity.toDomain(): Counter =
+    Counter(
+        counterName = name,
+        scenarioId = Identifier(scenarioId, asTemporary = false),
+        defaultValue = startingValue,
+    )
 
 internal fun CounterComparisonOperation.toDomain(): ComparisonOperation =
     when (this) {

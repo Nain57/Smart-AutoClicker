@@ -30,6 +30,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -113,6 +115,12 @@ internal class Repository @Inject internal constructor(
     override fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>> =
         dataSource.getTriggerEventsFlow(scenarioId).mapList { it.toDomainTriggerEvent() }
 
+    override fun getCountersFlow(scenarioId: Long): Flow<List<Counter>> =
+        dataSource.getCountersFlow(scenarioId).mapList { it.toDomain() }
+
+    override suspend fun getCounters(scenarioId: Long): List<Counter> =
+        dataSource.getCounters(scenarioId).map { it.toDomain() }
+
     override suspend fun addScenario(scenario: Scenario): Long =
         dataSource.addScenario(scenario)
 
@@ -124,24 +132,24 @@ internal class Repository @Inject internal constructor(
     }
 
     override suspend fun addScenarioCopy(completeScenario: CompleteScenario): Long? {
-        val (scenario, events) = completeScenario.toDomain(cleanIds = true)
-        return dataSource.addCompleteScenario(scenario, events, ::clearRemovedConditionsBitmaps)
+        val (scenario, events, counters) = completeScenario.toDomain(cleanIds = true)
+        return dataSource.addCompleteScenario(scenario, events, counters, ::clearRemovedConditionsBitmaps)
     }
 
     override fun addScenarioCopy(scenarioId: Long, copyName: String, onCopyCompleted: (Boolean) -> Unit) {
         coroutineScopeIo.launch {
-            val (scenario, events) = dataSource.getCompleteScenario(scenarioId)?.toDomain(cleanIds = true) ?: run {
+            val (scenario, events, counters) = dataSource.getCompleteScenario(scenarioId)?.toDomain(cleanIds = true) ?: run {
                 onCopyCompleted(false)
                 return@launch
             }
 
-            dataSource.addCompleteScenario(scenario.copy(name = copyName), events, ::clearRemovedConditionsBitmaps)
+            dataSource.addCompleteScenario(scenario.copy(name = copyName), events, counters, ::clearRemovedConditionsBitmaps)
             onCopyCompleted(true)
         }
     }
 
-    override suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean =
-        dataSource.updateScenario(scenario, events, ::clearRemovedConditionsBitmaps)
+    override suspend fun updateScenario(scenario: Scenario, events: List<Event>, counters: List<Counter>): Boolean =
+        dataSource.updateScenario(scenario, events, counters, ::clearRemovedConditionsBitmaps)
 
     override fun startTutorialMode() {
         Log.d(TAG, "Start tutorial mode, use tutorial database")

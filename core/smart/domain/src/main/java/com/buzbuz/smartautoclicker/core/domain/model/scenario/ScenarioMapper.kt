@@ -22,6 +22,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.toDomain
 
@@ -48,11 +50,12 @@ internal fun ScenarioWithEvents.toDomain(asDomain: Boolean = false) = Scenario(
 )
 
 /** @return the scenario for this entity. */
-internal fun CompleteScenario.toDomain(cleanIds: Boolean = false): Pair<Scenario, List<Event>> =
-    scenario.toDomain(cleanIds) to events.map { completeEventEntity ->
-        completeEventEntity.toDomain(cleanIds)
-    }
-
+internal fun CompleteScenario.toDomain(cleanIds: Boolean = false): Triple<Scenario, List<Event>, List<Counter>> =
+    Triple(
+        scenario.toDomain(cleanIds),
+        events.map { completeEventEntity -> completeEventEntity.toDomain(cleanIds) },
+        counters.map { counter -> counter.toDomain() }
+    )
 
 /** @return the scenario for this entity. */
 private fun ScenarioEntity.toDomain(cleanIds: Boolean = false) = Scenario(

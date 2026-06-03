@@ -69,8 +69,6 @@ internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
             return null
         }
 
-
-
         return ScenarioBackup(
             version = version,
             screenWidth = jsonBackup.getInt("screenWidth") ?: 0,

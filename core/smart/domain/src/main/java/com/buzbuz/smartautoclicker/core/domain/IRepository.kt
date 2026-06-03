@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -82,8 +83,9 @@ interface IRepository {
      *
      * @param scenario the scenario to update.
      * @param events the list of event for the scenario.
+     * @param counters the list of counters for the scenario.
      */
-    suspend fun updateScenario(scenario: Scenario, events: List<Event>): Boolean
+    suspend fun updateScenario(scenario: Scenario, events: List<Event>, counters: List<Counter>): Boolean
 
     /**
      * Delete a scenario.
@@ -156,6 +158,22 @@ interface IRepository {
      * @return the list of trigger events.
      */
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<TriggerEvent>>
+
+    /**
+     * Get the list of counters for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario to ge the counters from.
+     * @return the list of counters.
+     */
+    suspend fun getCounters(scenarioId: Long): List<Counter>
+
+    /**
+     * Get the list of counters for a given scenario.
+     *
+     * @param scenarioId the identifier of the scenario to ge the counters from.
+     * @return the list of counters.
+     */
+    fun getCountersFlow(scenarioId: Long): Flow<List<Counter>>
 
     fun startTutorialMode()
 

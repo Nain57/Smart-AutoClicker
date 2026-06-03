@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
 import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
+import com.buzbuz.smartautoclicker.core.database.dao.CountersDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
@@ -35,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
@@ -51,6 +53,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
@@ -86,6 +90,8 @@ internal class ScenarioDataSource @Inject constructor(
     private val conditionsDaoFlow: Flow<ConditionDao> = currentDatabase.map { it.conditionDao() }
     /** The Dao for accessing the actions. */
     private val actionDaoFlow: Flow<ActionDao> = currentDatabase.map { it.actionDao() }
+    /** The Dao for accessing the counters */
+    private val countersDaoFlow: Flow<CountersDao> = currentDatabase.map { it.countersDao() }
 
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
@@ -142,6 +148,12 @@ internal class ScenarioDataSource @Inject constructor(
     fun getAllActions(): Flow<List<CompleteActionEntity>> =
         actionDaoFlow.flatMapLatest { it.getAllActions() }
 
+    fun getCountersFlow(scenarioId: Long): Flow<List<CountersEntity>> =
+        countersDaoFlow.flatMapLatest { it.getScenarioCountersFlow(scenarioId) }
+
+    suspend fun getCounters(scenarioId: Long): List<CountersEntity> =
+        currentDatabase.value.countersDao().getScenarioCounters(scenarioId)
+
     suspend fun getImageConditionPathUsageCount(path: String): Int =
         currentDatabase.value.conditionDao().getValidPathCount(path)
 
@@ -167,6 +179,7 @@ internal class ScenarioDataSource @Inject constructor(
     suspend fun addCompleteScenario(
         scenario: Scenario,
         events: List<Event>,
+        counters: List<Counter>,
         onImageConditionsRemoved: suspend (List<String>) -> Unit,
     ): Long? {
         Log.d(TAG, "Add scenario copy to the database: ${scenario.id}")
@@ -188,6 +201,10 @@ internal class ScenarioDataSource @Inject constructor(
                     onImageConditionsRemoved = onImageConditionsRemoved,
                 )
 
+                counters.forEach { counter ->
+                    currentDatabase.value.countersDao().upsertCounter(counter.toEntity())
+                }
+
                 scenarioId.databaseId
             }
         } catch (ex: Exception) {
@@ -199,6 +216,7 @@ internal class ScenarioDataSource @Inject constructor(
     suspend fun updateScenario(
         scenario: Scenario,
         events: List<Event>,
+        counters: List<Counter>,
         onImageConditionsRemoved: suspend (List<String>) -> Unit,
     ): Boolean {
         Log.d(TAG, "Update scenario in the database: ${scenario.id}")
@@ -213,6 +231,10 @@ internal class ScenarioDataSource @Inject constructor(
                     events = events,
                     onImageConditionsRemoved = onImageConditionsRemoved,
                 )
+                // Update counters
+                counters.forEach { counter ->
+                    currentDatabase.value.countersDao().upsertCounter(counter.toEntity())
+                }
             }
 
             true
