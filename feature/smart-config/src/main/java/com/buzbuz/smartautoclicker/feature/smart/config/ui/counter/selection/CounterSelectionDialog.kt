@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -31,18 +32,19 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CounterCreationDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
-class CounterNameSelectionDialog(
+class CounterSelectionDialog(
     private val onCounterSelected: (String) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
-    private val viewModel: CounterNameSelectionViewModel by viewModels(
+    private val viewModel: CounterSelectionViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { counterNameSelectionViewModel() },
+        creator = { counterSelectionViewModel() },
     )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseListBinding
@@ -55,6 +57,11 @@ class CounterNameSelectionDialog(
                 dialogTitle.setText(R.string.generic_counters)
                 buttonDismiss.setDebouncedOnClickListener { back() }
             }
+
+            floatingButtonsLayout.visibility = View.VISIBLE
+            buttonCopy.visibility = View.GONE
+            buttonNew.visibility = View.VISIBLE
+            buttonNew.setDebouncedOnClickListener { showCounterCreationDialog() }
 
             counterNameAdapter = CounterNameSelectionAdapter { selectedCounterName ->
                 debounceUserInteraction {
@@ -82,8 +89,16 @@ class CounterNameSelectionDialog(
     }
 
 
-    private fun updateCounterNames(counterNames: Set<String>) {
+    private fun updateCounterNames(counterNames: List<String>) {
         viewBinding.layoutLoadableList.updateState(counterNames)
-        counterNameAdapter.submitList(counterNames.toList())
+        counterNameAdapter.submitList(counterNames)
+    }
+
+    private fun showCounterCreationDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterCreationDialog(),
+            hideCurrent = false,
+        )
     }
 }

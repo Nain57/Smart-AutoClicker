@@ -156,6 +156,9 @@
     <string name="field_scenario_quality_description">To achieve faster detection, Klick\'r is downscaling the images before detecting.\n\nIf you increase the resolution, the detection will be slower, but more accurate. If you decrease the resolution, the detection will be faster, but less accurate. Find the good ratio between the detection resolution and the conditions thresholds to get the best of your scenarios!</string>
     <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>
 
+    <string name="field_counters_title">Counters</string>
+    <string name="field_counters_desc_empty">No counters defined</string>
+    <string name="field_counters_desc">%1$d counters defined</string>
 
     <string name="field_show_debug_view_title">Show debug view</string>
     <string name="field_show_debug_view_desc">Display the events triggered while detecting.</string>
@@ -229,8 +232,6 @@
 
     <string name="field_select_detection_area_title">Detection Area</string>
     <string name="field_select_detection_area_desc">In [%1$d, %2$d, %3$d, %4$d]</string>
-
-
 
 
     <!-- Dialog Condition Text ==================================================================================== -->
@@ -477,13 +478,36 @@
         don\'t support standard text writing, so always test your action first!</string>
 
 
+    <!-- Dialogs Counters ========================================================================================== -->
+
+    <string name="dialog_title_counters_config">Counters</string>
+
+    <string name="item_counter_desc_collapsed_no_reference">This counter is unused. (%1$f)</string>
+    <string name="item_counter_desc_collapsed_referenced">This counter is referenced %1$d times. (%2$f)</string>
+    <string name="item_counter_desc_expanded_no_reference">This counter is unused.</string>
+    <string name="item_counter_desc_expanded_referenced">This counter is referenced %1$d times.</string>
+
+    <string name="field_label_counter_starting_value">Starting value</string>
+
+    <string name="button_text_counter_actions_references">%1$d Actions</string>
+    <string name="button_text_counter_actions_no_reference">Never used</string>
+    <string name="button_text_counter_conditions_references">%1$d Conditions</string>
+    <string name="button_text_counter_conditions_no_reference">Never checked</string>
+
+    <string name="button_text_counter_delete">Delete counter</string>
+    <string name="button_text_counter_delete_and_replace">Delete and Replace</string>
+    <string name="message_replace_by">Replace by …</string>
+
+    <string name="dialog_title_new_counter">New Counter</string>
+    <string name="field_new_counter_starting_value">Starting value</string>
+
     <!-- Dialogs warning/error ===================================================================================== -->
 
     <string name="warning_dialog_message_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>
     <string name="warning_dialog_message_event_delete_associated_action">This event have one or more actions referencing it. Deleting this event will delete the associated actions as well.\nAre you sure ?</string>
     <string name="warning_dialog_message_condition_delete_associated_action">This condition have one or more actions referencing it. Deleting this condition will delete the associated actions as well.\nAre you sure ?</string>
     <string name="warning_dialog_message_close_without_saving">You have unsaved modifications, do you want to discard them?</string>
-
+    <string name="warning_dialog_message_delete">You are about to delete this item, are you sure ?</string>
 
     <string name="error_dialog_message_scenario_saving">Your scenario can\'t be saved due to an internal error.\nDo you want to modify it or cancel all your modifications ?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r is incorrectly installed and can\'t start the detection.\n\nIf you have installed it from a legitimate application store, please contact us on GitHub, as it will help us fix this issue.</string>

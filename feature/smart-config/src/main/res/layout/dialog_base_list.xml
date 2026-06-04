@@ -15,10 +15,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorSurfaceContainerLowest"
     android:minHeight="@dimen/bottom_sheet_min_height">
 
@@ -38,6 +39,31 @@
             android:layout_marginTop="@dimen/margin_vertical_default"
             android:layout_marginBottom="@dimen/margin_vertical_default"
             android:background="@color/listBackground"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/floating_buttons_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_copy"
+            style="@style/AppTheme.Widget.FabSecondary"
+            app:srcCompat="@drawable/ic_copy"
+            android:contentDescription="@string/content_desc_copy_button"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_new"
+            style="@style/AppTheme.Widget.Fab"
+            app:srcCompat="@drawable/ic_add"
+            android:contentDescription="@string/content_desc_add_button"/>
 
     </LinearLayout>
 

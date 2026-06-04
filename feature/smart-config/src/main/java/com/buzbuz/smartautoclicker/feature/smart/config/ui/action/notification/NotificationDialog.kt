@@ -43,9 +43,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionNotificationBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationSettingsStarterOverlay
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -201,7 +201,7 @@ class NotificationDialog(
     private fun showCounterSelectionDialog() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = CounterNameSelectionDialog { counterName ->
+            newOverlay = CounterSelectionDialog { counterName ->
                 viewModel.setNotificationMessageCounterName(counterName)
                 viewBinding.fieldMessageCounterName.setTextValue(counterName)
             },

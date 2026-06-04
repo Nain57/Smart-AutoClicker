@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.AreRequiredAlphabetModelsInstalledUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.AreRequiredAlphabetModelsInstalledUseCase
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers

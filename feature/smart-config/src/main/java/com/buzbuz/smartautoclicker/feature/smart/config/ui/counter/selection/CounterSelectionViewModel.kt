@@ -14,24 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection
 
-import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRModelState
+import androidx.lifecycle.ViewModel
+
+import com.buzbuz.smartautoclicker.core.base.extensions.mapList
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+class CounterSelectionViewModel @Inject constructor(
+    editionRepository: EditionRepository,
+) : ViewModel() {
 
-class AreRequiredAlphabetModelsInstalledUseCase @Inject constructor(
-    private val getRequiredAlphabetModelsUseCase: GetRequiredAlphabetModelsUseCase,
-) {
+    val counterNames: Flow<List<String>> = editionRepository.editionState.allEditedCounters
+        .mapList { counter -> counter.counterName  }
 
-    operator fun invoke(scenarioId: Long): Flow<Boolean> =
-        getRequiredAlphabetModelsUseCase(scenarioId)
-            .map { models ->
-                models.find { model -> model.state !is OCRModelState.Installed } == null
-            }
 
 }
-

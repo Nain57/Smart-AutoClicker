@@ -54,6 +54,13 @@ internal fun Context.showDeleteConditionsWithAssociatedActionsDialog(onOkPressed
         onOkPressed = onOkPressed,
     )
 
+internal fun Context.showDeleteConfirmationDialog(onOkPressed: () -> Unit): Unit =
+    showConfirmationDialog(
+        title = R.string.dialog_overlay_title_warning,
+        message = R.string.warning_dialog_message_delete,
+        onOkPressed = onOkPressed,
+    )
+
 private fun Context.showConfirmationDialog(@StringRes title: Int, @StringRes message: Int, onOkPressed: () -> Unit) {
     MaterialAlertDialogBuilder(this)
         .setTitle(title)

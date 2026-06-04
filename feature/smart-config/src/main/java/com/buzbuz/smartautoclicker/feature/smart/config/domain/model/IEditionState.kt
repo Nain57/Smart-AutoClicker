@@ -79,6 +79,7 @@ interface IEditionState {
 
     // Edited items getters
     fun getScenario(): Scenario?
+    fun getAllEditedCounters(): List<Counter>
     fun getAllEditedEvents(): List<Event>
     fun <T : Event> getEditedEvent(): T?
     fun <T : Action> getEditedEventActions(): List<T>?

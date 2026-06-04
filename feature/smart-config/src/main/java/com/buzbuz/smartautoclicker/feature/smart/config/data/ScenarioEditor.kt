@@ -150,6 +150,10 @@ internal class ScenarioEditor {
         counterListEditor.deleteEditedCounter(item)
     }
 
+    fun saveCountersEditionAsReference() {
+        counterListEditor.saveEditionAsReference()
+    }
+
     fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {
         imageEventsEditor.updateList(newEvents)
     }
@@ -159,8 +163,8 @@ internal class ScenarioEditor {
         triggerEventsEditor.editedList.value?.let { addAll(it) }
     }
 
-    fun getEditedEvent(): Event? =
-        currentEventEditor.value?.editedItem?.value
+    fun getAllEditedCounters(): List<Counter> =
+        counterListEditor.editedList.value ?: emptyList()
 
     fun getEditedImageEventsCount(): Int =
         imageEventsEditor.editedList.value?.size ?: 0

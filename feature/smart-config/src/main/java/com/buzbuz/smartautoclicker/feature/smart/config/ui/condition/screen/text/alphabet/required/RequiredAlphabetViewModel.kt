@@ -23,8 +23,8 @@ import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.OCRModelsRepo
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.AreRequiredAlphabetModelsInstalledUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.GetRequiredAlphabetModelsUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.AreRequiredAlphabetModelsInstalledUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.GetRequiredAlphabetModelsUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.toUiState
 

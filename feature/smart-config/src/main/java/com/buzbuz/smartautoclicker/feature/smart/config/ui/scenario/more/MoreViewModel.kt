@@ -17,18 +17,25 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
 import android.content.ComponentName
+import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
 class MoreViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    editionRepository: EditionRepository,
     private val appComponentsProvider: AppComponentsProvider,
     private val debuggingRepository: DebuggingRepository,
 ) : ViewModel() {
@@ -45,6 +52,12 @@ class MoreViewModel @Inject constructor(
     val showDebugReportEnabled: Flow<Boolean> = debuggingRepository.isDebugReportAvailable
         .combine(_isDebugReportEnabled) { available, enabled ->
             available && enabled
+        }
+
+    val counterFieldDescription: Flow<String> = editionRepository.editionState.allEditedCounters
+        .map { counters ->
+            if (counters.isEmpty()) context.getString(R.string.field_counters_desc_empty)
+            else context.getString(R.string.field_counters_desc, counters.size)
         }
 
 

@@ -36,7 +36,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeVie
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.system.SystemActionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.counter.CounterNameSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureViewModel
@@ -53,6 +52,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.Tri
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config.CountersConfigViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CountersCreationViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
@@ -82,7 +84,9 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun clickViewModel(): ClickViewModel
     fun componentSelectionViewModel(): ComponentSelectionModel
     fun conditionCopyViewModel(): ConditionCopyModel
-    fun counterNameSelectionViewModel(): CounterNameSelectionViewModel
+    fun counterCreationViewModel(): CountersCreationViewModel
+    fun counterSelectionViewModel(): CounterSelectionViewModel
+    fun countersViewModel(): CountersConfigViewModel
     fun counterReachedConditionViewModel(): CounterReachedConditionViewModel
     fun eventCopyModel(): EventCopyModel
     fun eventDialogViewModel(): EventDialogViewModel

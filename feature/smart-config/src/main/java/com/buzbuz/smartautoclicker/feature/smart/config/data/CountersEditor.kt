@@ -58,8 +58,12 @@ internal class CountersEditor {
 
 
     fun startEdition(referenceItems: List<Counter>) {
-        referenceList.value = referenceItems
+        referenceList.value = referenceItems.toList()
         _editedList.value = referenceItems.toList()
+    }
+
+    fun saveEditionAsReference() {
+        referenceList.value = _editedList.value
     }
 
     fun isCounterDefined(counterName: String): Boolean =

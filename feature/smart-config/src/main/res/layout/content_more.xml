@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -29,10 +29,26 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/debug_live_card"
+            android:id="@+id/counters_card"
             style="@style/AppTheme.Widget.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <include layout="@layout/include_field_selector"
+                android:id="@+id/field_counters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/debug_live_card"
+            style="@style/AppTheme.Widget.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large">
 
             <include layout="@layout/include_field_switch"
                 android:id="@+id/field_debug_overlay"

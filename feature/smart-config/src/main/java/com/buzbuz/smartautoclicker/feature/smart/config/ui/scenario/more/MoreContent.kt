@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config.CountersConfigDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportDialog
 
 import kotlinx.coroutines.launch
@@ -81,6 +82,12 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
                 )
                 setOnClickListener { debounceUserInteraction { showDebugReport() } }
             }
+
+            fieldCounters.apply {
+                setTitle(context.getString(R.string.field_counters_title))
+                setOnClickListener(viewModel::toggleIsDebugReportEnabled)
+                setOnClickListener { debounceUserInteraction { showCountersConfigDialog() } }
+            }
         }
 
         return viewBinding.root
@@ -92,6 +99,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
                 launch { viewModel.isDebugViewEnabled.collect(viewBinding.fieldDebugOverlay::setChecked) }
                 launch { viewModel.isDebugReportEnabled.collect(viewBinding.fieldDebugReport::setChecked) }
                 launch { viewModel.showDebugReportEnabled.collect(::updateDebugReportAvailability) }
+                launch { viewModel.counterFieldDescription.collect(::updateCountersDesc) }
             }
         }
     }
@@ -111,6 +119,10 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
         }
     }
 
+    private fun updateCountersDesc(desc: String) {
+        viewBinding.fieldCounters.setDescription(desc)
+    }
+
     private fun updateDebugReportAvailability(isAvailable: Boolean) {
         viewBinding.fieldShowReport.apply {
             setEnabled(isAvailable)
@@ -122,6 +134,13 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
         dialogController.overlayManager.navigateTo(
             context = context,
             newOverlay = DebugReportDialog(),
+        )
+    }
+
+    private fun showCountersConfigDialog() {
+        dialogController.overlayManager.navigateTo(
+            context = context,
+            newOverlay = CountersConfigDialog(),
         )
     }
 }

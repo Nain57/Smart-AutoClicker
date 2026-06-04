@@ -228,11 +228,13 @@ internal class EditionState internal constructor(
     override fun getScenario(): Scenario? =
         editor.editedScenario.value
 
+    override fun getAllEditedCounters(): List<Counter> =
+        editor.getAllEditedCounters()
+
     override fun getAllEditedEvents(): List<Event> =
         editor.getAllEditedEvents()
 
     @Suppress("UNCHECKED_CAST")
-
     override fun <T : Event> getEditedEvent(): T? =
         editor.currentEventEditor.value?.editedItem?.value as? T
 
