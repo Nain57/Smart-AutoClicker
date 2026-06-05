@@ -501,6 +501,10 @@
     <string name="dialog_title_new_counter">New Counter</string>
     <string name="field_new_counter_starting_value">Starting value</string>
 
+    <string name="field_counter_selection_title_empty">No counter selected</string>
+    <string name="field_counter_selection_desc">Starting value: %1$f</string>
+    <string name="field_counter_selection_desc_empty">Click here to select a counter</string>
+
     <!-- Dialogs warning/error ===================================================================================== -->
 
     <string name="warning_dialog_message_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>

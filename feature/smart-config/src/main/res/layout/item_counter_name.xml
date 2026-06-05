@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2024 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,34 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_height">
+    android:layout_height="@dimen/item_height"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_vertical_small"
+    android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_counter_name"
-        style="@style/TextAppearance.Material3.BodyLarge"
+        android:id="@+id/title"
+        style="@style/AppTheme.Field.TitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_horizontal_default"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
-        android:layout_gravity="center_vertical"
-        app:drawableEndCompat="@drawable/ic_chevron_right"
-        tools:text="The counter name"/>
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="@dimen/margin_horizontal_large"
+        android:layout_marginVertical="@dimen/margin_vertical_mini"
+        tools:text="My_counter_name"/>
 
-</FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description"
+        style="@style/AppTheme.Field.SubText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_mini"
+        android:gravity="center_vertical"
+        tools:text="Starting value: 82.00" />
+
+</LinearLayout>

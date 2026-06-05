@@ -231,6 +231,9 @@ internal class EditionState internal constructor(
     override fun getAllEditedCounters(): List<Counter> =
         editor.getAllEditedCounters()
 
+    override fun getCounter(name: String): Counter? =
+        editor.getCounter(name)
+
     override fun getAllEditedEvents(): List<Event> =
         editor.getAllEditedEvents()
 

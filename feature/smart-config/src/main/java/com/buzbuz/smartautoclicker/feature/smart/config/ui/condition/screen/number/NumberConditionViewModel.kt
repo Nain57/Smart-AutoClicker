@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperato
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullNameRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.UiStaticOrCounterSelection
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
 
@@ -123,8 +124,7 @@ class NumberConditionViewModel @Inject constructor(
             detectionAreaError = detectionArea.isEmpty,
             detectionThreshold = threshold,
             selectorOperatorDropdownItem = comparisonOperation.toCounterOperatorDropdownItem(),
-            isNumberValue = counterValue is CounterOperationValue.Number,
-            valueText = counterValue.value.toString(),
+            operandValue = counterValue.toUiStaticOrCounterSelection(),
             conditionEffectDesc = counterValue.toEffectDescription(context, comparisonOperation),
         )
 
@@ -140,5 +140,14 @@ class NumberConditionViewModel @Inject constructor(
                 context.getString(operation.toFullNameRes()),
                 value.toString(),
             )
+        }
+
+    private fun CounterOperationValue.toUiStaticOrCounterSelection(): UiStaticOrCounterSelection =
+        when (this) {
+            is CounterOperationValue.Counter ->
+                UiStaticOrCounterSelection.CounterValue(editionRepository.editionState.getCounter(value))
+
+            is CounterOperationValue.Number ->
+                UiStaticOrCounterSelection.StaticValue(value)
         }
 }

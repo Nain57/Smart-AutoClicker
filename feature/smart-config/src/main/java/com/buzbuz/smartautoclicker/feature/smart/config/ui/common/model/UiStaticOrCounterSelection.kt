@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model
 
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 
-data class NumberConditionUiState(
-    val canBeSaved: Boolean,
-    val name: String,
-    val nameError: Boolean,
-    val detectionAreaDescription: String,
-    val detectionAreaError: Boolean,
-    val detectionThreshold: Int,
-    val selectorOperatorDropdownItem: CounterOperatorDropdownItem,
-    val operandValue: UiStaticOrCounterSelection,
-    val conditionEffectDesc: String,
-)
+sealed class UiStaticOrCounterSelection {
+    data class StaticValue(val value: Double): UiStaticOrCounterSelection()
+    data class CounterValue(val counter: Counter?): UiStaticOrCounterSelection()
+}

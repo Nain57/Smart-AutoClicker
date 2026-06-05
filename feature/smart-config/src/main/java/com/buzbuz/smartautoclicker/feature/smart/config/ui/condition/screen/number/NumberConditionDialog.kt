@@ -17,12 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number
 
 import android.text.InputFilter
-import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -41,23 +39,22 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnValueChangedFromUserListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderRange
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setSliderValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
-import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionNumberBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.setValueInfo
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.UiStaticOrCounterSelection
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
@@ -125,50 +122,25 @@ class NumberConditionDialog(
                 )
                 setOnCheckedListener { checkedId ->
                     viewModel.setOperationValue(
-                        if (checkedId == 0) {
-                            CounterOperationValue.Number(
-                                if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
-                                else editValueLayout.textField.text.toString().toDouble()
-                            )
-                        } else {
-                            CounterOperationValue.Counter(
-                                if (editValueCounterName.textField.text.isNullOrEmpty()) ""
-                                else editValueCounterName.textField.text.toString()
-                            )
-                        }
+                        if (checkedId == 0) CounterOperationValue.Number(0.0)
+                        else CounterOperationValue.Counter("")
                     )
                 }
             }
 
             editValueLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
-                setLabel(R.string.field_counter_operation_value_label)
-                setOnTextChangedListener {
-                    viewModel.setOperationValue(
-                        CounterOperationValue.Number(
-                            if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
-                            else editValueLayout.textField.text.toString().toDouble()
-                        )
-                    )
-                }
-            }
-            hideSoftInputOnFocusLoss(editValueLayout.textField)
-
-            editValueCounterName.apply {
-                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
-                setOnTextChangedListener {
-                    viewModel.setOperationValue(CounterOperationValue.Counter(it.toString()))
-                }
-                textField.filters = arrayOf<InputFilter>(
-                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
-                )
-                setOnCheckboxClickedListener {
-                    showCounterSelectionDialog { counterName ->
-                        viewModel.setOperationValue(CounterOperationValue.Counter(counterName))
+                setup(
+                    onStaticValueChangedListener = { newValue ->
+                        viewModel.setOperationValue(CounterOperationValue.Number(newValue))
+                    },
+                    onOpenCounterSelectionClicked = {
+                        showCounterSelectionDialog { counterSelected ->
+                            viewModel.setOperationValue(CounterOperationValue.Counter(counterSelected))
+                        }
                     }
-                }
+                )
+                hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
-            hideSoftInputOnFocusLoss(editValueCounterName.textField)
 
             fieldSelectArea.apply {
                 setTitle(context.getString(R.string.generic_detection_area_title))
@@ -222,36 +194,17 @@ class NumberConditionDialog(
             fieldEditName.setError(uiState.nameError)
 
             comparisonOperatorField.setSelectedItem(uiState.selectorOperatorDropdownItem)
-            updateCounterValueLayout(uiState)
+            valueTypeMultiStateButton.setChecked(
+                when (uiState.operandValue) {
+                    is UiStaticOrCounterSelection.CounterValue -> 1
+                    is UiStaticOrCounterSelection.StaticValue -> 0
+                }
+            )
+            editValueLayout.setValueInfo(uiState.operandValue)
+            textConditionOperation.text = uiState.conditionEffectDesc
 
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
-        }
-    }
-
-    private fun updateCounterValueLayout(uiState: NumberConditionUiState) {
-        viewBinding.apply {
-            val typeChanged = editValueLayout.root.isVisible != uiState.isNumberValue
-
-            if (uiState.isNumberValue) {
-                editValueCounterName.root.visibility = View.GONE
-                editValueLayout.root.visibility = View.VISIBLE
-                valueTypeMultiStateButton.setChecked(0)
-
-                if (typeChanged || editValueLayout.textField.text.isNullOrEmpty()) {
-                    viewBinding.editValueLayout.setText(uiState.valueText, InputType.TYPE_CLASS_NUMBER)
-                }
-            } else {
-                editValueCounterName.root.visibility = View.VISIBLE
-                editValueLayout.root.visibility = View.GONE
-                valueTypeMultiStateButton.setChecked(1)
-
-                if (typeChanged || editValueCounterName.textField.text.isNullOrEmpty()) {
-                    viewBinding.editValueCounterName.setTextValue(uiState.valueText)
-                }
-            }
-
-            textConditionOperation.text = uiState.conditionEffectDesc
         }
     }
 

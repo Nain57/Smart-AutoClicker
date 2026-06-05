@@ -66,6 +66,9 @@ internal class CountersEditor {
         referenceList.value = _editedList.value
     }
 
+    fun getCounter(name: String): Counter? =
+        _editedList.value?.find { counter -> counter.counterName == name }
+
     fun isCounterDefined(counterName: String): Boolean =
         _editedList.value?.let { it.find { counter -> counter.counterName == counterName } != null } ?: false
 

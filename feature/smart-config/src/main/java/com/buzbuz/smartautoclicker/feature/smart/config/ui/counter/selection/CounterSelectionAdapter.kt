@@ -25,40 +25,43 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCounterNameBinding
 
-class CounterNameSelectionAdapter(
-    private val onCounterNameSelected: (String) -> Unit,
-): ListAdapter<String, CounterNameViewHolder>(CounterNameDiffUtilCallback) {
+class CounterSelectionAdapter(
+    private val onCounterSelected: (CounterSelectionUiItem) -> Unit,
+): ListAdapter<CounterSelectionUiItem, CounterSelectionViewHolder>(CounterSelectionDiffUtilCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterNameViewHolder =
-        CounterNameViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CounterSelectionViewHolder =
+        CounterSelectionViewHolder(
             ItemCounterNameBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onCounterNameSelected,
+            onCounterSelected,
         )
 
-    override fun onBindViewHolder(holder: CounterNameViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CounterSelectionViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }
 
 }
 
-/** DiffUtil Callback comparing two counter names when updating the [CounterNameSelectionAdapter] list. */
-object CounterNameDiffUtilCallback: DiffUtil.ItemCallback<String>() {
-    override fun areItemsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
-    override fun areContentsTheSame(oldItem: String, newItem: String): Boolean = oldItem == newItem
+/** DiffUtil Callback comparing two counter names when updating the [CounterSelectionAdapter] list. */
+object CounterSelectionDiffUtilCallback: DiffUtil.ItemCallback<CounterSelectionUiItem>() {
+    override fun areItemsTheSame(oldItem: CounterSelectionUiItem, newItem: CounterSelectionUiItem): Boolean =
+        oldItem.counterName == newItem.counterName
+    override fun areContentsTheSame(oldItem: CounterSelectionUiItem, newItem: CounterSelectionUiItem): Boolean =
+        oldItem == newItem
 }
 
 
 /**
- * View holder displaying an counter name in the [CounterNameSelectionAdapter].
+ * View holder displaying an counter name in the [CounterSelectionAdapter].
  * @param viewBinding the view binding for this item.
  */
-class CounterNameViewHolder(
+class CounterSelectionViewHolder(
     private val viewBinding: ItemCounterNameBinding,
-    private val onCounterNameSelected: (String) -> Unit,
+    private val onCounterSelected: (CounterSelectionUiItem) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(item: String) {
-        viewBinding.textCounterName.text = item
-        viewBinding.root.setOnClickListener { onCounterNameSelected(item) }
+    fun onBind(item: CounterSelectionUiItem) {
+        viewBinding.title.text = item.counterName
+        viewBinding.description.text = item.counterStartingValueDesc
+        viewBinding.root.setOnClickListener { onCounterSelected(item) }
     }
 }

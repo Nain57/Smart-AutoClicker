@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConfirmationDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CounterCreationDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
@@ -60,6 +61,11 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
                 buttonDismiss.setDebouncedOnClickListener { back() }
             }
+
+            floatingButtonsLayout.visibility = View.VISIBLE
+            buttonCopy.visibility = View.GONE
+            buttonNew.visibility = View.VISIBLE
+            buttonNew.setDebouncedOnClickListener { showCounterCreationDialog() }
 
             countersAdapter = CountersConfigAdapter(
                 onExpandCollapse = ::onExpandClicked,
@@ -161,5 +167,13 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         context.showDeleteConfirmationDialog {
             viewModel.deleteCounter(counter)
         }
+    }
+
+    private fun showCounterCreationDialog() {
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterCreationDialog(),
+            hideCurrent = false,
+        )
     }
 }

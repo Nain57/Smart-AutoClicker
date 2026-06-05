@@ -16,20 +16,30 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.base.extensions.mapList
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CounterSelectionViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    val counterNames: Flow<List<String>> = editionRepository.editionState.allEditedCounters
-        .mapList { counter -> counter.counterName  }
-
-
+    val counterNames: Flow<List<CounterSelectionUiItem>> = editionRepository.editionState.allEditedCounters
+        .mapList { counter ->
+            CounterSelectionUiItem(
+                counterName = counter.counterName,
+                counterStartingValueDesc = context.getString(
+                    R.string.field_counter_selection_desc,
+                    counter.defaultValue,
+                )
+            )
+        }
 }

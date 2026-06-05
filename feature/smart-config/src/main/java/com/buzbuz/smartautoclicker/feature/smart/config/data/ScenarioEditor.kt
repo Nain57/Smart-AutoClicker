@@ -138,6 +138,9 @@ internal class ScenarioEditor {
         _editedScenario.value = item
     }
 
+    fun getCounter(name: String): Counter? =
+        counterListEditor.getCounter(name)
+
     fun addCounter(item: Counter) {
         counterListEditor.addCounter(item)
     }

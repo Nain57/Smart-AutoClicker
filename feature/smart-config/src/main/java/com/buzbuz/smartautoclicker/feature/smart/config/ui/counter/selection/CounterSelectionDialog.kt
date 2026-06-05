@@ -49,7 +49,7 @@ class CounterSelectionDialog(
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogBaseListBinding
 
-    private lateinit var counterNameAdapter: CounterNameSelectionAdapter
+    private lateinit var counterNameAdapter: CounterSelectionAdapter
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
@@ -63,9 +63,9 @@ class CounterSelectionDialog(
             buttonNew.visibility = View.VISIBLE
             buttonNew.setDebouncedOnClickListener { showCounterCreationDialog() }
 
-            counterNameAdapter = CounterNameSelectionAdapter { selectedCounterName ->
+            counterNameAdapter = CounterSelectionAdapter { selectedCounter ->
                 debounceUserInteraction {
-                    onCounterSelected(selectedCounterName)
+                    onCounterSelected(selectedCounter.counterName)
                     back()
                 }
             }
@@ -89,7 +89,7 @@ class CounterSelectionDialog(
     }
 
 
-    private fun updateCounterNames(counterNames: List<String>) {
+    private fun updateCounterNames(counterNames: List<CounterSelectionUiItem>) {
         viewBinding.layoutLoadableList.updateState(counterNames)
         counterNameAdapter.submitList(counterNames)
     }

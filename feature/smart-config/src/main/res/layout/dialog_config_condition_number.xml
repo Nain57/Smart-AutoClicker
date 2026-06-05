@@ -72,7 +72,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/value_type_multi_state_button"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/counter_operand_layout"/>
+                        app:layout_constraintBottom_toTopOf="@id/divider_top"/>
 
                     <include layout="@layout/include_button_multi_state"
                         android:id="@+id/value_type_multi_state_button"
@@ -83,29 +83,37 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/comparison_operator_field" />
 
-                    <FrameLayout
-                        android:id="@+id/counter_operand_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_top"
+                        style="@style/Widget.Material3.MaterialDivider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/margin_vertical_small"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/comparison_operator_field"
-                        app:layout_constraintBottom_toTopOf="@id/text_condition_operation">
+                        app:layout_constraintBottom_toTopOf="@id/edit_value_layout"/>
 
-                        <include layout="@layout/include_field_text_input"
-                            android:id="@+id/edit_value_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="visible"/>
+                    <include layout="@layout/include_static_or_counter_selection"
+                        android:id="@+id/edit_value_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider_top"
+                        app:layout_constraintBottom_toTopOf="@id/divider_bottom"/>
 
-                        <include layout="@layout/include_field_text_input_with_checkbox"
-                            android:id="@+id/edit_value_counter_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"/>
-
-                    </FrameLayout>
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_bottom"
+                        style="@style/Widget.Material3.MaterialDivider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/margin_vertical_small"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edit_value_layout"
+                        app:layout_constraintBottom_toTopOf="@id/text_condition_operation"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/text_condition_operation"
