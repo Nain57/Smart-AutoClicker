@@ -56,8 +56,8 @@ import kotlinx.coroutines.launch
  * once the user has selected a scenario to be used. It allows the user to start the detection on the currently loaded
  * scenario, as well as editing the attached list of events.
  *
- * There is no overlay views attached to this overlay menu, meaning that the user will always be able to clicks on the
- * Activities displayed below it.
+ * The debug panel is informational and should let the user interact with the app underneath while a scenario is
+ * running.
  */
 class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
@@ -84,6 +84,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
+    private var isScenarioRunning: Boolean = false
+    private var isDebugPanelVisible: Boolean = false
 
     /**
      * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
@@ -131,6 +133,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
         }
     }
+
+    override fun shouldUseTouchableInsets(): Boolean = shouldUseRuntimeDebugPassthrough()
+
+    override fun shouldForceNotTouchableOnGestureDispatch(): Boolean = shouldUseRuntimeDebugPassthrough()
 
     override fun onStart() {
         super.onStart()
@@ -231,6 +237,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     /** Refresh the menu layout according to the detection state. */
     private fun updateDetectionState(newState: UiState) {
         val currentState = viewBinding.btnPlay.tag
+        isScenarioRunning = newState == UiState.Detecting
+        refreshTouchHandling()
         if (currentState == newState) return
 
         viewBinding.btnPlay.tag = newState
@@ -280,6 +288,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
      * @param isVisible true when the debug view should be shown, false to hide it.
      */
     private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
+        isDebugPanelVisible = isVisible
         if (isVisible && debugObservableJob == null) {
             viewBinding.layoutDebug.visibility = View.VISIBLE
             debugObservableJob = observeDebugValues()
@@ -291,7 +300,12 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             updateLiveDebugUiState(null)
             viewBinding.layoutDebug.visibility = View.GONE
         }
+
+        refreshTouchHandling()
     }
+
+    private fun shouldUseRuntimeDebugPassthrough(): Boolean =
+        isScenarioRunning && isDebugPanelVisible
 
     /**
      * Observe the values for the debug and update the debug views.

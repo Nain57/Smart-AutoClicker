@@ -29,6 +29,7 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.ViewTreeObserver
 import android.widget.ImageButton
 
 import androidx.annotation.CallSuper
@@ -115,9 +116,9 @@ abstract class OverlayMenu(
     /** The root view of the menu overlay. Retrieved from [onCreateMenu] implementation. */
     private lateinit var menuLayout: ViewGroup
     /** The view displaying the background of the overlay. */
-    private lateinit var menuBackground: ViewGroup
+    protected lateinit var menuBackground: ViewGroup
     /** The view containing the buttons as direct children. */
-    private lateinit var buttonsContainer: ViewGroup
+    protected lateinit var buttonsContainer: ViewGroup
     /** Handles the window size computing when animating a resize of the overlay. */
     private lateinit var resizeController: OverlayMenuResizeController
     /** Handles the touch events on the move button. */
@@ -145,6 +146,85 @@ abstract class OverlayMenu(
     protected var screenOverlayView: View? = null
     /** The layout parameters of the overlay view. */
     private lateinit var overlayLayoutParams: WindowManager.LayoutParams
+    private var originalOverlayFlags: Int = 0
+    private var isWindowStarted: Boolean = false
+    private var forceWindowPassthrough: Boolean = false
+
+    private var internalInsetsListenerProxy: Any? = null
+
+    private fun setupInternalInsetsListener() {
+        if (internalInsetsListenerProxy != null) return
+        try {
+            val listenerClass = Class.forName("android.view.ViewTreeObserver\$OnComputeInternalInsetsListener")
+            val touchableRegionField = Class.forName("android.view.ViewTreeObserver\$InternalInsetsInfo").getField("touchableRegion")
+            val setTouchableInsetsMethod = Class.forName("android.view.ViewTreeObserver\$InternalInsetsInfo").getMethod("setTouchableInsets", java.lang.Integer.TYPE)
+
+            val proxy = java.lang.reflect.Proxy.newProxyInstance(
+                listenerClass.classLoader,
+                arrayOf(listenerClass)
+            ) { _, method, args ->
+                if (method.name == "onComputeInternalInsets") {
+                    val insetsInfo = args[0]
+                    val region = touchableRegionField.get(insetsInfo) as android.graphics.Region
+                    region.setEmpty()
+
+                    getTouchableViews().forEach { view ->
+                        if (view.visibility == View.VISIBLE && view.isAttachedToWindow) {
+                            val rect = android.graphics.Rect()
+                            view.getDrawingRect(rect)
+                            try {
+                                menuLayout.offsetDescendantRectToMyCoords(view, rect)
+                                region.union(rect)
+                            } catch (e: IllegalArgumentException) {
+                                // Descendant view is not a child of menuLayout
+                            }
+                        }
+                    }
+
+                    setTouchableInsetsMethod.invoke(insetsInfo, TOUCHABLE_INSETS_REGION)
+                }
+                null
+            }
+
+            val addMethod = ViewTreeObserver::class.java.getMethod("addOnComputeInternalInsetsListener", listenerClass)
+            addMethod.invoke(menuLayout.viewTreeObserver, proxy)
+            internalInsetsListenerProxy = proxy
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to setup OnComputeInternalInsetsListener via reflection", e)
+        }
+    }
+
+    private fun removeInternalInsetsListener() {
+        val proxy = internalInsetsListenerProxy ?: return
+        try {
+            val listenerClass = Class.forName("android.view.ViewTreeObserver\$OnComputeInternalInsetsListener")
+            val removeMethod = ViewTreeObserver::class.java.getMethod("removeOnComputeInternalInsetsListener", listenerClass)
+            removeMethod.invoke(menuLayout.viewTreeObserver, proxy)
+            internalInsetsListenerProxy = null
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to remove OnComputeInternalInsetsListener via reflection", e)
+        }
+    }
+
+    private fun updateInternalInsetsListener() {
+        if (!this::menuLayout.isInitialized || !menuLayout.isAttachedToWindow) return
+
+        if (shouldUseTouchableInsets()) {
+            setupInternalInsetsListener()
+            menuLayout.requestLayout()
+        } else {
+            removeInternalInsetsListener()
+        }
+    }
+
+    protected open fun getTouchableViews(): List<View> {
+        return listOf(buttonsContainer)
+    }
+
+    protected open fun shouldUseTouchableInsets(): Boolean = false
+
+    protected open fun shouldForceNotTouchableOnGestureDispatch(): Boolean = false
 
     private val onLockedPositionChangedListener: (Point?) -> Unit = ::onLockedPositionChanged
 
@@ -194,11 +274,23 @@ abstract class OverlayMenu(
         menuLayout = onCreateMenu(context.getSystemService(LayoutInflater::class.java))
         screenOverlayView = onCreateOverlayView()
         overlayLayoutParams = onCreateOverlayViewLayoutParams()
+        originalOverlayFlags = overlayLayoutParams.flags
 
         // Set the clicks listener on the menu items
         menuBackground = menuLayout.findViewById(R.id.menu_background)
         buttonsContainer = menuLayout.findViewById(R.id.menu_items)
         setupButtons(buttonsContainer)
+
+        // Add the attach listener to set up the insets listener when attached to the window
+        menuLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                updateInternalInsetsListener()
+            }
+
+            override fun onViewDetachedFromWindow(v: View) {
+                removeInternalInsetsListener()
+            }
+        })
 
         // Setup the touch event handler for the move button
         moveTouchEventHandler = OverlayMenuMoveTouchEventHandler(::updateMenuPosition)
@@ -263,6 +355,10 @@ abstract class OverlayMenu(
         super.start()
         loadMenuPosition(displayConfigManager.displayConfig.orientation)
 
+        isWindowStarted = true
+        applyWindowTouchability()
+        updateInternalInsetsListener()
+
         // Start the show animation for the menu
         Log.d(TAG, "Start show overlay ${hashCode()} animation...")
 
@@ -313,6 +409,9 @@ abstract class OverlayMenu(
             screenOverlayView?.visibility = View.GONE
 
             super.stop()
+            isWindowStarted = false
+            applyWindowTouchability()
+            updateInternalInsetsListener()
 
             if (destroyOnceHidden) {
                 destroyOnceHidden = false
@@ -335,6 +434,7 @@ abstract class OverlayMenu(
         positionDataSource.removeOnLockedPositionChangedListener(onLockedPositionChangedListener)
         saveMenuPosition(displayConfigManager.displayConfig.orientation)
 
+        removeInternalInsetsListener()
         windowManager.removeView(menuLayout)
         screenOverlayView?.let { windowManager.removeView(it) }
         screenOverlayView = null
@@ -420,6 +520,11 @@ abstract class OverlayMenu(
      * @param isVisible true if it has became visible, false if it became invisible.
      */
     protected open fun onScreenOverlayVisibilityChanged(isVisible: Boolean): Unit = Unit
+
+    protected fun refreshTouchHandling() {
+        updateInternalInsetsListener()
+        applyWindowTouchability()
+    }
 
     /**
      * Get the maximum size the window can take.
@@ -522,6 +627,7 @@ abstract class OverlayMenu(
                 hideOverlayButton?.setImageResource(R.drawable.ic_visible_off)
             }
 
+            refreshTouchHandling()
             onScreenOverlayVisibilityChanged(isOverlayVisible)
         }
     }
@@ -605,7 +711,50 @@ abstract class OverlayMenu(
             positionDataSource.dump(writer, contentPrefix)
         }
     }
+
+    private fun applyWindowTouchability() {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) return
+
+        val shouldForceNotTouchable = forceWindowPassthrough && shouldForceNotTouchableOnGestureDispatch()
+        val menuFlags = if (isWindowStarted && !shouldForceNotTouchable) {
+            menuLayoutParams.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
+        } else {
+            menuLayoutParams.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        }
+
+        if (menuLayoutParams.flags != menuFlags) {
+            menuLayoutParams.flags = menuFlags
+        }
+        if (menuLayout.isAttachedToWindow) {
+            windowManager.safeUpdateViewLayout(menuLayout, menuLayoutParams)
+        }
+
+        screenOverlayView?.let { view ->
+            val overlayFlags = when {
+                !isWindowStarted || shouldForceNotTouchable || view.visibility != View.VISIBLE ->
+                    overlayLayoutParams.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+
+                else -> originalOverlayFlags
+            }
+
+            if (overlayLayoutParams.flags != overlayFlags) {
+                overlayLayoutParams.flags = overlayFlags
+            }
+            if (view.isAttachedToWindow) {
+                windowManager.safeUpdateViewLayout(view, overlayLayoutParams)
+            }
+        }
+    }
+
+    fun setWindowTouchable(touchable: Boolean) {
+        val shouldForceWindowPassthrough = !touchable && shouldForceNotTouchableOnGestureDispatch()
+        if (forceWindowPassthrough == shouldForceWindowPassthrough) return
+
+        forceWindowPassthrough = shouldForceWindowPassthrough
+        applyWindowTouchability()
+    }
 }
 
 /** Tag for logs */
 private const val TAG = "OverlayMenu"
+private const val TOUCHABLE_INSETS_REGION = 3
