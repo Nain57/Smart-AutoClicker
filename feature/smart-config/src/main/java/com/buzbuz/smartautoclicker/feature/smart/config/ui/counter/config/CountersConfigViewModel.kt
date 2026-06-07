@@ -64,7 +64,7 @@ class CountersConfigViewModel @Inject constructor(
                     isExpanded = expanded.contains(counter.counterName),
                     forReplacement = forReplacement?.counterName == counter.counterName,
                 )
-            }
+            }.sortedBy { counter -> counter.counterName }
 
             if (forReplacement != null) {
                 CountersUiState.Replacing(counterItems = countersItems)
