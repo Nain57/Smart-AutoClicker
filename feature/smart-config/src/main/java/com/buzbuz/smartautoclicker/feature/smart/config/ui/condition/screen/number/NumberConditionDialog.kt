@@ -28,14 +28,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
@@ -50,11 +44,12 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setValueLabelState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigConditionNumberBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.setValueInfo
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.setup
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setSelectedOperator
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterComparisonOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
@@ -106,30 +101,11 @@ class NumberConditionDialog(
             }
             hideSoftInputOnFocusLoss(fieldEditName.textField)
 
-            comparisonOperatorField.setItems(
-                label = context.getString(R.string.dropdown_comparison_operator_label),
-                items = viewModel.operatorDropdownItems,
-                onItemSelected = viewModel::setComparisonOperator,
-            )
-
-            valueTypeMultiStateButton.apply {
-                setup(
-                    MultiStateButtonConfig(
-                        icons = listOf(R.drawable.ic_numbers, R.drawable.ic_change_counter),
-                        singleSelection = true,
-                        selectionRequired = true,
-                    )
-                )
-                setOnCheckedListener { checkedId ->
-                    viewModel.setOperationValue(
-                        if (checkedId == 0) CounterOperationValue.Number(0.0)
-                        else CounterOperationValue.Counter("")
-                    )
-                }
-            }
-
             editValueLayout.apply {
                 setup(
+                    dropdownItems = allCounterComparisonOperatorDropdownItems(),
+                    onOperatorSelected = viewModel::setComparisonOperator,
+                    onChangeTypeClicked = viewModel::setOperationValue,
                     onStaticValueChangedListener = { newValue ->
                         viewModel.setOperationValue(CounterOperationValue.Number(newValue))
                     },
@@ -137,7 +113,7 @@ class NumberConditionDialog(
                         showCounterSelectionDialog { counterSelected ->
                             viewModel.setOperationValue(CounterOperationValue.Counter(counterSelected))
                         }
-                    }
+                    },
                 )
                 hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
@@ -190,18 +166,12 @@ class NumberConditionDialog(
 
         viewBinding.apply {
             layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
-            if (fieldEditName.textField.text.isNullOrEmpty()) fieldEditName.setText(uiState.name)
+            fieldEditName.setText(uiState.name)
             fieldEditName.setError(uiState.nameError)
 
-            comparisonOperatorField.setSelectedItem(uiState.selectorOperatorDropdownItem)
-            valueTypeMultiStateButton.setChecked(
-                when (uiState.operandValue) {
-                    is UiStaticOrCounterSelection.CounterValue -> 1
-                    is UiStaticOrCounterSelection.StaticValue -> 0
-                }
-            )
+            editValueLayout.setSelectedOperator(uiState.selectorOperatorDropdownItem)
             editValueLayout.setValueInfo(uiState.operandValue)
-            textConditionOperation.text = uiState.conditionEffectDesc
+            effectDesc.text = uiState.conditionEffectDesc
 
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())

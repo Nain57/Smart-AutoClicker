@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeScreenConditionCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toOperationText
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
 
 import kotlinx.coroutines.Job
 
@@ -79,7 +79,7 @@ fun IncludeScreenConditionCardBinding.bind(
             conditionText.visibility = View.VISIBLE
 
             conditionText.text = condition.comparisonOperation
-                .toOperationText(root.context, condition.counterValue.value.toString())
+                .toEffectDescription(root.context, operand = condition.counterValue.value.toString())
             null
         }
 

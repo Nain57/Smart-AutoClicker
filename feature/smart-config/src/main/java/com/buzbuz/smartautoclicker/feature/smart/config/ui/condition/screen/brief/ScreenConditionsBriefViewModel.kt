@@ -47,11 +47,9 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderingType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNameRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toOperationText
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -270,6 +268,6 @@ private fun ScreenCondition.Text.toTextItemDescription(): TextConditionDescripti
 
 private fun ScreenCondition.Number.toTextItemDescription(context: Context): TextConditionDescription =
     TextConditionDescription(
-        conditionText = comparisonOperation.toOperationText(context, counterValue.value.toString()),
+        conditionText = comparisonOperation.toEffectDescription(context, operand = counterValue.value.toString()),
         conditionDetectionArea = detectionArea,
     )

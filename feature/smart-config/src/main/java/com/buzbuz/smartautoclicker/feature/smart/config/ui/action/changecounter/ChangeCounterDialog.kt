@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import android.text.InputFilter
-import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,29 +27,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
-import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setup
-import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionChangeCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setCounter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setOnClickListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setSelectedOperator
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterAffectationOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -94,76 +89,28 @@ class ChangeCounterDialog(
             }
             hideSoftInputOnFocusLoss(fieldName.textField)
 
-            editCounterNameLayout.apply {
-                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
-                setOnTextChangedListener { viewModel.setCounterName(it.toString()) }
-                textField.filters = arrayOf<InputFilter>(
-                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
-                )
-                setOnCheckboxClickedListener { showCounterSelectionDialog(viewModel::setCounterName) }
-            }
-            hideSoftInputOnFocusLoss(editCounterNameLayout.textField)
-
-            operatorField.setItems(
-                label = context.getString(R.string.dropdown_comparison_operator_label),
-                items = viewModel.operatorDropdownItems,
-                onItemSelected = viewModel::setOperationItem,
-            )
-
-            valueTypeMultiStateButton.apply {
-                setup(
-                    MultiStateButtonConfig(
-                        icons = listOf(R.drawable.ic_numbers, R.drawable.ic_change_counter),
-                        singleSelection = true,
-                        selectionRequired = true,
-                    )
-                )
-                setOnCheckedListener { checkedId ->
-                    viewModel.setOperationValue(
-                        if (checkedId == 0) {
-                            CounterOperationValue.Number(
-                                if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
-                                else editValueLayout.textField.text.toString().toDouble()
-                            )
-                        } else {
-                            CounterOperationValue.Counter(
-                                if (editValueCounterName.textField.text.isNullOrEmpty()) ""
-                                else editValueCounterName.textField.text.toString()
-                            )
-                        }
-                    )
+            counterToChange.setOnClickListener {
+                showCounterSelectionDialog { counter  ->
+                    viewModel.setCounterName(counter)
                 }
             }
 
             editValueLayout.apply {
-                textField.filters = arrayOf(MinMaxInputFilter(0, Int.MAX_VALUE))
-                setLabel(R.string.field_counter_operation_value_label)
-                setOnTextChangedListener {
-                    viewModel.setOperationValue(
-                        CounterOperationValue.Number(
-                            if (editValueLayout.textField.text.isNullOrEmpty()) 0.0
-                            else editValueLayout.textField.text.toString().toDouble()
-                        )
-                    )
-                }
-            }
-            hideSoftInputOnFocusLoss(editValueLayout.textField)
-
-            editValueCounterName.apply {
-                setup(R.string.field_counter_name_label, R.drawable.ic_search, false)
-                setOnTextChangedListener {
-                    viewModel.setOperationValue(CounterOperationValue.Counter(it.toString()))
-                }
-                textField.filters = arrayOf<InputFilter>(
-                    InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length))
+                setup(
+                    dropdownItems = allCounterAffectationOperatorDropdownItems(),
+                    onOperatorSelected = viewModel::setOperationItem,
+                    onChangeTypeClicked = viewModel::setOperationValue,
+                    onStaticValueChangedListener = { newValue ->
+                        viewModel.setOperationValue(CounterOperationValue.Number(newValue))
+                    },
+                    onOpenCounterSelectionClicked = {
+                        showCounterSelectionDialog { counterSelected ->
+                            viewModel.setOperationValue(CounterOperationValue.Counter(counterSelected))
+                        }
+                    },
                 )
-                setOnCheckboxClickedListener {
-                    showCounterSelectionDialog { counterName ->
-                        viewModel.setOperationValue(CounterOperationValue.Counter(counterName))
-                    }
-                }
+                hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
-            hideSoftInputOnFocusLoss(editValueCounterName.textField)
         }
 
         return viewBinding.root
@@ -175,17 +122,10 @@ class ChangeCounterDialog(
                 launch { viewModel.isEditingAction.collect(::onActionEditingStateChanged) }
             }
         }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError) }
-                launch { viewModel.counterName.collect(viewBinding.editCounterNameLayout::setTextValue) }
-                launch { viewModel.counterNameError.collect(viewBinding.editCounterNameLayout::setError) }
-                launch { viewModel.operatorDropdownState.collect(viewBinding.operatorField::setSelectedItem) }
-                launch { viewModel.isNumberValue.collect(::updateOperationValueVisibility) }
-                launch { viewModel.numberValueText.collect(::updateNumberValue) }
-                launch { viewModel.counterNameValueText.collect(::updateCounterValue) }
-                launch { viewModel.isValidAction.collect(::updateSaveButton) }
+                launch { viewModel.uiState.collect(::updateUiState) }
             }
         }
     }
@@ -213,30 +153,21 @@ class ChangeCounterDialog(
         super.back()
     }
 
-    private fun updateOperationValueVisibility(isNumberValue: Boolean) {
+    private fun updateUiState(state: ChangeCounterUiState?) {
+        state ?: return
+
         viewBinding.apply {
-            if (isNumberValue) {
-                editValueCounterName.root.visibility = View.GONE
-                editValueLayout.root.visibility = View.VISIBLE
-                valueTypeMultiStateButton.setChecked(0)
-            } else {
-                editValueCounterName.root.visibility = View.VISIBLE
-                editValueLayout.root.visibility = View.GONE
-                valueTypeMultiStateButton.setChecked(1)
-            }
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
+
+            fieldName.setText(state.name)
+            fieldName.setError(state.nameError)
+
+            counterToChange.setCounter(state.counter)
+            editValueLayout.setSelectedOperator(state.operator)
+            editValueLayout.setValueInfo(state.operandValue)
+
+            effectDesc.text = state.actionEffectText
         }
-    }
-
-    private fun updateNumberValue(newValue: String?) {
-        viewBinding.editValueLayout.setText(newValue, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateCounterValue(newValue: String?) {
-        viewBinding.editValueCounterName.setTextValue(newValue)
-    }
-
-    private fun updateSaveButton(isValidAction: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidAction)
     }
 
     private fun showCounterSelectionDialog(onCounterSelected: (String) -> Unit) {

@@ -242,15 +242,16 @@
 
     <!-- Dialog Condition Number ==================================================================================== -->
 
+    <string name="field_number_condition_effect_title">Condition effect</string>
     <!--Ex: The detected number must be greater than 10 -->
     <string name="message_number_condition_static_value_desc">The detected number must be %1$s %2$s</string>
     <!--Ex: The detected number must be greater than counter "My counter" value -->
     <string name="message_number_condition_counter_value_desc">The detected number must be %1$s counter \"%2$s\" value</string>
 
-    <string name="comparison_operator_greater_or_equals_full">greater or equals to</string>
+    <string name="comparison_operator_greater_or_equals_full">greater or equal to</string>
     <string name="comparison_operator_greater_full">greater than</string>
-    <string name="comparison_operator_equals_full">equals to</string>
-    <string name="comparison_operator_lower_or_equals_full">lower or equals to</string>
+    <string name="comparison_operator_equals_full">equal to</string>
+    <string name="comparison_operator_lower_or_equals_full">lower or equal to</string>
     <string name="comparison_operator_lower_full">lower than</string>
 
 
@@ -289,10 +290,11 @@
     <string name="dialog_title_counter_reached">Counter value</string>
 
     <string name="field_counter_name_label">Counter name</string>
-
     <string name="field_counter_comparison_value_label">Value</string>
-
     <string name="dropdown_comparison_operator_label">Operator</string>
+
+    <string name="field_change_counter_check_effect_title">Condition effect</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string> <!-- Toto = Tata; Toto <= Tata... -->
 
     <!-- Dialog Condition Timer Reached ============================================================================ -->
 
@@ -399,15 +401,16 @@
 
     <string name="dialog_title_change_counter">Change counter</string>
 
-    <string name="message_empty_counter_name_list_title">No counter defined</string>
-    <string name="message_empty_counter_name_list_desc">Counters are created with a Change Counter Action or a Counter Reached Condition</string>
-
     <string name="field_counter_operation_value_label">Value</string>
 
     <string name="dropdown_counter_operation_label">Operation</string>
     <string name="dropdown_counter_operation_item_add" translatable="false">+</string>
     <string name="dropdown_counter_operation_item_set" translatable="false">=</string>
     <string name="dropdown_counter_operation_item_minus" translatable="false">-</string>
+
+    <string name="field_change_counter_effect_title">Action effect</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string> <!-- Toto = Tata -->
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string> <!-- Toto = Toto + Tata -->
 
 
     <!-- Dialogs Action ToggleEvent ================================================================================ -->
@@ -481,6 +484,9 @@
     <!-- Dialogs Counters ========================================================================================== -->
 
     <string name="dialog_title_counters_config">Counters</string>
+
+    <string name="message_empty_counter_name_list_title">No counter defined</string>
+    <string name="message_empty_counter_name_list_desc">Counters are created with a Change Counter Action or a Counter Reached Condition</string>
 
     <string name="item_counter_desc_collapsed_no_reference">This counter is unused. (%1$f)</string>
     <string name="item_counter_desc_collapsed_referenced">This counter is referenced %1$d times. (%2$f)</string>

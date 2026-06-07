@@ -17,7 +17,7 @@
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppTheme.Dialog.BackgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,76 +33,84 @@
         android:layout_marginBottom="@dimen/margin_vertical_extra_large"
         android:scrollbars="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:orientation="vertical">
 
             <include layout="@layout/include_field_text_input"
                 android:id="@+id/field_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_default"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/edit_counter_name_layout"/>
+                android:layout_marginBottom="@dimen/margin_vertical_large"/>
 
-            <include layout="@layout/include_field_text_input_with_checkbox"
-                android:id="@+id/edit_counter_name_layout"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_horizontal_default"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/field_name"
-                app:layout_constraintBottom_toTopOf="@id/operator_field"/>
+                android:layout_marginBottom="@dimen/margin_vertical_large">
 
-            <include layout="@layout/include_input_field_dropdown"
-                android:id="@+id/operator_field"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_large"
-                android:layout_marginBottom="@dimen/margin_vertical_large"
-                android:layout_marginEnd="@dimen/margin_horizontal_large"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/value_type_multi_state_button"
-                app:layout_constraintTop_toBottomOf="@id/edit_counter_name_layout"
-                app:layout_constraintBottom_toTopOf="@id/counter_operand_layout"/>
+                <include layout="@layout/include_counter_selection"
+                    android:id="@+id/counter_to_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default" />
 
-            <include layout="@layout/include_button_multi_state"
-                android:id="@+id/value_type_multi_state_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_extra_large"
-                app:layout_constraintStart_toEndOf="@id/operator_field"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/operator_field"/>
+            </com.google.android.material.card.MaterialCardView>
 
-            <FrameLayout
-                android:id="@+id/counter_operand_layout"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/operator_field"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginBottom="@dimen/margin_vertical_large">
 
-                <include layout="@layout/include_field_text_input"
+                <include layout="@layout/include_static_or_counter_selection"
                     android:id="@+id/edit_value_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"/>
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"/>
 
-                <include layout="@layout/include_field_text_input_with_checkbox"
-                    android:id="@+id/edit_value_counter_name"
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_large">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_large"
+                    android:orientation="vertical">
 
-            </FrameLayout>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/effect_title"
+                        style="@style/AppTheme.TextAppearance.FieldTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_vertical_small"
+                        android:text="@string/field_change_counter_effect_title"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/effect_desc"
+                        style="@style/AppTheme.TextAppearance.FieldSubText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        tools:text="MyCounter = MyCounter + MyOtherCounter"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

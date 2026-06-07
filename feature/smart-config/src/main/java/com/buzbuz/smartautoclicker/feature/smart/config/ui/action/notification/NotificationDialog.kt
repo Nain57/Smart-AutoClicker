@@ -36,13 +36,12 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionNotificationBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setCounter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setOnClickListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationSettingsStarterOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
@@ -99,14 +98,10 @@ class NotificationDialog(
                 setOnTextChangedListener { viewModel.setNotificationMessage(it.toString()) }
             }
 
-            fieldMessageCounterName.apply {
-                setup(
-                    label = R.string.field_notification_message_counter_label,
-                    icon = R.drawable.ic_search,
-                    disableInputWithCheckbox = false,
-                )
-                setOnCheckboxClickedListener { showCounterSelectionDialog() }
-                setOnTextChangedListener { viewModel.setNotificationMessageCounterName(it.toString()) }
+            fieldMessageCounterName.setOnClickListener {
+                showCounterSelectionDialog { counterName ->
+                    viewModel.setNotificationMessageCounterName(counterName)
+                }
             }
 
             fieldDropdownChannelType.setItems(
@@ -173,8 +168,6 @@ class NotificationDialog(
         when (uiState.typeItem) {
             NotificationMessageTypeItem.Text -> {
                 viewBinding.fieldMessageText.apply {
-                    if (root.visibility != View.GONE) return@apply
-
                     root.visibility = View.VISIBLE
                     setText(uiState.messageContent)
                 }
@@ -184,10 +177,9 @@ class NotificationDialog(
 
             NotificationMessageTypeItem.Counter -> {
                 viewBinding.fieldMessageCounterName.apply {
-                    if (root.visibility != View.GONE) return@apply
-
                     root.visibility = View.VISIBLE
-                    setTextValue(uiState.messageContent)
+                    println("TOTO: uiState $uiState")
+                    uiState.counter?.let { setCounter(it) }
                 }
 
                 viewBinding.fieldMessageText.root.visibility = View.GONE
@@ -198,13 +190,10 @@ class NotificationDialog(
     }
 
 
-    private fun showCounterSelectionDialog() {
+    private fun showCounterSelectionDialog(onSelected: (String) -> Unit) {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = CounterSelectionDialog { counterName ->
-                viewModel.setNotificationMessageCounterName(counterName)
-                viewBinding.fieldMessageCounterName.setTextValue(counterName)
-            },
+            newOverlay = CounterSelectionDialog(onSelected),
             hideCurrent = true,
         )
     }

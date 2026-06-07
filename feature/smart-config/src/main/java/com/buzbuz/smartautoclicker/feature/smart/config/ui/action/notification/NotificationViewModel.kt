@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
@@ -64,9 +65,19 @@ class NotificationViewModel @Inject constructor(
         .map { notification ->
             when (notification.messageType) {
                 Notification.MessageType.TEXT ->
-                    UiNotificationMessage(notification.messageType.toTypeItem(), notification.messageText)
+                    UiNotificationMessage(
+                        typeItem = notification.messageType.toTypeItem(),
+                        messageContent = notification.messageText,
+                        counter = null
+                    )
                 Notification.MessageType.COUNTER_VALUE ->
-                    UiNotificationMessage(notification.messageType.toTypeItem(), notification.messageCounterName)
+                    UiNotificationMessage(
+                        typeItem = notification.messageType.toTypeItem(),
+                        messageContent = notification.messageCounterName,
+                        counter = UiStaticOrCounterSelection.CounterValue(
+                            editionRepository.editionState.getCounter(notification.messageCounterName)
+                        )
+                    )
             }
         }
 
@@ -113,4 +124,5 @@ class NotificationViewModel @Inject constructor(
 data class UiNotificationMessage(
     val typeItem: NotificationMessageTypeItem,
     val messageContent: String,
+    val counter: UiStaticOrCounterSelection.CounterValue?,
 )

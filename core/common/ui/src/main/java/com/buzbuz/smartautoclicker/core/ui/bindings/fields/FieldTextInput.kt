@@ -33,6 +33,8 @@ fun IncludeFieldTextInputBinding.setLabel(@StringRes labelResId: Int) {
 
 fun IncludeFieldTextInputBinding.setText(text: String?, type: Int = InputType.TYPE_CLASS_TEXT) {
     textField.apply {
+        if (hasFocus()) return
+
         inputType = type
         imeOptions = EditorInfo.IME_ACTION_DONE
         setText(text)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,39 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toDisplayValue
+
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
+
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 class CounterReachedConditionViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -51,60 +58,30 @@ class CounterReachedConditionViewModel @Inject constructor(
             .mapNotNull { it.value }
             .filterIsInstance<TriggerCondition.OnCounterCountReached>()
 
-    private val editedConditionHasChanged: StateFlow<Boolean> =
-        editionRepository.editionState.editedTriggerConditionState
-            .map { it.hasChanged }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    /** Tells if the user is currently editing a condition. If that's not the case, dialog should be closed. */
     val isEditingCondition: Flow<Boolean> = editionRepository.isEditingCondition
         .distinctUntilChanged()
         .debounce(1000)
 
-    val name: Flow<String?> = configuredCondition.map { it.name }.take(1)
-    val nameError: Flow<Boolean> = configuredCondition.map { it.name.isEmpty() }
-
-    val counterName: Flow<String?> = configuredCondition
-        .map { it.counterName }
-        .take(1)
-    val counterNameError: Flow<Boolean> = configuredCondition.map { it.counterName.isEmpty() }
-
-    val isNumberValue: Flow<Boolean> = configuredCondition
-        .map { it.counterValue is CounterOperationValue.Number }
-
-    val numberValueText: Flow<String?> = configuredCondition
-        .map { it.counterValue }
-        .filterIsInstance<CounterOperationValue.Number>()
-        .map { it.value.toString() }
-        .take(1)
-
-    val counterNameValueText: Flow<String?> = configuredCondition
-        .map { it.counterValue }
-        .filterIsInstance<CounterOperationValue.Counter>()
-        .map { it.value }
-        .take(1)
-
-    val operatorDropdownItems = allCounterOperatorDropdownItems()
-    val operatorDropdownState: Flow<CounterOperatorDropdownItem> = configuredCondition
-        .map { condition -> condition.comparisonOperation.toCounterOperatorDropdownItem() }
-
-    /** Tells if the configured condition is valid and can be saved. */
-    val conditionCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedTriggerConditionState.map { condition ->
-        condition.canBeSaved
-    }
+    val uiState: StateFlow<CounterReachedConditionUiState?> = combine(
+        configuredCondition,
+        editionRepository.editionState.editedTriggerConditionState.map { it.hasChanged },
+        editionRepository.editionState.editedTriggerConditionState.map { it.canBeSaved },
+    ) { condition, hasChanged, canBeSaved ->
+        condition.toUiState(context, canBeSaved = canBeSaved, hasChanged = hasChanged)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun hasUnsavedModifications(): Boolean =
-        editedConditionHasChanged.value
+        uiState.value?.hasUnsavedModifications == true
 
     fun setName(name: String) {
-        updateEditedCondition { it.copy(name = name) }
+        updateEditedCondition { old -> old.copy(name = "" + name) }
     }
 
     fun setCounterName(counterName: String) {
         updateEditedCondition { old -> old.copy(counterName = "" + counterName) }
     }
 
-    fun setComparisonOperator(item: CounterOperatorDropdownItem) {
+    fun setOperationItem(item: UiCounterOperatorDropdownItem) {
         updateEditedCondition { old -> old.copy(comparisonOperation = item.toComparisonOperation()) }
     }
 
@@ -123,4 +100,34 @@ class CounterReachedConditionViewModel @Inject constructor(
             }
         }
     }
+
+
+    private fun TriggerCondition.OnCounterCountReached.toUiState(context: Context, canBeSaved: Boolean, hasChanged: Boolean): CounterReachedConditionUiState {
+        val counterToChange = UiStaticOrCounterSelection.CounterValue(editionRepository.editionState.getCounter(counterName))
+        val operand = counterValue.toUiStaticOrCounterSelection()
+
+        return CounterReachedConditionUiState(
+            canBeSaved = canBeSaved,
+            hasUnsavedModifications = hasChanged,
+            name = name,
+            nameError = name.isEmpty(),
+            counter = counterToChange,
+            operator = comparisonOperation.toCounterOperatorDropdownItem(),
+            operandValue = operand,
+            conditionEffectText = comparisonOperation.toEffectDescription(
+                context = context,
+                counterName = counterName,
+                operand = operand.toDisplayValue(),
+            )
+        )
+    }
+
+    private fun CounterOperationValue.toUiStaticOrCounterSelection(): UiStaticOrCounterSelection =
+        when (this) {
+            is CounterOperationValue.Counter ->
+                UiStaticOrCounterSelection.CounterValue(editionRepository.editionState.getCounter(value))
+
+            is CounterOperationValue.Number ->
+                UiStaticOrCounterSelection.StaticValue(value)
+        }
 }

@@ -26,13 +26,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.CounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.allCounterOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullNameRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.UiStaticOrCounterSelection
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toComparisonOperation
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.toCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toCounterOperatorDropdownItem
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -72,8 +72,6 @@ class NumberConditionViewModel @Inject constructor(
         .distinctUntilChanged()
         .debounce(1000)
 
-    val operatorDropdownItems = allCounterOperatorDropdownItems()
-
 
     fun hasUnsavedModifications(): Boolean =
         editedConditionHasChanged.value
@@ -85,7 +83,7 @@ class NumberConditionViewModel @Inject constructor(
         updateEditedCondition { it.copy(name = name) }
     }
 
-    fun setComparisonOperator(item: CounterOperatorDropdownItem) {
+    fun setComparisonOperator(item: UiCounterOperatorDropdownItem) {
         updateEditedCondition { old -> old.copy(comparisonOperation = item.toComparisonOperation()) }
     }
 
@@ -127,20 +125,6 @@ class NumberConditionViewModel @Inject constructor(
             operandValue = counterValue.toUiStaticOrCounterSelection(),
             conditionEffectDesc = counterValue.toEffectDescription(context, comparisonOperation),
         )
-
-    private fun CounterOperationValue.toEffectDescription(context: Context, operation: ComparisonOperation): String =
-        when (this) {
-            is CounterOperationValue.Counter -> context.getString(
-                R.string.message_number_condition_counter_value_desc,
-                context.getString(operation.toFullNameRes()),
-                value,
-            )
-            is CounterOperationValue.Number -> context.getString(
-                R.string.message_number_condition_static_value_desc,
-                context.getString(operation.toFullNameRes()),
-                value.toString(),
-            )
-        }
 
     private fun CounterOperationValue.toUiStaticOrCounterSelection(): UiStaticOrCounterSelection =
         when (this) {

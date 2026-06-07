@@ -15,69 +15,56 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/counter_operand_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginBottom="@dimen/margin_vertical_large">
 
-    <include layout="@layout/include_field_text_input"
-        android:id="@+id/static_value_layout"
+    <include layout="@layout/include_input_field_dropdown"
+        android:id="@+id/operator_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_horizontal_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/value_type_multi_state_button"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <include layout="@layout/include_button_multi_state"
+        android:id="@+id/value_type_multi_state_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+        app:layout_constraintStart_toEndOf="@id/operator_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/operator_field"
+        app:layout_constraintBottom_toBottomOf="@id/operator_field"/>
+
+    <FrameLayout
+        android:id="@+id/counter_operand_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height_big"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/value_type_multi_state_button"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/counter_value_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height_big"
-        android:layout_gravity="center_vertical"
-        android:visibility="visible">
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/static_value_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_big"
+            android:visibility="visible"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/title"
-            style="@style/AppTheme.Field.TitleText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="@dimen/margin_horizontal_default"
-            android:layout_marginVertical="@dimen/margin_vertical_mini"
-            app:layout_constraintTop_toTopOf="@id/button_checkbox"
-            app:layout_constraintBottom_toTopOf="@id/description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_checkbox"
-            tools:text="My counter name"/>
+        <include layout="@layout/include_counter_selection"
+            android:id="@+id/counter_value_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height_big"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/description"
-            style="@style/AppTheme.Field.SubText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="@dimen/margin_horizontal_default"
-            android:layout_marginVertical="@dimen/margin_vertical_mini"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="@id/button_checkbox"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_checkbox"
-            android:gravity="center_vertical"
-            tools:text="Starting value: 82.00" />
+    </FrameLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_checkbox"
-            style="@style/AppTheme.Widget.IconButtonFilledTonal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_horizontal_default"
-            android:checkable="false"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:icon="@drawable/ic_change_counter"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

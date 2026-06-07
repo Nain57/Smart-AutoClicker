@@ -18,7 +18,9 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters
 
 import android.content.Context
 import androidx.annotation.StringRes
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 @StringRes
@@ -41,9 +43,53 @@ internal fun ComparisonOperation.toFullNameRes(): Int =
         ComparisonOperation.LOWER -> R.string.comparison_operator_lower_full
     }
 
-fun ComparisonOperation.toOperationText(context: Context, operand: String) =
+@StringRes
+internal fun ChangeCounter.OperationType.toNameRes(): Int =
+    when (this) {
+        ChangeCounter.OperationType.ADD -> R.string.dropdown_counter_operation_item_add
+        ChangeCounter.OperationType.MINUS -> R.string.dropdown_counter_operation_item_minus
+        ChangeCounter.OperationType.SET -> R.string.dropdown_counter_operation_item_set
+    }
+
+fun ComparisonOperation.toEffectDescription(context: Context, counterName: String? = null, operand: String) =
     context.getString(
-        R.string.brief_overlay_number_condition_format,
+        R.string.field_change_counter_check_effect_desc,
+        counterName ?: "",
         context.getString(toNameRes()),
         operand,
     )
+
+internal fun ChangeCounter.OperationType.toEffectDescription(context: Context, counterName: String, operand: String) =
+    when (this) {
+        ChangeCounter.OperationType.ADD,
+        ChangeCounter.OperationType.MINUS -> {
+            context.getString(
+                R.string.field_change_counter_effect_desc_operation,
+                counterName.ifEmpty { "?" },
+                context.getString(toNameRes()),
+                operand.ifEmpty { "?" },
+            )
+        }
+
+        ChangeCounter.OperationType.SET ->
+            context.getString(
+                R.string.field_change_counter_effect_desc_set,
+                counterName.ifEmpty { "?" },
+                operand.ifEmpty { "?" },
+            )
+    }
+
+
+internal fun CounterOperationValue.toEffectDescription(context: Context, operation: ComparisonOperation): String =
+    when (this) {
+        is CounterOperationValue.Counter -> context.getString(
+            R.string.message_number_condition_counter_value_desc,
+            context.getString(operation.toFullNameRes()),
+            value.ifEmpty { "?" },
+        )
+        is CounterOperationValue.Number -> context.getString(
+            R.string.message_number_condition_static_value_desc,
+            context.getString(operation.toFullNameRes()),
+            value.toString(),
+        )
+    }
