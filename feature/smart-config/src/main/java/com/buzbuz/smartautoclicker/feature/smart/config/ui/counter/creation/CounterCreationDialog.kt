@@ -21,15 +21,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogCounterCreationBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
 
 import kotlin.getValue
 
@@ -46,38 +52,49 @@ class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogCounterCreationBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
-                dialogTitle.setText(R.string.dialog_title_counters_config)
+                dialogTitle.setText(R.string.dialog_title_new_counter)
 
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
                 buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonSave.setDebouncedOnClickListener {
+                    viewModel.createCounter()
+                    back()
+                }
             }
+
             fieldName.root.hint = context.getString(R.string.generic_name)
+            fieldName.textField.doAfterTextChanged { viewModel.setName(it.toString()) }
+
             fieldStartingValue.root.hint = context.getString(R.string.field_new_counter_starting_value)
             fieldStartingValue.textField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             fieldStartingValue.textField.setText("0.0")
-
-            val updateSaveButton = {
-                layoutTopBar.buttonSave.isEnabled =
-                    fieldName.textField.text?.isNotEmpty() == true &&
-                            fieldStartingValue.textField.text?.isNotEmpty() == true
+            fieldStartingValue.textField.doAfterTextChanged {
+                viewModel.setStartingValue(it.toString().toDoubleOrNull() ?: 0.0)
             }
-            fieldName.textField.doAfterTextChanged { updateSaveButton() }
-            fieldStartingValue.textField.doAfterTextChanged { updateSaveButton() }
-
-            layoutTopBar.buttonSave.setDebouncedOnClickListener {
-                val name = fieldName.textField.text.toString()
-                val startingValue = fieldStartingValue.textField.text.toString().toDoubleOrNull() ?: 0.0
-                viewModel.addNewCounter(name, startingValue)
-                back()
-            }
-
-            updateSaveButton()
         }
 
         return viewBinding.root
     }
 
-    override fun onDialogCreated(dialog: BottomSheetDialog) = Unit
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect(::updateUi) }
+            }
+        }
+    }
+
+    private fun updateUi(uiState: CounterCreationUiState?) {
+        uiState ?: return
+
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
+            fieldName.setError(
+                messageId = R.string.field_counter_name_already_declared,
+                isError = uiState.nameError,
+            )
+        }
+    }
 }

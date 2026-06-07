@@ -17,9 +17,16 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 import javax.inject.Inject
 
@@ -28,14 +35,43 @@ class CountersCreationViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    fun addNewCounter(name: String, startingValue: Double) {
+    private val name: MutableStateFlow<String?> = MutableStateFlow("")
+    private val startingValue: MutableStateFlow<Double> = MutableStateFlow(0.0)
+
+    val uiState: StateFlow<CounterCreationUiState?> = name
+        .map { counterName -> toUiState(counterName) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
+
+
+    fun setName(counterName: String) {
+        name.update { counterName }
+    }
+
+    fun setStartingValue(value: Double) {
+        startingValue.update { value }
+    }
+
+    fun createCounter() {
         val scenarioId = editionRepository.editionState.getScenario()?.id ?: return
+        val counterName = name.value ?: return
+        val startingValue = startingValue.value
+
+        if (editionRepository.editionState.getCounter(counterName) != null) return
         editionRepository.addNewCounter(
             Counter(
-                counterName = name,
+                counterName = counterName,
                 defaultValue = startingValue,
                 scenarioId = scenarioId,
             )
+        )
+    }
+
+    private fun toUiState(name: String?): CounterCreationUiState {
+        val isAlreadyDefined = !name.isNullOrEmpty() && editionRepository.editionState.getCounter(name) != null
+
+        return CounterCreationUiState(
+            canBeSaved = !name.isNullOrEmpty() && !isAlreadyDefined,
+            nameError = isAlreadyDefined,
         )
     }
 }

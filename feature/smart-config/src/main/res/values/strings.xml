@@ -505,6 +505,7 @@
 
     <string name="dialog_title_new_counter">New Counter</string>
     <string name="field_new_counter_starting_value">Starting value</string>
+    <string name="field_counter_name_already_declared">This counter name already exists</string>
 
     <string name="field_counter_selection_title_empty">No counter selected</string>
     <string name="field_counter_selection_desc">Starting value: %1$f</string>
