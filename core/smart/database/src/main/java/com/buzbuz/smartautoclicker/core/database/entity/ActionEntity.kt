@@ -81,11 +81,7 @@ import kotlinx.serialization.Serializable
  * @param counterOperationCounterName [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.COUNTER] only: the name
  * of the counter containing the value for the operation on this counter. Null for others [ActionType].
  *
- * @param notificationMessageType [ActionType.NOTIFICATION] only: tells what kind of message the notification will contains.
- * @param notificationMessageText [ActionType.NOTIFICATION] only: used as notification message when [notificationMessageType]
- *  is [NotificationMessageType.TEXT].
- * @param notificationMessageCounterName [ActionType.NOTIFICATION] only: the counter value will be used as notification
- *  message when [notificationMessageType] is [NotificationMessageType.COUNTER_VALUE].
+ * @param notificationMessageText [ActionType.NOTIFICATION] only: used as notification message.
  * @param notificationImportance [ActionType.NOTIFICATION] only: how the notification will behave.
  *
  * @param systemActionType [ActionType.SYSTEM] only: the type of system action to execute.
@@ -157,9 +153,7 @@ data class ActionEntity(
     @ColumnInfo(name = "counter_operation_counter_name") val counterOperationCounterName: String? = null,
 
     // ActionType.NOTIFICATION
-    @ColumnInfo(name = "notification_message_type") val notificationMessageType: NotificationMessageType? = null,
     @ColumnInfo(name = "notification_message_text") val notificationMessageText: String? = null,
-    @ColumnInfo(name = "notification_message_counter_name") val notificationMessageCounterName: String? = null,
     @ColumnInfo(name = "notification_importance") var notificationImportance: Int? = null,
 
     // ActionType.SYSTEM

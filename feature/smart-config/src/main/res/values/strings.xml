@@ -105,7 +105,6 @@
     <string name="item_notification_title">Notification</string>
     <string name="item_notification_desc">Send a notification to your device</string>
     <string name="item_notification_details_text">Send \"%1$s\"</string>
-    <string name="item_notification_details_counter">Send %1$s value</string>
 
     <string name="item_system_action_title">System action</string>
     <string name="item_system_action_desc">Use an Android system action (back, home or recent apps)</string>

@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
@@ -32,7 +33,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButt
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
@@ -103,7 +103,15 @@ class SetTextDialog(
                 ))
                 setOnTextChangedListener { viewModel.setTextToWrite(it.toString()) }
                 setOnCheckboxClickedListener {
-                    showCounterSelectionDialog(viewModel::appendCounterReferenceToTextToWrite)
+                    showCounterSelectionDialog { selectedCounter ->
+                        setTextValue(
+                            textField.text.toString().appendCounterReference(
+                                counterName = selectedCounter,
+                                atIndex = textField.selectionEnd,
+                            ),
+                            force = true,
+                        )
+                    }
                 }
             }
             hideSoftInputOnFocusLoss(fieldTextToWrite.textField)
@@ -136,11 +144,7 @@ class SetTextDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
-                launch { viewModel.textToWrite.collect(viewBinding.fieldTextToWrite::setTextValue) }
-                launch { viewModel.validateInput.collect(::updateValidateInput) }
-                launch { viewModel.isValidAction.collect(::updateSaveButton) }
+                launch { viewModel.uiState.collect(::onUiStateUpdated) }
             }
         }
     }
@@ -168,14 +172,18 @@ class SetTextDialog(
         super.back()
     }
 
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
-    }
+    private fun onUiStateUpdated(uiState: SetTextUiState?) {
+        uiState ?: return
 
-    private fun updateValidateInput(validateInput: Boolean) {
-        viewBinding.fieldValidateText.apply {
-            setChecked(validateInput)
-            setDescription(if (validateInput) 1 else 0)
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
+
+            fieldName.setText(uiState.name)
+            fieldTextToWrite.setTextValue(uiState.textToWrite)
+            viewBinding.fieldValidateText.apply {
+                setChecked(uiState.validateInput)
+                setDescription(if (uiState.validateInput) 1 else 0)
+            }
         }
     }
 

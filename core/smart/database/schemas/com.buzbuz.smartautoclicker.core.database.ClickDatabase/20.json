@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 20,
-    "identityHash": "28dd665e98b98a3c8e26ef7cc88319e4",
+    "identityHash": "0c07485e15195cbec4cd782327491288",
     "entities": [
       {
         "tableName": "action_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` REAL, `counter_operation_counter_name` TEXT, `notification_message_type` TEXT, `notification_message_text` TEXT, `notification_message_counter_name` TEXT, `notification_importance` INTEGER, `system_action_type` TEXT, `text_value` TEXT, `text_validate_input` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `eventId` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `clickPositionType` TEXT, `x` INTEGER, `y` INTEGER, `clickOnConditionId` INTEGER, `pressDuration` INTEGER, `clickOffsetX` INTEGER, `clickOffsetY` INTEGER, `fromX` INTEGER, `fromY` INTEGER, `toX` INTEGER, `toY` INTEGER, `swipeDuration` INTEGER, `pauseDuration` INTEGER, `isAdvanced` INTEGER, `isBroadcast` INTEGER, `intent_action` TEXT, `component_name` TEXT, `flags` INTEGER, `toggle_all` INTEGER, `toggle_all_type` TEXT, `counter_name` TEXT, `counter_operation` TEXT, `counter_operation_value_type` TEXT, `counter_operation_value` REAL, `counter_operation_counter_name` TEXT, `notification_message_text` TEXT, `notification_importance` INTEGER, `system_action_type` TEXT, `text_value` TEXT, `text_validate_input` INTEGER, FOREIGN KEY(`eventId`) REFERENCES `event_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`clickOnConditionId`) REFERENCES `condition_table`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -164,18 +164,8 @@
             "affinity": "TEXT"
           },
           {
-            "fieldPath": "notificationMessageType",
-            "columnName": "notification_message_type",
-            "affinity": "TEXT"
-          },
-          {
             "fieldPath": "notificationMessageText",
             "columnName": "notification_message_text",
-            "affinity": "TEXT"
-          },
-          {
-            "fieldPath": "notificationMessageCounterName",
-            "columnName": "notification_message_counter_name",
             "affinity": "TEXT"
           },
           {
@@ -851,7 +841,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28dd665e98b98a3c8e26ef7cc88319e4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0c07485e15195cbec4cd782327491288')"
     ]
   }
 }

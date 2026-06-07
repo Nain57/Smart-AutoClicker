@@ -103,9 +103,11 @@ class ReplaceCounterUseCase @Inject constructor(
             }
 
             is Notification -> {
-                if (messageType == Notification.MessageType.COUNTER_VALUE && messageCounterName == from.counterName) {
+                if (messageText.findCounterReferences().contains(from.counterName)) {
                     editionRepository.startActionEdition(this)
-                    editionRepository.updateEditedAction(this.copy(messageCounterName = to.counterName))
+                    editionRepository.updateEditedAction(
+                        this.copy(messageText = messageText.replace("{${from.counterName}}", "{${to.counterName}}"))
+                    )
                     editionRepository.upsertEditedAction()
                 }
             }

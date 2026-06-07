@@ -19,14 +19,18 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.settext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
+import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.NotificationDialogUiState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.toImportanceItem
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
@@ -36,6 +40,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 
 import javax.inject.Inject
+import kotlin.text.isNullOrEmpty
 
 
 class SetTextViewModel @Inject constructor(
@@ -58,25 +63,10 @@ class SetTextViewModel @Inject constructor(
         .distinctUntilChanged()
         .debounce(1000)
 
-    /** The name of the system action. */
-    val name: Flow<String?> = configuredSetTextAction
-        .map { it.name }
-        .take(1)
-    /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredSetTextAction.map { it.name?.isEmpty() ?: true }
-
-    /** The text to be written by the action. */
-    val textToWrite: Flow<String> = configuredSetTextAction
-        .map { it.text }
-        .take(1)
-
-    /** Tells if the input should be validated or not. */
-    val validateInput: Flow<Boolean> = configuredSetTextAction
-        .map { it.validateInput }
-
-    /** Tells if the configured system action is valid and can be saved. */
-    val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
-        .map { it.canBeSaved }
+    val uiState: StateFlow<SetTextUiState?> =
+        combine(configuredSetTextAction, editedActionHasChanged) { setText, hasChanged ->
+            setText.toUiState(hasChanged)
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
 
     fun hasUnsavedModifications(): Boolean =
@@ -109,4 +99,14 @@ class SetTextViewModel @Inject constructor(
             )
         }
     }
+
+    private fun SetText.toUiState(hasUnsavedModifications: Boolean): SetTextUiState =
+        SetTextUiState(
+            canBeSaved = isComplete(),
+            hasUnsavedModifications = hasUnsavedModifications,
+            name = name ?: "",
+            nameError = name.isNullOrEmpty(),
+            textToWrite = text,
+            validateInput = validateInput,
+        )
 }

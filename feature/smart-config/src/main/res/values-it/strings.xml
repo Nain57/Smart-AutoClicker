@@ -284,7 +284,6 @@
     <string name="item_notification_title">Notifica</string>
     <string name="item_notification_desc">Inviare una notifica al dispositivo</string>
     <string name="item_notification_details_text">Inviare \"%1$s\"</string>
-    <string name="item_notification_details_counter">Inviare il valore %1$s</string>
 
     <!-- Dialogs Notification ===================================================================================== -->
 

@@ -8,7 +8,6 @@ import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationTy
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
-import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -112,9 +111,7 @@ private fun CompleteActionEntity.toDomainNotification(cleanIds: Boolean = false)
     name = action.name,
     priority = action.priority,
     channelImportance = action.notificationImportance!!,
-    messageType = action.notificationMessageType!!.toDomain(),
     messageText = action.notificationMessageText!!,
-    messageCounterName = action.notificationMessageCounterName!!,
 )
 
 private fun CompleteActionEntity.toDomainSystem(cleanIds: Boolean = false) = SystemAction(
@@ -142,9 +139,6 @@ private fun EventToggleType.toDomain(): ToggleEvent.ToggleType =
 
 private fun ChangeCounterOperationType.toDomain(): ChangeCounter.OperationType =
     ChangeCounter.OperationType.valueOf(name)
-
-private fun NotificationMessageType.toDomain(): Notification.MessageType =
-    Notification.MessageType.valueOf(name)
 
 private fun SystemActionType.toDomain(): SystemAction.Type =
     SystemAction.Type.valueOf(name)

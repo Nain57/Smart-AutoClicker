@@ -281,7 +281,6 @@
     <string name="item_notification_title">通知</string>
     <string name="item_notification_desc">向設備發送通知</string>
     <string name="item_notification_details_text">發送 \"%1$s\"</string>
-    <string name="item_notification_details_counter">發送 %1$s 值</string>
 
     <!-- Dialogs Notification ===================================================================================== -->
 

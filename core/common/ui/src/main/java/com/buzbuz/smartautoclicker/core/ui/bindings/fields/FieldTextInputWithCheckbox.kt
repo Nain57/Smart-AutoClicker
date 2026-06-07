@@ -40,16 +40,20 @@ fun IncludeFieldTextInputWithCheckboxBinding.setup(
     buttonCheckbox.isCheckable = disableInputWithCheckbox
 }
 
-fun IncludeFieldTextInputWithCheckboxBinding.setNumericValue(value: String) {
+fun IncludeFieldTextInputWithCheckboxBinding.setNumericValue(value: String, force: Boolean = false) {
     textField.apply {
+        if (hasFocus() && !force) return
+
         inputType = InputType.TYPE_CLASS_NUMBER
         imeOptions = EditorInfo.IME_ACTION_DONE
         textField.setText(value)
     }
 }
 
-fun IncludeFieldTextInputWithCheckboxBinding.setTextValue(value: String?) {
+fun IncludeFieldTextInputWithCheckboxBinding.setTextValue(value: String?, force: Boolean = false) {
     textField.apply {
+        if (hasFocus() && !force) return
+
         inputType = InputType.TYPE_CLASS_TEXT
         imeOptions = EditorInfo.IME_ACTION_DONE
         textField.setText(value)

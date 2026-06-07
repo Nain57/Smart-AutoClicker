@@ -52,7 +52,6 @@
     <string name="item_notification_title">通知</string>
     <string name="item_notification_desc">デバイスに通知を送信する</string>
     <string name="item_notification_details_text">「%1$s」を送信します</string>
-    <string name="item_notification_details_counter">%1$s 値を送信する</string>
     <string name="item_system_action_title">システム操作</string>
     <string name="item_system_action_desc">Android システムアクションを使用する (戻る、ホーム、または最近使用したアプリ)</string>
     <string name="item_system_action_details_text">%1$s</string>

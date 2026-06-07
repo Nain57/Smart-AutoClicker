@@ -35,6 +35,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
 
     testImplementation(libs.androidx.arch.core.testing)

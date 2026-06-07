@@ -87,7 +87,6 @@
     <string name="item_notification_title">إشعار</string>
     <string name="item_notification_desc">إرسال إشعار إلى جهازك</string>
     <string name="item_notification_details_text">أرسل \"%1$s\"</string>
-    <string name="item_notification_details_counter">أرسل قيمة %1$s</string>
 
     <string name="item_system_action_title">عمل النظام</string>
     <string name="item_system_action_desc">استخدام إجراء نظام Android (العودة أو المنزل أو التطبيقات الحديثة)</string>

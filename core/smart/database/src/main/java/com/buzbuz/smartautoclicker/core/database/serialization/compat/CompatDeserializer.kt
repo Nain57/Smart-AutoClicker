@@ -48,7 +48,6 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
-import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.database.serialization.Deserializer
@@ -641,8 +640,6 @@ internal open class CompatDeserializer : Deserializer {
         val id = jsonNotification.getLong("id", true) ?: return null
         val eventId = jsonNotification.getLong("eventId", true) ?: return null
         val channelImportance = jsonNotification.getInt("notificationImportance") ?: return null
-        val notificationMessageType = jsonNotification
-            .getEnum<NotificationMessageType>("notificationMessageType") ?: return null
 
         return ActionEntity(
             id = id,
@@ -651,9 +648,7 @@ internal open class CompatDeserializer : Deserializer {
             priority = jsonNotification.getInt("priority")?.coerceAtLeast(0) ?: 0,
             type = ActionType.NOTIFICATION,
             notificationImportance = channelImportance,
-            notificationMessageType = notificationMessageType,
             notificationMessageText = jsonNotification.getString("notificationMessageText") ?: "",
-            notificationMessageCounterName = jsonNotification.getString("notificationMessageCounterName") ?: "",
         )
     }
 

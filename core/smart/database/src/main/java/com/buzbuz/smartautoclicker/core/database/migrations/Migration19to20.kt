@@ -24,12 +24,14 @@ import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteColumn
 import com.buzbuz.smartautoclicker.core.base.migrations.SQLiteTable
 import com.buzbuz.smartautoclicker.core.base.migrations.forEachRow
 import com.buzbuz.smartautoclicker.core.base.migrations.getSQLiteTableReference
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.COUNTERS_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
+import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 
 /**
  * Migration from database v18 to v19.
@@ -37,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
  * Klick'r 4.0.0 release migration:
  * * Counter values are now stored as REAL (Double)
  * * Counter are now stored in database (table has been created during previous migration, but it is empty)
+ * * Notification Action behave like set text now, counter columns have been deleted.
  */
 object Migration19to20 : Migration(19, 20) {
 
@@ -50,6 +53,11 @@ object Migration19to20 : Migration(19, 20) {
     private val actionCounterValueOldColumn = SQLiteColumn.Int("counter_operation_value", isNotNull = false)
     private val actionCounterValueNewColumn = SQLiteColumn.Double("counter_operation_value", isNotNull = false)
 
+    private val notificationMessageTypeColumn = SQLiteColumn.Text("notification_message_type", isNotNull = false)
+    private val notificationMessageCounterNameColumn = SQLiteColumn.Text("notification_message_counter_name", isNotNull = false)
+    private val notificationMessageTextColumn = SQLiteColumn.Text("notification_message_text", isNotNull = false)
+
+
     override fun migrate(db: SupportSQLiteDatabase) {
         // Migrate counters types from Int to Double
         db.migrateConditionsCounterValueType()
@@ -57,6 +65,9 @@ object Migration19to20 : Migration(19, 20) {
 
         // Populate counters table with all existing counters
         db.populateCountersTable()
+
+        // Rework notification actions to behave like set text
+        db.migrateNotificationActions()
     }
 
     private fun SupportSQLiteDatabase.migrateConditionsCounterValueType() {
@@ -134,6 +145,28 @@ object Migration19to20 : Migration(19, 20) {
         }
     }
 
+    private fun SupportSQLiteDatabase.migrateNotificationActions() {
+        getSQLiteTableReference(ACTION_TABLE).apply {
+
+            // First, move the counter name into the text using counter placeholders
+            forEachNotificationActionWithCounter { id, _, _, counterName ->
+                if (id == null || counterName == null) return@forEachNotificationActionWithCounter
+                updateNotificationCounterText(
+                    actionId = id,
+                    text = "$counterName = ".appendCounterReference(counterName)
+                )
+            }
+
+            // Then, remove counter related columns
+            alterTableDropColumn(
+                setOf(
+                    notificationMessageTypeColumn.name,
+                    notificationMessageCounterNameColumn.name,
+                )
+            )
+        }
+    }
+
     private fun SQLiteTable.forEachCounterReachedCondition(closure: (Long?, String?, Int?) -> Unit) {
         forEachRow(
             extraClause = "WHERE `type` = \"${ConditionType.ON_COUNTER_REACHED}\"",
@@ -190,6 +223,17 @@ object Migration19to20 : Migration(19, 20) {
         )
     }
 
+    private fun SQLiteTable.forEachNotificationActionWithCounter(closure: (Long?, String?, String?, String?) -> Unit) {
+        forEachRow(
+            extraClause = "WHERE `type` = \"${ActionType.NOTIFICATION}\" AND `${notificationMessageTypeColumn.name}` = \"${NotificationMessageType.COUNTER_VALUE}\"",
+            columnA = actionIdColumn,
+            columnB = actionTypeColumn,
+            columnC = notificationMessageTypeColumn,
+            columnD = notificationMessageCounterNameColumn,
+            closure = closure,
+        )
+    }
+
     private fun SQLiteTable.restoreConditionCounterValue(conditionId: Long, counterValue: Double) = update(
         extraClause = "WHERE `id` = $conditionId",
         contentValues = ContentValues().apply {
@@ -201,6 +245,13 @@ object Migration19to20 : Migration(19, 20) {
         extraClause = "WHERE `id` = $actionId",
         contentValues = ContentValues().apply {
             put(actionCounterValueNewColumn.name, counterValue)
+        },
+    )
+
+    private fun SQLiteTable.updateNotificationCounterText(actionId: Long, text: String) = update(
+        extraClause = "WHERE `id` = $actionId",
+        contentValues = ContentValues().apply {
+            put(notificationMessageTextColumn.name, text)
         },
     )
 }

@@ -125,7 +125,6 @@ internal open class ListEditor<Item , Parent>(
         if (itemIndex == -1) newItems.add(newItem)
         else newItems[itemIndex] = newItem
 
-        println("TOTO: upsert item $newItem")
         updateList(newItems)
         stopItemEdition()
     }

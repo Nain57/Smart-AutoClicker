@@ -18,8 +18,12 @@ package com.buzbuz.smartautoclicker.core.common.actions.text
 
 import java.util.regex.Pattern
 
-fun String.appendCounterReference(counterName: String): String =
-    "$this{$counterName}"
+fun String.appendCounterReference(counterName: String, atIndex: Int = -1): String {
+    val reference = "{$counterName}"
+
+    return if (atIndex !in indices) "${this}${reference}"
+    else StringBuilder(this).insert(atIndex, reference).toString()
+}
 
 fun String.findCounterReferences(): List<String> {
     val counterReferences = mutableListOf<String>()

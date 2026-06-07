@@ -25,23 +25,24 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTextValue
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionNotificationBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setCounter
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setOnClickListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationSettingsStarterOverlay
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
@@ -86,21 +87,26 @@ class NotificationDialog(
             }
             hideSoftInputOnFocusLoss(fieldName.textField)
 
-            fieldDropdownMessageType.setItems(
-                label = context.getString(R.string.field_dropdown_notification_message_type_title),
-                items = notificationMessageTypeItems,
-                onItemSelected = viewModel::setNotificationMessageType,
-            )
-
-            fieldMessageText.apply {
-                setLabel(R.string.field_notification_message_text_label)
-                textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(context.resources.getInteger(R.integer.name_max_length)))
-                setOnTextChangedListener { viewModel.setNotificationMessage(it.toString()) }
-            }
-
-            fieldMessageCounterName.setOnClickListener {
-                showCounterSelectionDialog { counterName ->
-                    viewModel.setNotificationMessageCounterName(counterName)
+            fieldTextToWrite.apply {
+                setup(
+                    label = R.string.field_notification_message_text_label,
+                    icon = R.drawable.ic_counter_reached,
+                    disableInputWithCheckbox = false,
+                )
+                textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(300))
+                setOnTextChangedListener { text ->
+                    viewModel.setNotificationMessage(text.toString())
+                }
+                setOnCheckboxClickedListener {
+                    showCounterSelectionDialog { selectedCounter ->
+                        setTextValue(
+                            textField.text.toString().appendCounterReference(
+                                counterName = selectedCounter,
+                                atIndex = textField.selectionEnd,
+                            ),
+                            force = true,
+                        )
+                    }
                 }
             }
 
@@ -128,11 +134,7 @@ class NotificationDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
-                launch { viewModel.notificationMessage.collect(::updateMessageCard) }
-                launch { viewModel.importanceItem.collect(viewBinding.fieldDropdownChannelType::setSelectedItem) }
-                launch { viewModel.isValidAction.collect(::updateSaveButton) }
+                launch { viewModel.uiState.collect(::onUiStateUpdated) }
             }
         }
     }
@@ -160,35 +162,17 @@ class NotificationDialog(
         super.back()
     }
 
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
-    }
+    private fun onUiStateUpdated(uiState: NotificationDialogUiState?) {
+        uiState ?: return
 
-    private fun updateMessageCard(uiState: UiNotificationMessage) {
-        when (uiState.typeItem) {
-            NotificationMessageTypeItem.Text -> {
-                viewBinding.fieldMessageText.apply {
-                    root.visibility = View.VISIBLE
-                    setText(uiState.messageContent)
-                }
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeSaved)
 
-                viewBinding.fieldMessageCounterName.root.visibility = View.GONE
-            }
-
-            NotificationMessageTypeItem.Counter -> {
-                viewBinding.fieldMessageCounterName.apply {
-                    root.visibility = View.VISIBLE
-                    println("TOTO: uiState $uiState")
-                    uiState.counter?.let { setCounter(it) }
-                }
-
-                viewBinding.fieldMessageText.root.visibility = View.GONE
-            }
+            fieldName.setText(uiState.name)
+            fieldTextToWrite.setTextValue(uiState.message)
+            fieldDropdownChannelType.setSelectedItem(uiState.importance)
         }
-
-        viewBinding.fieldDropdownMessageType.setSelectedItem(uiState.typeItem)
     }
-
 
     private fun showCounterSelectionDialog(onSelected: (String) -> Unit) {
         overlayManager.navigateTo(

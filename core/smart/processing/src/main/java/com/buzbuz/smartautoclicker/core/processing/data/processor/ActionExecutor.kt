@@ -256,11 +256,11 @@ internal class ActionExecutor(
     }
 
     private fun executeNotification(event: Event, notification: Notification) {
-        val message = when (notification.messageType) {
-            Notification.MessageType.TEXT -> notification.messageText
-            Notification.MessageType.COUNTER_VALUE -> {
-                val counterValue = processingState.getCounterValue(notification.messageCounterName) ?: return
-                notification.messageCounterName + " = " + counterValue
+        val counters = buildMap {
+            notification.messageText.findCounterReferences().forEach { counterName ->
+                processingState.getCounterValue(counterName)?.let { counterValue ->
+                    put(counterName, counterValue)
+                }
             }
         }
 
@@ -268,7 +268,7 @@ internal class ActionExecutor(
             ActionNotificationRequest(
                 actionId = notification.id.databaseId,
                 title = notification.name ?: "Klick'r",
-                message = message,
+                message = notification.messageText.replaceCounterReferences(counters),
                 eventId = event.id.databaseId,
                 groupName = event.name,
                 importance = notification.channelImportance,

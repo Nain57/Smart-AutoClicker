@@ -72,15 +72,6 @@ enum class ClickPositionType {
 }
 
 
-/** Types of notification message of a [ActionType.NOTIFICATION]. */
-enum class NotificationMessageType {
-    /** Display the text defined by [ActionEntity.notificationMessageText]. */
-    TEXT,
-    /** Display the value of the counter defined by [ActionEntity.notificationMessageCounterName]. */
-    COUNTER_VALUE;
-}
-
-
 /**
  * Type of [ConditionEntity].
  * For each type there is a set of values that will be available in the database, all others will always be null. Refers
@@ -176,4 +167,11 @@ enum class SystemActionType {
     HOME,
     /** Open recent apps screen. */
     RECENT_APPS,
+}
+
+
+/** DELETED but kept because referenced in migrations/deserialization. */
+enum class NotificationMessageType {
+    TEXT,
+    COUNTER_VALUE;
 }

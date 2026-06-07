@@ -138,9 +138,7 @@ private fun Notification.toNotificationEntity(): ActionEntity =
         name = name!!,
         type = ActionType.NOTIFICATION,
         notificationImportance = channelImportance,
-        notificationMessageType = messageType.toEntity(),
         notificationMessageText = messageText,
-        notificationMessageCounterName = messageCounterName,
     )
 
 private fun SystemAction.toSystemActionEntity(): ActionEntity =

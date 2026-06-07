@@ -101,8 +101,8 @@ class GetCounterReferencesUseCase @Inject constructor(
                     }
 
                     is Notification -> {
-                        if (action.messageType == Notification.MessageType.COUNTER_VALUE) {
-                            addReference(action.messageCounterName, action)
+                        action.messageText.findCounterReferences().forEach { counterName ->
+                            addReference(counterName, action)
                         }
                     }
 

@@ -86,7 +86,6 @@
     <string name="item_notification_title">Notificação</string>
     <string name="item_notification_desc">Enviar uma notificação para seu dispositivo</string>
     <string name="item_notification_details_text">Enviar \"%1$s\"</string>
-    <string name="item_notification_details_counter">Enviar valor %1$s</string>
 
     <string name="item_system_action_title">Ação do sistema</string>
     <string name="item_system_action_desc">Use uma ação do sistema Android (voltar, página inicial ou aplicativos recentes)</string>

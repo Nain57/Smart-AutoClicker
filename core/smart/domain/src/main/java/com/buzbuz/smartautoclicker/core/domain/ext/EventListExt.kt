@@ -18,13 +18,12 @@ package com.buzbuz.smartautoclicker.core.domain.ext
 
 import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlphabet
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
-
+// TODO: irrelevant now, should use counter object
 fun List<Event>.getAllCounterNames(): Set<String> = buildSet {
     this@getAllCounterNames.forEach { event ->
         event.conditions.forEach { condition ->
@@ -33,8 +32,6 @@ fun List<Event>.getAllCounterNames(): Set<String> = buildSet {
 
         event.actions.forEach { action ->
             if (action is ChangeCounter) add(action.counterName)
-            if (action is Notification && action.messageType == Notification.MessageType.COUNTER_VALUE)
-                add(action.messageCounterName)
         }
     }
 }

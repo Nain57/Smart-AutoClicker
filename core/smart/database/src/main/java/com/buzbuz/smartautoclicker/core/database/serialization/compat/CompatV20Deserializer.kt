@@ -16,9 +16,17 @@
  */
 package com.buzbuz.smartautoclicker.core.database.serialization.compat
 
+import com.buzbuz.smartautoclicker.core.base.extensions.getEnum
 import com.buzbuz.smartautoclicker.core.base.extensions.getInt
+import com.buzbuz.smartautoclicker.core.base.extensions.getLong
+import com.buzbuz.smartautoclicker.core.base.extensions.getString
+import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
+import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
+import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
+import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 import kotlinx.serialization.json.JsonObject
 
 
@@ -35,6 +43,34 @@ internal open class CompatV20Deserializer : CompatDeserializer() {
     override fun deserializeCounterActionValue(jsonCounterCondition: JsonObject): Double =
         jsonCounterCondition.getInt("counterOperationValue")?.toDouble() ?: 0.0
 
+    override fun deserializeActionNotification(jsonNotification: JsonObject): ActionEntity? {
+        val id = jsonNotification.getLong("id", true) ?: return null
+        val eventId = jsonNotification.getLong("eventId", true) ?: return null
+        val channelImportance = jsonNotification.getInt("notificationImportance") ?: return null
+
+        val notificationMessageType = jsonNotification
+            .getEnum<NotificationMessageType>("notificationMessageType") ?: return null
+        val notificationMessageText =
+            if (notificationMessageType == NotificationMessageType.COUNTER_VALUE) {
+                jsonNotification.getString("notificationMessageCounterName")?.let { counterName ->
+                    "$counterName = ".appendCounterReference(counterName)
+                }
+            } else {
+                jsonNotification.getString("notificationMessageText")
+            }
+
+        return ActionEntity(
+            id = id,
+            eventId = eventId,
+            name = jsonNotification.getString("name") ?: "",
+            priority = jsonNotification.getInt("priority")?.coerceAtLeast(0) ?: 0,
+            type = ActionType.NOTIFICATION,
+            notificationImportance = channelImportance,
+            notificationMessageText = notificationMessageText ?: "",
+        )
+    }
+
+
     private fun CompleteScenario.migrateToCounterTable(): CompleteScenario =
         copy(
             counters = buildMap {
@@ -42,7 +78,13 @@ internal open class CompatV20Deserializer : CompatDeserializer() {
                     actions.forEach { actionItem ->
                         putIfValidCounter(event.scenarioId, actionItem.action.counterName)
                         putIfValidCounter(event.scenarioId, actionItem.action.counterOperationCounterName)
-                        putIfValidCounter(event.scenarioId, actionItem.action.notificationMessageCounterName)
+
+                        // We just migrated the format, so it can only contain one counter
+                        val counterRefs = actionItem.action.notificationMessageText?.findCounterReferences()
+                        if (!counterRefs.isNullOrEmpty()) putIfValidCounter(
+                            event.scenarioId,
+                            counterRefs[0],
+                        )
                     }
 
                     conditions.forEach { conditionItem ->

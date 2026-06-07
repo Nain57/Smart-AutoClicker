@@ -87,7 +87,6 @@
     <string name="item_notification_title">Уведомление</string>
     <string name="item_notification_desc">Отправьте уведомление на ваше устройство</string>
     <string name="item_notification_details_text">Отправить «%1$s»</string>
-    <string name="item_notification_details_counter">Отправить значение %1$s</string>
 
     <string name="item_system_action_title">Системное действие</string>
     <string name="item_system_action_desc">Используйте системное действие Android («Назад», «Домой» или «Недавние приложения»).</string>

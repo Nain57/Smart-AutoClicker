@@ -386,9 +386,7 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.notificationName(context),
             channelImportance = NotificationManager.IMPORTANCE_DEFAULT,
-            messageType = Notification.MessageType.TEXT,
             messageText = "",
-            messageCounterName = "",
             priority = 0,
         )
 
@@ -515,7 +513,6 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + from.name,
             messageText = "" + from.messageText,
-            messageCounterName = "" + from.messageCounterName,
         )
     }
 
