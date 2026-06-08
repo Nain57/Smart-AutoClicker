@@ -25,6 +25,10 @@
 
 using namespace smartautoclicker;
 
+static constexpr int MIN_COLORFUL_SATURATION = 128;
+static constexpr int MIN_COLORFUL_VALUE = 40;
+static constexpr double MIN_COLORFUL_PIXEL_RATIO = 0.05;
+
 
 void TemplateMatcher::reset() {
     currentMatchingResult.reset();
@@ -107,15 +111,23 @@ void TemplateMatcher::parseMatchingResult(
 
         // Check if the colors are matching in the candidate area.
         cv::Mat fullSizeColorCroppedCurrentImage = screenImage.cropColor(currentMatchingResult.getResultArea());
-        double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage,condition.getColorMean());
 
         // If the colors are OK, the result is valid
-        if (colorDiff < threshold) currentMatchingResult.markResultAsDetected();
+        if (isColorValid(fullSizeColorCroppedCurrentImage, condition, threshold)) {
+            currentMatchingResult.markResultAsDetected();
+        }
     }
 }
 
 bool TemplateMatcher::isConfidenceValid(double confidence, int threshold) {
     return confidence > ((100.0 - threshold) / 100.0);
+}
+
+bool TemplateMatcher::isColorValid(const cv::Mat& image, const ConditionImage& condition, int threshold) {
+    double colorDiffThreshold = static_cast<double>(threshold);
+
+    return getColorDiff(image, condition.getColorMean()) < colorDiffThreshold
+           && getSaturationDropDiff(image, *condition.getColorMat()) < colorDiffThreshold;
 }
 
 double TemplateMatcher::getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans) {
@@ -126,4 +138,40 @@ double TemplateMatcher::getColorDiff(const cv::Mat& image, const cv::Scalar& con
        diff += abs(imageColorMeans.val[i] - conditionColorMeans.val[i]);
    }
    return (diff * 100) / (255 * 3);
+}
+
+double TemplateMatcher::getSaturationDropDiff(const cv::Mat& image, const cv::Mat& condition) {
+    cv::Mat imageRgb;
+    cv::Mat conditionRgb;
+    cv::cvtColor(image, imageRgb, cv::COLOR_RGBA2RGB);
+    cv::cvtColor(condition, conditionRgb, cv::COLOR_RGBA2RGB);
+
+    cv::Mat imageHsv;
+    cv::Mat conditionHsv;
+    cv::cvtColor(imageRgb, imageHsv, cv::COLOR_RGB2HSV);
+    cv::cvtColor(conditionRgb, conditionHsv, cv::COLOR_RGB2HSV);
+
+    cv::Mat imageSaturation;
+    cv::Mat conditionSaturation;
+    cv::Mat conditionValue;
+    cv::extractChannel(imageHsv, imageSaturation, 1);
+    cv::extractChannel(conditionHsv, conditionSaturation, 1);
+    cv::extractChannel(conditionHsv, conditionValue, 2);
+
+    cv::Mat colorfulSaturationMask;
+    cv::Mat colorfulValueMask;
+    cv::compare(conditionSaturation, MIN_COLORFUL_SATURATION, colorfulSaturationMask, cv::CMP_GT);
+    cv::compare(conditionValue, MIN_COLORFUL_VALUE, colorfulValueMask, cv::CMP_GT);
+
+    cv::Mat colorfulMask;
+    cv::bitwise_and(colorfulSaturationMask, colorfulValueMask, colorfulMask);
+
+    int colorfulPixels = cv::countNonZero(colorfulMask);
+    double minColorfulPixels = condition.total() * MIN_COLORFUL_PIXEL_RATIO;
+    if (colorfulPixels < minColorfulPixels) return 0;
+
+    cv::Mat saturationDrop;
+    cv::subtract(conditionSaturation, imageSaturation, saturationDrop, colorfulMask);
+
+    return (cv::mean(saturationDrop, colorfulMask).val[0] * 100) / 255;
 }
