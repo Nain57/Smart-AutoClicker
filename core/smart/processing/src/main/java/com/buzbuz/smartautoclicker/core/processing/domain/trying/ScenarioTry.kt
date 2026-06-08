@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -32,11 +33,13 @@ internal sealed class ScenarioTry {
     internal abstract val scenario: Scenario
     internal abstract val screenEvents: List<ScreenEvent>
     internal abstract val triggerEvents: List<TriggerEvent>
+    internal abstract val counters: List<Counter>
 
 }
 
 internal class ImageEventTry(
     override val scenario: Scenario,
+    override val counters: List<Counter>,
     val event: ScreenEvent,
 ) : ScenarioTry() {
 
@@ -55,6 +58,7 @@ internal class ImageEventTry(
 
 internal class ScreenConditionTry(
     override val scenario: Scenario,
+    override val counters: List<Counter>,
     val condition: ScreenCondition,
 ) : ScenarioTry() {
 
@@ -88,6 +92,7 @@ internal class ScreenConditionTry(
 
 internal class ActionTry(
     override val scenario: Scenario,
+    override val counters: List<Counter>,
     val action: Action,
 ) : ScenarioTry() {
 

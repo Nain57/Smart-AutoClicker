@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 import android.content.Context
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -27,10 +28,11 @@ import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListene
 internal class ProcessingState(
     screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
+    counters: List<Counter>,
     private val progressListener: SmartProcessingListener?,
     private val eventsState: EventsState = EventsState(screenEvents, triggerEvents),
     private val broadcastsState: BroadcastsState = BroadcastsState(triggerEvents),
-    private val countersState: CountersState = CountersState(screenEvents, triggerEvents, progressListener),
+    private val countersState: CountersState = CountersState(counters, progressListener),
     private val timersState: TimersState = TimersState(triggerEvents),
 ) : IBroadcastsState by broadcastsState, ICountersState by countersState, ITimersState by timersState, IEventsState by eventsState {
 

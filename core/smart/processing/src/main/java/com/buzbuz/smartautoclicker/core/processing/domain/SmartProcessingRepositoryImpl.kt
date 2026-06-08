@@ -158,12 +158,14 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         val scenario = scenarioRepository.getScenario(id) ?: return
         val events = scenarioRepository.getScreenEvents(id)
         val triggerEvents = scenarioRepository.getTriggerEvents(id)
+        val counters = scenarioRepository.getCounters(id)
 
         detectorEngine.startDetection(
             context = context,
             scenario = scenario,
             screenEvents = events,
             triggerEvents = triggerEvents,
+            counters = counters,
             liveDebugging = liveDebugging,
             generateReport = generateReport,
         )
@@ -194,26 +196,32 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         _scenarioId.value = null
     }
 
-    override fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent) {
-        val triedElement = ImageEventTry(scenario, event)
+    override suspend fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent) {
+        val counters = scenarioRepository.getCounters(scenario.id.databaseId)
+        val triedElement = ImageEventTry(scenario, counters, event)
+
         tryElement(
             context,
             triedElement,
         )
     }
 
-    override fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition) {
-        val triedElement = ScreenConditionTry(scenario, condition)
+    override suspend fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition) {
+        val counters = scenarioRepository.getCounters(scenario.id.databaseId)
+        val triedElement = ScreenConditionTry(scenario, counters, condition)
+
         tryElement(
             context = context,
             elementTry = triedElement,
         )
     }
 
-    override fun tryAction(context: Context,  scenario: Scenario, action: Action) {
+    override suspend fun tryAction(context: Context,  scenario: Scenario, action: Action) {
+        val counters = scenarioRepository.getCounters(scenario.id.databaseId)
+
         tryElement(
             context = context,
-            elementTry = ActionTry(scenario, action),
+            elementTry = ActionTry(scenario, counters, action),
         )
     }
 
@@ -224,6 +232,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = elementTry.scenario,
             screenEvents = elementTry.screenEvents,
             triggerEvents = elementTry.triggerEvents,
+            counters = emptyList(),
             liveDebugging = true,
             generateReport = false,
         )

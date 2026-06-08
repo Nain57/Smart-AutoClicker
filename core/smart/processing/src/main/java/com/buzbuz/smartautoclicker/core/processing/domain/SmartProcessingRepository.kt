@@ -108,7 +108,7 @@ interface SmartProcessingRepository : Dumpable {
      * @param scenario the original scenario containing the event to test
      * @param event the event to be tested.
      */
-    fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent)
+    suspend fun tryEvent(context: Context, scenario: Scenario, event: ScreenEvent)
 
     /**
      * Creates a dedicated scenario containing only an [ScreenEvent] with the [ScreenCondition] to be tested.
@@ -117,7 +117,7 @@ interface SmartProcessingRepository : Dumpable {
      * @param scenario the original scenario containing the condition to test
      * @param condition the condition to be tested.
      */
-    fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition)
+    suspend fun tryScreenCondition(context: Context, scenario: Scenario, condition: ScreenCondition)
 
     /**
      * Creates a dedicated scenario containing only an Event with the [Action] to be tested.
@@ -126,5 +126,5 @@ interface SmartProcessingRepository : Dumpable {
      * @param scenario the original scenario containing the condition to test
      * @param action the action to be tested.
      */
-    fun tryAction(context: Context,  scenario: Scenario, action: Action)
+    suspend fun tryAction(context: Context,  scenario: Scenario, action: Action)
 }

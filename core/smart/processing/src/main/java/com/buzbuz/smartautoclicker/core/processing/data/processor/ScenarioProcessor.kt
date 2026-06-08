@@ -22,6 +22,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
@@ -49,6 +50,7 @@ internal class ScenarioProcessor(
     randomize: Boolean,
     screenEvents: List<ScreenEvent>,
     triggerEvents: List<TriggerEvent>,
+    counters: List<Counter>,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
@@ -60,6 +62,7 @@ internal class ScenarioProcessor(
     @VisibleForTesting internal val processingState: ProcessingState = ProcessingState(
         screenEvents = screenEvents,
         triggerEvents = triggerEvents,
+        counters = counters,
         progressListener = progressListener,
     )
     /** Check conditions and tell if they are fulfilled. */

@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
-import com.buzbuz.smartautoclicker.core.domain.ext.getAllCounterNames
-import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 
 
@@ -28,15 +26,13 @@ interface ICountersState {
 }
 
 internal class CountersState(
-    screenEvents: List<ScreenEvent>,
-    triggerEvent: List<TriggerEvent>,
+    counters: List<Counter>,
     private val listener: SmartProcessingListener?,
 ) : ICountersState {
 
-    /** Parse the whole event list to get all the counters names. */
     private val counterMap: MutableMap<String, Double> = mutableMapOf<String, Double>().apply {
-        (screenEvents + triggerEvent).getAllCounterNames().forEach { counterName ->
-            put(counterName, 0.0)
+        counters.forEach { counter ->
+            put(counter.counterName, counter.defaultValue)
         }
     }
 
@@ -46,7 +42,7 @@ internal class CountersState(
     override fun setCounterValue(counterName: String, value: Double) {
         if (!counterMap.containsKey(counterName)) return
 
-        // Values are initialized at 0, previous should never be null
+        // Values are initialized with starting value, previous should never be null
         val previous = counterMap.put(counterName, value) ?: return
         listener?.onCounterValueChanged(counterName, previous, value)
     }

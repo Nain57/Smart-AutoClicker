@@ -16,9 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder
 
-import com.buzbuz.smartautoclicker.core.domain.ext.getAllCounterNames
-import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportActionResult
 import javax.inject.Inject
 
@@ -31,9 +29,9 @@ internal class CounterValuesRecorder @Inject constructor() {
     val eventCounterChanges: List<DebugReportActionResult.CounterChange> = _eventCounterChanges
 
 
-    fun onSessionStarted(screenEvents: List<ScreenEvent>, triggerEvents: List<TriggerEvent>) {
+    fun onSessionStarted(counters: List<Counter>) {
         reset()
-        _counterNames.addAll((screenEvents + triggerEvents).getAllCounterNames())
+        _counterNames.addAll(counters.map { counter -> counter.counterName })
     }
 
     fun onEventProcessingStarted() {

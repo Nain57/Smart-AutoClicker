@@ -22,6 +22,7 @@ import android.util.Size
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -89,8 +90,7 @@ internal class DebugEngine @Inject constructor(
 
     override fun onSessionStarted(
         scenario: Scenario,
-        screenEvents: List<ScreenEvent>,
-        triggerEvents: List<TriggerEvent>,
+        counters: List<Counter>,
         generateLiveEvents: Boolean,
     ) {
         coroutineScopeIo.launch {
@@ -100,7 +100,7 @@ internal class DebugEngine @Inject constructor(
 
             if (shouldWriteReport) {
                 overviewRecorder.onSessionStart(scenario)
-                counterValuesRecorder.onSessionStarted(screenEvents, triggerEvents)
+                counterValuesRecorder.onSessionStarted(counters)
                 debugReportLocalDataSource.startReportWrite()
             }
         }

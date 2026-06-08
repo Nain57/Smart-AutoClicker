@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.ext.getAllOCRAlphabets
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -172,6 +173,7 @@ class DetectorEngine @Inject constructor(
         scenario: Scenario,
         screenEvents: List<ScreenEvent>,
         triggerEvents: List<TriggerEvent>,
+        counters: List<Counter>,
         liveDebugging: Boolean,
         generateReport: Boolean,
     ) {
@@ -228,8 +230,7 @@ class DetectorEngine @Inject constructor(
             if (liveDebugging || generateReport) {
                 debuggingListener.onSessionStarted(
                     scenario = scenario,
-                    screenEvents = screenEvents,
-                    triggerEvents = triggerEvents,
+                    counters = counters,
                     generateLiveEvents = liveDebugging,
                 )
             }
@@ -242,6 +243,7 @@ class DetectorEngine @Inject constructor(
                 randomize = scenario.randomize,
                 screenEvents = screenEvents,
                 triggerEvents = triggerEvents,
+                counters = counters,
                 bitmapSupplier = bitmapRepository::getImageConditionBitmap,
                 androidExecutor = actionExecutor,
                 unblockWorkaroundEnabled = settingsRepository.isInputBlockWorkaroundEnabled(),

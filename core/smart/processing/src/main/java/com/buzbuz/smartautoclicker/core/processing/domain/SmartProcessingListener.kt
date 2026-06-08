@@ -17,9 +17,9 @@
 package com.buzbuz.smartautoclicker.core.processing.domain
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
@@ -31,14 +31,12 @@ interface SmartProcessingListener {
      * The processing session have started.
      *
      * @param scenario the [Scenario] running for the processing session.
-     * @param screenEvents the list of [ScreenEvent] to be processed for this scenario.
-     * @param triggerEvents the list of [TriggerEvent] to be processed for this scenario.
+     * @param counters the list of [Counter] to be processed for this scenario.
      * @param generateLiveEvents tells if the live debugging events should be generated.
      */
     fun onSessionStarted(
         scenario: Scenario,
-        screenEvents: List<ScreenEvent>,
-        triggerEvents: List<TriggerEvent>,
+        counters: List<Counter>,
         generateLiveEvents: Boolean,
     ) = Unit
 

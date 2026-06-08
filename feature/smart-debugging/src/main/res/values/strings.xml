@@ -90,8 +90,8 @@
       - DO NOT TRANSLATE.
       -->
     <string name="event_state_changed_separator" translatable="false">"  »  "</string>
-    <string name="item_counter_state_value_same" translatable="false">%1$d</string>
-    <string name="item_counter_state_value_changed" translatable="false">%1$d » %2$d</string>
+    <string name="item_counter_state_value_same" translatable="false">%1$f</string>
+    <string name="item_counter_state_value_changed" translatable="false">%1$.2f » %2$.2f</string>
 
 
 </resources>
