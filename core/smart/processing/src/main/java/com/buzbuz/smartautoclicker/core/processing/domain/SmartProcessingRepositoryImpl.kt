@@ -232,7 +232,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
             scenario = elementTry.scenario,
             screenEvents = elementTry.screenEvents,
             triggerEvents = elementTry.triggerEvents,
-            counters = emptyList(),
+            counters = elementTry.counters,
             liveDebugging = true,
             generateReport = false,
         )
