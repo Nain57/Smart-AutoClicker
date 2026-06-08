@@ -55,6 +55,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/edit_text_field_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:icon="@drawable/ic_visible_on"/>
+        tools:icon="@drawable/ic_append_counter"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

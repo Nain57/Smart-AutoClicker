@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
@@ -75,7 +76,13 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 onDeleteClick = ::onDeleteClicked,
                 onCounterClicked = ::onCounterClicked,
             )
-            layoutLoadableList.list.adapter = countersAdapter
+            layoutLoadableList.apply {
+                list.adapter = countersAdapter
+                setEmptyText(
+                    id = R.string.message_empty_counter_name_list_title,
+                    secondaryId =R.string.message_empty_counter_name_list_desc
+                )
+            }
         }
 
         return viewBinding.root

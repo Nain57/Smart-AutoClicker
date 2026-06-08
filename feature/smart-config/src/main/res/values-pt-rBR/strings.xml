@@ -286,7 +286,7 @@
     <string name="dialog_title_change_counter">Alterar contador</string>
 
     <string name="message_empty_counter_name_list_title">Nenhum contador definido</string>
-    <string name="message_empty_counter_name_list_desc">Contadores são criados com uma ação de alterar contador ou uma condição de contador alcançado</string>
+    <string name="message_empty_counter_name_list_desc">Um contador armazena um valor numérico que pode ser alterado, verificado ou utilizado nas suas ações ou condições</string>
 
     <string name="field_counter_operation_value_label">Valor</string>
 

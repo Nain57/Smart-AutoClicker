@@ -157,7 +157,7 @@
     <string name="message_empty_trigger_condition_list_desc">條件是啟動一項操作的自訂標準。</string>
     <string name="message_empty_screen_condition_list_desc">螢幕條件是螢幕截圖的一部分，將在手機螢幕顯示的每個幀上進行搜索。</string>
     <string name="message_empty_action_list_desc">操作是在滿足創建的條件時觸發的與手機的交互（點擊、輕掃…）。</string>
-    <string name="message_empty_counter_name_list_desc">使用更改計數器操作或計數器達到條件創建計數器</string>
+    <string name="message_empty_counter_name_list_desc">計數器用於儲存數值，該數值可在您的動作或條件中進行變更、驗證或使用</string>
 
     <!--
       - Messages.

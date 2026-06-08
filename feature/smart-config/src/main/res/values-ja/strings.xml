@@ -161,7 +161,7 @@
     <string name="dropdown_intent_extra_type_title">値のタイプ</string>
     <string name="dialog_title_change_counter">カウンターを変更する</string>
     <string name="message_empty_counter_name_list_title">カウンタが定義されていません</string>
-    <string name="message_empty_counter_name_list_desc">カウンタは、「カウンタ変更アクション」または「カウンタ到達条件」を使用して作成されます。</string>
+    <string name="message_empty_counter_name_list_desc">カウンターには数値が格納され、アクションや条件式内でその値を変更、検証、または使用することができます</string>
     <string name="field_counter_operation_value_label">値</string>
     <string name="dropdown_counter_operation_label">演算</string>
     <string name="dialog_title_toggle_event">イベント状態</string>

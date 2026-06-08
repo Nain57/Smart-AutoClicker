@@ -95,7 +95,7 @@ class SetTextDialog(
             fieldTextToWrite.apply {
                 setup(
                     label = R.string.field_input_set_text_text_to_write_title,
-                    icon = R.drawable.ic_change_counter,
+                    icon = R.drawable.ic_append_counter,
                     disableInputWithCheckbox = false,
                 )
                 textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(

@@ -90,7 +90,7 @@ class NotificationDialog(
             fieldTextToWrite.apply {
                 setup(
                     label = R.string.field_notification_message_text_label,
-                    icon = R.drawable.ic_counter_reached,
+                    icon = R.drawable.ic_append_counter,
                     disableInputWithCheckbox = false,
                 )
                 textField.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(300))

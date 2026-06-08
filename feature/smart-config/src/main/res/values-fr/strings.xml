@@ -159,7 +159,7 @@
     <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.</string>
     <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.</string>
     <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.</string>
-    <string name="message_empty_counter_name_list_desc">Les compteur sont créés avec une Action Modifier Compteur ou une condition Compteur atteint</string>
+    <string name="message_empty_counter_name_list_desc">Un compteur stocke une valeur numérique qui peut être modifiée, vérifiée ou utilisée dans vos actions ou conditions</string>
 
     <!--
       - Messages.

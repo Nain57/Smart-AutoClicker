@@ -320,7 +320,7 @@
     <string name="dialog_title_change_counter">تغيير العداد</string>
 
     <string name="message_empty_counter_name_list_title">لم يتم تعريف العداد</string>
-    <string name="message_empty_counter_name_list_desc">يتم إنشاء العدادات باستخدام إجراء العداد التغييري أو حالة الوصول إلى العداد</string>
+    <string name="message_empty_counter_name_list_desc">خزن العداد قيمة رقمية يمكن تغييرها أو التحقق منها أو استخدامها في الإجراءات أو الشروط الخاصة بك</string>
 
     <string name="field_counter_operation_value_label">قيمة</string>
 

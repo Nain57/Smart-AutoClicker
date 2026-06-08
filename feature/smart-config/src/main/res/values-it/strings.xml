@@ -158,7 +158,7 @@
     <string name="message_empty_trigger_condition_list_desc">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
     <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.</string>
     <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.</string>
-    <string name="message_empty_counter_name_list_desc">I contatori vengono creati con un\'azione di modifica del contatore o con una condizione di raggiungimento del contatore.</string>
+    <string name="message_empty_counter_name_list_desc">Un contatore memorizza un valore numerico che può essere modificato, verificato o utilizzato nelle azioni o nelle condizioni</string>
 
     <!--
       - Messages.
