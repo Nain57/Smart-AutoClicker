@@ -46,5 +46,6 @@ data class CounterUiItem(
     val readByButtonText: String,
     val readByButtonIsEmpty: Boolean,
     val deleteButtonText: String,
+    val deleteButtonEnabled: Boolean,
 )
 

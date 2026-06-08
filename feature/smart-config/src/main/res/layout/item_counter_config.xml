@@ -161,7 +161,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="#99FFFFFF"
+        android:background="#BBFFFFFF"
         android:text="@string/message_replace_by"/>
 
 </com.google.android.material.card.MaterialCardView>

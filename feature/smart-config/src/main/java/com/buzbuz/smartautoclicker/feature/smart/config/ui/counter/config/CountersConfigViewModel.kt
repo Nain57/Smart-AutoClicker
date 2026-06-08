@@ -68,6 +68,7 @@ class CountersConfigViewModel @Inject constructor(
             val countersItems = counterList.map { counter ->
                 counter.toUiItem(
                     context = context,
+                    counterCount = counterList.size,
                     readReferences = readRefs.getOrDefault(counter.counterName, emptySet()),
                     writeReferences = writeRefs.getOrDefault(counter.counterName, emptySet()),
                     isExpanded = expanded.contains(counter.counterName),
@@ -107,6 +108,10 @@ class CountersConfigViewModel @Inject constructor(
         selectedForReplacement.update { item }
     }
 
+    fun cancelReplacement() {
+        selectedForReplacement.update { null }
+    }
+
     fun replaceAndDelete(replacedBy: CounterUiItem) {
         val toDelete = selectedForReplacement.value ?: return
         viewModelScope.launch {
@@ -131,6 +136,7 @@ class CountersConfigViewModel @Inject constructor(
 
 private fun Counter.toUiItem(
     context: Context,
+    counterCount: Int,
     readReferences: Set<CounterReference>,
     writeReferences: Set<CounterReference>,
     isExpanded: Boolean,
@@ -155,7 +161,8 @@ private fun Counter.toUiItem(
         readByButtonText = context.getReadByButtonText(readCount),
         readByButtonIsEmpty = readCount == 0,
         deleteButtonText = context.getDeleteButtonText(totalReferences),
-        selectedForReplacement = forReplacement,
+        deleteButtonEnabled = counterCount > 1,
+        selectedForReplacement = forReplacement
     )
 }
 

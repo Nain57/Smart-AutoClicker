@@ -26,6 +26,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
@@ -75,6 +76,7 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 onReadByClick = ::showReadByDialog,
                 onDeleteClick = ::onDeleteClicked,
                 onCounterClicked = ::onCounterClicked,
+                onCancelReplace = viewModel::cancelReplacement,
             )
             layoutLoadableList.apply {
                 list.adapter = countersAdapter
@@ -138,9 +140,9 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         if (uiState == null) return
 
         viewBinding.apply {
-            layoutTopBar.setButtonVisibility(
+            layoutTopBar.setButtonEnabledState(
                 buttonType = DialogNavigationButton.DISMISS,
-                visibility = if (uiState is CountersUiState.Loaded) View.VISIBLE else View.GONE,
+                enabled = uiState is CountersUiState.Loaded,
             )
 
             when (uiState) {

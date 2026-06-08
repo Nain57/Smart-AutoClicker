@@ -43,6 +43,7 @@ class CountersConfigAdapter(
     private val onDeleteClick: (CounterUiItem) -> Unit,
     private val onCounterClicked: (CounterUiItem) -> Unit,
     private val onStartingValueChange: (CounterUiItem, Double) -> Unit,
+    private val onCancelReplace: () -> Unit,
 ) : ListAdapter<CounterUiItem, CountersConfigViewHolder>(CounterDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountersConfigViewHolder =
@@ -54,6 +55,7 @@ class CountersConfigAdapter(
             onDeleteClick = onDeleteClick,
             onCounterClicked = onCounterClicked,
             onStartingValueChange = onStartingValueChange,
+            onCancelReplace = onCancelReplace,
         )
 
     override fun onBindViewHolder(holder: CountersConfigViewHolder, position: Int) {
@@ -77,6 +79,7 @@ class CountersConfigViewHolder(
     onDeleteClick: (CounterUiItem) -> Unit,
     onCounterClicked: (CounterUiItem) -> Unit,
     onStartingValueChange: (CounterUiItem, Double) -> Unit,
+    onCancelReplace: () -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var item: CounterUiItem? = null
@@ -90,6 +93,7 @@ class CountersConfigViewHolder(
             writtenByButton.setOnClickListener { item?.let(onSetByClick) }
             readByButton.setOnClickListener { item?.let(onReadByClick) }
             deleteButton.setOnClickListener { item?.let(onDeleteClick) }
+            replaceByText.setOnClickListener { onCancelReplace() }
 
             textFieldStartingValue.doAfterTextChanged { text ->
                 val counter = item ?: return@doAfterTextChanged
@@ -133,7 +137,9 @@ class CountersConfigViewHolder(
                 text = newItem.readByButtonText
                 isEnabled = !newItem.readByButtonIsEmpty
             }
+
             deleteButton.text = newItem.deleteButtonText
+            deleteButton.isEnabled = newItem.deleteButtonEnabled
 
             replaceByText.visibility = if (newItem.selectedForReplacement) View.VISIBLE else View.GONE
         }
