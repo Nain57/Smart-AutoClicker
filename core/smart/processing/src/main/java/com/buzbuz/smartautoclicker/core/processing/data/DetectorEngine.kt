@@ -220,7 +220,8 @@ class DetectorEngine @Inject constructor(
 
             // Compute minimal processing duration
             val frameLimit = scenario.frameLimit
-            minProcessingDurationNs = if (frameLimit == 0) DEFAULT_MIN_PROCESSING_DURATION_NS
+            minProcessingDurationNs =
+                if (frameLimit == 0) DEFAULT_MIN_PROCESSING_DURATION_NS
                 else ONE_SECOND_IN_NANO / frameLimit
 
             Log.i(TAG, "Process scenario at ${if (frameLimit == 0) "unlimited" else frameLimit} FPS " +
@@ -372,9 +373,12 @@ class DetectorEngine @Inject constructor(
                     scenarioProcessor?.process(screenFrame)
                 }
 
+                println("DetectorEngine: ProcessingDuration=$processingDurationNs, minDuration=$minProcessingDurationNs")
+
                 // Avoid looping infinitely to quickly for nothing.
                 if (processingDurationNs < minProcessingDurationNs) {
-                    delay(max(1, (minProcessingDurationNs - processingDurationNs) / ONE_SECOND_IN_NANO))
+                    println("DetectorEngine: Delay=${(minProcessingDurationNs - processingDurationNs) / ONE_MILLISECOND_IN_NANO}")
+                    delay(max(1, (minProcessingDurationNs - processingDurationNs) / ONE_MILLISECOND_IN_NANO))
                 }
 
             } ?: delay(NO_IMAGE_DELAY_MS)
@@ -451,7 +455,9 @@ internal enum class DetectorState {
 private const val NO_IMAGE_DELAY_MS = 20L
 
 /** The value of 1 second in nanoseconds. */
-private const val ONE_SECOND_IN_NANO = 1000000L
+private const val ONE_SECOND_IN_NANO = 1000000000L
+/** The value of 1 milliseconds  in nanoseconds.*/
+private const val ONE_MILLISECOND_IN_NANO = 1000000L
 /** The default minimal processing duration in nanoseconds. */
 private const val DEFAULT_MIN_PROCESSING_DURATION_NS = ONE_SECOND_IN_NANO
 
