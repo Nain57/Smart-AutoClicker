@@ -26,7 +26,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -34,6 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseLi
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConfirmationDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CounterCreationDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.reference.CounterReferenceDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
@@ -119,7 +119,10 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private fun onCounterClicked(counter: CounterUiItem) {
         when (viewModel.getUiState()) {
-            is CountersUiState.Replacing -> viewModel.replaceAndDelete(counter)
+            is CountersUiState.Replacing ->
+                viewModel.replaceAndDelete(counter)
+            is CountersUiState.Loaded ->
+                if (!counter.isExpanded) viewModel.expandCollapseItem(counter)
             else -> Unit
         }
     }
@@ -156,11 +159,27 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
     private fun showSetByDialog(counter: CounterUiItem) {
         if (viewModel.getUiState() !is CountersUiState.Loaded) return
 
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterReferenceDialog(
+                counterName = counter.counterName,
+                type = CounterReferenceDialog.ReferencesType.WRITE,
+            ),
+            hideCurrent = false,
+        )
     }
 
     private fun showReadByDialog(counter: CounterUiItem) {
         if (viewModel.getUiState() !is CountersUiState.Loaded) return
 
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterReferenceDialog(
+                counterName = counter.counterName,
+                type = CounterReferenceDialog.ReferencesType.READ,
+            ),
+            hideCurrent = false,
+        )
     }
 
     private fun showDeleteDialog(counter: CounterUiItem) {

@@ -494,13 +494,13 @@
 
     <string name="field_label_counter_starting_value">Starting value</string>
 
-    <string name="button_text_counter_actions_references">%1$d Actions</string>
-    <string name="button_text_counter_actions_no_reference">Never used</string>
-    <string name="button_text_counter_conditions_references">%1$d Conditions</string>
-    <string name="button_text_counter_conditions_no_reference">Never checked</string>
+    <string name="button_text_counter_actions_references">%1$d write</string>
+    <string name="button_text_counter_actions_no_reference">Never changed</string>
+    <string name="button_text_counter_conditions_references">%1$d read</string>
+    <string name="button_text_counter_conditions_no_reference">Never read</string>
 
     <string name="button_text_counter_delete">Delete counter</string>
-    <string name="button_text_counter_delete_and_replace">Delete and Replace</string>
+    <string name="button_text_counter_delete_and_replace">Replace and delete</string>
     <string name="message_replace_by">Replace by …</string>
 
     <string name="dialog_title_new_counter">New Counter</string>

@@ -32,11 +32,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-        android:layout_marginTop="@dimen/margin_vertical_large"
-        android:layout_marginBottom="@dimen/margin_vertical_default">
+        android:layout_marginVertical="@dimen/margin_vertical_large">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/reference_name"
+            android:id="@+id/event_name"
             style="@style/AppTheme.TextAppearance.ListItemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,18 +43,18 @@
             android:gravity="center_vertical"
             android:drawablePadding="@dimen/margin_horizontal_small"
             tools:text="Click on item"
-            tools:drawableStart="@drawable/ic_click"/>
+            tools:drawableStart="@drawable/ic_screen_event"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/event_name"
+            android:id="@+id/reference_name"
             style="@style/AppTheme.TextAppearance.ListItemSubText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:layout_marginBottom="@dimen/margin_vertical_default"
             android:gravity="center_vertical"
             android:drawablePadding="@dimen/margin_horizontal_small"
             tools:text="First step event"
-            tools:drawableStart="@drawable/ic_screen_event"/>
+            tools:drawableStart="@drawable/ic_click"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/effect_description"

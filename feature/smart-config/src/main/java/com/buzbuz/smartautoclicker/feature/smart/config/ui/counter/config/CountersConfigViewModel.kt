@@ -24,8 +24,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.CounterReference
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterReferencesUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterReadReferencesUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.model.CounterReference
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterWriteReferencesUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.ReplaceCounterUseCase
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,24 +44,32 @@ import javax.inject.Inject
 
 class CountersConfigViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    getCounterReferencesUseCase: GetCounterReferencesUseCase,
+    getCounterReadReferencesUseCase: GetCounterReadReferencesUseCase,
+    getCounterWriteReferencesUseCase: GetCounterWriteReferencesUseCase,
     private val replaceCounterUseCase: ReplaceCounterUseCase,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
     private val allCounters: Flow<EditedListState<Counter>> = editionRepository.editionState.editedCountersState
-    private val countersReferences: Flow<Map<String, Set<CounterReference>>> = getCounterReferencesUseCase()
+    private val readReferences: Flow<Map<String, Set<CounterReference>>> = getCounterReadReferencesUseCase()
+    private val writeReferences: Flow<Map<String, Set<CounterReference>>> = getCounterWriteReferencesUseCase()
 
     private val selectedForReplacement: MutableStateFlow<CounterUiItem?> = MutableStateFlow(null)
     private val expandedItems: MutableStateFlow<Set<String>> = MutableStateFlow(emptySet())
 
-    val uiState: StateFlow<CountersUiState?> =
-        combine(allCounters, countersReferences, expandedItems, selectedForReplacement) { counters, countersRef, expanded, forReplacement ->
+    val uiState: StateFlow<CountersUiState?> = combine(
+        allCounters,
+        readReferences,
+        writeReferences,
+        expandedItems,
+        selectedForReplacement
+    ) { counters, readRefs, writeRefs, expanded, forReplacement ->
             val counterList = counters.value ?: return@combine CountersUiState.Empty
             val countersItems = counterList.map { counter ->
                 counter.toUiItem(
                     context = context,
-                    references = countersRef.getOrDefault(counter.counterName, emptySet()),
+                    readReferences = readRefs.getOrDefault(counter.counterName, emptySet()),
+                    writeReferences = writeRefs.getOrDefault(counter.counterName, emptySet()),
                     isExpanded = expanded.contains(counter.counterName),
                     forReplacement = forReplacement?.counterName == counter.counterName,
                 )
@@ -122,13 +131,14 @@ class CountersConfigViewModel @Inject constructor(
 
 private fun Counter.toUiItem(
     context: Context,
-    references: Set<CounterReference>,
+    readReferences: Set<CounterReference>,
+    writeReferences: Set<CounterReference>,
     isExpanded: Boolean,
     forReplacement: Boolean,
 ): CounterUiItem {
-    val actionsCount = references.count { it is CounterReference.ActionElement }
-    val conditionsCount = references.count { it is CounterReference.ConditionElement }
-    val totalReferences = references.size
+    val writeCount = writeReferences.size
+    val readCount = readReferences.size
+    val totalReferences = writeCount + readCount
 
     return CounterUiItem(
         counter = this,
@@ -140,10 +150,10 @@ private fun Counter.toUiItem(
             startingValue = defaultValue,
         ),
         startingValue = defaultValue,
-        setByButtonText = context.getSetByButtonText(actionsCount),
-        setByButtonIsEmpty = actionsCount == 0,
-        readByButtonText = context.getReadByButtonText(conditionsCount),
-        readByButtonIsEmpty = conditionsCount == 0,
+        setByButtonText = context.getSetByButtonText(writeCount),
+        setByButtonIsEmpty = writeCount == 0,
+        readByButtonText = context.getReadByButtonText(readCount),
+        readByButtonIsEmpty = readCount == 0,
         deleteButtonText = context.getDeleteButtonText(totalReferences),
         selectedForReplacement = forReplacement,
     )

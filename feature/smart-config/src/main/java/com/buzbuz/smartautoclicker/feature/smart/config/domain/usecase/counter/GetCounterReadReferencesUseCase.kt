@@ -33,12 +33,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.model.CounterReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.collections.forEach
 
-class GetCounterReferencesUseCase @Inject constructor(
+class GetCounterReadReferencesUseCase @Inject constructor(
     private val editionRepository: EditionRepository,
 ) {
 
@@ -49,32 +50,32 @@ class GetCounterReferencesUseCase @Inject constructor(
     private fun List<Event>.findCounterReferences(): Map<String, Set<CounterReference>> =
         buildMap {
             this@findCounterReferences.forEach { event ->
-                event.conditions.getConditionsCounterReferences().forEach { (counterName, references) ->
+                event.conditions.getConditionsCounterReadReferences(event).forEach { (counterName, references) ->
                     addReferences(counterName, references)
                 }
-                event.actions.getActionsCounterReferences().forEach { (counterName, references) ->
+                event.actions.getActionsCounterReferences(event).forEach { (counterName, references) ->
                     addReferences(counterName, references)
                 }
             }
         }
 
-    private fun List<Condition>.getConditionsCounterReferences(): Map<String, Set<CounterReference>> =
+    private fun List<Condition>.getConditionsCounterReadReferences(event: Event): Map<String, Set<CounterReference>> =
         buildMap {
-            this@getConditionsCounterReferences.forEach { condition ->
+            this@getConditionsCounterReadReferences.forEach { condition ->
                 when (condition) {
                     is ScreenCondition.Number -> {
                         val counterValue = condition.counterValue
                         if (counterValue is CounterOperationValue.Counter) {
-                            addReference(counterValue.value, condition)
+                            addReference(event, counterValue.value, condition)
                         }
                     }
 
                     is TriggerCondition.OnCounterCountReached -> {
-                        addReference(condition.counterName, condition)
+                        addReference(event, condition.counterName, condition)
 
                         val operationValue = condition.counterValue
                         if (operationValue is CounterOperationValue.Counter) {
-                            addReference(operationValue.value, condition)
+                            addReference(event, operationValue.value, condition)
                         }
                     }
 
@@ -87,28 +88,26 @@ class GetCounterReferencesUseCase @Inject constructor(
             }
         }
 
-    private fun List<Action>.getActionsCounterReferences(): Map<String, Set<CounterReference>> =
+    private fun List<Action>.getActionsCounterReferences(event: Event): Map<String, Set<CounterReference>> =
         buildMap {
             this@getActionsCounterReferences.forEach { action ->
                 when (action) {
-                    is ChangeCounter -> {
-                        addReference(action.counterName, action)
-
-                        val operationValue = action.operationValue
-                        if (operationValue is CounterOperationValue.Counter) {
-                            addReference(operationValue.value, action)
-                        }
-                    }
-
                     is Notification -> {
                         action.messageText.findCounterReferences().forEach { counterName ->
-                            addReference(counterName, action)
+                            addReference(event, counterName, action)
                         }
                     }
 
                     is SetText -> {
                         action.text.findCounterReferences().forEach { counterName ->
-                            addReference(counterName, action)
+                            addReference(event, counterName, action)
+                        }
+                    }
+
+                    is ChangeCounter -> {
+                        val operationValue = action.operationValue
+                        if (operationValue is CounterOperationValue.Counter) {
+                            addReference(event, operationValue.value, action)
                         }
                     }
 
@@ -122,17 +121,17 @@ class GetCounterReferencesUseCase @Inject constructor(
             }
         }
 
-    private fun MutableMap<String, Set<CounterReference>>.addReference(counterName: String, condition: Condition) {
+    private fun MutableMap<String, Set<CounterReference>>.addReference(event: Event, counterName: String, condition: Condition) {
         put(
             counterName,
-            getOrDefault(counterName, emptySet()) + CounterReference.ConditionElement(condition)
+            getOrDefault(counterName, emptySet()) + CounterReference.ConditionElement(event, condition)
         )
     }
 
-    private fun MutableMap<String, Set<CounterReference>>.addReference(counterName: String, action: Action) {
+    private fun MutableMap<String, Set<CounterReference>>.addReference(event: Event, counterName: String, action: Action) {
         put(
             counterName,
-            getOrDefault(counterName, emptySet()) + CounterReference.ActionElement(action)
+            getOrDefault(counterName, emptySet()) + CounterReference.ActionElement(event, action)
         )
     }
 
@@ -142,10 +141,4 @@ class GetCounterReferencesUseCase @Inject constructor(
             getOrDefault(counterName, emptySet()) + references
         )
     }
-}
-
-/** Element within a Scenario associated to a counter. */
-sealed class CounterReference {
-    data class ActionElement(val action: Action): CounterReference()
-    data class ConditionElement(val condition: Condition): CounterReference()
 }
