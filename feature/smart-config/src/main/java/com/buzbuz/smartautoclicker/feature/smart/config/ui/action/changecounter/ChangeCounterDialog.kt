@@ -99,7 +99,7 @@ class ChangeCounterDialog(
                 setup(
                     dropdownItems = allCounterAffectationOperatorDropdownItems(),
                     onOperatorSelected = viewModel::setOperationItem,
-                    onChangeTypeClicked = viewModel::setOperationValue,
+                    onChangeTypeClicked = viewModel::setOperandType,
                     onStaticValueChangedListener = { newValue ->
                         viewModel.setOperationValue(CounterOperationValue.Number(newValue))
                     },

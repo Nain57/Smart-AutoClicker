@@ -22,14 +22,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toFullNameRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toCounterOperatorDropdownItem
@@ -85,6 +83,21 @@ class NumberConditionViewModel @Inject constructor(
 
     fun setComparisonOperator(item: UiCounterOperatorDropdownItem) {
         updateEditedCondition { old -> old.copy(comparisonOperation = item.toComparisonOperation()) }
+    }
+
+    fun setOperandType(type: UiOperandType) {
+        // Do nothing if this is the same operand
+        val currentOperand = uiState.value?.operandValue
+        if (currentOperand is UiStaticOrCounterSelection.CounterValue && type == UiOperandType.COUNTER) return
+        if (currentOperand is UiStaticOrCounterSelection.StaticValue && type == UiOperandType.STATIC) return
+
+        // Change operand and use default value
+        setOperationValue(
+            when (type) {
+                UiOperandType.STATIC -> CounterOperationValue.Number(0.0)
+                UiOperandType.COUNTER -> CounterOperationValue.Counter("")
+            }
+        )
     }
 
     fun setOperationValue(value: CounterOperationValue) {

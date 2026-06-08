@@ -23,8 +23,14 @@ sealed class UiStaticOrCounterSelection {
     data class CounterValue(val counter: Counter?): UiStaticOrCounterSelection()
 }
 
+enum class UiOperandType {
+    STATIC,
+    COUNTER,
+}
+
 fun UiStaticOrCounterSelection.toDisplayValue(): String =
     when (this) {
         is UiStaticOrCounterSelection.CounterValue -> counter?.counterName ?: "?"
         is UiStaticOrCounterSelection.StaticValue -> value.toString()
     }
+

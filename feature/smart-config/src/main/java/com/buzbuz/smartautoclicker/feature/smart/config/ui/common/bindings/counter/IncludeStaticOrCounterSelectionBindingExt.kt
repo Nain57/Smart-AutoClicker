@@ -19,7 +19,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.coun
 import android.text.InputType
 import android.view.View
 
-import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
@@ -31,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeStaticOrCounterSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 
@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.
 fun IncludeStaticOrCounterSelectionBinding.setup(
     dropdownItems: List<UiCounterOperatorDropdownItem>,
     onOperatorSelected: (UiCounterOperatorDropdownItem) -> Unit,
-    onChangeTypeClicked: (defaultValue: CounterOperationValue) -> Unit,
+    onChangeTypeClicked: (UiOperandType) -> Unit,
     onStaticValueChangedListener: (Double) -> Unit,
     onOpenCounterSelectionClicked: () -> Unit,
 ) {
@@ -59,8 +59,11 @@ fun IncludeStaticOrCounterSelectionBinding.setup(
 
         setOnCheckedListener { checkedId ->
             onChangeTypeClicked(
-                if (checkedId == 0) CounterOperationValue.Number(0.0)
-                else CounterOperationValue.Counter("")
+                when (checkedId) {
+                    0 -> UiOperandType.STATIC
+                    1 -> UiOperandType.COUNTER
+                    else -> return@setOnCheckedListener
+                }
             )
         }
     }

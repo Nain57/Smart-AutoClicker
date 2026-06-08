@@ -44,7 +44,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.count
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterAffectationOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterComparisonOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
@@ -100,7 +99,7 @@ class CounterReachedConditionDialog(
                 setup(
                     dropdownItems = allCounterComparisonOperatorDropdownItems(),
                     onOperatorSelected = viewModel::setOperationItem,
-                    onChangeTypeClicked = viewModel::setOperationValue,
+                    onChangeTypeClicked = viewModel::setOperandType,
                     onStaticValueChangedListener = { newValue ->
                         viewModel.setOperationValue(CounterOperationValue.Number(newValue))
                     },
