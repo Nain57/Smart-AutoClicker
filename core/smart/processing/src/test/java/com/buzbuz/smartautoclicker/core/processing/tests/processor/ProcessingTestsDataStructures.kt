@@ -22,6 +22,7 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -33,6 +34,7 @@ internal data class TestScenario(
     val scenario: Scenario,
     val screenEvents: List<ScreenEvent>,
     val triggerEvents: List<TriggerEvent>,
+    val counters: List<Counter> = emptyList(),
 )
 
 internal data class TestImageCondition(

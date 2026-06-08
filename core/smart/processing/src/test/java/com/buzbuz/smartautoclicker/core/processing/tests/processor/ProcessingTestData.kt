@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventTog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -105,6 +106,7 @@ internal object ProcessingTestData {
         scenarioId: Identifier,
         screenEvents: List<ScreenEvent> = emptyList(),
         triggerEvents: List<TriggerEvent> = emptyList(),
+        counters: List<Counter> = emptyList(),
     ): TestScenario {
 
         // Setup correct priorities
@@ -120,6 +122,7 @@ internal object ProcessingTestData {
             ),
             screenEvents = screenEvents,
             triggerEvents = triggerEvents,
+            counters = counters,
         )
     }
 

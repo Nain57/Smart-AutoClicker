@@ -70,7 +70,8 @@ class ScenarioMapperTests {
                     actions = emptyList(),
                     conditions = emptyList(),
                 ),
-            )
+            ),
+            counters = emptyList(),
         ).toDomain()
         val expectedScenario = ScenarioTestsData.getNewScenario(ScenarioTestsData.SCENARIO_ID, ScenarioTestsData.SCENARIO_NAME)
 

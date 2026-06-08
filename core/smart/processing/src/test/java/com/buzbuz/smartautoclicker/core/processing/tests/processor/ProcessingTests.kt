@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter.OperationType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.EQUALS
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
@@ -84,6 +85,7 @@ class ProcessingTests {
             randomize = testScenario.scenario.randomize,
             screenEvents = testScenario.screenEvents,
             triggerEvents = testScenario.triggerEvents,
+            counters = testScenario.counters,
             imageDetector = mockImageDetector,
             androidExecutor = mockAndroidExecutor,
             bitmapSupplier = mockBitmapSupplier::getBitmap,
@@ -309,6 +311,10 @@ class ProcessingTests {
         val eventId1 = testsData.newEventId()
         val eventId2 = testsData.newEventId()
         val eventId3 = testsData.newEventId()
+        val counterA = Counter("A", 0.0, scenarioId)
+        val counterB = Counter("B", 0.0, scenarioId)
+        val counterC = Counter("C", 0.0, scenarioId)
+
         val testEvent1 = testsData.newTestTriggerEvent(
             eventId = eventId1,
             scenarioId = scenarioId,
@@ -332,7 +338,8 @@ class ProcessingTests {
         )
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
-            triggerEvents = listOf(testEvent1, testEvent2, testEvent3)
+            triggerEvents = listOf(testEvent1, testEvent2, testEvent3),
+            counters = listOf(counterA, counterB, counterC),
         )
 
         // When: Only verify on one frame here
@@ -426,6 +433,7 @@ class ProcessingTests {
         val scenarioId = testsData.newScenarioId()
         val eventId1 = testsData.newEventId()
         val eventId2 = testsData.newEventId()
+        val counterA = Counter("A", 0.0, scenarioId)
         val testEvent1 = testsData.newTestTriggerEvent(
             eventId = eventId1,
             scenarioId = scenarioId,
@@ -449,7 +457,8 @@ class ProcessingTests {
         )
         val testScenario = testsData.newTestScenario(
             scenarioId = scenarioId,
-            triggerEvents = listOf(testEvent1, testEvent2)
+            triggerEvents = listOf(testEvent1, testEvent2),
+            counters = listOf(counterA),
         )
 
         // When: Only verify on one frame here

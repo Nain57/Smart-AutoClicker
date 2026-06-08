@@ -24,8 +24,6 @@ import com.buzbuz.smartautoclicker.core.database.DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.*
 import com.buzbuz.smartautoclicker.core.database.utils.encodeToJsonObject
 
-import kotlinx.serialization.json.*
-
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -63,6 +61,7 @@ class DeserializerTests {
                     )
                 )
             ),
+            counters = emptyList()
         )
     }
 

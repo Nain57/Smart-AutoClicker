@@ -174,6 +174,7 @@ class ScenarioProcessorTests {
             randomize = false,
             screenEvents = events,
             triggerEvents = triggerEvent,
+            counters = emptyList(),
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             androidExecutor = mockAndroidExecutor,
             onStopRequested = mockEndListener::onStopRequested,
