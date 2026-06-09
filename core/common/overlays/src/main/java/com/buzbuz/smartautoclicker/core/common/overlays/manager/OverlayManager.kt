@@ -221,6 +221,15 @@ class OverlayManager @Inject internal constructor(
     fun isOverlayStackVisible(): Boolean =
         getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
 
+    /** Enable/disable touchability of all overlay windows in the back stack. */
+    fun setOverlaysTouchable(touchable: Boolean) {
+        Log.d(TAG, "setOverlaysTouchable: $touchable")
+        topOverlay?.setWindowTouchable(touchable)
+        overlayBackStack.forEach { overlay ->
+            overlay.setWindowTouchable(touchable)
+        }
+    }
+
     /**
      * Set an overlay as being shown above all overlays in the backstack.
      * It will not be added to the backstack, and can be seen as "an overlay for overlays".

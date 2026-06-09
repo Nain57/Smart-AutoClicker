@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProj
 import com.buzbuz.smartautoclicker.core.base.notifications.NotificationIds
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.GestureDispatchListener
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
@@ -94,6 +95,15 @@ class SmartAutoClickerService : AccessibilityService() {
 
         qualityMetricsMonitor.onServiceConnected()
         actionExecutor.init(this)
+        actionExecutor.setGestureDispatchListener(object : GestureDispatchListener {
+            override fun onGestureWillDispatch() {
+                overlayManager.setOverlaysTouchable(false)
+            }
+
+            override fun onGestureDidDispatch() {
+                overlayManager.setOverlaysTouchable(true)
+            }
+        })
 
         tileRepository.setTileActionHandler(
             object : QSTileActionHandler {

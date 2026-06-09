@@ -234,4 +234,22 @@ class OverlayManagerTests {
         }
         Mockito.verifyNoMoreInteractions(mockOverlay1, mockOverlay2)
     }
+
+    @Test
+    fun setOverlaysTouchable_propagatesToBackStack() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+        Mockito.clearInvocations(mockOverlay1, mockOverlay2)
+
+        overlayManager.setOverlaysTouchable(false)
+        overlayManager.setOverlaysTouchable(true)
+
+        Mockito.inOrder(mockOverlay1, mockOverlay2).apply {
+            verify(mockOverlay1).setWindowTouchable(false)
+            verify(mockOverlay2).setWindowTouchable(false)
+            verify(mockOverlay1).setWindowTouchable(true)
+            verify(mockOverlay2).setWindowTouchable(true)
+        }
+        Mockito.verifyNoMoreInteractions(mockOverlay1, mockOverlay2)
+    }
 }

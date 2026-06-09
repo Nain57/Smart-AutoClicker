@@ -22,7 +22,15 @@ import android.content.Intent
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 
+interface GestureDispatchListener {
+    fun onGestureWillDispatch()
+    fun onGestureDidDispatch()
+}
+
 interface AndroidActionExecutor: Dumpable {
+
+    /** Sets the listener to be notified when gestures are about to be dispatched or completed. */
+    fun setGestureDispatchListener(listener: GestureDispatchListener?)
 
     /**
      * Initialize the executor.

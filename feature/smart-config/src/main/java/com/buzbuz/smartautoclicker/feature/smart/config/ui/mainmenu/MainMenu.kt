@@ -84,6 +84,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
+    private var isScenarioRunning: Boolean = false
+    private var isDebugPanelVisible: Boolean = false
 
     /**
      * Tells if this service has handled onKeyEvent with ACTION_DOWN for a key in order to return
@@ -132,6 +134,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         }
     }
 
+    override fun shouldUseTouchableInsets(): Boolean = shouldUseRuntimeDebugPassthrough()
+
+    override fun shouldUseGestureDispatchWindowTouchability(): Boolean = shouldUseRuntimeDebugPassthrough()
+
     override fun onStart() {
         super.onStart()
 
@@ -142,6 +148,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         // Start loading advertisement if needed
         viewModel.loadAdIfNeeded(context)
+        updateRuntimeDebugTouchHandling()
     }
 
     override fun onStop() {
@@ -231,6 +238,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     /** Refresh the menu layout according to the detection state. */
     private fun updateDetectionState(newState: UiState) {
         val currentState = viewBinding.btnPlay.tag
+        isScenarioRunning = newState == UiState.Detecting
+        updateRuntimeDebugTouchHandling()
         if (currentState == newState) return
 
         viewBinding.btnPlay.tag = newState
@@ -280,6 +289,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
      * @param isVisible true when the debug view should be shown, false to hide it.
      */
     private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
+        isDebugPanelVisible = isVisible
         if (isVisible && debugObservableJob == null) {
             viewBinding.layoutDebug.visibility = View.VISIBLE
             debugObservableJob = observeDebugValues()
@@ -291,6 +301,15 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             updateLiveDebugUiState(null)
             viewBinding.layoutDebug.visibility = View.GONE
         }
+
+        updateRuntimeDebugTouchHandling()
+    }
+
+    private fun shouldUseRuntimeDebugPassthrough(): Boolean =
+        isScenarioRunning && isDebugPanelVisible
+
+    private fun updateRuntimeDebugTouchHandling() {
+        refreshTouchHandling()
     }
 
     /**

@@ -44,6 +44,7 @@ internal class AndroidActionExecutorImpl @Inject constructor(
 
     /** Keep the service in a week reference to avoid potential leak. */
     private var accessibilityServiceRef: WeakReference<AccessibilityService>? = null
+    private var gestureDispatchListener: GestureDispatchListener? = null
     private val accessibilityService: AccessibilityService?
         get() {
             val ref = accessibilityServiceRef ?: let {
@@ -55,6 +56,10 @@ internal class AndroidActionExecutorImpl @Inject constructor(
                 null
             }
         }
+
+    override fun setGestureDispatchListener(listener: GestureDispatchListener?) {
+        gestureDispatchListener = listener
+    }
 
     override fun init(service: AccessibilityService) {
         accessibilityServiceRef = WeakReference(service)
@@ -69,14 +74,20 @@ internal class AndroidActionExecutorImpl @Inject constructor(
     override fun clear() {
         resetState()
         accessibilityServiceRef = null
+        gestureDispatchListener = null
     }
 
     override suspend fun dispatchGesture(gestureDescription: GestureDescription) {
         val service = accessibilityService ?: return
 
-        if (!gestureExecutor.dispatchGesture(service, gestureDescription)) {
-            Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
-            delay(500)
+        gestureDispatchListener?.onGestureWillDispatch()
+        try {
+            if (!gestureExecutor.dispatchGesture(service, gestureDescription)) {
+                Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
+                delay(500)
+            }
+        } finally {
+            gestureDispatchListener?.onGestureDidDispatch()
         }
     }
 

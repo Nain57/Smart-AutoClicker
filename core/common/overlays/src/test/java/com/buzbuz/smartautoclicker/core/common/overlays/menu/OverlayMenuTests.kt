@@ -79,14 +79,23 @@ class OverlayMenuTests {
      * @param impl the mock called for each abstract method calls.
      */
     class OverlayMenuTestImpl(private val impl: OverlayMenuControllerImpl) : OverlayMenu() {
+        var useTouchableInsets: Boolean = false
+        var useGestureDispatchWindowTouchability: Boolean = false
+
         override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup = impl.onCreateMenu(layoutInflater)
         override fun onCreateOverlayView(): View? = impl.onCreateOverlayView()
+        override fun shouldUseTouchableInsets(): Boolean = useTouchableInsets
+        override fun shouldUseGestureDispatchWindowTouchability(): Boolean = useGestureDispatchWindowTouchability
+        override fun shouldAnimateMenu(): Boolean = false
         override fun onMenuItemClicked(viewId: Int) {
             impl.onMenuItemClicked(viewId)
         }
         override fun onStart() {
             super.onStart()
             impl.onShow()
+        }
+        fun publicSetWindowTouchable(touchable: Boolean) {
+            setWindowTouchable(touchable)
         }
         fun publicSetMenuItemViewEnabled(view: View, enabled: Boolean, clickable: Boolean = false) {
             setMenuItemViewEnabled(view, enabled, clickable)
@@ -371,5 +380,76 @@ class OverlayMenuTests {
 
         verify(item).isEnabled = true
         verify(item).alpha = 1f
+    }
+
+    @Test
+    fun stopStart_keepsOverlayViewTouchableFlags() {
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl)
+        val menuView = mock(ViewGroup::class.java)
+        val overlayView = mock(View::class.java)
+        mockViewsFromImpl(menuView, overlayView)
+
+        overlayMenuController.create(mockContext)
+        overlayMenuController.start()
+
+        val addedViews = captureWindowManagerAddedViews(mockWindowManager)
+        val initialOverlayFlags = addedViews.first.params.flags
+
+        overlayMenuController.stop()
+        org.robolectric.shadows.ShadowLooper.idleMainLooper()
+        overlayMenuController.start()
+
+        assertEquals(initialOverlayFlags, addedViews.first.params.flags)
+    }
+
+    @Test
+    fun setWindowTouchable_updatesAndRestoresMenuFlags() {
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl).apply {
+            useTouchableInsets = true
+            useGestureDispatchWindowTouchability = true
+        }
+        mockViewsFromImpl()
+
+        overlayMenuController.create(mockContext)
+        overlayMenuController.start()
+
+        val addedView = captureWindowManagerAddedMenuView(mockWindowManager)
+        val initialMenuFlags = addedView.params.flags
+
+        overlayMenuController.publicSetWindowTouchable(false)
+        assertEquals(
+            initialMenuFlags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            addedView.params.flags,
+        )
+
+        overlayMenuController.publicSetWindowTouchable(true)
+        assertEquals(initialMenuFlags, addedView.params.flags)
+    }
+
+    @Test
+    fun setWindowTouchable_restoresTouchStateAfterRestart() {
+        overlayMenuController = OverlayMenuTestImpl(overlayMenuControllerImpl).apply {
+            useTouchableInsets = true
+            useGestureDispatchWindowTouchability = true
+        }
+        mockViewsFromImpl()
+
+        overlayMenuController.create(mockContext)
+        overlayMenuController.start()
+
+        val addedView = captureWindowManagerAddedMenuView(mockWindowManager)
+        val initialMenuFlags = addedView.params.flags
+
+        overlayMenuController.publicSetWindowTouchable(false)
+        assertEquals(
+            initialMenuFlags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            addedView.params.flags,
+        )
+
+        overlayMenuController.stop()
+        org.robolectric.shadows.ShadowLooper.idleMainLooper()
+        overlayMenuController.start()
+
+        assertEquals(initialMenuFlags, addedView.params.flags)
     }
 }

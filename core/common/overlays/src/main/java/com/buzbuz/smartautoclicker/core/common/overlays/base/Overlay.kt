@@ -99,4 +99,6 @@ abstract class Overlay : LifecycleOwner, ViewModelStoreOwner, HasDefaultViewMode
     internal abstract fun handleKeyEvent(keyEvent: KeyEvent): Boolean
     /** Change the orientation of the overlay. */
     internal abstract fun changeOrientation()
+    /** Enable/disable touchability of the overlay window(s). */
+    internal open fun setWindowTouchable(touchable: Boolean) = Unit
 }
