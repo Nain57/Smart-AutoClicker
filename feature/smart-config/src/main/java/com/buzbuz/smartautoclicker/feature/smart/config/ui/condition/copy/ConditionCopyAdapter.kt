@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -42,24 +41,24 @@ import kotlinx.coroutines.Job
  * @param bitmapProvider provides the conditions bitmaps to the items.
  */
 class ConditionCopyAdapter(
-    private val conditionClickedListener: (Condition) -> Unit,
+    private val conditionClickedListener: (Condition, Int) -> Unit,
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-): ListAdapter<ConditionCopyModel.ConditionCopyItem, RecyclerView.ViewHolder>(ConditionDiffUtilCallback) {
+): ListAdapter<ConditionCopyItem, RecyclerView.ViewHolder>(ConditionDiffUtilCallback) {
 
     val spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
         override fun getSpanSize(position: Int): Int =
             when (getItem(position)) {
-                is ConditionCopyModel.ConditionCopyItem.HeaderItem -> 2
-                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> 2
-                is ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen -> 1
+                is ConditionCopyItem.HeaderItem -> 2
+                is ConditionCopyItem.ConditionItem.Trigger -> 2
+                is ConditionCopyItem.ConditionItem.Screen -> 1
             }
     }
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
-            is ConditionCopyModel.ConditionCopyItem.HeaderItem -> R.layout.item_list_header
-            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen -> R.layout.item_screen_condition_list
-            is ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger -> R.layout.item_trigger_condition
+            is ConditionCopyItem.HeaderItem -> R.layout.item_list_header
+            is ConditionCopyItem.ConditionItem.Screen -> R.layout.item_screen_condition_list
+            is ConditionCopyItem.ConditionItem.Trigger -> R.layout.item_trigger_condition
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
@@ -78,13 +77,15 @@ class ConditionCopyAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderViewHolder -> holder.onBind(getItem(position) as ConditionCopyModel.ConditionCopyItem.HeaderItem)
+            is HeaderViewHolder -> holder.onBind(getItem(position) as ConditionCopyItem.HeaderItem)
             is ImageConditionViewHolder -> holder.onBind(
-                getItem(position) as ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen,
+                getItem(position) as ConditionCopyItem.ConditionItem.Screen,
+                position,
                 conditionClickedListener,
             )
             is TriggerConditionViewHolder -> holder.onBind(
-                getItem(position) as ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger,
+                getItem(position) as ConditionCopyItem.ConditionItem.Trigger,
+                position,
                 conditionClickedListener,
             )
         }
@@ -97,22 +98,17 @@ class ConditionCopyAdapter(
 }
 
 /** DiffUtil Callback comparing two Conditions when updating the [ConditionCopyAdapter] list. */
-object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionCopyModel.ConditionCopyItem>() {
+object ConditionDiffUtilCallback: DiffUtil.ItemCallback<ConditionCopyItem>() {
 
-    override fun areItemsTheSame(
-        oldItem: ConditionCopyModel.ConditionCopyItem,
-        newItem: ConditionCopyModel.ConditionCopyItem,
-    ): Boolean =  when {
-        oldItem is ConditionCopyModel.ConditionCopyItem.HeaderItem && newItem is ConditionCopyModel.ConditionCopyItem.HeaderItem -> true
-        oldItem is ConditionCopyModel.ConditionCopyItem.ConditionItem && newItem is ConditionCopyModel.ConditionCopyItem.ConditionItem ->
+    override fun areItemsTheSame(oldItem: ConditionCopyItem, newItem: ConditionCopyItem): Boolean = when (oldItem) {
+        is ConditionCopyItem.HeaderItem if newItem is ConditionCopyItem.HeaderItem -> true
+        is ConditionCopyItem.ConditionItem if newItem is ConditionCopyItem.ConditionItem ->
             oldItem.uiCondition.condition.id == newItem.uiCondition.condition.id
+
         else -> false
     }
 
-    override fun areContentsTheSame(
-        oldItem: ConditionCopyModel.ConditionCopyItem,
-        newItem: ConditionCopyModel.ConditionCopyItem,
-    ): Boolean = oldItem == newItem
+    override fun areContentsTheSame(oldItem: ConditionCopyItem, newItem: ConditionCopyItem): Boolean = oldItem == newItem
 }
 
 /**
@@ -123,7 +119,7 @@ class HeaderViewHolder(
     private val viewBinding: ItemListHeaderBinding,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(header: ConditionCopyModel.ConditionCopyItem.HeaderItem) {
+    fun onBind(header: ConditionCopyItem.HeaderItem) {
         viewBinding.textHeader.setText(header.title)
     }
 }
@@ -141,21 +137,31 @@ private class ImageConditionViewHolder(
     /** Job for the loading of the condition bitmap. Null until bound. */
     private var bitmapLoadingJob: Job? = null
 
+    init {
+        viewBinding.root.isCheckable = true
+        viewBinding.root.isFocusable = true
+        viewBinding.root.isClickable = true
+    }
+
     /**
-     * Bind this view holder as a action item.
+     * Bind this view holder as a condition item.
      *
      * @param item the condition to be represented by this item.
+     * @param position the index of the item in the list.
      * @param conditionClickedListener listener notified upon user click on this item.
      */
     fun onBind(
-        item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Screen,
-        conditionClickedListener: (ScreenCondition) -> Unit,
+        item: ConditionCopyItem.ConditionItem.Screen,
+        position: Int,
+        conditionClickedListener: (Condition, Int) -> Unit,
     ) {
+        viewBinding.root.isChecked = item.isChecked
+
         bitmapLoadingJob?.cancel()
         bitmapLoadingJob = viewBinding.cardImageCondition.bind(
             item.uiCondition,
             bitmapProvider,
-            conditionClickedListener,
+            { condition -> conditionClickedListener(condition, position) },
         )
     }
 
@@ -178,12 +184,14 @@ private class TriggerConditionViewHolder(
      * Bind this view holder as a condition item.
      *
      * @param item the condition to be represented by this item.
+     * @param position the index of the item in the list.
      * @param conditionClickedListener listener notified upon user click on this item.
      */
     fun onBind(
-        item: ConditionCopyModel.ConditionCopyItem.ConditionItem.Trigger,
-        conditionClickedListener: (TriggerCondition) -> Unit
+        item: ConditionCopyItem.ConditionItem.Trigger,
+        position: Int,
+        conditionClickedListener: (Condition, Int) -> Unit
     ) {
-        viewBinding.bind(item.uiCondition, conditionClickedListener)
+        viewBinding.bind(item.uiCondition, { condition -> conditionClickedListener(condition, position) })
     }
 }

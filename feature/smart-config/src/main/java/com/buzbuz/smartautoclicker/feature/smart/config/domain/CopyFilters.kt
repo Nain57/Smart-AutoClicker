@@ -29,22 +29,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.isClickOnCondition
 
 
-internal fun List<ScreenEvent>.getEditedImageEventsForCopy(): List<ScreenEvent> = filter { event ->
-    event.isComplete()
-}
-
-internal fun List<ScreenEvent>.filterForImageEventCopy(editedEvents: List<ScreenEvent>): List<ScreenEvent> = filter { event ->
-    event.isComplete() && (editedEvents.find { it.id == event.id } == null)
-}
-
-internal fun List<TriggerEvent>.getEditedTriggerEventsForCopy(): List<TriggerEvent> = filter { event ->
-    event.isComplete()
-}
-
-internal fun List<TriggerEvent>.filterForTriggerEventCopy(editedEvents: List<TriggerEvent>): List<TriggerEvent> = filter { event ->
-    event.isComplete() && (editedEvents.find { it.id == event.id } == null)
-}
-
 internal fun List<Event>.getEditedConditionsForCopy(editedEvent: Event): List<Condition> = buildList {
     editedEvent.conditions.forEach { editedCondition ->
         if (editedCondition.isComplete()) add(editedCondition)

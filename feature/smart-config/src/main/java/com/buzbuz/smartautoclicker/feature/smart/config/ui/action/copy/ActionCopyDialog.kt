@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -34,15 +35,14 @@ import kotlinx.coroutines.launch
 
 /**
  * [CopyDialog] implementation for displaying the whole list of actions for a copy.
- *
- * @param onActionSelected the listener called when the user select an Action.
+ * @param onActionsSelected the listener called when the user select one or more Action.
  */
 class ActionCopyDialog(
-    private val onActionSelected: (Action) -> Unit,
+    private val onActionsSelected: (List<Action>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
-    private val viewModel: ActionCopyModel by viewModels(
+    private val viewModel: ActionCopyViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { actionCopyViewModel() },
     )
@@ -55,12 +55,12 @@ class ActionCopyDialog(
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        actionCopyAdapter = ActionCopyAdapter { selectedAction ->
-            debounceUserInteraction {
-                back()
-                onActionSelected(selectedAction.uiAction.action)
-            }
-        }
+        actionCopyAdapter = ActionCopyAdapter (
+            onActionSelected = { item, index ->
+                debounceUserInteraction { viewModel.toggleCheckedForCopy(item.uiAction.action, index) }
+            },
+            onActionCheckboxClicked = { item, index -> viewModel.toggleCheckedForCopy(item.uiAction.action, index) }
+        )
 
         viewBinding.layoutLoadableList.list.apply {
             addItemDecoration(newDividerWithoutHeader(context))
@@ -69,7 +69,7 @@ class ActionCopyDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.actionList.collect(::updateActionList)
+                viewModel.uiState.collect(::updateUiState)
             }
         }
     }
@@ -78,8 +78,23 @@ class ActionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun updateActionList(newList: List<ActionCopyModel.ActionCopyItem>?) {
-        viewBinding.layoutLoadableList.updateState(newList)
-        actionCopyAdapter.submitList(if (newList == null) ArrayList() else ArrayList(newList))
+    override fun onCopyClicked() {
+        if (viewModel.actionCopyShouldWarnUser()) {
+            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
+                notifySelectionAndDestroy()
+            }
+        } else {
+            notifySelectionAndDestroy()
+        }
+    }
+
+    private fun updateUiState(uiState: ActionCopyUiState?) {
+        viewBinding.layoutLoadableList.updateState(uiState?.items)
+        actionCopyAdapter.submitList(ArrayList(uiState?.items ?: emptyList<ActionCopyItem>()))
+    }
+
+    private fun notifySelectionAndDestroy() {
+        back()
+        onActionsSelected(viewModel.getActionsToCopy())
     }
 }

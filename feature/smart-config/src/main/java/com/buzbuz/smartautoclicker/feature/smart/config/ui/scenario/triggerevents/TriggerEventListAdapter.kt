@@ -68,6 +68,6 @@ class TriggerEventViewHolder(
      * @param itemClickedListener listener called when an event is clicked.
      */
     fun bindEvent(item: UiTriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
-        holderViewBinding.bind(item, itemClickedListener)
+        holderViewBinding.bind(item = item, itemClickedListener = itemClickedListener)
     }
 }

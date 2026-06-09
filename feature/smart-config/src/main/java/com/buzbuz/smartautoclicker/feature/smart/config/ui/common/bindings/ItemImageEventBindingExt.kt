@@ -34,7 +34,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 fun ItemImageEventBinding.bind(
     item: UiImageEvent,
     canDrag: Boolean,
+    selected: Boolean? = null,
     itemClickedListener: (ScreenEvent) -> Unit,
+    itemCheckboxClicked: ((ScreenEvent) -> Unit)? = null,
 ) {
     textName.text = item.name
     textConditionsCount.text = item.conditionsCountText
@@ -49,5 +51,8 @@ fun ItemImageEventBinding.bind(
 
     btnReorder.visibility = if (canDrag) View.VISIBLE else View.GONE
 
+    checkboxCopy.visibility = if (selected != null) View.VISIBLE else View.GONE
+    checkboxCopy.isChecked = selected == true
+    checkboxCopy.setOnClickListener { itemCheckboxClicked?.invoke(item.event) }
     root.setOnClickListener { itemClickedListener(item.event) }
 }

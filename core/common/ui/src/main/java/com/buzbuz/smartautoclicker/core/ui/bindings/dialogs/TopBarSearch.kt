@@ -22,6 +22,7 @@ import androidx.annotation.StringRes
 import androidx.core.widget.doAfterTextChanged
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeDialogSearchTopBarBinding
+import androidx.core.view.isGone
 
 
 fun IncludeDialogSearchTopBarBinding.setup(@StringRes title: Int, @StringRes searchHint: Int) {
@@ -29,7 +30,7 @@ fun IncludeDialogSearchTopBarBinding.setup(@StringRes title: Int, @StringRes sea
     searchEdit.setHint(searchHint)
 
     buttonSearchCancel.setOnClickListener {
-        if (searchEdit.visibility == View.GONE) toSearchMode()
+        if (searchEdit.isGone) toSearchMode()
         else toTitleMode()
     }
     toTitleMode()
@@ -45,6 +46,7 @@ fun IncludeDialogSearchTopBarBinding.setOnDismissClickedListener(onDismissClicke
 
 private fun IncludeDialogSearchTopBarBinding.toTitleMode() {
     buttonDismiss.visibility = View.VISIBLE
+    buttonCopy.visibility = View.VISIBLE
     dialogTitle.visibility = View.VISIBLE
     buttonSearchCancel.setIconResource(R.drawable.abc_ic_search_api_material)
 
@@ -61,6 +63,7 @@ private fun IncludeDialogSearchTopBarBinding.toTitleMode() {
 private fun IncludeDialogSearchTopBarBinding.toSearchMode() {
     buttonDismiss.visibility = View.GONE
     dialogTitle.visibility = View.GONE
+    buttonCopy.visibility = View.GONE
     buttonSearchCancel.setIconResource(R.drawable.ic_cancel)
 
     searchEdit.apply {

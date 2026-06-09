@@ -31,7 +31,7 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/checkbox_copy"
         android:textSize="@dimen/text_size_list_item_text_big"
         android:textStyle="bold"
         android:singleLine="true"
@@ -97,7 +97,7 @@
         app:layout_constraintStart_toEndOf="@id/layout_actions"
         app:layout_constraintTop_toTopOf="@id/layout_actions"
         app:layout_constraintBottom_toBottomOf="@id/layout_actions"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/checkbox_copy"
         android:orientation="horizontal">
 
         <ImageView
@@ -114,5 +114,16 @@
             tools:text="1"/>
 
     </LinearLayout>
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkbox_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_horizontal_small"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

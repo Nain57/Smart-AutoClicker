@@ -21,6 +21,7 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.StringRes
+import androidx.core.widget.doAfterTextChanged
 
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputBinding

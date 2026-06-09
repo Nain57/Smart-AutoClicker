@@ -73,6 +73,7 @@
     <string name="item_click_title">Click</string>
     <string name="item_click_desc">Click somewhere on the screen</string>
     <string name="item_click_details_on_condition">During %1$s on %2$s</string>
+    <string name="item_click_details_on_condition_unknown">During %1$s on detected condition</string>
     <string name="item_click_details_at_position">During %1$s</string>
 
     <string name="item_swipe_title">Swipe</string>
@@ -121,11 +122,13 @@
     <string name="search_view_hint_action_copy">Search by action name</string>
     <string name="search_view_hint_condition_copy">Search by condition name</string>
 
-    <string name="list_header_copy_conditions_this">Conditions from this event</string>
-    <string name="list_header_copy_conditions_all">Conditions from all events</string>
+    <string name="list_header_copy_conditions_this">Conditions from this Event</string>
+    <string name="list_header_copy_conditions_this_scenario">Conditions from this Scenario</string>
+    <string name="list_header_copy_conditions_all">Conditions from all Scenarios</string>
 
-    <string name="list_header_copy_action_this">Actions from this event</string>
-    <string name="list_header_copy_action_all">Actions from other events</string>
+    <string name="list_header_copy_action_this">Actions from this Event</string>
+    <string name="list_header_copy_action_this_scenario">Actions from this Scenario</string>
+    <string name="list_header_copy_action_all">Actions from all Scenarios</string>
 
     <string name="list_header_copy_event_this">Events from this scenario</string>
     <string name="list_header_copy_event_all">Events from all scenarios</string>

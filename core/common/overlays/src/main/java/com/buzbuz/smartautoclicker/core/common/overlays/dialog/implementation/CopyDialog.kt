@@ -47,6 +47,7 @@ abstract class CopyDialog(
                 setup(titleRes, searchHintRes)
                 setOnDismissClickedListener { debounceUserInteraction { back() } }
                 setOnTextChangedListener(::onSearchQueryChanged)
+                buttonCopy.setOnClickListener{ onCopyClicked() }
             }
 
             layoutLoadableList.setEmptyText(emptyRes)
@@ -56,4 +57,5 @@ abstract class CopyDialog(
     }
 
     abstract fun onSearchQueryChanged(newText: String?)
+    abstract fun onCopyClicked()
 }

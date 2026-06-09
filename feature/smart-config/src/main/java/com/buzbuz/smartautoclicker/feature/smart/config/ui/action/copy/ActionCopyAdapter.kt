@@ -27,36 +27,42 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemActionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyModel.ActionCopyItem
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCopyActionBinding
 
 /**
  * Adapter displaying all actions in a list.
  * @param onActionSelected Called when the user presses an action.
  */
 class ActionCopyAdapter(
-    private val onActionSelected: (ActionCopyItem.ActionItem) -> Unit
-): ListAdapter<ActionCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
+    private val onActionSelected: (ActionCopyItem.ActionItem, Int) -> Unit,
+    private val onActionCheckboxClicked: (ActionCopyItem.ActionItem, Int) -> Unit,
+
+    ): ListAdapter<ActionCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
         when(getItem(position)) {
             is ActionCopyItem.HeaderItem -> R.layout.item_list_header
-            is ActionCopyItem.ActionItem -> R.layout.item_action
+            is ActionCopyItem.ActionItem -> R.layout.item_copy_action
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.item_list_header -> HeaderViewHolder(
                 ItemListHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            R.layout.item_action -> ActionViewHolder(
-                ItemActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            R.layout.item_copy_action -> ActionViewHolder(
+                ItemCopyActionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Unsupported view type !")
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is HeaderViewHolder -> holder.onBind(getItem(position) as ActionCopyItem.HeaderItem)
-            is ActionViewHolder -> holder.onBind(getItem(position) as ActionCopyItem.ActionItem, onActionSelected)
+            is ActionViewHolder -> holder.onBind(
+                item = getItem(position) as ActionCopyItem.ActionItem,
+                position = position,
+                actionClickedListener = onActionSelected,
+                checkboxClickedListener = onActionCheckboxClicked,
+            )
         }
     }
 }
@@ -64,10 +70,11 @@ class ActionCopyAdapter(
 /** DiffUtil Callback comparing two items when updating the [ActionCopyAdapter] list. */
 object DiffUtilCallback: DiffUtil.ItemCallback<ActionCopyItem>(){
     override fun areItemsTheSame(oldItem: ActionCopyItem, newItem: ActionCopyItem): Boolean =
-        when {
-            oldItem is ActionCopyItem.HeaderItem && newItem is ActionCopyItem.HeaderItem -> true
-            oldItem is ActionCopyItem.ActionItem && newItem is ActionCopyItem.ActionItem ->
+        when (oldItem) {
+            is ActionCopyItem.HeaderItem if newItem is ActionCopyItem.HeaderItem -> true
+            is ActionCopyItem.ActionItem if newItem is ActionCopyItem.ActionItem ->
                 oldItem.uiAction.action.id == newItem.uiAction.action.id
+
             else -> false
         }
 
@@ -91,7 +98,7 @@ class HeaderViewHolder(
  * View holder displaying an action in the [ActionCopyAdapter].
  * @param viewBinding the view binding for this item.
  */
-class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+class ActionViewHolder(private val viewBinding: ItemCopyActionBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     /**
      * Bind this view holder as a action item.
@@ -99,9 +106,14 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
      * @param item the item to be represented by this view holder.
      * @param actionClickedListener listener notified upon user click on this item.
      */
-    fun onBind(item: ActionCopyItem.ActionItem, actionClickedListener: (ActionCopyItem.ActionItem) -> Unit) {
+    fun onBind(
+        item: ActionCopyItem.ActionItem,
+        position: Int,
+        actionClickedListener: (ActionCopyItem.ActionItem, Int) -> Unit,
+        checkboxClickedListener: (ActionCopyItem.ActionItem, Int) -> Unit,
+    ) {
         viewBinding.apply {
-            root.setOnClickListener { actionClickedListener.invoke(item) }
+            root.setOnClickListener { actionClickedListener.invoke(item, position) }
 
             actionName.visibility = View.VISIBLE
             actionTypeIcon.setImageResource(item.uiAction.icon)
@@ -114,6 +126,9 @@ class ActionViewHolder(private val viewBinding: ItemActionBinding) : RecyclerVie
                 root.context.theme.resolveAttribute(actionColorAttr, typedValue, true)
                 setTextColor(typedValue.data)
             }
+
+            checkboxCopy.isChecked = item.checked
+            checkboxCopy.setOnClickListener { checkboxClickedListener(item, position) }
         }
     }
 }

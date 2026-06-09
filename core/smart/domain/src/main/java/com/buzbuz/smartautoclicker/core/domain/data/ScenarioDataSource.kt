@@ -108,6 +108,21 @@ internal class ScenarioDataSource @Inject constructor(
     val allImageEvents: Flow<List<CompleteEventEntity>> =
         eventDaoFlow.flatMapLatest { it.getAllScreenEventsFlow() }
 
+    val screenEventsCount: Flow<Int> =
+        eventDaoFlow.flatMapLatest { it.getScreenEventsCount() }
+
+    val triggerEventsCount: Flow<Int> =
+        eventDaoFlow.flatMapLatest { it.getTriggerEventsCount() }
+
+    val screenConditionsCount: Flow<Int> =
+        conditionsDaoFlow.flatMapLatest { it.getScreenConditionsCount() }
+
+    val triggerConditionsCount: Flow<Int> =
+        conditionsDaoFlow.flatMapLatest { it.getTriggerConditionsCount() }
+
+    val actionsCount: Flow<Int> =
+        actionDaoFlow.flatMapLatest { it.getActionsCount() }
+
 
     fun useTutorialDatabase() {
         currentDatabase.value = tutorialDatabase

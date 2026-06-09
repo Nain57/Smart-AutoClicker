@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -34,15 +35,15 @@ import kotlinx.coroutines.launch
 
 /**
  * [CopyDialog] implementation for displaying the whole list of conditions for a copy.
- *
- * @param onConditionSelected the listener called when the user select a Condition.
+ * @param onConditionsSelected the listener called when the user select Conditions.
  */
 class ConditionCopyDialog(
-    private val onConditionSelected: (Condition) -> Unit,
+    private val requestTriggerConditions: Boolean,
+    private val onConditionsSelected: (List<Condition>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme)  {
 
     /** View model for this content. */
-    private val viewModel: ConditionCopyModel by viewModels(
+    private val viewModel: ConditionCopyViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { conditionCopyViewModel() },
     )
@@ -55,10 +56,10 @@ class ConditionCopyDialog(
     override val emptyRes: Int = R.string.message_empty_copy
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
+        viewModel.setCopyListType(requestTriggerConditions)
         conditionAdapter = ConditionCopyAdapter(
-            conditionClickedListener = { selectedCondition ->
-                back()
-                onConditionSelected(selectedCondition)
+            conditionClickedListener = { selectedCondition, index ->
+                viewModel.toggleCheckedForCopy(selectedCondition, index)
             },
             bitmapProvider = { bitmap, onLoaded ->
                 viewModel.getConditionBitmap(bitmap, onLoaded)
@@ -75,7 +76,7 @@ class ConditionCopyDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.conditionList.collect(::updateConditionList)
+                viewModel.uiState.collect(::updateUiState)
             }
         }
     }
@@ -84,8 +85,23 @@ class ConditionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun updateConditionList(newItems: List<ConditionCopyModel.ConditionCopyItem>?) {
-        viewBinding.layoutLoadableList.updateState(newItems)
-        conditionAdapter.submitList(if (newItems == null) ArrayList() else ArrayList(newItems))
+    override fun onCopyClicked() {
+        if (viewModel.conditionCopyShouldWarnUser()) {
+            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
+                notifySelectionAndDestroy()
+            }
+        } else {
+            notifySelectionAndDestroy()
+        }
+    }
+
+    private fun updateUiState(uiState: ConditionCopyUiState?) {
+        viewBinding.layoutLoadableList.updateState(uiState?.items)
+        conditionAdapter.submitList(ArrayList(uiState?.items ?: emptyList<ConditionCopyItem>()))
+    }
+
+    private fun notifySelectionAndDestroy() {
+        back()
+        onConditionsSelected(viewModel.getConditionsToCopy())
     }
 }

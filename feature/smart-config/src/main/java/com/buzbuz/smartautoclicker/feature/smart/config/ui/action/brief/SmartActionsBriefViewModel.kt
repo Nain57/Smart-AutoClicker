@@ -51,6 +51,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescri
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsActionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
@@ -72,11 +73,13 @@ import kotlinx.coroutines.launch
 
 import java.util.Collections
 import javax.inject.Inject
+import kotlin.collections.forEach
 
 
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     repository: IRepository,
+    isActionCopyAvailableUseCase: IsActionCopyAvailableUseCase,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val smartProcessingRepository: SmartProcessingRepository,
@@ -119,8 +122,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         .filter { !it.second }
         .map { (action, _) -> action?.toActionDescription(context) }
 
-    val canCopyActions: Flow<Boolean> =
-        editionRepository.editionState.canCopyActions
+    val canCopyActions: Flow<Boolean> = isActionCopyAvailableUseCase()
 
     val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
         combine(canCopyActions, isLegacyUiEnabled) { canCopy, legacyEnabled ->
@@ -184,6 +186,15 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     override fun createActionFrom(action: Action): Action =
         editionRepository.editedItemsBuilder.createNewActionFrom(action)
+
+    override fun copyActionsFrom(actions: List<Action>) {
+        editionRepository.apply {
+            actions.forEach { action ->
+                startActionEdition(createActionFrom(action))
+                upsertEditedAction()
+            }
+        }
+    }
 
     override fun startActionEdition(action: Action) {
         editionRepository.startActionEdition(action)

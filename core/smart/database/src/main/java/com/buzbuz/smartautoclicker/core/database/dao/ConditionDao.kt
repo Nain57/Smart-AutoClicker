@@ -82,6 +82,14 @@ abstract class ConditionDao {
     @Query("SELECT COUNT(path) FROM $CONDITION_TABLE WHERE path=:path AND type='ON_IMAGE_DETECTED'")
     abstract suspend fun getValidPathCount(path: String): Int
 
+    /** @return the flow on the count of screen conditions. */
+    @Query("SELECT COUNT(*) FROM $CONDITION_TABLE WHERE type IN ('ON_IMAGE_DETECTED', 'ON_COLOR_DETECTED', 'ON_NUMBER_DETECTED', 'ON_TEXT_DETECTED')")
+    abstract fun getScreenConditionsCount(): Flow<Int>
+
+    /** @return the flow on the count of trigger conditions. */
+    @Query("SELECT COUNT(*) FROM $CONDITION_TABLE WHERE type IN ('ON_BROADCAST_RECEIVED', 'ON_COUNTER_REACHED', 'ON_TIMER_REACHED')")
+    abstract fun getTriggerConditionsCount(): Flow<Int>
+
     /**
      * Add conditions to the database.
      * @param conditions the conditions to be added.

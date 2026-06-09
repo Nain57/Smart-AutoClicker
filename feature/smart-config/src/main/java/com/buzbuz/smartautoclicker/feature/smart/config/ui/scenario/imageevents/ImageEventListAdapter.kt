@@ -99,7 +99,7 @@ class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
      * @param itemClickedListener listener called when an event is clicked.
      */
     fun bindEvent(item: UiImageEvent, itemClickedListener: (ScreenEvent) -> Unit) {
-        holderViewBinding.bind(item, true, itemClickedListener)
+        holderViewBinding.bind(item = item, canDrag =  true, itemClickedListener = itemClickedListener)
     }
 }
 

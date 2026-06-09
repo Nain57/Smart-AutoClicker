@@ -23,8 +23,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 
+import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TOGGLE_TABLE
 import com.buzbuz.smartautoclicker.core.database.INTENT_EXTRA_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
@@ -46,6 +46,10 @@ abstract class ActionDao {
     @Transaction
     @Query("SELECT * FROM $ACTION_TABLE ORDER BY name")
     abstract fun getAllActions(): Flow<List<CompleteActionEntity>>
+
+    /** @return the flow on the count of actions. */
+    @Query("SELECT COUNT(*) FROM $ACTION_TABLE")
+    abstract fun getActionsCount(): Flow<Int>
 
     /**
      * Get the list of complete actions for an event, ordered by priority.

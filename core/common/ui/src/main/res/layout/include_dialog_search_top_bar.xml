@@ -38,6 +38,8 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dialog_title"
         style="@style/AppTheme.Dialog.TopBarTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_search_cancel"
         app:layout_constraintStart_toEndOf="@id/button_dismiss"
@@ -68,9 +70,23 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_small"
         android:layout_marginVertical="@dimen/margin_vertical_default"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_copy"
         app:layout_constraintTop_toTopOf="parent"
         app:icon="@drawable/abc_ic_search_api_material"
         tools:visibility="visible"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_copy"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+        android:layout_marginVertical="@dimen/margin_vertical_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:icon="@drawable/ic_copy"
+        tools:visibility="visible"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

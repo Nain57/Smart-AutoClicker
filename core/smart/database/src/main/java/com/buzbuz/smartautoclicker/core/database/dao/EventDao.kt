@@ -109,6 +109,14 @@ abstract class EventDao {
     @Query("SELECT * FROM $EVENT_TABLE WHERE scenario_id=:scenarioId AND type='TRIGGER_EVENT' ORDER BY name")
     abstract fun getCompleteTriggerEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>>
 
+    /** @return the flow on the count of screen events. */
+    @Query("SELECT COUNT(*) FROM $EVENT_TABLE WHERE type='IMAGE_EVENT'")
+    abstract fun getScreenEventsCount(): Flow<Int>
+
+    /** @return the flow on the count of trigger events. */
+    @Query("SELECT COUNT(*) FROM $EVENT_TABLE WHERE type='TRIGGER_EVENT'")
+    abstract fun getTriggerEventsCount(): Flow<Int>
+
     /**
      * Add a list of events to the database.
      * @param events the events to be added.

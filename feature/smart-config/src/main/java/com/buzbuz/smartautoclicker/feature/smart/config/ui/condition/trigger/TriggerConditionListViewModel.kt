@@ -20,8 +20,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsTriggerConditionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -33,6 +35,7 @@ import javax.inject.Inject
 
 class TriggerConditionListViewModel @Inject constructor(
     @ApplicationContext context: Context,
+    isTriggerConditionCopyAvailableUseCase: IsTriggerConditionCopyAvailableUseCase,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -45,7 +48,7 @@ class TriggerConditionListViewModel @Inject constructor(
             }
 
     /** Tells if there is at least one condition to copy. */
-    val canCopyCondition: Flow<Boolean> = editionRepository.editionState.canCopyConditions
+    val canCopyCondition: Flow<Boolean> = isTriggerConditionCopyAvailableUseCase()
 
     /**
      * Create a new condition with the default values from configuration.
@@ -67,8 +70,20 @@ class TriggerConditionListViewModel @Inject constructor(
      * Get a new condition based on the provided one.
      * @param condition the condition to copy.
      */
-    fun createNewTriggerConditionFromCopy(condition: TriggerCondition): TriggerCondition =
-        editionRepository.editedItemsBuilder.createNewTriggerConditionFrom(condition)
+    fun createNewTriggerConditionFromCopy(condition: Condition): TriggerCondition? =
+        if (condition !is TriggerCondition)  null
+        else editionRepository.editedItemsBuilder.createNewTriggerConditionFrom(condition)
+
+    fun copyConditionsFrom(conditions: List<Condition>) {
+        editionRepository.apply {
+            conditions.forEach { condition ->
+                createNewTriggerConditionFromCopy(condition)?.let { newCondition ->
+                    startConditionEdition(newCondition)
+                    upsertEditedCondition()
+                }
+            }
+        }
+    }
 
     fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
 

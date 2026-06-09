@@ -39,7 +39,7 @@ data class UiAction(
     val haveError: Boolean,
 )
 
-internal fun Action.toUiAction(context: Context, parent: Event, inError: Boolean = !isComplete()): UiAction =
+internal fun Action.toUiAction(context: Context, parent: Event? = null, inError: Boolean = !isComplete()): UiAction =
     UiAction(
         action = this,
         name = name!!,
@@ -61,7 +61,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is SetText -> getSetTextIconRes()
 }
 
-internal fun Action.getActionDescription(context: Context, parent: Event, inError: Boolean): String = when (this) {
+internal fun Action.getActionDescription(context: Context, parent: Event?, inError: Boolean): String = when (this) {
     is Click -> getDescription(context, parent, inError)
     is Swipe -> getDescription(context, inError)
     is Pause -> getDescription(context, inError)

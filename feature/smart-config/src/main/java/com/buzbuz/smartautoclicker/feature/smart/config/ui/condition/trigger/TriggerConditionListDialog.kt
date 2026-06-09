@@ -49,7 +49,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 
-class TriggerConditionListDialog() : OverlayDialog(R.style.ScenarioConfigTheme) {
+class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private val viewModel: TriggerConditionListViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
@@ -127,11 +127,18 @@ class TriggerConditionListDialog() : OverlayDialog(R.style.ScenarioConfigTheme) 
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
-                onConditionSelected = { conditionSelected ->
-                    (conditionSelected as? TriggerCondition)?.let {
-                        showTriggerConditionDialog(viewModel.createNewTriggerConditionFromCopy(it))
+                onConditionsSelected = { conditionsSelected ->
+                    when {
+                        conditionsSelected.isEmpty() -> return@ConditionCopyDialog
+                        conditionsSelected.size == 1 ->
+                            viewModel.createNewTriggerConditionFromCopy(conditionsSelected[0])?.let { conditionCopy ->
+                                showTriggerConditionDialog(conditionCopy)
+                            }
+
+                        else -> viewModel.copyConditionsFrom(conditionsSelected)
                     }
                 },
+                requestTriggerConditions = true,
             ),
         )
     }

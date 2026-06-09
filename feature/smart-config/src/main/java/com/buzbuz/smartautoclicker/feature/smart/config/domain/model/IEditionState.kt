@@ -65,18 +65,6 @@ interface IEditionState {
     val editedIntentExtraState: Flow<EditedElementState<IntentExtra<out Any>>>
     val editedActionEventTogglesState: Flow<EditedListState<EventToggle>>
 
-    // Copy possibility state depending on current edition state
-    val canCopyImageEvents: Flow<Boolean>
-    val canCopyTriggerEvents: Flow<Boolean>
-    val canCopyConditions: Flow<Boolean>
-    val canCopyActions: Flow<Boolean>
-
-    // Possible items for copy depending on current edition state
-    val screenEventsForCopy: Flow<List<ScreenEvent>>
-    val triggerEventsForCopy: Flow<List<TriggerEvent>>
-    val conditionsForCopy: Flow<List<Condition>>
-    val actionsForCopy: Flow<List<Action>>
-
     // Edited items getters
     fun getScenario(): Scenario?
     fun getAllEditedCounters(): List<Counter>
@@ -89,7 +77,6 @@ interface IEditionState {
     fun <T : Action> getEditedAction(): T?
     fun getEditedIntentExtra(): IntentExtra<out Any>?
     fun getEditedActionEventToggles(): List<EventToggle>?
-
 
 
     /** Check if this event id is set for one of the edited events. */

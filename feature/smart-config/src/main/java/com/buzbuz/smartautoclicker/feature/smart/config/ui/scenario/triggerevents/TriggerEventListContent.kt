@@ -117,8 +117,15 @@ class TriggerEventListContent(appContext: Context) : NavBarDialogContent(appCont
             context = context,
             newOverlay = EventCopyDialog(
                 requestTriggerEvents = true,
-                onEventSelected = { event ->
-                    showTriggerEventConfigDialog(viewModel.createNewEvent(context, event as? TriggerEvent))
+                onEventsSelected = { events ->
+                    @Suppress("UNCHECKED_CAST")
+                    when {
+                        events.isEmpty() -> return@EventCopyDialog
+                        events.size == 1 -> showTriggerEventConfigDialog(
+                            viewModel.createNewEvent(context, events[0] as TriggerEvent)
+                        )
+                        else -> viewModel.createNewEventsFrom(context, events as List<TriggerEvent>)
+                    }
                 },
             ),
         )

@@ -49,6 +49,17 @@ interface IRepository {
     /** All actions from all events. */
     val allActions: Flow<List<Action>>
 
+    /** The total number of screen events */
+    val screenEventsCount: Flow<Int>
+    /** The total number of trigger events */
+    val triggerEventsCount: Flow<Int>
+    /** The total number of screen conditions. */
+    val screenConditionsCount: Flow<Int>
+    /** The total number of trigger conditions. */
+    val triggerConditionsCount: Flow<Int>
+    /** The total number of actions */
+    val actionsCount: Flow<Int>
+
     /** Tells if there is image conditions that uses the legacy image format. */
     val legacyConditionsCount: Flow<Int>
 

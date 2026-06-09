@@ -35,11 +35,11 @@ import kotlinx.coroutines.launch
 
 class EventCopyDialog(
     private val requestTriggerEvents: Boolean,
-    private val onEventSelected: (Event) -> Unit,
+    private val onEventsSelected: (List<Event>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
-    private val viewModel: EventCopyModel by viewModels(
+    private val viewModel: EventCopyViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { eventCopyModel() },
     )
@@ -52,9 +52,10 @@ class EventCopyDialog(
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         viewModel.setCopyListType(requestTriggerEvents)
-        eventCopyAdapter = EventCopyAdapter { event ->
-            debounceUserInteraction { onEventClicked(event) }
-        }
+        eventCopyAdapter = EventCopyAdapter(
+            onEventSelected = { item -> debounceUserInteraction { onEventClicked(item) } },
+            onEventCheckboxClicked = { item -> viewModel.toggleCheckedForCopy(item)}
+        )
 
         viewBinding.layoutLoadableList.list.apply {
             addItemDecoration(newDividerWithoutHeader(context))
@@ -63,7 +64,7 @@ class EventCopyDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.eventList.collect(::updateEventList)
+                viewModel.uiState.collect(::updateEventList)
             }
         }
     }
@@ -72,23 +73,28 @@ class EventCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
-    private fun onEventClicked(event: Event) {
-        if (viewModel.eventCopyShouldWarnUser(event)) {
+    override fun onCopyClicked() {
+        if (viewModel.eventsCopyShouldWarnUser()) {
             context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
-                notifySelectionAndDestroy(event)
+                notifySelectionAndDestroy()
             }
         } else {
-            notifySelectionAndDestroy(event)
+            notifySelectionAndDestroy()
         }
     }
 
-    private fun updateEventList(newItems: List<EventCopyModel.EventCopyItem>?) {
-        viewBinding.layoutLoadableList.updateState(newItems)
-        eventCopyAdapter.submitList(newItems)
+    private fun onEventClicked(event: Event) {
+        viewModel.toggleCheckedForCopy(event)
     }
 
-    private fun notifySelectionAndDestroy(event: Event) {
+    private fun updateEventList(newItems: List<EventCopyItem>?) {
+        viewBinding.layoutLoadableList.updateState(newItems)
+        eventCopyAdapter.submitList(newItems)
+        viewBinding.layoutTopBar.buttonCopy.isEnabled = !newItems.isNullOrEmpty()
+    }
+
+    private fun notifySelectionAndDestroy() {
         back()
-        onEventSelected(event)
+        onEventsSelected(viewModel.getEventsToCopy())
     }
 }

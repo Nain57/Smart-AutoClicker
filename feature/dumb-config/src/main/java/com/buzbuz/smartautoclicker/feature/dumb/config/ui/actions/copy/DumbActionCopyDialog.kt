@@ -78,6 +78,8 @@ class DumbActionCopyDialog(
         viewModel.updateSearchQuery(newText)
     }
 
+    override fun onCopyClicked() = Unit
+
     private fun updateActionList(newList: List<DumbActionCopyItem>) {
         viewBinding.layoutLoadableList.updateState(newList)
         actionCopyAdapter.submitList(ArrayList(newList))

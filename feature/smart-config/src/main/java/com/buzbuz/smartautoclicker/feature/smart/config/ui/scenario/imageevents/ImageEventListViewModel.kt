@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsScreenEventCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
 
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class ImageEventListViewModel @Inject constructor(
+    isScreenEventCopyAvailableUseCase: IsScreenEventCopyAvailableUseCase,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -47,17 +49,23 @@ class ImageEventListViewModel @Inject constructor(
         }
 
     /** Tells if the copy button should be visible or not. */
-    val copyButtonIsVisible: Flow<Boolean> = editionRepository.editionState.canCopyImageEvents
+    val copyButtonIsVisible: Flow<Boolean> = isScreenEventCopyAvailableUseCase()
 
     /**
      * Creates a new event item.
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: ScreenEvent? = null): ScreenEvent = with(editionRepository.editedItemsBuilder) {
-        if (event == null) createNewImageEvent(context)
-        else createNewImageEventFrom(event)
+    fun createNewEvent(context: Context, from: ScreenEvent? = null): ScreenEvent = with(editionRepository.editedItemsBuilder) {
+        if (from == null) createNewImageEvent(context)
+        else createNewImageEventFrom(from)
     }
+
+    fun createEventsCopy(context: Context, from: List<ScreenEvent>) =
+        from.forEach { event ->
+            startEventEdition(createNewEvent(context, event))
+            saveEventEdition()
+        }
 
     fun startEventEdition(event: ScreenEvent) = editionRepository.startEventEdition(event)
 

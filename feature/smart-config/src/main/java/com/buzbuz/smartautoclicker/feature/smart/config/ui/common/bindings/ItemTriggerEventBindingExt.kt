@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
+import android.view.View
 import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -29,7 +30,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
  * @param item the item providing the binding data.
  * @param itemClickedListener listener called when an event is clicked.
  */
-fun ItemTriggerEventBinding.bind(item: UiTriggerEvent, itemClickedListener: (TriggerEvent) -> Unit) {
+fun ItemTriggerEventBinding.bind(
+    item: UiTriggerEvent,
+    selected: Boolean? = null,
+    itemClickedListener: (TriggerEvent) -> Unit,
+    itemCheckboxClicked: ((TriggerEvent) -> Unit)? = null,
+) {
     textName.text = item.name
     textConditionsCount.text = item.conditionsCountText
 
@@ -41,5 +47,8 @@ fun ItemTriggerEventBinding.bind(item: UiTriggerEvent, itemClickedListener: (Tri
     textEnabled.setText(item.enabledOnStartTextRes)
     iconEnabled.setImageResource(item.enabledOnStartIconRes)
 
+    checkboxCopy.visibility = if (selected != null) View.VISIBLE else View.GONE
+    checkboxCopy.isChecked = selected == true
+    checkboxCopy.setOnClickListener { itemCheckboxClicked?.invoke(item.event) }
     root.setOnClickListener { itemClickedListener(item.event) }
 }

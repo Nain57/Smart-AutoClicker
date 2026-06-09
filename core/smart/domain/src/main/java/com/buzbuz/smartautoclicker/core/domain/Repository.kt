@@ -83,6 +83,21 @@ internal class Repository @Inject internal constructor(
     override val allActions: Flow<List<Action>> =
         dataSource.getAllActions().mapList { it.toDomain() }
 
+    override val screenEventsCount: Flow<Int> =
+        dataSource.screenEventsCount
+
+    override val triggerEventsCount: Flow<Int> =
+        dataSource.triggerEventsCount
+
+    override val screenConditionsCount: Flow<Int> =
+        dataSource.screenConditionsCount
+
+    override val triggerConditionsCount: Flow<Int> =
+        dataSource.triggerConditionsCount
+
+    override val actionsCount: Flow<Int> =
+        dataSource.actionsCount
+
     override val legacyConditionsCount: Flow<Int> =
         dataSource.getLegacyImageConditionsFlow()
             .map { it.size }

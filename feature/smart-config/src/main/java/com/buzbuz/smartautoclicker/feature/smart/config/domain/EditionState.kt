@@ -175,56 +175,6 @@ internal class EditionState internal constructor(
             eventEditor?.actionsEditor?.eventToggleEditor?.listState  ?: emptyFlow()
         }
 
-    override val screenEventsForCopy: Flow<List<ScreenEvent>> =
-        combine(editedScreenEventsState, repository.allScreenEvents) { allEditedEvents, dbEvents ->
-            buildList {
-                val scenarioEvents = allEditedEvents.value?.getEditedImageEventsForCopy() ?: emptyList()
-                addAll(scenarioEvents)
-                addAll(dbEvents.filterForImageEventCopy(scenarioEvents))
-            }
-        }
-
-    override val triggerEventsForCopy: Flow<List<TriggerEvent>> =
-        combine(editedTriggerEventsState, repository.allTriggerEvents) { allEditedEvents, dbEvents ->
-            buildList {
-                val scenarioEvents = allEditedEvents.value?.getEditedTriggerEventsForCopy() ?: emptyList()
-                addAll(scenarioEvents)
-                addAll(dbEvents.filterForTriggerEventCopy(scenarioEvents))
-            }
-        }
-
-    override val conditionsForCopy: Flow<List<Condition>> =
-        combine(editor.editedEvent, allEditedEvents, repository.allConditions) { editedEvent, allEditedEvents, dbConditions ->
-            if (editedEvent == null) return@combine emptyList()
-            buildList {
-                val editedConditions = allEditedEvents.getEditedConditionsForCopy(editedEvent)
-                addAll(editedConditions)
-                addAll(dbConditions.filterConditionsForCopy(editedEvent, editedConditions))
-            }.distinctBy { item -> item.hashCodeNoIds() }
-        }
-
-    override val actionsForCopy: Flow<List<Action>> =
-        combine(editor.editedEvent, allEditedEvents, repository.allActions) { editedEvent, allEditedEvents, dbActions ->
-            buildList {
-                editedEvent ?: return@buildList
-                val editedActions = allEditedEvents.getEditedActionsForCopy(editedEvent)
-                addAll(editedActions)
-                addAll(dbActions.filterActionsForCopy(editedEvent, editedActions))
-            }.distinctBy { item -> item.hashCodeNoIds() }
-        }
-
-    override val canCopyImageEvents: Flow<Boolean> =
-        screenEventsForCopy.map { it.isNotEmpty() }
-
-    override val canCopyTriggerEvents: Flow<Boolean> =
-        triggerEventsForCopy.map { it.isNotEmpty() }
-
-    override val canCopyConditions: Flow<Boolean> =
-        conditionsForCopy.map { it.isNotEmpty() }
-
-    override val canCopyActions: Flow<Boolean> =
-        actionsForCopy.map { it.isNotEmpty() }
-
     override fun getScenario(): Scenario? =
         editor.editedScenario.value
 

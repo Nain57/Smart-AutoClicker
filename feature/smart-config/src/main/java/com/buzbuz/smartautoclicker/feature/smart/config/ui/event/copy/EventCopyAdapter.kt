@@ -31,14 +31,14 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyModel.EventCopyItem
 
 /**
  * Adapter displaying all events in a list.
  * @param onEventSelected Called when the user presses an event.
  */
 class EventCopyAdapter(
-    private val onEventSelected: (Event) -> Unit
+    private val onEventSelected: (Event) -> Unit,
+    private val onEventCheckboxClicked: (Event) -> Unit,
 ) : ListAdapter<EventCopyItem, RecyclerView.ViewHolder>(DiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -62,8 +62,16 @@ class EventCopyAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is HeaderViewHolder -> holder.onBind(getItem(position) as EventCopyItem.Header)
-            is ImageEventViewHolder -> holder.onBind(getItem(position) as EventCopyItem.EventItem.Image, onEventSelected)
-            is TriggerEventViewHolder -> holder.onBind(getItem(position) as EventCopyItem.EventItem.Trigger, onEventSelected)
+            is ImageEventViewHolder -> holder.onBind(
+                item = getItem(position) as EventCopyItem.EventItem.Image,
+                eventClickedListener = onEventSelected,
+                onCheckboxClicked = onEventCheckboxClicked,
+            )
+            is TriggerEventViewHolder -> holder.onBind(
+                item = getItem(position) as EventCopyItem.EventItem.Trigger,
+                eventClickedListener = onEventSelected,
+                onCheckboxClicked = onEventCheckboxClicked,
+            )
         }
     }
 }
@@ -71,10 +79,11 @@ class EventCopyAdapter(
 /** DiffUtil Callback comparing two items when updating the [EventCopyAdapter] list. */
 private object DiffUtilCallback: DiffUtil.ItemCallback<EventCopyItem>() {
     override fun areItemsTheSame(oldItem: EventCopyItem, newItem: EventCopyItem): Boolean =
-        when {
-            oldItem is EventCopyItem.Header && newItem is EventCopyItem.Header -> true
-            oldItem is EventCopyItem.EventItem && newItem is EventCopyItem.EventItem ->
+        when (oldItem) {
+            is EventCopyItem.Header if newItem is EventCopyItem.Header -> true
+            is EventCopyItem.EventItem if newItem is EventCopyItem.EventItem ->
                 oldItem.uiEvent.event.id == newItem.uiEvent.event.id
+
             else -> false
         }
 
@@ -97,14 +106,25 @@ class HeaderViewHolder(
 
 class ImageEventViewHolder(private val viewBinding: ItemImageEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ScreenEvent) -> Unit) {
-        viewBinding.bind(item.uiEvent, false, eventClickedListener)
+    fun onBind(item: EventCopyItem.EventItem.Image, eventClickedListener: (ScreenEvent) -> Unit, onCheckboxClicked: (ScreenEvent) -> Unit) {
+        viewBinding.bind(
+            item = item.uiEvent,
+            canDrag = false,
+            selected = item.checked,
+            itemClickedListener = eventClickedListener,
+            itemCheckboxClicked = onCheckboxClicked,
+        )
     }
 }
 
 class TriggerEventViewHolder(private val viewBinding: ItemTriggerEventBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
-    fun onBind(item: EventCopyItem.EventItem.Trigger, eventClickedListener: (TriggerEvent) -> Unit) {
-        viewBinding.bind(item.uiEvent, eventClickedListener)
+    fun onBind(item: EventCopyItem.EventItem.Trigger, eventClickedListener: (TriggerEvent) -> Unit, onCheckboxClicked: (TriggerEvent) -> Unit) {
+        viewBinding.bind(
+            item = item.uiEvent,
+            selected = item.checked,
+            itemClickedListener = eventClickedListener,
+            itemCheckboxClicked = onCheckboxClicked,
+        )
     }
 }
