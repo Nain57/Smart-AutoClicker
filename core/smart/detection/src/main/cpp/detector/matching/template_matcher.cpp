@@ -28,6 +28,7 @@ using namespace smartautoclicker;
 static constexpr int MIN_COLORFUL_SATURATION = 128;
 static constexpr int MIN_COLORFUL_VALUE = 40;
 static constexpr double MIN_COLORFUL_PIXEL_RATIO = 0.05;
+static constexpr double SATURATION_DROP_THRESHOLD = 20.0;
 
 
 void TemplateMatcher::reset() {
@@ -127,7 +128,7 @@ bool TemplateMatcher::isColorValid(const cv::Mat& image, const ConditionImage& c
     double colorDiffThreshold = static_cast<double>(threshold);
 
     return getColorDiff(image, condition.getColorMean()) < colorDiffThreshold
-           && getSaturationDropDiff(image, *condition.getColorMat()) < colorDiffThreshold;
+           && getSaturationDropDiff(image, *condition.getColorMat()) < SATURATION_DROP_THRESHOLD;
 }
 
 double TemplateMatcher::getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans) {
