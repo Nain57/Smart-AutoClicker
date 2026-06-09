@@ -41,6 +41,6 @@ internal fun newNotificationPermissionStarterOverlay(context: Context) = Activit
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
-internal fun newNotificationSettingsStarterOverlay() = ActivityStarterOverlayMenu(
-    intent = getNotificationSettingsIntent(),
+internal fun newNotificationSettingsStarterOverlay(context: Context) = ActivityStarterOverlayMenu(
+    intent = getNotificationSettingsIntent(context.packageName),
 )
