@@ -219,12 +219,12 @@ class DetectorEngine @Inject constructor(
             )
 
             // Compute minimal processing duration
-            val frameLimit = scenario.frameLimit
+            val frameLimit = scenario.computeRate
             minProcessingDurationNs =
-                if (frameLimit == 0) DEFAULT_MIN_PROCESSING_DURATION_NS
-                else ONE_SECOND_IN_NANO / frameLimit
+                if (frameLimit <= 0.0) DEFAULT_MIN_PROCESSING_DURATION_NS
+                else (ONE_SECOND_IN_NANO / frameLimit).toLong()
 
-            Log.i(TAG, "Process scenario at ${if (frameLimit == 0) "unlimited" else frameLimit} FPS " +
+            Log.i(TAG, "Process scenario at ${if (frameLimit == 0.0) "unlimited" else frameLimit} FPS " +
                     "(${minProcessingDurationNs}ns per loop)")
 
             // Setup listeners if needed

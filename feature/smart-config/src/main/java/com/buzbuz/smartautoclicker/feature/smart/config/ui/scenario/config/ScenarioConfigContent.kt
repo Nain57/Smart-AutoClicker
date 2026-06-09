@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config
 import android.content.Context
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -28,22 +29,21 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
-import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
-import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
-import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
-import com.buzbuz.smartautoclicker.core.ui.utils.addOnAfterTextChangedListener
+import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxDoubleInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.google.android.material.textfield.TextInputLayout
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -96,18 +96,24 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
                 setDescription(context.getString(R.string.field_scenario_fps_limit_desc))
                 setOnClickListener(viewModel::toggleFpsLimiter)
             }
-            seekbarFrameLimit.addOnChangeListener {seekbar, value, fromUser ->
-                if (fromUser) viewModel.setFpsLimit(value)
-                if (seekbar.isEnabled) textFpsLimit.setText(value.toInt().toString())
-            }
-            textFpsLimit.addOnAfterTextChangedListener { editable ->
-                val limit = try {
-                    editable.toString().toInt()
-                } catch (_: NumberFormatException) {
-                    return@addOnAfterTextChangedListener
+
+            editFpsLimit.apply {
+                textLayout.endIconMode = TextInputLayout.END_ICON_NONE
+                setLabel(R.string.field_scenario_fps_rate_label)
+                setOnTextChangedListener {
+                    viewModel.setComputeRate(
+                        if (it.isNotEmpty()) it.toString().toDoubleOrNull() ?: return@setOnTextChangedListener
+                        else return@setOnTextChangedListener
+                    )
                 }
-                viewModel.setFpsLimit(limit.toFloat())
             }
+            dialogController.hideSoftInputOnFocusLoss(editFpsLimit.textField)
+
+            fpsTimeUnitField.setItems(
+                label = context.getString(R.string.field_scenario_fps_rate_unit_label),
+                items = allComputeRateUnitDropdownItems(),
+                onItemSelected = viewModel::setComputeRateUnit,
+            )
 
             textSpeed.setOnClickListener { viewModel.decreaseDetectionQuality() }
             textPrecision.setOnClickListener { viewModel.increaseDetectionQuality() }
@@ -122,70 +128,47 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     override fun onViewCreated() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.scenarioName.collect(::updateScenarioName) }
-                launch { viewModel.scenarioNameError.collect(viewBinding.fieldScenarioName::setError) }
-                launch { viewModel.randomization.collect(::updateRandomization) }
-                launch { viewModel.keepScreenOn.collect(::updateKeepScreenOn) }
-                launch { viewModel.fpsLimit.collect(::updateFpsLimit) }
-                launch { viewModel.detectionQuality.collect(::updateQuality) }
+                launch { viewModel.uiState.collect(::updateUiState)}
             }
         }
     }
 
-    private fun updateScenarioName(name: String?) {
-        viewBinding.fieldScenarioName.setText(name)
-    }
+    private fun updateUiState(uiState: ScenarioConfigUiState?) {
+        uiState ?: return
 
-    private fun updateRandomization(isEnabled: Boolean) {
-        viewBinding.fieldAntiDetection.apply {
-            setChecked(isEnabled)
-            setDescription(if (isEnabled) 1 else 0)
+        viewBinding.apply {
+            fieldScenarioName.setText(uiState.name)
+
+            fieldAntiDetection.setChecked(uiState.randomizeChecked)
+            fieldAntiDetection.setDescription(if (uiState.randomizeChecked) 1 else 0)
+
+            fieldKeepScreenOn.setChecked(uiState.keepScreenOnChecked)
+            fieldKeepScreenOn.setDescription(if (uiState.keepScreenOnChecked) 1 else 0)
         }
+
+        updateQuality(uiState.qualityUiState)
+        updateComputeRate(uiState.computeRateState)
     }
 
-    private fun updateKeepScreenOn(isEnabled: Boolean) {
-        viewBinding.fieldKeepScreenOn.apply {
-            setChecked(isEnabled)
-            setDescription(if (isEnabled) 1 else 0)
-        }
-    }
-
-    private fun updateFpsLimit(state: ScenarioConfigUiState.FpsLimit) {
+    private fun updateComputeRate(state: ComputeRateLimitUiState) {
         viewBinding.apply {
             fieldLimitFps.setChecked(state.isEnabled)
 
-            seekbarFrameLimit.apply {
-                isEnabled = state.isEnabled
-                alpha = if (state.isEnabled) ALPHA_ENABLED else ALPHA_DISABLED
-
-                val isNotInitialized = value == 0f
-                value = if (state.value != 0f) state.value else FRAME_LIMIT_MAX_VALUE
-
-                if (isNotInitialized) {
-                    valueFrom = state.minValue
-                    valueTo = state.maxValue
-                    stepSize = 1f
-                }
+            editFpsLimit.textLayout.isEnabled = state.isEnabled
+            if (state.isEnabled) {
+                editFpsLimit.textField.filters = arrayOf(MinMaxDoubleInputFilter(min = 0.0, max = state.maxValue))
+                editFpsLimit.setText(state.value.toString(), InputType.TYPE_NUMBER_FLAG_DECIMAL)
+            } else {
+                editFpsLimit.textField.filters = emptyArray<InputFilter>()
+                editFpsLimit.setText(context.getString(R.string.field_scenario_fps_limit_disable_rate))
             }
 
-            textFpsLimit.apply {
-                if (!state.isEnabled) {
-                    textFpsLimit.filters = emptyArray<InputFilter>()
-                    setText(context.getString(R.string.field_scenario_fps_limit_disable_rate))
-                } else {
-                    textFpsLimit.filters = arrayOf<InputFilter>(
-                        MinMaxInputFilter(state.minValue.toInt(), state.maxValue.toInt())
-                    )
-                }
-            }
-            editFpsLimit.apply {
-                isEnabled = state.isEnabled
-                alpha = if (state.isEnabled) ALPHA_ENABLED else ALPHA_DISABLED
-            }
+            fpsTimeUnitField.textLayout.isEnabled = state.isEnabled
+            fpsTimeUnitField.setSelectedItem(state.unit)
         }
     }
 
-    private fun updateQuality(quality: ScenarioConfigUiState.DetectionQuality) {
+    private fun updateQuality(quality: DetectionQualityUiState) {
         viewBinding.apply {
             textQualityValue.text = quality.displayText
 

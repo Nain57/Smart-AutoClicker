@@ -29,9 +29,12 @@ import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.CONDITION_TABLE
 import com.buzbuz.smartautoclicker.core.database.COUNTERS_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
+import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 /**
  * Migration from database v18 to v19.
@@ -40,6 +43,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
  * * Counter values are now stored as REAL (Double)
  * * Counter are now stored in database (table has been created during previous migration, but it is empty)
  * * Notification Action behave like set text now, counter columns have been deleted.
+ * * Scenario frame limit is now a REAL and renamed compute_rate (FPS to FPMinutes)
  */
 object Migration19to20 : Migration(19, 20) {
 
@@ -57,6 +61,10 @@ object Migration19to20 : Migration(19, 20) {
     private val notificationMessageCounterNameColumn = SQLiteColumn.Text("notification_message_counter_name", isNotNull = false)
     private val notificationMessageTextColumn = SQLiteColumn.Text("notification_message_text", isNotNull = false)
 
+    private val scenarioIdColumn = SQLiteColumn.PrimaryKey()
+    private val scenarioFrameLimitColumn = SQLiteColumn.Int("frame_limit")
+    private val scenarioComputeRateColumn = SQLiteColumn.Double("compute_rate", defaultValue = "0.0")
+
 
     override fun migrate(db: SupportSQLiteDatabase) {
         // Migrate counters types from Int to Double
@@ -68,6 +76,9 @@ object Migration19to20 : Migration(19, 20) {
 
         // Rework notification actions to behave like set text
         db.migrateNotificationActions()
+
+        // Migrate scenario frame limit
+        db.migrateScenarioFrameLimit()
     }
 
     private fun SupportSQLiteDatabase.migrateConditionsCounterValueType() {
@@ -167,6 +178,27 @@ object Migration19to20 : Migration(19, 20) {
         }
     }
 
+    private fun SupportSQLiteDatabase.migrateScenarioFrameLimit() {
+        getSQLiteTableReference(SCENARIO_TABLE).apply {
+            // Get the current frame limit values
+            val frameLimits = buildMap {
+                forEachScenario { id, frameLimit ->
+                    if (id == null || frameLimit == null) return@forEachScenario
+                    put(id, frameLimit)
+                }
+            }
+
+            // Remove the int version and recreate it with Double version
+            alterTableDropColumn(setOf(scenarioFrameLimitColumn.name))
+            alterTableAddColumn(scenarioComputeRateColumn)
+
+            // Restore the values
+            frameLimits.forEach { (scenarioId, frameLimit) ->
+                restoreFrameLimitValue(scenarioId, frameLimit.toDouble())
+            }
+        }
+    }
+
     private fun SQLiteTable.forEachCounterReachedCondition(closure: (Long?, String?, Int?) -> Unit) {
         forEachRow(
             extraClause = "WHERE `type` = \"${ConditionType.ON_COUNTER_REACHED}\"",
@@ -234,6 +266,14 @@ object Migration19to20 : Migration(19, 20) {
         )
     }
 
+    private fun SQLiteTable.forEachScenario(closure: (Long?, Int?) -> Unit) {
+        forEachRow(
+            columnA = scenarioIdColumn,
+            columnB = scenarioFrameLimitColumn,
+            closure = closure,
+        )
+    }
+
     private fun SQLiteTable.restoreConditionCounterValue(conditionId: Long, counterValue: Double) = update(
         extraClause = "WHERE `id` = $conditionId",
         contentValues = ContentValues().apply {
@@ -252,6 +292,13 @@ object Migration19to20 : Migration(19, 20) {
         extraClause = "WHERE `id` = $actionId",
         contentValues = ContentValues().apply {
             put(notificationMessageTextColumn.name, text)
+        },
+    )
+
+    private fun SQLiteTable.restoreFrameLimitValue(scenarioId: Long, computeRate: Double) = update(
+        extraClause = "WHERE `id` = $scenarioId",
+        contentValues = ContentValues().apply {
+            put(scenarioComputeRateColumn.name, computeRate.toString())
         },
     )
 }

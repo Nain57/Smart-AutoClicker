@@ -79,56 +79,49 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                android:layout_marginVertical="@dimen/margin_vertical_default">
 
                 <include layout="@layout/include_field_switch"
                     android:id="@+id/field_limit_fps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/seekbar_frame_limit"
+                    app:layout_constraintBottom_toTopOf="@id/edit_fps_limit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/seekbar_frame_limit"
+                <include layout="@layout/include_field_text_input"
+                    android:id="@+id/edit_fps_limit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_horizontal_small"
-                    android:layout_marginTop="@dimen/margin_vertical_small"
+                    android:layout_marginVertical="@dimen/margin_horizontal_small"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/edit_fps_limit"
+                    app:layout_constraintEnd_toStartOf="@id/text_separator"
+                    app:layout_constraintTop_toBottomOf="@id/field_limit_fps"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_separator"
+                    style="@style/TextAppearance.Material3.HeadlineMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+                    android:text="/"
+                    app:layout_constraintStart_toEndOf="@id/edit_fps_limit"
+                    app:layout_constraintEnd_toStartOf="@id/fps_time_unit_field"
                     app:layout_constraintTop_toTopOf="@id/edit_fps_limit"
                     app:layout_constraintBottom_toBottomOf="@id/edit_fps_limit"
-                    app:trackColor="?attr/colorSecondaryContainer"
-                    app:thumbHeight="32dp"
-                    app:trackHeight="12dp"
-                    app:labelBehavior="gone"/>
+                    tools:ignore="HardcodedText" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/edit_fps_limit"
-                    style="@style/AppTheme.Widget.InputText.Dense"
-                    android:layout_width="70dp"
+                <include layout="@layout/include_input_field_dropdown"
+                    android:id="@+id/fps_time_unit_field"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_vertical_small"
                     android:layout_marginBottom="@dimen/margin_vertical_default"
-                    app:layout_constraintStart_toEndOf="@id/seekbar_frame_limit"
+                    app:layout_constraintStart_toEndOf="@id/text_separator"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/field_limit_fps"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:endIconMode="none">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/text_fps_limit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:lines="1"
-                        android:inputType="number"
-                        tools:text="240"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintTop_toTopOf="@id/edit_fps_limit"
+                    app:layout_constraintWidth_percent="0.45"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

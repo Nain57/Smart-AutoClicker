@@ -26,13 +26,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.DETECTION_QUALITY_MIN
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.Flow
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,32 +50,19 @@ class ScenarioConfigViewModel @Inject constructor(
     private val configuredScenario = editionRepository.editionState.scenarioState
         .mapNotNull { it.value }
 
-    /** The event name value currently edited by the user. */
-    val scenarioName: Flow<String> = configuredScenario
-        .map { it.name }
-        .filterNotNull()
-        .take(1)
-    /** Tells if the scenario name is valid or not. */
-    val scenarioNameError: Flow<Boolean> = configuredScenario
-        .map { it.name.isEmpty() }
+    private val userComputeRateUnit: MutableStateFlow<ComputeRateUnitDropdownItem?> =
+        MutableStateFlow(editionRepository.editionState.getScenario()?.getInitialComputeRateUnitItem())
 
-    /** The randomization value for the scenario. */
-    val randomization: Flow<Boolean> = configuredScenario
-        .map { it.randomize }
-
-    /** Tells if we should keep the screen awake while running the scenario */
-    val keepScreenOn: Flow<Boolean> = configuredScenario
-        .map { it.keepScreenOn }
-
-    /** State of the FPS limiter card. */
-    val fpsLimit: Flow<ScenarioConfigUiState.FpsLimit> = configuredScenario
-        .map { it.toFpsLimitUiState() }
-
-    /** The detection resolution */
-    val detectionQuality: Flow<ScenarioConfigUiState.DetectionQuality> = configuredScenario
-        .map { scenario ->
-            context.getUiDetectionQuality(displayConfigManager.displayConfig.sizePx, scenario.detectionQuality)
+    val uiState: StateFlow<ScenarioConfigUiState?> = configuredScenario
+        .combine(userComputeRateUnit) { scenario, userUnit ->
+            scenario.toUiState(
+                context = context,
+                displaySize = displayConfigManager.displayConfig.sizePx,
+                computeRateUnit = userUnit,
+            )
         }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
 
     /** Set a new name for the scenario. */
     fun setScenarioName(name: String) {
@@ -106,24 +95,31 @@ class ScenarioConfigViewModel @Inject constructor(
         editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
-                    scenario.copy(frameLimit = if (scenario.frameLimit != 0) 0 else FRAME_LIMIT_DEFAULT_VALUE.toInt())
+                    scenario.copy(computeRate = if (scenario.computeRate != 0.0) 0.0 else FRAME_LIMIT_DEFAULT_VALUE)
                 )
             }
         }
     }
 
-    /** @return true if the value was valid and set, false if not. */
-    fun setFpsLimit(value: Float): Boolean {
-        if (value !in FRAME_LIMIT_MIN_VALUE..FRAME_LIMIT_MAX_VALUE) return false
+    fun setComputeRateUnit(unit: ComputeRateUnitDropdownItem) {
+        userComputeRateUnit.update { unit }
+    }
+
+    fun setComputeRate(value: Double) {
+        if (value <= FRAME_LIMIT_MIN_VALUE) return
+
+        val unit = userComputeRateUnit.value ?: ComputeRateUnitDropdownItem.Second
+        val newValue =
+            if (unit is ComputeRateUnitDropdownItem.Minute) value / 60
+            else value
+
+        if (newValue > FRAME_LIMIT_MAX_VALUE) return
 
         editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
-                editionRepository.updateEditedScenario(scenario.copy(frameLimit = value.toInt()))
+                editionRepository.updateEditedScenario(scenario.copy(computeRate = newValue))
             }
-            return true
         }
-
-        return false
     }
 
     /** Remove one to the detection quality */
@@ -154,36 +150,66 @@ class ScenarioConfigViewModel @Inject constructor(
             }
         }
     }
-
-    private fun Scenario.toFpsLimitUiState(): ScenarioConfigUiState.FpsLimit =
-        ScenarioConfigUiState.FpsLimit(
-            isEnabled = frameLimit != 0,
-            value = frameLimit.toFloat(),
-            minValue = FRAME_LIMIT_MIN_VALUE,
-            maxValue = FRAME_LIMIT_MAX_VALUE,
-        )
-
-    private fun Context.getUiDetectionQuality(displaySize: Point, resolution: Int): ScenarioConfigUiState.DetectionQuality {
-        val maxVal = maxOf(displaySize.x, displaySize.y, 1).toFloat()
-        val minVal = minOf(displaySize.x, displaySize.y).toFloat()
-        val quality = resolution.toFloat().coerceIn(DETECTION_QUALITY_MIN.toFloat(), maxVal)
-
-        return ScenarioConfigUiState.DetectionQuality(
-            displayText = getString(
-                R.string.field_scenario_quality_resolution,
-                quality.toInt(),
-                (minVal * (quality / maxVal)).toInt(),
-            ),
-            qualityValue = quality,
-            min = DETECTION_QUALITY_MIN.toFloat(),
-            max = maxVal,
-        )
-    }
-
-    private fun DisplayConfigManager.getMaxDetectionQuality(): Int =
-        maxOf(displayConfig.sizePx.x, displayConfig.sizePx.y, 1)
 }
 
-internal const val FRAME_LIMIT_DEFAULT_VALUE = 60f
-internal const val FRAME_LIMIT_MIN_VALUE = 1f
-internal const val FRAME_LIMIT_MAX_VALUE = 240f
+
+private fun Scenario.toUiState(
+    context: Context,
+    displaySize: Point,
+    computeRateUnit: ComputeRateUnitDropdownItem?,
+): ScenarioConfigUiState =
+    ScenarioConfigUiState(
+        name = name,
+        randomizeChecked = randomize,
+        keepScreenOnChecked = keepScreenOn,
+        computeRateState = toComputeRateUiState(computeRateUnit),
+        qualityUiState = toDetectionQualityUiState(context, displaySize),
+    )
+
+private fun Scenario.toComputeRateUiState(userUnit: ComputeRateUnitDropdownItem?): ComputeRateLimitUiState {
+    val unit = userUnit ?: ComputeRateUnitDropdownItem.Second
+    return when (unit) {
+        ComputeRateUnitDropdownItem.Second -> ComputeRateLimitUiState(
+            isEnabled = computeRate > 0.0,
+            unit = unit,
+            maxValue = FRAME_LIMIT_MAX_VALUE,
+            value = computeRate,
+        )
+
+        ComputeRateUnitDropdownItem.Minute -> ComputeRateLimitUiState(
+            isEnabled = computeRate > 0.0,
+            unit = unit,
+            maxValue = FRAME_LIMIT_MAX_VALUE * 60.0,
+            value = computeRate * 60,
+        )
+    }
+}
+
+private fun Scenario.toDetectionQualityUiState(context: Context, displaySize: Point): DetectionQualityUiState {
+    val maxVal = maxOf(displaySize.x, displaySize.y, 1).toFloat()
+    val minVal = minOf(displaySize.x, displaySize.y).toFloat()
+    val quality = detectionQuality.toFloat().coerceIn(DETECTION_QUALITY_MIN.toFloat(), maxVal)
+
+    return DetectionQualityUiState(
+        displayText = context.getString(
+            R.string.field_scenario_quality_resolution,
+            quality.toInt(),
+            (minVal * (quality / maxVal)).toInt(),
+        ),
+        qualityValue = quality,
+        min = DETECTION_QUALITY_MIN.toFloat(),
+        max = maxVal,
+    )
+}
+
+private fun Scenario.getInitialComputeRateUnitItem(): ComputeRateUnitDropdownItem =
+     if (computeRate == 0.0|| computeRate >= 1.0) ComputeRateUnitDropdownItem.Second
+     else ComputeRateUnitDropdownItem.Minute
+
+
+private fun DisplayConfigManager.getMaxDetectionQuality(): Int =
+    maxOf(displayConfig.sizePx.x, displayConfig.sizePx.y, 1)
+
+internal const val FRAME_LIMIT_DEFAULT_VALUE = 60.0
+internal const val FRAME_LIMIT_MIN_VALUE = 0.0
+internal const val FRAME_LIMIT_MAX_VALUE = 1000.0

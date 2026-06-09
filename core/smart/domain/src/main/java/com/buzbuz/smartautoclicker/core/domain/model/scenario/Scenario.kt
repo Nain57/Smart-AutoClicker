@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * @param detectionQuality the quality of the detection algorithm. Lower value means faster detection but poorer
  *                         quality, while higher values means better and slower detection.
  * @param randomize tells if the actions values should be randomized a bit.
- * @param frameLimit the maximum amount of event loop per seconds. If 0, limit is disabled.
+ * @param computeRate the maximum amount of event loop per seconds. If 0.0, limit is disabled.
  * @param eventCount the number of events in this scenario. Default value is 0.
  */
 data class Scenario(
@@ -37,7 +37,7 @@ data class Scenario(
     val detectionQuality: Int,
     val randomize: Boolean = false,
     val keepScreenOn: Boolean = false,
-    val frameLimit: Int = 0,
+    val computeRate: Double = 0.0,
     val eventCount: Int = 0,
     val stats: ScenarioStats? = null,
 ): Identifiable

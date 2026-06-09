@@ -82,3 +82,30 @@ class MinMaxInputFilter(
     }
 
 }
+
+/** Input filter for a number between a min and a max. */
+class MinMaxDoubleInputFilter(
+    private val min: Double? = null,
+    private val max: Double? = null,
+) : InputFilter {
+
+    override fun filter(
+        source: CharSequence?,
+        start: Int,
+        end: Int,
+        dest: Spanned?,
+        dstart: Int,
+        dend: Int
+    ): CharSequence? {
+        try {
+            val sanitizedSource = if (source == "-") "-0" else source
+            val input = (dest.toString() + sanitizedSource.toString()).toDouble()
+
+            val isOverMin = min == null || min <= input
+            val isBelowMax = max == null || input <= max
+            if (isOverMin && isBelowMax) return null
+        } catch (_: NumberFormatException) { }
+        return ""
+    }
+
+}

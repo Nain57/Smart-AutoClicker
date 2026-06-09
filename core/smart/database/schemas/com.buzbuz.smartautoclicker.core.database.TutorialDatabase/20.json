@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 20,
-    "identityHash": "958c5cf6f8af4f98aa3007cc34510c3a",
+    "identityHash": "0b75183650839b695b772dc96adfc7db",
     "entities": [
       {
         "tableName": "action_table",
@@ -326,7 +326,7 @@
       },
       {
         "tableName": "scenario_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `detection_quality` INTEGER NOT NULL, `frame_limit` INTEGER NOT NULL DEFAULT 0, `randomize` INTEGER NOT NULL DEFAULT 0, `keep_screen_on` INTEGER NOT NULL DEFAULT 0)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `detection_quality` INTEGER NOT NULL, `compute_rate` REAL NOT NULL DEFAULT 0.0, `randomize` INTEGER NOT NULL DEFAULT 0, `keep_screen_on` INTEGER NOT NULL DEFAULT 0)",
         "fields": [
           {
             "fieldPath": "id",
@@ -347,11 +347,11 @@
             "notNull": true
           },
           {
-            "fieldPath": "frameLimit",
-            "columnName": "frame_limit",
-            "affinity": "INTEGER",
+            "fieldPath": "computeRate",
+            "columnName": "compute_rate",
+            "affinity": "REAL",
             "notNull": true,
-            "defaultValue": "0"
+            "defaultValue": "0.0"
           },
           {
             "fieldPath": "randomize",
@@ -889,7 +889,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '958c5cf6f8af4f98aa3007cc34510c3a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b75183650839b695b772dc96adfc7db')"
     ]
   }
 }

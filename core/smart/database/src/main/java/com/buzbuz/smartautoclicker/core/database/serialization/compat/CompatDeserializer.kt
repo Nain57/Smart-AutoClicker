@@ -209,7 +209,7 @@ internal open class CompatDeserializer : Deserializer {
         return ScenarioEntity(
             id = id,
             name = jsonScenario.getString("name") ?: "",
-            frameLimit = 0,
+            computeRate = jsonScenario.getDouble("computeRate") ?: 0.0,
             detectionQuality = detectionQuality,
             randomize = jsonScenario.getBoolean("randomize") ?: false,
             keepScreenOn = jsonScenario.getBoolean("keepScreenOn") ?: false,
