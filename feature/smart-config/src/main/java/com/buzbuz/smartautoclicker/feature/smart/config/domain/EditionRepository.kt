@@ -19,9 +19,8 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import android.util.Log
-import androidx.core.graphics.scaleMatrix
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
@@ -56,7 +55,7 @@ class EditionRepository @Inject constructor(
     /** Provides creators for all elements in an edited scenario. */
     val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, bitmapRepository, scenarioEditor)
     /** Provides the states of all elements in the edited scenario. */
-    val editionState: IEditionState = EditionState(repository, scenarioEditor)
+    val editionState: IEditionState = EditionState(scenarioEditor)
 
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = scenarioEditor.editedScenario

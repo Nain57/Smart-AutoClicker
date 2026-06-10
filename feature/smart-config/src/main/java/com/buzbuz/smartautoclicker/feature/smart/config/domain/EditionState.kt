@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.domain
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.sortedByPriority
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -52,7 +51,6 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class EditionState internal constructor(
-    repository: IRepository,
     private val editor: ScenarioEditor,
 ) : IEditionState {
 
@@ -85,7 +83,7 @@ internal class EditionState internal constructor(
     override val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>> =
         editor.editedTriggerEventListState
 
-    override val allEditedCounters: Flow<List<Counter>> =
+    override val allEditedCountersFlow: Flow<List<Counter>> =
         editor.allEditedCounters.filterNotNull()
 
     override val editedCountersState: Flow<EditedListState<Counter>> =
@@ -97,7 +95,7 @@ internal class EditionState internal constructor(
     override val editedTriggerEventState: Flow<EditedElementState<TriggerEvent>> =
         editor.editedTriggerEventState
 
-    override val allEditedEvents : Flow<List<Event>> =
+    override val allEditedEventsFlow : Flow<List<Event>> =
         editor.allEditedEvents
 
     override val editedEventState: Flow<EditedElementState<Event>> =

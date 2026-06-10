@@ -40,6 +40,7 @@ class AndroidLocalTestConventionPlugin : Plugin<Project> {
             androidTestImplementation(libs.getLibrary("androidx.test.ext.junit"))
             androidTestImplementation(libs.getLibrary("androidx.test.runner"))
             androidTestImplementation(libs.getLibrary("androidx.test.rules"))
+            androidTestImplementation(libs.getLibrary("kotlinx.coroutines.test"))
         }
     }
 }

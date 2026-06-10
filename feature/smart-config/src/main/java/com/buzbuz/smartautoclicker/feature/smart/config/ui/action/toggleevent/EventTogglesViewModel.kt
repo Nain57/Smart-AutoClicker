@@ -56,7 +56,7 @@ class EventTogglesViewModel @Inject constructor(
 
     /** Final items list, with all events and the user modifications applied. */
     val currentItems: Flow<List<EventTogglesListItem>> =
-        combine(editionRepository.editionState.allEditedEvents, userModifications) { editedEvents, modifications ->
+        combine(editionRepository.editionState.allEditedEventsFlow, userModifications) { editedEvents, modifications ->
             buildList {
                 val imageEvents = mutableListOf<EventTogglesListItem>().apply {
                     add(EventTogglesListItem.Header(context.getString(R.string.list_header_image_events)))

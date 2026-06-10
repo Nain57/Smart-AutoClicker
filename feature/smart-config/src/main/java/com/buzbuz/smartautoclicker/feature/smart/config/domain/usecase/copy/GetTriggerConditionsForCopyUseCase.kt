@@ -40,7 +40,7 @@ class GetTriggerConditionsForCopyUseCase @Inject constructor(
     smartRepository: IRepository,
 ) {
 
-    private val editedScenarioEventsId: Flow<List<Identifier?>> = editionRepository.editionState.allEditedEvents
+    private val editedScenarioEventsId: Flow<List<Identifier?>> = editionRepository.editionState.allEditedEventsFlow
         .map { events -> events.map { event -> event.id } }
 
     private val editedEventId: Flow<Identifier?> = editionRepository.editionState.editedEventState

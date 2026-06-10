@@ -37,6 +37,4 @@ dependencies {
     implementation(project(":core:smart:detection"))
     implementation(project(":core:smart:detection-models"))
     implementation(project(":core:smart:domain"))
-
-    testImplementation(libs.kotlinx.coroutines.test)
 }

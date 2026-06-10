@@ -38,10 +38,10 @@ interface IEditionState {
     val scenarioState: Flow<EditedElementState<Scenario>>
 
     // Edited Scenario child items (ImageEvents and TriggerEvents)
-    val allEditedEvents: Flow<List<Event>>
+    val allEditedEventsFlow: Flow<List<Event>>
     val editedScreenEventsState: Flow<EditedListState<ScreenEvent>>
     val editedTriggerEventsState: Flow<EditedListState<TriggerEvent>>
-    val allEditedCounters: Flow<List<Counter>>
+    val allEditedCountersFlow: Flow<List<Counter>>
     val editedCountersState: Flow<EditedListState<Counter>>
 
     // Edited Event

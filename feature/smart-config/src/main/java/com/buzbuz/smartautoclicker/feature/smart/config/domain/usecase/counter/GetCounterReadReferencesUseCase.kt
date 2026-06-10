@@ -44,7 +44,7 @@ class GetCounterReadReferencesUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Flow<Map<String, Set<CounterReference>>> =
-        editionRepository.editionState.allEditedEvents
+        editionRepository.editionState.allEditedEventsFlow
             .map { events -> events.findCounterReferences() }
 
     private fun List<Event>.findCounterReferences(): Map<String, Set<CounterReference>> =

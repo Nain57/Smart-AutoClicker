@@ -45,6 +45,7 @@ class AndroidUnitTestConventionPlugin : Plugin<Project> {
             testImplementation(libs.getLibrary("junit"))
             testImplementation(libs.getLibrary("androidx.test.core"))
             testImplementation(libs.getLibrary("androidx.test.ext.junit"))
+            testImplementation(libs.getLibrary("kotlinx.coroutines.test"))
             testImplementation(libs.getLibrary("mockito.core"))
             testImplementation(libs.getLibrary("mockito.kotlin"))
             testImplementation(libs.getLibrary("mockk.android"))

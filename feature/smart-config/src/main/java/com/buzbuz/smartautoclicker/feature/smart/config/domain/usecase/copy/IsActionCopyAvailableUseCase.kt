@@ -34,7 +34,7 @@ class IsActionCopyAvailableUseCase @Inject constructor(
     smartRepository: IRepository,
 ) {
 
-    private val haveEditedActions: Flow<Boolean> = editionRepository.editionState.allEditedEvents
+    private val haveEditedActions: Flow<Boolean> = editionRepository.editionState.allEditedEventsFlow
         .map { editedEvents -> editedEvents.find { event -> event.actions.isNotEmpty() } != null }
 
     private val haveDatabaseActions: Flow<Boolean> = smartRepository.actionsCount

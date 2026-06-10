@@ -38,7 +38,7 @@ class GetActionsForCopyUseCase @Inject constructor(
     smartRepository: IRepository,
 ) {
 
-    private val editedScenarioEventsId: Flow<List<Identifier?>> = editionRepository.editionState.allEditedEvents
+    private val editedScenarioEventsId: Flow<List<Identifier?>> = editionRepository.editionState.allEditedEventsFlow
         .map { events -> events.map { event -> event.id } }
 
     private val editedEventId: Flow<Identifier?> = editionRepository.editionState.editedEventState
@@ -47,7 +47,7 @@ class GetActionsForCopyUseCase @Inject constructor(
     private val editedEventActions: Flow<List<Action>> = editionRepository.editionState.editedEventState
         .map { eventState -> eventState.value?.actions ?: emptyList() }
 
-    private val editedScenarioActions: Flow<List<Action>> = editionRepository.editionState.allEditedEvents
+    private val editedScenarioActions: Flow<List<Action>> = editionRepository.editionState.allEditedEventsFlow
         .map { events -> events.fold(initial = emptyList(), operation = { acc, current -> acc + current.actions }) }
 
     private val allActions: Flow<List<Action>> = smartRepository.allActions

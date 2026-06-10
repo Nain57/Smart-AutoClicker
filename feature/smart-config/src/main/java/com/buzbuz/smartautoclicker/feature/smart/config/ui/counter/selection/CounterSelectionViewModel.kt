@@ -32,7 +32,7 @@ class CounterSelectionViewModel @Inject constructor(
     editionRepository: EditionRepository,
 ) : ViewModel() {
 
-    val counterNames: Flow<List<CounterSelectionUiItem>> = editionRepository.editionState.allEditedCounters
+    val counterNames: Flow<List<CounterSelectionUiItem>> = editionRepository.editionState.allEditedCountersFlow
         .map { counters ->
             counters.map { counter ->
                 CounterSelectionUiItem(
