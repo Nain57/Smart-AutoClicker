@@ -127,15 +127,10 @@ class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
-                onConditionsSelected = { conditionsSelected ->
-                    when {
-                        conditionsSelected.isEmpty() -> return@ConditionCopyDialog
-                        conditionsSelected.size == 1 ->
-                            viewModel.createNewTriggerConditionFromCopy(conditionsSelected[0])?.let { conditionCopy ->
-                                showTriggerConditionDialog(conditionCopy)
-                            }
-
-                        else -> viewModel.copyConditionsFrom(conditionsSelected)
+                onConditionsCopied = { conditionsSelected ->
+                    if (conditionsSelected.size != 1) return@ConditionCopyDialog
+                    (conditionsSelected[0] as? TriggerCondition)?.let { condition ->
+                        showTriggerConditionDialog(condition)
                     }
                 },
                 requestTriggerConditions = true,

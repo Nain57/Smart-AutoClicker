@@ -214,14 +214,14 @@ class EditedItemsBuilder internal constructor(
             is ScreenCondition.Text -> createNewTextConditionFrom(condition, eventId)
         }
 
-    fun createNewColorConditionFrom(condition: ScreenCondition.Color, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Color =
+    private fun createNewColorConditionFrom(condition: ScreenCondition.Color, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Color =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + condition.name,
         )
 
-    fun createNewImageConditionFrom(condition: ScreenCondition.Image, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Image =
+    private fun createNewImageConditionFrom(condition: ScreenCondition.Image, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Image =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
@@ -229,14 +229,14 @@ class EditedItemsBuilder internal constructor(
             path = "" + condition.path,
         )
 
-    fun createNewNumberConditionFrom(condition: ScreenCondition.Number, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Number =
+    private fun createNewNumberConditionFrom(condition: ScreenCondition.Number, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Number =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + condition.name,
         )
 
-    fun createNewTextConditionFrom(condition: ScreenCondition.Text, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Text =
+    private fun createNewTextConditionFrom(condition: ScreenCondition.Text, eventId: Identifier = getEditedEventIdOrThrow()): ScreenCondition.Text =
         condition.copy(
             id = conditionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
@@ -423,9 +423,10 @@ class EditedItemsBuilder internal constructor(
 
     private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
         val conditionId =
-            if (from.positionType == PositionType.ON_DETECTED_CONDITION && from.clickOnConditionId != null)
-                eventCopyConditionIdMap[from.clickOnConditionId]
-            else null
+            if (from.positionType == PositionType.ON_DETECTED_CONDITION) {
+                val mappedId = from.clickOnConditionId?.let { eventCopyConditionIdMap[it] }
+                mappedId ?: from.clickOnConditionId
+            } else null
 
         return from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
@@ -472,12 +473,8 @@ class EditedItemsBuilder internal constructor(
     private fun createNewToggleEventFrom(from: ToggleEvent, eventId: Identifier): ToggleEvent {
         val actionId = actionsIdCreator.generateNewIdentifier()
 
-        val eventsToggles = from.eventToggles.mapNotNull { eventToggle ->
-            // Check if the current edited scenario contains the event modified by the child event toggle.
-            // Filter if not
-            if (eventToggle.targetEventId == eventId || isEventIdValidInEditedScenario(eventId)) {
-                createEventToggleFrom(eventToggle, actionId)
-            } else null
+        val eventsToggles = from.eventToggles.map { eventToggle ->
+            createEventToggleFrom(eventToggle, actionId)
         }
 
         return from.copy(
@@ -538,9 +535,6 @@ class EditedItemsBuilder internal constructor(
             validateInput = from.validateInput,
         )
     }
-
-    private fun isEventIdValidInEditedScenario(eventId: Identifier): Boolean =
-        editor.getAllEditedEvents().find { eventId == it.id } != null
 
     private fun getEditedScenarioIdOrThrow(): Identifier =
         editor.editedScenario.value?.id

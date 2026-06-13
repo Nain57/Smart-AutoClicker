@@ -151,7 +151,7 @@ class GetActionMissingReferencesUseCaseTest {
     }
 
     @Test
-    fun `click on detected condition with conditionId found in edited events has no missing references`() = runTest {
+    fun `click on detected condition with conditionId found in its own edited event has no missing references`() = runTest {
         val conditionId = Identifier(databaseId = 100L)
         val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
         val event = mockk<ScreenEvent>(relaxed = true) {
@@ -161,6 +161,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns listOf(event)
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
@@ -168,7 +169,48 @@ class GetActionMissingReferencesUseCaseTest {
     }
 
     @Test
-    fun `click on detected condition with conditionId in eventsToCopy has no missing references`() = runTest {
+    fun `click on detected condition with conditionId found in a different edited event has one screen condition reference`() = runTest {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val otherEvent = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns OTHER_EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(otherEvent)
+        coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
+
+        val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
+            every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
+            every { clickOnConditionId } returns conditionId
+        }
+        val result = useCase(click)
+        assertActionItem(result, expectedMissingCount = 1)
+        val ref = result.missingReferences[0] as MissingCopyReference.ScreenConditionReference
+        assertEquals(CONDITION_NAME, ref.name)
+        assertEquals(conditionId, ref.conditionId)
+    }
+
+    @Test
+    fun `click on detected condition with conditionId in its own eventsToCopy event has no missing references`() = runTest {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val copyEvent = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+
+        val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
+            every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
+            every { clickOnConditionId } returns conditionId
+        }
+        assertActionItem(useCase(click, eventsToCopy = listOf(copyEvent)), expectedMissingCount = 0)
+    }
+
+    @Test
+    fun `click on detected condition with conditionId in a different eventsToCopy event has one screen condition reference`() = runTest {
         val conditionId = Identifier(databaseId = 100L)
         val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
         val copyEvent = mockk<ScreenEvent>(relaxed = true) {
@@ -176,12 +218,18 @@ class GetActionMissingReferencesUseCaseTest {
             every { conditions } returns listOf(condition)
         }
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
-        assertActionItem(useCase(click, eventsToCopy = listOf(copyEvent)), expectedMissingCount = 0)
+        val result = useCase(click, eventsToCopy = listOf(copyEvent))
+        assertActionItem(result, expectedMissingCount = 1)
+        val ref = result.missingReferences[0] as MissingCopyReference.ScreenConditionReference
+        assertEquals(CONDITION_NAME, ref.name)
+        assertEquals(conditionId, ref.conditionId)
     }
 
     @Test
@@ -191,6 +239,7 @@ class GetActionMissingReferencesUseCaseTest {
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns null
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
@@ -204,6 +253,7 @@ class GetActionMissingReferencesUseCaseTest {
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }

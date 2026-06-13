@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.event.FixEventsCopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -69,32 +69,43 @@ class EventCopyDialog(
         }
     }
 
-    override fun onSearchQueryChanged(newText: String?) {
-        viewModel.updateSearchQuery(newText)
-    }
-
-    override fun onCopyClicked() {
-        if (viewModel.eventsCopyShouldWarnUser()) {
-            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
-                notifySelectionAndDestroy()
-            }
-        } else {
-            notifySelectionAndDestroy()
-        }
-    }
-
-    private fun onEventClicked(event: Event) {
-        viewModel.toggleCheckedForCopy(event)
-    }
-
     private fun updateEventList(newItems: List<EventCopyItem>?) {
         viewBinding.layoutLoadableList.updateState(newItems)
         eventCopyAdapter.submitList(newItems)
         viewBinding.layoutTopBar.buttonCopy.isEnabled = !newItems.isNullOrEmpty()
     }
 
-    private fun notifySelectionAndDestroy() {
+    override fun onSearchQueryChanged(newText: String?) {
+        viewModel.updateSearchQuery(newText)
+    }
+
+    private fun onEventClicked(event: Event) {
+        viewModel.toggleCheckedForCopy(event)
+    }
+
+    override fun onCopyClicked() {
+        val copyEvents = viewModel.getEventsCopy()
+        if (viewModel.eventsCopyShouldWarnUser(copyEvents)) {
+            showCopyFixDialog(copyEvents)
+        } else {
+            notifySelectionAndDestroy(copyEvents)
+        }
+    }
+
+    private fun showCopyFixDialog(eventsToCopy: List<Event>) {
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = FixEventsCopyDialog(
+                eventsToCopy = eventsToCopy,
+                onFixConfirmed = ::notifySelectionAndDestroy,
+            )
+        )
+    }
+
+    private fun notifySelectionAndDestroy(eventsToCopy: List<Event>) {
+        viewModel.saveCopyEvents(eventsToCopy)
         back()
-        onEventsSelected(viewModel.getEventsToCopy())
+        onEventsSelected(eventsToCopy)
     }
 }

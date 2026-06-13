@@ -176,14 +176,10 @@ class ScreenConditionsBriefMenu(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionCopyDialog(
-                onConditionsSelected = { conditionsSelected ->
-                    when {
-                        conditionsSelected.isEmpty() -> return@ConditionCopyDialog
-                        conditionsSelected.size == 1 ->
-                            viewModel.createNewScreenConditionFromCopy(conditionsSelected[0])?.let { conditionCopy ->
-                                showScreenConditionConfigDialog(conditionCopy)
-                            }
-                        else -> viewModel.copyConditionsFrom(conditionsSelected)
+                onConditionsCopied = { conditionsSelected ->
+                    if (conditionsSelected.size != 1) return@ConditionCopyDialog
+                    (conditionsSelected[0] as? ScreenCondition)?.let { condition ->
+                        showScreenConditionConfigDialog(condition)
                     }
                 },
                 requestTriggerConditions = false,

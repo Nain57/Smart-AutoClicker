@@ -27,13 +27,16 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetScreenConditionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetTriggerConditionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ConditionsForCopy
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsConditionRelatedToUnreachableItemUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -48,12 +51,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.collections.forEach
+import kotlin.collections.mapNotNull
+import kotlin.collections.plus
 
 /** View model for the [ConditionCopyDialog]. */
 class ConditionCopyViewModel @Inject constructor(
     @ApplicationContext context: Context,
     getScreenConditionsForCopyUseCase: GetScreenConditionsForCopyUseCase,
     getTriggerConditionsForCopyUseCase: GetTriggerConditionsForCopyUseCase,
+    private val isConditionRelatedToUnreachableItemUseCase: IsConditionRelatedToUnreachableItemUseCase,
+    private val editionRepository: EditionRepository,
     private val bitmapRepository: BitmapRepository,
 ) : ViewModel() {
 
@@ -116,51 +124,62 @@ class ConditionCopyViewModel @Inject constructor(
         }
     }
 
-    fun conditionCopyShouldWarnUser(): Boolean {
-        val state = uiState.value ?: return false
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
+    }
 
-        // If there is only one condition that references something unreachable, we should warn.
-        // So return early we one is found.
-        checkedForCopy.value.forEach { (_, conditionWithIndex) ->
+    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
-            // It's always safe to copy from the same event
-            if (state.thisEventSize > 0 && conditionWithIndex.index in 0 until state.thisEventSize) return@forEach
+    fun getConditionsCopy(): List<Condition> =
+        uiState.value?.items?.mapNotNull { item ->
+            if (item !is ConditionCopyItem.ConditionItem || !item.isChecked) return@mapNotNull null
+            item.uiCondition.condition.createCopy()
+        } ?: emptyList()
 
-            // In the same scenario but different event
-            val thisScenarioStartIndex = state.thisEventSize
-            val otherScenarioStartIndex = thisScenarioStartIndex + state.thisScenarioSize
-            if (state.thisScenarioSize > 0 && conditionWithIndex.index in thisScenarioStartIndex until otherScenarioStartIndex) {
-                if (conditionWithIndex.condition.isRelatedToItsEvent()) return true
-                return@forEach
-            }
 
-            // In the same scenario but different event
-            val otherScenarioEndIndex = otherScenarioStartIndex + state.otherScenarioSize - 1
-            if (state.otherScenarioSize > 0 && conditionWithIndex.index in otherScenarioStartIndex .. otherScenarioEndIndex) {
-                if (conditionWithIndex.condition.isRelatedToItsScenario()) return true
-                return@forEach
-            }
+    fun conditionCopyShouldWarnUser(copyConditions: List<Condition>): Boolean {
+        copyConditions.forEach { condition ->
+            if (isConditionRelatedToUnreachableItemUseCase(condition)) return true
         }
 
         return false
     }
 
-    fun getConditionsToCopy(): List<Condition> = checkedForCopy.value
-        .mapNotNull { (_, conditionWithIndex) -> conditionWithIndex.condition }
+    fun getFixEventDialogArgument(conditionsToCopy: List<Condition>): FixEventChildrenCopyDialog.Arguments? {
+        val editedEvent = editionRepository.editionState.getEditedEvent<Event>() ?: return null
 
-    fun updateSearchQuery(query: String?) {
-        searchQuery.value = query
+        val allEvents = editionRepository.editionState.getAllEditedEvents()
+        val editedEventIndex = allEvents.indexOfFirst { event -> editedEvent.id == event.id }
+        if (editedEventIndex !in allEvents.indices) return null
+
+        val newEvent = editedEvent.copyBase(
+            conditions = editedEvent.conditions + conditionsToCopy
+        )
+        val resultingEventList = allEvents.toMutableList().apply {
+            removeAt(editedEventIndex)
+            add(editedEventIndex, newEvent)
+        }
+
+        return FixEventChildrenCopyDialog.Arguments(
+            resultingEventList = resultingEventList,
+            parent = newEvent,
+            showHelpMessage = true,
+        )
     }
 
-    /**
-     * Get the bitmap corresponding to a condition.
-     * Loading is async and the result notified via the onBitmapLoaded argument.
-     *
-     * @param condition the condition to load the bitmap of.
-     * @param onBitmapLoaded the callback notified upon completion.
-     */
-    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+    fun saveCopyConditions(conditionCopies: List<Condition>) {
+        conditionCopies.forEach { condition ->
+            editionRepository.startConditionEdition(condition)
+            editionRepository.upsertEditedCondition()
+        }
+    }
+
+    private fun Condition.createCopy(): Condition =
+        when (this) {
+            is ScreenCondition -> editionRepository.editedItemsBuilder.createNewScreenConditionFrom(this)
+            is TriggerCondition -> editionRepository.editedItemsBuilder.createNewTriggerConditionFrom(this)
+        }
 
     private fun List<Condition>.toCopyItems(context: Context, checked: Map<Identifier, ConditionWithIndex>) = map { condition ->
         when (condition) {
@@ -174,32 +193,6 @@ class ConditionCopyViewModel @Inject constructor(
             )
         }
     }
-
-    private fun Condition.isRelatedToItsEvent(): Boolean =
-        when (this) {
-            // No conditions relates to an event specific value
-            is ScreenCondition.Color,
-            is ScreenCondition.Image,
-            is ScreenCondition.Text,
-            is ScreenCondition.Number,
-            is TriggerCondition.OnBroadcastReceived,
-            is TriggerCondition.OnCounterCountReached,
-            is TriggerCondition.OnTimerReached -> false
-        }
-
-    private fun Condition.isRelatedToItsScenario(): Boolean =
-        when (this) {
-            // Number condition can be compared to a counter
-            is ScreenCondition.Number -> counterValue is CounterOperationValue.Counter
-            // On counter reached condition always refers to a counter
-            is TriggerCondition.OnCounterCountReached -> true
-
-            is ScreenCondition.Color,
-            is ScreenCondition.Image,
-            is ScreenCondition.Text,
-            is TriggerCondition.OnBroadcastReceived,
-            is TriggerCondition.OnTimerReached -> false
-        }
 
     private data class ConditionWithIndex(
         val condition: Condition,

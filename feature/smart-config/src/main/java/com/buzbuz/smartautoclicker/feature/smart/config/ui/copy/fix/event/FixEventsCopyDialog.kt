@@ -44,7 +44,7 @@ import kotlin.getValue
 
 
 class FixEventsCopyDialog(
-    private val events: List<Event>,
+    private val eventsToCopy: List<Event>,
     private val onFixConfirmed: (List<Event>) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -61,7 +61,7 @@ class FixEventsCopyDialog(
 
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setEventsToCopy(events)
+        viewModel.setEventsToCopy(eventsToCopy)
 
         viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {

@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -35,10 +35,10 @@ import kotlinx.coroutines.launch
 
 /**
  * [CopyDialog] implementation for displaying the whole list of actions for a copy.
- * @param onActionsSelected the listener called when the user select one or more Action.
+ * @param onActionsCopied the listener called when the user select one or more Action.
  */
 class ActionCopyDialog(
-    private val onActionsSelected: (List<Action>) -> Unit,
+    private val onActionsCopied: (List<Action>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
 
     /** View model for this content. */
@@ -74,27 +74,39 @@ class ActionCopyDialog(
         }
     }
 
-    override fun onSearchQueryChanged(newText: String?) {
-        viewModel.updateSearchQuery(newText)
-    }
-
-    override fun onCopyClicked() {
-        if (viewModel.actionCopyShouldWarnUser()) {
-            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
-                notifySelectionAndDestroy()
-            }
-        } else {
-            notifySelectionAndDestroy()
-        }
-    }
-
     private fun updateUiState(uiState: ActionCopyUiState?) {
         viewBinding.layoutLoadableList.updateState(uiState?.items)
         actionCopyAdapter.submitList(ArrayList(uiState?.items ?: emptyList<ActionCopyItem>()))
     }
 
-    private fun notifySelectionAndDestroy() {
+    override fun onSearchQueryChanged(newText: String?) {
+        viewModel.updateSearchQuery(newText)
+    }
+
+    override fun onCopyClicked() {
+        val copyActions = viewModel.getActionsCopy()
+        if (viewModel.actionCopyShouldWarnUser(copyActions)) {
+            showCopyFixDialog(copyActions)
+        } else {
+            notifySelectionAndDestroy(copyActions)
+        }
+    }
+
+    private fun showCopyFixDialog(actionsToCopy: List<Action>) {
+        val dialogArg = viewModel.getFixEventDialogArgument(actionsToCopy) ?: return
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = FixEventChildrenCopyDialog(
+                dialogArguments = dialogArg,
+                onFixConfirmed = { event -> notifySelectionAndDestroy(event.actions) }
+            )
+        )
+    }
+
+    private fun notifySelectionAndDestroy(actionsToCopy: List<Action>) {
+        viewModel.saveCopyActions(actionsToCopy)
         back()
-        onActionsSelected(viewModel.getActionsToCopy())
+        onActionsCopied(actionsToCopy)
     }
 }

@@ -132,7 +132,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
     }
 
     @Test
-    fun `click on detected condition with conditionId found in edited events is not related to unreachable item`() {
+    fun `click on detected condition with conditionId found in its own edited event is not related to unreachable item`() {
         val conditionId = Identifier(databaseId = 100L)
         val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
         val event = mockk<ScreenEvent>(relaxed = true) {
@@ -142,10 +142,29 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns listOf(event)
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
         assertFalse(useCase(click))
+    }
+
+    @Test
+    fun `click on detected condition with conditionId found in a different edited event is related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val otherEvent = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns OTHER_EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(otherEvent)
+
+        val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
+            every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
+            every { clickOnConditionId } returns conditionId
+        }
+        assertTrue(useCase(click))
     }
 
     @Test
@@ -154,6 +173,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
@@ -161,7 +181,25 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
     }
 
     @Test
-    fun `click on detected condition with conditionId in eventsToCopy is not related to unreachable item`() {
+    fun `click on detected condition with conditionId in its own eventsToCopy event is not related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val copyEvent = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+
+        val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
+            every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
+            every { clickOnConditionId } returns conditionId
+        }
+        assertFalse(useCase(click, eventsToCopy = listOf(copyEvent)))
+    }
+
+    @Test
+    fun `click on detected condition with conditionId in a different eventsToCopy event is related to unreachable item`() {
         val conditionId = Identifier(databaseId = 100L)
         val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
         val copyEvent = mockk<ScreenEvent>(relaxed = true) {
@@ -171,10 +209,11 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
         val click = mockk<Click>(relaxed = true) {
+            every { eventId } returns EVENT_ID
             every { positionType } returns Click.PositionType.ON_DETECTED_CONDITION
             every { clickOnConditionId } returns conditionId
         }
-        assertFalse(useCase(click, eventsToCopy = listOf(copyEvent)))
+        assertTrue(useCase(click, eventsToCopy = listOf(copyEvent)))
     }
 
     // endregion

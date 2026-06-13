@@ -66,10 +66,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Collections
 
+import java.util.Collections
 import javax.inject.Inject
-import kotlin.collections.forEach
 
 
 class ScreenConditionsBriefViewModel @Inject constructor(
@@ -124,22 +123,6 @@ class ScreenConditionsBriefViewModel @Inject constructor(
 
     fun setFocusedItemIndex(index: Int) {
         currentFocusItemIndex.value = index
-    }
-
-    fun createNewScreenConditionFromCopy(condition: Condition): ScreenCondition? {
-        if (condition !is ScreenCondition) return null
-        return editionRepository.editedItemsBuilder.createNewScreenConditionFrom(condition)
-    }
-
-    fun copyConditionsFrom(conditions: List<Condition>) {
-        editionRepository.apply {
-            conditions.forEach { condition ->
-                createNewScreenConditionFromCopy(condition)?.let { newCondition ->
-                    startConditionEdition(newCondition)
-                    upsertEditedCondition()
-                }
-            }
-        }
     }
 
     fun deleteScreenCondition(index: Int, force: Boolean = false): Boolean {

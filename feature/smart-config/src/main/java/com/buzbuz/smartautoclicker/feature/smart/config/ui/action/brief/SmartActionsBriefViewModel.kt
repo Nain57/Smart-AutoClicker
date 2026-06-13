@@ -73,7 +73,6 @@ import kotlinx.coroutines.launch
 
 import java.util.Collections
 import javax.inject.Inject
-import kotlin.collections.forEach
 
 
 class SmartActionsBriefViewModel @Inject constructor(
@@ -182,18 +181,6 @@ class SmartActionsBriefViewModel @Inject constructor(
         ActionTypeChoice.System -> editionRepository.editedItemsBuilder.createNewSystemAction(context)
         ActionTypeChoice.SetText -> editionRepository.editedItemsBuilder.createNewSetText(context)
         ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
-    }
-
-    override fun createActionFrom(action: Action): Action =
-        editionRepository.editedItemsBuilder.createNewActionFrom(action)
-
-    override fun copyActionsFrom(actions: List<Action>) {
-        editionRepository.apply {
-            actions.forEach { action ->
-                startActionEdition(createActionFrom(action))
-                upsertEditedAction()
-            }
-        }
     }
 
     override fun startActionEdition(action: Action) {

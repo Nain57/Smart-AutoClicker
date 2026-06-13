@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCopyEventWithToggleEventFromAnotherScenarioDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -35,11 +35,11 @@ import kotlinx.coroutines.launch
 
 /**
  * [CopyDialog] implementation for displaying the whole list of conditions for a copy.
- * @param onConditionsSelected the listener called when the user select Conditions.
+ * @param onConditionsCopied the listener called when the user select Conditions.
  */
 class ConditionCopyDialog(
     private val requestTriggerConditions: Boolean,
-    private val onConditionsSelected: (List<Condition>) -> Unit,
+    private val onConditionsCopied: (List<Condition>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme)  {
 
     /** View model for this content. */
@@ -81,27 +81,39 @@ class ConditionCopyDialog(
         }
     }
 
-    override fun onSearchQueryChanged(newText: String?) {
-        viewModel.updateSearchQuery(newText)
-    }
-
-    override fun onCopyClicked() {
-        if (viewModel.conditionCopyShouldWarnUser()) {
-            context.showCopyEventWithToggleEventFromAnotherScenarioDialog {
-                notifySelectionAndDestroy()
-            }
-        } else {
-            notifySelectionAndDestroy()
-        }
-    }
-
     private fun updateUiState(uiState: ConditionCopyUiState?) {
         viewBinding.layoutLoadableList.updateState(uiState?.items)
         conditionAdapter.submitList(ArrayList(uiState?.items ?: emptyList<ConditionCopyItem>()))
     }
 
-    private fun notifySelectionAndDestroy() {
+    override fun onSearchQueryChanged(newText: String?) {
+        viewModel.updateSearchQuery(newText)
+    }
+
+    override fun onCopyClicked() {
+        val copyConditions = viewModel.getConditionsCopy()
+        if (viewModel.conditionCopyShouldWarnUser(copyConditions)) {
+            showCopyFixDialog(copyConditions)
+        } else {
+            notifySelectionAndDestroy(copyConditions)
+        }
+    }
+
+    private fun showCopyFixDialog(conditionsToCopy: List<Condition>) {
+        val dialogArg = viewModel.getFixEventDialogArgument(conditionsToCopy) ?: return
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = FixEventChildrenCopyDialog(
+                dialogArguments = dialogArg,
+                onFixConfirmed = { event -> notifySelectionAndDestroy(event.conditions) }
+            )
+        )
+    }
+
+    private fun notifySelectionAndDestroy(conditionsToCopy: List<Condition>) {
+        viewModel.saveCopyConditions(conditionsToCopy)
         back()
-        onConditionsSelected(viewModel.getConditionsToCopy())
+        onConditionsCopied(conditionsToCopy)
     }
 }

@@ -72,9 +72,8 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
     private fun Click.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
         if (positionType == Click.PositionType.ON_DETECTED_CONDITION) {
             clickOnConditionId?.let { conditionId ->
-                return copyResultEvents.values.find { event ->
-                    event.conditions.find { condition -> condition.id == conditionId } != null
-                } == null
+                return copyResultEvents[eventId]?.conditions
+                    ?.find { condition -> condition.id == conditionId } == null
             }
         }
 

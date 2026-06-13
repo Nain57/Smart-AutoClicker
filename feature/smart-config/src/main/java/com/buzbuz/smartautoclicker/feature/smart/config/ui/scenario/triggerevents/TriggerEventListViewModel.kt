@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.to
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
-import kotlin.collections.forEach
 
 
 class TriggerEventListViewModel @Inject constructor(
@@ -51,16 +50,8 @@ class TriggerEventListViewModel @Inject constructor(
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, event: TriggerEvent? = null): TriggerEvent = with(editionRepository.editedItemsBuilder) {
-        if (event == null) createNewTriggerEvent(context)
-        else createNewTriggerEventFrom(from = event)
-    }
-
-    fun createNewEventsFrom(context: Context, from: List<TriggerEvent>) =
-        from.forEach { event ->
-            startEventEdition(createNewEvent(context, event))
-            saveEventEdition()
-        }
+    fun createNewEvent(context: Context): TriggerEvent =
+        editionRepository.editedItemsBuilder. createNewTriggerEvent(context)
 
     fun startEventEdition(event: TriggerEvent) = editionRepository.startEventEdition(event)
 

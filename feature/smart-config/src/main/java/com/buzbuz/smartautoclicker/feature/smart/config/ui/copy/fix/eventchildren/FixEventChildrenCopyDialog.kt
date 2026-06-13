@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,13 +25,12 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
@@ -75,6 +75,16 @@ class FixEventChildrenCopyDialog(
         viewModel.setDialogArguments(dialogArguments)
 
         viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
+            layoutTopBar.apply {
+                setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
+
+                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
+                buttonSave.setDebouncedOnClickListener { onSaveClicked() }
+
+                setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
+                buttonDismiss.setDebouncedOnClickListener { back() }
+            }
+
             layoutLoadableList.list.adapter = itemAdapter
         }
 
@@ -96,6 +106,13 @@ class FixEventChildrenCopyDialog(
             layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeCopied)
             layoutLoadableList.updateState(uiState.items)
             itemAdapter.submitList(uiState.items)
+        }
+    }
+
+    private fun onSaveClicked() {
+        if (viewModel.uiState.value?.canBeCopied != true) return
+        viewModel.getFixedEventToCopy()?.let { event ->
+            onFixConfirmed(event)
         }
     }
 

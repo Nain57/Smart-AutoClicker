@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
@@ -130,6 +131,9 @@ class FixEventChildrenCopyViewModel @Inject constructor(
 
         itemsToCopy.update { old -> old?.copy(parent = newEvent) }
     }
+
+    fun getFixedEventToCopy(): Event? =
+        itemsToCopy.value?.parent
 
     private suspend fun FixEventChildrenCopyDialog.Arguments?.toUiState(context: Context): FixEventsChildrenCopyUiState {
         val items = this?.let { (_, event, showHelpMessage) ->

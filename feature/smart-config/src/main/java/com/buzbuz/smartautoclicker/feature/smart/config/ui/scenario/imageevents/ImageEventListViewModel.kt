@@ -56,16 +56,8 @@ class ImageEventListViewModel @Inject constructor(
      * @param context the Android context.
      * @return the new event item.
      */
-    fun createNewEvent(context: Context, from: ScreenEvent? = null): ScreenEvent = with(editionRepository.editedItemsBuilder) {
-        if (from == null) createNewImageEvent(context)
-        else createNewImageEventFrom(from)
-    }
-
-    fun createEventsCopy(context: Context, from: List<ScreenEvent>) =
-        from.forEach { event ->
-            startEventEdition(createNewEvent(context, event))
-            saveEventEdition()
-        }
+    fun createNewEvent(context: Context): ScreenEvent =
+        editionRepository.editedItemsBuilder.createNewImageEvent(context)
 
     fun startEventEdition(event: ScreenEvent) = editionRepository.startEventEdition(event)
 

@@ -138,14 +138,8 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
             newOverlay = EventCopyDialog(
                 requestTriggerEvents = false,
                 onEventsSelected = { events ->
-                    @Suppress("UNCHECKED_CAST")
-                    when {
-                        events.isEmpty() -> return@EventCopyDialog
-                        events.size == 1 -> showEventConfigDialog(
-                            viewModel.createNewEvent(context, events[0] as ScreenEvent)
-                        )
-                        else -> viewModel.createEventsCopy(context, events as List<ScreenEvent>)
-                    }
+                    if (events.size != 1) return@EventCopyDialog
+                    (events[0] as? ScreenEvent)?.let { screenEvent ->  showEventConfigDialog(screenEvent) }
                 },
             ),
         )

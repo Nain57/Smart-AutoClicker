@@ -65,25 +65,6 @@ class TriggerConditionListViewModel @Inject constructor(
                 editionRepository.editedItemsBuilder.createNewOnTimerReached(context)
         }
 
-    /**
-     * Get a new condition based on the provided one.
-     * @param condition the condition to copy.
-     */
-    fun createNewTriggerConditionFromCopy(condition: Condition): TriggerCondition? =
-        if (condition !is TriggerCondition)  null
-        else editionRepository.editedItemsBuilder.createNewTriggerConditionFrom(condition)
-
-    fun copyConditionsFrom(conditions: List<Condition>) {
-        editionRepository.apply {
-            conditions.forEach { condition ->
-                createNewTriggerConditionFromCopy(condition)?.let { newCondition ->
-                    startConditionEdition(newCondition)
-                    upsertEditedCondition()
-                }
-            }
-        }
-    }
-
     fun startConditionEdition(condition: Condition) = editionRepository.startConditionEdition(condition)
 
     /** Insert/update a new condition to the event. */

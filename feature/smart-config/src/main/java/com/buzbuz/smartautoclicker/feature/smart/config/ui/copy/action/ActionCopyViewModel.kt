@@ -21,22 +21,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
-import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
-import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
-import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
-import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
-import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetActionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ActionsForCopy
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsActionRelatedToUnreachableItemUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.isClickOnCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +44,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.collections.forEach
 import kotlin.collections.mapNotNull
 
 /**
@@ -55,7 +53,9 @@ import kotlin.collections.mapNotNull
 class ActionCopyViewModel @Inject constructor(
     @ApplicationContext context: Context,
     getActionsForCopyUseCase: GetActionsForCopyUseCase,
-) : androidx.lifecycle.ViewModel() {
+    private val isActionRelatedToUnreachableItemUseCase: IsActionRelatedToUnreachableItemUseCase,
+    private val editionRepository: EditionRepository,
+) : ViewModel() {
 
     /** The currently searched action name. Null if none is. */
     private val searchQuery: MutableStateFlow<String?> = MutableStateFlow(null)
@@ -105,6 +105,10 @@ class ActionCopyViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
 
+    fun updateSearchQuery(query: String?) {
+        searchQuery.value = query
+    }
+
     fun toggleCheckedForCopy(action: Action, index: Int) {
         checkedForCopy.update { old ->
             if (old.contains(action.id)) old - action.id
@@ -112,45 +116,51 @@ class ActionCopyViewModel @Inject constructor(
         }
     }
 
-    fun actionCopyShouldWarnUser(): Boolean {
-        val state = uiState.value ?: return false
+    fun getActionsCopy(): List<Action> =
+        uiState.value?.items?.mapNotNull { item ->
+            if (item !is ActionCopyItem.ActionItem || !item.checked) return@mapNotNull null
+            item.uiAction.action.createCopy()
+        } ?: emptyList()
 
-        // If there is only one action that references something unreachable, we should warn.
-        // So return early we one is found.
-        checkedForCopy.value.forEach { (_, actionWithIndex) ->
-
-            // It's always safe to copy from the same event
-            if (state.thisEventSize > 0 && actionWithIndex.index in 0 until state.thisEventSize) return@forEach
-
-            // In the same scenario but different event
-            val thisScenarioStartIndex = state.thisEventSize
-            val otherScenarioStartIndex = thisScenarioStartIndex + state.thisScenarioSize
-            if (state.thisScenarioSize > 0 && actionWithIndex.index in thisScenarioStartIndex until otherScenarioStartIndex) {
-                if (actionWithIndex.action.isRelatedToItsEvent()) return true
-                return@forEach
-            }
-
-            // In the same scenario but different event
-            val otherScenarioEndIndex = otherScenarioStartIndex + state.otherScenarioSize - 1
-            if (state.otherScenarioSize > 0 && actionWithIndex.index in otherScenarioStartIndex .. otherScenarioEndIndex) {
-                if (actionWithIndex.action.isRelatedToItsScenario()) return true
-                return@forEach
-            }
+    fun actionCopyShouldWarnUser(copyActions: List<Action>): Boolean {
+        copyActions.forEach { action ->
+            if (isActionRelatedToUnreachableItemUseCase(action)) return true
         }
 
         return false
     }
 
-    fun getActionsToCopy(): List<Action>  = checkedForCopy.value
-        .mapNotNull { (_, actionWithIndex) -> actionWithIndex.action }
+    fun getFixEventDialogArgument(actionsToCopy: List<Action>): FixEventChildrenCopyDialog.Arguments? {
+        val editedEvent = editionRepository.editionState.getEditedEvent<Event>() ?: return null
 
-    /**
-     * Update the action search query.
-     * @param query the new query.
-     */
-    fun updateSearchQuery(query: String?) {
-        searchQuery.value = query
+        val allEvents = editionRepository.editionState.getAllEditedEvents()
+        val editedEventIndex = allEvents.indexOfFirst { event -> editedEvent.id == event.id }
+        if (editedEventIndex !in allEvents.indices) return null
+
+        val newEvent = editedEvent.copyBase(
+            actions = editedEvent.actions + actionsToCopy
+        )
+        val resultingEventList = allEvents.toMutableList().apply {
+            removeAt(editedEventIndex)
+            add(editedEventIndex, newEvent)
+        }
+
+        return FixEventChildrenCopyDialog.Arguments(
+            resultingEventList = resultingEventList,
+            parent = newEvent,
+            showHelpMessage = true,
+        )
     }
+
+    fun saveCopyActions(actionCopies: List<Action>) {
+        actionCopies.forEach { action ->
+            editionRepository.startActionEdition(action)
+            editionRepository.upsertEditedAction()
+        }
+    }
+
+    private fun Action.createCopy(): Action =
+        editionRepository.editedItemsBuilder.createNewActionFrom(this)
 
     /** Creates copy items from a list of edited actions from this scenario. */
     private fun List<Action>.toCopyItems(context: Context, checked: Map<Identifier, ActionWithIndex>) = map { action ->
@@ -159,41 +169,6 @@ class ActionCopyViewModel @Inject constructor(
             checked = checked.contains(action.id),
         )
     }
-
-    private fun Action.isRelatedToItsEvent(): Boolean =
-        when (this) {
-            // Condition can't be reached in another event
-            is Click -> isClickOnCondition()
-
-            // Same scenario, so events & counters are always reachable
-            is ChangeCounter,
-            is Intent,
-            is Notification,
-            is Pause,
-            is SetText,
-            is Swipe,
-            is SystemAction,
-            is ToggleEvent -> return false
-        }
-
-    private fun Action.isRelatedToItsScenario(): Boolean =
-        when (this) {
-            is Click -> isClickOnCondition()
-
-            // Other scenario, so events & counters never reachable
-            is ChangeCounter,
-            is ToggleEvent -> return true
-
-            // Nothing referenced besides counters, so they are always reachable as well
-            is Notification -> messageText.findCounterReferences().isNotEmpty()
-            is SetText -> text.findCounterReferences().isNotEmpty()
-
-            // Nothing is reference in those actions
-            is Pause,
-            is Swipe,
-            is Intent,
-            is SystemAction -> return false
-        }
 
     private data class ActionWithIndex(
         val action: Action,

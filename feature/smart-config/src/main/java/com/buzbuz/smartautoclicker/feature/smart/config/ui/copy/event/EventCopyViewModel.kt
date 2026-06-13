@@ -18,9 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -29,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetScreenEventsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetTriggerEventsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.EventsForCopy
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsEventRelatedToUnreachableItemUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
@@ -43,14 +43,16 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.collections.forEach
 
 
 /** View model for the [EventCopyDialog]. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class EventCopyViewModel @Inject constructor(
-    private val editionRepository: EditionRepository,
     getScreenEventsForCopyUseCase: GetScreenEventsForCopyUseCase,
     getTriggerEventsForCopyUseCase: GetTriggerEventsForCopyUseCase,
+    private val isEventRelatedToUnreachableItemUseCase: IsEventRelatedToUnreachableItemUseCase,
+    private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
     private val requestTriggerEvents: MutableStateFlow<Boolean?> = MutableStateFlow(null)
@@ -103,27 +105,33 @@ class EventCopyViewModel @Inject constructor(
         searchQuery.update { query }
     }
 
-    fun eventsCopyShouldWarnUser(): Boolean {
-        uiState.value?.forEach { eventItem ->
-            if (eventItem is EventCopyItem.EventItem && eventItem.uiEvent.event.isReferencingUnreachableEvent()) {
-                return true
-            }
+    fun getEventsCopy(): List<Event> =
+        uiState.value?.mapNotNull { item ->
+            if (item !is EventCopyItem.EventItem || !item.checked) return@mapNotNull null
+            item.uiEvent.event.createCopy()
+        } ?: emptyList()
 
+
+    fun eventsCopyShouldWarnUser(copyEvents: List<Event>): Boolean {
+        copyEvents.forEach { event ->
+            if (isEventRelatedToUnreachableItemUseCase(event, copyEvents)) return true
         }
 
         return false
     }
 
-    fun getEventsToCopy(): List<Event> =
-        uiState.value?.mapNotNull { item ->
-            if (item !is EventCopyItem.EventItem || !item.checked) return@mapNotNull null
-            item.uiEvent.event
-        } ?: emptyList()
+    fun saveCopyEvents(eventCopies: List<Event>) {
+        eventCopies.forEach { event ->
+            editionRepository.startEventEdition(event)
+            editionRepository.upsertEditedEvent()
+        }
+    }
 
-
-    private fun Event.isReferencingUnreachableEvent(): Boolean =
-        editionRepository.editionState.getScenario()?.id == scenarioId
-                && actions.find { action -> action is ToggleEvent && !action.toggleAll } != null
+    private fun Event.createCopy(): Event =
+        when (this) {
+            is ScreenEvent -> editionRepository.editedItemsBuilder.createNewImageEventFrom(this)
+            is TriggerEvent -> editionRepository.editedItemsBuilder.createNewTriggerEventFrom(this)
+        }
 
     private fun List<Event>.toCopyItems(checked: Map<Identifier, Event>): List<EventCopyItem.EventItem> = map { event ->
         when (event) {

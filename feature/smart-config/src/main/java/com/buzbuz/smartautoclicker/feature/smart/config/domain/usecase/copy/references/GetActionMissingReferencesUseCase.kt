@@ -95,9 +95,8 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return emptyList()
 
         val conditionId = clickOnConditionId ?: return emptyList()
-        val isFound = copyResultEvents.values.any { event ->
-            event.conditions.any { condition -> condition.id == conditionId }
-        }
+        val isFound = copyResultEvents[eventId]?.conditions
+            ?.find { condition -> condition.id == conditionId } != null
         if (isFound) return emptyList()
 
         val name = smartRepository.getConditionName(conditionId) ?: return emptyList()

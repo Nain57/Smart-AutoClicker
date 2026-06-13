@@ -48,8 +48,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.action.ActionCop
 internal interface ActionConfigurator {
     fun getActionTypeChoices(): List<ActionTypeChoice>
     fun createAction(context: Context, choice: ActionTypeChoice): Action
-    fun createActionFrom(action: Action): Action
-    fun copyActionsFrom(actions: List<Action>)
     fun startActionEdition(action: Action)
     fun upsertEditedAction()
     fun removeEditedAction()
@@ -77,13 +75,9 @@ internal fun BaseOverlay.showActionCopyDialog(configurator: ActionConfigurator) 
     overlayManager.navigateTo(
         context = context,
         newOverlay = ActionCopyDialog(
-            onActionsSelected = { newCopyActions ->
-                when {
-                    newCopyActions.isEmpty() -> return@ActionCopyDialog
-                    newCopyActions.size == 1 ->
-                        showActionConfigDialog(configurator, configurator.createActionFrom(newCopyActions[0]))
-                    else -> configurator.copyActionsFrom(newCopyActions)
-                }
+            onActionsCopied = { newCopyActions ->
+                if (newCopyActions.size == 1)
+                    showActionConfigDialog(configurator, newCopyActions[0])
             }
         ),
     )
