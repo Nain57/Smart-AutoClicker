@@ -51,7 +51,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescri
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsActionCopyAvailableUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsActionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes

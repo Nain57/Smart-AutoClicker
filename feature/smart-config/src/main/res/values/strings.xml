@@ -519,6 +519,17 @@
     <string name="field_counter_selection_desc">Starting value: %1$.2f</string>
     <string name="field_counter_selection_desc_empty">Click here to select a counter</string>
 
+
+    <!-- Dialogs copy fix ===================================================================================== -->
+
+    <string name="dialog_title_copy_fix">Resolve issues</string>
+
+    <string name="item_header_event_copy_fix">One or more items in this copy are referencing an unreachable item.\nClick on the problematic item to fix those issues.</string>
+
+    <string name="item_copy_fix_description_ok">Item is valid</string>
+    <string name="item_copy_fix_description_missing">Missing referenced item(s)</string>
+
+
     <!-- Dialogs warning/error ===================================================================================== -->
 
     <string name="warning_dialog_message_toggle_action_from_another_scenario">This event have one or more toggle event actions referencing an event from another scenario.\nYou will have to update their target events before saving your scenario.</string>

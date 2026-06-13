@@ -126,4 +126,15 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/copy_validity_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:visibility="gone"
+        tools:srcCompat="@drawable/ic_confirm"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

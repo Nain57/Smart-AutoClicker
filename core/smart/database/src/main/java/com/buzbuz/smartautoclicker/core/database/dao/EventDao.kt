@@ -118,6 +118,15 @@ abstract class EventDao {
     abstract fun getTriggerEventsCount(): Flow<Int>
 
     /**
+     * Get the name of an event by its identifier.
+     *
+     * @param eventId the identifier of the event.
+     * @return the name of the event, or null if not found.
+     */
+    @Query("SELECT name FROM $EVENT_TABLE WHERE id=:eventId")
+    abstract suspend fun getEventName(eventId: Long): String?
+
+    /**
      * Add a list of events to the database.
      * @param events the events to be added.
      */

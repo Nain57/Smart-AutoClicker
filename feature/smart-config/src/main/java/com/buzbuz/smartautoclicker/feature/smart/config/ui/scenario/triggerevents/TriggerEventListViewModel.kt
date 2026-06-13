@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsTriggerEventCopyAvailableUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsTriggerEventCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
 
 import kotlinx.coroutines.flow.Flow

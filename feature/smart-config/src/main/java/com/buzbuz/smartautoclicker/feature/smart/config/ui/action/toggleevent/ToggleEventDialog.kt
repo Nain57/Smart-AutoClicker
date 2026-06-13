@@ -202,6 +202,7 @@ class ToggleEventDialog(
         overlayManager.navigateTo(
             context = context,
             newOverlay = EventTogglesDialog(
+                scenarioEvents = viewModel.getScenarioEvents(),
                 onConfirmClicked = viewModel::setNewEventToggles,
             )
         )

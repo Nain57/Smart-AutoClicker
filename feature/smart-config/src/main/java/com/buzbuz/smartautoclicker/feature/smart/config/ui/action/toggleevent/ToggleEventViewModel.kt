@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -113,6 +114,9 @@ class ToggleEventViewModel @Inject constructor(
 
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
+
+    fun getScenarioEvents(): List<Event> =
+        editionRepository.editionState.getAllEditedEvents()
 
     /**
      * Set the name of the toggle event action.

@@ -1,0 +1,149 @@
+/*
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+
+import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
+import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
+import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
+import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsChildrenCopyUiState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
+
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
+import kotlin.getValue
+
+
+class FixEventChildrenCopyDialog(
+    private val dialogArguments: Arguments,
+    private val onFixConfirmed: (Event) -> Unit,
+) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    data class Arguments(
+        val resultingEventList: List<Event>,
+        val parent: Event,
+        val showHelpMessage: Boolean,
+    )
+
+    /** View model for this content. */
+    private val viewModel: FixEventChildrenCopyViewModel by viewModels(
+        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
+        creator = { fixEventChildrenCopyViewModel() },
+    )
+
+    /** ViewBinding containing the views for this dialog. */
+    private lateinit var viewBinding: DialogBaseListBinding
+    /** Adapter displaying the list of conditions and actions. */
+    private val itemAdapter: FixEventChildrenCopyAdapter = FixEventChildrenCopyAdapter(
+        onMissingReferenceClicked = ::onMissingReferenceClicked,
+    )
+
+    override fun onCreateView(): ViewGroup {
+        viewModel.setDialogArguments(dialogArguments)
+
+        viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
+            layoutLoadableList.list.adapter = itemAdapter
+        }
+
+        return viewBinding.root
+    }
+
+    override fun onDialogCreated(dialog: BottomSheetDialog) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect(::updateUiState) }
+            }
+        }
+    }
+
+    private fun updateUiState(uiState: FixEventsChildrenCopyUiState?) {
+        uiState ?: return
+
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, uiState.canBeCopied)
+            layoutLoadableList.updateState(uiState.items)
+            itemAdapter.submitList(uiState.items)
+        }
+    }
+
+    private fun onMissingReferenceClicked(item: FixCopyUiItem.Item.EventChildren, reference: MissingCopyReference) {
+        when (reference) {
+            is MissingCopyReference.EventToggleReference -> showReplaceEventToggleDialog { replacement ->
+                viewModel.updateEventToggles(item, reference, replacement)
+            }
+
+            is MissingCopyReference.ScreenConditionReference -> showReplaceScreenConditionDialog { replacement ->
+                viewModel.updateScreenCondition(item, reference, replacement)
+            }
+
+            is MissingCopyReference.CounterReference -> showReplaceCounterDialog { replacement ->
+                viewModel.updateCounter(item, reference, replacement)
+            }
+        }
+    }
+
+    private fun showReplaceScreenConditionDialog(onScreenConditionSelected: (ScreenCondition) -> Unit) {
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = ScreenConditionSelectionDialog(
+                conditionList = viewModel.getScreenConditionReplacementCandidates(context),
+                onConditionSelected = onScreenConditionSelected,
+            ),
+        )
+    }
+
+    private fun showReplaceEventToggleDialog(onEventTogglesSelected: (List<EventToggle>) -> Unit) {
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = EventTogglesDialog(
+                scenarioEvents = dialogArguments.resultingEventList,
+                onConfirmClicked = onEventTogglesSelected,
+            ),
+        )
+    }
+
+    private fun showReplaceCounterDialog(onCounterSelected: (String) -> Unit) {
+        overlayManager.navigateTo(
+            context = context,
+            hideCurrent = false,
+            newOverlay = CounterSelectionDialog(
+                onCounterSelected = onCounterSelected,
+            ),
+        )
+    }
+}

@@ -34,6 +34,7 @@ data class UiScreenCondition(
     @field:DrawableRes val shouldBeVisibleIconRes: Int,
     @field:StringRes val shouldBeVisibleTextRes: Int,
     @field:DrawableRes val detectionTypeIconRes: Int,
+    @field:DrawableRes override val iconRes: Int,
     val thresholdText: String,
 ) : UiCondition()
 
@@ -44,6 +45,7 @@ fun ScreenCondition.toUiScreenCondition(context: Context, shortThreshold: Boolea
     shouldBeVisibleTextRes = getShouldBeDetectedTextRes(),
     detectionTypeIconRes = getDetectionTypeIconRes(),
     thresholdText = if (shortThreshold) getShortThresholdText(context) else getThresholdText(context),
+    iconRes = getIconRes(),
     haveError = inError,
 )
 

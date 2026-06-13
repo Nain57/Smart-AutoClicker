@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.NotificationDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDialog
@@ -43,6 +42,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe.SwipeDia
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.system.SystemActionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newNotificationPermissionStarterOverlay
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.action.ActionCopyDialog
 
 
 internal interface ActionConfigurator {

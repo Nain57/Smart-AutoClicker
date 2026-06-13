@@ -20,10 +20,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsTriggerConditionCopyAvailableUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsTriggerConditionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
 import dagger.hilt.android.qualifiers.ApplicationContext

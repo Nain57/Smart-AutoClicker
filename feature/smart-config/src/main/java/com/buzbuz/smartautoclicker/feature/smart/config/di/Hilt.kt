@@ -23,7 +23,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartAct
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickOffsetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.copy.ActionCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activities.ActivitySelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionModel
@@ -37,7 +36,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.system.SystemA
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.ToggleEventViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.intent.IntentActionsSelectionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionViewModel
@@ -45,6 +43,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brie
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number.NumberConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionViewModel
@@ -52,12 +51,16 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.Tri
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter.CounterReachedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer.TimerReachedConditionViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.action.ActionCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event.EventCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.event.FixEventsCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config.CountersConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CountersCreationViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.reference.CounterReferenceViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
@@ -94,6 +97,8 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel
     fun extraConfigViewModel(): ExtraConfigModel
+    fun fixEventChildrenCopyViewModel(): FixEventChildrenCopyViewModel
+    fun fixEventsCopyViewModel(): FixEventsCopyViewModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel
     fun imageConditionAreaSelectorViewModel(): ConditionAreaSelectorViewModel
     fun screenConditionsBriefViewModel(): ScreenConditionsBriefViewModel
@@ -110,10 +115,11 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun requiredAlphabetViewModel(): RequiredAlphabetViewModel
     fun scenarioConfigViewModel(): ScenarioConfigViewModel
     fun scenarioDialogViewModel(): ScenarioDialogViewModel
+    fun screenConditionSelectionViewModel(): ScreenConditionSelectionViewModel
     fun setTextViewModel(): SetTextViewModel
-    fun systemActionViewModel(): SystemActionViewModel
     fun smartActionsBriefViewModel(): SmartActionsBriefViewModel
     fun swipeViewModel(): SwipeViewModel
+    fun systemActionViewModel(): SystemActionViewModel
     fun textConditionViewModel(): TextConditionViewModel
     fun timerReachedConditionViewModel(): TimerReachedConditionViewModel
     fun toggleEventViewModel(): ToggleEventViewModel

@@ -29,7 +29,7 @@ data class UiTriggerCondition(
     override val condition: TriggerCondition,
     override val name: String,
     override val haveError: Boolean,
-    @field:DrawableRes val iconRes: Int,
+    @field:DrawableRes override val iconRes: Int,
     val description: String,
 ) : UiCondition()
 
@@ -40,14 +40,6 @@ internal fun TriggerCondition.toUiTriggerCondition(context: Context, inError: Bo
     description = getTriggerConditionDescription(context),
     haveError = inError,
 )
-
-@DrawableRes
-internal fun TriggerCondition.getIconRes(): Int =
-    when (this) {
-        is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
-        is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
-        is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
-    }
 
 private fun TriggerCondition.getTriggerConditionDescription(context: Context): String =
     when (this) {

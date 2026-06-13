@@ -60,7 +60,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -275,7 +275,6 @@ class ClickDialog(
             context = context,
             newOverlay = ScreenConditionSelectionDialog(
                 conditionList = viewModel.availableConditions.value,
-                bitmapProvider = viewModel::getConditionBitmap,
                 onConditionSelected = viewModel::setConditionToBeClicked,
             ),
             hideCurrent = false,

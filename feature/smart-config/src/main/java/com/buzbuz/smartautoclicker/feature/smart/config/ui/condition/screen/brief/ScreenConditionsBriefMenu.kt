@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.copy.ConditionCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionTypeChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.allScreenConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionDialog

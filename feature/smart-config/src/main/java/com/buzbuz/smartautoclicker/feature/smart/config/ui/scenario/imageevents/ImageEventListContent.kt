@@ -34,7 +34,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.copy.EventCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event.EventCopyDialog
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent

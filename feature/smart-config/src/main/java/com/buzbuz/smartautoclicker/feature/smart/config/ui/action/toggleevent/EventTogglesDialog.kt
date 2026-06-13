@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigEventsToggleBinding
@@ -41,6 +42,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class EventTogglesDialog(
+    private val scenarioEvents: List<Event>,
     private val onConfirmClicked: (List<EventToggle>) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -56,6 +58,8 @@ class EventTogglesDialog(
     private lateinit var eventToggleAdapter: EventToggleAdapter
 
     override fun onCreateView(): ViewGroup {
+        viewModel.setEventList(scenarioEvents)
+
         viewBinding = DialogConfigEventsToggleBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_events_toggle)

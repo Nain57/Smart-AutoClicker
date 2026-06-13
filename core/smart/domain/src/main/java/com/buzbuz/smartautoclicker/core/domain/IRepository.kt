@@ -193,4 +193,20 @@ interface IRepository {
     fun isTutorialModeEnabled(): Boolean
 
     suspend fun migrateLegacyImageConditions(): Boolean
+
+    /**
+     * Get the name of a condition by its identifier.
+     *
+     * @param conditionId the identifier of the condition.
+     * @return the name of the condition, or null if not found.
+     */
+    suspend fun getConditionName(conditionId: Identifier): String?
+
+    /**
+     * Get the name of an event by its identifier.
+     *
+     * @param eventId the identifier of the event.
+     * @return the name of the event, or null if not found.
+     */
+    suspend fun getEventName(eventId: Identifier): String?
 }

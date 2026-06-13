@@ -32,12 +32,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 class EventTogglesViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
+
+    private val scenarioEvents: MutableStateFlow<List<Event>> = MutableStateFlow(emptyList())
 
     /**
      * Contains the changes for the events toggle made by the user.
@@ -56,7 +59,7 @@ class EventTogglesViewModel @Inject constructor(
 
     /** Final items list, with all events and the user modifications applied. */
     val currentItems: Flow<List<EventTogglesListItem>> =
-        combine(editionRepository.editionState.allEditedEventsFlow, userModifications) { editedEvents, modifications ->
+        combine(scenarioEvents, userModifications) { editedEvents, modifications ->
             buildList {
                 val imageEvents = mutableListOf<EventTogglesListItem>().apply {
                     add(EventTogglesListItem.Header(context.getString(R.string.list_header_image_events)))
@@ -98,6 +101,10 @@ class EventTogglesViewModel @Inject constructor(
                 }
             }
         }
+
+    fun setEventList(events: List<Event>) {
+        scenarioEvents.update { events }
+    }
 
     fun changeEventToggleState(eventId: Identifier, newState: ToggleEvent.ToggleType?) {
         userModifications.value = userModifications.value.toMutableMap().apply {

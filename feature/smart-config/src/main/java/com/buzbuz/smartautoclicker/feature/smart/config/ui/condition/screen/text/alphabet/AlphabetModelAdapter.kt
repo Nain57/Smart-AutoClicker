@@ -26,7 +26,7 @@ import androidx.viewbinding.ViewBinding
 
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemAlphabetBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemAlphabetHeaderBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemMessageHeaderBinding
 
 class AlphabetModelItemAdapter(
     private val onItemClicked: (item: AlphabetSelectionItem) -> Unit,
@@ -34,14 +34,14 @@ class AlphabetModelItemAdapter(
 
     override fun getItemViewType(position: Int): Int =
         when (getItem(position)) {
-            is AlphabetSelectionItem.Header -> R.layout.item_alphabet_header
+            is AlphabetSelectionItem.Header -> R.layout.item_message_header
             is AlphabetSelectionItem.Alphabet -> R.layout.item_alphabet
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlphabetSelectionViewHolder =
             when (viewType) {
-                    R.layout.item_alphabet_header -> AlphabetSelectionViewHolder.Header(
-                        ItemAlphabetHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                    R.layout.item_message_header -> AlphabetSelectionViewHolder.Header(
+                        ItemMessageHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                         )
 
                     R.layout.item_alphabet -> AlphabetSelectionViewHolder.Item(
@@ -65,11 +65,11 @@ class AlphabetModelItemAdapter(
 sealed class AlphabetSelectionViewHolder(viewBinding: ViewBinding) : RecyclerView.ViewHolder(viewBinding.root) {
 
     internal class Header (
-        val viewBinding: ItemAlphabetHeaderBinding,
+        val viewBinding: ItemMessageHeaderBinding,
     ): AlphabetSelectionViewHolder(viewBinding) {
 
         fun onBind(header: AlphabetSelectionItem.Header) {
-            viewBinding.languageHeaderText.setText(header.text)
+            viewBinding.headerText.setText(header.text)
         }
     }
 

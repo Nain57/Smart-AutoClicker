@@ -18,15 +18,14 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
 import androidx.core.content.ContextCompat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -35,18 +34,18 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putClickPressDurationConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
 
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
@@ -61,8 +60,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import androidx.core.content.edit
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
+
 
 @OptIn(FlowPreview::class)
 class ClickViewModel @Inject constructor(
@@ -187,16 +185,6 @@ class ClickViewModel @Inject constructor(
             editionRepository.updateEditedAction(click.copy(pressDuration = durationMs))
         }
     }
-
-    /**
-     * Get the bitmap corresponding to a condition.
-     * Loading is async and the result notified via the onBitmapLoaded argument.
-     *
-     * @param condition the condition to load the bitmap of.
-     * @param onBitmapLoaded the callback notified upon completion.
-     */
-    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
 
     /** Set the condition to click on when the events conditions are fulfilled. */
     fun setConditionToBeClicked(condition: ScreenCondition) {

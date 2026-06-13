@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemImageEventBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
 
@@ -46,7 +46,7 @@ class ImageEventListAdapter(
 ) : ListAdapter<UiImageEvent, ImageEventViewHolder>(ImageEventDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageEventViewHolder =
-        ImageEventViewHolder(ItemImageEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ImageEventViewHolder(ItemScreenEventBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ImageEventViewHolder, position: Int) {
         holder.bindEvent(getItem(position), itemClickedListener)
@@ -89,7 +89,7 @@ object ImageEventDiffUtilCallback: DiffUtil.ItemCallback<UiImageEvent>() {
  * View holder displaying a click in the [ImageEventListAdapter].
  * @param holderViewBinding the view binding for this item.
  */
-class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
+class ImageEventViewHolder(private val holderViewBinding: ItemScreenEventBinding)
     : RecyclerView.ViewHolder(holderViewBinding.root) {
 
     /**
@@ -99,7 +99,7 @@ class ImageEventViewHolder(private val holderViewBinding: ItemImageEventBinding)
      * @param itemClickedListener listener called when an event is clicked.
      */
     fun bindEvent(item: UiImageEvent, itemClickedListener: (ScreenEvent) -> Unit) {
-        holderViewBinding.bind(item = item, canDrag =  true, itemClickedListener = itemClickedListener)
+        holderViewBinding.bind(item = item, startBtnVisible = true, itemClickedListener = itemClickedListener)
     }
 }
 

@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 fun ItemTriggerEventBinding.bind(
     item: UiTriggerEvent,
     selected: Boolean? = null,
+    copyValidity: Boolean? = null,
     itemClickedListener: (TriggerEvent) -> Unit,
     itemCheckboxClicked: ((TriggerEvent) -> Unit)? = null,
 ) {
@@ -51,4 +52,14 @@ fun ItemTriggerEventBinding.bind(
     checkboxCopy.isChecked = selected == true
     checkboxCopy.setOnClickListener { itemCheckboxClicked?.invoke(item.event) }
     root.setOnClickListener { itemClickedListener(item.event) }
+
+    if (copyValidity != null) {
+        copyValidityIcon.visibility = View.VISIBLE
+        copyValidityIcon.setImageResource(
+            if (copyValidity) R.drawable.ic_confirm
+            else R.drawable.ic_cancel
+        )
+    } else {
+        copyValidityIcon.visibility = View.GONE
+    }
 }

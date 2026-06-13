@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.IsScreenEventCopyAvailableUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsScreenEventCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
 

@@ -82,6 +82,15 @@ abstract class ConditionDao {
     @Query("SELECT COUNT(path) FROM $CONDITION_TABLE WHERE path=:path AND type='ON_IMAGE_DETECTED'")
     abstract suspend fun getValidPathCount(path: String): Int
 
+    /**
+     * Get the name of a condition by its identifier.
+     *
+     * @param conditionId the identifier of the condition.
+     * @return the name of the condition, or null if not found.
+     */
+    @Query("SELECT name FROM $CONDITION_TABLE WHERE id=:conditionId")
+    abstract suspend fun getConditionName(conditionId: Long): String?
+
     /** @return the flow on the count of screen conditions. */
     @Query("SELECT COUNT(*) FROM $CONDITION_TABLE WHERE type IN ('ON_IMAGE_DETECTED', 'ON_COLOR_DETECTED', 'ON_NUMBER_DETECTED', 'ON_TEXT_DETECTED')")
     abstract fun getScreenConditionsCount(): Flow<Int>

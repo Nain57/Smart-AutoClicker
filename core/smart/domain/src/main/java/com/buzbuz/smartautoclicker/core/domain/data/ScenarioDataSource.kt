@@ -172,6 +172,12 @@ internal class ScenarioDataSource @Inject constructor(
     suspend fun getImageConditionPathUsageCount(path: String): Int =
         currentDatabase.value.conditionDao().getValidPathCount(path)
 
+    suspend fun getConditionName(conditionId: Long): String? =
+        currentDatabase.value.conditionDao().getConditionName(conditionId)
+
+    suspend fun getEventName(eventId: Long): String? =
+        currentDatabase.value.eventDao().getEventName(eventId)
+
     suspend fun addScenario(scenario: Scenario): Long {
         Log.d(TAG, "Add scenario to the database: ${scenario.id}")
         return currentDatabase.value.scenarioDao().add(scenario.toEntity())

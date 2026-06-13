@@ -16,10 +16,34 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition
 
+import android.content.Context
+import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.ui.R
 
 sealed class UiCondition {
     abstract val condition: Condition
     abstract val name: String
     abstract val haveError: Boolean
+    abstract val iconRes: Int
 }
+
+internal fun Condition.toUiCondition(context: Context, shortThreshold: Boolean? = null, inError: Boolean): UiCondition =
+    when (this) {
+        is ScreenCondition -> toUiScreenCondition(context, shortThreshold = shortThreshold == true, inError = inError)
+        is TriggerCondition -> toUiTriggerCondition(context, inError = inError)
+    }
+
+@DrawableRes
+internal fun Condition.getIconRes(): Int =
+    when (this) {
+        is ScreenCondition.Color -> R.drawable.ic_color_condition
+        is ScreenCondition.Image -> R.drawable.ic_image_condition
+        is ScreenCondition.Number -> R.drawable.ic_number_condition
+        is ScreenCondition.Text -> R.drawable.ic_text_condition
+        is TriggerCondition.OnBroadcastReceived -> R.drawable.ic_broadcast_received
+        is TriggerCondition.OnCounterCountReached -> R.drawable.ic_counter_reached
+        is TriggerCondition.OnTimerReached -> R.drawable.ic_timer_reached
+    }

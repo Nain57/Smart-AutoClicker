@@ -136,6 +136,12 @@ internal class Repository @Inject internal constructor(
     override suspend fun getCounters(scenarioId: Long): List<Counter> =
         dataSource.getCounters(scenarioId).map { it.toDomain() }
 
+    override suspend fun getConditionName(conditionId: Identifier): String? =
+        dataSource.getConditionName(conditionId.databaseId)
+
+    override suspend fun getEventName(eventId: Identifier): String? =
+        dataSource.getEventName(eventId.databaseId)
+
     override suspend fun addScenario(scenario: Scenario): Long =
         dataSource.addScenario(scenario)
 
