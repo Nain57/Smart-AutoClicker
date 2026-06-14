@@ -141,8 +141,7 @@ class ActionCopyViewModel @Inject constructor(
             actions = editedEvent.actions + actionsToCopy
         )
         val resultingEventList = allEvents.toMutableList().apply {
-            removeAt(editedEventIndex)
-            add(editedEventIndex, newEvent)
+            set(editedEventIndex, newEvent)
         }
 
         return FixEventChildrenCopyDialog.Arguments(

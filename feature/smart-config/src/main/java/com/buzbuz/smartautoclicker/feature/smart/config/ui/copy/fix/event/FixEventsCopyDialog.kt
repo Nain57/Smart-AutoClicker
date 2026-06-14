@@ -72,6 +72,8 @@ class FixEventsCopyDialog(
 
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
                 buttonDismiss.setDebouncedOnClickListener { back() }
+
+                dialogTitle.setText(R.string.dialog_title_copy_fix)
             }
 
             layoutLoadableList.list.apply {
@@ -98,6 +100,8 @@ class FixEventsCopyDialog(
 
     private fun onSaveClicked() {
         if (viewModel.uiState.value?.canBeCopied != true) return
+
+        back()
         onFixConfirmed(viewModel.getFixedEventsToCopy())
     }
 
@@ -122,7 +126,7 @@ class FixEventsCopyDialog(
                 ),
                 onFixConfirmed = viewModel::updateEvent,
             ),
-            hideCurrent = false,
+            hideCurrent = true,
         )
     }
 }

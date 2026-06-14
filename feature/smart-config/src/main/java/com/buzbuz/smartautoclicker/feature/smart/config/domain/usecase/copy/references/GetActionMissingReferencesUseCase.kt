@@ -116,14 +116,18 @@ class GetActionMissingReferencesUseCase @Inject constructor(
     private suspend fun ToggleEvent.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> {
         if (toggleAll) return emptyList()
 
-        return buildList {
-            eventToggles.forEach { toggle ->
-                val targetEventId = toggle.targetEventId ?: return@forEach
-                if (!copyResultEvents.contains(targetEventId)) {
-                    val name = smartRepository.getEventName(targetEventId) ?: return@forEach
-                    add(MissingCopyReference.EventToggleReference(name))
-                }
-            }
-        }
+        // We don't want one error per toggle, as if one is valid, all them of will most likely be
+        // Just take the first one found, UI forces an update in batches anyway
+        val invalidToggle = eventToggles.find { toggle ->
+            toggle.targetEventId?.let { targetEventId ->
+                !copyResultEvents.contains(targetEventId)
+            } ?: false
+        } ?: return emptyList()
+
+        val name = invalidToggle.targetEventId
+            ?.let { eventId -> smartRepository.getEventName(eventId) }
+            ?: "Unknown"
+
+        return listOf(MissingCopyReference.EventToggleReference(name))
     }
 }

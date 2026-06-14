@@ -198,14 +198,17 @@ class ToggleEventDialog(
     }
 
     /** Show the event selection dialog. */
-    private fun showEventTogglesDialog() =
+    private fun showEventTogglesDialog() {
+        val toggleAction = viewModel.getEditedAction() ?: return
         overlayManager.navigateTo(
             context = context,
             newOverlay = EventTogglesDialog(
                 scenarioEvents = viewModel.getScenarioEvents(),
+                toggleEventAction = toggleAction,
                 onConfirmClicked = viewModel::setNewEventToggles,
             )
         )
+    }
 
     private fun onActionEditingStateChanged(isEditingAction: Boolean) {
         if (!isEditingAction) {

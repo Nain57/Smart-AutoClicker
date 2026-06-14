@@ -118,6 +118,9 @@ class ToggleEventViewModel @Inject constructor(
     fun getScenarioEvents(): List<Event> =
         editionRepository.editionState.getAllEditedEvents()
 
+    fun getEditedAction(): ToggleEvent? =
+        editionRepository.editionState.getEditedAction()
+
     /**
      * Set the name of the toggle event action.
      * @param name the new name.

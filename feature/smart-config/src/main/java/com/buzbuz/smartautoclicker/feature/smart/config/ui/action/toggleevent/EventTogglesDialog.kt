@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -42,8 +43,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class EventTogglesDialog(
+    private val toggleEventAction: ToggleEvent,
     private val scenarioEvents: List<Event>,
     private val onConfirmClicked: (List<EventToggle>) -> Unit,
+    private val onDismissed: (() -> Unit)? = null,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     /** The view model for this dialog. */
@@ -58,7 +61,7 @@ class EventTogglesDialog(
     private lateinit var eventToggleAdapter: EventToggleAdapter
 
     override fun onCreateView(): ViewGroup {
-        viewModel.setEventList(scenarioEvents)
+        viewModel.setDialogArgs(toggleEventAction, scenarioEvents)
 
         viewBinding = DialogConfigEventsToggleBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -96,6 +99,11 @@ class EventTogglesDialog(
                 launch { viewModel.currentItems.collect(::updateToggleList) }
             }
         }
+    }
+
+    override fun onDestroy() {
+        onDismissed?.invoke()
+        super.onDestroy()
     }
 
     private fun updateToggleList(toggleList: List<EventTogglesListItem>) {

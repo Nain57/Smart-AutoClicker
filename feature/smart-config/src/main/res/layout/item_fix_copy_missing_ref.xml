@@ -22,8 +22,6 @@
     android:layout_height="@dimen/item_height"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingStart="@dimen/margin_horizontal_default"
-    android:paddingEnd="@dimen/margin_horizontal_default"
     android:paddingTop="@dimen/margin_vertical_mini"
     android:paddingBottom="@dimen/margin_vertical_mini"
     android:background="?attr/selectableItemBackground"

@@ -48,8 +48,7 @@ class ReplaceMissingEventToggleReferenceUseCase @Inject constructor() {
 
         return event.copyBase(
             actions = event.actions.toMutableList().apply {
-                removeAt(actionIndex)
-                add(actionIndex, actionToEdit.copy(eventToggles = replacement))
+                set(actionIndex, actionToEdit.copy(eventToggles = replacement))
             }
         )
     }

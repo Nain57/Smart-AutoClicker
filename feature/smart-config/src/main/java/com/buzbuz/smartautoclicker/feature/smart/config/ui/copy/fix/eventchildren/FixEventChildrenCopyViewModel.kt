@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.GetActionMissingReferencesUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.GetConditionMissingReferencesUseCase
@@ -56,7 +57,8 @@ class FixEventChildrenCopyViewModel @Inject constructor(
     private val getConditionMissingReferencesUseCase: GetConditionMissingReferencesUseCase,
     private val replaceMissingCounterReferenceUseCase: ReplaceMissingCounterReferenceUseCase,
     private val replaceMissingEventToggleReferenceUseCase: ReplaceMissingEventToggleReferenceUseCase,
-    private val replaceMissingScreenConditionReferenceUseCase: ReplaceMissingScreenConditionReferenceUseCase
+    private val replaceMissingScreenConditionReferenceUseCase: ReplaceMissingScreenConditionReferenceUseCase,
+    private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
     private val itemsToCopy: MutableStateFlow<FixEventChildrenCopyDialog.Arguments?> = MutableStateFlow(null)
@@ -81,6 +83,19 @@ class FixEventChildrenCopyViewModel @Inject constructor(
         return conditions.map { condition ->
             condition.toUiScreenCondition(context = context, shortThreshold = true, inError = false)
         }
+    }
+
+    fun startActionEdition(action: Action) {
+        val event = itemsToCopy.value?.parent ?: return
+
+        // Required to create correct sub elements
+        editionRepository.startEventEdition(event)
+        editionRepository.startActionEdition(action)
+    }
+
+    fun stopActionEdition() {
+        editionRepository.stopActionEdition()
+        editionRepository.stopEventEdition()
     }
 
     fun updateEventToggles(
@@ -164,7 +179,7 @@ class FixEventChildrenCopyViewModel @Inject constructor(
 
     private suspend fun List<Action>.toUiState(context: Context): List<FixCopyUiItem.Item.EventChildren.ActionItem> =
         map { action ->
-            val result = getActionMissingReferencesUseCase(action)
+            val result = getActionMissingReferencesUseCase(action, itemsToCopy.value?.resultingEventList ?: emptyList())
             val isValid = result.missingReferences.isEmpty()
             FixCopyUiItem.Item.EventChildren.ActionItem(
                 uiAction = action.toUiAction(context, inError = false),

@@ -87,7 +87,7 @@ class FixEventsCopyViewModel @Inject constructor(
             add(FixCopyUiItem.Header(R.string.item_header_event_copy_fix))
             addAll(
                 this@toUiState.map { event ->
-                    val isEventValid = event.isComplete() && !isEventRelatedToUnreachableItemUseCase(event)
+                    val isEventValid = event.isComplete() && !isEventRelatedToUnreachableItemUseCase(event, getResultingEventList())
                     isCopyValid = isCopyValid && isEventValid
                     FixCopyUiItem.Item.EventItem(
                         uiEvent = event.toUiEvent(),

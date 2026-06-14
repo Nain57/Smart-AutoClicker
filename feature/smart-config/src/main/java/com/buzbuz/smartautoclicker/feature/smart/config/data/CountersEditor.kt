@@ -88,8 +88,7 @@ internal class CountersEditor {
         if (toBeUpdatedIndex !in currentCounters.indices) return
 
         _editedList.value = currentCounters.toMutableList().apply {
-            removeAt(toBeUpdatedIndex)
-            add(toBeUpdatedIndex, item)
+            set(toBeUpdatedIndex, item)
         }
     }
 

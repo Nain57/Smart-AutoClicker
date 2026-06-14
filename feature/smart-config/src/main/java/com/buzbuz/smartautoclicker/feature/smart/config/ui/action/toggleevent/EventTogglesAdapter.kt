@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.setOnCheckedListener
@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 
 
 class EventToggleAdapter(
-    private val onEventToggleStateChanged: (Identifier, ToggleEvent.ToggleType?) -> Unit,
+    private val onEventToggleStateChanged: (Event, ToggleEvent.ToggleType?) -> Unit,
 ) : ListAdapter<EventTogglesListItem, RecyclerView.ViewHolder>(ItemEventToggleDiffUtilCallback) {
 
     override fun getItemViewType(position: Int): Int =
@@ -80,7 +80,7 @@ object ItemEventToggleDiffUtilCallback: DiffUtil.ItemCallback<EventTogglesListIt
               oldItem is EventTogglesListItem.Header && newItem is EventTogglesListItem.Header ->
                   oldItem.title == newItem.title
               oldItem is EventTogglesListItem.Item && newItem is EventTogglesListItem.Item ->
-                  oldItem.eventId == newItem.eventId
+                  oldItem.event.id == newItem.event.id
               else -> false
           }
 
@@ -108,7 +108,7 @@ class HeaderViewHolder(
  */
 class ItemViewHolder(
     private val viewBinding: ItemEventToggleBinding,
-    private val onEventToggleStateChanged: (Identifier, ToggleEvent.ToggleType?) -> Unit,
+    private val onEventToggleStateChanged: (Event, ToggleEvent.ToggleType?) -> Unit,
 ) : RecyclerView.ViewHolder(viewBinding.root) {
 
     private companion object {
@@ -129,7 +129,7 @@ class ItemViewHolder(
 
     fun onBind(item: EventTogglesListItem.Item) {
         viewBinding.apply {
-            eventName.text = item.eventName
+            eventName.text = item.event.name
             textActionsCount.text = item.actionsCount.toString()
             textConditionCount.text = item.conditionsCount.toString()
 
@@ -150,7 +150,7 @@ class ItemViewHolder(
                     else -> null
                 }
 
-                onEventToggleStateChanged(item.eventId, newState)
+                onEventToggleStateChanged(item.event, newState)
             }
         }
     }

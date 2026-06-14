@@ -21,7 +21,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/AppTheme.Widget.Card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_vertical_default">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,8 +79,8 @@
 
             <ImageView
                 android:id="@+id/icon_child_can_be_copied"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginEnd="@dimen/margin_horizontal_default"
                 app:layout_constraintStart_toEndOf="@id/child_name"
                 app:layout_constraintTop_toTopOf="parent"

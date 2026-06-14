@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -83,6 +84,8 @@ class FixEventChildrenCopyDialog(
 
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
                 buttonDismiss.setDebouncedOnClickListener { back() }
+
+                dialogTitle.setText(R.string.dialog_title_copy_fix)
             }
 
             layoutLoadableList.list.adapter = itemAdapter
@@ -112,14 +115,20 @@ class FixEventChildrenCopyDialog(
     private fun onSaveClicked() {
         if (viewModel.uiState.value?.canBeCopied != true) return
         viewModel.getFixedEventToCopy()?.let { event ->
+            back()
             onFixConfirmed(event)
         }
     }
 
     private fun onMissingReferenceClicked(item: FixCopyUiItem.Item.EventChildren, reference: MissingCopyReference) {
         when (reference) {
-            is MissingCopyReference.EventToggleReference -> showReplaceEventToggleDialog { replacement ->
-                viewModel.updateEventToggles(item, reference, replacement)
+            is MissingCopyReference.EventToggleReference -> {
+                val action = (item as? FixCopyUiItem.Item.EventChildren.ActionItem)?.uiAction?.action ?: return
+                if (action !is ToggleEvent) return
+
+                showReplaceEventToggleDialog(action) { replacement ->
+                    viewModel.updateEventToggles(item, reference, replacement)
+                }
             }
 
             is MissingCopyReference.ScreenConditionReference -> showReplaceScreenConditionDialog { replacement ->
@@ -135,7 +144,7 @@ class FixEventChildrenCopyDialog(
     private fun showReplaceScreenConditionDialog(onScreenConditionSelected: (ScreenCondition) -> Unit) {
         overlayManager.navigateTo(
             context = context,
-            hideCurrent = false,
+            hideCurrent = true,
             newOverlay = ScreenConditionSelectionDialog(
                 conditionList = viewModel.getScreenConditionReplacementCandidates(context),
                 onConditionSelected = onScreenConditionSelected,
@@ -143,13 +152,20 @@ class FixEventChildrenCopyDialog(
         )
     }
 
-    private fun showReplaceEventToggleDialog(onEventTogglesSelected: (List<EventToggle>) -> Unit) {
+    private fun showReplaceEventToggleDialog(action: ToggleEvent, onEventTogglesSelected: (List<EventToggle>) -> Unit) {
+        viewModel.startActionEdition(action)
+
         overlayManager.navigateTo(
             context = context,
-            hideCurrent = false,
+            hideCurrent = true,
             newOverlay = EventTogglesDialog(
                 scenarioEvents = dialogArguments.resultingEventList,
-                onConfirmClicked = onEventTogglesSelected,
+                toggleEventAction = action,
+                onConfirmClicked = { toggles ->
+                    viewModel.stopActionEdition()
+                    onEventTogglesSelected(toggles)
+                },
+                onDismissed = { viewModel.stopActionEdition() }
             ),
         )
     }
@@ -157,7 +173,7 @@ class FixEventChildrenCopyDialog(
     private fun showReplaceCounterDialog(onCounterSelected: (String) -> Unit) {
         overlayManager.navigateTo(
             context = context,
-            hideCurrent = false,
+            hideCurrent = true,
             newOverlay = CounterSelectionDialog(
                 onCounterSelected = onCounterSelected,
             ),

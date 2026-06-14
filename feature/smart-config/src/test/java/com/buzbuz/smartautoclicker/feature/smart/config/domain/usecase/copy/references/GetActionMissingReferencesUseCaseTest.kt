@@ -341,12 +341,14 @@ class GetActionMissingReferencesUseCaseTest {
     }
 
     @Test
-    fun `toggle event with target not found in repository has no missing references`() = runTest {
+    fun `toggle event with target not found in repository has one event toggle reference with unknown name`() = runTest {
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
         coEvery { mockSmartRepository.getEventName(OTHER_EVENT_ID) } returns null
 
         val action = toggleEvent(listOf(eventToggle(targetEventId = OTHER_EVENT_ID)))
-        assertActionItem(useCase(action), expectedMissingCount = 0)
+        val result = useCase(action)
+        assertActionItem(result, expectedMissingCount = 1)
+        assertEquals(MissingCopyReference.EventToggleReference("Unknown"), result.missingReferences[0])
     }
 
     @Test
@@ -358,6 +360,20 @@ class GetActionMissingReferencesUseCaseTest {
         val result = useCase(action)
         assertActionItem(result, expectedMissingCount = 1)
         assertEquals(MissingCopyReference.EventToggleReference(EVENT_NAME), result.missingReferences[0])
+    }
+
+    @Test
+    fun `toggle event with multiple missing targets only reports one event toggle reference`() = runTest {
+        val anotherEventId = Identifier(databaseId = 12L)
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        coEvery { mockSmartRepository.getEventName(OTHER_EVENT_ID) } returns EVENT_NAME
+        coEvery { mockSmartRepository.getEventName(anotherEventId) } returns "anotherEvent"
+
+        val action = toggleEvent(listOf(
+            eventToggle(targetEventId = OTHER_EVENT_ID),
+            eventToggle(targetEventId = anotherEventId),
+        ))
+        assertActionItem(useCase(action), expectedMissingCount = 1)
     }
 
     @Test

@@ -157,8 +157,7 @@ class ConditionCopyViewModel @Inject constructor(
             conditions = editedEvent.conditions + conditionsToCopy
         )
         val resultingEventList = allEvents.toMutableList().apply {
-            removeAt(editedEventIndex)
-            add(editedEventIndex, newEvent)
+            set(editedEventIndex, newEvent)
         }
 
         return FixEventChildrenCopyDialog.Arguments(
