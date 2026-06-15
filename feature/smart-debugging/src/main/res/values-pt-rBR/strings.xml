@@ -28,8 +28,8 @@
     <string name="item_title_report_total_duration">Duração total</string>
     <string name="item_title_report_frame_processed">Imagens processadas</string>
     <string name="item_title_report_avg_image_processing_duration">Duração média de processamento</string>
-    <string name="item_title_report_image_event_fulfilled">Eventos acionados</string>
-    <string name="item_title_report_trigger_event_fulfilled">Condições detectadas</string>
+    <string name="item_title_report_image_event_fulfilled">Screen Events acionados</string>
+    <string name="item_title_report_trigger_event_fulfilled">Trigger Events acionados</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">Sem eventos</string>

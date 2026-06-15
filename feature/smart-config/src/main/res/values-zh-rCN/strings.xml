@@ -356,4 +356,103 @@
     <string name="field_show_debug_view_desc">显示检测过程中触发的事件。</string>
     <string name="item_desc_debug_generate_report">在检测时捕获场景行为以创建报告。</string>
 
+    <string name="generic_detection_area_title">检测区域</string>
+    <string name="generic_detection_area_desc_empty">您必须定义一个检测区域。点击此处进行定义</string>
+
+    <string name="item_color_condition_title">检测到颜色时</string>
+    <string name="item_color_condition_desc">当屏幕某处可见指定颜色时满足</string>
+    <string name="item_image_condition_title">检测到图像时</string>
+    <string name="item_image_condition_desc">当屏幕某处可见指定图像时满足</string>
+    <string name="item_text_condition_title">检测到文字时</string>
+    <string name="item_text_condition_desc">当屏幕某处可见指定文字时满足</string>
+    <string name="item_number_condition_title">检测到数值时</string>
+    <string name="item_number_condition_desc">当屏幕某处可见指定数值时满足</string>
+    <string name="item_click_details_on_condition_unknown">%1$s 期间，在检测到的条件上</string>
+
+    <string name="list_header_copy_conditions_this_scenario">本场景的条件</string>
+    <string name="list_header_copy_action_this_scenario">本场景的动作</string>
+
+    <string name="field_scenario_fps_limit_title">执行限制器</string>
+    <string name="field_scenario_fps_limit_desc">限制场景处理频率以节省电量。检测速度将会变慢。</string>
+    <string name="field_scenario_fps_rate_label">执行次数</string>
+    <string name="field_scenario_fps_rate_unit_label">每</string>
+    <string name="field_scenario_fps_dropdown_item_second">秒</string>
+    <string name="field_scenario_fps_dropdown_item_minute">分钟</string>
+
+    <string name="field_counters_title">计数器</string>
+    <string name="field_counters_desc_empty">未定义计数器</string>
+    <string name="field_counters_desc">已定义 %1$d 个计数器</string>
+
+    <string name="dialog_title_screen_condition_type">条件类型</string>
+
+    <string name="field_event_cooldown_title">冷却</string>
+    <string name="field_event_cooldown_desc">在事件满足后的指定时间内忽略此事件。</string>
+    <string name="field_event_cooldown_edit_label">持续时间</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">选择一个像素</string>
+    <string name="dialog_title_condition_color_config">条件</string>
+
+    <string name="field_text_to_detect_label">要检测的文字</string>
+    <string name="field_text_detection_alphabet_title">字母表</string>
+
+    <string name="field_number_condition_effect_title">条件效果</string>
+    <string name="message_number_condition_static_value_desc">检测到的数值必须 %1$s %2$s</string>
+    <string name="message_number_condition_counter_value_desc">检测到的数值必须 %1$s 计数器 \"%2$s\" 的值</string>
+    <string name="comparison_operator_greater_or_equals_full">大于或等于</string>
+    <string name="comparison_operator_greater_full">大于</string>
+    <string name="comparison_operator_equals_full">等于</string>
+    <string name="comparison_operator_lower_or_equals_full">小于或等于</string>
+    <string name="comparison_operator_lower_full">小于</string>
+
+    <string name="item_alphabet_selection_header">要在您的场景中使用文字检测，您需要下载相关的字母表模型。\n\n每个模型最多可占用 5MB。</string>
+    <string name="item_alphabet_required_header">要运行此场景，您需要下载以下字母表模型。\n\n每个模型最多可占用 5MB。</string>
+    <string name="item_alphabet_name_arabic">阿拉伯语</string>
+    <string name="item_alphabet_name_chinese_simplified">简体中文</string>
+    <string name="item_alphabet_name_chinese_traditional">繁体中文</string>
+    <string name="item_alphabet_name_cyrillic">西里尔字母</string>
+    <string name="item_alphabet_name_devanagari">天城文</string>
+    <string name="item_alphabet_name_japanese">日语</string>
+    <string name="item_alphabet_name_kannada">卡纳达语</string>
+    <string name="item_alphabet_name_korean">韩语</string>
+    <string name="item_alphabet_name_latin">拉丁字母</string>
+    <string name="item_alphabet_name_tamil">泰米尔语</string>
+    <string name="item_alphabet_name_telugu">泰卢固语</string>
+
+    <string name="field_change_counter_check_effect_title">条件效果</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">动作效果</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">计数器</string>
+    <string name="message_empty_counter_name_list_title">未定义计数器</string>
+    <string name="message_empty_counter_name_list_desc">计数器用于存储一个数值，该数值可在您的操作或条件中进行修改、验证或使用</string>
+    <string name="item_counter_desc_collapsed_no_reference">此计数器未被使用。(%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">此计数器被引用了 %1$d 次。(%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">此计数器未被使用。</string>
+    <string name="item_counter_desc_expanded_referenced">此计数器被引用了 %1$d 次。</string>
+    <string name="field_label_counter_starting_value">初始值</string>
+    <string name="button_text_counter_actions_references">%1$d 次写入</string>
+    <string name="button_text_counter_actions_no_reference">从未更改</string>
+    <string name="button_text_counter_conditions_references">%1$d 次读取</string>
+    <string name="button_text_counter_conditions_no_reference">从未读取</string>
+    <string name="button_text_counter_delete">删除计数器</string>
+    <string name="button_text_counter_delete_and_replace">替换并删除</string>
+    <string name="message_replace_by">替换为 …</string>
+    <string name="dialog_title_new_counter">新建计数器</string>
+    <string name="field_new_counter_starting_value">初始值</string>
+    <string name="field_counter_name_already_declared">此计数器名称已存在</string>
+    <string name="field_counter_selection_title_empty">未选择计数器</string>
+    <string name="field_counter_selection_desc">初始值：%1$.2f</string>
+    <string name="field_counter_selection_desc_empty">点击此处选择计数器</string>
+
+    <string name="dialog_title_copy_fix">解决问题</string>
+    <string name="item_header_event_copy_fix">此副本中一个或多个项目引用了无法访问的项目。\n点击有问题的项目以解决这些问题。</string>
+    <string name="item_copy_fix_description_ok">项目有效</string>
+    <string name="item_copy_fix_description_missing">缺少引用的项目</string>
+
+    <string name="warning_dialog_message_delete">您即将删除此项目，确定吗？</string>
+
 </resources>

@@ -6,7 +6,7 @@
     <string name="item_title_report_total_duration">總時長</string>
     <string name="item_title_report_frame_processed">已處理影格數</string>
     <string name="item_title_report_avg_image_processing_duration">平均處理耗時</string>
-    <string name="item_title_report_image_event_fulfilled">已滿足的影像事件</string>
+    <string name="item_title_report_image_event_fulfilled">已滿足的螢幕事件</string>
     <string name="item_title_report_trigger_event_fulfilled">已滿足的觸發事件</string>
     <string name="title_event_occurrence_empty">無事件</string>
     <string name="desc_event_occurrence_empty">上次情境工作階段期間未執行任何事件。</string>

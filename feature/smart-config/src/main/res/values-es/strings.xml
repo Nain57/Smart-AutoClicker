@@ -420,4 +420,103 @@
     <string name="content_desc_open_event_list">Abrir la lista de eventos</string>
     <string name="content_desc_application_icon">El icono de la aplicación para iniciar.</string>
 
+    <string name="generic_detection_area_title">Área de detección</string>
+    <string name="generic_detection_area_desc_empty">Debes definir un área de detección. Toca aquí para definir una</string>
+
+    <string name="item_color_condition_title">Al detectar color</string>
+    <string name="item_color_condition_desc">Se cumple cuando un color es visible en algún lugar de la pantalla</string>
+    <string name="item_image_condition_title">Al detectar imagen</string>
+    <string name="item_image_condition_desc">Se cumple cuando una imagen es visible en algún lugar de la pantalla</string>
+    <string name="item_text_condition_title">Al detectar texto</string>
+    <string name="item_text_condition_desc">Se cumple cuando un texto es visible en algún lugar de la pantalla</string>
+    <string name="item_number_condition_title">Al detectar número</string>
+    <string name="item_number_condition_desc">Se cumple cuando un número es visible en algún lugar de la pantalla</string>
+    <string name="item_click_details_on_condition_unknown">Durante %1$s en condición detectada</string>
+
+    <string name="list_header_copy_conditions_this_scenario">Condiciones de este escenario</string>
+    <string name="list_header_copy_action_this_scenario">Acciones de este escenario</string>
+
+    <string name="field_scenario_fps_limit_title">Limitador de ejecución</string>
+    <string name="field_scenario_fps_limit_desc">Limita la frecuencia de procesamiento de tu escenario para ahorrar batería. La detección será más lenta.</string>
+    <string name="field_scenario_fps_rate_label">Ejecuciones</string>
+    <string name="field_scenario_fps_rate_unit_label">Por</string>
+    <string name="field_scenario_fps_dropdown_item_second">Segundo</string>
+    <string name="field_scenario_fps_dropdown_item_minute">Minuto</string>
+
+    <string name="field_counters_title">Contadores</string>
+    <string name="field_counters_desc_empty">No hay contadores definidos</string>
+    <string name="field_counters_desc">%1$d contadores definidos</string>
+
+    <string name="dialog_title_screen_condition_type">Tipo de condición</string>
+
+    <string name="field_event_cooldown_title">Recarga</string>
+    <string name="field_event_cooldown_desc">Ignorar este evento durante un tiempo determinado después de ser cumplido.</string>
+    <string name="field_event_cooldown_edit_label">Duración</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">Seleccionar un píxel</string>
+    <string name="dialog_title_condition_color_config">Condición</string>
+
+    <string name="field_text_to_detect_label">Texto a detectar</string>
+    <string name="field_text_detection_alphabet_title">Alfabeto</string>
+
+    <string name="field_number_condition_effect_title">Efecto de condición</string>
+    <string name="message_number_condition_static_value_desc">El número detectado debe ser %1$s %2$s</string>
+    <string name="message_number_condition_counter_value_desc">El número detectado debe ser %1$s el valor del contador \"%2$s\"</string>
+    <string name="comparison_operator_greater_or_equals_full">mayor o igual a</string>
+    <string name="comparison_operator_greater_full">mayor que</string>
+    <string name="comparison_operator_equals_full">igual a</string>
+    <string name="comparison_operator_lower_or_equals_full">menor o igual a</string>
+    <string name="comparison_operator_lower_full">menor que</string>
+
+    <string name="item_alphabet_selection_header">Para usar la detección de texto en tu escenario, necesitas descargar el modelo de alfabeto correspondiente.\n\nCada modelo puede ocupar hasta 5 MB.</string>
+    <string name="item_alphabet_required_header">Para ejecutar este escenario, necesitas descargar los siguientes modelos de alfabeto.\n\nCada modelo puede ocupar hasta 5 MB.</string>
+    <string name="item_alphabet_name_arabic">Árabe</string>
+    <string name="item_alphabet_name_chinese_simplified">Chino simplificado</string>
+    <string name="item_alphabet_name_chinese_traditional">Chino tradicional</string>
+    <string name="item_alphabet_name_cyrillic">Cirílico</string>
+    <string name="item_alphabet_name_devanagari">Devanagari</string>
+    <string name="item_alphabet_name_japanese">Japonés</string>
+    <string name="item_alphabet_name_kannada">Kannada</string>
+    <string name="item_alphabet_name_korean">Coreano</string>
+    <string name="item_alphabet_name_latin">Latino</string>
+    <string name="item_alphabet_name_tamil">Tamil</string>
+    <string name="item_alphabet_name_telugu">Telugu</string>
+
+    <string name="field_change_counter_check_effect_title">Efecto de condición</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">Efecto de acción</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">Contadores</string>
+    <string name="message_empty_counter_name_list_title">No hay contadores definidos</string>
+    <string name="message_empty_counter_name_list_desc">Un contador almacena un valor numérico que se puede modificar, verificar o utilizar en tus acciones o condiciones</string>
+    <string name="item_counter_desc_collapsed_no_reference">Este contador no se usa. (%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">Este contador se referencia %1$d veces. (%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">Este contador no se usa.</string>
+    <string name="item_counter_desc_expanded_referenced">Este contador se referencia %1$d veces.</string>
+    <string name="field_label_counter_starting_value">Valor inicial</string>
+    <string name="button_text_counter_actions_references">%1$d escritura(s)</string>
+    <string name="button_text_counter_actions_no_reference">Nunca cambiado</string>
+    <string name="button_text_counter_conditions_references">%1$d lectura(s)</string>
+    <string name="button_text_counter_conditions_no_reference">Nunca leído</string>
+    <string name="button_text_counter_delete">Eliminar contador</string>
+    <string name="button_text_counter_delete_and_replace">Reemplazar y eliminar</string>
+    <string name="message_replace_by">Reemplazar por …</string>
+    <string name="dialog_title_new_counter">Nuevo contador</string>
+    <string name="field_new_counter_starting_value">Valor inicial</string>
+    <string name="field_counter_name_already_declared">Este nombre de contador ya existe</string>
+    <string name="field_counter_selection_title_empty">Ningún contador seleccionado</string>
+    <string name="field_counter_selection_desc">Valor inicial: %1$.2f</string>
+    <string name="field_counter_selection_desc_empty">Toca aquí para seleccionar un contador</string>
+
+    <string name="dialog_title_copy_fix">Resolver problemas</string>
+    <string name="item_header_event_copy_fix">Uno o más elementos de esta copia hacen referencia a un elemento inaccesible.\nToca el elemento problemático para solucionar estos problemas.</string>
+    <string name="item_copy_fix_description_ok">El elemento es válido</string>
+    <string name="item_copy_fix_description_missing">Elemento(s) referenciado(s) faltante(s)</string>
+
+    <string name="warning_dialog_message_delete">Estás a punto de eliminar este elemento, ¿estás seguro?</string>
+
 </resources>

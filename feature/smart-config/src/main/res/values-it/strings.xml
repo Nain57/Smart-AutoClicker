@@ -359,4 +359,103 @@
     <string name="brief_empty_actions">Nessuna azione. È necessaria almeno un\'azione per creare un evento valido</string>
     <string name="brief_empty_image_conditions">Nessuna condizione dello schermo. Per creare un evento valido è necessaria almeno una condizione</string>
 
+    <string name="generic_detection_area_title">Area di rilevamento</string>
+    <string name="generic_detection_area_desc_empty">Devi definire un\'area di rilevamento. Clicca qui per definirne una</string>
+
+    <string name="item_color_condition_title">Al rilevamento del colore</string>
+    <string name="item_color_condition_desc">Soddisfatta quando un colore è visibile da qualche parte sullo schermo</string>
+    <string name="item_image_condition_title">Al rilevamento dell\'immagine</string>
+    <string name="item_image_condition_desc">Soddisfatta quando un\'immagine è visibile da qualche parte sullo schermo</string>
+    <string name="item_text_condition_title">Al rilevamento del testo</string>
+    <string name="item_text_condition_desc">Soddisfatta quando un testo è visibile da qualche parte sullo schermo</string>
+    <string name="item_number_condition_title">Al rilevamento del numero</string>
+    <string name="item_number_condition_desc">Soddisfatta quando un numero è visibile da qualche parte sullo schermo</string>
+    <string name="item_click_details_on_condition_unknown">Durante %1$s sulla condizione rilevata</string>
+
+    <string name="list_header_copy_conditions_this_scenario">Condizioni da questo scenario</string>
+    <string name="list_header_copy_action_this_scenario">Azioni da questo scenario</string>
+
+    <string name="field_scenario_fps_limit_title">Limitatore di esecuzione</string>
+    <string name="field_scenario_fps_limit_desc">Limita la frequenza di elaborazione dello scenario per risparmiare batteria. Il rilevamento sarà più lento.</string>
+    <string name="field_scenario_fps_rate_label">Esecuzioni</string>
+    <string name="field_scenario_fps_rate_unit_label">Per</string>
+    <string name="field_scenario_fps_dropdown_item_second">Secondo</string>
+    <string name="field_scenario_fps_dropdown_item_minute">Minuto</string>
+
+    <string name="field_counters_title">Contatori</string>
+    <string name="field_counters_desc_empty">Nessun contatore definito</string>
+    <string name="field_counters_desc">%1$d contatori definiti</string>
+
+    <string name="dialog_title_screen_condition_type">Tipo di condizione</string>
+
+    <string name="field_event_cooldown_title">Ricarica</string>
+    <string name="field_event_cooldown_desc">Ignora questo evento per una durata specificata dopo che è stato soddisfatto.</string>
+    <string name="field_event_cooldown_edit_label">Durata</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">Seleziona un pixel</string>
+    <string name="dialog_title_condition_color_config">Condizione</string>
+
+    <string name="field_text_to_detect_label">Testo da rilevare</string>
+    <string name="field_text_detection_alphabet_title">Alfabeto</string>
+
+    <string name="field_number_condition_effect_title">Effetto condizione</string>
+    <string name="message_number_condition_static_value_desc">Il numero rilevato deve essere %1$s %2$s</string>
+    <string name="message_number_condition_counter_value_desc">Il numero rilevato deve essere %1$s il valore del contatore \"%2$s\"</string>
+    <string name="comparison_operator_greater_or_equals_full">maggiore o uguale a</string>
+    <string name="comparison_operator_greater_full">maggiore di</string>
+    <string name="comparison_operator_equals_full">uguale a</string>
+    <string name="comparison_operator_lower_or_equals_full">minore o uguale a</string>
+    <string name="comparison_operator_lower_full">minore di</string>
+
+    <string name="item_alphabet_selection_header">Per utilizzare il rilevamento del testo nel tuo scenario, devi scaricare il modello alfabeto pertinente.\n\nOgni modello può occupare fino a 5 MB.</string>
+    <string name="item_alphabet_required_header">Per eseguire questo scenario, devi scaricare i seguenti modelli alfabeto.\n\nOgni modello può occupare fino a 5 MB.</string>
+    <string name="item_alphabet_name_arabic">Arabo</string>
+    <string name="item_alphabet_name_chinese_simplified">Cinese semplificato</string>
+    <string name="item_alphabet_name_chinese_traditional">Cinese tradizionale</string>
+    <string name="item_alphabet_name_cyrillic">Cirillico</string>
+    <string name="item_alphabet_name_devanagari">Devanagari</string>
+    <string name="item_alphabet_name_japanese">Giapponese</string>
+    <string name="item_alphabet_name_kannada">Kannada</string>
+    <string name="item_alphabet_name_korean">Coreano</string>
+    <string name="item_alphabet_name_latin">Latino</string>
+    <string name="item_alphabet_name_tamil">Tamil</string>
+    <string name="item_alphabet_name_telugu">Telugu</string>
+
+    <string name="field_change_counter_check_effect_title">Effetto condizione</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">Effetto azione</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">Contatori</string>
+    <string name="message_empty_counter_name_list_title">Nessun contatore definito</string>
+    <string name="message_empty_counter_name_list_desc">Un contatore memorizza un valore numerico che può essere modificato, verificato o utilizzato nelle azioni o nelle condizioni</string>
+    <string name="item_counter_desc_collapsed_no_reference">Questo contatore non è utilizzato. (%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">Questo contatore è referenziato %1$d volte. (%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">Questo contatore non è utilizzato.</string>
+    <string name="item_counter_desc_expanded_referenced">Questo contatore è referenziato %1$d volte.</string>
+    <string name="field_label_counter_starting_value">Valore iniziale</string>
+    <string name="button_text_counter_actions_references">%1$d scrittura/e</string>
+    <string name="button_text_counter_actions_no_reference">Mai modificato</string>
+    <string name="button_text_counter_conditions_references">%1$d lettura/e</string>
+    <string name="button_text_counter_conditions_no_reference">Mai letto</string>
+    <string name="button_text_counter_delete">Elimina contatore</string>
+    <string name="button_text_counter_delete_and_replace">Sostituisci ed elimina</string>
+    <string name="message_replace_by">Sostituisci con …</string>
+    <string name="dialog_title_new_counter">Nuovo contatore</string>
+    <string name="field_new_counter_starting_value">Valore iniziale</string>
+    <string name="field_counter_name_already_declared">Questo nome di contatore esiste già</string>
+    <string name="field_counter_selection_title_empty">Nessun contatore selezionato</string>
+    <string name="field_counter_selection_desc">Valore iniziale: %1$.2f</string>
+    <string name="field_counter_selection_desc_empty">Clicca qui per selezionare un contatore</string>
+
+    <string name="dialog_title_copy_fix">Risolvi i problemi</string>
+    <string name="item_header_event_copy_fix">Uno o più elementi di questa copia fanno riferimento a un elemento non raggiungibile.\nClicca sull\'elemento problematico per risolvere questi problemi.</string>
+    <string name="item_copy_fix_description_ok">L\'elemento è valido</string>
+    <string name="item_copy_fix_description_missing">Elemento/i di riferimento mancante/i</string>
+
+    <string name="warning_dialog_message_delete">Stai per eliminare questo elemento, sei sicuro?</string>
+
 </resources>

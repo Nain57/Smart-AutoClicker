@@ -27,8 +27,8 @@
     <string name="item_title_report_total_duration">المدة الإجمالية</string>
     <string name="item_title_report_frame_processed">تمت معالجة الإطارات</string>
     <string name="item_title_report_avg_image_processing_duration">متوسط ​​مدة المعالجة</string>
-    <string name="item_title_report_image_event_fulfilled">تم تنفيذ أحداث الصورة</string>
-    <string name="item_title_report_trigger_event_fulfilled">تم استيفاء أحداث TriggerEvents</string>
+    <string name="item_title_report_image_event_fulfilled">أحداث الشاشة المتحققة</string>
+    <string name="item_title_report_trigger_event_fulfilled">أحداث التشغيل المتحققة</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">لا توجد أحداث</string>

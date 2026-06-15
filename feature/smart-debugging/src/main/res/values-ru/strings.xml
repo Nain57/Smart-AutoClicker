@@ -27,7 +27,7 @@
     <string name="item_title_report_total_duration">Общая длительность</string>
     <string name="item_title_report_frame_processed">Обработано кадров</string>
     <string name="item_title_report_avg_image_processing_duration">Средняя длительность обработки</string>
-    <string name="item_title_report_image_event_fulfilled">События изображения выполнены</string>
+    <string name="item_title_report_image_event_fulfilled">Экранные события выполнены</string>
     <string name="item_title_report_trigger_event_fulfilled">Триггерные события выполнены</string>
 
     <!-- Debug Report Timeline Tab -->

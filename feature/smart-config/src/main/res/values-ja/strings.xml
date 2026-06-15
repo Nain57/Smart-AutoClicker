@@ -220,4 +220,103 @@
     <string name="field_show_debug_view_desc">検出中にトリガーされたイベントを表示します。</string>
     <string name="item_desc_debug_generate_report">検出中にシナリオの動作を記録してレポートを作成します。</string>
 
+    <string name="generic_detection_area_title">検出エリア</string>
+    <string name="generic_detection_area_desc_empty">検出エリアを定義する必要があります。ここをクリックして定義してください</string>
+
+    <string name="item_color_condition_title">色が検出されたとき</string>
+    <string name="item_color_condition_desc">画面のどこかに色が表示されているときに満たされます</string>
+    <string name="item_image_condition_title">画像が検出されたとき</string>
+    <string name="item_image_condition_desc">画面のどこかに画像が表示されているときに満たされます</string>
+    <string name="item_text_condition_title">テキストが検出されたとき</string>
+    <string name="item_text_condition_desc">画面のどこかにテキストが表示されているときに満たされます</string>
+    <string name="item_number_condition_title">数値が検出されたとき</string>
+    <string name="item_number_condition_desc">画面のどこかに数値が表示されているときに満たされます</string>
+    <string name="item_click_details_on_condition_unknown">%1$s の間、検出された条件</string>
+
+    <string name="list_header_copy_conditions_this_scenario">このシナリオの条件</string>
+    <string name="list_header_copy_action_this_scenario">このシナリオのアクション</string>
+
+    <string name="field_scenario_fps_limit_title">実行リミッター</string>
+    <string name="field_scenario_fps_limit_desc">バッテリー節約のためシナリオの処理頻度を制限します。検出が遅くなります。</string>
+    <string name="field_scenario_fps_rate_label">実行回数</string>
+    <string name="field_scenario_fps_rate_unit_label">毎</string>
+    <string name="field_scenario_fps_dropdown_item_second">秒</string>
+    <string name="field_scenario_fps_dropdown_item_minute">分</string>
+
+    <string name="field_counters_title">カウンター</string>
+    <string name="field_counters_desc_empty">カウンターが未定義です</string>
+    <string name="field_counters_desc">%1$d 個のカウンターが定義済み</string>
+
+    <string name="dialog_title_screen_condition_type">条件タイプ</string>
+
+    <string name="field_event_cooldown_title">リロード</string>
+    <string name="field_event_cooldown_desc">このイベントが満たされた後、指定した期間は無視します。</string>
+    <string name="field_event_cooldown_edit_label">時間</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">ピクセルを選択</string>
+    <string name="dialog_title_condition_color_config">条件</string>
+
+    <string name="field_text_to_detect_label">検出するテキスト</string>
+    <string name="field_text_detection_alphabet_title">アルファベット</string>
+
+    <string name="field_number_condition_effect_title">条件の効果</string>
+    <string name="message_number_condition_static_value_desc">検出された数値は %1$s %2$s である必要があります</string>
+    <string name="message_number_condition_counter_value_desc">検出された数値はカウンター \"%2$s\" の値 %1$s である必要があります</string>
+    <string name="comparison_operator_greater_or_equals_full">以上</string>
+    <string name="comparison_operator_greater_full">より大きい</string>
+    <string name="comparison_operator_equals_full">等しい</string>
+    <string name="comparison_operator_lower_or_equals_full">以下</string>
+    <string name="comparison_operator_lower_full">より小さい</string>
+
+    <string name="item_alphabet_selection_header">シナリオでテキスト検出を使用するには、関連するアルファベットモデルをダウンロードする必要があります。\n\n各モデルは最大5MBになる場合があります。</string>
+    <string name="item_alphabet_required_header">このシナリオを実行するには、以下のアルファベットモデルをダウンロードする必要があります。\n\n各モデルは最大5MBになる場合があります。</string>
+    <string name="item_alphabet_name_arabic">アラビア語</string>
+    <string name="item_alphabet_name_chinese_simplified">中国語（簡体字）</string>
+    <string name="item_alphabet_name_chinese_traditional">中国語（繁体字）</string>
+    <string name="item_alphabet_name_cyrillic">キリル文字</string>
+    <string name="item_alphabet_name_devanagari">デーヴァナーガリー</string>
+    <string name="item_alphabet_name_japanese">日本語</string>
+    <string name="item_alphabet_name_kannada">カンナダ語</string>
+    <string name="item_alphabet_name_korean">韓国語</string>
+    <string name="item_alphabet_name_latin">ラテン文字</string>
+    <string name="item_alphabet_name_tamil">タミル語</string>
+    <string name="item_alphabet_name_telugu">テルグ語</string>
+
+    <string name="field_change_counter_check_effect_title">条件の効果</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">アクションの効果</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">カウンター</string>
+    <string name="message_empty_counter_name_list_title">カウンターが未定義です</string>
+    <string name="message_empty_counter_name_list_desc">カウンターには数値が格納され、アクションや条件式内でその値を変更、検証、または使用することができます</string>
+    <string name="item_counter_desc_collapsed_no_reference">このカウンターは未使用です。(%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">このカウンターは %1$d 回参照されています。(%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">このカウンターは未使用です。</string>
+    <string name="item_counter_desc_expanded_referenced">このカウンターは %1$d 回参照されています。</string>
+    <string name="field_label_counter_starting_value">初期値</string>
+    <string name="button_text_counter_actions_references">%1$d 書き込み</string>
+    <string name="button_text_counter_actions_no_reference">変更なし</string>
+    <string name="button_text_counter_conditions_references">%1$d 読み込み</string>
+    <string name="button_text_counter_conditions_no_reference">読み取りなし</string>
+    <string name="button_text_counter_delete">カウンターを削除</string>
+    <string name="button_text_counter_delete_and_replace">置換して削除</string>
+    <string name="message_replace_by">次に置換 …</string>
+    <string name="dialog_title_new_counter">新しいカウンター</string>
+    <string name="field_new_counter_starting_value">初期値</string>
+    <string name="field_counter_name_already_declared">このカウンター名はすでに存在します</string>
+    <string name="field_counter_selection_title_empty">カウンターが選択されていません</string>
+    <string name="field_counter_selection_desc">初期値: %1$.2f</string>
+    <string name="field_counter_selection_desc_empty">ここをクリックしてカウンターを選択</string>
+
+    <string name="dialog_title_copy_fix">問題を解決</string>
+    <string name="item_header_event_copy_fix">このコピーの 1 つ以上の項目が到達不能な項目を参照しています。\n問題のある項目をクリックして問題を解決してください。</string>
+    <string name="item_copy_fix_description_ok">項目は有効です</string>
+    <string name="item_copy_fix_description_missing">参照された項目が見つかりません</string>
+
+    <string name="warning_dialog_message_delete">このアイテムを削除しようとしています。よろしいですか？</string>
+
 </resources>

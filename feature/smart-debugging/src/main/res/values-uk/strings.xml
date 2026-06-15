@@ -27,8 +27,8 @@
     <string name="item_title_report_total_duration">Загальна тривалість</string>
     <string name="item_title_report_frame_processed">Оброблені зображення</string>
     <string name="item_title_report_avg_image_processing_duration">Середня тривалість обробки</string>
-    <string name="item_title_report_image_event_fulfilled">Події запущено</string>
-    <string name="item_title_report_trigger_event_fulfilled">Виявлені умови</string>
+    <string name="item_title_report_image_event_fulfilled">Екранні події виконано</string>
+    <string name="item_title_report_trigger_event_fulfilled">Тригерні події виконано</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">Немає подій</string>

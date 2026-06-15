@@ -356,4 +356,103 @@
     <string name="field_show_debug_view_desc">顯示偵測過程中觸發的事件。</string>
     <string name="item_desc_debug_generate_report">在偵測時擷取情境行為以建立報告。</string>
 
+    <string name="generic_detection_area_title">偵測區域</string>
+    <string name="generic_detection_area_desc_empty">您必須定義一個偵測區域。點擊此處進行定義</string>
+
+    <string name="item_color_condition_title">偵測到顏色時</string>
+    <string name="item_color_condition_desc">當畫面某處可見指定顏色時滿足</string>
+    <string name="item_image_condition_title">偵測到圖像時</string>
+    <string name="item_image_condition_desc">當畫面某處可見指定圖像時滿足</string>
+    <string name="item_text_condition_title">偵測到文字時</string>
+    <string name="item_text_condition_desc">當畫面某處可見指定文字時滿足</string>
+    <string name="item_number_condition_title">偵測到數值時</string>
+    <string name="item_number_condition_desc">當畫面某處可見指定數值時滿足</string>
+    <string name="item_click_details_on_condition_unknown">%1$s 期間，在偵測到的條件上</string>
+
+    <string name="list_header_copy_conditions_this_scenario">此情境的條件</string>
+    <string name="list_header_copy_action_this_scenario">此情境的動作</string>
+
+    <string name="field_scenario_fps_limit_title">執行限制器</string>
+    <string name="field_scenario_fps_limit_desc">限制情境處理頻率以節省電量。偵測速度將會變慢。</string>
+    <string name="field_scenario_fps_rate_label">執行次數</string>
+    <string name="field_scenario_fps_rate_unit_label">每</string>
+    <string name="field_scenario_fps_dropdown_item_second">秒</string>
+    <string name="field_scenario_fps_dropdown_item_minute">分鐘</string>
+
+    <string name="field_counters_title">計數器</string>
+    <string name="field_counters_desc_empty">未定義計數器</string>
+    <string name="field_counters_desc">已定義 %1$d 個計數器</string>
+
+    <string name="dialog_title_screen_condition_type">條件類型</string>
+
+    <string name="field_event_cooldown_title">冷卻</string>
+    <string name="field_event_cooldown_desc">在事件滿足後的指定時間內忽略此事件。</string>
+    <string name="field_event_cooldown_edit_label">持續時間</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">選擇一個像素</string>
+    <string name="dialog_title_condition_color_config">條件</string>
+
+    <string name="field_text_to_detect_label">要偵測的文字</string>
+    <string name="field_text_detection_alphabet_title">字母表</string>
+
+    <string name="field_number_condition_effect_title">條件效果</string>
+    <string name="message_number_condition_static_value_desc">偵測到的數值必須 %1$s %2$s</string>
+    <string name="message_number_condition_counter_value_desc">偵測到的數值必須 %1$s 計數器 \"%2$s\" 的值</string>
+    <string name="comparison_operator_greater_or_equals_full">大於或等於</string>
+    <string name="comparison_operator_greater_full">大於</string>
+    <string name="comparison_operator_equals_full">等於</string>
+    <string name="comparison_operator_lower_or_equals_full">小於或等於</string>
+    <string name="comparison_operator_lower_full">小於</string>
+
+    <string name="item_alphabet_selection_header">要在您的情境中使用文字偵測，您需要下載相關的字母表模型。\n\n每個模型最多可占用 5MB。</string>
+    <string name="item_alphabet_required_header">要執行此情境，您需要下載以下字母表模型。\n\n每個模型最多可占用 5MB。</string>
+    <string name="item_alphabet_name_arabic">阿拉伯語</string>
+    <string name="item_alphabet_name_chinese_simplified">簡體中文</string>
+    <string name="item_alphabet_name_chinese_traditional">繁體中文</string>
+    <string name="item_alphabet_name_cyrillic">西里爾字母</string>
+    <string name="item_alphabet_name_devanagari">天城文</string>
+    <string name="item_alphabet_name_japanese">日語</string>
+    <string name="item_alphabet_name_kannada">卡納達語</string>
+    <string name="item_alphabet_name_korean">韓語</string>
+    <string name="item_alphabet_name_latin">拉丁字母</string>
+    <string name="item_alphabet_name_tamil">泰米爾語</string>
+    <string name="item_alphabet_name_telugu">泰盧固語</string>
+
+    <string name="field_change_counter_check_effect_title">條件效果</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">動作效果</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">計數器</string>
+    <string name="message_empty_counter_name_list_title">未定義計數器</string>
+    <string name="message_empty_counter_name_list_desc">計數器用於儲存數值，該數值可在您的動作或條件中進行變更、驗證或使用</string>
+    <string name="item_counter_desc_collapsed_no_reference">此計數器未被使用。(%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">此計數器被引用了 %1$d 次。(%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">此計數器未被使用。</string>
+    <string name="item_counter_desc_expanded_referenced">此計數器被引用了 %1$d 次。</string>
+    <string name="field_label_counter_starting_value">初始值</string>
+    <string name="button_text_counter_actions_references">%1$d 次寫入</string>
+    <string name="button_text_counter_actions_no_reference">從未更改</string>
+    <string name="button_text_counter_conditions_references">%1$d 次讀取</string>
+    <string name="button_text_counter_conditions_no_reference">從未讀取</string>
+    <string name="button_text_counter_delete">刪除計數器</string>
+    <string name="button_text_counter_delete_and_replace">替換並刪除</string>
+    <string name="message_replace_by">替換為 …</string>
+    <string name="dialog_title_new_counter">新建計數器</string>
+    <string name="field_new_counter_starting_value">初始值</string>
+    <string name="field_counter_name_already_declared">此計數器名稱已存在</string>
+    <string name="field_counter_selection_title_empty">未選擇計數器</string>
+    <string name="field_counter_selection_desc">初始值：%1$.2f</string>
+    <string name="field_counter_selection_desc_empty">點擊此處選擇計數器</string>
+
+    <string name="dialog_title_copy_fix">解決問題</string>
+    <string name="item_header_event_copy_fix">此副本中一個或多個項目引用了無法訪問的項目。\n點擊有問題的項目以解決這些問題。</string>
+    <string name="item_copy_fix_description_ok">項目有效</string>
+    <string name="item_copy_fix_description_missing">缺少引用的項目</string>
+
+    <string name="warning_dialog_message_delete">您即將刪除此項目，確定嗎？</string>
+
 </resources>

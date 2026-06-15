@@ -385,4 +385,103 @@
     <string name="content_desc_open_event_list">Відкрити список подій</string>
     <string name="content_desc_application_icon">Іконка додатка для запуску.</string>
 
+    <string name="generic_detection_area_title">Область виявлення</string>
+    <string name="generic_detection_area_desc_empty">Потрібно визначити область виявлення. Натисніть тут, щоб визначити її</string>
+
+    <string name="item_color_condition_title">При виявленні кольору</string>
+    <string name="item_color_condition_desc">Виконується, коли колір видно десь на екрані</string>
+    <string name="item_image_condition_title">При виявленні зображення</string>
+    <string name="item_image_condition_desc">Виконується, коли зображення видно десь на екрані</string>
+    <string name="item_text_condition_title">При виявленні тексту</string>
+    <string name="item_text_condition_desc">Виконується, коли текст видно десь на екрані</string>
+    <string name="item_number_condition_title">При виявленні числа</string>
+    <string name="item_number_condition_desc">Виконується, коли число видно десь на екрані</string>
+    <string name="item_click_details_on_condition_unknown">Протягом %1$s на виявленій умові</string>
+
+    <string name="list_header_copy_conditions_this_scenario">Умови з цього сценарію</string>
+    <string name="list_header_copy_action_this_scenario">Дії з цього сценарію</string>
+
+    <string name="field_scenario_fps_limit_title">Обмежувач виконання</string>
+    <string name="field_scenario_fps_limit_desc">Обмежте частоту обробки сценарію для економії заряду батареї. Виявлення буде повільнішим.</string>
+    <string name="field_scenario_fps_rate_label">Виконань</string>
+    <string name="field_scenario_fps_rate_unit_label">За</string>
+    <string name="field_scenario_fps_dropdown_item_second">Секунда</string>
+    <string name="field_scenario_fps_dropdown_item_minute">Хвилина</string>
+
+    <string name="field_counters_title">Лічильники</string>
+    <string name="field_counters_desc_empty">Лічильники не визначені</string>
+    <string name="field_counters_desc">%1$d лічильників визначено</string>
+
+    <string name="dialog_title_screen_condition_type">Тип умови</string>
+
+    <string name="field_event_cooldown_title">Перезарядка</string>
+    <string name="field_event_cooldown_desc">Ігнорувати цю подію протягом заданого часу після виконання.</string>
+    <string name="field_event_cooldown_edit_label">Тривалість</string>
+
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string>
+
+    <string name="overlay_pixel_selector_title">Вибрати піксель</string>
+    <string name="dialog_title_condition_color_config">Умова</string>
+
+    <string name="field_text_to_detect_label">Текст для виявлення</string>
+    <string name="field_text_detection_alphabet_title">Алфавіт</string>
+
+    <string name="field_number_condition_effect_title">Ефект умови</string>
+    <string name="message_number_condition_static_value_desc">Виявлене число повинно бути %1$s %2$s</string>
+    <string name="message_number_condition_counter_value_desc">Виявлене число повинно бути %1$s значенням лічильника \"%2$s\"</string>
+    <string name="comparison_operator_greater_or_equals_full">більше або рівне</string>
+    <string name="comparison_operator_greater_full">більше</string>
+    <string name="comparison_operator_equals_full">рівне</string>
+    <string name="comparison_operator_lower_or_equals_full">менше або рівне</string>
+    <string name="comparison_operator_lower_full">менше</string>
+
+    <string name="item_alphabet_selection_header">Щоб використовувати виявлення тексту у вашому сценарії, вам потрібно завантажити відповідну модель алфавіту.\n\nКожна модель може займати до 5 МБ.</string>
+    <string name="item_alphabet_required_header">Щоб запустити цей сценарій, вам потрібно завантажити наступні моделі алфавіту.\n\nКожна модель може займати до 5 МБ.</string>
+    <string name="item_alphabet_name_arabic">Арабська</string>
+    <string name="item_alphabet_name_chinese_simplified">Китайська спрощена</string>
+    <string name="item_alphabet_name_chinese_traditional">Китайська традиційна</string>
+    <string name="item_alphabet_name_cyrillic">Кирилиця</string>
+    <string name="item_alphabet_name_devanagari">Деванагарі</string>
+    <string name="item_alphabet_name_japanese">Японська</string>
+    <string name="item_alphabet_name_kannada">Каннада</string>
+    <string name="item_alphabet_name_korean">Корейська</string>
+    <string name="item_alphabet_name_latin">Латиниця</string>
+    <string name="item_alphabet_name_tamil">Тамільська</string>
+    <string name="item_alphabet_name_telugu">Телугу</string>
+
+    <string name="field_change_counter_check_effect_title">Ефект умови</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string>
+    <string name="field_change_counter_effect_title">Ефект дії</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
+
+    <string name="dialog_title_counters_config">Лічильники</string>
+    <string name="message_empty_counter_name_list_title">Лічильники не визначені</string>
+    <string name="message_empty_counter_name_list_desc">Лічильник зберігає числове значення, яке можна змінювати, перевіряти або використовувати у ваших діях чи умовах</string>
+    <string name="item_counter_desc_collapsed_no_reference">Цей лічильник не використовується. (%1$.2f)</string>
+    <string name="item_counter_desc_collapsed_referenced">На цей лічильник посилаються %1$d разів. (%2$.2f)</string>
+    <string name="item_counter_desc_expanded_no_reference">Цей лічильник не використовується.</string>
+    <string name="item_counter_desc_expanded_referenced">На цей лічильник посилаються %1$d разів.</string>
+    <string name="field_label_counter_starting_value">Початкове значення</string>
+    <string name="button_text_counter_actions_references">%1$d запис</string>
+    <string name="button_text_counter_actions_no_reference">Ніколи не змінювався</string>
+    <string name="button_text_counter_conditions_references">%1$d читання</string>
+    <string name="button_text_counter_conditions_no_reference">Ніколи не читався</string>
+    <string name="button_text_counter_delete">Видалити лічильник</string>
+    <string name="button_text_counter_delete_and_replace">Замінити та видалити</string>
+    <string name="message_replace_by">Замінити на …</string>
+    <string name="dialog_title_new_counter">Новий лічильник</string>
+    <string name="field_new_counter_starting_value">Початкове значення</string>
+    <string name="field_counter_name_already_declared">Цей лічильник вже існує</string>
+    <string name="field_counter_selection_title_empty">Лічильник не вибраний</string>
+    <string name="field_counter_selection_desc">Початкове значення: %1$.2f</string>
+    <string name="field_counter_selection_desc_empty">Натисніть тут, щоб вибрати лічильник</string>
+
+    <string name="dialog_title_copy_fix">Вирішити проблеми</string>
+    <string name="item_header_event_copy_fix">Один або декілька елементів у цій копії посилаються на недоступний елемент.\nНатисніть на проблемний елемент, щоб вирішити ці проблеми.</string>
+    <string name="item_copy_fix_description_ok">Елемент дійсний</string>
+    <string name="item_copy_fix_description_missing">Відсутній(і) вказаний(і) елемент(и)</string>
+
+    <string name="warning_dialog_message_delete">Ви збираєтесь видалити цей елемент, ви впевнені?</string>
+
 </resources>
