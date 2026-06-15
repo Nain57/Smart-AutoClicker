@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
 import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,12 +30,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.DualStateButtonTextConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
@@ -54,7 +57,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartAct
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryEventOverlayMenu
@@ -141,6 +143,27 @@ class EventDialog(
             )
             setOnClickListener(viewModel::toggleKeepDetectingState)
         }
+
+        fieldCooldownCheckbox.apply {
+            setTitle(context.getString(R.string.field_event_cooldown_title))
+            setDescription(context.getString(R.string.field_event_cooldown_desc))
+            setOnClickListener(viewModel::toggleCooldownState)
+        }
+
+        editCooldownValue.apply {
+            setLabel(R.string.field_event_cooldown_edit_label)
+            setOnTextChangedListener { viewModel.setCooldownValue(it.toString().toLongOrNull()) }
+        }
+
+        dropdownCooldownTimeUnit.setItems(
+            label = context.getString(R.string.dropdown_label_time_unit),
+            items = listOf(
+                TimeUnitDropDownItem.Milliseconds,
+                TimeUnitDropDownItem.Seconds,
+                TimeUnitDropDownItem.Minutes
+            ),
+            onItemSelected = viewModel::setCooldownTimeUnit,
+        )
 
         fieldTestEvent.apply {
             setTitle(
@@ -237,21 +260,7 @@ class EventDialog(
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.eventCanBeSaved.collect(::updateSaveButton) }
-                launch { viewModel.eventName.collect(viewBinding.fieldEventName::setText) }
-                launch { viewModel.eventNameError.collect(viewBinding.fieldEventName::setError) }
-                launch { viewModel.conditionOperator.collect(::updateConditionOperator) }
-                launch { viewModel.eventEnabledOnStart.collect(::updateEnabledOnStart) }
-                launch { viewModel.keepDetecting.collect(::updateKeepDetecting) }
-                launch { viewModel.isScreenEvent.collect(::updateImageEventSpecificViewsVisibility) }
-                launch { viewModel.canTryEvent.collect(::updateTryFieldEnabledState) }
-                launch { viewModel.actionsDescriptions.collect(viewBinding.fieldActionsSelector::setItems) }
-
-                if (viewModel.isConfiguringScreenEvent()) {
-                    launch { viewModel.imageConditions.collect(::updateImageConditionsField) }
-                } else {
-                    launch { viewModel.triggerConditionsDescription.collect(viewBinding.fieldTriggerConditionsSelector::setItems) }
-                }
+                launch { viewModel.uiState.collect(::updateUiState) }
             }
         }
     }
@@ -284,53 +293,75 @@ class EventDialog(
         viewModel.stopViewMonitoring()
     }
 
+    private fun updateUiState(state: EventDialogUiState?) {
+        state ?: return
+
+        // Generic views
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
+
+            fieldEventName.setText(state.name)
+            fieldEventName.setError(state.nameError)
+
+            fieldConditionsOperator.apply {
+                val index = if (state.conditionOperator == AND) 0 else 1
+                setChecked(index)
+                setDescription(index)
+            }
+
+            fieldIsEnabled.apply {
+                setChecked(state.enabledOnStart)
+                setDescription(if (state.enabledOnStart) 1 else 0)
+            }
+
+            viewBinding.fieldActionsSelector.setItems(state.actionsItems)
+        }
+
+        // Specific views
+        when (state) {
+            is EventDialogUiState.ScreenEvent -> updateScreenEventUiState(state)
+            is EventDialogUiState.TriggerEvent -> updateTriggerEventUiState(state)
+        }
+    }
+
+    private fun updateScreenEventUiState(uiState: EventDialogUiState.ScreenEvent) {
+        viewBinding.apply {
+            fieldKeepDetecting.root.visibility = View.VISIBLE
+            dividerKeepDetecting.visibility = View.VISIBLE
+            cardEventTest.visibility = View.VISIBLE
+
+            fieldKeepDetecting.apply {
+                setChecked(uiState.keepDetecting)
+                setDescription(if (uiState.keepDetecting) 1 else 0)
+            }
+
+            fieldCooldownCheckbox.setChecked(uiState.cooldownEnabled)
+            editCooldownValue.textLayout.isEnabled = uiState.cooldownEnabled
+            dropdownCooldownTimeUnit.textLayout.isEnabled = uiState.cooldownEnabled
+
+            editCooldownValue.setText(uiState.cooldownValue, InputType.TYPE_CLASS_NUMBER)
+            dropdownCooldownTimeUnit.setSelectedItem(uiState.cooldownUnit)
+
+            fieldTestEvent.setEnabled(uiState.canTryEvent)
+            fieldImageConditionsSelector.setItems(uiState.imageConditionsItems)
+        }
+    }
+
+    private fun updateTriggerEventUiState(uiState: EventDialogUiState.TriggerEvent) {
+        viewBinding.apply {
+            fieldKeepDetecting.root.visibility = View.GONE
+            dividerKeepDetecting.visibility = View.GONE
+            cardEventTest.visibility = View.GONE
+        }
+
+        viewBinding.fieldTriggerConditionsSelector.setItems(uiState.triggerConditionsItems)
+    }
+
     private fun onEventEditingStateChanged(isEditingScenario: Boolean) {
         if (!isEditingScenario) {
             Log.e(TAG, "Closing EventDialog because there is no event edited")
             finish()
         }
-    }
-
-    private fun updateSaveButton(enabled: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, enabled)
-    }
-
-    private fun updateImageConditionsField(conditions: List<UiScreenCondition>) {
-        viewBinding.fieldImageConditionsSelector.setItems(conditions)
-    }
-
-    private fun updateConditionOperator(@ConditionOperator operator: Int) {
-        viewBinding.fieldConditionsOperator.apply {
-            val index = if (operator == AND) 0 else 1
-            setChecked(index)
-            setDescription(index)
-        }
-    }
-
-    private fun updateEnabledOnStart(enabledOnStart: Boolean) {
-        viewBinding.fieldIsEnabled.apply {
-            setChecked(enabledOnStart)
-            setDescription(if (enabledOnStart) 1 else 0)
-        }
-    }
-
-    private fun updateKeepDetecting(keepDetecting: Boolean) {
-        viewBinding.fieldKeepDetecting.apply {
-            setChecked(keepDetecting)
-            setDescription(if (keepDetecting) 1 else 0)
-        }
-    }
-
-    private fun updateImageEventSpecificViewsVisibility(isEnabled: Boolean) {
-        viewBinding.apply {
-            fieldKeepDetecting.root.visibility =  if (isEnabled) View.VISIBLE else View.GONE
-            dividerKeepDetecting.visibility =  if (isEnabled) View.VISIBLE else View.GONE
-            cardEventTest.visibility = if (isEnabled) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun updateTryFieldEnabledState(isEnabled: Boolean) {
-        viewBinding.fieldTestEvent.setEnabled(isEnabled)
     }
 
     private fun onDeleteButtonClicked() {

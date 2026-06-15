@@ -207,6 +207,10 @@
     <string name="field_event_keep_detecting_desc_enabled">When this Event is triggered, continue the execution from the next event on the list</string>
     <string name="field_event_keep_detecting_desc_disabled">When this Event is triggered, restart the execution from the first event on the list</string>
 
+    <string name="field_event_cooldown_title">Reloading</string>
+    <string name="field_event_cooldown_desc">Ignore this event for a given duration after being fulfilled.</string>
+    <string name="field_event_cooldown_edit_label">Duration</string>
+
     <string name="field_operator_title">Operator</string>
     <string name="field_operator_desc_or">Only one condition must be fulfilled to trigger the actions</string>
     <string name="field_operator_desc_and">All conditions must be fulfilled to trigger the actions</string>

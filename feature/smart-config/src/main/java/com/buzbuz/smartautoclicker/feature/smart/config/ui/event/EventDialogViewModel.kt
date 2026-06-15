@@ -21,42 +21,42 @@ import android.graphics.Bitmap
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext
-
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
+
 
 @OptIn(FlowPreview::class)
 class EventDialogViewModel @Inject constructor(
@@ -67,74 +67,36 @@ class EventDialogViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
-    private val configuredEvent = editionRepository.editionState.editedEventState
-        .mapNotNull { it.value }
-
-    private val editedEventHasChanged: StateFlow<Boolean> =
-        editionRepository.editionState.editedEventState
-            .map { it.hasChanged }
-            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
-    val eventCanBeSaved: Flow<Boolean> = editionRepository.editionState.editedEventState
-        .map { it.canBeSaved }
+    private val userEventCooldownTimeUnit: MutableStateFlow<TimeUnitDropDownItem?> =
+        MutableStateFlow(editionRepository.editionState.getEditedEvent<ScreenEvent>()?.getInitialCooldownTimeUnit())
 
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
         .distinctUntilChanged()
-        .debounce(1000)
+        .debounce(1000.milliseconds)
 
-    val eventName: Flow<String?> = configuredEvent
-        .filterNotNull()
-        .map { it.name }
-        .take(1)
-
-    val eventNameError: Flow<Boolean> = configuredEvent
-        .map { it.name.isEmpty() }
-
-    val imageConditions: Flow<List<UiScreenCondition>> =
-        editionRepository.editionState.editedEventScreenConditionsState
-            .mapNotNull { screenConditionState ->
-                screenConditionState.value?.map { imageCondition ->
-                    imageCondition.toUiScreenCondition(
-                        context = context,
-                        shortThreshold = true,
-                        inError = !imageCondition.isComplete(),
-                    )
-                }
-            }
-
-    val triggerConditionsDescription:  Flow<List<EventChildrenItem>> =
-        editionRepository.editionState.editedEventTriggerConditionsState.mapNotNull { conditionsListState ->
-            conditionsListState.value?.toTriggerConditionsChildrenItem()
-        }
-
-    val conditionOperator: Flow<Int> = configuredEvent
-        .map { event -> event.conditionOperator }
-
-    val actionsDescriptions: Flow<List<EventChildrenItem>> = editionRepository.editionState.editedEventActionsState.mapNotNull { actionsState ->
-        actionsState.value?.toActionsChildrenItem()
-    }
-
-    val eventEnabledOnStart: Flow<Boolean> = configuredEvent
-        .map { event -> event.enabledOnStart }
-
-    val isScreenEvent: Flow<Boolean> = configuredEvent
-        .map { it is ScreenEvent }
-
-    val keepDetecting: Flow<Boolean> = configuredEvent
-        .filterIsInstance<ScreenEvent>()
-        .map { event -> event.keepDetecting }
-
-    val canTryEvent: Flow<Boolean> = configuredEvent
-        .filterIsInstance<ScreenEvent>()
-        .map { it.isComplete() }
-
+    val uiState: StateFlow<EventDialogUiState?> = editionRepository.editionState.editedEventState
+        .combine(userEventCooldownTimeUnit) { eventsState, cooldownTimeUnit ->
+            val event = eventsState.value ?: return@combine null
+            event.toUiState(
+                context = context,
+                hasUnsavedModifications = eventsState.hasChanged,
+                canBeSaved = eventsState.canBeSaved,
+                cooldownTimeUnit = cooldownTimeUnit,
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
     fun isConfiguringScreenEvent(): Boolean =
         editionRepository.editionState.getEditedEvent<Event>() is ScreenEvent
 
     fun hasUnsavedModifications(): Boolean =
-        editedEventHasChanged.value
+        uiState.value?.hasUnsavedModifications == true
+
+    fun isEventHaveRelatedActions(): Boolean =
+        editionRepository.editionState.isEditedEventReferencedByAction()
+
+    fun isLegacyActionUiEnabled(): Boolean =
+        settingsRepository.isLegacyActionUiEnabled()
 
     fun getTryInfo(): Pair<Scenario, ScreenEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
@@ -145,9 +107,6 @@ class EventDialogViewModel @Inject constructor(
 
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
         getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
-
-    fun isEventHaveRelatedActions(): Boolean =
-        editionRepository.editionState.isEditedEventReferencedByAction()
 
     fun setEventName(newName: String) {
         updateEditedEvent { oldValue -> oldValue.copyBase(name = newName) }
@@ -172,8 +131,32 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
-    fun isLegacyActionUiEnabled(): Boolean =
-        settingsRepository.isLegacyActionUiEnabled()
+    fun toggleCooldownState() {
+        updateEditedEvent { oldValue ->
+            if (oldValue is ScreenEvent) oldValue.copy(cooldownMs = if (oldValue.cooldownMs == 0L) 1 else 0)
+            else oldValue
+        }
+    }
+
+    fun setCooldownTimeUnit(timeUnit: TimeUnitDropDownItem) {
+        userEventCooldownTimeUnit.update { timeUnit }
+    }
+
+    fun setCooldownValue(value: Long?) {
+        if (value == null || value <= 0L) return
+        val timeUnit = userEventCooldownTimeUnit.value ?: return
+
+        updateEditedEvent { oldValue ->
+            if (oldValue is ScreenEvent) oldValue.copy(
+                cooldownMs = when (timeUnit) {
+                    TimeUnitDropDownItem.Minutes -> value * 60000
+                    TimeUnitDropDownItem.Seconds -> value * 1000
+                    else -> value
+                }
+            )
+            else oldValue
+        }
+    }
 
     fun monitorViews(conditionsField: View, conditionOperatorAndView: View, actionsField: View, saveButton: View) {
         monitoredViewsManager.apply {
@@ -203,6 +186,62 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
+    private fun Event.toUiState(
+        context: Context,
+        hasUnsavedModifications: Boolean,
+        canBeSaved: Boolean,
+        cooldownTimeUnit: TimeUnitDropDownItem?,
+    ): EventDialogUiState =
+        when (this) {
+            is ScreenEvent -> toScreenEventUiState(context, hasUnsavedModifications, canBeSaved, cooldownTimeUnit ?: TimeUnitDropDownItem.Seconds)
+            is TriggerEvent -> toTriggerEventUiState(hasUnsavedModifications, canBeSaved)
+        }
+
+    private fun ScreenEvent.toScreenEventUiState(
+        context: Context,
+        hasUnsavedModifications: Boolean,
+        canBeSaved: Boolean,
+        cooldownTimeUnit: TimeUnitDropDownItem,
+    ) = EventDialogUiState.ScreenEvent(
+        canBeSaved = canBeSaved,
+        hasUnsavedModifications = hasUnsavedModifications,
+        name = name,
+        nameError = name.isEmpty(),
+        enabledOnStart = enabledOnStart,
+        conditionOperator = conditionOperator,
+        keepDetecting = keepDetecting,
+        canTryEvent = isComplete(),
+        cooldownEnabled = cooldownMs > 0L,
+        cooldownUnit = cooldownTimeUnit,
+        cooldownValue = when (cooldownTimeUnit) {
+            TimeUnitDropDownItem.Minutes -> cooldownMs / 60000L
+            TimeUnitDropDownItem.Seconds -> cooldownMs / 1000L
+            else -> cooldownMs
+        }.toString(),
+        actionsItems = actions.toActionsChildrenItem(),
+        imageConditionsItems = conditions.map { condition ->
+            condition.toUiScreenCondition(
+                context = context,
+                shortThreshold = true,
+                inError = !condition.isComplete(),
+            )
+        },
+    )
+
+    private fun TriggerEvent.toTriggerEventUiState(
+        hasUnsavedModifications: Boolean,
+        canBeSaved: Boolean,
+    ) = EventDialogUiState.TriggerEvent(
+        canBeSaved = canBeSaved,
+        hasUnsavedModifications = hasUnsavedModifications,
+        name = name,
+        nameError = name.isEmpty(),
+        enabledOnStart = enabledOnStart,
+        conditionOperator = conditionOperator,
+        actionsItems = actions.toActionsChildrenItem(),
+        triggerConditionsItems = conditions.toTriggerConditionsChildrenItem(),
+    )
+
     private fun List<TriggerCondition>.toTriggerConditionsChildrenItem(): List<EventChildrenItem> = map { condition ->
         EventChildrenItem(
             iconRes = condition.getIconRes(),
@@ -216,4 +255,14 @@ class EventDialogViewModel @Inject constructor(
             isInError = !action.isComplete(),
         )
     }
+
+    private fun Event.getInitialCooldownTimeUnit(): TimeUnitDropDownItem? =
+        if (this is ScreenEvent) {
+            when {
+                cooldownMs > 60000 && cooldownMs % 60000 == 0L -> TimeUnitDropDownItem.Minutes
+                cooldownMs > 1000 && cooldownMs % 1000 == 0L -> TimeUnitDropDownItem.Seconds
+                else -> TimeUnitDropDownItem.Milliseconds
+            }
+        } else null
+
 }

@@ -15,9 +15,9 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/AppTheme.Dialog.BackgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -136,6 +136,47 @@
                         android:id="@+id/field_keep_detecting"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_cooldown"
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cooldown_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <include layout="@layout/include_field_switch"
+                            android:id="@+id/field_cooldown_checkbox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/edit_cooldown_value"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"/>
+
+                        <include layout="@layout/include_field_text_input"
+                            android:id="@+id/edit_cooldown_value"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/margin_horizontal_small"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/dropdown_cooldown_time_unit"
+                            app:layout_constraintTop_toBottomOf="@id/field_cooldown_checkbox"/>
+
+                        <include layout="@layout/include_input_field_dropdown"
+                            android:id="@+id/dropdown_cooldown_time_unit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_horizontal_default"
+                            app:layout_constraintStart_toEndOf="@id/edit_cooldown_value"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/edit_cooldown_value"
+                            app:layout_constraintWidth_percent="0.3"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
