@@ -41,7 +41,8 @@ internal object EventTestsData {
         enabledOnStart: Boolean = EVENT_ENABLED_ON_START,
         scenarioId: Long,
         priority: Int = 0,
-    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart, EventType.IMAGE_EVENT, keepDetecting = false)
+        cooldownMs: Long = 0,
+    ) = EventEntity(id, scenarioId, name, conditionOperator, priority, enabledOnStart, EventType.IMAGE_EVENT, detectionCooldownMs = cooldownMs, keepDetecting = false)
 
     fun getNewTriggerEventEntity(
         id: Long = EVENT_ID,
@@ -60,7 +61,8 @@ internal object EventTestsData {
         conditions: List<ScreenCondition.Image> = emptyList(),
         scenarioId: Long,
         priority: Int = 0,
-    ) = ScreenEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, false)
+        cooldownMs: Long = 0,
+    ) = ScreenEvent(id.asIdentifier(), scenarioId.asIdentifier(), name, conditionOperator, actions, conditions, enabledOnStart, priority, cooldownMs = cooldownMs, keepDetecting = false)
 
     fun getNewTriggerEvent(
         id: Long = EVENT_ID,

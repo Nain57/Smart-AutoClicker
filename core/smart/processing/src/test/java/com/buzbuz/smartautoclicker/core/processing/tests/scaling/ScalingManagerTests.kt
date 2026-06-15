@@ -534,6 +534,7 @@ class ScalingManagerTests {
             enabledOnStart = true,                      // Unused in scaling
             priority = 0,                               // Unused in scaling
             keepDetecting = false,                      // Unused in scaling
+            cooldownMs = 0,                             // Unused in scaling
         )
 
     private fun createTestCondition(

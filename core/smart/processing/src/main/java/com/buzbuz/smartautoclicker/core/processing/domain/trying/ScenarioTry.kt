@@ -77,6 +77,7 @@ internal class ScreenConditionTry(
             conditions = listOf(condition.copyCondition(eventId = tryEventId)),
             actions = listOf(getTestPauseAction(tryEventId)),
             keepDetecting = false,
+            cooldownMs = 0L,
         )
     }
 

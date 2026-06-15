@@ -22,11 +22,15 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
+import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
@@ -263,6 +267,143 @@ internal object ActionTestsData {
         targetEventId: Long = EVENT_TOGGLE_TARGET_ID,
         type: ToggleEvent.ToggleType = EVENT_TOGGLE_TYPE,
     ) = EventToggleEntity(id, actionId, type.toEntity(), targetEventId)
+
+    /* ------- Change Counter Action Data ------- */
+
+    private const val CHANGE_COUNTER_ID = 214L
+    private const val CHANGE_COUNTER_NAME = "ChangeCounter name"
+    private const val CHANGE_COUNTER_COUNTER_NAME = "myCounter"
+    private val CHANGE_COUNTER_OPERATION = ChangeCounter.OperationType.ADD
+    private const val CHANGE_COUNTER_VALUE = 5.0
+
+    fun getNewChangeCounterEntity(
+        id: Long = CHANGE_COUNTER_ID,
+        name: String = CHANGE_COUNTER_NAME,
+        priority: Int = 0,
+        counterName: String = CHANGE_COUNTER_COUNTER_NAME,
+        operation: ChangeCounter.OperationType = CHANGE_COUNTER_OPERATION,
+        operationValue: Double = CHANGE_COUNTER_VALUE,
+        eventId: Long,
+    ) = CompleteActionEntity(
+        action = ActionEntity(
+            id, eventId, priority, name, ActionType.CHANGE_COUNTER,
+            counterName = counterName,
+            counterOperation = ChangeCounterOperationType.valueOf(operation.name),
+            counterOperationValueType = CounterOperationValueType.NUMBER,
+            counterOperationValue = operationValue,
+        ),
+        intentExtras = emptyList(),
+        eventsToggle = emptyList(),
+    )
+
+    fun getNewChangeCounter(
+        id: Long = CHANGE_COUNTER_ID,
+        name: String? = CHANGE_COUNTER_NAME,
+        priority: Int = 0,
+        counterName: String = CHANGE_COUNTER_COUNTER_NAME,
+        operation: ChangeCounter.OperationType = CHANGE_COUNTER_OPERATION,
+        operationValue: CounterOperationValue = CounterOperationValue.Number(CHANGE_COUNTER_VALUE),
+        eventId: Long,
+    ) = ChangeCounter(id.asIdentifier(), eventId.asIdentifier(), name, priority, counterName, operation, operationValue)
+
+
+    /* ------- Notification Action Data ------- */
+
+    private const val NOTIFICATION_ID = 312L
+    private const val NOTIFICATION_NAME = "Notification name"
+    private const val NOTIFICATION_MESSAGE = "Hello from Smart AutoClicker"
+    private const val NOTIFICATION_IMPORTANCE = 3
+
+    fun getNewNotificationEntity(
+        id: Long = NOTIFICATION_ID,
+        name: String = NOTIFICATION_NAME,
+        priority: Int = 0,
+        messageText: String = NOTIFICATION_MESSAGE,
+        channelImportance: Int = NOTIFICATION_IMPORTANCE,
+        eventId: Long,
+    ) = CompleteActionEntity(
+        action = ActionEntity(
+            id, eventId, priority, name, ActionType.NOTIFICATION,
+            notificationMessageText = messageText,
+            notificationImportance = channelImportance,
+        ),
+        intentExtras = emptyList(),
+        eventsToggle = emptyList(),
+    )
+
+    fun getNewNotification(
+        id: Long = NOTIFICATION_ID,
+        name: String? = NOTIFICATION_NAME,
+        priority: Int = 0,
+        messageText: String = NOTIFICATION_MESSAGE,
+        channelImportance: Int = NOTIFICATION_IMPORTANCE,
+        eventId: Long,
+    ) = Notification(id.asIdentifier(), eventId.asIdentifier(), name, priority, messageText, channelImportance)
+
+
+    /* ------- System Action Data ------- */
+
+    private const val SYSTEM_ACTION_ID = 421L
+    private const val SYSTEM_ACTION_NAME = "SystemAction name"
+    private val SYSTEM_ACTION_TYPE = SystemAction.Type.BACK
+
+    fun getNewSystemActionEntity(
+        id: Long = SYSTEM_ACTION_ID,
+        name: String = SYSTEM_ACTION_NAME,
+        priority: Int = 0,
+        type: SystemAction.Type = SYSTEM_ACTION_TYPE,
+        eventId: Long,
+    ) = CompleteActionEntity(
+        action = ActionEntity(
+            id, eventId, priority, name, ActionType.SYSTEM,
+            systemActionType = SystemActionType.valueOf(type.name),
+        ),
+        intentExtras = emptyList(),
+        eventsToggle = emptyList(),
+    )
+
+    fun getNewSystemAction(
+        id: Long = SYSTEM_ACTION_ID,
+        name: String? = SYSTEM_ACTION_NAME,
+        priority: Int = 0,
+        type: SystemAction.Type = SYSTEM_ACTION_TYPE,
+        eventId: Long,
+    ) = SystemAction(id.asIdentifier(), eventId.asIdentifier(), name, priority, type)
+
+
+    /* ------- Set Text Action Data ------- */
+
+    private const val SET_TEXT_ID = 534L
+    private const val SET_TEXT_NAME = "SetText name"
+    private const val SET_TEXT_VALUE = "Hello World"
+    private const val SET_TEXT_VALIDATE_INPUT = true
+
+    fun getNewSetTextEntity(
+        id: Long = SET_TEXT_ID,
+        name: String = SET_TEXT_NAME,
+        priority: Int = 0,
+        text: String = SET_TEXT_VALUE,
+        validateInput: Boolean = SET_TEXT_VALIDATE_INPUT,
+        eventId: Long,
+    ) = CompleteActionEntity(
+        action = ActionEntity(
+            id, eventId, priority, name, ActionType.TEXT,
+            textValue = text,
+            textValidateInput = validateInput,
+        ),
+        intentExtras = emptyList(),
+        eventsToggle = emptyList(),
+    )
+
+    fun getNewSetText(
+        id: Long = SET_TEXT_ID,
+        name: String? = SET_TEXT_NAME,
+        priority: Int = 0,
+        text: String = SET_TEXT_VALUE,
+        validateInput: Boolean = SET_TEXT_VALIDATE_INPUT,
+        eventId: Long,
+    ) = SetText(id.asIdentifier(), eventId.asIdentifier(), name, priority, text, validateInput)
+
 
     fun getNewEventToggleExtra(
         id: Long = EVENT_TOGGLE_ID,

@@ -51,8 +51,11 @@ import kotlinx.serialization.Serializable
  * @param priority the order in the scenario. Lowest priority will always be checked first when detecting.
  * @param enabledOnStart if true, the event will be evaluated while the scenario is playing. If false, it must be
  *                       enabled via an action TOGGLE_EVENT to be evaluated.
+ * @param type the [EventType] of this event.
  * @param keepDetecting only for [EventType.IMAGE_EVENT]. If true, keep interpreting the next events in the list with
  *                      the current screen frame. If false, stops and start over the event list with the next frame.
+ * @param detectionCooldownMs only for [EventType.IMAGE_EVENT]. If >= 0 or null, cooldown is disabled. If > 0, event will be
+ * ignored for the next detectionCooldownMs after being fulfilled.
  */
 @Entity(
     tableName = EVENT_TABLE,
@@ -74,6 +77,7 @@ data class EventEntity(
     @ColumnInfo(name = "enabled_on_start", defaultValue="1") var enabledOnStart: Boolean = true,
     @ColumnInfo(name = "type") val type: EventType,
     @ColumnInfo(name = "keep_detecting") val keepDetecting: Boolean? = null,
+    @ColumnInfo(name = "detecetion_cooldown_ms") val detectionCooldownMs: Long? = null,
 ) : EntityWithId
 
 /**

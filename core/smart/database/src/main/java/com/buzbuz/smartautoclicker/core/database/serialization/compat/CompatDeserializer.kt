@@ -233,7 +233,12 @@ internal open class CompatDeserializer : Deserializer {
             ?.coerceIn(OPERATOR_LOWER_BOUND, OPERATOR_UPPER_BOUND)
             ?: OPERATOR_DEFAULT_VALUE
 
-        val keepDetecting = jsonEvent.getBoolean("keepDetecting") ?: false
+        var keepDetecting: Boolean? = null
+        var cooldownMs: Long? = null
+        if (type == EventType.IMAGE_EVENT) {
+            keepDetecting = jsonEvent.getBoolean("keepDetecting") ?: false
+            cooldownMs = jsonEvent.getLong("detectionCooldownMs") ?: 0L
+        }
 
         return EventEntity(
             id = id,
@@ -244,6 +249,7 @@ internal open class CompatDeserializer : Deserializer {
             enabledOnStart = jsonEvent.getBoolean("enabledOnStart") ?: true,
             type = type,
             keepDetecting = keepDetecting,
+            detectionCooldownMs = cooldownMs,
         )
     }
 

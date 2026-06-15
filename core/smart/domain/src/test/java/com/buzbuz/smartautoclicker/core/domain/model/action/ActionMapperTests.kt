@@ -111,4 +111,68 @@ class ActionMapperTests {
             ActionTestsData.getNewToggleEventEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
         )
     }
+
+    @Test
+    fun changeCounter_toEntity() {
+        assertEquals(
+            ActionTestsData.getNewChangeCounterEntity(eventId = ActionTestsData.ACTION_EVENT_ID).action,
+            ActionTestsData.getNewChangeCounter(eventId = ActionTestsData.ACTION_EVENT_ID).toEntity(),
+        )
+    }
+
+    @Test
+    fun changeCounter_toDomain() {
+        assertEquals(
+            ActionTestsData.getNewChangeCounter(eventId = ActionTestsData.ACTION_EVENT_ID),
+            ActionTestsData.getNewChangeCounterEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
+        )
+    }
+
+    @Test
+    fun notification_toEntity() {
+        assertEquals(
+            ActionTestsData.getNewNotificationEntity(eventId = ActionTestsData.ACTION_EVENT_ID).action,
+            ActionTestsData.getNewNotification(eventId = ActionTestsData.ACTION_EVENT_ID).toEntity(),
+        )
+    }
+
+    @Test
+    fun notification_toDomain() {
+        assertEquals(
+            ActionTestsData.getNewNotification(eventId = ActionTestsData.ACTION_EVENT_ID),
+            ActionTestsData.getNewNotificationEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
+        )
+    }
+
+    @Test
+    fun systemAction_toEntity() {
+        assertEquals(
+            ActionTestsData.getNewSystemActionEntity(eventId = ActionTestsData.ACTION_EVENT_ID).action,
+            ActionTestsData.getNewSystemAction(eventId = ActionTestsData.ACTION_EVENT_ID).toEntity(),
+        )
+    }
+
+    @Test
+    fun systemAction_toDomain() {
+        assertEquals(
+            ActionTestsData.getNewSystemAction(eventId = ActionTestsData.ACTION_EVENT_ID),
+            ActionTestsData.getNewSystemActionEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
+        )
+    }
+
+    @Test
+    fun setText_toEntity() {
+        assertEquals(
+            ActionTestsData.getNewSetTextEntity(eventId = ActionTestsData.ACTION_EVENT_ID).action,
+            ActionTestsData.getNewSetText(eventId = ActionTestsData.ACTION_EVENT_ID).toEntity(),
+        )
+    }
+
+    @Test
+    fun setText_toDomain() {
+        assertEquals(
+            ActionTestsData.getNewSetText(eventId = ActionTestsData.ACTION_EVENT_ID),
+            ActionTestsData.getNewSetTextEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
+        )
+    }
 }

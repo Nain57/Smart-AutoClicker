@@ -131,6 +131,7 @@ internal object ProcessingTestData {
         scenarioId: Identifier,
         enabledOnStart: Boolean = true,
         keepDetecting: Boolean = false,
+        cooldownMs: Long = 0L,
         @ConditionOperator conditionOperator: Int = AND,
         conditions: List<TestImageCondition>,
         actions: List<Action>,
@@ -144,6 +145,7 @@ internal object ProcessingTestData {
         actions = actions,
         name = "TestImageEvent",    // No impact on processor
         priority = 0,               // Set correctly once added to a test scenario
+        cooldownMs = cooldownMs,
     )
 
     fun newTestImageCondition(

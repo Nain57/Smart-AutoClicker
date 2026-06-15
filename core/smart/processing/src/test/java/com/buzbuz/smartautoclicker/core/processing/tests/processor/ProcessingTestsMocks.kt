@@ -118,3 +118,7 @@ internal fun SmartProcessingListener.verifyTriggerEventNotProcessed(event: Trigg
     verify(this, never()).onEventProcessingCompleted(event, true, event.expectedResult(true))
     verify(this, never()).onEventProcessingCompleted(event, false, event.expectedResult(false))
 }
+
+internal fun SmartProcessingListener.verifyScreenEventNotProcessed(event: ScreenEvent) {
+    verify(this, never()).onEventProcessingStarted(event)
+}

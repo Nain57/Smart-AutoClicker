@@ -94,6 +94,7 @@ class EditedItemsBuilder internal constructor(
             conditions = mutableListOf(),
             actions = mutableListOf(),
             keepDetecting = false,
+            cooldownMs = 0L,
         )
 
     fun createNewTriggerEvent(context: Context): TriggerEvent =

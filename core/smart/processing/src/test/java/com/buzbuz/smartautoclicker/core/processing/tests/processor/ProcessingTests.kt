@@ -423,6 +423,226 @@ class ProcessingTests {
         assertTrue(eventsFulfilled[eventId2.databaseId] == true)
     }
 
+    // ---- ScreenEvent.cooldownMs tests ----
+
+    /**
+     * Use case: 1 event with no cooldown, conditions always detected.
+     * Expected behaviour: the event is processed on every frame with no skips.
+     */
+    @Test
+    fun `Event with no cooldown is processed on every frame`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId = testsData.newEventId()
+        val testCondition = testsData.newTestImageCondition(eventId)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            screenEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId,
+                    scenarioId = scenarioId,
+                    cooldownMs = 0L,
+                    conditions = listOf(testCondition),
+                    actions = listOf(testsData.newPauseAction(eventId)),
+                ),
+            ),
+        )
+
+        mockBitmapSupplier.mockBitmapProviding(testCondition)
+        mockScalingManager.mockScaling(testCondition)
+        mockImageDetector.mockDetectionResult(testCondition, true)
+
+        scenarioProcessor = createScenarioProcessor(testScenario)
+
+        // When: process 2 frames
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // Then: condition is checked on both frames
+        mockProcessingListener.verifyImageConditionProcessed(testCondition, true, processedCount = 2)
+    }
+
+    /**
+     * Use case: 1 event with a long cooldown, conditions always detected.
+     * Expected behaviour: the event is processed on the first frame and its cooldown starts. On the second frame, the
+     * cooldown is still active so the event is skipped entirely.
+     */
+    @Test
+    fun `Event with active cooldown is skipped on the next frame`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId = testsData.newEventId()
+        val testCondition = testsData.newTestImageCondition(eventId)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            screenEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId,
+                    scenarioId = scenarioId,
+                    cooldownMs = 10_000L,
+                    conditions = listOf(testCondition),
+                    actions = listOf(testsData.newPauseAction(eventId)),
+                ),
+            ),
+        )
+
+        mockBitmapSupplier.mockBitmapProviding(testCondition)
+        mockScalingManager.mockScaling(testCondition)
+        mockImageDetector.mockDetectionResult(testCondition, true)
+
+        scenarioProcessor = createScenarioProcessor(testScenario)
+
+        // When: process frame 1 (event detected, cooldown starts), then frame 2 immediately
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // Then: condition is only checked once — the event is skipped on frame 2 due to the active cooldown
+        mockProcessingListener.verifyImageConditionProcessed(testCondition, true, processedCount = 1)
+    }
+
+    /**
+     * Use case: 1 event with a very short cooldown, conditions always detected.
+     * Expected behaviour: after the cooldown expires between two frames, the event is processed again.
+     */
+    @Test
+    fun `Event is processed again after its cooldown expires`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId = testsData.newEventId()
+        val testCondition = testsData.newTestImageCondition(eventId)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            screenEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId,
+                    scenarioId = scenarioId,
+                    cooldownMs = 1L,
+                    conditions = listOf(testCondition),
+                    actions = listOf(testsData.newPauseAction(eventId)),
+                ),
+            ),
+        )
+
+        mockBitmapSupplier.mockBitmapProviding(testCondition)
+        mockScalingManager.mockScaling(testCondition)
+        mockImageDetector.mockDetectionResult(testCondition, true)
+
+        scenarioProcessor = createScenarioProcessor(testScenario)
+
+        // When: process frame 1 (event detected, cooldown starts), wait for cooldown to expire, then frame 2
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+        Thread.sleep(10L)
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // Then: condition is checked on both frames — the expired cooldown does not block the second frame
+        mockProcessingListener.verifyImageConditionProcessed(testCondition, true, processedCount = 2)
+    }
+
+    /**
+     * Use case: 2 events, event1 has a long cooldown, event2 has no cooldown. Both are detected.
+     * event1 has keepDetecting = true so event2 is also evaluated on the same frame.
+     * Expected behaviour: on frame 2, event1 is skipped due to cooldown but event2 is still processed normally.
+     */
+    @Test
+    fun `Cooldown on one event does not affect sibling events`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId1 = testsData.newEventId()
+        val eventId2 = testsData.newEventId()
+        val testCondition1 = testsData.newTestImageCondition(eventId1)
+        val testCondition2 = testsData.newTestImageCondition(eventId2)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            screenEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId1,
+                    scenarioId = scenarioId,
+                    keepDetecting = true,
+                    cooldownMs = 10_000L,
+                    conditions = listOf(testCondition1),
+                    actions = listOf(testsData.newPauseAction(eventId1)),
+                ),
+                testsData.newTestImageEvent(
+                    eventId = eventId2,
+                    scenarioId = scenarioId,
+                    keepDetecting = true,
+                    cooldownMs = 0L,
+                    conditions = listOf(testCondition2),
+                    actions = listOf(testsData.newPauseAction(eventId2)),
+                ),
+            ),
+        )
+
+        mockBitmapSupplier.apply {
+            mockBitmapProviding(testCondition1)
+            mockBitmapProviding(testCondition2)
+        }
+        mockScalingManager.apply {
+            mockScaling(testCondition1)
+            mockScaling(testCondition2)
+        }
+        mockImageDetector.apply {
+            mockDetectionResult(testCondition1, true)
+            mockDetectionResult(testCondition2, true)
+        }
+
+        scenarioProcessor = createScenarioProcessor(testScenario)
+
+        // When: process 2 frames; event1 cooldown is active on frame 2
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // Then: event1 condition is only checked once (skipped on frame 2); event2 is checked on both frames
+        mockProcessingListener.verifyImageConditionProcessed(testCondition1, true, processedCount = 1)
+        mockProcessingListener.verifyImageConditionProcessed(testCondition2, true, processedCount = 2)
+    }
+
+    /**
+     * Use case: 1 event with a long cooldown. On the first frame the condition is NOT detected so the event is not
+     * fulfilled. On the second frame the condition IS detected and the event is fulfilled.
+     * Expected behaviour: the cooldown only starts when the event is fulfilled, not when it is merely checked.
+     * So after the second frame the cooldown starts, and the third frame should be skipped.
+     */
+    @Test
+    fun `Cooldown starts only when event is fulfilled, not when conditions are checked`() = runTest {
+        // Given
+        val scenarioId = testsData.newScenarioId()
+        val eventId = testsData.newEventId()
+        val testCondition = testsData.newTestImageCondition(eventId)
+        val testScenario = testsData.newTestScenario(
+            scenarioId = scenarioId,
+            screenEvents = listOf(
+                testsData.newTestImageEvent(
+                    eventId = eventId,
+                    scenarioId = scenarioId,
+                    cooldownMs = 10_000L,
+                    conditions = listOf(testCondition),
+                    actions = listOf(testsData.newPauseAction(eventId)),
+                ),
+            ),
+        )
+
+        mockBitmapSupplier.mockBitmapProviding(testCondition)
+        mockScalingManager.mockScaling(testCondition)
+
+        scenarioProcessor = createScenarioProcessor(testScenario)
+
+        // When: frame 1 — condition not detected (no fulfillment, no cooldown)
+        mockImageDetector.mockDetectionResult(testCondition, false)
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // When: frame 2 — condition detected (event fulfilled, cooldown now starts)
+        mockImageDetector.mockDetectionResult(testCondition, true)
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // When: frame 3 — cooldown is active, event should be skipped
+        scenarioProcessor.process(testsData.newMockedScreenBitmap())
+
+        // Then: condition is checked on frames 1 and 2 (not detected, then detected), but not on frame 3
+        mockProcessingListener.verifyImageConditionProcessed(testCondition, false, processedCount = 1)
+        mockProcessingListener.verifyImageConditionProcessed(testCondition, true, processedCount = 1)
+    }
+
     /**
      * Use case: 2 trigger events, all enabled. First one is fulfilled and disables the second one.
      * This verifies the case where the trigger event list is modifying itself during the same iteration.

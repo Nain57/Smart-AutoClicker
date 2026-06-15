@@ -159,6 +159,9 @@ internal class ScenarioProcessor(
                 // No conditions ? This should not happen, skip this event
                 if (screenEvent.conditions.isEmpty()) continue
 
+                // Event is under cooldown, skip it
+                if (processingState.isCooldownRunning(screenEvent)) continue
+
                 progressListener?.onEventProcessingStarted(screenEvent)
                 val results = conditionsVerifier.verifyConditions(
                     operator = screenEvent.conditionOperator,
@@ -170,6 +173,7 @@ internal class ScenarioProcessor(
                     actionExecutor.executeActions(screenEvent, results)
                     progressListener?.onEventActionsExecuted(screenEvent, results.getAllScreenConditionsResults())
 
+                    processingState.startCooldownIfNeeded(screenEvent)
                     if (!screenEvent.keepDetecting) break
                 }
 

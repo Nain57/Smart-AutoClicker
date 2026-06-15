@@ -83,6 +83,7 @@ data class ScreenEvent(
     override val enabledOnStart: Boolean = true,
     override var priority: Int,
     val keepDetecting: Boolean,
+    val cooldownMs: Long,
 ): Event(), Prioritizable {
 
     /** Tells if this event is complete and valid for save. */

@@ -76,6 +76,43 @@ class EventMapperTests {
     }
 
     @Test
+    fun imageEvent_toEntity_withCooldown() {
+        assertEquals(
+            EventTestsData.getNewImageEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 1500L),
+            EventTestsData.getNewImageEvent(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 1500L).toEntity()
+        )
+    }
+
+    @Test
+    fun imageEvent_toDomain_withCooldown() {
+        val completeEvent = CompleteEventEntity(
+            event = EventTestsData.getNewImageEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 1500L),
+            actions = emptyList(),
+            conditions = emptyList(),
+        )
+
+        assertEquals(
+            EventTestsData.getNewImageEvent(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 1500L),
+            completeEvent.toDomainScreenEvent()
+        )
+    }
+
+    @Test
+    fun imageEvent_toDomain_nullCooldown_defaultsToZero() {
+        val completeEvent = CompleteEventEntity(
+            event = EventTestsData.getNewImageEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 0L)
+                .copy(detectionCooldownMs = null),
+            actions = emptyList(),
+            conditions = emptyList(),
+        )
+
+        assertEquals(
+            EventTestsData.getNewImageEvent(scenarioId = EventTestsData.EVENT_SCENARIO_ID, priority = 0, cooldownMs = 0L),
+            completeEvent.toDomainScreenEvent()
+        )
+    }
+
+    @Test
     fun triggerEvent_toEntity() {
         assertEquals(
             EventTestsData.getNewTriggerEventEntity(scenarioId = EventTestsData.EVENT_SCENARIO_ID),
