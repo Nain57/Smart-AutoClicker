@@ -144,6 +144,8 @@ class DebugReportTimelineFiltersDialog(
         viewBinding.apply {
             textStartTime.text = uiState.lowerValueText
             textEndTime.text = uiState.upperValueText
+
+            if (uiState.lowerBoundMs >= uiState.upperBoundMs) return
             rangeSliderTime.apply {
                 valueFrom = uiState.lowerBoundMs.toFloat()
                 valueTo = uiState.upperBoundMs.toFloat()

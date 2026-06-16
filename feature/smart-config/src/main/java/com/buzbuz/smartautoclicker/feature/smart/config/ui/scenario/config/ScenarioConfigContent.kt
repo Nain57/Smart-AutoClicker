@@ -175,7 +175,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
             val isNotInitialized = seekbarResolution.value == 0f
             seekbarResolution.value = quality.qualityValue
 
-            if (isNotInitialized) {
+            if (isNotInitialized && quality.min < quality.max) {
                 seekbarResolution.valueFrom = quality.min
                 seekbarResolution.valueTo = quality.max
             }

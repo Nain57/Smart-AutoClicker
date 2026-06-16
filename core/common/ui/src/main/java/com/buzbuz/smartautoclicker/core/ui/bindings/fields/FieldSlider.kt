@@ -52,6 +52,7 @@ fun IncludeFieldSliderBinding.setSliderValue(value: Float) {
 }
 
 fun IncludeFieldSliderBinding.setSliderRange(min: Float, max: Float) {
+    if (min >= max) return
     slider.valueFrom = min
     slider.valueTo = max
 }
