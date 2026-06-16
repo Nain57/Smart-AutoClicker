@@ -60,6 +60,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.system.measureNanoTime
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Detects [ScreenEvent] conditions on a display and execute its actions.
@@ -94,6 +95,8 @@ class DetectorEngine @Inject constructor(
     private var processingJob: Job? = null
     /** Coroutine job for the cleaning of the detection once stopped. */
     private var processingShutdownJob: Job? = null
+    /** Coroutine job for the debounced orientation change handler. */
+    private var orientationChangeJob: Job? = null
 
     private val screenOrientationListener: (Context) -> Unit = { onScreenOrientationChanged() }
 
@@ -142,7 +145,7 @@ class DetectorEngine @Inject constructor(
 
         Log.i(TAG, "startScreenRecord")
 
-        processingScope = CoroutineScope(ioDispatcher)
+        processingScope = CoroutineScope(ioDispatcher.limitedParallelism(1))
 
         displayConfigManager.addOrientationListener(screenOrientationListener)
 
@@ -266,12 +269,14 @@ class DetectorEngine @Inject constructor(
 
         Log.d(TAG, "onOrientationChanged")
 
-        processingScope?.launch {
+        orientationChangeJob?.cancel()
+        orientationChangeJob = processingScope?.launch {
+            delay(ORIENTATION_CHANGE_DEBOUNCE_MS.milliseconds)
+
             if (_state.value == DetectorState.DETECTING) {
                 processingJob?.cancelAndJoin()
                 debuggingListener.onEventsProcessingCancelled()
             }
-
 
             displayRecorder.resizeDisplay(
                 displaySize = scalingManager.refreshScaling(),
@@ -373,15 +378,15 @@ class DetectorEngine @Inject constructor(
                     scenarioProcessor?.process(screenFrame)
                 }
 
-                println("DetectorEngine: ProcessingDuration=$processingDurationNs, minDuration=$minProcessingDurationNs")
-
                 // Avoid looping infinitely to quickly for nothing.
                 if (processingDurationNs < minProcessingDurationNs) {
-                    println("DetectorEngine: Delay=${(minProcessingDurationNs - processingDurationNs) / ONE_MILLISECOND_IN_NANO}")
-                    delay(max(1, (minProcessingDurationNs - processingDurationNs) / ONE_MILLISECOND_IN_NANO))
+                    delay(duration = max(
+                        a = 1,
+                        b = (minProcessingDurationNs - processingDurationNs) / ONE_MILLISECOND_IN_NANO,
+                    ).milliseconds)
                 }
 
-            } ?: delay(NO_IMAGE_DELAY_MS)
+            } ?: delay(NO_IMAGE_DELAY_MS.milliseconds)
         }
     }
 
@@ -453,6 +458,8 @@ internal enum class DetectorState {
  * This is to avoid spamming when there is no image.
  */
 private const val NO_IMAGE_DELAY_MS = 20L
+/** Debounce delay for orientation changes, to avoid restarting detection on every intermediate rotation event. */
+private const val ORIENTATION_CHANGE_DEBOUNCE_MS = 100L
 
 /** The value of 1 second in nanoseconds. */
 private const val ONE_SECOND_IN_NANO = 1000000000L
