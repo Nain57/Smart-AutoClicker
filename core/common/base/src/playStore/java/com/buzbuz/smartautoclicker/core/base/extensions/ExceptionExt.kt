@@ -16,16 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.core.base.extensions
 
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.crashlytics.setCustomKeys
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 fun Exception.throwWithKeys(keys: Map<String, String>) {
-    Firebase.crashlytics.setCustomKeys {
-        keys.entries.forEach { (key, values) ->
-            key(key, values)
-        }
+    val crashlytics = FirebaseCrashlytics.getInstance()
+    keys.entries.forEach { (key, value) ->
+        crashlytics.setCustomKey(key, value)
     }
     throw this
 }
