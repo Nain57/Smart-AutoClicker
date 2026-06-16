@@ -430,8 +430,6 @@
     <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
 
     <string name="dialog_title_counters_config">Contatori</string>
-    <string name="message_empty_counter_name_list_title">Nessun contatore definito</string>
-    <string name="message_empty_counter_name_list_desc">Un contatore memorizza un valore numerico che può essere modificato, verificato o utilizzato nelle azioni o nelle condizioni</string>
     <string name="item_counter_desc_collapsed_no_reference">Questo contatore non è utilizzato. (%1$.2f)</string>
     <string name="item_counter_desc_collapsed_referenced">Questo contatore è referenziato %1$d volte. (%2$.2f)</string>
     <string name="item_counter_desc_expanded_no_reference">Questo contatore non è utilizzato.</string>

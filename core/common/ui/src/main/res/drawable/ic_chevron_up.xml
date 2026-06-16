@@ -1,8 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromDegrees="270"
-    android:toDegrees="270"
-    android:pivotX="50%"
-    android:pivotY="50%"
-    android:drawable="@drawable/ic_chevron_right">
-</rotate>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal"
+    android:autoMirrored="true">
+
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="270">
+
+        <path
+            android:fillColor="@android:color/black"
+            android:pathData="M10,6L8.59,7.41 13.17,12l-4.58,4.59L10,18l6,-6z"/>
+
+    </group>
+
+</vector>

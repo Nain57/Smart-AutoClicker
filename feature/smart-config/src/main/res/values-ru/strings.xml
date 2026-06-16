@@ -319,9 +319,6 @@
 
     <string name="dialog_title_change_counter">Change counter</string>
 
-    <string name="message_empty_counter_name_list_title">No counter defined</string>
-    <string name="message_empty_counter_name_list_desc">Счетчик хранит числовое значение, которое можно изменять, проверять или использовать в действиях или условиях</string>
-
     <string name="field_counter_operation_value_label">Value</string>
 
     <string name="dropdown_counter_operation_label">Operation</string>
