@@ -37,7 +37,7 @@ jobs:
       - name: Build language pack models
         env:
           PYTHONUNBUFFERED: "1"
-        run: python scripts/ocr-models/build_models.py --output output --mode language_pack
+        run: python scripts/ocr-models/build_models.py --output output --mode default
 
       - name: Collect release artifacts
         run: |
