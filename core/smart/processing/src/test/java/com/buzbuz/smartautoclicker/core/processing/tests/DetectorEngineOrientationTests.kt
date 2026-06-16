@@ -52,6 +52,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.stub
 import org.robolectric.annotation.Config
 
 import org.mockito.Mockito.`when` as mockWhen
@@ -161,6 +163,9 @@ class DetectorEngineOrientationTests {
             debuggingListener = mockDebuggingListener,
             ocrModelsRepository = mockOcrModelsRepository,
         )
+
+        mockDisplayRecorder.stub { on { validateScreenCapture() } doReturn true }
+        mockWhen(mockScalingManager.refreshScaling()).thenReturn(TEST_DISPLAY_SIZE)
 
         engine.startScreenRecord(0, mockIntent, null)
 

@@ -24,6 +24,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.ImageButton
 import androidx.annotation.IdRes
@@ -161,6 +162,7 @@ class OverlayMenuTests {
         mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_items)).thenReturn(mockMenu)
         mockWhen(mockMenu.findViewById<ViewGroup>(R.id.menu_background)).thenReturn(mockMenu)
         mockWhen(mockMenu.context).thenReturn(mockContext)
+        mockWhen(mockMenu.viewTreeObserver).thenReturn(mock(ViewTreeObserver::class.java))
         mockWhen(overlayMenuControllerImpl.onCreateMenu(mockLayoutInflater)).thenReturn(mockMenu)
         mockWhen(overlayMenuControllerImpl.onCreateOverlayView()).thenReturn(mockOverlay)
     }
