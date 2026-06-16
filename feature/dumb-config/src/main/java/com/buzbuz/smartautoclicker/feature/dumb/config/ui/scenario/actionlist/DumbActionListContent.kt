@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.di.DumbConfigViewModelsEn
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionCreator
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.DumbActionUiFlowListener
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.onCopyDumbActionSelected
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionCreationUiFlow
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.startDumbActionEditionUiFlow
 
@@ -122,7 +123,11 @@ class DumbActionListContent(appContext: Context) : NavBarDialogContent(appContex
 
     override fun onSecondaryFloatingActionButtonClicked() {
         debounceUserInteraction {
-
+            dialogController.overlayManager.onCopyDumbActionSelected(
+                context = context,
+                creator = dumbActionCreator,
+                listener = createCopyActionUiFlowListener,
+            )
         }
     }
 

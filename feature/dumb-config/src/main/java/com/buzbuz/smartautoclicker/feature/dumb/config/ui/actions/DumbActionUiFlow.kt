@@ -102,7 +102,7 @@ private fun OverlayManager.startDumbClickEditionUiFlow(
     )
 }
 
-private fun OverlayManager.onCopyDumbActionSelected(
+internal fun OverlayManager.onCopyDumbActionSelected(
     context: Context,
     creator: DumbActionCreator,
     listener: DumbActionUiFlowListener,
