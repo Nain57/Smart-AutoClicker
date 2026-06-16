@@ -16,6 +16,7 @@
 import sys
 import re
 import importlib
+import shutil
 import os
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -57,6 +58,9 @@ PACKAGE_TO_MODULE = {
     "opencv-python-headless": "cv2",
 }
 
+# Packages that are CLI tools only — verified via PATH rather than import.
+CLI_ONLY_PACKAGES = {"paddle2onnx"}
+
 
 def check_dependencies(requirements_path: str = REQ_PATH):
     """
@@ -73,6 +77,13 @@ def check_dependencies(requirements_path: str = REQ_PATH):
 
     for pkg in required:
         pkg_lower = pkg.lower()
+
+        if pkg_lower in CLI_ONLY_PACKAGES:
+            if shutil.which(pkg_lower) is None:
+                missing.append(pkg)
+                print(f"[MISSING] {pkg}")
+            continue
+
         module_name = PACKAGE_TO_MODULE.get(pkg_lower, pkg_lower.replace("-", "_"))
 
         try:
