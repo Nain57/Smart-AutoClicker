@@ -48,6 +48,16 @@ def parse_requirements(file_path: str):
     return packages
 
 
+# Some packages install under a different module name than their pip package name.
+PACKAGE_TO_MODULE = {
+    "pyyaml": "yaml",
+    "pillow": "PIL",
+    "scikit-learn": "sklearn",
+    "opencv-python": "cv2",
+    "opencv-python-headless": "cv2",
+}
+
+
 def check_dependencies(requirements_path: str = REQ_PATH):
     """
     Verify all required packages are importable.
@@ -62,7 +72,8 @@ def check_dependencies(requirements_path: str = REQ_PATH):
     missing = []
 
     for pkg in required:
-        module_name = pkg.replace("-", "_")
+        pkg_lower = pkg.lower()
+        module_name = PACKAGE_TO_MODULE.get(pkg_lower, pkg_lower.replace("-", "_"))
 
         try:
             importlib.import_module(module_name)
