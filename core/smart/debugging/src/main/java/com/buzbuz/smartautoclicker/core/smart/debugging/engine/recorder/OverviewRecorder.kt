@@ -31,7 +31,9 @@ internal class DebugReportOverviewRecorder @Inject constructor() {
     val sessionDurationMs: Long
         get() = sessionDurationRecorder.durationMs()
     val averageFrameProcessingDurationMs: Long
-        get() = totalFrameProcessingDurationMs / frameCount
+        get() =
+            if (frameCount > 0) totalFrameProcessingDurationMs / frameCount
+            else 0
 
     var scenarioId: Long = -1
         private set
