@@ -208,6 +208,7 @@
     <string name="warning_dialog_message_close_without_saving">未保存の変更があります。破棄してもよろしいですか。</string>
     <string name="error_dialog_message_scenario_saving">内部エラーのためシナリオを保存できません。編集を続行しますか。それともすべての変更を破棄しますか。</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r が正しくインストールされていないため、検出を開始できません。\n\n正規のアプリケーション ストアからインストールした場合は、この問題の解決に役立つため、GitHub でご連絡ください。</string>
+    <string name="error_dialog_message_screen_capture_unsupported">グラフィックドライバーの制限により、Klick\'r はこのデバイスの画面を読み取ることができません。\n\n残念ながら、これはハードウェアの制限であり回避できません。影響を受けるデバイスを追跡できるよう、デバイスのモデル名を添えて GitHub からご連絡ください。</string>
     <string name="content_desc_event_state">イベントの状態</string>
     <string name="content_desc_conditions_count">このイベントの条件の数</string>
     <string name="content_desc_actions_count">このイベントのアクションの数</string>

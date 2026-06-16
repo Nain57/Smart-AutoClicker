@@ -405,6 +405,7 @@
 
     <string name="error_dialog_message_scenario_saving">Su escenario no se puede guardar debido a un error interno.\n¿Quiere modificarlo o cancelar todas sus modificaciones?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r está instalado incorrectamente y no puede iniciar la detección.\n\nSi lo instaló desde una tienda de aplicaciones legítima, contáctenos en GitHub, ya que nos ayudará a solucionar este problema.</string>
+    <string name="error_dialog_message_screen_capture_unsupported">La pantalla de su dispositivo no puede ser leída por Klick\'r debido a una limitación del controlador gráfico.\n\nDesafortunadamente, se trata de una restricción de hardware que no puede evitarse. Por favor, contáctenos en GitHub con el modelo de su dispositivo para que podamos hacer un seguimiento de los dispositivos afectados.</string>
 
 
     <!-- Content description ======================================================================================= -->

@@ -114,6 +114,11 @@ class MainMenuModel @Inject constructor(
         .map { it == DetectionState.ERROR_NO_NATIVE_LIB }
         .distinctUntilChanged()
 
+    /** Tells if the device's GPU driver can't expose screen capture buffers for CPU access. */
+    val screenCaptureError: Flow<Boolean> = smartProcessingRepository.detectionState
+        .map { it == DetectionState.ERROR_SCREEN_IMAGE_CAPTURE_FAILED }
+        .distinctUntilChanged()
+
     /** Load an advertisement, if needed. Should be called before showing the paywall to reduce user waiting time. */
     fun loadAdIfNeeded(context: Context) {
         revenueRepository.loadAdIfNeeded(context)

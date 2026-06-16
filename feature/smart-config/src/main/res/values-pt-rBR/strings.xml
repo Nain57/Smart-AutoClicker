@@ -364,6 +364,7 @@
 
     <string name="error_dialog_message_scenario_saving">Seu cenário não pode ser salvo devido a um erro interno.\nVocê deseja modificar ou cancelar todas as suas alterações?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r está instalado incorretamente e não pode iniciar a detecção.\n\nSe você instalou de uma loja de aplicativos legítima, por favor, contate-nos no GitHub, pois isso ajudará a resolver esse problema.</string>
+    <string name="error_dialog_message_screen_capture_unsupported">A tela do seu dispositivo não pode ser lida pelo Klick\'r devido a uma limitação do driver gráfico.\n\nInfelizmente, esta é uma restrição de hardware que não pode ser contornada. Por favor, entre em contato conosco no GitHub com o modelo do seu dispositivo para que possamos acompanhar os dispositivos afetados.</string>
 
     <!-- Content description ======================================================================================= -->
     <!--They are use as accessibility texts for visually impaired people. They will not be displayed but spoken. -->

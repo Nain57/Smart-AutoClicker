@@ -544,6 +544,7 @@
 
     <string name="error_dialog_message_scenario_saving">Your scenario can\'t be saved due to an internal error.\nDo you want to modify it or cancel all your modifications ?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r is incorrectly installed and can\'t start the detection.\n\nIf you have installed it from a legitimate application store, please contact us on GitHub, as it will help us fix this issue.</string>
+    <string name="error_dialog_message_screen_capture_unsupported">Your device\'s screen can\'t be read by Klick\'r due to a driver limitation.\n\nUnfortunately this is a hardware restriction that can\'t be worked around. Please contact us on GitHub with your device model so we can track affected devices.</string>
 
 
     <!-- Content description ======================================================================================= -->

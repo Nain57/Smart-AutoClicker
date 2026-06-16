@@ -172,6 +172,7 @@
     <string name="field_tutorial_desc">Apprenez à utiliser Klick\'r</string>
     <string name="error_dialog_message_scenario_saving">Votre scenario ne peux pas être enregistré à cause d\'une erreur interne.\nVoulez vous le modifier ou annuler vos modifications ?</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r est mal installé et ne peut pas démarrer la détection.\n\nSi vous l\'avez installé à partir d\'une boutique d\'applications légitime, veuillez nous contacter sur GitHub, car cela nous aidera à résoudre ce problème.</string>
+    <string name="error_dialog_message_screen_capture_unsupported">L\'écran de votre appareil ne peut pas être lu par Klick\'r en raison d\'une limitation du pilote graphique.\n\nMalheureusement, il s\'agit d\'une restriction matérielle qui ne peut pas être contournée. Veuillez nous contacter sur GitHub avec le modèle de votre appareil afin que nous puissions suivre les appareils affectés.</string>
 
     <!--
       - Section titles.

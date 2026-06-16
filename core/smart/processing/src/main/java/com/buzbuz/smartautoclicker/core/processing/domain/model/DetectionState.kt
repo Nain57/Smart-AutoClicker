@@ -30,6 +30,8 @@ enum class DetectionState {
     ERROR_NO_NATIVE_LIB,
     /** The OCR models required by the scenario can't be found. */
     ERROR_OCR_MODEL_NOT_FOUND,
+    /** The device's GPU driver can't expose screen capture buffers for CPU access. */
+    ERROR_SCREEN_IMAGE_CAPTURE_FAILED,
 }
 
 internal fun DetectorState.toDetectionState(): DetectionState? = when (this) {
@@ -40,4 +42,5 @@ internal fun DetectorState.toDetectionState(): DetectionState? = when (this) {
     DetectorState.TRANSITIONING -> null // Return null to avoid notifying state change when transitioning
     DetectorState.ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND -> DetectionState.ERROR_NO_NATIVE_LIB
     DetectorState.ERROR_OCR_MODEL_NOT_FOUND -> DetectionState.ERROR_OCR_MODEL_NOT_FOUND
+    DetectorState.ERROR_SCREEN_IMAGE_CAPTURE_FAILED -> DetectionState.ERROR_SCREEN_IMAGE_CAPTURE_FAILED
 }

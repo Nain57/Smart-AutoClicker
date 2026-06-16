@@ -35,6 +35,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Record the screen and provide [Image] from it.
@@ -136,6 +137,21 @@ class DisplayRecorder @Inject internal constructor(
         )
     }
 
+    suspend fun validateScreenCapture(): Boolean {
+        val startTimeMs = System.currentTimeMillis()
+        while (System.currentTimeMillis() < startTimeMs + SCREEN_CAPTURE_VALIDATION_TIMEOUT_MS) {
+            try {
+                if (acquireLatestBitmap() != null) return true
+                delay(SCREEN_CAPTURE_VALIDATION_RETRY_DELAY_MS.milliseconds)
+            } catch (captureEx: ScreenCaptureException) {
+                Log.e(TAG, "Screen capture is not supported on this device", captureEx)
+                return false
+            }
+        }
+
+        return true
+    }
+
     /** @return the last image of the screen, or null if they have been processed. */
     suspend fun acquireLatestBitmap(): Bitmap? = mutex.withLock {
         imageReaderProxy.getLastFrame()
@@ -147,7 +163,7 @@ class DisplayRecorder @Inject internal constructor(
 
         do {
             result = imageReaderProxy.getLastFrame()
-            if (result == null) delay(20)
+            if (result == null) delay(20.milliseconds)
 
         } while (result == null && System.currentTimeMillis() < (startTimeMs + 1000))
 
@@ -184,6 +200,11 @@ class DisplayRecorder @Inject internal constructor(
         }
     }
 }
+
+/** How long to wait for the first valid frame when validating screen capture support, in milliseconds. */
+private const val SCREEN_CAPTURE_VALIDATION_TIMEOUT_MS = 1000L
+/** Polling interval between frame acquisition attempts during screen capture validation, in milliseconds. */
+private const val SCREEN_CAPTURE_VALIDATION_RETRY_DELAY_MS = 20L
 
 /** Tag for logs. */
 private const val TAG = "DisplayRecorder"

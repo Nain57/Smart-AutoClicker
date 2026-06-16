@@ -72,6 +72,9 @@ internal class ImageReaderProxy @Inject constructor(
         } catch (uoEx: UnsupportedOperationException) {
             Log.e(TAG, "Unsupported screen format", uoEx)
             return null
+        } catch (rtEx: RuntimeException) {
+            Log.e(TAG, "Failed to lock image buffer", rtEx)
+            throw ScreenCaptureException(rtEx)
         }
     }
 
@@ -122,5 +125,8 @@ internal class ImageReaderProxy @Inject constructor(
         }
     }
 }
+
+/** Thrown when the device's gralloc driver can't lock the screen capture buffer for CPU access. */
+class ScreenCaptureException(cause: Throwable) : Exception(cause)
 
 private const val TAG = "ImageReaderProxy"

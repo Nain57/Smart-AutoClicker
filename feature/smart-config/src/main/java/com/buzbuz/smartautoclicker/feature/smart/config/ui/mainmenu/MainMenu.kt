@@ -128,6 +128,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
+                launch { viewModel.screenCaptureError.collect(::showScreenCaptureErrorDialogIfNeeded) }
                 launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
             }
         }
@@ -372,6 +373,19 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         MaterialAlertDialogBuilder(context.getDynamicColorsContext(R.style.AppTheme))
             .setTitle(R.string.dialog_overlay_title_warning)
             .setMessage(R.string.error_dialog_message_error_native_lib)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                onStopClicked()
+            }
+            .create()
+            .showAsOverlay()
+    }
+
+    private fun showScreenCaptureErrorDialogIfNeeded(haveError: Boolean) {
+        if (!haveError) return
+
+        MaterialAlertDialogBuilder(context.getDynamicColorsContext(R.style.AppTheme))
+            .setTitle(R.string.dialog_overlay_title_warning)
+            .setMessage(R.string.error_dialog_message_screen_capture_unsupported)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 onStopClicked()
             }

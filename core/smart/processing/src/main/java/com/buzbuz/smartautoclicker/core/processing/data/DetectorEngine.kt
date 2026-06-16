@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
+import com.buzbuz.smartautoclicker.core.display.recorder.ScreenCaptureException
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
 import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
@@ -159,7 +160,10 @@ class DetectorEngine @Inject constructor(
                 startScreenRecord(displaySize)
             }
 
-            _state.emit(DetectorState.RECORDING)
+            _state.emit(
+                if (!displayRecorder.validateScreenCapture()) DetectorState.ERROR_SCREEN_IMAGE_CAPTURE_FAILED
+                else DetectorState.RECORDING
+            )
         }
     }
 
@@ -451,6 +455,8 @@ internal enum class DetectorState {
     ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND,
     /** The text detection models required for this scenario are not found. */
     ERROR_OCR_MODEL_NOT_FOUND,
+    /** The device's GPU driver can't expose screen capture buffers for CPU access. */
+    ERROR_SCREEN_IMAGE_CAPTURE_FAILED,
 }
 
 /**
