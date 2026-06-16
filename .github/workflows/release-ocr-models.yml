@@ -1,0 +1,56 @@
+# Copyright (C) 2026 Kevin Buzeau
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+name: Release OCR Models
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build OCR models
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/ocr-models/requirements.txt
+
+      - name: Build language pack models
+        run: python scripts/ocr-models/build_models.py --output output --mode language_pack
+
+      - name: Collect release artifacts
+        run: |
+          mkdir -p dist
+          find output/rec -maxdepth 1 -name "*.zip" -exec cp {} dist/ \;
+
+      - name: Replace release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_TAG="test-recognition-models"
+
+          # Delete all existing assets on the release
+          gh release view "$RELEASE_TAG" --json assets --jq '.assets[].id' | \
+            xargs -I{} gh api -X DELETE repos/${{ github.repository }}/releases/assets/{}
+
+          # Upload new artifacts
+          gh release upload "$RELEASE_TAG" dist/* --clobber
