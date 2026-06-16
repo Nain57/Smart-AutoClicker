@@ -68,6 +68,18 @@ android {
         }
     }
 
+    // Generate per-ABI APKs for fDroid (reduces download size; full APK also produced)
+    if (project.isBuildForVariant(KlickrFlavour.F_DROID)) {
+        splits {
+            abi {
+                isEnable = true
+                reset()
+                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+                isUniversalApk = true
+            }
+        }
+    }
+
     signingConfigs {
         create(KlickrBuildType.RELEASE.buildTypeName) {
             storeFile = file("./smartautoclicker.jks")
@@ -93,6 +105,26 @@ android {
                 ":core:smart:detection-models:models:text:telugu",
             )
         )
+    }
+}
+
+// Assign unique versionCodes per ABI for fDroid multi-APK publishing
+if (project.isBuildForVariant(KlickrFlavour.F_DROID)) {
+    androidComponents.onVariants { variant ->
+        variant.outputs.forEach { output ->
+            val abiFilter = output.filters
+                .find { it.filterType == com.android.build.api.variant.FilterConfiguration.FilterType.ABI }
+                ?.identifier
+            val abiVersionCode = when (abiFilter) {
+                "armeabi-v7a" -> 1
+                "arm64-v8a"   -> 2
+                "x86"         -> 3
+                "x86_64"      -> 4
+                else          -> 0  // universal
+            }
+            val baseVersionCode = output.versionCode.get()
+            output.versionCode.set(abiVersionCode * 10_000 + baseVersionCode)
+        }
     }
 }
 
