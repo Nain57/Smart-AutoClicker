@@ -35,6 +35,8 @@ jobs:
         run: pip install -r scripts/ocr-models/requirements.txt
 
       - name: Build language pack models
+        env:
+          PYTHONUNBUFFERED: "1"
         run: python scripts/ocr-models/build_models.py --output output --mode language_pack
 
       - name: Collect release artifacts

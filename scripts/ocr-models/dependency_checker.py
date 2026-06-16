@@ -51,6 +51,7 @@ def parse_requirements(file_path: str):
 
 # Some packages install under a different module name than their pip package name.
 PACKAGE_TO_MODULE = {
+    "paddlepaddle": "paddle",
     "pyyaml": "yaml",
     "pillow": "PIL",
     "scikit-learn": "sklearn",

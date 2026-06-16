@@ -1,3 +1,4 @@
+paddlepaddle==3.0.0
 paddle2onnx==2.0.2rc3
 onnx==1.17.0
 onnxsim==0.4.36
