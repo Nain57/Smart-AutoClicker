@@ -19,9 +19,13 @@ package com.buzbuz.smartautoclicker.core.common.overlays.base
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
+import android.hardware.display.DisplayManager
+import android.os.Build
 import android.util.Log
+import android.view.Display
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
@@ -66,6 +70,7 @@ import java.io.PrintWriter
 abstract class BaseOverlay internal constructor(
     private val theme: Int? = null,
     private val recreateOnRotation: Boolean = false,
+    private val useWindowContext: Boolean = false,
 ) : Overlay(), Dumpable {
 
     /** The context for this overlay. */
@@ -303,10 +308,19 @@ abstract class BaseOverlay internal constructor(
      *
      * @param appContext the Android application context.
      */
-    private fun newOverlayContext(appContext: Context): Context =
-        if (theme == null) appContext
+    private fun newOverlayContext(appContext: Context): Context {
+        val baseContext = if (useWindowContext && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val display = appContext.getSystemService(DisplayManager::class.java)
+                .getDisplay(Display.DEFAULT_DISPLAY)
+            appContext.createDisplayContext(display)
+                .createWindowContext(WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, null)
+        } else {
+            appContext
+        }
+
+        return if (theme == null) baseContext
         else DynamicColors.wrapContextIfAvailable(
-            ContextThemeWrapper(appContext, theme).apply {
+            ContextThemeWrapper(baseContext, theme).apply {
                 applyOverrideConfiguration(
                     Configuration(applicationContext.resources.configuration).apply {
                         orientation = displayConfigManager.displayConfig.orientation
@@ -314,6 +328,7 @@ abstract class BaseOverlay internal constructor(
                 )
             }
         )
+    }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()

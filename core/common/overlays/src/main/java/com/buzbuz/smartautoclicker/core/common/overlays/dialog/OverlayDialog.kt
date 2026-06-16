@@ -41,7 +41,7 @@ import java.io.PrintWriter
  * This class ensure that all dialogs opened from a service will have the same behaviour. It provides basic lifecycle
  * alike methods to ease the view initialization/cleaning.
  */
-abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true) {
+abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true, useWindowContext = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
     private lateinit var inputMethodManager: InputMethodManager
