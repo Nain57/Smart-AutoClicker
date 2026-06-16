@@ -45,14 +45,9 @@ jobs:
           find output/rec -maxdepth 1 -name "*.zip" -exec cp {} dist/ \;
 
       - name: Replace release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          tag_name: 'test-recognition-models'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          RELEASE_TAG="test-recognition-models"
-
-          # Delete all existing assets on the release
-          gh release view "$RELEASE_TAG" --json assets --jq '.assets[].id' | \
-            xargs -I{} gh api -X DELETE repos/${{ github.repository }}/releases/assets/{}
-
-          # Upload new artifacts
-          gh release upload "$RELEASE_TAG" dist/* --clobber
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
