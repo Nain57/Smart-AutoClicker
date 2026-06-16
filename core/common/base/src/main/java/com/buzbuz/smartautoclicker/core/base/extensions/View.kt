@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.base.extensions
 
 import android.view.View
 import android.view.ViewTreeObserver
-import androidx.core.view.doOnLayout
 
 
 fun View.doWhenMeasured(closure: () -> Unit) {
@@ -27,7 +26,15 @@ fun View.doWhenMeasured(closure: () -> Unit) {
         return
     }
 
-    doOnLayout { doWhenMeasured(closure) }
+    viewTreeObserver.addOnGlobalLayoutListener(
+        object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (width == 0 && height == 0) return
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                closure()
+            }
+        }
+    )
 }
 
 fun View.delayDrawUntil(timeOutMs: Long = DEFAULT_DRAW_DELAY_TIMEOUT_MS, closure: () -> Boolean) {
