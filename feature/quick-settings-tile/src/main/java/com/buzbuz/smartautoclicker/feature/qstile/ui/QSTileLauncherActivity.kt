@@ -43,7 +43,7 @@ class QSTileLauncherActivity : AppCompatActivity() {
 
         fun getStartIntent(context: Context, scenarioId: Long, isSmartScenario: Boolean): Intent =
             Intent(context, QSTileLauncherActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(EXTRA_SCENARIO_ID, scenarioId)
                 .putExtra(EXTRA_IS_SMART_SCENARIO, isSmartScenario)
     }

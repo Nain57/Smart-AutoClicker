@@ -160,7 +160,7 @@ class SmartAutoClickerService : AccessibilityService() {
             Log.i(TAG, "User is candidate for review")
 
             reviewRepository.getReviewActivityIntent(this)?.let { intent ->
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
             }
         }

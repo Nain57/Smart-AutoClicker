@@ -42,7 +42,7 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
 
         fun getStartIntent(context: Context): Intent =
             Intent(context, RestartMediaProjectionActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
     }
 
     private val viewModel: RestartMediaProjectionViewModel by viewModels()
