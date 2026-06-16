@@ -60,7 +60,7 @@ PACKAGE_TO_MODULE = {
 }
 
 # Packages that are CLI tools only — verified via PATH rather than import.
-CLI_ONLY_PACKAGES = {"paddle2onnx"}
+CLI_ONLY_PACKAGES = {"paddle2onnx", "pnnx"}
 
 
 def check_dependencies(requirements_path: str = REQ_PATH):
