@@ -108,16 +108,18 @@ class BackupRepository @Inject constructor(
                     onCompleted = { dumbs, smarts, failureCount, compatWarning ->
                         var totalFailures = failureCount
 
-                        val dumbsSuccess = dumbs.toMutableList()
-                        dumbs.forEach { completeScenario ->
+                        val dumbsSnapshot = dumbs.toList()
+                        val dumbsSuccess = dumbsSnapshot.toMutableList()
+                        dumbsSnapshot.forEach { completeScenario ->
                             if (dumbRepository.addDumbScenarioCopy(completeScenario) == null) {
                                 dumbsSuccess.remove(completeScenario)
                                 totalFailures++
                             }
                         }
 
-                        val smartsSuccess = smarts.toMutableList()
-                        smarts.forEach { completeScenario ->
+                        val smartsSnapshot = smarts.toList()
+                        val smartsSuccess = smartsSnapshot.toMutableList()
+                        smartsSnapshot.forEach { completeScenario ->
                             if (smartRepository.addScenarioCopy(completeScenario) == null) {
                                 smartsSuccess.remove(completeScenario)
                                 totalFailures++
