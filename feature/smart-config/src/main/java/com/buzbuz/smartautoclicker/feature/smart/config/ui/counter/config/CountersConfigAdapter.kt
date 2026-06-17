@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCounterConfigBinding
 
+import java.util.Locale
+
 /**
  * Adapter for the list of counters in the configuration.
  *
@@ -118,8 +120,9 @@ class CountersConfigViewHolder(
                 readByButton.visibility = View.VISIBLE
                 deleteButton.visibility = View.VISIBLE
 
-                if (textFieldStartingValue.text.toString() != newItem.startingValue.toString()) {
-                    textFieldStartingValue.setText(newItem.startingValue.toString())
+                val startingValueText = String.format(Locale.getDefault(), "%s", newItem.startingValue)
+                if (textFieldStartingValue.text.toString() != startingValueText) {
+                    textFieldStartingValue.setText(startingValueText)
                 }
             } else {
                 buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_down)

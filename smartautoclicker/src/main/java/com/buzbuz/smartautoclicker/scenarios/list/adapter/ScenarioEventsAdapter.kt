@@ -36,6 +36,8 @@ import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState.Item
 
 import kotlinx.coroutines.Job
 
+import java.util.Locale
+
 class ScenarioEventsAdapter(
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<EventItem, EventCardViewHolder>(EventDiffUtilCallback) {
@@ -75,8 +77,8 @@ class EventCardViewHolder(
     fun onBind(item: EventItem) {
         viewBinding.apply {
             eventName.text = item.eventName
-            eventActionsCount.text = item.actionsCount.toString()
-            eventConditionsCount.text = item.conditionsCount.toString()
+            eventActionsCount.text = String.format(Locale.getDefault(), "%d", item.actionsCount)
+            eventConditionsCount.text = String.format(Locale.getDefault(), "%d", item.conditionsCount)
 
             val condition = item.firstCondition
             if (condition == null) {

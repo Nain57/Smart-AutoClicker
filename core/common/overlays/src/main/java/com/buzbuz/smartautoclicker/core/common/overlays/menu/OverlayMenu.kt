@@ -407,7 +407,7 @@ abstract class OverlayMenu(
 
         lifecycleRegistry.currentState = previousState
 
-        setOverlayViewVisibility(oldOverlayView.visibility == View.VISIBLE)
+        setOverlayViewVisibility(oldOverlayView.isVisible)
     }
 
     /**

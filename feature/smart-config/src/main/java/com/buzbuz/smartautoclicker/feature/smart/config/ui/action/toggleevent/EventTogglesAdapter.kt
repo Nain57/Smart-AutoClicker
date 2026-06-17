@@ -33,6 +33,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemEventToggleBinding
 import com.buzbuz.smartautoclicker.core.ui.databinding.ItemListHeaderBinding
 
+import java.util.Locale
+
 
 class EventToggleAdapter(
     private val onEventToggleStateChanged: (Event, ToggleEvent.ToggleType?) -> Unit,
@@ -130,8 +132,8 @@ class ItemViewHolder(
     fun onBind(item: EventTogglesListItem.Item) {
         viewBinding.apply {
             eventName.text = item.event.name
-            textActionsCount.text = item.actionsCount.toString()
-            textConditionCount.text = item.conditionsCount.toString()
+            textActionsCount.text = String.format(Locale.getDefault(), "%d", item.actionsCount)
+            textConditionCount.text = String.format(Locale.getDefault(), "%d", item.conditionsCount)
 
             toggleTypeButton.setChecked(
                 when (item.toggleState) {

@@ -29,6 +29,8 @@ import com.buzbuz.smartautoclicker.databinding.ItemEmptyScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemSmartScenarioBinding
 import kotlinx.coroutines.Job
 
+import java.util.Locale
+
 class EmptyScenarioHolder(
     private val viewBinding: ItemEmptyScenarioBinding,
     private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
@@ -81,9 +83,9 @@ class DumbScenarioViewHolder(
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {
             scenarioDetails.visibility = View.VISIBLE
             buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_up)
-            clickCount.text = scenarioItem.clickCount.toString()
-            swipeCount.text = scenarioItem.swipeCount.toString()
-            pauseCount.text = scenarioItem.pauseCount.toString()
+            clickCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.clickCount)
+            swipeCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.swipeCount)
+            pauseCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.pauseCount)
             repeatLimit.text = scenarioItem.repeatText
             durationLimit.text = scenarioItem.maxDurationText
         } else {
@@ -138,8 +140,8 @@ class SmartScenarioViewHolder(
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {
             scenarioDetails.visibility = View.VISIBLE
             buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_up)
-            detectionQuality.text = scenarioItem.detectionQuality.toString()
-            triggerEventCount.text = scenarioItem.triggerEventCount.toString()
+            detectionQuality.text = String.format(Locale.getDefault(), "%d", scenarioItem.detectionQuality)
+            triggerEventCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.triggerEventCount)
 
             eventsAdapter.submitList(scenarioItem.eventsItems)
             if (scenarioItem.eventsItems.isEmpty()) {
