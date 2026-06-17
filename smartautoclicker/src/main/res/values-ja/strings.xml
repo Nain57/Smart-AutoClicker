@@ -17,18 +17,10 @@
 -->
 <resources>
 
-    <string name="notification_title">シナリオ：%1$s</string>
-    <string name="notification_message">タップしてシナリオを変更します</string>
-    <string name="notification_button_play_and_hide">再生して非表示</string>
-    <string name="notification_button_pause_and_show">一時停止して表示</string>
-    <string name="notification_button_toggle_menu">表示／非表示</string>
-    <string name="notification_button_stop">停止</string>
-
     <string name="activity_scenario_title">シナリオ</string>
     <string name="accessibility_service_description">本アプリは、条件が検出された際に、お客様が作成したタップ操作を他のアプリへ注入するために本サービスを必要とします。\n\n本アプリによるデータの収集は行いません。ソースコードは公開されておりますので、GitHub をご参照ください。</string>
 
     <string name="dialog_title_add_scenario">新規シナリオ</string>
-    <string name="dialog_title_copy_scenario">シナリオのコピー</string>
 
     <string name="menu_item_title_export">エクスポート</string>
     <string name="menu_item_title_import">インポート</string>
@@ -55,8 +47,6 @@
 
     <string name="message_delete_scenario">「%1$s」を削除します。よろしいですか。</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">お使いの端末は、標準の Android 画面キャプチャ権限ダイアログを提供していません。Klick\'r はこの端末では動作しません。</string>
-
-    <string name="section_title_scenario_type_title">シナリオの種類</string>
 
     <string name="toast_denied_screen_sharing_permission">画面共有の権限が拒否されました</string>
     <string name="toast_denied_foreground_permission">フォアグラウンド サービスの権限が拒否されました</string>

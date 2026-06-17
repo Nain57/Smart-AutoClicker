@@ -17,18 +17,10 @@
 -->
 <resources>
 
-    <string name="notification_title">情境：%1$s</string>
-    <string name="notification_message">輕觸即可變更情境</string>
-    <string name="notification_button_play_and_hide">開始並隱藏</string>
-    <string name="notification_button_pause_and_show">暫停並顯示</string>
-    <string name="notification_button_toggle_menu">顯示／隱藏</string>
-    <string name="notification_button_stop">停止</string>
-
     <string name="activity_scenario_title">情境</string>
     <string name="accessibility_service_description">本應用程式需要此服務，以便在偵測到條件後，將您建立的點擊操作注入其他應用程式。\n\n本應用程式不會蒐集任何資料。歡迎前往我們的 GitHub 存放庫，原始碼為開放授權。</string>
 
     <string name="dialog_title_add_scenario">新增情境</string>
-    <string name="dialog_title_copy_scenario">複製情境</string>
 
     <string name="menu_item_title_export">匯出</string>
     <string name="menu_item_title_import">匯入</string>
@@ -55,8 +47,6 @@
 
     <string name="message_delete_scenario">將刪除「%1$s」。是否確認？</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">您的裝置未提供標準的 Android 螢幕擷取權限對話方塊，Klick\'r 無法於此裝置上執行。</string>
-
-    <string name="section_title_scenario_type_title">情境類型</string>
 
     <string name="toast_denied_screen_sharing_permission">使用者已拒絕螢幕共用權限</string>
     <string name="toast_denied_foreground_permission">使用者已拒絕前景服務權限</string>

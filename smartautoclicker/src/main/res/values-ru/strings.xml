@@ -17,15 +17,6 @@
 -->
 <resources>
 
-    <!-- Application wide texts. -->
-    <string name="notification_title">Сценарий: %1$s</string>
-    <string name="notification_message">Нажмите, чтобы поменять сценарий</string>
-    <string name="notification_button_play_and_hide">Запустить и скрыть</string>
-    <string name="notification_button_pause_and_show">Приостановить и показать</string>
-    <string name="notification_button_toggle_menu">Скрыть/Показать</string>
-    <string name="notification_button_stop">Остановить</string>
-
-
     <string name="activity_scenario_title">Сценарии</string>
     <string name="accessibility_service_description">Данному приложению требуется эта служба для 
         выполнения созданных вами нажатий в других приложениях при исполнении требуемых условий.\n\nНикакие 
@@ -36,7 +27,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">Новый сценарий</string>
-    <string name="dialog_title_copy_scenario">Копировать сценарий</string>
 
     <!--
       - Text for menu items.
@@ -82,13 +72,6 @@
     <string name="message_delete_scenario">Сценарий %1$s будет удалён. Продолжить?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Ваша система не отправляет 
         стандартный в Android запрос на трансляцию экрана. Klick\'r не сможет работать на ней.</string>
-
-    <!--
-      - Section titles.
-      - Should be short and concise.
-      -->
-    <string name="section_title_scenario_type_title">Тип сценария</string>
-
 
     <!--
       - Toast messages.

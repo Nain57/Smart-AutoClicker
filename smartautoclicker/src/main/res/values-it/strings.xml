@@ -17,14 +17,6 @@
 -->
 <resources>
 
-    <!-- Application wide texts. -->
-    <string name="notification_title">Scenario: %1$s</string>
-    <string name="notification_message">Premi per cambiare scenario</string>
-    <string name="notification_button_play_and_hide">Giocare e nascondersi</string>
-    <string name="notification_button_pause_and_show">Pausa e mostra</string>
-    <string name="notification_button_toggle_menu">Mostra/Nascondi</string>
-    <string name="notification_button_stop">Stop</string>
-
     <string name="activity_scenario_title">Scenari</string>
     <string name="accessibility_service_description">Questa applicazione ha bisogno di questo servizio per inserire i clic che hai
          creato nelle altre applicazioni una volta che le condizioni sono state rilevate.\n\nNon verranno raccolti dati da
@@ -35,7 +27,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">Nuovo scenario</string>
-    <string name="dialog_title_copy_scenario">Copiare lo scenario</string>
 
     <!--
       - Text for menu items.
@@ -87,8 +78,6 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_scenario_type_title">Tipo di scenario</string>
-
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).

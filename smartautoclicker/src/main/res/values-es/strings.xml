@@ -17,15 +17,6 @@
 -->
 <resources>
 
-    <!-- Application wide texts. -->
-    <string name="notification_title">Guión: %1$s</string>
-    <string name="notification_message">Presiona para cambiar el guión</string>
-    <string name="notification_button_play_and_hide">jugar y esconderse</string>
-    <string name="notification_button_pause_and_show">Pausa y muestra</string>
-    <string name="notification_button_toggle_menu">Mostrar/Ocultar</string>
-    <string name="notification_button_stop">Detener</string>
-
-
     <string name="activity_scenario_title">Escenarios</string>
     <string name="accessibility_service_description">Esta aplicación necesita este permiso para inyectar los clicks que hayas creado
         en otras aplicaciones una vez que las condiciones se hayan detectado.\n\nNo se recogerán datos de esa aplicación.
@@ -36,7 +27,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">Nuevo guión</string>
-    <string name="dialog_title_copy_scenario">Copiar escenario</string>
 
     <!--
       - Text for menu items.
@@ -87,7 +77,6 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_scenario_type_title">Tipo de escenario</string>
 
 
     <!--
