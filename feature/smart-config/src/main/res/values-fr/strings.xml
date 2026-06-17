@@ -321,7 +321,7 @@
     <string name="item_set_text_title">Écrire du texte</string>
     <string name="item_set_text_desc">Écrire un texte dans la vue actuellement sélectionnée</string>
     <string name="item_set_text_details_text">%1$s</string>
-    <string name="item_set_text_details_text_empty">Clear text</string>
+    <string name="item_set_text_details_text_empty">Effacer le texte</string>
 
     <!-- Dialogs Action System ===================================================================================== -->
 

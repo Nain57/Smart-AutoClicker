@@ -96,7 +96,7 @@
     <string name="item_set_text_title">Написати текст</string>
     <string name="item_set_text_desc">Написати текст у вибраному вікні</string>
     <string name="item_set_text_details_text">%1$s</string>
-    <string name="item_set_text_details_text_empty">Clear text</string>
+    <string name="item_set_text_details_text_empty">Очистити текст</string>
 
     <!-- Dialog Copy =============================================================================================== -->
 

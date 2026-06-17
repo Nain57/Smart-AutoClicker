@@ -322,7 +322,7 @@
     <string name="item_set_text_title">Scrivi testo</string>
     <string name="item_set_text_desc">Scrivi un testo nella vista attualmente selezionata</string>
     <string name="item_set_text_details_text">%1$s</string>
-    <string name="item_set_text_details_text_empty">Clear text</string>
+    <string name="item_set_text_details_text_empty">Cancella testo</string>
 
 
     <!-- Dialogs Action System ===================================================================================== -->
