@@ -6,10 +6,10 @@ androidMinSdk = "24"
 androidNdk = "28.2.13676358"
 
 # Build script
+androidGradlePlugin = "9.2.1"
 googleFirebaseCrashlyticsGradle = "3.0.7"
 googleProtobufGradlePlugin = "0.10.0"
 googleServices = "4.4.4"
-androidGradlePlugin = "9.2.0"
 java = "21"
 kotlin = "2.3.21"
 kotlinxCoroutines = "1.10.2"
