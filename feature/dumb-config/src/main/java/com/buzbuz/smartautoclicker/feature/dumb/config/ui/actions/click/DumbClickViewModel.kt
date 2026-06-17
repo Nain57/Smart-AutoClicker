@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.click
 import android.content.Context
 import android.graphics.Point
 
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -126,12 +127,11 @@ class DumbClickViewModel @Inject constructor(
 
     fun saveLastConfig(context: Context) {
         _editedDumbClick.value?.let { click ->
-            context.getDumbConfigPreferences()
-                .edit()
-                .putClickPressDurationConfig(click.pressDurationMs)
-                .putClickRepeatCountConfig(click.repeatCount)
-                .putClickRepeatDelayConfig(click.repeatDelayMs)
-                .apply()
+            context.getDumbConfigPreferences().edit {
+                putClickPressDurationConfig(click.pressDurationMs)
+                putClickRepeatCountConfig(click.repeatCount)
+                putClickRepeatDelayConfig(click.repeatDelayMs)
+            }
         }
     }
 }

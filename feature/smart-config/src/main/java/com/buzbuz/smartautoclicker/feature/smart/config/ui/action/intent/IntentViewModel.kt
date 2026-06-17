@@ -20,6 +20,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent as AndroidIntent
 import android.content.SharedPreferences
+
+import androidx.core.content.edit
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 
@@ -264,7 +266,7 @@ class IntentViewModel @Inject constructor(
 
     fun saveLastConfig() {
         editionRepository.editionState.getEditedAction<Intent>()?.let { intent ->
-            sharedPreferences.edit().putIntentIsAdvancedConfig(intent.isAdvanced == true).apply()
+            sharedPreferences.edit { putIntentIsAdvancedConfig(intent.isAdvanced == true) }
         }
     }
 }

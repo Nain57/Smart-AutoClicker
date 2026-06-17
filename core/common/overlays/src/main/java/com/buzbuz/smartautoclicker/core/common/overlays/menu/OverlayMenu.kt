@@ -35,6 +35,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.core.view.forEach
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
@@ -208,7 +209,7 @@ abstract class OverlayMenu(
         overlayLayoutParams.gravity = Gravity.TOP or Gravity.START
         positionDataSource.addOnLockedPositionChangedListener(onLockedPositionChangedListener)
         loadMenuPosition(displayConfigManager.displayConfig.orientation)
-        moveButton?.visibility = if (positionDataSource.isPositionLocked()) View.GONE else View.VISIBLE
+        moveButton?.isVisible = !positionDataSource.isPositionLocked()
 
         // Handle window resize animations
         resizeController = OverlayMenuResizeController(
@@ -460,7 +461,7 @@ abstract class OverlayMenu(
      */
     protected fun setMenuItemVisibility(view: View, visible: Boolean) {
         Log.d(TAG, "setMenuItemVisibility for ${hashCode()}, $view to $visible")
-        view.visibility = if (visible) View.VISIBLE else View.GONE
+        view.isVisible = visible
 
         if (!resizeController.isAnimating) forceWindowResize()
     }

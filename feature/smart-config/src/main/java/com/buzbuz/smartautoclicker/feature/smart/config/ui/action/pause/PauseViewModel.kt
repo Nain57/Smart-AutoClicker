@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause
 import android.content.Context
 import android.content.SharedPreferences
 
+import androidx.core.content.edit
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -134,7 +136,7 @@ class PauseViewModel @Inject constructor(
 
     fun saveLastConfig() {
         editionRepository.editionState.getEditedAction<Pause>()?.let { pause ->
-            sharedPreferences.edit().putPauseDurationConfig(pause.pauseDuration ?: 0).apply()
+            sharedPreferences.edit { putPauseDurationConfig(pause.pauseDuration ?: 0) }
         }
     }
 }

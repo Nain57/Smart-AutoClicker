@@ -23,6 +23,7 @@ import android.graphics.Point
 import android.util.Log
 
 import androidx.annotation.VisibleForTesting
+import androidx.core.content.edit
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.PrintWriter
@@ -100,15 +101,15 @@ class OverlayMenuPositionDataSource @Inject constructor(
         Log.d(TAG, "saveMenuPosition for orientation $orientation = $position")
 
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            sharedPreferences.edit()
-                .putInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, position.x)
-                .putInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, position.y)
-                .apply()
+            sharedPreferences.edit {
+                putInt(PREFERENCE_MENU_X_LANDSCAPE_KEY, position.x)
+                putInt(PREFERENCE_MENU_Y_LANDSCAPE_KEY, position.y)
+            }
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            sharedPreferences.edit()
-                .putInt(PREFERENCE_MENU_X_PORTRAIT_KEY, position.x)
-                .putInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, position.y)
-                .apply()
+            sharedPreferences.edit {
+                putInt(PREFERENCE_MENU_X_PORTRAIT_KEY, position.x)
+                putInt(PREFERENCE_MENU_Y_PORTRAIT_KEY, position.y)
+            }
         }
     }
 

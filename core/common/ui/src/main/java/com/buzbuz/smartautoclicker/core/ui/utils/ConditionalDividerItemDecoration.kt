@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 
+import androidx.core.graphics.withSave
 import androidx.core.view.children
 import androidx.core.content.res.use
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -84,57 +85,53 @@ class ConditionalDividerItemDecoration(
     }
 
     private fun drawVertical(canvas: Canvas, parent: RecyclerView, drawable: Drawable) {
-        canvas.save()
+        canvas.withSave {
+            val left: Int
+            val right: Int
+            if (parent.clipToPadding) {
+                left = parent.paddingLeft
+                right = parent.width - parent.paddingRight
+                clipRect(left, parent.paddingTop, right, parent.height - parent.paddingBottom)
+            } else {
+                left = 0
+                right = parent.width
+            }
 
-        val left: Int
-        val right: Int
-        if (parent.clipToPadding) {
-            left = parent.paddingLeft
-            right = parent.width - parent.paddingRight
-            canvas.clipRect(left, parent.paddingTop, right, parent.height - parent.paddingBottom)
-        } else {
-            left = 0
-            right = parent.width
+            parent.children.forEach { child ->
+                if (excludedViewTypes.contains(parent.getViewType(child))) return@forEach
+
+                parent.getDecoratedBoundsWithMargins(child, bounds)
+                val bottom: Int = bounds.bottom + child.translationY.roundToInt()
+                val top: Int = bottom - drawable.intrinsicHeight
+                drawable.setBounds(left, top, right, bottom)
+                drawable.draw(this)
+            }
         }
-
-        parent.children.forEach { child ->
-            if (excludedViewTypes.contains(parent.getViewType(child))) return@forEach
-
-            parent.getDecoratedBoundsWithMargins(child, bounds)
-            val bottom: Int = bounds.bottom + child.translationY.roundToInt()
-            val top: Int = bottom - drawable.intrinsicHeight
-            drawable.setBounds(left, top, right, bottom)
-            drawable.draw(canvas)
-        }
-
-        canvas.restore()
     }
 
     private fun drawHorizontal(canvas: Canvas, parent: RecyclerView, drawable: Drawable) {
-        canvas.save()
+        canvas.withSave {
+            val top: Int
+            val bottom: Int
+            if (parent.clipToPadding) {
+                top = parent.paddingTop
+                bottom = parent.height - parent.paddingBottom
+                clipRect(parent.paddingLeft, top, parent.width - parent.paddingRight, bottom)
+            } else {
+                top = 0
+                bottom = parent.height
+            }
 
-        val top: Int
-        val bottom: Int
-        if (parent.clipToPadding) {
-            top = parent.paddingTop
-            bottom = parent.height - parent.paddingBottom
-            canvas.clipRect(parent.paddingLeft, top, parent.width - parent.paddingRight, bottom)
-        } else {
-            top = 0
-            bottom = parent.height
+            parent.children.forEach { child ->
+                if (excludedViewTypes.contains(parent.getViewType(child))) return@forEach
+
+                parent.layoutManager?.getDecoratedBoundsWithMargins(child, bounds)
+                val right: Int = bounds.right + child.translationX.roundToInt()
+                val left: Int = right - drawable.intrinsicWidth
+                drawable.setBounds(left, top, right, bottom)
+                drawable.draw(this)
+            }
         }
-
-        parent.children.forEach { child ->
-            if (excludedViewTypes.contains(parent.getViewType(child))) return@forEach
-
-            parent.layoutManager?.getDecoratedBoundsWithMargins(child, bounds)
-            val right: Int = bounds.right + child.translationX.roundToInt()
-            val left: Int = right - drawable.intrinsicWidth
-            drawable.setBounds(left, top, right, bottom)
-            drawable.draw(canvas)
-        }
-
-        canvas.restore()
     }
 }
 

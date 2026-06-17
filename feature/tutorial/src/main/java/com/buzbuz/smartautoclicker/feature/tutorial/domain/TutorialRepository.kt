@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
 import android.content.Context
 import android.content.SharedPreferences
+
+import androidx.core.content.edit
 import android.graphics.Rect
 import android.util.Log
 
@@ -122,7 +124,7 @@ class TutorialRepository @Inject constructor(
         !sharedPrefs.isStopVolumeDownDontShowAgain()
 
     fun setStopWithVolumeDownDontShowAgain() =
-        sharedPrefs.edit().putStopVolumeDownDontShowAgain(true).apply()
+        sharedPrefs.edit { putStopVolumeDownDontShowAgain(true) }
 
     fun setupTutorialMode() {
         if (scenarioId != null) return
