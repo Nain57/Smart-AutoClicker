@@ -174,6 +174,7 @@ class NumberConditionDialog(
             effectDesc.text = uiState.conditionEffectDesc
 
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
+            fieldSelectArea.setError(uiState.detectionAreaError)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
         }
     }

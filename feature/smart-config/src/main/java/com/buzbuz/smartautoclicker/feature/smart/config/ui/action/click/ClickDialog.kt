@@ -59,6 +59,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.offset.ClickOffsetDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
 
@@ -153,12 +154,7 @@ class ClickDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
-                launch { viewModel.pressDuration.collect(::updateClickDuration) }
-                launch { viewModel.pressDurationError.collect(viewBinding.fieldPressDuration::setError)}
-                launch { viewModel.positionStateUi.collect(::updateClickPositionUiState) }
-                launch { viewModel.isValidAction.collect(::updateSaveButton) }
+                launch { viewModel.uiState.collect(::updateUi) }
             }
         }
     }
@@ -201,12 +197,18 @@ class ClickDialog(
         super.back()
     }
 
-    private fun updateClickName(newName: String?) {
-        viewBinding.fieldName.setText(newName)
-    }
+    private fun updateUi(state: ClickUiState?) {
+        state ?: return
 
-    private fun updateClickDuration(newDuration: String?) {
-        viewBinding.fieldPressDuration.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
+            fieldName.setText(state.name)
+            fieldName.setError(state.nameError)
+            fieldPressDuration.setText(state.pressDuration, InputType.TYPE_CLASS_NUMBER)
+            fieldPressDuration.setError(state.pressDurationError)
+        }
+
+        updateClickPositionUiState(state.positionState)
     }
 
     private fun updateClickPositionUiState(state: ClickPositionUiState?) {
@@ -224,6 +226,7 @@ class ClickDialog(
             setTitle(state.selectorTitle)
             setDescription(state.selectorDescription)
             setEnabled(state.isSelectorEnabled)
+            setError(state.isSelectorInError)
 
             when (val visualization = state.selectorVisualization) {
                 is Drawable -> setImageDrawable(visualization)
@@ -244,10 +247,6 @@ class ClickDialog(
             setDescription(state.clickOffsetDescription)
             root.visibility = if (state.isClickOffsetVisible) View.VISIBLE else View.GONE
         }
-    }
-
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
     }
 
     private fun showPositionSelector() {
@@ -274,7 +273,7 @@ class ClickDialog(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ScreenConditionSelectionDialog(
-                conditionList = viewModel.availableConditions.value,
+                conditionList = viewModel.uiState.value?.availableConditions ?: emptyList(),
                 onConditionSelected = viewModel::setConditionToBeClicked,
             ),
             hideCurrent = false,

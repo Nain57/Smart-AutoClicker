@@ -44,6 +44,7 @@
         app:layout_constraintEnd_toStartOf="@+id/chevron"
         app:layout_constraintStart_toEndOf="@id/icon_counter"
         app:layout_constraintTop_toTopOf="@id/icon_counter"
+        android:drawablePadding="@dimen/margin_horizontal_small"
         tools:text="My counter name" />
 
     <com.google.android.material.textview.MaterialTextView

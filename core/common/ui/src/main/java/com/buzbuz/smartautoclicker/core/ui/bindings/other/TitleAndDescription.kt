@@ -25,8 +25,15 @@ import android.widget.TextView
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.ui.bindings.setTextOrGone
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeTitleAndDescriptionBinding
+import com.buzbuz.smartautoclicker.core.ui.R
+
+import androidx.appcompat.R as AppCompatR
+import com.google.android.material.R as MaterialR
+import com.google.android.material.color.MaterialColors
+
 
 
 internal fun IncludeTitleAndDescriptionBinding.setTitle(titleText: String) {
@@ -75,6 +82,14 @@ internal fun IncludeTitleAndDescriptionBinding.setDescription(index: Int) {
     state.maxLinesCount?.let(description::setLines)
     description.text = state.descriptions[index]
     description.tag = state.copy(displayedIndex = index)
+}
+
+internal fun IncludeTitleAndDescriptionBinding.setError(inError: Boolean) {
+    title.setLeftCompoundDrawable(if (inError) R.drawable.ic_badge_error else null)
+    description.setTextColor(
+        if (inError) MaterialColors.getColor(root, AppCompatR.attr.colorError)
+        else MaterialColors.getColor(root, MaterialR.attr.colorOnSurfaceVariant)
+    )
 }
 
 private fun TextView.getTextLineCount(textToShow: CharSequence): Int {

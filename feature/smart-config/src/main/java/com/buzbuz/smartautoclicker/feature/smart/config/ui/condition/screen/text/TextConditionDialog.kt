@@ -178,6 +178,7 @@ class TextConditionDialog(
 
             fieldAlphabet.setDescription(uiState.alphabetDesc)
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
+            fieldSelectArea.setError(uiState.detectionAreaError)
             fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
         }

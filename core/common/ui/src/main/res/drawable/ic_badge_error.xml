@@ -5,7 +5,7 @@
     android:tint="?attr/colorError">
 
     <solid
-        android:color="@color/md_theme_light_error"/>
+        android:color="@color/design_default_color_error"/>
 
     <size
         android:width="6dp"

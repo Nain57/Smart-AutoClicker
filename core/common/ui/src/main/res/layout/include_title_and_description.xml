@@ -31,8 +31,10 @@
         android:layout_marginEnd="@dimen/margin_horizontal_large"
         android:layout_marginVertical="@dimen/margin_vertical_mini"
         android:visibility="gone"
+        android:drawablePadding="@dimen/margin_horizontal_small"
         tools:text="Field title"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        tools:drawableStart="@drawable/ic_badge_error"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/description"

@@ -16,9 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter
 
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCounterSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+
+import androidx.appcompat.R as AppCompatR
+import com.google.android.material.R as MaterialR
+import com.google.android.material.color.MaterialColors
 
 fun IncludeCounterSelectionBinding.setOnClickListener(listener: () -> Unit) {
     root.setOnClickListener { listener() }
@@ -26,13 +31,17 @@ fun IncludeCounterSelectionBinding.setOnClickListener(listener: () -> Unit) {
 
 fun IncludeCounterSelectionBinding.setCounter(uiState: UiStaticOrCounterSelection.CounterValue) {
     if (uiState.counter?.counterName.isNullOrEmpty()) {
+        title.setLeftCompoundDrawable(R.drawable.ic_badge_error)
+        description.setTextColor(MaterialColors.getColor(root, AppCompatR.attr.colorError))
         title.setText(R.string.field_counter_selection_title_empty)
         description.setText(R.string.field_counter_selection_desc_empty)
     } else {
         title.text = uiState.counter.counterName
+        title.setLeftCompoundDrawable(null)
         description.text = root.context.getString(
             R.string.field_counter_selection_desc,
             uiState.counter.defaultValue,
         )
+        description.setTextColor(MaterialColors.getColor(root, MaterialR.attr.colorOnSurfaceVariant))
     }
 }

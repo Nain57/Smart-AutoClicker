@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putSwipeDurationConfig
@@ -34,20 +35,21 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 class SwipeViewModel @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -67,37 +69,20 @@ class SwipeViewModel @Inject constructor(
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
         .distinctUntilChanged()
-        .debounce(1000)
+        .debounce(1000.milliseconds)
 
-    /** The name of the swipe. */
-    val name: Flow<String?> = configuredSwipe
-        .map { it.name }
-        .take(1)
-    /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredSwipe.map { it.name?.isEmpty() ?: true }
-
-    /** The duration between the start and end of the swipe in milliseconds. */
-    val swipeDuration: Flow<String?> = configuredSwipe
-        .map { it.swipeDuration?.toString() }
-        .take(1)
-    /** Tells if the swipe duration value is valid or not. */
-    val swipeDurationError: Flow<Boolean> = configuredSwipe.map { (it.swipeDuration ?: -1) <= 0 }
-
-    /** The start and end positions of the swipe. */
-    val positions: Flow<Pair<Point, Point>?> = configuredSwipe
-        .map { swipe ->
-            val from = swipe.from
-            val to = swipe.to
-            if (from != null && to != null) from to to
-            else null
-        }
-
-    /** Tells if the configured swipe is valid and can be saved. */
-    val isValidAction: Flow<Boolean> =  editionRepository.editionState.editedActionState
-        .map { it.canBeSaved }
+    val uiState: StateFlow<SwipeUiState?> = combine(
+        configuredSwipe,
+        editionRepository.editionState.editedActionState,
+    ) { swipe, actionState ->
+        swipe.toDialogUiState(
+            hasUnsavedModifications = actionState.hasChanged,
+            canBeSaved = actionState.canBeSaved,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     fun getEditedSwipe(): Swipe? =
-        editionRepository.editionState.getEditedAction()
+        editionRepository.editionState.getEditedAction<Swipe>()
 
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
@@ -137,5 +122,25 @@ class SwipeViewModel @Inject constructor(
         editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
             sharedPreferences.edit { putSwipeDurationConfig(swipe.swipeDuration ?: 0) }
         }
+    }
+
+    private fun Swipe.toDialogUiState(
+        hasUnsavedModifications: Boolean,
+        canBeSaved: Boolean,
+    ): SwipeUiState {
+        val hasPositions = from != null && to != null
+        return SwipeUiState(
+            canBeSaved = canBeSaved,
+            hasUnsavedModifications = hasUnsavedModifications,
+            name = name,
+            nameError = name?.isEmpty() ?: true,
+            swipeDuration = swipeDuration?.toString(),
+            swipeDurationError = (swipeDuration ?: -1) <= 0,
+            positionsDescription = if (hasPositions)
+                context.getString(R.string.field_swipe_positions_desc, from!!.x, from!!.y, to!!.x, to!!.y)
+            else
+                context.getString(R.string.generic_select_the_position),
+            positionsError = !hasPositions,
+        )
     }
 }

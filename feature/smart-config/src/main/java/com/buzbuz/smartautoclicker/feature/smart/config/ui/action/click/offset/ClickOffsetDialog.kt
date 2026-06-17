@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.offset
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

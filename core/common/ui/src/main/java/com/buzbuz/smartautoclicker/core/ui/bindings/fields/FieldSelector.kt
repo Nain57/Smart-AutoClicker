@@ -23,6 +23,7 @@ import android.view.View
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_DISABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.ALPHA_ENABLED
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setDescription
+import com.buzbuz.smartautoclicker.core.ui.bindings.other.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setTitle
 import com.buzbuz.smartautoclicker.core.ui.bindings.other.setupDescriptions
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldSelectorBinding
@@ -42,6 +43,10 @@ fun IncludeFieldSelectorBinding.setDescription(descriptionIndex: Int) {
 
 fun IncludeFieldSelectorBinding.setDescription(description: String?) {
     titleAndDescription.setDescription(description)
+}
+
+fun IncludeFieldSelectorBinding.setError(inError: Boolean) {
+    titleAndDescription.setError(inError)
 }
 
 fun IncludeFieldSelectorBinding.setIconBitmap(bitmap: Bitmap?) {

@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe
 
-import android.graphics.Point
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -118,12 +117,7 @@ class SwipeDialog(
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.name.collect(::updateClickName) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
-                launch { viewModel.swipeDuration.collect(::updateSwipeDuration) }
-                launch { viewModel.swipeDurationError.collect(viewBinding.fieldSwipeDuration::setError)}
-                launch { viewModel.positions.collect(::updateSwipePositionsField) }
-                launch { viewModel.isValidAction.collect(::updateSaveButton) }
+                launch { viewModel.uiState.collect(::updateUi) }
             }
         }
     }
@@ -152,30 +146,18 @@ class SwipeDialog(
         super.back()
     }
 
-    private fun updateClickName(newName: String?) {
-        viewBinding.fieldName.setText(newName)
-    }
+    private fun updateUi(state: SwipeUiState?) {
+        state ?: return
 
-    private fun updateSwipeDuration(newDuration: String?) {
-        viewBinding.fieldSwipeDuration.setText(newDuration, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateSwipePositionsField(positions: Pair<Point, Point>?) {
-        viewBinding.fieldSelectionSwipePosition.setDescription(
-            if (positions != null)
-                context.getString(
-                    R.string.field_swipe_positions_desc,
-                    positions.first.x,
-                    positions.first.y,
-                    positions.second.x,
-                    positions.second.y,
-                )
-            else context.getString(R.string.generic_select_the_position)
-        )
-    }
-
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
+            fieldName.setText(state.name)
+            fieldName.setError(state.nameError)
+            fieldSwipeDuration.setText(state.swipeDuration, InputType.TYPE_CLASS_NUMBER)
+            fieldSwipeDuration.setError(state.swipeDurationError)
+            fieldSelectionSwipePosition.setDescription(state.positionsDescription)
+            fieldSelectionSwipePosition.setError(state.positionsError)
+        }
     }
 
     private fun showPositionSelector() {

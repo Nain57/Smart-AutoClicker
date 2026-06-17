@@ -47,7 +47,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -60,6 +59,8 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import androidx.core.content.edit
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @OptIn(FlowPreview::class)
@@ -86,65 +87,30 @@ class ClickViewModel @Inject constructor(
     /** Tells if the user is currently editing an action. If that's not the case, dialog should be closed. */
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
         .distinctUntilChanged()
-        .debounce(1000)
+        .debounce(1000.milliseconds)
 
-    /** The name of the click. */
-    val name: Flow<String?> = configuredClick
-        .map { it.name }
-        .take(1)
-    /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = configuredClick
-        .map { it.name?.isEmpty() ?: true }
+    val uiState: StateFlow<ClickUiState?> = combine(
+        configuredClick,
+        editionRepository.editionState.editedEventState,
+        editionRepository.editionState.editedActionState,
+        editionRepository.editionState.editedEventScreenConditionsState,
+    ) { click, event, actionState, conditionsState ->
 
-    /** The duration between the press and release of the click in milliseconds. */
-    val pressDuration: Flow<String?> = configuredClick
-        .map { it.pressDuration?.toString() }
-        .take(1)
-    /** Tells if the press duration value is valid or not. */
-    val pressDurationError: Flow<Boolean> = configuredClick
-        .map { (it.pressDuration ?: -1) <= 0 }
-
-    val availableConditions: StateFlow<List<UiScreenCondition>> = editionRepository.editionState.editedEventScreenConditionsState
-        .map { editedConditions ->
-            editedConditions.value?.filter { it.shouldBeDetected }
-                ?.map {
-                    it.toUiScreenCondition(
-                        context = context,
-                        shortThreshold = true,
-                        inError = !it.isComplete(),
-                    )
-                }
+        val evt = event.value ?: return@combine null
+        click.toDialogUiState(
+            context = context,
+            event = evt,
+            hasUnsavedModifications = actionState.hasChanged,
+            canBeSaved = actionState.canBeSaved,
+            availableConditions = conditionsState.value
+                ?.filter { it.shouldBeDetected }
+                ?.map { it.toUiScreenCondition(context = context, shortThreshold = true, inError = !it.isComplete()) }
                 ?: emptyList()
-        }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-
-    val positionStateUi: Flow<ClickPositionUiState?> =
-        combine(editionRepository.editionState.editedEventState, configuredClick) { event, click ->
-            val evt = event.value ?: return@combine null
-
-            when (evt) {
-                is TriggerEvent ->
-                    context.getUserSelectedClickPositionState(click, forced = true)
-
-                is ScreenEvent if click.positionType == Click.PositionType.USER_SELECTED ->
-                    context.getUserSelectedClickPositionState(click, forced = false)
-
-                is ScreenEvent if click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == OR ->
-                    context.getOnConditionWithOrPositionState(click)
-
-                is ScreenEvent if click.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.value.conditionOperator == AND ->
-                    context.getOnConditionWithAndPositionState(evt, click)
-
-                else -> null
-            }
-        }.flowOn(Dispatchers.IO).distinctUntilChanged()
-
-    /** Tells if the configured click is valid and can be saved. */
-    val isValidAction: Flow<Boolean> = editionRepository.editionState.editedActionState
-        .map { it.canBeSaved }
+            )
+    }.flowOn(Dispatchers.IO).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     fun getEditedClick(): Click? =
-        editionRepository.editionState.getEditedAction()
+        editionRepository.editionState.getEditedAction<Click>()
 
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
@@ -216,6 +182,41 @@ class ClickViewModel @Inject constructor(
         }
     }
 
+    private suspend fun Click.toDialogUiState(
+        context: Context,
+        event: Event,
+        availableConditions: List<UiScreenCondition>,
+        hasUnsavedModifications: Boolean,
+        canBeSaved: Boolean,
+    ) : ClickUiState {
+        val positionState = when (event) {
+            is TriggerEvent ->
+                context.getUserSelectedClickPositionState(this, forced = true)
+
+            is ScreenEvent if this.positionType == Click.PositionType.USER_SELECTED ->
+                context.getUserSelectedClickPositionState(this, forced = false)
+
+            is ScreenEvent if this.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.conditionOperator == OR ->
+                context.getOnConditionWithOrPositionState(this)
+
+            is ScreenEvent if this.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.conditionOperator == AND ->
+                context.getOnConditionWithAndPositionState(event, this, availableConditions)
+
+            else -> null
+        }
+
+        return ClickUiState(
+            canBeSaved = canBeSaved,
+            hasUnsavedModifications = hasUnsavedModifications,
+            name = name,
+            nameError = name?.isEmpty() ?: true,
+            pressDuration = pressDuration?.toString() ?: "1",
+            pressDurationError = (pressDuration ?: -1) <= 0,
+            positionState = positionState,
+            availableConditions = availableConditions,
+        )
+    }
+
     private fun Context.getUserSelectedClickPositionState(click: Click, forced: Boolean): ClickPositionUiState =
         ClickPositionUiState(
             positionType = Click.PositionType.USER_SELECTED,
@@ -225,6 +226,7 @@ class ClickViewModel @Inject constructor(
             selectorDescription =
                 if (click.position == null) getString(R.string.generic_select_the_position)
                 else getString(R.string.field_click_position_desc, click.position?.x ?: 0, click.position?.y ?: 0),
+            isSelectorInError = click.position == null,
             isClickOffsetEnabled = false,
             isClickOffsetVisible = !forced,
             clickOffsetDescription = getClickOffsetString(click),
@@ -237,12 +239,17 @@ class ClickViewModel @Inject constructor(
             isSelectorEnabled = false,
             selectorTitle = getString(R.string.field_condition_selection_title_or_operator),
             selectorDescription = getString(R.string.field_condition_selection_desc_or_operator),
+            isSelectorInError = false,
             isClickOffsetVisible = true,
             isClickOffsetEnabled = true,
             clickOffsetDescription = getClickOffsetString(click),
         )
 
-    private suspend fun Context.getOnConditionWithAndPositionState(event: ScreenEvent, click: Click): ClickPositionUiState {
+    private suspend fun Context.getOnConditionWithAndPositionState(
+        event: ScreenEvent,
+        click: Click,
+        availableConditions: List<UiScreenCondition>,
+    ): ClickPositionUiState {
         val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
 
         val conditionVisualization = when (conditionToClick) {
@@ -256,12 +263,13 @@ class ClickViewModel @Inject constructor(
         return ClickPositionUiState(
             positionType = Click.PositionType.ON_DETECTED_CONDITION,
             isTypeFieldVisible = true,
-            isSelectorEnabled = availableConditions.value.isNotEmpty(),
+            isSelectorEnabled = availableConditions.isNotEmpty(),
             selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
             selectorDescription =
                 if (conditionToClick == null || conditionVisualization == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
                 else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
             selectorVisualization = conditionVisualization,
+            isSelectorInError = availableConditions.isNotEmpty() && (conditionToClick == null || conditionVisualization == null),
             isClickOffsetVisible = true,
             isClickOffsetEnabled = true,
             clickOffsetDescription = getClickOffsetString(click),
@@ -277,15 +285,3 @@ class ClickViewModel @Inject constructor(
             ?: getString(R.string.field_click_offset_desc_none)
     }
 }
-
-data class ClickPositionUiState(
-    val positionType: Click.PositionType,
-    val isTypeFieldVisible: Boolean,
-    val isClickOffsetVisible: Boolean,
-    val isClickOffsetEnabled: Boolean,
-    val clickOffsetDescription: String? = null,
-    val isSelectorEnabled: Boolean,
-    val selectorTitle: String,
-    val selectorDescription: String?,
-    val selectorVisualization: Any? = null,
-)

@@ -27,16 +27,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeFieldEventChildrenBinding
 
 
-internal fun IncludeFieldEventChildrenBinding.setTitle(
-    @StringRes titleRes: Int,
-    @StringRes emptyTitleRes: Int,
-) {
+internal fun IncludeFieldEventChildrenBinding.setTitle(@StringRes titleRes: Int) {
     title.setText(titleRes)
-    title.tag = FieldTitles(titleRes, emptyTitleRes)
-}
-
-internal fun IncludeFieldEventChildrenBinding.setEmptyDescription(@StringRes descRes: Int) {
-    emptyDescription.setText(descRes)
 }
 
 @SuppressLint("ClickableViewAccessibility")
@@ -55,23 +47,6 @@ internal fun <Item> IncludeFieldEventChildrenBinding.setAdapter(adapter: ListAda
 }
 
 internal fun <Item> IncludeFieldEventChildrenBinding.setItems(items: List<Item>) {
-    if (items.isEmpty()) toEmptyState()
-    else toListState(items)
-}
-
-private fun IncludeFieldEventChildrenBinding.toEmptyState() {
-    (title.tag as? FieldTitles)?.let { titles ->
-        title.text = root.context.getText(titles.emptyTitleRes)
-    }
-    emptyDescription.visibility = View.VISIBLE
-    list.visibility = View.GONE
-}
-
-private fun <Item> IncludeFieldEventChildrenBinding.toListState(items: List<Item>) {
-    (title.tag as? FieldTitles)?.let { titles ->
-        title.text = root.context.getText(titles.titleRes)
-    }
-    emptyDescription.visibility = View.GONE
     list.apply {
         visibility = View.VISIBLE
         getListAdapter<Item>()?.submitList(items)
@@ -107,8 +82,3 @@ private fun RecyclerView.setEmptySpaceClickListener(listener: (() -> Unit)?) {
         } else false
     }
 }
-
-private data class FieldTitles(
-    @field:StringRes val titleRes: Int,
-    @field:StringRes val emptyTitleRes: Int,
-)

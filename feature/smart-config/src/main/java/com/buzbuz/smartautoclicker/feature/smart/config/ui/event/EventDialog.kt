@@ -181,32 +181,31 @@ class EventDialog(
             fieldTriggerConditionsSelector.root.visibility = View.GONE
             fieldImageConditionsSelector.apply {
                 root.visibility = View.VISIBLE
-                setTitle(
-                    titleRes = R.string.menu_item_title_conditions,
-                    emptyTitleRes = R.string.message_empty_screen_condition_list_title,
-                )
-                setEmptyDescription(R.string.message_empty_screen_condition_list_desc)
-
+                setTitle(titleRes = R.string.menu_item_title_conditions,)
                 setAdapter(
                     EventImageConditionsAdapter(
                         itemClickedListener = ::showImageConditionsBriefMenu,
                         bitmapProvider = viewModel::getConditionBitmap,
                     ),
                 )
-
+                setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
+            }
+            fieldEmptyConditionsSelector.apply {
+                setTitle(context.getString(R.string.message_empty_screen_condition_list_title))
+                setDescription(context.getString(R.string.message_empty_screen_condition_list_desc))
                 setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
             }
         } else {
             fieldImageConditionsSelector.root.visibility = View.GONE
             fieldTriggerConditionsSelector.apply {
                 root.visibility = View.VISIBLE
-                setTitle(
-                    titleRes = R.string.menu_item_title_conditions,
-                    emptyTitleRes = R.string.message_empty_trigger_condition_list_title,
-                )
-                setEmptyDescription(R.string.message_empty_trigger_condition_list_desc)
-
+                setTitle(titleRes = R.string.menu_item_title_conditions)
                 setAdapter(EventChildrenCardsAdapter { showTriggerConditionsDialog() })
+                setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
+            }
+            fieldEmptyConditionsSelector.apply {
+                setTitle(context.getString(R.string.message_empty_trigger_condition_list_title))
+                setDescription(context.getString(R.string.message_empty_trigger_condition_list_desc))
                 setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
             }
         }
@@ -235,17 +234,21 @@ class EventDialog(
 
     private fun DialogEventConfigBinding.setupActionCard() {
         fieldActionsSelector.apply {
-            setTitle(
-                titleRes = R.string.menu_item_title_actions,
-                emptyTitleRes = R.string.message_empty_action_list_title,
-            )
-            setEmptyDescription(R.string.message_empty_action_list_desc)
-
+            setTitle(titleRes = R.string.menu_item_title_actions)
             setAdapter(
                 EventChildrenCardsAdapter(
                     itemClickedListener = ::showActionsOverlay,
                 ),
             )
+
+            setOnClickListener { debounceUserInteraction { showActionsOverlay() } }
+        }
+
+        fieldEmptyActionsSelector.apply {
+            fieldEmptyActionsSelector.apply {
+                setTitle(context.getString(R.string.message_empty_action_list_title))
+                setDescription(context.getString(R.string.message_empty_action_list_desc))
+            }
 
             setOnClickListener { debounceUserInteraction { showActionsOverlay() } }
         }
@@ -315,6 +318,16 @@ class EventDialog(
             }
 
             viewBinding.fieldActionsSelector.setItems(state.actionsItems)
+            if (state.actionsItems.isEmpty()) {
+                fieldActionsSelector.root.visibility = View.GONE
+                fieldEmptyActionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyActionsSelector.setError(true)
+
+            } else {
+                fieldActionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyActionsSelector.root.visibility = View.GONE
+                fieldEmptyActionsSelector.setError(false)
+            }
         }
 
         // Specific views
@@ -343,7 +356,18 @@ class EventDialog(
             dropdownCooldownTimeUnit.setSelectedItem(uiState.cooldownUnit)
 
             fieldTestEvent.setEnabled(uiState.canTryEvent)
+
             fieldImageConditionsSelector.setItems(uiState.imageConditionsItems)
+            if (uiState.imageConditionsItems.isEmpty()) {
+                fieldImageConditionsSelector.root.visibility = View.GONE
+                fieldEmptyConditionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyConditionsSelector.setError(true)
+
+            } else {
+                fieldImageConditionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyConditionsSelector.root.visibility = View.GONE
+                fieldEmptyConditionsSelector.setError(false)
+            }
         }
     }
 

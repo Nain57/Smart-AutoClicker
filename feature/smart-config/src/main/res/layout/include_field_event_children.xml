@@ -65,21 +65,4 @@
         tools:itemCount="3"
         tools:visibility="visible"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/empty_description"
-        style="@style/AppTheme.Field.SubText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="@dimen/margin_vertical_small"
-        android:layout_marginBottom="@dimen/margin_vertical_mini"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"
-        tools:text="@string/message_empty_screen_condition_list_desc"
-        tools:visibility="gone"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
