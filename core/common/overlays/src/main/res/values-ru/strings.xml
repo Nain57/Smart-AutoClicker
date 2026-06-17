@@ -19,6 +19,4 @@
     <string name="dialog_move_to_title">Перемещение</string>
     <string name="dialog_move_to_position_label">Индекс</string>
     <string name="overlay_instructions_gesture_record">Идёт запись жеста…</string>
-
-    <string name="item_brief_items_count" translatable="false">%1$d/%2$d</string>
 </resources>
