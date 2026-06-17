@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildr
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
 
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
@@ -120,15 +121,21 @@ private class EventChildViewHolder(
     }
 
     private fun bindAction(item: FixCopyUiItem.Item.EventChildren.ActionItem) {
-        viewBinding.iconChildType.setImageResource(item.uiAction.icon)
-        viewBinding.childName.text = item.uiAction.name
-        viewBinding.childDetails.text = item.stateText
+        viewBinding.apply {
+            iconChildType.setImageResource(item.uiAction.icon)
+            childName.text = item.uiAction.name
+            childDetails.text = item.stateText
+            root.strokeColor = root.context.getColor(item.getItemTypeColor())
+        }
     }
 
     private fun bindCondition(item: FixCopyUiItem.Item.EventChildren.ConditionItem) {
-        viewBinding.iconChildType.setImageResource(item.uiCondition.iconRes)
-        viewBinding.childName.text = item.uiCondition.name
-        viewBinding.childDetails.text = item.stateText
+        viewBinding.apply {
+            iconChildType.setImageResource(item.uiCondition.iconRes)
+            childName.text = item.uiCondition.name
+            childDetails.text = item.stateText
+            root.strokeColor = root.context.getColor(item.getItemTypeColor())
+        }
     }
 
     private fun bindMissingReferences(
@@ -150,6 +157,7 @@ private class EventChildViewHolder(
             val refBinding = ItemFixCopyMissingRefBinding.inflate(inflater, container, true)
             refBinding.iconMissingRefType.setImageResource(reference.getIconRes())
             refBinding.textMissingRefName.text = reference.name
+            refBinding.colorItemType.setBackgroundColor(container.context.getColor(item.getItemTypeColor()))
             refBinding.root.setOnClickListener { onMissingReferenceClicked(item, reference) }
         }
     }
@@ -161,4 +169,11 @@ private fun MissingCopyReference.getIconRes(): Int =
         is MissingCopyReference.EventToggleReference -> R.drawable.ic_toggle_event
         is MissingCopyReference.ScreenConditionReference -> R.drawable.ic_image_condition
         is MissingCopyReference.CounterReference -> R.drawable.ic_change_counter
+    }
+
+@ColorRes
+private fun FixCopyUiItem.Item.EventChildren.getItemTypeColor(): Int =
+    when (this) {
+        is FixCopyUiItem.Item.EventChildren.ActionItem -> R.color.event_actions_color
+        is FixCopyUiItem.Item.EventChildren.ConditionItem -> R.color.event_conditions_color
     }

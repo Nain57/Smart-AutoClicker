@@ -22,16 +22,21 @@
     android:layout_height="@dimen/item_height"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingTop="@dimen/margin_vertical_mini"
-    android:paddingBottom="@dimen/margin_vertical_mini"
     android:clickable="true"
     android:focusable="true">
+
+    <View
+        android:id="@+id/color_item_type"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:background="@color/event_test_color"/>
 
     <ImageView
         android:id="@+id/icon_missing_ref_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
+        android:layout_marginStart="@dimen/margin_horizontal_small"
         android:layout_marginVertical="@dimen/margin_vertical_default"
         android:contentDescription="@string/content_desc_action_icon"
         tools:src="@drawable/ic_toggle_event"/>
@@ -50,7 +55,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_horizontal_default"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:src="@drawable/ic_chevron_right"
         android:scaleType="fitCenter"
         android:contentDescription="@null"/>

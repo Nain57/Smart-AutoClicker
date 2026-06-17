@@ -23,7 +23,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-    android:layout_marginVertical="@dimen/margin_vertical_default">
+    android:layout_marginVertical="@dimen/margin_vertical_default"
+    app:strokeWidth="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,9 +38,9 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_child_type"
-                android:layout_width="48dp"
+                android:layout_width="36dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="@dimen/margin_horizontal_small"
+                android:layout_marginStart="@dimen/margin_horizontal_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +51,7 @@
                 android:id="@+id/child_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_horizontal_default"
+                android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                 android:layout_marginTop="@dimen/margin_vertical_small"
                 android:layout_marginBottom="@dimen/margin_vertical_mini"
                 app:layout_constraintStart_toEndOf="@id/icon_child_type"
@@ -70,7 +71,7 @@
                 android:layout_marginBottom="@dimen/margin_vertical_small"
                 app:layout_constraintStart_toStartOf="@id/child_name"
                 app:layout_constraintTop_toBottomOf="@id/child_name"
-                app:layout_constraintEnd_toStartOf="@id/icon_child_can_be_copied"
+                app:layout_constraintEnd_toEndOf="@id/child_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_size_list_item_text_small"
@@ -97,9 +98,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_horizontal_small"
-            android:layout_marginEnd="@dimen/margin_horizontal_small"
-            android:layout_marginBottom="@dimen/margin_vertical_small"
             android:visibility="gone"
             tools:visibility="visible"/>
 
