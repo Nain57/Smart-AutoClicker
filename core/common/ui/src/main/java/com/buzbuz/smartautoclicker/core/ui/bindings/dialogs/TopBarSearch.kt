@@ -48,7 +48,7 @@ private fun IncludeDialogSearchTopBarBinding.toTitleMode() {
     buttonDismiss.visibility = View.VISIBLE
     buttonCopy.visibility = View.VISIBLE
     dialogTitle.visibility = View.VISIBLE
-    buttonSearchCancel.setIconResource(R.drawable.abc_ic_search_api_material)
+    buttonSearchCancel.setIconResource(R.drawable.ic_search)
 
     searchEdit.apply {
         visibility = View.GONE
@@ -71,6 +71,6 @@ private fun IncludeDialogSearchTopBarBinding.toSearchMode() {
 
         requestFocus()
         context.getSystemService(InputMethodManager::class.java)
-            .showSoftInput(searchEdit, InputMethodManager.SHOW_IMPLICIT)
+            .showSoftInput(searchEdit, 0)
     }
 }
