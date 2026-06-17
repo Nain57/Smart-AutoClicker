@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:text="@string/overlay_instructions_gesture_record"
-            tools:text="Recording gesture..." />
+            tools:text="Recording gesture…" />
 
         <ImageView
             android:id="@+id/icon_recording"

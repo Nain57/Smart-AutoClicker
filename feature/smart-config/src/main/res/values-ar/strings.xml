@@ -159,7 +159,7 @@
     <string name="message_empty_trigger_condition_list_title">لا توجد شروط!</string>
     <string name="message_empty_trigger_condition_list_desc">الشرط هو معايير مخصصة لبدء الإجراء.</string>
     <string name="message_empty_action_list_title">لا توجد إجراءات!</string>
-    <string name="message_empty_action_list_desc">الإجراء هو تفاعل (نقر، تمرير...) مع هاتفك يتم تشغيله عند استيفاء الشروط التي تم إنشاؤها.</string>
+    <string name="message_empty_action_list_desc">الإجراء هو تفاعل (نقر، تمرير…) مع هاتفك يتم تشغيله عند استيفاء الشروط التي تم إنشاؤها.</string>
 
     <string name="menu_item_title_conditions">شروط</string>
     <string name="menu_item_title_actions">الإجراءات</string>

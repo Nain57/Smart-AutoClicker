@@ -83,6 +83,7 @@ private fun <Item> RecyclerView.getListAdapter(): ListAdapter<Item, *>? =
     adapter as? ListAdapter<Item, *>
 
 
+@SuppressLint("ClickableViewAccessibility")
 private fun RecyclerView.setEmptySpaceClickListener(listener: (() -> Unit)?) {
     if (listener == null) {
         setOnTouchListener(null)

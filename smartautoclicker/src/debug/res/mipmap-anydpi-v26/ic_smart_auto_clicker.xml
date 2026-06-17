@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+<adaptive-icon xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="MonochromeLauncherIcon">
     <background android:drawable="@android:color/holo_blue_dark"/>
     <foreground android:drawable="@drawable/ic_smart_auto_clicker_foreground"/>
 </adaptive-icon>
