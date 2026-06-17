@@ -76,5 +76,6 @@ internal object SmartDatabaseModule {
         ).addMigrations(
             Migration10to11,
             Migration12to13,
+            Migration19to20,
         ).build()
 }
