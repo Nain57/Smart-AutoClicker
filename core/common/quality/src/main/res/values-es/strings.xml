@@ -21,6 +21,5 @@
     <string name="message_accessibility_issues">Parece que el permiso del Servicio de Accesibilidad se ha eliminado varias veces. Si no lo has cambiado tú mismo, significa que tu dispositivo lo ha eliminado.\n\n
         Algunos fabricantes de dispositivos Android no respetan el comportamiento estándar de las aplicaciones en segundo plano y, según la marca de su dispositivo, es posible que deba realizar una configuración adicional.\n\n
         Consulte el siguiente sitio web para obtener más información sobre ese problema y cómo puede mejorar la estabilidad del permiso.</string>
-    <string name="button_open_dont_kill_my_app" translatable="false">Don\'t kill my app</string>
 
 </resources>
