@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.pause
 
 import android.content.Context
 
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -97,10 +98,9 @@ class DumbPauseViewModel @Inject constructor() : ViewModel() {
 
     fun saveLastConfig(context: Context) {
         _editedDumbPause.value?.let { pause ->
-            context.getDumbConfigPreferences()
-                .edit()
-                .putPauseDurationConfig(pause.pauseDurationMs)
-                .apply()
+            context.getDumbConfigPreferences().edit {
+                putPauseDurationConfig(pause.pauseDurationMs)
+            }
         }
     }
 }

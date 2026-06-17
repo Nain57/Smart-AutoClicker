@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.swipe
 
 import android.content.Context
 import android.content.SharedPreferences
+
+import androidx.core.content.edit
 import android.graphics.Point
 
 import androidx.lifecycle.ViewModel
@@ -133,7 +135,7 @@ class SwipeViewModel @Inject constructor(
 
     fun saveLastConfig() {
         editionRepository.editionState.getEditedAction<Swipe>()?.let { swipe ->
-            sharedPreferences.edit().putSwipeDurationConfig(swipe.swipeDuration ?: 0).apply()
+            sharedPreferences.edit { putSwipeDurationConfig(swipe.swipeDuration ?: 0) }
         }
     }
 }

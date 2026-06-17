@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.animation.ValueAnimator
 import android.graphics.Canvas
+
+import androidx.core.graphics.withSave
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
@@ -100,10 +102,10 @@ internal class PauseBriefRenderer(
             drawCircle(viewCenter.x, viewCenter.y, viewStyle.outerRadiusPx * 2f, gradientBackgroundPaint)
             drawCircle(viewCenter.x, viewCenter.y, viewStyle.outerRadiusPx, viewStyle.outerPaint)
 
-            save()
-            rotate(handRotation, viewCenter.x, viewCenter.y)
-            drawRoundRect(handPosition, 4f, 4f, viewStyle.linePaint)
-            restore()
+            withSave {
+                rotate(handRotation, viewCenter.x, viewCenter.y)
+                drawRoundRect(handPosition, 4f, 4f, viewStyle.linePaint)
+            }
         }
     }
 

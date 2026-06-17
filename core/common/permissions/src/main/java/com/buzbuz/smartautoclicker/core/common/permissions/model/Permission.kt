@@ -23,6 +23,7 @@ import android.os.Build
 import android.util.Log
 
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.content.edit
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 
@@ -44,9 +45,7 @@ sealed class Permission(internal val isOptional: Boolean) {
         val result = onStartRequestFlow(context)
 
         context.getPermissionSharedPrefs()
-            .edit()
-            .putBoolean(javaClass.simpleName, true)
-            .apply()
+            .edit { putBoolean(javaClass.simpleName, true) }
 
         return result
     }

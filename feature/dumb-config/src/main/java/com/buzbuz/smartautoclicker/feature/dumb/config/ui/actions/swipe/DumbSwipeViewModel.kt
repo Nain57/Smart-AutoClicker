@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.swipe
 import android.content.Context
 import android.graphics.Point
 
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 
@@ -128,12 +129,11 @@ class DumbSwipeViewModel @Inject constructor(
 
     fun saveLastConfig(context: Context) {
         _editedDumbSwipe.value?.let { swipe ->
-            context.getDumbConfigPreferences()
-                .edit()
-                .putSwipeDurationConfig(swipe.swipeDurationMs)
-                .putSwipeRepeatCountConfig(swipe.repeatCount)
-                .putSwipeRepeatDelayConfig(swipe.repeatDelayMs)
-                .apply()
+            context.getDumbConfigPreferences().edit {
+                putSwipeDurationConfig(swipe.swipeDurationMs)
+                putSwipeRepeatCountConfig(swipe.repeatCount)
+                putSwipeRepeatDelayConfig(swipe.repeatDelayMs)
+            }
         }
     }
 }

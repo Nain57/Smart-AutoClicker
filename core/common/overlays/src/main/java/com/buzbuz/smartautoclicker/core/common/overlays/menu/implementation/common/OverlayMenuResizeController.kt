@@ -23,6 +23,7 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import androidx.core.view.children
+import androidx.core.view.isGone
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 
@@ -128,7 +129,7 @@ internal class OverlayMenuResizeController(
 
         // Get the height of all children + the padding
         val height = resizedContainer.children.fold(0) { acc, child ->
-            acc + (if (child.visibility == View.GONE) 0 else child.height)
+            acc + (if (child.isGone) 0 else child.height)
         } + resizedContainer.paddingTop + resizedContainer.paddingBottom
 
         val firstChild = (backgroundViewGroup.getChildAt(0) as? ViewGroup)
@@ -137,7 +138,7 @@ internal class OverlayMenuResizeController(
         } else {
             firstChild.children.fold(0) { acc, child ->
                 acc + (
-                    if (child.visibility == View.GONE) 0
+                    if (child.isGone) 0
                     else child.width + child.marginStart + child.marginEnd
                 )
             }

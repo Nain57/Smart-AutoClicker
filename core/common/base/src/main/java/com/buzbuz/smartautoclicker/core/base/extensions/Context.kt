@@ -21,6 +21,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+
+import androidx.core.net.toUri
 import android.util.TypedValue
 
 import androidx.annotation.AttrRes
@@ -38,7 +40,7 @@ fun Context.getThemeColor(@AttrRes colorAttr: Int): Int {
 
 
 fun Context.safeStartWebBrowserActivity(url: String): Boolean =
-    safeStartWebBrowserActivity(Uri.parse(url))
+    safeStartWebBrowserActivity(url.toUri())
 
 fun Context.safeStartWebBrowserActivity(uri: Uri): Boolean {
     if (safeStartActivity(getOpenWebBrowserIntent(uri))) return true
