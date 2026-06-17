@@ -18,16 +18,6 @@
 <resources>
 
     <string name="app_name" translatable="false">Klick\'r</string>
-    <string name="notification_channel_name" translatable="false">Klick\'r</string>
-
-    <!-- Application wide texts. -->
-    <string name="notification_title">Scenario: %1$s</string>
-    <string name="notification_message">Press to change the scenario</string>
-    <string name="notification_button_play_and_hide">Play and hide</string>
-    <string name="notification_button_pause_and_show">Pause and show</string>
-    <string name="notification_button_toggle_menu">Show/Hide</string>
-    <string name="notification_button_stop">Stop</string>
-
 
     <string name="activity_scenario_title">Scenarios</string>
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
@@ -39,7 +29,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">New scenario</string>
-    <string name="dialog_title_copy_scenario">Copy scenario</string>
 
     <!--
       - Text for menu items.
@@ -85,13 +74,6 @@
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
     <string name="message_error_screen_capture_permission_dialog_not_found">Your device does not provide the standard
         Android screen capture permission dialog. Klick\'r won\'t be able to run on it.</string>
-
-    <!--
-      - Section titles.
-      - Should be short and concise.
-      -->
-    <string name="section_title_scenario_type_title">Scenario type</string>
-
 
     <!--
       - Toast messages.

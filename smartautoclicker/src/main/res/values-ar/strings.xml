@@ -17,15 +17,6 @@
 -->
 <resources>
 
-    <!-- Application wide texts. -->
-    <string name="notification_title">السيناريو: %1$s</string>
-    <string name="notification_message">اضغط لتغيير السيناريو</string>
-    <string name="notification_button_play_and_hide">تشغيل وإخفاء</string>
-    <string name="notification_button_pause_and_show">إيقاف مؤقت وعرض</string>
-    <string name="notification_button_toggle_menu">عرض/إخفاء</string>
-    <string name="notification_button_stop">إيقاف</string>
-
-
     <string name="activity_scenario_title">السيناريوهات</string>
     <string name="accessibility_service_description">تحتاج هذه التطبيق إلى هذه الخدمة لإدخال النقرات التي قمت بإنشائها في التطبيقات الأخرى بمجرد اكتشاف الشروط.\n\nلن يتم جمع أي بيانات من هذا التطبيق. لا تتردد في زيارة حسابنا على GitHub، الشيفرة مفتوحة المصدر!</string>
 
@@ -34,7 +25,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">سيناريو جديد</string>
-    <string name="dialog_title_copy_scenario">نسخ السيناريو</string>
 
     <!--
       - Text for menu items.
@@ -84,7 +74,6 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_scenario_type_title">نوع السيناريو</string>
 
 
     <!--

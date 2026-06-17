@@ -17,15 +17,6 @@
 -->
 <resources>
 
-    <!-- Application wide texts. -->
-    <string name="notification_title">Сценарій: %1$s</string>
-    <string name="notification_message">Натисніть, щоб змінити сценарій</string>
-    <string name="notification_button_play_and_hide">Запустити й сховати</string>
-    <string name="notification_button_pause_and_show">Призупинити й показати</string>
-    <string name="notification_button_toggle_menu">Показати/Сховати</string>
-    <string name="notification_button_stop">Зупинити</string>
-
-
     <string name="activity_scenario_title">Сценарії</string>
     <string name="accessibility_service_description">Ця програма потребує цю службу для впровадження натискань, які ви
         створили, в інші програми після виявлення умов.\n\nЗ цієї програми не буде зібрано жодних даних. Не соромтеся відвідати наш github, код має відкрите джерело!</string>
@@ -35,7 +26,6 @@
       - Regular Android dialog title characters size.
       -->
     <string name="dialog_title_add_scenario">Новий сценарій</string>
-    <string name="dialog_title_copy_scenario">Копіювати сценарій</string>
 
     <!--
       - Text for menu items.
@@ -86,9 +76,6 @@
       - Section titles.
       - Should be short and concise.
       -->
-    <string name="section_title_scenario_type_title">Тип сценарію</string>
-
-
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).
