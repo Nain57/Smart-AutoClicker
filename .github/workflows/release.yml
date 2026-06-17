@@ -38,7 +38,7 @@ jobs:
           -PsigningStorePassword="${{ secrets.SIGNING_STORE_PASSWORD }}" \
           -PsigningKeyAlias="${{ secrets.SIGNING_KEY_ALIAS }}" \
           -PsigningKeyPassword="${{ secrets.SIGNING_KEY_PASSWORD }}" \
-          assembleFDroidRelease bundleFDroidRelease
+          assembleFDroidRelease
       env:
         JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
 
