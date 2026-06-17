@@ -88,8 +88,8 @@ class QualityMetricsMonitor @Inject constructor(
 
     fun onServiceUnbind() {
         Log.w(TAG, "Accessibility service is unbound. If you haven't touched the accessibility permission, this " +
-                "means your Android device manufacturer does not comply with Android standards and have decided to kill" +
-                "Smart AutoClicker."
+                " means your Android device manufacturer does not comply with Android standards and have decided to kill" +
+                " Smart AutoClicker."
         )
     }
 

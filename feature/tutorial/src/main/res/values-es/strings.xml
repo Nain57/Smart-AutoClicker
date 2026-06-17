@@ -56,7 +56,7 @@
         Contiene la configuración general de detección y una lista de eventos que describen lo que se ejecutará al ejecutar
         tu escenario. \n\nHaz clic en el botón de crear evento para crear tu primer evento.</string>
 
-    <string name="message_tutorial_1_step_5">Un evento describe qué acciones (clic, deslizamiento...) ejecutar cuando se cumplen
+    <string name="message_tutorial_1_step_5">Un evento describe qué acciones (clic, deslizamiento…) ejecutar cuando se cumplen
         ciertas condiciones.\n\nDebes crear al menos una condición y una acción para crear un evento válido y usarlo en tu escenario.\n\n
         Haz clic en la pestaña de Condiciones para mostrar la lista de condiciones.</string>
 

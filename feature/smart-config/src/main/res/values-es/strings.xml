@@ -159,7 +159,7 @@
     <string name="message_empty_trigger_condition_list_title">¡Sin condiciones!</string>
     <string name="message_empty_trigger_condition_list_desc">Una condición es un criterio personalizado para iniciar una acción.</string>
     <string name="message_empty_action_list_title">¡Sin acciones!</string>
-    <string name="message_empty_action_list_desc">Una acción es una interacción (hacer clic, deslizar el dedo...) con su teléfono que se activa cuando se cumplen las condiciones creadas.</string>
+    <string name="message_empty_action_list_desc">Una acción es una interacción (hacer clic, deslizar el dedo…) con su teléfono que se activa cuando se cumplen las condiciones creadas.</string>
 
     <string name="menu_item_title_conditions">Condiciones</string>
     <string name="menu_item_title_actions">Acciones</string>
