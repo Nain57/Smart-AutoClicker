@@ -53,19 +53,30 @@
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_large">
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:strokeColor="@color/event_conditions_color"
+                app:strokeWidth="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
                     android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.CardTitle.Event"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/event_conditions_color"
+                        android:paddingVertical="@dimen/margin_vertical_small"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        android:text="@string/menu_item_title_conditions"/>
 
                     <include layout="@layout/include_field_event_children"
                         android:id="@+id/field_image_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 
@@ -73,23 +84,27 @@
                         android:id="@+id/field_trigger_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                         android:visibility="gone"/>
 
                     <include layout="@layout/include_field_selector"
                         android:id="@+id/field_empty_conditions_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
                         android:visibility="gone" />
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                     <include layout="@layout/include_field_dual_state_text"
                         android:id="@+id/field_conditions_operator"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                 </LinearLayout>
 
@@ -101,22 +116,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_large"
-                android:minHeight="@dimen/item_height">
+                android:minHeight="@dimen/item_height"
+                app:strokeColor="@color/event_actions_color"
+                app:strokeWidth="2dp">
 
-                <include layout="@layout/include_field_event_children"
-                    android:id="@+id/field_actions_selector"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+                    android:orientation="vertical"
+                    android:layout_marginBottom="@dimen/margin_vertical_default">
 
-                <include layout="@layout/include_field_selector"
-                    android:id="@+id/field_empty_actions_selector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                    android:visibility="gone" />
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.CardTitle.Event"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/event_actions_color"
+                        android:paddingVertical="@dimen/margin_vertical_small"
+                        android:text="@string/menu_item_title_actions"/>
+
+                    <include layout="@layout/include_field_event_children"
+                        android:id="@+id/field_actions_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
+
+                    <include layout="@layout/include_field_selector"
+                        android:id="@+id/field_empty_actions_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -126,41 +159,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_large"
-                android:minHeight="@dimen/item_height">
+                android:minHeight="@dimen/item_height"
+                app:strokeColor="@color/event_state_color"
+                app:strokeWidth="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginBottom="@dimen/margin_vertical_default"
                     android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.CardTitle.Event"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/event_state_color"
+                        android:paddingVertical="@dimen/margin_vertical_small"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        android:text="@string/menu_item_title_state"/>
 
                     <include layout="@layout/include_field_switch"
                         android:id="@+id/field_is_enabled"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/divider_keep_detecting"
                         style="@style/AppTheme.Widget.Divider.Horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                     <include layout="@layout/include_field_switch"
                         android:id="@+id/field_keep_detecting"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/divider_cooldown"
                         style="@style/AppTheme.Widget.Divider.Horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cooldown_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default">
 
                         <include layout="@layout/include_field_switch"
                             android:id="@+id/field_cooldown_checkbox"
@@ -202,15 +250,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_large"
-                android:minHeight="@dimen/item_height">
+                android:minHeight="@dimen/item_height"
+                app:strokeColor="@color/event_test_color"
+                app:strokeWidth="2dp">
 
-                <include layout="@layout/include_field_selector"
-                    android:id="@+id/field_test_event"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                    android:layout_gravity="center"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/field_test_event"
+                        style="@style/AppTheme.TextAppearance.CardTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight = "1"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                        tools:text="Test your event"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_test_event"
+                        style="@style/AppTheme.Widget.IconButtonFilled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight = "0"
+                        android:layout_marginVertical="@dimen/margin_vertical_default"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                        app:icon="@drawable/ic_play_arrow"/>
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

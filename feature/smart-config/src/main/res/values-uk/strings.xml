@@ -165,7 +165,8 @@
     <string name="menu_item_title_conditions">Умови</string>
     <string name="menu_item_title_actions">Дії</string>
 
-    <string name="field_event_state_title">Стан</string>
+    <string name="menu_item_title_state">Стан</string>
+    <string name="field_event_state_title">Початковий стан</string>
     <string name="field_event_state_desc_enabled">Ця подія буде оброблятися нормально при відтворенні сценарію</string>
     <string name="field_event_state_desc_disabled">Ця подія потребує увімкнення дією для обробки при відтворенні сценарію</string>
 

@@ -34,6 +34,11 @@
 
     <color name="iconColor">@color/md_theme_light_onPrimaryContainer</color>
 
+    <color name="event_conditions_color">#c20007</color>
+    <color name="event_actions_color">#0044d6</color>
+    <color name="event_state_color">#007e2b</color>
+    <color name="event_test_color">#000000</color>
+
     <!-- Material 3 Theme colors -->
     <color name="seed">#006688</color>
     <color name="md_theme_light_primary">#006688</color>

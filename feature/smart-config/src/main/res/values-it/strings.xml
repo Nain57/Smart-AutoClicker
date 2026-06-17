@@ -217,7 +217,8 @@
       -->
     <string name="generic_name">Nome</string>
     <string name="field_intent_extra_key_label">Chiave</string>
-    <string name="field_event_state_title">Stato</string>
+    <string name="menu_item_title_state">Stato</string>
+    <string name="field_event_state_title">Stato iniziale</string>
     <string name="field_counter_operation_value_label">Valore</string>
     <string name="field_counter_comparison_value_label">Valore</string>
     <string name="field_counter_name_label">Nome del contatore</string>

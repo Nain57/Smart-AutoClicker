@@ -216,7 +216,8 @@
       -->
     <string name="generic_name">名称</string>
     <string name="field_intent_extra_key_label">参数名</string>
-    <string name="field_event_state_title">状态</string>
+    <string name="menu_item_title_state">状态</string>
+    <string name="field_event_state_title">初始状态</string>
     <string name="field_counter_operation_value_label">数值</string>
     <string name="field_counter_name_label">计数器名称</string>
     <string name="field_counter_comparison_value_label">数值</string>

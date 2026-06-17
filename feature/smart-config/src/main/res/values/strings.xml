@@ -198,8 +198,9 @@
 
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
+    <string name="menu_item_title_state">State</string>
 
-    <string name="field_event_state_title">State</string>
+    <string name="field_event_state_title">Initial state</string>
     <string name="field_event_state_desc_enabled">This event will be interpreted normally when playing the scenario</string>
     <string name="field_event_state_desc_disabled">This event needs to be enabled by an action to be interpreted when playing the scenario</string>
 

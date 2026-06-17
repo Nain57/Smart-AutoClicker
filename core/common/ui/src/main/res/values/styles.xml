@@ -341,6 +341,11 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="AppTheme.TextAppearance.CardTitle.Event" parent="@style/TextAppearance.Material3.BodyLarge">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/md_theme_light_onPrimary</item>
+    </style>
+
     <!-- Text appearance for the overlays text. -->
     <style name="AppTheme.TextAppearance.Overlay" />
     <style name="AppTheme.TextAppearance.Overlay.Default" parent="@android:style/TextAppearance.Widget.TextView">

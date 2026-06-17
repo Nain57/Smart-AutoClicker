@@ -164,7 +164,8 @@
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
 
-    <string name="field_event_state_title">State</string>
+    <string name="menu_item_title_state">Состояние</string>
+    <string name="field_event_state_title">Начальное состояние</string>
     <string name="field_event_state_desc_enabled">Это событие будет обрабатываться нормально при воспроизведении сценария</string>
     <string name="field_event_state_desc_disabled">Это событие должно быть включено действием для обработки при воспроизведении сценария</string>
 

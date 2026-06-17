@@ -20,16 +20,11 @@ import android.annotation.SuppressLint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.StringRes
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeFieldEventChildrenBinding
 
-
-internal fun IncludeFieldEventChildrenBinding.setTitle(@StringRes titleRes: Int) {
-    title.setText(titleRes)
-}
 
 @SuppressLint("ClickableViewAccessibility")
 internal fun IncludeFieldEventChildrenBinding.setOnClickListener(listener: (() -> Unit)?) {

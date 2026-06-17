@@ -216,7 +216,8 @@
       -->
     <string name="generic_name">Nom</string>
     <string name="field_intent_extra_key_label">Clé</string>
-    <string name="field_event_state_title">État</string>
+    <string name="menu_item_title_state">État</string>
+    <string name="field_event_state_title">État initial</string>
     <string name="field_counter_operation_value_label">Valeur</string>
     <string name="field_counter_comparison_value_label">Valeur</string>
     <string name="field_counter_name_label">Nom du compteur</string>

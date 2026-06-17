@@ -41,7 +41,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
@@ -165,15 +164,11 @@ class EventDialog(
             onItemSelected = viewModel::setCooldownTimeUnit,
         )
 
-        fieldTestEvent.apply {
-            setTitle(
-                context.getString(
-                    R.string.item_title_try_element,
-                    context.getString(R.string.dialog_title_image_event),
-                )
-            )
-            setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
-        }
+        fieldTestEvent.text = context.getString(
+            R.string.item_title_try_element,
+            context.getString(R.string.dialog_title_image_event),
+        )
+        buttonTestEvent.setOnClickListener { debounceUserInteraction { showTryElementMenu() } }
     }
 
     private fun DialogEventConfigBinding.setupConditionsCard() {
@@ -181,7 +176,6 @@ class EventDialog(
             fieldTriggerConditionsSelector.root.visibility = View.GONE
             fieldImageConditionsSelector.apply {
                 root.visibility = View.VISIBLE
-                setTitle(titleRes = R.string.menu_item_title_conditions,)
                 setAdapter(
                     EventImageConditionsAdapter(
                         itemClickedListener = ::showImageConditionsBriefMenu,
@@ -199,7 +193,6 @@ class EventDialog(
             fieldImageConditionsSelector.root.visibility = View.GONE
             fieldTriggerConditionsSelector.apply {
                 root.visibility = View.VISIBLE
-                setTitle(titleRes = R.string.menu_item_title_conditions)
                 setAdapter(EventChildrenCardsAdapter { showTriggerConditionsDialog() })
                 setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
             }
@@ -234,7 +227,6 @@ class EventDialog(
 
     private fun DialogEventConfigBinding.setupActionCard() {
         fieldActionsSelector.apply {
-            setTitle(titleRes = R.string.menu_item_title_actions)
             setAdapter(
                 EventChildrenCardsAdapter(
                     itemClickedListener = ::showActionsOverlay,
@@ -355,7 +347,7 @@ class EventDialog(
             editCooldownValue.setText(uiState.cooldownValue, InputType.TYPE_CLASS_NUMBER)
             dropdownCooldownTimeUnit.setSelectedItem(uiState.cooldownUnit)
 
-            fieldTestEvent.setEnabled(uiState.canTryEvent)
+            buttonTestEvent.setEnabled(uiState.canTryEvent)
 
             fieldImageConditionsSelector.setItems(uiState.imageConditionsItems)
             if (uiState.imageConditionsItems.isEmpty()) {
@@ -376,9 +368,20 @@ class EventDialog(
             fieldKeepDetecting.root.visibility = View.GONE
             dividerKeepDetecting.visibility = View.GONE
             cardEventTest.visibility = View.GONE
+
+            fieldTriggerConditionsSelector.setItems(uiState.triggerConditionsItems)
+            if (uiState.triggerConditionsItems.isEmpty()) {
+                fieldTriggerConditionsSelector.root.visibility = View.GONE
+                fieldEmptyConditionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyConditionsSelector.setError(true)
+
+            } else {
+                fieldTriggerConditionsSelector.root.visibility = View.VISIBLE
+                fieldEmptyConditionsSelector.root.visibility = View.GONE
+                fieldEmptyConditionsSelector.setError(false)
+            }
         }
 
-        viewBinding.fieldTriggerConditionsSelector.setItems(uiState.triggerConditionsItems)
     }
 
     private fun onEventEditingStateChanged(isEditingScenario: Boolean) {

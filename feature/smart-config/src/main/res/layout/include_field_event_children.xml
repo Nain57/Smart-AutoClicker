@@ -22,20 +22,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/title"
-        style="@style/AppTheme.Field.TitleText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="@dimen/margin_horizontal_intermediate"
-        android:layout_marginVertical="@dimen/margin_vertical_mini"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/chevron"
-        tools:text="Field title"
-        tools:visibility="visible"/>
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/chevron"
         android:layout_width="wrap_content"
@@ -55,7 +41,7 @@
         android:layout_marginEnd="@dimen/margin_horizontal_intermediate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/chevron"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="horizontal"
         android:scrollbars="none"

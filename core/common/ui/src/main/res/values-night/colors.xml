@@ -17,4 +17,10 @@
 -->
 <resources>
     <color name="iconColor">@color/md_theme_dark_onPrimaryContainer</color>
+
+    <color name="event_conditions_color">#ed666a</color>
+    <color name="event_actions_color">#718df5</color>
+    <color name="event_state_color">#05a142</color>
+    <color name="event_test_color">#ffffff</color>
+
 </resources>

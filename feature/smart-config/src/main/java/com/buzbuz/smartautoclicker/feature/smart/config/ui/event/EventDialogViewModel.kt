@@ -68,7 +68,7 @@ class EventDialogViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val userEventCooldownTimeUnit: MutableStateFlow<TimeUnitDropDownItem?> =
-        MutableStateFlow(editionRepository.editionState.getEditedEvent<ScreenEvent>()?.getInitialCooldownTimeUnit())
+        MutableStateFlow(editionRepository.editionState.getEditedEvent<Event>()?.getInitialCooldownTimeUnit())
 
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent

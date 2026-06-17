@@ -101,7 +101,8 @@
     <string name="message_empty_action_list_desc">アクションとは、作成された条件が満たされたときにトリガーされる、携帯電話とのインタラクション (クリック、スワイプなど) です。</string>
     <string name="menu_item_title_conditions">条件</string>
     <string name="menu_item_title_actions">アクション</string>
-    <string name="field_event_state_title">状態</string>
+    <string name="menu_item_title_state">状態</string>
+    <string name="field_event_state_title">初期状態</string>
     <string name="field_event_state_desc_enabled">シナリオ再生時、本イベントは通常どおり評価されます。</string>
     <string name="field_event_state_desc_disabled">シナリオ再生時、本イベントは既定では無効です。他の操作で有効化された後に評価されます。</string>
     <string name="field_event_keep_detecting_title">実行を続ける</string>
