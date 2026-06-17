@@ -132,8 +132,6 @@
 
     <string name="field_scenario_quality_title">Resolución de detección</string>
     <string name="field_scenario_quality_description">Para lograr una detección más rápida, Klick\'r reduce la escala de las imágenes antes de detectarlas.\n\nSi aumenta la resolución, la detección será más lenta, pero más precisa. Si disminuye la resolución, la detección será más rápida, pero menos precisa. Encuentre la buena relación entre la resolución de detección y los umbrales de condiciones para obtener lo mejor de sus escenarios.</string>
-    <string name="field_scenario_quality_resolution" translatable="false">%1$d x %2$d</string>
-
 
     <string name="field_show_debug_view_title">Mostrar vista de depuración</string>
     <string name="field_show_debug_view_desc">Muestra los eventos desencadenados durante la detección.</string>
@@ -250,10 +248,6 @@
 
     <string name="field_click_offset_title">Haga clic en desplazamiento</string>
     <string name="field_click_offset_desc_none">Ninguno</string>
-    <string name="field_click_offset_desc" translatable="false">X=%1$d Y=%2$d</string>
-    <string name="field_click_offset_x" translatable="false">X</string>
-    <string name="field_click_offset_y" translatable="false">Y</string>
-
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
@@ -270,10 +264,6 @@
 
     <!-- Dialog Action Intent ====================================================================================== -->
 
-    <string name="dialog_title_intent" translatable="false">Intent</string>
-    <string name="dialog_title_intent_flags" translatable="false">Flags</string>
-    <string name="dialog_title_intent_actions" translatable="false">Intent Actions</string>
-    <string name="dialog_title_intent_component_name" translatable="false">Component name</string>
     <string name="dialog_title_application_selection">Seleccione una aplicación</string>
 
     <string name="menu_item_title_advanced">Avanzado</string>
@@ -283,37 +273,13 @@
     <string name="field_application_selection_desc">Iniciar una aplicación cuando se ejecute esta acción</string>
 
     <string name="dropdown_intent_sending_type_label">Tipo</string>
-    <string name="dropdown_intent_sending_type_item_activity" translatable="false">Start Activity</string>
-    <string name="dropdown_intent_sending_type_item_broadcast" translatable="false">Send Broadcast</string>
-
-    <string name="field_intent_action_label" translatable="false">Action</string>
-    <string name="field_intent_broadcast_action_label" translatable="false">Broadcast Action</string>
-    <string name="field_intent_flags_label" translatable="false">Flags</string>
-    <string name="field_intent_component_name_label" translatable="false">Component name</string>
-
-    <string name="field_intent_extra_title" translatable="false">Extras</string>
-
 
     <!-- Dialogs Intent Extras ===================================================================================== -->
-
-    <string name="dialog_intent_extra_title" translatable="false">Extra</string>
 
     <string name="field_intent_extra_key_label">Llave</string>
     <string name="field_intent_extra_value_title">Valor</string>
 
     <string name="dropdown_intent_extra_type_title">Tipo de valor</string>
-    <string name="dropdown_intent_extra_type_item_boolean" translatable="false">Boolean</string>
-    <string name="dropdown_intent_extra_type_item_byte" translatable="false">Byte</string>
-    <string name="dropdown_intent_extra_type_item_char" translatable="false">Char</string>
-    <string name="dropdown_intent_extra_type_item_double" translatable="false">Double</string>
-    <string name="dropdown_intent_extra_type_item_int" translatable="false">Integer</string>
-    <string name="dropdown_intent_extra_type_item_float" translatable="false">Float</string>
-    <string name="dropdown_intent_extra_type_item_short" translatable="false">Short</string>
-    <string name="dropdown_intent_extra_type_item_string" translatable="false">String</string>
-
-    <string name="dropdown_extra_boolean_item_true" translatable="false">True</string>
-    <string name="dropdown_extra_boolean_item_false" translatable="false">False</string>
-
 
     <!-- Dialog Action Change Counter ============================================================================== -->
 
@@ -322,10 +288,6 @@
     <string name="field_counter_operation_value_label">Valor</string>
 
     <string name="dropdown_counter_operation_label">Operación</string>
-    <string name="dropdown_counter_operation_item_add" translatable="false">+</string>
-    <string name="dropdown_counter_operation_item_set" translatable="false">=</string>
-    <string name="dropdown_counter_operation_item_minus" translatable="false">-</string>
-
 
     <!-- Dialogs Action ToggleEvent ================================================================================ -->
 
