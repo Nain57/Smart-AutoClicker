@@ -332,6 +332,8 @@ class EventDialog(
     private fun updateScreenEventUiState(uiState: EventDialogUiState.ScreenEvent) {
         viewBinding.apply {
             fieldKeepDetecting.root.visibility = View.VISIBLE
+            cooldownLayout.visibility = View.VISIBLE
+            dividerCooldown.visibility = View.VISIBLE
             dividerKeepDetecting.visibility = View.VISIBLE
             cardEventTest.visibility = View.VISIBLE
 
@@ -366,6 +368,8 @@ class EventDialog(
     private fun updateTriggerEventUiState(uiState: EventDialogUiState.TriggerEvent) {
         viewBinding.apply {
             fieldKeepDetecting.root.visibility = View.GONE
+            cooldownLayout.visibility = View.GONE
+            dividerCooldown.visibility = View.GONE
             dividerKeepDetecting.visibility = View.GONE
             cardEventTest.visibility = View.GONE
 
@@ -381,7 +385,6 @@ class EventDialog(
                 fieldEmptyConditionsSelector.setError(false)
             }
         }
-
     }
 
     private fun onEventEditingStateChanged(isEditingScenario: Boolean) {
