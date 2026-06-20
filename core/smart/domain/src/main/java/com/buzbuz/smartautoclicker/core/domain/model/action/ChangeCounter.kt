@@ -46,7 +46,7 @@ data class ChangeCounter(
     }
 
     override fun isComplete(): Boolean =
-        super.isComplete() && counterName.isNotEmpty() && operationValue.isComplete()
+        super.isComplete() && counterName.isNotBlank() && operationValue.isComplete()
 
     override fun hashCodeNoIds(): Int =
         name.hashCode() + counterName.hashCode() + operation.hashCode() + operationValue.hashCode()

@@ -519,7 +519,7 @@ internal class ScenarioDataSource @Inject constructor(
             .getScenarioCounters(scenarioDbId)
             .toMutableList()
 
-        newCounters.forEach { counter ->
+        newCounters.filter { counter -> counter.counterName.isNotBlank() }.forEach { counter ->
             // Discard all items added/updated from the to be removed list
             val oldIndex = toBeRemoved.indexOfFirst { oldCounter -> oldCounter.name == counter.counterName }
             if (oldIndex in toBeRemoved.indices) toBeRemoved.remove(toBeRemoved[oldIndex])
@@ -530,7 +530,7 @@ internal class ScenarioDataSource @Inject constructor(
         }
 
         toBeRemoved.forEach { counter ->
-            currentDatabase.value.countersDao().deleteCounter(counter.name)
+            currentDatabase.value.countersDao().deleteCounter(counter.name, scenarioDbId)
         }
     }
 

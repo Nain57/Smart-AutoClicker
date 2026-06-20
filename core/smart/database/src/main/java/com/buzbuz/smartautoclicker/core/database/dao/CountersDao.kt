@@ -38,6 +38,6 @@ interface CountersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertCounter(counter: CountersEntity)
 
-    @Query("DELETE FROM $COUNTERS_TABLE WHERE counterName = :counterName")
-    suspend fun deleteCounter(counterName: String)
+    @Query("DELETE FROM $COUNTERS_TABLE WHERE counterName = :counterName AND scenarioId = :scenarioId")
+    suspend fun deleteCounter(counterName: String, scenarioId: Long)
 }

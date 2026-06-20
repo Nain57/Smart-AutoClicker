@@ -49,7 +49,7 @@ sealed class TriggerCondition: Condition() {
     ) : TriggerCondition() {
 
         override fun isComplete(): Boolean =
-            super.isComplete() && counterName.isNotEmpty() && counterValue.isComplete()
+            super.isComplete() && counterName.isNotBlank() && counterValue.isComplete()
 
         override fun hashCodeNoIds(): Int =
             super.hashCode() + counterName.hashCode() + comparisonOperation.hashCode() + counterValue.hashCode()

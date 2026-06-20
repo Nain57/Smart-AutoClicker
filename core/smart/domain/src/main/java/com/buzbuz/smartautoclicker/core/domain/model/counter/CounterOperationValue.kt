@@ -28,7 +28,7 @@ sealed class CounterOperationValue : Completable {
     }
 
     data class Counter(override val value: String): CounterOperationValue() {
-        override fun isComplete(): Boolean = value.isNotEmpty()
+        override fun isComplete(): Boolean = value.isNotBlank()
     }
 
     internal companion object {

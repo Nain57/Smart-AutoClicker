@@ -30,5 +30,5 @@ data class Counter(
 ): Completable {
 
     override fun isComplete(): Boolean =
-        counterName.isNotEmpty()
+        counterName.isNotBlank()
 }

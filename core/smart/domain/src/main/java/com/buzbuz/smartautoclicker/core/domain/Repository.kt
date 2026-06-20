@@ -131,10 +131,14 @@ internal class Repository @Inject internal constructor(
         dataSource.getTriggerEventsFlow(scenarioId).mapList { it.toDomainTriggerEvent() }
 
     override fun getCountersFlow(scenarioId: Long): Flow<List<Counter>> =
-        dataSource.getCountersFlow(scenarioId).mapList { it.toDomain() }
+        dataSource.getCountersFlow(scenarioId)
+            .mapList { it.toDomain() }
+            .map { counters -> counters.filter { it.counterName.isNotBlank() } }
 
     override suspend fun getCounters(scenarioId: Long): List<Counter> =
-        dataSource.getCounters(scenarioId).map { it.toDomain() }
+        dataSource.getCounters(scenarioId)
+            .map { it.toDomain() }
+            .filter { it.counterName.isNotBlank() }
 
     override suspend fun getConditionName(conditionId: Identifier): String? =
         dataSource.getConditionName(conditionId.databaseId)

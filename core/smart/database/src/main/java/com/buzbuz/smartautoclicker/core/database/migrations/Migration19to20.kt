@@ -128,17 +128,17 @@ object Migration19to20 : Migration(19, 20) {
         getSQLiteTableReference(ACTION_TABLE).apply {
             forEachActionCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
                 if (scenarioId == null) return@forEachActionCounterMention
-                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal1.addCounterIfNamed(scenarioId, countersFound)
+                sourceVal2.addCounterIfNamed(scenarioId, countersFound)
+                sourceVal3.addCounterIfNamed(scenarioId, countersFound)
             }
         }
         getSQLiteTableReference(CONDITION_TABLE).apply {
             forEachConditionsCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
                 if (scenarioId == null) return@forEachConditionsCounterMention
-                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal1.addCounterIfNamed(scenarioId, countersFound)
+                sourceVal2.addCounterIfNamed(scenarioId, countersFound)
+                sourceVal3.addCounterIfNamed(scenarioId, countersFound)
             }
         }
 
@@ -154,6 +154,11 @@ object Migration19to20 : Migration(19, 20) {
                 )
             }
         }
+    }
+
+    private fun String?.addCounterIfNamed(scenarioId: Long, countersFound: MutableSet<Pair<String, Long>>) {
+        if (isNullOrBlank()) return
+        countersFound.add(this to scenarioId)
     }
 
     private fun SupportSQLiteDatabase.migrateNotificationActions() {

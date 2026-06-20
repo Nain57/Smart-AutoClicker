@@ -118,6 +118,26 @@ class Migration19to20Tests {
     }
 
     @Test
+    fun migrate_counters_creation_ignores_blank_counter_names() {
+        // Given
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(1L)
+            db.insertTestEvent(1L, 1L)
+            db.insertTestAction(1L, 1L, type = ActionType.CHANGE_COUNTER, counterName = "")
+            db.insertTestCondition(1L, 1L, type = ConditionType.ON_COUNTER_REACHED, counterName = "")
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then
+            db.query("SELECT COUNT(*) FROM $COUNTERS_TABLE").use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals(0, cursor.getInt(0))
+            }
+        }
+    }
+
+    @Test
     fun migrate_counters_creation_action_only() {
         // Given
         val scenarioId = 1L
