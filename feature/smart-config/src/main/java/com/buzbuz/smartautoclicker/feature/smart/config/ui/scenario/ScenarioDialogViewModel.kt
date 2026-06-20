@@ -57,14 +57,15 @@ class ScenarioDialogViewModel @Inject constructor(
         editionRepository.editionState.scenarioState.filterNotNull(),
         editionRepository.editionState.editedScreenEventsState.filterNotNull(),
         editionRepository.editionState.editedTriggerEventsState.filterNotNull(),
-    ) { scenarioState, imageEventsState, triggerEventsState ->
+        editionRepository.editionState.editedCountersState.filterNotNull(),
+    ) { scenarioState, imageEventsState, triggerEventsState, countersState ->
         buildMap {
             put(R.id.page_image_events, imageEventsState.canBeSaved &&
                     (!imageEventsState.value.isNullOrEmpty() || !triggerEventsState.value.isNullOrEmpty()))
             put(R.id.page_trigger_events, triggerEventsState.canBeSaved &&
                     (!imageEventsState.value.isNullOrEmpty() || !triggerEventsState.value.isNullOrEmpty()))
             put(R.id.page_config, scenarioState.canBeSaved)
-            put(R.id.page_more, true)
+            put(R.id.page_more, countersState.canBeSaved)
         }
     }
 

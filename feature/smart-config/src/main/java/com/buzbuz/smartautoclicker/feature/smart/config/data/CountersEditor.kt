@@ -84,7 +84,7 @@ internal class CountersEditor {
 
     fun updateCounter(item: Counter) {
         val currentCounters = _editedList.value ?: emptyList()
-        val toBeUpdatedIndex = currentCounters.indexOf(item)
+        val toBeUpdatedIndex = currentCounters.indexOfFirst { counter -> counter.counterName == item.counterName }
         if (toBeUpdatedIndex !in currentCounters.indices) return
 
         _editedList.value = currentCounters.toMutableList().apply {
