@@ -16,12 +16,15 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config
 
+import android.graphics.Rect
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
@@ -34,6 +37,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConfirmationDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.CounterCreationDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.reference.CounterReferenceDialog
 
@@ -59,9 +63,10 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 dialogTitle.setText(R.string.dialog_title_counters_config)
 
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
-                setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
+                setButtonVisibility(DialogNavigationButton.SAVE, View.VISIBLE)
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
                 buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonSave.setDebouncedOnClickListener { onSaveClicked() }
             }
 
             floatingButtonsLayout.visibility = View.VISIBLE
@@ -80,10 +85,24 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
             )
             layoutLoadableList.apply {
                 list.adapter = countersAdapter
+                list.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+                    override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                        clearCounterValueFocusIfTouchOutside(e)
+                        return false
+                    }
+                })
                 setEmptyText(
                     id = R.string.message_empty_counter_name_list_title,
-                    secondaryId =R.string.message_empty_counter_name_list_desc
+                    secondaryId = R.string.message_empty_counter_name_list_desc
                 )
+            }
+            layoutTopBar.root.setOnTouchListener { _, event ->
+                clearCounterValueFocusIfTouchOutside(event)
+                false
+            }
+            floatingButtonsLayout.setOnTouchListener { _, event ->
+                clearCounterValueFocusIfTouchOutside(event)
+                false
             }
         }
 
@@ -98,13 +117,20 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         }
     }
 
-    override fun onDestroy() {
-        viewModel.saveEditions()
-        super.onDestroy()
-    }
-
     override fun back() {
         if (viewModel.getUiState() is CountersUiState.Replacing) return
+        if (viewModel.hasUnsavedModifications()) {
+            context.showCloseWithoutSavingDialog {
+                viewModel.discardChanges()
+                super.back()
+            }
+            return
+        }
+
+        super.back()
+    }
+
+    private fun onSaveClicked() {
         super.back()
     }
 
@@ -142,7 +168,13 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         viewBinding.apply {
             layoutTopBar.setButtonEnabledState(
                 buttonType = DialogNavigationButton.DISMISS,
-                enabled = uiState is CountersUiState.Loaded,
+                enabled = uiState is CountersUiState.Loaded || uiState is CountersUiState.Empty,
+            )
+            layoutTopBar.setButtonEnabledState(
+                buttonType = DialogNavigationButton.SAVE,
+                enabled = uiState.let { state ->
+                    state is CountersUiState.Empty || state is CountersUiState.Loaded && state.canBeSaved
+                },
             )
 
             when (uiState) {
@@ -203,5 +235,20 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
             newOverlay = CounterCreationDialog(),
             hideCurrent = false,
         )
+    }
+
+    private fun clearCounterValueFocusIfTouchOutside(event: MotionEvent) {
+        if (event.action != MotionEvent.ACTION_DOWN) return
+
+        val focusedView = dialog?.currentFocus ?: return
+        if (focusedView.id != R.id.text_field_starting_value) return
+        if (focusedView.containsRawPoint(event)) return
+
+        focusedView.clearFocus()
+    }
+
+    private fun View.containsRawPoint(event: MotionEvent): Boolean {
+        val bounds = Rect()
+        return getGlobalVisibleRect(bounds) && bounds.contains(event.rawX.toInt(), event.rawY.toInt())
     }
 }

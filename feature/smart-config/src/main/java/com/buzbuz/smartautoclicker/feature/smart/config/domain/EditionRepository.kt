@@ -144,12 +144,12 @@ class EditionRepository @Inject constructor(
         scenarioEditor.updateCounter(counter)
     }
 
-    fun deleteCounter(counter: Counter) {
-        scenarioEditor.deleteCounter(counter)
+    fun updateCounters(counters: List<Counter>) {
+        scenarioEditor.updateCounters(counters)
     }
 
-    fun saveCounterEditionsAsReference() {
-        scenarioEditor.saveCountersEditionAsReference()
+    fun deleteCounter(counter: Counter) {
+        scenarioEditor.deleteCounter(counter)
     }
 
     // --- EVENT

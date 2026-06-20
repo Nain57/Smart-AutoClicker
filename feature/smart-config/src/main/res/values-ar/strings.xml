@@ -454,8 +454,8 @@
     <string name="dialog_title_counters_config">العدادات</string>
     <string name="message_empty_counter_name_list_title">لا يوجد عداد محدد</string>
     <string name="message_empty_counter_name_list_desc">خزن العداد قيمة رقمية يمكن تغييرها أو التحقق منها أو استخدامها في الإجراءات أو الشروط الخاصة بك</string>
-    <string name="item_counter_desc_collapsed_no_reference">هذا العداد غير مستخدم. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">يُشار إلى هذا العداد %1$d مرة. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">هذا العداد غير مستخدم. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">يُشار إلى هذا العداد %1$d مرة. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">هذا العداد غير مستخدم.</string>
     <string name="item_counter_desc_expanded_referenced">يُشار إلى هذا العداد %1$d مرة.</string>
     <string name="field_label_counter_starting_value">القيمة الابتدائية</string>
@@ -470,7 +470,7 @@
     <string name="field_new_counter_starting_value">القيمة الابتدائية</string>
     <string name="field_counter_name_already_declared">اسم العداد هذا موجود بالفعل</string>
     <string name="field_counter_selection_title_empty">لم يتم اختيار عداد</string>
-    <string name="field_counter_selection_desc">القيمة الابتدائية: %1$.2f</string>
+    <string name="field_counter_selection_desc">القيمة الابتدائية: %1$s</string>
     <string name="field_counter_selection_desc_empty">انقر هنا لاختيار عداد</string>
 
     <string name="dialog_title_copy_fix">حل المشكلات</string>

@@ -432,8 +432,8 @@
     <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string>
 
     <string name="dialog_title_counters_config">Contatori</string>
-    <string name="item_counter_desc_collapsed_no_reference">Questo contatore non è utilizzato. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">Questo contatore è referenziato %1$d volte. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">Questo contatore non è utilizzato. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">Questo contatore è referenziato %1$d volte. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">Questo contatore non è utilizzato.</string>
     <string name="item_counter_desc_expanded_referenced">Questo contatore è referenziato %1$d volte.</string>
     <string name="field_label_counter_starting_value">Valore iniziale</string>
@@ -448,7 +448,7 @@
     <string name="field_new_counter_starting_value">Valore iniziale</string>
     <string name="field_counter_name_already_declared">Questo nome di contatore esiste già</string>
     <string name="field_counter_selection_title_empty">Nessun contatore selezionato</string>
-    <string name="field_counter_selection_desc">Valore iniziale: %1$.2f</string>
+    <string name="field_counter_selection_desc">Valore iniziale: %1$s</string>
     <string name="field_counter_selection_desc_empty">Clicca qui per selezionare un contatore</string>
 
     <string name="dialog_title_copy_fix">Risolvi i problemi</string>

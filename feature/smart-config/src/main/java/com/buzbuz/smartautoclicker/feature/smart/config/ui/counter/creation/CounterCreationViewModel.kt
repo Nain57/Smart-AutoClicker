@@ -44,7 +44,7 @@ class CountersCreationViewModel @Inject constructor(
 
 
     fun setName(counterName: String) {
-        name.update { counterName }
+        name.update { counterName.trim() }
     }
 
     fun setStartingValue(value: Double) {
@@ -53,7 +53,7 @@ class CountersCreationViewModel @Inject constructor(
 
     fun createCounter() {
         val scenarioId = editionRepository.editionState.getScenario()?.id ?: return
-        val counterName = name.value ?: return
+        val counterName = name.value?.trim() ?: return
         val startingValue = startingValue.value
 
         if (editionRepository.editionState.getCounter(counterName) != null) return

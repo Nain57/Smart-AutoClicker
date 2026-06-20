@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.G
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.model.CounterReference
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterWriteReferencesUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.ReplaceCounterUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.toCounterValueText
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -49,6 +50,8 @@ class CountersConfigViewModel @Inject constructor(
     private val replaceCounterUseCase: ReplaceCounterUseCase,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
+
+    private val initialCounters: List<Counter> = editionRepository.editionState.getAllEditedCounters()
 
     private val allCounters: Flow<EditedListState<Counter>> = editionRepository.editionState.editedCountersState
     private val readReferences: Flow<Map<String, Set<CounterReference>>> = getCounterReadReferencesUseCase()
@@ -129,9 +132,18 @@ class CountersConfigViewModel @Inject constructor(
         }
     }
 
-    fun saveEditions() {
-        editionRepository.saveCounterEditionsAsReference()
+    fun discardChanges() {
+        selectedForReplacement.update { null }
+        expandedItems.update { emptySet() }
+        editionRepository.updateCounters(initialCounters)
     }
+
+    fun hasUnsavedModifications(): Boolean =
+        when (val state = uiState.value) {
+            is CountersUiState.Loaded -> state.hasUnsavedModifications
+            is CountersUiState.Replacing -> true
+            else -> false
+        }
 }
 
 private fun Counter.toUiItem(
@@ -171,8 +183,9 @@ private fun Context.getDescription(referencesCount: Int, isExpanded: Boolean, st
         if (referencesCount == 0) getString(R.string.item_counter_desc_expanded_no_reference)
         else getString(R.string.item_counter_desc_expanded_referenced, referencesCount)
     } else {
-        if (referencesCount == 0) getString(R.string.item_counter_desc_collapsed_no_reference, startingValue)
-        else getString(R.string.item_counter_desc_collapsed_referenced, referencesCount, startingValue)
+        val startingValueText = startingValue.toCounterValueText()
+        if (referencesCount == 0) getString(R.string.item_counter_desc_collapsed_no_reference, startingValueText)
+        else getString(R.string.item_counter_desc_collapsed_referenced, referencesCount, startingValueText)
     }
 
 private fun Context.getSetByButtonText(actionsCount: Int): String =

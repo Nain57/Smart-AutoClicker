@@ -16,18 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config
 
+import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doAfterTextChanged
+import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCounterConfigBinding
-
-import java.util.Locale
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.hideSoftInput
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.toCounterValueText
 
 /**
  * Adapter for the list of counters in the configuration.
@@ -80,7 +82,7 @@ class CountersConfigViewHolder(
     onReadByClick: (CounterUiItem) -> Unit,
     onDeleteClick: (CounterUiItem) -> Unit,
     onCounterClicked: (CounterUiItem) -> Unit,
-    onStartingValueChange: (CounterUiItem, Double) -> Unit,
+    private val onStartingValueChange: (CounterUiItem, Double) -> Unit,
     onCancelReplace: () -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -89,6 +91,29 @@ class CountersConfigViewHolder(
     init {
         binding.apply {
             layoutStartingValue.hint = root.context.getString(R.string.field_label_counter_starting_value)
+            textFieldStartingValue.apply {
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                        InputType.TYPE_NUMBER_FLAG_SIGNED
+                imeOptions = EditorInfo.IME_ACTION_SEND or EditorInfo.IME_FLAG_NO_EXTRACT_UI
+                setSingleLine(true)
+                setOnEditorActionListener { view, actionId, event ->
+                    if (actionId == EditorInfo.IME_ACTION_SEND || event.isEnterKeyUp()) {
+                        commitStartingValue()
+                        view.hideSoftInput()
+                        view.clearFocus()
+                        true
+                    } else {
+                        false
+                    }
+                }
+                setOnFocusChangeListener { view, hasFocus ->
+                    if (!hasFocus) {
+                        commitStartingValue()
+                        normalizeStartingValueText()
+                        view.hideSoftInput()
+                    }
+                }
+            }
 
             contentLayout.setOnClickListener { item?.let(onCounterClicked) }
             buttonExpandCollapse.setOnClickListener { item?.let(onExpandCollapse) }
@@ -96,18 +121,11 @@ class CountersConfigViewHolder(
             readByButton.setOnClickListener { item?.let(onReadByClick) }
             deleteButton.setOnClickListener { item?.let(onDeleteClick) }
             replaceByText.setOnClickListener { onCancelReplace() }
-
-            textFieldStartingValue.doAfterTextChanged { text ->
-                val counter = item ?: return@doAfterTextChanged
-                val newValue = text?.toString()?.toDoubleOrNull() ?: return@doAfterTextChanged
-                if (newValue != counter.startingValue) {
-                    onStartingValueChange(counter, newValue)
-                }
-            }
         }
     }
 
     fun bind(newItem: CounterUiItem) {
+        val isSameCounter = item?.counterName == newItem.counterName
         item = newItem
         binding.apply {
             counterName.text = newItem.counterName
@@ -120,9 +138,8 @@ class CountersConfigViewHolder(
                 readByButton.visibility = View.VISIBLE
                 deleteButton.visibility = View.VISIBLE
 
-                val startingValueText = String.format(Locale.getDefault(), "%s", newItem.startingValue)
-                if (textFieldStartingValue.text.toString() != startingValueText) {
-                    textFieldStartingValue.setText(startingValueText)
+                if (!textFieldStartingValue.hasFocus() || !isSameCounter) {
+                    updateStartingValueText(newItem.startingValue.toCounterValueText())
                 }
             } else {
                 buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_down)
@@ -147,4 +164,33 @@ class CountersConfigViewHolder(
             replaceByText.visibility = if (newItem.selectedForReplacement) View.VISIBLE else View.GONE
         }
     }
+
+    private fun updateStartingValueText(value: String) {
+        binding.textFieldStartingValue.apply {
+            if (text.toString() != value) {
+                setText(value)
+                setSelection(value.length)
+            }
+        }
+    }
+
+    private fun commitStartingValue() {
+        val counter = item ?: return
+        val newValue = binding.textFieldStartingValue.text?.toString()?.toDoubleOrNull() ?: return
+
+        if (newValue != counter.startingValue) {
+            onStartingValueChange(counter, newValue)
+        }
+    }
+
+    private fun normalizeStartingValueText() {
+        val value = binding.textFieldStartingValue.text?.toString()?.toDoubleOrNull()
+            ?: item?.startingValue
+            ?: return
+
+        updateStartingValueText(value.toCounterValueText())
+    }
+
+    private fun KeyEvent?.isEnterKeyUp(): Boolean =
+        this?.keyCode == KeyEvent.KEYCODE_ENTER && this.action == KeyEvent.ACTION_UP
 }

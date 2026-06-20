@@ -149,12 +149,12 @@ internal class ScenarioEditor {
         counterListEditor.updateCounter(item)
     }
 
-    fun deleteCounter(item: Counter) {
-        counterListEditor.deleteEditedCounter(item)
+    fun updateCounters(items: List<Counter>) {
+        counterListEditor.updateCounters(items)
     }
 
-    fun saveCountersEditionAsReference() {
-        counterListEditor.saveEditionAsReference()
+    fun deleteCounter(item: Counter) {
+        counterListEditor.deleteEditedCounter(item)
     }
 
     fun updateImageEventsOrder(newEvents: List<ScreenEvent>) {

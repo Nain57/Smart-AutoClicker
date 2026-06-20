@@ -17,9 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation
 
 import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogCounterCreationBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.hideSoftInput
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
@@ -68,8 +71,21 @@ class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
             fieldName.textField.doAfterTextChanged { viewModel.setName(it.toString()) }
 
             fieldStartingValue.root.hint = context.getString(R.string.field_new_counter_starting_value)
-            fieldStartingValue.textField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            fieldStartingValue.textField.setText("0.0")
+            fieldStartingValue.textField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
+                    InputType.TYPE_NUMBER_FLAG_SIGNED
+            fieldStartingValue.textField.imeOptions = EditorInfo.IME_ACTION_SEND or EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            fieldStartingValue.textField.setSingleLine(true)
+            fieldStartingValue.textField.setOnEditorActionListener { view, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEND || event.isEnterKeyUp()) {
+                    view.clearFocus()
+                    view.hideSoftInput()
+                    true
+                } else {
+                    false
+                }
+            }
+            hideSoftInputOnFocusLoss(fieldStartingValue.textField)
+            fieldStartingValue.textField.setText("0")
             fieldStartingValue.textField.doAfterTextChanged {
                 viewModel.setStartingValue(it.toString().toDoubleOrNull() ?: 0.0)
             }
@@ -97,4 +113,7 @@ class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
             )
         }
     }
+
+    private fun KeyEvent?.isEnterKeyUp(): Boolean =
+        this?.keyCode == KeyEvent.KEYCODE_ENTER && this.action == KeyEvent.ACTION_UP
 }

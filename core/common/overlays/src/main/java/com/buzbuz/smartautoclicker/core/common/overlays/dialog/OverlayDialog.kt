@@ -160,8 +160,8 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
 
     /** Hide the software keyboard. */
     private fun hideSoftInput() {
-        dialog?.let {
-            inputMethodManager.hideSoftInputFromWindow(it.window!!.decorView.windowToken, 0)
+        dialog?.window?.decorView?.windowToken?.let { windowToken ->
+            inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
         }
     }
 
