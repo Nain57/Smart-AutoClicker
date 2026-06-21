@@ -94,10 +94,10 @@ class CountersConfigViewHolder(
             textFieldStartingValue.apply {
                 inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or
                         InputType.TYPE_NUMBER_FLAG_SIGNED
-                imeOptions = EditorInfo.IME_ACTION_SEND or EditorInfo.IME_FLAG_NO_EXTRACT_UI
+                imeOptions = EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI
                 setSingleLine(true)
                 setOnEditorActionListener { view, actionId, event ->
-                    if (actionId == EditorInfo.IME_ACTION_SEND || event.isEnterKeyUp()) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || event.isEnterKeyUp()) {
                         commitStartingValue()
                         view.hideSoftInput()
                         view.clearFocus()
