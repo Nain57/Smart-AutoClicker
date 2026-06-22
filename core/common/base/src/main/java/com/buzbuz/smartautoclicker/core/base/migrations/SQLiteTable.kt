@@ -105,13 +105,25 @@ class SQLiteTable internal constructor(
         """.trimIndent()
     )
 
-    fun update(extraClause: String?, contentValues: ContentValues): Unit = execSQLite(
-        """
-            UPDATE `$tableName` 
-            SET ${contentValues.valueSet().map { it.key to (it.value?.toString() ?: "NULL") }.formatAsSQLiteUpdateList()}
-            ${extraClause.formatAsOptionalClause()}
-        """.trimIndent()
-    )
+    fun update(extraClause: String?, contentValues: ContentValues) {
+        val bindArgs = mutableListOf<Any>()
+        val updatedValues = contentValues.valueSet().map { (key, value) ->
+            if (value == null) key to "NULL"
+            else {
+                bindArgs += value.formatAsSQLiteBindArg()
+                key to "?"
+            }
+        }
+
+        execSQLite(
+            """
+                UPDATE `$tableName`
+                SET ${updatedValues.formatAsSQLiteUpdateList()}
+                ${extraClause.formatAsOptionalClause()}
+            """.trimIndent(),
+            bindArgs.toTypedArray(),
+        )
+    }
 
     fun deleteFrom(primaryKeys: Set<Long>): Unit = execSQLite(
         """
@@ -167,6 +179,11 @@ class SQLiteTable internal constructor(
     fun execSQLite(statement: String) {
         Log.d(TAG, "Executing: $statement")
         databaseSQLite.execSQL(statement)
+    }
+
+    private fun execSQLite(statement: String, bindArgs: Array<Any>) {
+        Log.d(TAG, "Executing: $statement with args: ${bindArgs.contentToString()}")
+        databaseSQLite.execSQL(statement, bindArgs)
     }
 
     private fun querySQLite(query: String): Cursor {
