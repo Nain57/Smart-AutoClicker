@@ -70,5 +70,5 @@ void ColorMatcher::matchColor(
     currentMatchingResult.updateResults(detectionArea, diff);
 
     // If the colors are OK, the result is valid
-    if (diff < threshold) currentMatchingResult.markResultAsDetected();
+    if ((diff * 100) < threshold) currentMatchingResult.markResultAsDetected();
 }
