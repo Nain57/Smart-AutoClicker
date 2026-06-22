@@ -472,7 +472,7 @@ private const val ONE_SECOND_IN_NANO = 1000000000L
 /** The value of 1 milliseconds  in nanoseconds.*/
 private const val ONE_MILLISECOND_IN_NANO = 1000000L
 /** The default minimal processing duration in nanoseconds. */
-private const val DEFAULT_MIN_PROCESSING_DURATION_NS = ONE_SECOND_IN_NANO
+private const val DEFAULT_MIN_PROCESSING_DURATION_NS = ONE_MILLISECOND_IN_NANO
 
 /** Tag for logs. */
 private const val TAG = "DetectorEngine"
