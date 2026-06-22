@@ -186,7 +186,7 @@ object Migration10to11 : Migration(10, 11) {
     private fun SQLiteTable.updateClickPositionType(actionId: Long, positionType: ClickPositionType) = update(
         extraClause = "WHERE `id` = $actionId",
         contentValues = ContentValues().apply {
-            put("clickPositionType", "\"${positionType.name}\"")
+            put("clickPositionType", positionType.name)
         },
     )
 

@@ -298,7 +298,7 @@ object Migration19to20 : Migration(19, 20) {
     private fun SQLiteTable.restoreFrameLimitValue(scenarioId: Long, computeRate: Double) = update(
         extraClause = "WHERE `id` = $scenarioId",
         contentValues = ContentValues().apply {
-            put(scenarioComputeRateColumn.name, computeRate.toString())
+            put(scenarioComputeRateColumn.name, computeRate)
         },
     )
 }
