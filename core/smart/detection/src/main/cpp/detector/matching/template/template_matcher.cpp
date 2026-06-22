@@ -133,7 +133,7 @@ void TemplateMatcher::parseMatchingResult(
         double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage,condition.getColorMean());
 
         // If the colors are OK, the result is valid
-        if (colorDiff < threshold) currentMatchingResult.markResultAsDetected();
+        if (colorDiff <= threshold) currentMatchingResult.markResultAsDetected();
     }
 }
 
