@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.database.EVENT_TABLE
 import com.buzbuz.smartautoclicker.core.database.SCENARIO_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
+import com.buzbuz.smartautoclicker.core.database.entity.NotificationMessageType
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -141,6 +142,35 @@ class Migration19to20Tests {
     }
 
     @Test
+    fun migrate_notification_counter_text_escapes_sql_value() {
+        // Given
+        val scenarioId = 1L
+        val actionId = 860L
+        val counterName = "ConnectionError"
+        val expectedText = "ConnectionError = {ConnectionError}"
+
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestAction(
+                id = actionId,
+                eventId = 1L,
+                type = ActionType.NOTIFICATION,
+                notificationMessageCounterName = counterName,
+            )
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then
+            db.query("SELECT notification_message_text FROM $ACTION_TABLE WHERE id = $actionId").use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals(expectedText, cursor.getString(0))
+            }
+        }
+    }
+
+    @Test
     fun migrate_counters_creation_condition_only() {
         // Given
         val scenarioId = 1L
@@ -232,6 +262,8 @@ class Migration19to20Tests {
         counterOperationValue: Int? = null,
         counterOperationCounterName: String? = null,
         notificationMessageCounterName: String? = null,
+        notificationMessageType: NotificationMessageType? =
+            if (notificationMessageCounterName != null) NotificationMessageType.COUNTER_VALUE else null,
     ) {
         insert(ACTION_TABLE, 0, ContentValues().apply {
             put("id", id)
@@ -242,6 +274,7 @@ class Migration19to20Tests {
             put("counter_name", counterName)
             put("counter_operation_value", counterOperationValue)
             put("counter_operation_counter_name", counterOperationCounterName)
+            put("notification_message_type", notificationMessageType?.name)
             put("notification_message_counter_name", notificationMessageCounterName)
         })
     }

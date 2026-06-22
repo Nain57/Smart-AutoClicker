@@ -59,6 +59,16 @@ internal fun Collection<Pair<String, String>>.formatAsSQLiteUpdateList(): String
     }
 
 /**
+ * Format a value before binding it to a SQLite statement.
+ * Boolean values are stored as SQLite integers.
+ */
+internal fun Any.formatAsSQLiteBindArg(): Any =
+    when (this) {
+        is Boolean -> if (this) 1 else 0
+        else -> this
+    }
+
+/**
  * Format a primary key column for a SQLite create table statement.
  * Output will have the following format:
  *   `columnName` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
