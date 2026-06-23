@@ -24,17 +24,14 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortSettings
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortConfig
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortConfigRepository
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -42,19 +39,13 @@ import kotlin.time.Duration.Companion.minutes
 class FilteredScenarioListUseCase @Inject constructor(
     @ApplicationContext context: Context,
     dumbRepository: IDumbRepository,
-    sortConfigRepository: ScenarioSortConfigRepository,
-    settingsRepository: SettingsRepository,
+    private val settingsRepository: SettingsRepository,
     private val smartRepository: IRepository,
 ) {
 
-    /** The currently searched action name. Null if no is. */
-    private val searchQuery = MutableStateFlow<String?>(null)
-
-    private val refresh: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 1)
-
     /** Dumb & Smart scenario together. */
     private val allScenarios: Flow<List<ScenarioListUiState.Item.ScenarioItem>> =
-        combine(refresh, dumbRepository.dumbScenarios, smartRepository.scenarios) { _, dumbList, smartList ->
+        combine(dumbRepository.dumbScenarios, smartRepository.scenarios) { dumbList, smartList ->
             mutableListOf<ScenarioListUiState.Item.ScenarioItem>().apply {
                 addAll(dumbList.map { it.toItem(context) })
                 addAll(smartList.map { it.toItem() })
@@ -62,11 +53,11 @@ class FilteredScenarioListUseCase @Inject constructor(
         }
 
     /** Flow upon the list of Dumb & Smart scenarios, filtered with the search query and ordered with the sort config */
-    val orderedItems: Flow<List<ScenarioListUiState.Item>> =
+    operator fun invoke(searchQuery: Flow<String?>): Flow<List<ScenarioListUiState.Item>> =
         combine(
             allScenarios,
             searchQuery,
-            sortConfigRepository.getSortConfig(),
+            settingsRepository.scenarioSortSettings,
             settingsRepository.isFilterScenarioUiEnabledFlow,
         ) { scenarios, searchQuery, sortConfig, filtersEnabled ->
             if (searchQuery == null) {
@@ -91,17 +82,6 @@ class FilteredScenarioListUseCase @Inject constructor(
             }
         }
 
-    init {
-        refresh.tryEmit(Unit)
-    }
-
-    fun updateSearchQuery(query: String?) {
-        searchQuery.value = query
-    }
-
-    suspend fun refresh() {
-        refresh.emit(Unit)
-    }
 
     private suspend fun Scenario.toItem(): ScenarioListUiState.Item.ScenarioItem =
         if (eventCount == 0) ScenarioListUiState.Item.ScenarioItem.Empty.Smart(
@@ -163,7 +143,7 @@ private fun DumbScenario.getMaxDurationDisplayText(context: Context): String =
     )
 
 private fun Collection<ScenarioListUiState.Item.ScenarioItem>.sortAndFilter(
-    sortConfig: ScenarioSortConfig,
+    sortConfig: ScenarioSortSettings,
 ): Collection<ScenarioListUiState.Item.ScenarioItem> {
 
     val filteredList = filter { item ->

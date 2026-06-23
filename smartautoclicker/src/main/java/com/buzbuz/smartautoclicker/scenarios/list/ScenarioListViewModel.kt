@@ -31,9 +31,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortConfigRepository
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -46,14 +46,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 
 @HiltViewModel
 class ScenarioListViewModel @Inject constructor(
-    private val filteredScenarioListUseCase: FilteredScenarioListUseCase,
-    private val sortConfigRepository: ScenarioSortConfigRepository,
+    filteredScenarioListUseCase: FilteredScenarioListUseCase,
+    private val settingsRepository: SettingsRepository,
     private val bitmapRepository: BitmapRepository,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
@@ -67,9 +68,12 @@ class ScenarioListViewModel @Inject constructor(
     /** Set of scenario identifier selected for a backup. */
     private val selectedForBackup = MutableStateFlow(ScenarioBackupSelection())
 
+    /** The currently searched action name. Null if no is. */
+    private val searchQuery = MutableStateFlow<String?>(null)
+
     val uiState: StateFlow<ScenarioListUiState?> = combine(
         uiStateType,
-        filteredScenarioListUseCase.orderedItems,
+        filteredScenarioListUseCase(searchQuery),
         selectedForBackup,
         expandedItems,
     ) { stateType, items, backupSelection, expanded,  ->
@@ -106,37 +110,23 @@ class ScenarioListViewModel @Inject constructor(
      * @param query the new query.
      */
     fun updateSearchQuery(query: String?) {
-        filteredScenarioListUseCase.updateSearchQuery(query)
+        searchQuery.update { query }
     }
 
     fun updateSortType(type: ScenarioSortType) {
-        viewModelScope.launch {
-            sortConfigRepository.setSortType(type)
-        }
+        settingsRepository.setScenarioSortType(type)
     }
 
     fun updateSortOrder(isChecked: Boolean) {
-        viewModelScope.launch {
-            sortConfigRepository.setSortOrder(isChecked)
-        }
+        settingsRepository.setScenarioSortOrder(isChecked)
     }
 
     fun updateDumbVisible(show: Boolean) {
-        viewModelScope.launch {
-            sortConfigRepository.setShowDumb(show)
-        }
+        settingsRepository.setScenarioSortShowDumb(show)
     }
 
     fun updateSmartVisible(show: Boolean) {
-        viewModelScope.launch {
-            sortConfigRepository.setShowSmart(show)
-        }
-    }
-
-    fun refreshScenarioList() {
-        viewModelScope.launch {
-            filteredScenarioListUseCase.refresh()
-        }
+        settingsRepository.setScenarioSortShowSmart(show)
     }
 
     /** @return the list of selected dumb scenario identifiers. */

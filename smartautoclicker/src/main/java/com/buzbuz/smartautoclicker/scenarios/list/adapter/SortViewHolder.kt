@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.databinding.ItemOrderingAndFilteringBinding
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonCheckedListener
 
 class SortViewHolder(

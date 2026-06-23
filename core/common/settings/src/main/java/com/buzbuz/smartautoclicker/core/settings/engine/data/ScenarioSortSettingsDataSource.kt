@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.scenarios.list.sort
+package com.buzbuz.smartautoclicker.core.settings.engine.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
@@ -23,23 +23,23 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.base.getEnum
 import com.buzbuz.smartautoclicker.core.base.setEnum
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortSettings
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
-class ScenarioSortConfigRepository @Inject constructor(
+internal class ScenarioSortSettingsDataSource @Inject constructor(
     @ApplicationContext context: Context,
-    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
+    @Dispatcher(HiltCoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
 ) {
 
     private companion object {
@@ -63,9 +63,9 @@ class ScenarioSortConfigRepository @Inject constructor(
             migrations = emptyList()
         )
 
-    internal fun getSortConfig(): Flow<ScenarioSortConfig> =
+    fun getSortConfig(): Flow<ScenarioSortSettings> =
         dataStore.data.map { preferences ->
-            ScenarioSortConfig(
+            ScenarioSortSettings(
                 type = preferences.getEnum<ScenarioSortType>(KEY_SORT_TYPE) ?: ScenarioSortType.NAME,
                 inverted = preferences[KEY_SORT_INVERTED] ?: false,
                 showSmartScenario = preferences[KEY_FILTER_SHOW_SMART] ?: true,
@@ -73,22 +73,22 @@ class ScenarioSortConfigRepository @Inject constructor(
             )
         }
 
-    internal suspend fun setSortType(type: ScenarioSortType) =
+    suspend fun setSortType(type: ScenarioSortType) =
         dataStore.edit { preferences ->
             preferences.setEnum(KEY_SORT_TYPE, type)
         }
 
-    internal suspend fun setSortOrder(invertSortOrder: Boolean) =
+    suspend fun setSortOrder(invertSortOrder: Boolean) =
         dataStore.edit { preferences ->
             preferences[KEY_SORT_INVERTED] = invertSortOrder
         }
 
-    internal suspend fun setShowDumb(show: Boolean) =
+    suspend fun setShowDumb(show: Boolean) =
         dataStore.edit { preferences ->
             preferences[KEY_FILTER_SHOW_DUMB] = show
         }
 
-    internal suspend fun setShowSmart(show: Boolean) =
+    suspend fun setShowSmart(show: Boolean) =
         dataStore.edit { preferences ->
             preferences[KEY_FILTER_SHOW_SMART] = show
         }

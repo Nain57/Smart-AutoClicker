@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.scenarios.list.sort
+package com.buzbuz.smartautoclicker.core.settings.domain.model
 
-data class ScenarioSortConfig(
+data class ScenarioSortSettings(
     val type: ScenarioSortType,
     val inverted: Boolean,
     val showSmartScenario: Boolean,
     val showDumbScenario: Boolean,
 )
-
-enum class ScenarioSortType {
-    NAME,
-    RECENT,
-    MOST_USED,
-}
-

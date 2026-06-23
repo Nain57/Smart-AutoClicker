@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.databinding.ItemEmptyScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemOrderingAndFilteringBinding
 import com.buzbuz.smartautoclicker.databinding.ItemSmartScenarioBinding
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 
 import kotlinx.coroutines.Job
 
