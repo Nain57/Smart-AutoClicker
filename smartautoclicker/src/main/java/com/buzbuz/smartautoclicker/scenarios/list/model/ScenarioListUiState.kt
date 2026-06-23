@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM_INT
-import com.buzbuz.smartautoclicker.scenarios.list.sort.ScenarioSortType
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 
 /**
  * Ui State for the [com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment]

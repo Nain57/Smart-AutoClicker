@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType

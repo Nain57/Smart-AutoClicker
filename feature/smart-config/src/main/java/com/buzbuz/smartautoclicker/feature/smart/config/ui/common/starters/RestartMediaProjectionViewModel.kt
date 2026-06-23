@@ -23,7 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

@@ -38,7 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository

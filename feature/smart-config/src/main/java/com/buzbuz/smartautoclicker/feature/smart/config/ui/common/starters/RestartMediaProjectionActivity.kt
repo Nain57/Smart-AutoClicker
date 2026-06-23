@@ -29,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import dagger.hilt.android.AndroidEntryPoint

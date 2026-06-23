@@ -26,7 +26,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.base.notifications.NotificationIds
 import com.buzbuz.smartautoclicker.feature.notifications.model.SERVICE_CHANNEL_ID
 import com.buzbuz.smartautoclicker.feature.notifications.model.ServiceNotificationState

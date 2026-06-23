@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu

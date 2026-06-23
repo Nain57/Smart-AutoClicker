@@ -22,6 +22,7 @@ import com.buzbuz.gradle.obfuscation.getExtraActualApplicationId
 
 plugins {
     alias(libs.plugins.buzbuz.androidApplication)
+    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.obfuscation)
     alias(libs.plugins.buzbuz.buildParameters)

@@ -233,7 +233,7 @@ class ScenarioListFragment : Fragment() {
 
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.setFragmentResultListener(FRAGMENT_RESULT_KEY_COMPLETED, this) { _, _ ->
-            scenarioListViewModel.refreshScenarioList()
+            // Nothing to do
         }
         ConditionsMigrationFragment
             .newInstance()

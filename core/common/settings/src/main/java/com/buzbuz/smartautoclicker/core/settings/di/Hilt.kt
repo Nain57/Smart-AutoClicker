@@ -18,9 +18,10 @@ package com.buzbuz.smartautoclicker.core.settings.di
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
-import com.buzbuz.smartautoclicker.core.settings.data.SettingsDataSource
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepository
-import com.buzbuz.smartautoclicker.core.settings.SettingsRepositoryImpl
+import com.buzbuz.smartautoclicker.core.settings.engine.data.ScenarioSortSettingsDataSource
+import com.buzbuz.smartautoclicker.core.settings.engine.data.SettingsDataSource
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.engine.SettingsRepositoryImpl
 
 import dagger.Module
 import dagger.Provides
@@ -38,5 +39,6 @@ object SettingsHiltModule {
     internal fun providesSettingsRepository(
         @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
         dataSource: SettingsDataSource,
-    ): SettingsRepository = SettingsRepositoryImpl(ioDispatcher, dataSource)
+        scenarioSortSettingsDatasource: ScenarioSortSettingsDataSource,
+    ): SettingsRepository = SettingsRepositoryImpl(ioDispatcher, dataSource, scenarioSortSettingsDatasource)
 }
