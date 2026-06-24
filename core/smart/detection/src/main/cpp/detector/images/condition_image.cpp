@@ -35,9 +35,5 @@ void ConditionImage::processNewData(std::unique_ptr<cv::Mat> newData, int target
     }
 
     grayValid = false;
-}
-
-cv::Scalar ConditionImage::getColorMean() const {
-    if (colorMat.empty()) return {};
-    return cv::mean(colorMat);
+    hsvValid = false;
 }

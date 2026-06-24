@@ -129,8 +129,8 @@ void TemplateMatcher::parseMatchingResult(
         if (!isRoiBiggerOrEquals(screenImage.getRoi(), currentMatchingResult.getResultArea())) continue;
 
         // Check if the colors are matching in the candidate area.
-        cv::Mat fullSizeColorCroppedCurrentImage = screenImage.cropColor(currentMatchingResult.getResultArea());
-        double colorDiff = getColorDiff(fullSizeColorCroppedCurrentImage,condition.getColorMean());
+        cv::Mat hsvCrop = screenImage.cropHsv(currentMatchingResult.getResultArea());
+        double colorDiff = getColorDiff(hsvCrop, condition.getHsvMean());
 
         // If the colors are OK, the result is valid
         if (colorDiff <= threshold) currentMatchingResult.markResultAsDetected();
@@ -141,12 +141,17 @@ bool TemplateMatcher::isConfidenceValid(double confidence, int threshold) {
     return confidence > ((100.0 - threshold) / 100.0);
 }
 
-double TemplateMatcher::getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans) {
-   auto imageColorMeans = mean(image);
+double TemplateMatcher::getColorDiff(const cv::Mat& hsvImage, const cv::Scalar& conditionHsvMean) {
+    cv::Scalar imageHsvMean = cv::mean(hsvImage);
 
-   double diff = 0;
-   for (int i = 0; i < 3; i++) {
-       diff += abs(imageColorMeans.val[i] - conditionColorMeans.val[i]);
-   }
-   return (diff * 100) / (255 * 3);
+    // Compute shortest arc distance (H channel is circular [0, 180] in OpenCV)
+    double hDiff = std::abs(imageHsvMean.val[0] - conditionHsvMean.val[0]);
+    if (hDiff > 90.0) hDiff = 180.0 - hDiff;
+
+    // S and V channels are linear [0, 255]
+    double sDiff = std::abs(imageHsvMean.val[1] - conditionHsvMean.val[1]);
+    double vDiff = std::abs(imageHsvMean.val[2] - conditionHsvMean.val[2]);
+
+    // Normalize each channel to [0, 100] then average
+    return ((hDiff / 90.0) + (sDiff / 255.0) + (vDiff / 255.0)) * (100.0 / 3.0);
 }
