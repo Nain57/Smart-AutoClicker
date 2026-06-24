@@ -27,8 +27,6 @@ namespace smartautoclicker {
 
     public:
         void processNewData(std::unique_ptr<cv::Mat> newData, int targetWidth, int targetHeight);
-
-        [[nodiscard]] cv::Scalar getColorMean() const;
     };
 }
 

@@ -27,6 +27,7 @@ void ScreenImage::processNewData(std::unique_ptr<cv::Mat> newData, const char* m
 
     this->colorMat = std::move(*newData);
     grayValid = false;
+    hsvValid = false;
 }
 
 cv::Mat ScreenImage::cropColor(const cv::Rect &roi) const {
@@ -38,6 +39,12 @@ cv::Mat ScreenImage::cropGray(const cv::Rect &roi) const {
     const cv::Mat& gray = getGrayMat();
     if (gray.empty()) return {};
     return cropMat(gray, roi);
+}
+
+cv::Mat ScreenImage::cropHsv(const cv::Rect &roi) const {
+    const cv::Mat& hsv = getHsvMat();
+    if (hsv.empty()) return {};
+    return cropMat(hsv, roi);
 }
 
 cv::Mat ScreenImage::cropMat(const cv::Mat& mat, const cv::Rect& roi) {

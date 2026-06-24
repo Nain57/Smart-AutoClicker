@@ -33,6 +33,22 @@ const cv::Mat& DetectionImage::getGrayMat() const {
     return grayMat;
 }
 
+const cv::Mat& DetectionImage::getHsvMat() const {
+    if (!hsvValid && !colorMat.empty()) {
+        cv::Mat rgbMat;
+        cv::cvtColor(colorMat, rgbMat, cv::COLOR_RGBA2RGB);
+        cv::cvtColor(rgbMat, hsvMat, cv::COLOR_RGB2HSV);
+        hsvValid = true;
+    }
+    return hsvMat;
+}
+
+cv::Scalar DetectionImage::getHsvMean() const {
+    const cv::Mat& hsv = getHsvMat();
+    if (hsv.empty()) return {};
+    return cv::mean(hsv);
+}
+
 cv::Rect DetectionImage::getRoi() const {
     return {0, 0, colorMat.cols, colorMat.rows};
 }

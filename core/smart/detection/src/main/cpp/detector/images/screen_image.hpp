@@ -33,6 +33,7 @@ namespace smartautoclicker {
 
         [[nodiscard]] cv::Mat cropColor(const cv::Rect& roi) const;
         [[nodiscard]] cv::Mat cropGray(const cv::Rect& roi) const;
+        [[nodiscard]] cv::Mat cropHsv(const cv::Rect& roi) const;
     };
 }
 

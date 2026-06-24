@@ -39,7 +39,7 @@ namespace smartautoclicker {
                 cv::Mat& matchingResult);
 
         static bool isConfidenceValid(double confidence, int threshold);
-        static double getColorDiff(const cv::Mat& image, const cv::Scalar& conditionColorMeans);
+        static double getColorDiff(const cv::Mat& hsvImage, const cv::Scalar& conditionHsvMean);
 
     public:
         void reset();

@@ -28,12 +28,16 @@ namespace smartautoclicker {
         cv::Mat colorMat;
         mutable cv::Mat grayMat;
         mutable bool grayValid = false;
+        mutable cv::Mat hsvMat;
+        mutable bool hsvValid = false;
 
     public:
         virtual ~DetectionImage() = default;
 
         [[nodiscard]] const cv::Mat& getColorMat() const;
         [[nodiscard]] const cv::Mat& getGrayMat() const;
+        [[nodiscard]] const cv::Mat& getHsvMat() const;
+        [[nodiscard]] cv::Scalar getHsvMean() const;
         [[nodiscard]] cv::Rect getRoi() const;
         [[nodiscard]] bool empty() const;
     };
