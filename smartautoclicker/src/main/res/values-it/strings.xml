@@ -42,7 +42,20 @@
 
     <string name="item_scenario_filter_by_name">Nome</string>
     <string name="item_scenario_filter_by_recent">Recente</string>
-    <string name="item_scenario_filter_by_favorite">Preferito</string>
+    <string name="item_scenario_filter_by_most_used">Utilizzi</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">%1$d min. fa</item>
+        <item quantity="other">%1$d min. fa</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">%1$d ora fa</item>
+        <item quantity="other">%1$d ore fa</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">%1$d giorno fa</item>
+        <item quantity="other">%1$d giorni fa</item>
+    </plurals>
 
     <!--
       - Text for items in a list or vertical layout.

@@ -43,7 +43,20 @@
 
     <string name="item_scenario_filter_by_name">Name</string>
     <string name="item_scenario_filter_by_recent">Recent</string>
-    <string name="item_scenario_filter_by_favorite">Favorite</string>
+    <string name="item_scenario_filter_by_most_used">Uses</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">%1$d min. ago</item>
+        <item quantity="other">%1$d min. ago</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">%1$d hour ago</item>
+        <item quantity="other">%1$d hours ago</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">%1$d day ago</item>
+        <item quantity="other">%1$d days ago</item>
+    </plurals>
 
     <!--
       - Text for items in a list or vertical layout.

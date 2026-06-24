@@ -91,6 +91,33 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="visible">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/execution_count"
+                style="@style/AppTheme.TextAppearance.BodyLarge"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="1"
+                android:drawablePadding="@dimen/margin_horizontal_mini"
+                app:drawableLeftCompat="@drawable/ic_most_used"
+                tools:text="4444" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/last_execution"
+                style="@style/AppTheme.TextAppearance.BodyLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
+                app:layout_constraintStart_toEndOf="@id/execution_count"
+                app:layout_constraintTop_toTopOf="@id/execution_count"
+                app:layout_constraintBottom_toBottomOf="@id/execution_count"
+                android:drawablePadding="@dimen/margin_horizontal_mini"
+                app:drawableLeftCompat="@drawable/ic_sort_recent"
+                tools:text="3 days ago" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/dumb_actions_layout"
                 android:layout_width="0dp"
@@ -98,7 +125,7 @@
                 android:layout_marginVertical="@dimen/margin_vertical_small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/button_copy"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/execution_count"
                 app:layout_constraintBottom_toTopOf="@id/layout_action_description">
 
                 <com.google.android.material.textview.MaterialTextView

@@ -40,7 +40,24 @@
 
     <string name="item_scenario_filter_by_name">Назва</string>
     <string name="item_scenario_filter_by_recent">Останні</string>
-    <string name="item_scenario_filter_by_favorite">Улюблені</string>
+    <string name="item_scenario_filter_by_most_used">Використання</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">%1$d хв. тому</item>
+        <item quantity="other">%1$d хв. тому</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">%1$d година тому</item>
+        <item quantity="few">%1$d години тому</item>
+        <item quantity="many">%1$d годин тому</item>
+        <item quantity="other">%1$d години тому</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">%1$d день тому</item>
+        <item quantity="few">%1$d дні тому</item>
+        <item quantity="many">%1$d днів тому</item>
+        <item quantity="other">%1$d дні тому</item>
+    </plurals>
 
     <!--
       - Text for items in a list or vertical layout.

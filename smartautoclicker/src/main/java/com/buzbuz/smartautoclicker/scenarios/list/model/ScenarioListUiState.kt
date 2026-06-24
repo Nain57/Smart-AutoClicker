@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.scenarios.list.model
 
 import androidx.annotation.IntRange
 
-import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -112,27 +111,27 @@ data class ScenarioListUiState(
             val changeOrderChecked: Boolean,
         ): Item()
 
-        sealed class ScenarioItem(val displayName: String, val scenarioTypeIcon: Int): Item() {
+        sealed class ScenarioItem(val displayName: String): Item() {
 
             abstract val scenario: Any
             abstract val lastStartTimestamp: Long
             abstract val startCount: Long
 
-            sealed class Empty(displayName: String, scenarioTypeIcon: Int) : ScenarioItem(displayName, scenarioTypeIcon) {
+            sealed class Empty(displayName: String) : ScenarioItem(displayName) {
                 data class Dumb(
                     override val scenario: DumbScenario,
                     override val lastStartTimestamp: Long,
                     override val startCount: Long,
-                ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_dumb)
+                ) : Empty(displayName = scenario.name)
 
                 data class Smart(
                     override val scenario: Scenario,
                     override val lastStartTimestamp: Long,
                     override val startCount: Long,
-                ) : Empty(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart)
+                ) : Empty(displayName = scenario.name)
             }
 
-            sealed class Valid(displayName: String, scenarioTypeIcon: Int) : ScenarioItem(displayName, scenarioTypeIcon) {
+            sealed class Valid(displayName: String) : ScenarioItem(displayName) {
 
                 abstract val showExportCheckbox: Boolean
                 abstract val checkedForExport: Boolean
@@ -152,7 +151,7 @@ data class ScenarioListUiState(
                     val pauseCount: Int,
                     val repeatText: String,
                     val maxDurationText: String,
-                ) : Valid(displayName = scenario.name,  scenarioTypeIcon = R.drawable.ic_dumb) {
+                ) : Valid(displayName = scenario.name) {
                     override fun getScenarioId(): Long = scenario.id.databaseId
                 }
 
@@ -166,7 +165,7 @@ data class ScenarioListUiState(
                     val eventsItems: List<EventItem>,
                     val triggerEventCount: Int,
                     val detectionQuality: Int,
-                ) : Valid(displayName = scenario.name, scenarioTypeIcon = R.drawable.ic_smart) {
+                ) : Valid(displayName = scenario.name) {
 
                     override fun getScenarioId(): Long = scenario.id.databaseId
 

@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.scenarios.list.adapter
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.databinding.ItemDumbScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemEmptyScenarioBinding
 import com.buzbuz.smartautoclicker.databinding.ItemSmartScenarioBinding
+import com.buzbuz.smartautoclicker.scenarios.list.model.getTimeSinceString
 import kotlinx.coroutines.Job
 
 import java.util.Locale
@@ -83,9 +85,13 @@ class DumbScenarioViewHolder(
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {
             scenarioDetails.visibility = View.VISIBLE
             buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_up)
+
+            executionCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.startCount)
+            lastExecution.text = root.context.getTimeSinceString(scenarioItem.lastStartTimestamp)
             clickCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.clickCount)
             swipeCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.swipeCount)
             pauseCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.pauseCount)
+
             repeatLimit.text = scenarioItem.repeatText
             durationLimit.text = scenarioItem.maxDurationText
         } else {
@@ -140,6 +146,9 @@ class SmartScenarioViewHolder(
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {
             scenarioDetails.visibility = View.VISIBLE
             buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_up)
+
+            executionCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.startCount)
+            lastExecution.text = root.context.getTimeSinceString(scenarioItem.lastStartTimestamp)
             detectionQuality.text = String.format(Locale.getDefault(), "%d", scenarioItem.detectionQuality)
             triggerEventCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.triggerEventCount)
 
