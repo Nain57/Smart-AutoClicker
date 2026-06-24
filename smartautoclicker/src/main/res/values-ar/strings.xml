@@ -39,7 +39,20 @@
 
     <string name="item_scenario_filter_by_name">الاسم</string>
     <string name="item_scenario_filter_by_recent">الأحدث</string>
-    <string name="item_scenario_filter_by_favorite">المفضلة</string>
+    <string name="item_scenario_filter_by_most_used">استخدامات</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">منذ %1$d دقيقة</item>
+        <item quantity="other">منذ %1$d دقائق</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">منذ %1$d ساعة</item>
+        <item quantity="other">منذ %1$d ساعات</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">منذ %1$d يوم</item>
+        <item quantity="other">منذ %1$d أيام</item>
+    </plurals>
 
     <!--
       - Text for items in a list or vertical layout.

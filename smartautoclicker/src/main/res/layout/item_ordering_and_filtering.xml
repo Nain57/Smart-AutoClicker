@@ -54,8 +54,8 @@
             android:id="@+id/button_most_used"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/item_scenario_filter_by_favorite"
-            app:icon="@drawable/ic_sort_favourites"/>
+            android:text="@string/item_scenario_filter_by_most_used"
+            app:icon="@drawable/ic_most_used"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

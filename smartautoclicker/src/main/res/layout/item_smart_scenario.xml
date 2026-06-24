@@ -92,14 +92,41 @@
             android:visibility="visible">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/detection_quality"
+                android:id="@+id/execution_count"
                 style="@style/AppTheme.TextAppearance.BodyLarge"
-                android:layout_width="wrap_content"
+                android:layout_width="72dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_default"
                 android:layout_marginBottom="@dimen/margin_vertical_default"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="1"
+                android:drawablePadding="@dimen/margin_horizontal_mini"
+                app:drawableLeftCompat="@drawable/ic_most_used"
+                tools:text="4444" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/last_execution"
+                style="@style/AppTheme.TextAppearance.BodyLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
+                app:layout_constraintStart_toEndOf="@id/execution_count"
+                app:layout_constraintTop_toTopOf="@id/execution_count"
+                app:layout_constraintBottom_toBottomOf="@id/execution_count"
+                android:drawablePadding="@dimen/margin_horizontal_mini"
+                app:drawableLeftCompat="@drawable/ic_sort_recent"
+                tools:text="3 days ago" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/detection_quality"
+                style="@style/AppTheme.TextAppearance.BodyLarge"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginBottom="@dimen/margin_vertical_default"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/execution_count"
                 android:drawablePadding="@dimen/margin_horizontal_mini"
                 app:drawableLeftCompat="@drawable/ic_detection_quality"
                 tools:text="1865" />
@@ -109,7 +136,7 @@
                 style="@style/AppTheme.TextAppearance.BodyLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_horizontal_default"
+                android:layout_marginStart="@dimen/margin_horizontal_small"
                 app:layout_constraintStart_toEndOf="@id/detection_quality"
                 app:layout_constraintTop_toTopOf="@id/detection_quality"
                 app:layout_constraintBottom_toBottomOf="@id/detection_quality"

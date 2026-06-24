@@ -41,7 +41,24 @@
 
     <string name="item_scenario_filter_by_name">Имя</string>
     <string name="item_scenario_filter_by_recent">Недавний</string>
-    <string name="item_scenario_filter_by_favorite">Любимый</string>
+    <string name="item_scenario_filter_by_most_used">Использования</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">%1$d мин. назад</item>
+        <item quantity="other">%1$d мин. назад</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">%1$d час назад</item>
+        <item quantity="few">%1$d часа назад</item>
+        <item quantity="many">%1$d часов назад</item>
+        <item quantity="other">%1$d часа назад</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">%1$d день назад</item>
+        <item quantity="few">%1$d дня назад</item>
+        <item quantity="many">%1$d дней назад</item>
+        <item quantity="other">%1$d дня назад</item>
+    </plurals>
 
     <!--
       - Text for items in a list or vertical layout.

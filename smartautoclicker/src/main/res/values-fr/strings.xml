@@ -41,7 +41,20 @@
 
     <string name="item_scenario_filter_by_name">Nom</string>
     <string name="item_scenario_filter_by_recent">Récent</string>
-    <string name="item_scenario_filter_by_favorite">Favoris</string>
+    <string name="item_scenario_filter_by_most_used">Utilisations</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">il y a %1$d min.</item>
+        <item quantity="other">il y a %1$d min.</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">il y a %1$d heure</item>
+        <item quantity="other">il y a %1$d heures</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">il y a %1$d jour</item>
+        <item quantity="other">il y a %1$d jours</item>
+    </plurals>
 
 
     <!--
