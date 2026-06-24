@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
@@ -196,8 +197,10 @@ class ColorConditionDialog(
 
             updateRGBSliders(uiState)
 
-            viewBinding.fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
-            viewBinding.fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
+            fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
+            fieldShouldAppear.setDescription(if (uiState.shouldBeDetectedChecked) 1 else 0)
+
+            fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
         }
     }
 

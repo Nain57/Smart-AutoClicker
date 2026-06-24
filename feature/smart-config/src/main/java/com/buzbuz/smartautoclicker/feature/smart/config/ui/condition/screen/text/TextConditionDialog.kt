@@ -180,6 +180,7 @@ class TextConditionDialog(
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
             fieldSelectArea.setError(uiState.detectionAreaError)
             fieldShouldAppear.setChecked(uiState.shouldBeDetectedChecked)
+            fieldShouldAppear.setDescription(if (uiState.shouldBeDetectedChecked) 1 else 0)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())
         }
     }
