@@ -187,7 +187,7 @@ class NotificationDialog(
 
         overlayManager.navigateTo(
             context = context,
-            newOverlay = newNotificationSettingsStarterOverlay(),
+            newOverlay = newNotificationSettingsStarterOverlay(context),
             hideCurrent = true,
         )
     }
