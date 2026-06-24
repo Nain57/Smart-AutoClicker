@@ -1,9 +1,9 @@
 paddlepaddle==3.0.0
 paddle2onnx==2.0.2rc3
-onnx==1.17.0
+onnx==1.21.0
 onnxsim==0.4.36
 numpy==2.0.2
 pyyaml==6.0.2
-requests==2.32.3
+requests==2.33.0
 onnxruntime==1.19.2
 pnnx
