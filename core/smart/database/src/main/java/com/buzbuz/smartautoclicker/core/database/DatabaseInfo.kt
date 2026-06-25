@@ -40,4 +40,4 @@ internal const val COUNTERS_TABLE = "counters_table"
 internal const val END_CONDITION_TABLE = "end_condition_table"
 
 /** Current version of the database. */
-const val DATABASE_VERSION = 21
+const val DATABASE_VERSION = 22

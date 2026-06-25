@@ -193,6 +193,121 @@ class Migration19to20Tests {
         }
     }
 
+    // --- Blank counter regression tests (empty-string counter names must not create a blank counter) ---
+
+    @Test
+    fun migrate_blankCounter_notCreatedFromEmptyActionCounterName() {
+        // Given: a CHANGE_COUNTER action whose counter_name is empty string (not null)
+        // This simulates data produced by older app versions that stored "" instead of NULL.
+        val scenarioId = 1L
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestAction(1L, 1L, type = ActionType.CHANGE_COUNTER, counterName = "")
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then: no blank counter must be created in the counters table
+            db.query("SELECT counterName FROM $COUNTERS_TABLE WHERE scenarioId = $scenarioId").use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(0)
+                    assertTrue("Blank counter name must not be created, found: '$name'", name.isNotEmpty())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun migrate_blankCounter_notCreatedFromEmptyActionOperationCounterName() {
+        // Given: a CHANGE_COUNTER action whose counter_operation_counter_name is empty string
+        val scenarioId = 1L
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestAction(1L, 1L, type = ActionType.CHANGE_COUNTER, counterOperationCounterName = "")
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then
+            db.query("SELECT counterName FROM $COUNTERS_TABLE WHERE scenarioId = $scenarioId").use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(0)
+                    assertTrue("Blank counter name must not be created, found: '$name'", name.isNotEmpty())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun migrate_blankCounter_notCreatedFromEmptyNotificationCounterName() {
+        // Given: a NOTIFICATION action whose notification_message_counter_name is empty string
+        val scenarioId = 1L
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestAction(
+                id = 1L,
+                eventId = 1L,
+                type = ActionType.NOTIFICATION,
+                notificationMessageCounterName = "",
+            )
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then
+            db.query("SELECT counterName FROM $COUNTERS_TABLE WHERE scenarioId = $scenarioId").use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(0)
+                    assertTrue("Blank counter name must not be created, found: '$name'", name.isNotEmpty())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun migrate_blankCounter_notCreatedFromEmptyConditionCounterName() {
+        // Given: an ON_COUNTER_REACHED condition whose counter_name is empty string
+        val scenarioId = 1L
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestCondition(1L, 1L, type = ConditionType.ON_COUNTER_REACHED, counterName = "")
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then
+            db.query("SELECT counterName FROM $COUNTERS_TABLE WHERE scenarioId = $scenarioId").use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(0)
+                    assertTrue("Blank counter name must not be created, found: '$name'", name.isNotEmpty())
+                }
+            }
+        }
+    }
+
+    @Test
+    fun migrate_blankCounter_validCountersStillCreatedAlongsideEmptyNames() {
+        // Given: a scenario with one real counter and one empty-string counter name
+        val scenarioId = 1L
+        val realCounter = "MyCounter"
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(scenarioId)
+            db.insertTestEvent(1L, scenarioId)
+            db.insertTestAction(1L, 1L, type = ActionType.CHANGE_COUNTER, counterName = realCounter)
+            db.insertTestAction(2L, 1L, type = ActionType.CHANGE_COUNTER, counterName = "")
+        }
+
+        // When
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            // Then: only the real counter exists, no blank one
+            db.assertScenarioHasCounters(scenarioId, setOf(realCounter))
+        }
+    }
+
     @Test
     fun migrate_counters_creation_mixed() {
         // Given

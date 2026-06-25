@@ -98,11 +98,6 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         }
     }
 
-    override fun onDestroy() {
-        viewModel.saveEditions()
-        super.onDestroy()
-    }
-
     override fun back() {
         if (viewModel.getUiState() is CountersUiState.Replacing) return
         super.back()
