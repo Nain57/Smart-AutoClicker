@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 
 internal class CountersEditor {
 
@@ -83,12 +84,15 @@ internal class CountersEditor {
     }
 
     fun updateCounter(item: Counter) {
-        val currentCounters = _editedList.value ?: emptyList()
-        val toBeUpdatedIndex = currentCounters.indexOf(item)
-        if (toBeUpdatedIndex !in currentCounters.indices) return
+        _editedList.update { currentCounters ->
+            val toBeUpdatedIndex = currentCounters?.indexOfFirst { counter ->
+                counter.counterName == item.counterName
+            } ?: return
+            if (toBeUpdatedIndex !in currentCounters.indices) return
 
-        _editedList.value = currentCounters.toMutableList().apply {
-            set(toBeUpdatedIndex, item)
+            currentCounters.toMutableList().apply {
+                set(toBeUpdatedIndex, item)
+            }.toList()
         }
     }
 
