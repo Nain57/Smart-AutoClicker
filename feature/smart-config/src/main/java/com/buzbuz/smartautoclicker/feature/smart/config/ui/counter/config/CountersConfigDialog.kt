@@ -61,6 +61,7 @@ class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
+                buttonDismiss.setIconResource(R.drawable.ic_back)
                 buttonDismiss.setDebouncedOnClickListener { back() }
             }
 
