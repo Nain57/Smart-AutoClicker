@@ -58,8 +58,6 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
                 setTitle(context.getString(R.string.field_tutorial_title))
                 setupDescriptions(listOf(context.getString(R.string.field_tutorial_desc)))
                 setOnClickListener(::onTutorialClicked)
-
-                setEnabled(false) // TODO: enable back one tutorials refactoring is completed for next betas
             }
 
             fieldDebugOverlay.apply {
