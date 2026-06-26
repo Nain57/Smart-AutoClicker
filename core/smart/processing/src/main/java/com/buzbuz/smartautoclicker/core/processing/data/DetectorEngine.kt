@@ -358,18 +358,6 @@ class DetectorEngine @Inject constructor(
         }
     }
 
-    /** Clear this engine. It can't be used after this call. */
-    internal fun clear() {
-        if (_state.value != DetectorState.CREATED) {
-            Log.w(TAG, "Clearing the detector but it was still started.")
-            stopScreenRecord()
-        }
-
-        Log.i(TAG, "clear")
-
-        _state.value != DetectorState.DESTROYED
-    }
-
     /** Process the latest images provided by the [DisplayRecorder]. */
     private suspend fun processScreenImages() {
         _state.emit(DetectorState.DETECTING)
@@ -448,8 +436,6 @@ internal enum class DetectorState {
     RECORDING,
     /** The screen is being recorded and the detection is running. */
     DETECTING,
-    /** The engine is destroyed and can no longer be used. */
-    DESTROYED,
     /** The native lib can't be loaded and the detection can't be used. */
     ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND,
     /** The text detection models required for this scenario are not found. */
