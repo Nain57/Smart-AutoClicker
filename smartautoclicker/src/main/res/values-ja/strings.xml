@@ -33,6 +33,7 @@
     <string name="item_scenario_filter_by_recent">最近使用</string>
     <string name="item_scenario_filter_by_most_used">使用数</string>
 
+    <string name="item_scenario_last_used_never">一度も使用されていません</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="other">%1$d 分前</item>
     </plurals>

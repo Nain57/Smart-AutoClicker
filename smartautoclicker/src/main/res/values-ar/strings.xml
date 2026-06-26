@@ -41,6 +41,7 @@
     <string name="item_scenario_filter_by_recent">الأحدث</string>
     <string name="item_scenario_filter_by_most_used">استخدامات</string>
 
+    <string name="item_scenario_last_used_never">لم يُستخدم قط</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">منذ %1$d دقيقة</item>
         <item quantity="other">منذ %1$d دقائق</item>

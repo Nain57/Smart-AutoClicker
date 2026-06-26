@@ -42,6 +42,7 @@
     <string name="item_scenario_filter_by_recent">Останні</string>
     <string name="item_scenario_filter_by_most_used">Використання</string>
 
+    <string name="item_scenario_last_used_never">Ніколи не використовувався</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">%1$d хв. тому</item>
         <item quantity="other">%1$d хв. тому</item>

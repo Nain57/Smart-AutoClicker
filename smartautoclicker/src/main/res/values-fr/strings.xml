@@ -43,6 +43,7 @@
     <string name="item_scenario_filter_by_recent">Récent</string>
     <string name="item_scenario_filter_by_most_used">Utilisations</string>
 
+    <string name="item_scenario_last_used_never">Jamais utilisé</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">il y a %1$d min.</item>
         <item quantity="other">il y a %1$d min.</item>
