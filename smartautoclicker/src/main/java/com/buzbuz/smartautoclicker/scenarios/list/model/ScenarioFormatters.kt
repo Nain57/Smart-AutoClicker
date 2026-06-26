@@ -20,6 +20,8 @@ import android.content.Context
 import com.buzbuz.smartautoclicker.R
 
 internal fun Context.getTimeSinceString(timestamp: Long): String {
+    if (timestamp == 0L) return resources.getString(R.string.item_scenario_last_used_never)
+
     val elapsed = System.currentTimeMillis() - timestamp
     return when {
         elapsed < MILLIS_PER_HOUR -> {

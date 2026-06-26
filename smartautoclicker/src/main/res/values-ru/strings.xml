@@ -43,6 +43,7 @@
     <string name="item_scenario_filter_by_recent">Недавний</string>
     <string name="item_scenario_filter_by_most_used">Использования</string>
 
+    <string name="item_scenario_last_used_never">Никогда не использовался</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">%1$d мин. назад</item>
         <item quantity="other">%1$d мин. назад</item>

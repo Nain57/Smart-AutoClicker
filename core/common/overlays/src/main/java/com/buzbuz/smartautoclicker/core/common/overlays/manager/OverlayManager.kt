@@ -343,7 +343,7 @@ class OverlayManager @Inject internal constructor(
     }
 
     private fun onOrientationChanged() {
-        overlayBackStack.forEachReversed { it.changeOrientation() }
+        overlayBackStack.forEach { it.changeOrientation() }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {

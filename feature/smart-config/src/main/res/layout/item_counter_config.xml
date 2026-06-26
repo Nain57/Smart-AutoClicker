@@ -83,28 +83,15 @@
             app:icon="@drawable/ic_chevron_down"
             tools:visibility="visible"/>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <include layout="@layout/include_field_text_input"
             android:id="@+id/layout_starting_value"
-            style="@style/AppTheme.Widget.InputText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_vertical_default"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_expand_collapse"
-            app:layout_constraintBottom_toTopOf="@id/written_by_button"
-            app:endIconMode="none"
-            tools:hint="Starting value">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_field_starting_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:lines="1"
-                tools:text="12547"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintBottom_toTopOf="@id/written_by_button"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/written_by_button"

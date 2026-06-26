@@ -67,10 +67,11 @@ class CountersCreationViewModel @Inject constructor(
     }
 
     private fun toUiState(name: String?): CounterCreationUiState {
-        val isAlreadyDefined = !name.isNullOrEmpty() && editionRepository.editionState.getCounter(name) != null
+        val nameIsValid = name?.isNotBlank() == true
+        val isAlreadyDefined = nameIsValid && editionRepository.editionState.getCounter(name) != null
 
         return CounterCreationUiState(
-            canBeSaved = !name.isNullOrEmpty() && !isAlreadyDefined,
+            canBeSaved = nameIsValid && !isAlreadyDefined,
             nameError = isAlreadyDefined,
         )
     }

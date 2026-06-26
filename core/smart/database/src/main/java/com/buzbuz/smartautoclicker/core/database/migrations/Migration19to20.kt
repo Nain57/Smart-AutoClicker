@@ -128,17 +128,17 @@ object Migration19to20 : Migration(19, 20) {
         getSQLiteTableReference(ACTION_TABLE).apply {
             forEachActionCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
                 if (scenarioId == null) return@forEachActionCounterMention
-                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal1?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
+                sourceVal2?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
+                sourceVal3?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
             }
         }
         getSQLiteTableReference(CONDITION_TABLE).apply {
             forEachConditionsCounterMention { sourceVal1, sourceVal2, sourceVal3, scenarioId ->
                 if (scenarioId == null) return@forEachConditionsCounterMention
-                sourceVal1?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal2?.let { value -> countersFound.add(value to scenarioId) }
-                sourceVal3?.let { value -> countersFound.add(value to scenarioId) }
+                sourceVal1?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
+                sourceVal2?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
+                sourceVal3?.takeIf { it.isNotBlank() }?.let { countersFound.add(it to scenarioId) }
             }
         }
 
@@ -223,11 +223,11 @@ object Migration19to20 : Migration(19, 20) {
         forEachRow(
             distinct = true,
             extraClause = """
-                AS actions JOIN $EVENT_TABLE AS events 
-                ON actions.eventId = events.id 
-                WHERE actions.counter_name IS NOT NULL
-                OR actions.counter_operation_counter_name IS NOT NULL
-                OR actions.notification_message_counter_name IS NOT NULL
+                AS actions JOIN $EVENT_TABLE AS events
+                ON actions.eventId = events.id
+                WHERE (actions.counter_name IS NOT NULL AND length(trim(actions.counter_name)) > 0)
+                OR (actions.counter_operation_counter_name IS NOT NULL AND length(trim(actions.counter_operation_counter_name)) > 0)
+                OR (actions.notification_message_counter_name IS NOT NULL AND length(trim(actions.notification_message_counter_name)) > 0)
             """.trimIndent(),
             columnA = SQLiteColumn.Text("actions.counter_name"),
             columnB = SQLiteColumn.Text("actions.counter_operation_counter_name"),
@@ -241,11 +241,11 @@ object Migration19to20 : Migration(19, 20) {
         forEachRow(
             distinct = true,
             extraClause = """
-                AS conditions JOIN $EVENT_TABLE AS events 
-                ON conditions.eventId = events.id 
-                WHERE conditions.counter_name IS NOT NULL
-                OR conditions.counter_value_counter_name IS NOT NULL
-                OR conditions.number_counter_value_counter_name IS NOT NULL
+                AS conditions JOIN $EVENT_TABLE AS events
+                ON conditions.eventId = events.id
+                WHERE (conditions.counter_name IS NOT NULL AND length(trim(conditions.counter_name)) > 0)
+                OR (conditions.counter_value_counter_name IS NOT NULL AND length(trim(conditions.counter_value_counter_name)) > 0)
+                OR (conditions.number_counter_value_counter_name IS NOT NULL AND length(trim(conditions.number_counter_value_counter_name)) > 0)
             """.trimIndent(),
             columnA = SQLiteColumn.Text("conditions.counter_name"),
             columnB = SQLiteColumn.Text("conditions.counter_value_counter_name"),

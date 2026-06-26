@@ -42,21 +42,25 @@ fun IncludeFieldTextInputWithCheckboxBinding.setup(
 
 fun IncludeFieldTextInputWithCheckboxBinding.setNumericValue(value: String, force: Boolean = false) {
     textField.apply {
-        if (hasFocus() && !force) return
+        val initialized = tag as? Boolean ?: false
+        if (initialized && hasFocus() && !force) return
 
         inputType = InputType.TYPE_CLASS_NUMBER
         imeOptions = EditorInfo.IME_ACTION_DONE
         textField.setText(value)
+        tag = true
     }
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.setTextValue(value: String?, force: Boolean = false) {
     textField.apply {
-        if (hasFocus() && !force) return
+        val initialized = tag as? Boolean ?: false
+        if (initialized && hasFocus() && !force) return
 
         inputType = InputType.TYPE_CLASS_TEXT
         imeOptions = EditorInfo.IME_ACTION_DONE
         textField.setText(value)
+        tag = true
     }
 }
 
@@ -83,7 +87,9 @@ fun IncludeFieldTextInputWithCheckboxBinding.setError(@StringRes messageId: Int,
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
-    textField.addTextChangedListener(OnAfterTextChangedListener(listener))
+    textField.addTextChangedListener(OnAfterTextChangedListener { editable ->
+        if (textField.hasFocus()) listener(editable)
+    })
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.setOnCheckboxClickedListener(listener: () -> Unit) {

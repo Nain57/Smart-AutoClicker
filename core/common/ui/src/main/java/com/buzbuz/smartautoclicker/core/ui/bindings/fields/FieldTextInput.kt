@@ -21,7 +21,6 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.StringRes
-import androidx.core.widget.doAfterTextChanged
 
 import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputBinding
@@ -34,11 +33,13 @@ fun IncludeFieldTextInputBinding.setLabel(@StringRes labelResId: Int) {
 
 fun IncludeFieldTextInputBinding.setText(text: String?, type: Int = InputType.TYPE_CLASS_TEXT) {
     textField.apply {
-        if (hasFocus()) return
+        val initialized = tag as? Boolean ?: false
+        if (initialized && hasFocus()) return
 
         inputType = type
         imeOptions = EditorInfo.IME_ACTION_DONE
         setText(text)
+        tag = true
     }
 }
 
@@ -51,5 +52,7 @@ fun IncludeFieldTextInputBinding.setError(@StringRes messageId: Int, isError: Bo
 }
 
 fun IncludeFieldTextInputBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
-    textField.addTextChangedListener(OnAfterTextChangedListener(listener))
+    textField.addTextChangedListener(OnAfterTextChangedListener { editable ->
+        if (textField.hasFocus()) listener(editable)
+    })
 }

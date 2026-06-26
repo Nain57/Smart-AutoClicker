@@ -187,11 +187,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
 
     override fun stopScreenRecord() {
         projectionErrorHandler = null
-
-        detectorEngine.apply {
-            stopScreenRecord()
-            clear()
-        }
+        detectorEngine.stopScreenRecord()
 
         _scenarioId.value = null
     }

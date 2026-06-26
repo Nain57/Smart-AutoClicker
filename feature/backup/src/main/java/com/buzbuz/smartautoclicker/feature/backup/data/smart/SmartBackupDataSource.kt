@@ -21,6 +21,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.database.DATABASE_VERSION
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.feature.backup.data.base.CONDITION_BACKUP_MATCH_REGEX
@@ -94,6 +95,20 @@ internal class SmartBackupDataSource(
                 return null
             }
 
+            if (event.event.type == EventType.IMAGE_EVENT) {
+                if (event.conditions.find { condition -> !condition.isScreenCondition() } != null) {
+                    Log.w(TAG, "Invalid scenario, condition list is invalid.")
+                    return null
+                }
+            }
+
+            if (event.event.type == EventType.TRIGGER_EVENT) {
+                if (event.conditions.find { condition -> !condition.isTriggerCondition() } != null) {
+                    Log.w(TAG, "Invalid scenario, condition list is invalid.")
+                    return null
+                }
+            }
+
             event.conditions.forEach { condition ->
                 if (condition.type == ConditionType.ON_IMAGE_DETECTED && (
                             condition.path == null || !File(appDataDir, condition.path!!).exists())) {
@@ -115,6 +130,30 @@ internal class SmartBackupDataSource(
         super.reset()
         screenCompatWarning = false
     }
+
+    private fun ConditionEntity.isScreenCondition(): Boolean =
+        when (type) {
+            ConditionType.ON_COLOR_DETECTED,
+            ConditionType.ON_IMAGE_DETECTED,
+            ConditionType.ON_NUMBER_DETECTED,
+            ConditionType.ON_TEXT_DETECTED -> true
+
+            ConditionType.ON_COUNTER_REACHED,
+            ConditionType.ON_BROADCAST_RECEIVED,
+            ConditionType.ON_TIMER_REACHED -> false
+        }
+
+    private fun ConditionEntity.isTriggerCondition(): Boolean =
+        when (type) {
+            ConditionType.ON_COUNTER_REACHED,
+            ConditionType.ON_BROADCAST_RECEIVED,
+            ConditionType.ON_TIMER_REACHED -> true
+
+            ConditionType.ON_COLOR_DETECTED,
+            ConditionType.ON_IMAGE_DETECTED,
+            ConditionType.ON_NUMBER_DETECTED,
+            ConditionType.ON_TEXT_DETECTED -> false
+        }
 }
 
 /** Tag for logs. */
