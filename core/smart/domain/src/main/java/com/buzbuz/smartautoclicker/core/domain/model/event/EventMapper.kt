@@ -75,7 +75,7 @@ internal fun CompleteEventEntity.toDomainScreenEvent(cleanIds: Boolean = false):
         enabledOnStart = event.enabledOnStart,
         keepDetecting = event.keepDetecting == true,
         actions = actions.map { it.toDomain(cleanIds) }.sortedByPriority().toMutableList(),
-        conditions = conditions.map { it.toDomain(cleanIds) as ScreenCondition }.sortedByPriority().toMutableList(),
+        conditions = conditions.mapNotNull { it.toDomain(cleanIds) as? ScreenCondition }.sortedByPriority().toMutableList(),
         cooldownMs = event.detectionCooldownMs ?: 0L,
     )
 
@@ -88,5 +88,5 @@ internal fun CompleteEventEntity.toDomainTriggerEvent(cleanIds: Boolean = false)
         conditionOperator = event.conditionOperator,
         enabledOnStart = event.enabledOnStart,
         actions = actions.map { it.toDomain(cleanIds) }.sortedByPriority().toMutableList(),
-        conditions = conditions.map { it.toDomain(cleanIds) as TriggerCondition }.toMutableList(),
+        conditions = conditions.mapNotNull { it.toDomain(cleanIds) as? TriggerCondition }.toMutableList(),
     )
