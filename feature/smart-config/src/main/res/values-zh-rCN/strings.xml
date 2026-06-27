@@ -429,8 +429,8 @@
     <string name="dialog_title_counters_config">计数器</string>
     <string name="message_empty_counter_name_list_title">未定义计数器</string>
     <string name="message_empty_counter_name_list_desc">计数器用于存储一个数值，该数值可在您的操作或条件中进行修改、验证或使用</string>
-    <string name="item_counter_desc_collapsed_no_reference">此计数器未被使用。(%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">此计数器被引用了 %1$d 次。(%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">此计数器未被使用。(%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">此计数器被引用了 %1$d 次。(%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">此计数器未被使用。</string>
     <string name="item_counter_desc_expanded_referenced">此计数器被引用了 %1$d 次。</string>
     <string name="field_label_counter_starting_value">初始值</string>
@@ -445,7 +445,7 @@
     <string name="field_new_counter_starting_value">初始值</string>
     <string name="field_counter_name_already_declared">此计数器名称已存在</string>
     <string name="field_counter_selection_title_empty">未选择计数器</string>
-    <string name="field_counter_selection_desc">初始值：%1$.2f</string>
+    <string name="field_counter_selection_desc">初始值：%1$s</string>
     <string name="field_counter_selection_desc_empty">点击此处选择计数器</string>
 
     <string name="dialog_title_copy_fix">解决问题</string>

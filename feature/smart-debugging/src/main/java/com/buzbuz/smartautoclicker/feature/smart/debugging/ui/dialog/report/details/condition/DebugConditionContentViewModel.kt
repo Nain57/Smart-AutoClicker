@@ -38,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.GREATER_OR_EQUALS
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.LOWER
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.LOWER_OR_EQUALS
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -60,6 +61,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -187,7 +189,7 @@ class DebugConditionContentViewModel @Inject constructor(
                 R.string.item_event_occurrence_details_trigger_desc_counter,
                 counterName,
                 comparisonOperation.getComparisonOperationDisplayName(context),
-                counterValue.value.toString(),
+                counterValue.toNaturalDisplayString(),
             )
             is TriggerCondition.OnTimerReached -> context.getString(
                 R.string.item_event_occurrence_details_trigger_desc_timer,
@@ -231,4 +233,15 @@ class DebugConditionContentViewModel @Inject constructor(
 
     private fun Int.toMinimumConfidence(): Double =
         100.00 - this
+
+    private fun Double.toNaturalDisplayString(): String {
+        if (!isFinite()) return toString()
+        return BigDecimal.valueOf(this).stripTrailingZeros().toPlainString()
+    }
+
+    private fun CounterOperationValue.toNaturalDisplayString(): String =
+        when (this) {
+            is CounterOperationValue.Counter -> value
+            is CounterOperationValue.Number -> value.toNaturalDisplayString()
+        }
 }

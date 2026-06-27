@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +40,7 @@ class CounterSelectionViewModel @Inject constructor(
                     counterName = counter.counterName,
                     counterStartingValueDesc = context.getString(
                         R.string.field_counter_selection_desc,
-                        counter.defaultValue,
+                        counter.defaultValue.toNaturalDisplayString(maxFractionDigits = 2),
                     )
                 )
             }.sortedBy { counter -> counter.counterName }

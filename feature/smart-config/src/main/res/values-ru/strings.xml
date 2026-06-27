@@ -454,8 +454,8 @@
     <string name="dialog_title_counters_config">Счётчики</string>
     <string name="message_empty_counter_name_list_title">Счётчики не определены</string>
     <string name="message_empty_counter_name_list_desc">Счетчик хранит числовое значение, которое можно изменять, проверять или использовать в действиях или условиях</string>
-    <string name="item_counter_desc_collapsed_no_reference">Этот счётчик не используется. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">На этот счётчик ссылаются %1$d раз. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">Этот счётчик не используется. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">На этот счётчик ссылаются %1$d раз. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">Этот счётчик не используется.</string>
     <string name="item_counter_desc_expanded_referenced">На этот счётчик ссылаются %1$d раз.</string>
     <string name="field_label_counter_starting_value">Начальное значение</string>
@@ -470,7 +470,7 @@
     <string name="field_new_counter_starting_value">Начальное значение</string>
     <string name="field_counter_name_already_declared">Этот счётчик уже существует</string>
     <string name="field_counter_selection_title_empty">Счётчик не выбран</string>
-    <string name="field_counter_selection_desc">Начальное значение: %1$.2f</string>
+    <string name="field_counter_selection_desc">Начальное значение: %1$s</string>
     <string name="field_counter_selection_desc_empty">Нажмите здесь, чтобы выбрать счётчик</string>
 
     <string name="dialog_title_copy_fix">Устранить проблемы</string>

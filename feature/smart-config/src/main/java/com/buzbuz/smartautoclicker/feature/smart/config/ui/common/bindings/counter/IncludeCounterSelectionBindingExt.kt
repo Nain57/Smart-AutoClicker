@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.coun
 import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCounterSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 
 import androidx.appcompat.R as AppCompatR
@@ -40,7 +41,7 @@ fun IncludeCounterSelectionBinding.setCounter(uiState: UiStaticOrCounterSelectio
         title.setLeftCompoundDrawable(null)
         description.text = root.context.getString(
             R.string.field_counter_selection_desc,
-            uiState.counter.defaultValue,
+            uiState.counter.defaultValue.toNaturalDisplayString(maxFractionDigits = 2),
         )
         description.setTextColor(MaterialColors.getColor(root, MaterialR.attr.colorOnSurfaceVariant))
     }

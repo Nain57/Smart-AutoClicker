@@ -69,7 +69,7 @@ class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
             fieldStartingValue.root.hint = context.getString(R.string.field_new_counter_starting_value)
             fieldStartingValue.textField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            fieldStartingValue.textField.setText("0.0")
+            fieldStartingValue.textField.setText("0")
             fieldStartingValue.textField.doAfterTextChanged {
                 viewModel.setStartingValue(it.toString().toDoubleOrNull() ?: 0.0)
             }

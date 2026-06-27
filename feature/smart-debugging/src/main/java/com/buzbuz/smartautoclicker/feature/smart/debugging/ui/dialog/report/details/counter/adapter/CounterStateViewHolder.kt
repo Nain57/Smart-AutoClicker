@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemCounterStateBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.CounterStateItem
+import java.math.BigDecimal
 
 class CounterStateViewHolder private constructor(
     private val viewBinding: ItemCounterStateBinding,
@@ -46,14 +47,19 @@ class CounterStateViewHolder private constructor(
         return if (oldValue == null) {
             context.getString(
                 R.string.item_counter_state_value_same,
-                currentCounterValue,
+                currentCounterValue.toNaturalDisplayString(),
             )
         } else {
             context.getString(
                 R.string.item_counter_state_value_changed,
-                oldValue,
-                currentCounterValue,
+                oldValue.toNaturalDisplayString(),
+                currentCounterValue.toNaturalDisplayString(),
             )
         }
+    }
+
+    private fun Double.toNaturalDisplayString(): String {
+        if (!isFinite()) return toString()
+        return BigDecimal.valueOf(this).stripTrailingZeros().toPlainString()
     }
 }

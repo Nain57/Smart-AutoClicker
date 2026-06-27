@@ -500,8 +500,8 @@
     <string name="message_empty_counter_name_list_title">No counter defined</string>
     <string name="message_empty_counter_name_list_desc">A Counter stores a numeric value that can be changed, verified or used in your Actions or Conditions</string>
 
-    <string name="item_counter_desc_collapsed_no_reference">This counter is unused. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">This counter is referenced %1$d times. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">This counter is unused. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">This counter is referenced %1$d times. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">This counter is unused.</string>
     <string name="item_counter_desc_expanded_referenced">This counter is referenced %1$d times.</string>
 
@@ -521,7 +521,7 @@
     <string name="field_counter_name_already_declared">This counter name already exists</string>
 
     <string name="field_counter_selection_title_empty">No counter selected</string>
-    <string name="field_counter_selection_desc">Starting value: %1$.2f</string>
+    <string name="field_counter_selection_desc">Starting value: %1$s</string>
     <string name="field_counter_selection_desc_empty">Click here to select a counter</string>
 
 

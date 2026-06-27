@@ -457,8 +457,8 @@
     <string name="dialog_title_counters_config">Лічильники</string>
     <string name="message_empty_counter_name_list_title">Лічильники не визначені</string>
     <string name="message_empty_counter_name_list_desc">Лічильник зберігає числове значення, яке можна змінювати, перевіряти або використовувати у ваших діях чи умовах</string>
-    <string name="item_counter_desc_collapsed_no_reference">Цей лічильник не використовується. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">На цей лічильник посилаються %1$d разів. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">Цей лічильник не використовується. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">На цей лічильник посилаються %1$d разів. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">Цей лічильник не використовується.</string>
     <string name="item_counter_desc_expanded_referenced">На цей лічильник посилаються %1$d разів.</string>
     <string name="field_label_counter_starting_value">Початкове значення</string>
@@ -473,7 +473,7 @@
     <string name="field_new_counter_starting_value">Початкове значення</string>
     <string name="field_counter_name_already_declared">Цей лічильник вже існує</string>
     <string name="field_counter_selection_title_empty">Лічильник не вибраний</string>
-    <string name="field_counter_selection_desc">Початкове значення: %1$.2f</string>
+    <string name="field_counter_selection_desc">Початкове значення: %1$s</string>
     <string name="field_counter_selection_desc_empty">Натисніть тут, щоб вибрати лічильник</string>
 
     <string name="dialog_title_copy_fix">Вирішити проблеми</string>

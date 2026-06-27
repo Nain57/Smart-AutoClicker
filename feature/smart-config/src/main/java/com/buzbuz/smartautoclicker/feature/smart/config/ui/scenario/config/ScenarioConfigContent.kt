@@ -43,6 +43,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxDoubleInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentScenarioConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 import com.google.android.material.textfield.TextInputLayout
 
 import kotlinx.coroutines.launch
@@ -157,7 +158,7 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
             editFpsLimit.textLayout.isEnabled = state.isEnabled
             if (state.isEnabled) {
                 editFpsLimit.textField.filters = arrayOf(MinMaxDoubleInputFilter(min = 0.0, max = state.maxValue))
-                editFpsLimit.setText(state.value.toString(), InputType.TYPE_NUMBER_FLAG_DECIMAL)
+                editFpsLimit.setText(state.value.toNaturalDisplayString(), InputType.TYPE_NUMBER_FLAG_DECIMAL)
             } else {
                 editFpsLimit.textField.filters = emptyArray<InputFilter>()
                 editFpsLimit.setText(context.getString(R.string.field_scenario_fps_limit_disable_rate))
