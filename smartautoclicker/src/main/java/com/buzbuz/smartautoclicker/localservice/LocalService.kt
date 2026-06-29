@@ -23,6 +23,7 @@ import android.media.projection.MediaProjectionManager
 import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
+import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -60,7 +61,7 @@ class LocalService(
     private val debuggingRepository: DebuggingRepository,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
     private val onStop: () -> Unit,
-) : ILocalService {
+) : LocalAccessibilityService {
 
     /** Scope for this LocalService. */
     private val serviceScope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -80,7 +81,7 @@ class LocalService(
                 override fun onPause()= pause()
                 override fun onShow() = showMenu()
                 override fun onHide() = hideMenu()
-                override fun onStop() = stop()
+                override fun onStop() = stopScenario()
             }
         )
     }
@@ -119,7 +120,7 @@ class LocalService(
 
             overlayManager.navigateTo(
                 context = context,
-                newOverlay = DumbMainMenu(dumbScenario.id) { stop() },
+                newOverlay = DumbMainMenu(dumbScenario.id) { stopScenario() },
             )
         }
     }
@@ -154,7 +155,7 @@ class LocalService(
         )
 
         startJob = serviceScope.launch {
-            val mainMenu = MainMenu { stop() }
+            val mainMenu = MainMenu { stopScenario() }
 
             smartProcessingRepository.apply {
                 setScenarioId(scenario.id, markAsUsed = true)
@@ -173,7 +174,7 @@ class LocalService(
         }
     }
 
-    override fun stop() {
+    override fun stopScenario() {
         if (!isStarted) return
         state = LocalServiceState(isStarted = false, isSmartLoaded = false)
 

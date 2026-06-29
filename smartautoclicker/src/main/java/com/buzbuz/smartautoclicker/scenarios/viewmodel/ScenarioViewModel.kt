@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.scenarios.viewmodel
 
 import android.Manifest
 import android.app.Activity
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -30,6 +29,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
+import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityServiceConnection
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -40,11 +40,8 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostN
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
-import com.buzbuz.smartautoclicker.localservice.ILocalService
-import com.buzbuz.smartautoclicker.localservice.LocalServiceProvider
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -53,43 +50,16 @@ import javax.inject.Inject
 /** AndroidViewModel for create/delete/list click scenarios from an LifecycleOwner. */
 @HiltViewModel
 class ScenarioViewModel @Inject constructor(
-    @ApplicationContext context: Context,
     private val revenueRepository: IRevenueRepository,
     private val qualityRepository: QualityRepository,
     private val permissionController: PermissionsController,
     private val settingsRepository: SettingsRepository,
     private val appComponentsProvider: AppComponentsProvider,
+    private val serviceConnection: LocalAccessibilityServiceConnection,
 ) : ViewModel() {
-
-    /** Callback upon the availability of SmartAutoClickerService. */
-    private val serviceConnection: (ILocalService?) -> Unit = { localService ->
-        clickerService = localService
-    }
-
-    /**
-     * Reference on SmartAutoClickerService.
-     * Will be not null only if the Accessibility Service is enabled.
-     */
-    private var clickerService: ILocalService? = null
-    /** The Android notification manager. Initialized only if needed.*/
-    private val notificationManager: NotificationManager?
 
     val userConsentState: StateFlow<UserConsentState> = revenueRepository.userConsentState
         .stateIn(viewModelScope, SharingStarted.Eagerly, UserConsentState.UNKNOWN)
-
-    init {
-        LocalServiceProvider.getLocalService(serviceConnection)
-
-        notificationManager =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                context.getSystemService(NotificationManager::class.java)
-            else null
-    }
-
-    override fun onCleared() {
-        LocalServiceProvider.getLocalService(null)
-        super.onCleared()
-    }
 
     fun isEntireScreenCaptureForced(): Boolean =
         settingsRepository.isEntireScreenCaptureForced()
@@ -110,7 +80,7 @@ class ScenarioViewModel @Inject constructor(
                 PermissionOverlay(),
                 PermissionAccessibilityService(
                     componentName = appComponentsProvider.klickrServiceComponentName,
-                    isServiceRunning = { LocalServiceProvider.isServiceStarted() },
+                    isServiceRunning = { serviceConnection.isServiceStarted() },
                 ),
                 PermissionPostNotification(optional = true),
             ),
@@ -143,7 +113,7 @@ class ScenarioViewModel @Inject constructor(
             if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
         }
 
-        clickerService?.startSmartScenario(resultCode, data, scenario)
+        serviceConnection.getLocalService()?.startSmartScenario(resultCode, data, scenario)
         return true
     }
 
@@ -153,13 +123,13 @@ class ScenarioViewModel @Inject constructor(
             if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
         }
 
-        clickerService?.startDumbScenario(scenario)
+        serviceConnection.getLocalService()?.startDumbScenario(scenario)
         return true
     }
 
     /** Stop the overlay UI and release all associated resources. */
     fun stopScenario() {
-        clickerService?.stop()
+        serviceConnection.getLocalService()?.stopScenario()
     }
 }
 

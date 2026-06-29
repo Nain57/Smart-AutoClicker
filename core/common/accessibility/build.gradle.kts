@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.localservice
 
-import android.content.Intent
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+plugins {
+    alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.flavour)
+    alias(libs.plugins.buzbuz.hilt)
+}
 
-interface ILocalService {
-    fun startDumbScenario(dumbScenario: DumbScenario)
-    fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
-    fun stop()
-    fun release()
+android {
+    namespace = "com.buzbuz.smartautoclicker.core.common.accessibility"
+}
+
+dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+
+    implementation(project(":core:dumb"))
+    implementation(project(":core:smart:domain"))
 }
