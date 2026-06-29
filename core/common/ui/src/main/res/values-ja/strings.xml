@@ -12,6 +12,7 @@
     <string name="message_empty_copy">コピーできる項目がありません</string>
     <string name="message_tutorial_volume_down_stop">シナリオのタップ間隔が短すぎると、メニューから停止できない場合があります。\n\nそのときは端末の物理キー「音量下」で実行中のシナリオを停止できます。</string>
     <string name="message_dont_show_again">今後表示しない</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">お使いの端末は、標準の Android 画面キャプチャ権限ダイアログを提供していません。Klick\'r はこの端末では動作しません。</string>
     <string name="button_understood">了解しました</string>
     <string name="input_field_label_anti_detection">検出回避</string>
     <string name="input_field_label_click_press_duration">押下時間（ミリ秒）</string>
@@ -29,6 +30,7 @@
     <string name="dropdown_label_time_unit_min">分</string>
     <string name="dropdown_label_time_unit_h">時間</string>
     <string name="dropdown_label_time_unit">時間の単位</string>
+    <string name="toast_denied_screen_sharing_permission">画面共有の権限が拒否されました</string>
     <string name="toast_configure_single_click">タップする位置に触れてください</string>
     <string name="toast_configure_swipe_from">スワイプの開始位置に触れてください</string>
     <string name="toast_configure_swipe_to">スワイプの終了位置に触れてください</string>

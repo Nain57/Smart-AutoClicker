@@ -82,7 +82,6 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">سيتم حذف %1$s. هل أنت متأكد؟</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">جهازك لا يوفر مربع حوار إذن التقاط الشاشة القياسي لنظام Android. لن يتمكن Klick\'r من العمل عليه.</string>
 
     <!--
       - Section titles.
@@ -94,7 +93,6 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_denied_screen_sharing_permission">رفض المستخدم إذن مشاركة الشاشة</string>
     <string name="toast_denied_foreground_permission">رفض المستخدم إذن خدمة المقدمة في الواجهة</string>
 
     <!--

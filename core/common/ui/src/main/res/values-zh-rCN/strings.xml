@@ -12,6 +12,7 @@
     <string name="message_empty_copy">没有可复制的内容</string>
     <string name="message_tutorial_volume_down_stop">若场景点击过快，可能无法通过悬浮菜单停止。\n\n此时可按下设备的实体「音量减」键以停止当前场景。</string>
     <string name="message_dont_show_again">不再显示此消息</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的设备未提供标准的 Android 屏幕捕获权限对话框，Klick\'r 无法在此设备上运行。</string>
     <string name="button_understood">知道了</string>
     <string name="input_field_label_anti_detection">反检测</string>
     <string name="input_field_label_click_press_duration">按压时长（毫秒）</string>
@@ -29,6 +30,7 @@
     <string name="dropdown_label_time_unit_min">分</string>
     <string name="dropdown_label_time_unit_h">时</string>
     <string name="dropdown_label_time_unit">时间单位</string>
+    <string name="toast_denied_screen_sharing_permission">用户已拒绝屏幕共享权限</string>
     <string name="toast_configure_single_click">请触摸要点击的位置</string>
     <string name="toast_configure_swipe_from">请触摸滑动起点</string>
     <string name="toast_configure_swipe_to">请触摸滑动终点</string>

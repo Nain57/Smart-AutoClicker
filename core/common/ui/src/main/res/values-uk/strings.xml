@@ -52,6 +52,8 @@
     заблокувати вас від використання меню Klick\'r для його зупинки.\n\nУ такому випадку ви можете натиснути
     фізичну кнопку "Зменшити гучність" на вашому пристрої, щоб зупинити запущений сценарій.</string>
     <string name="message_dont_show_again">Не показувати це повідомлення знову</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Ваш пристрій не надає стандартного
+        діалогового вікна дозволу на захоплення екрана Android. Klick\'r не зможе працювати на ньому.</string>
 
 
     <string name="button_understood">Зрозуміло</string>
@@ -95,6 +97,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">Користувач відхилив дозвіл на спільне використання екрана</string>
     <string name="toast_configure_single_click">Торкніться позиції для кліку</string>
     <string name="toast_configure_swipe_from">Торкніться позиції для початку свайпу</string>
     <string name="toast_configure_swipe_to">Торкніться позиції для завершення свайпу</string>

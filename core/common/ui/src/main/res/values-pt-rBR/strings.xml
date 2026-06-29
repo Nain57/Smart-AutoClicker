@@ -52,6 +52,8 @@
         bloquear você de usar o menu do Klick\'r para pará-lo.\n\nNesse caso, você pode pressionar o
         botão físico "Volume Baixo" do seu dispositivo para parar o cenário em execução.</string>
     <string name="message_dont_show_again">Não mostre essa mensagem novamente</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Seu dispositivo não fornece o padrão
+        diálogo de permissão de captura de tela do Android. O Klick\'r não conseguirá rodar nele.</string>
 
 
     <string name="button_understood">Entendido</string>
@@ -94,6 +96,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">Permissão de compartilhamento de tela negada pelo usuário</string>
     <string name="toast_configure_single_click">Toque na posição para clicar</string>
     <string name="toast_configure_swipe_from">Toque na posição para iniciar o swipe</string>
     <string name="toast_configure_swipe_to">Toque na posição para terminar o swipe</string>

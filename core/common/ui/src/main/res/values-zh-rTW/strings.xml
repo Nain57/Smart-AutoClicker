@@ -12,6 +12,7 @@
     <string name="message_empty_copy">沒有可複製的內容</string>
     <string name="message_tutorial_volume_down_stop">若情境點擊過快，可能無法透過懸浮選單停止。\n\n此時可按下裝置的實體「音量降低」鍵以停止目前情境。</string>
     <string name="message_dont_show_again">不再顯示此訊息</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">您的裝置未提供標準的 Android 螢幕擷取權限對話方塊，Klick\'r 無法於此裝置上執行。</string>
     <string name="button_understood">瞭解</string>
     <string name="input_field_label_anti_detection">反偵測</string>
     <string name="input_field_label_click_press_duration">按壓時長（毫秒）</string>
@@ -29,6 +30,7 @@
     <string name="dropdown_label_time_unit_min">分</string>
     <string name="dropdown_label_time_unit_h">時</string>
     <string name="dropdown_label_time_unit">時間單位</string>
+    <string name="toast_denied_screen_sharing_permission">使用者已拒絕螢幕共用權限</string>
     <string name="toast_configure_single_click">請觸碰要點擊的位置</string>
     <string name="toast_configure_swipe_from">請觸碰滑動起點</string>
     <string name="toast_configure_swipe_to">請觸碰滑動終點</string>

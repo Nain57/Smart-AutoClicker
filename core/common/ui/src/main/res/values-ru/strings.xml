@@ -53,6 +53,8 @@
         меню.\n\nВ данном случае остановить выполнение можно нажав на физическую кнопку 
         уменьшения громкости.</string>
     <string name="message_dont_show_again">Больше не показывать это сообщение</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Ваша система не отправляет
+        стандартный в Android запрос на трансляцию экрана. Klick\'r не сможет работать на ней.</string>
 
 
     <string name="button_understood">Понял</string>
@@ -96,6 +98,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">Разрешение на трансляцию экрана отклонено пользователем</string>
     <string name="toast_configure_single_click">Коснитесь там, где нужно расположить нажатие</string>
     <string name="toast_configure_swipe_from">Коснитесь там, откуда должно начаться смахивание</string>
     <string name="toast_configure_swipe_to">Коснитесь там, где смахивание должно окончиться</string>

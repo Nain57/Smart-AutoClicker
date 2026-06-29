@@ -84,8 +84,6 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">Esto eliminará %1$s. Estás seguro ?</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">Tu dispositivo no provee el diálogo de
-        capturar pantalla estándar de Android. Smart AutoClicker no podrá ejecutarse.</string>
 
     <!--
       - Section titles.
@@ -97,7 +95,6 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_denied_screen_sharing_permission">El usuario ha denegado el permiso de capturar pantalla</string>
     <string name="toast_denied_foreground_permission">El usuario ha denegado el permiso de aplicación en primer plano</string>
 
     <!--

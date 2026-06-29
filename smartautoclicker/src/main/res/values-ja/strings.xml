@@ -57,9 +57,7 @@
     <string name="message_empty_scenario_list">最初のシナリオを作成し、端末上の作業を自動化しましょう</string>
 
     <string name="message_delete_scenario">「%1$s」を削除します。よろしいですか。</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">お使いの端末は、標準の Android 画面キャプチャ権限ダイアログを提供していません。Klick\'r はこの端末では動作しません。</string>
 
-    <string name="toast_denied_screen_sharing_permission">画面共有の権限が拒否されました</string>
     <string name="toast_denied_foreground_permission">フォアグラウンド サービスの権限が拒否されました</string>
 
     <string name="button_text_create_scenario">シナリオを作成</string>

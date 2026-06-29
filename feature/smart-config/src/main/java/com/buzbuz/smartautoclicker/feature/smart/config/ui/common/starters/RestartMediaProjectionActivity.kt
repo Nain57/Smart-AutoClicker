@@ -20,15 +20,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
+import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
+import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,32 +48,21 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
     @Inject lateinit var overlayManager: OverlayManager
 
     /** The result launcher for the projection permission dialog. */
-    private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
+    private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
+
     private var dialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transparent)
 
-        projectionActivityResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                val data = result.data
-                if (data == null || result.resultCode != RESULT_OK) {
-                    Log.i(TAG, "Media projection permission rejected")
-                    finishActivity()
-                    return@registerForActivityResult
-                }
-
-                Log.i(TAG, "Media projection permission granted, restart recording")
-                viewModel.restartScreenRecord(result.resultCode, data)
-
-                finishActivity()
-            }
-
-        projectionActivityResult.showMediaProjectionWarning(
+        mediaProjectionRequest.registerForActivityResult(this)
+        mediaProjectionRequest.showMediaProjectionWarning(
             context = this,
             forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
-            onError = { finishActivity() },
+            onSuccess = { resultCode, data -> restartScreenRecord(resultCode, data) },
+            onFailure = { showProjectionDeniedToast() },
+            onError = { showUnsupportedDeviceDialog() },
         )
     }
 
@@ -84,6 +72,22 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
 
         overlayManager.navigateUp(this)
         finish()
+    }
+
+    private fun restartScreenRecord(resultCode: Int, data: Intent) {
+        Log.i(TAG, "Media projection permission granted, restart recording")
+        viewModel.restartScreenRecord(resultCode, data)
+        finishActivity()
+    }
+
+    private fun showProjectionDeniedToast() {
+        Log.i(TAG, "Media projection permission rejected")
+        Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
+        finishActivity()
+    }
+
+    private fun showUnsupportedDeviceDialog() {
+        createNoMediaProjectionDialog { finishActivity() }.show()
     }
 }
 

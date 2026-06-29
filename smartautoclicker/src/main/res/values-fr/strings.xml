@@ -86,8 +86,6 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">Le scénario %1$s va être supprimé. Êtes vous sûr ?</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">Votre appareil ne donne pas la possibilité à
-        Klick\'r de pouvoir enregistrer votre écran. L\'application ne pourra pas fonctionner dessus.</string>
 
 
     <!--
@@ -98,7 +96,6 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_denied_screen_sharing_permission">L\'utilisateur a refusé l\'autorisation de partage d\'écran</string>
     <string name="toast_denied_foreground_permission">L\'utilisateur a refusé l\'autorisation de service au premier plan</string>
 
     <!--

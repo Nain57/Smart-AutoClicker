@@ -57,9 +57,7 @@
     <string name="message_empty_scenario_list">請建立第一個情境，開始於手機上自動化工作</string>
 
     <string name="message_delete_scenario">將刪除「%1$s」。是否確認？</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">您的裝置未提供標準的 Android 螢幕擷取權限對話方塊，Klick\'r 無法於此裝置上執行。</string>
 
-    <string name="toast_denied_screen_sharing_permission">使用者已拒絕螢幕共用權限</string>
     <string name="toast_denied_foreground_permission">使用者已拒絕前景服務權限</string>
 
     <string name="button_text_create_scenario">建立情境</string>

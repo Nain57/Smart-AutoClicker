@@ -52,6 +52,8 @@
         block you from using Klick\'r menu to stop it.\n\nIn that case, you can press the
         physical \"Volume Down\" button of your device to stop the running scenario.</string>
     <string name="message_dont_show_again">Don\'t show this message again</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Your device does not provide the standard
+        Android screen capture permission dialog. Klick\'r won\'t be able to run on it.</string>
 
 
     <string name="button_understood">Understood</string>
@@ -95,6 +97,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">User denied screen sharing permission</string>
     <string name="toast_configure_single_click">Touch the position to click on</string>
     <string name="toast_configure_swipe_from">Touch the position to start the swipe from</string>
     <string name="toast_configure_swipe_to">Touch the position to end the swipe to</string>

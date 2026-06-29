@@ -88,14 +88,11 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">Сценарий %1$s будет удалён. Продолжить?</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">Ваша система не отправляет 
-        стандартный в Android запрос на трансляцию экрана. Klick\'r не сможет работать на ней.</string>
 
     <!--
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_denied_screen_sharing_permission">Разрешение на трансляцию экрана отклонено пользователем</string>
     <string name="toast_denied_foreground_permission">Разрешение на работу в фоновом режиме отклонено пользователем</string>
 
     <!--

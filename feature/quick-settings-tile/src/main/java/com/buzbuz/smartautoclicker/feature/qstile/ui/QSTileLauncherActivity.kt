@@ -20,13 +20,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
-import com.buzbuz.smartautoclicker.core.display.recorder.showMediaProjectionWarning
+import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
+import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
 import com.buzbuz.smartautoclicker.feature.qstile.R
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,8 +48,9 @@ class QSTileLauncherActivity : AppCompatActivity() {
     }
 
     private val viewModel: QSTileLauncherViewModel by viewModels()
+
     /** The result launcher for the projection permission dialog. */
-    private lateinit var projectionActivityResult: ActivityResultLauncher<Intent>
+    private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,31 +82,40 @@ class QSTileLauncherActivity : AppCompatActivity() {
     }
 
     private fun onCreateSmartScenarioLauncher(scenarioId: Long) {
-        projectionActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode != RESULT_OK) {
-                finish()
-                return@registerForActivityResult
-            }
-
-            Log.i(TAG, "Media projection us running, start scenario")
-
-            viewModel.startSmartScenario(result.resultCode, result.data!!, scenarioId)
-            finish()
-        }
+        mediaProjectionRequest.registerForActivityResult(this)
 
         viewModel.startPermissionFlowIfNeeded(
             activity = this,
             onMandatoryDenied = ::finish,
-            onAllGranted = ::showMediaProjectionWarning
+            onAllGranted = { showMediaProjectionWarning(scenarioId) },
         )
     }
 
     /** Show the media projection start warning. */
-    private fun showMediaProjectionWarning() {
+    private fun showMediaProjectionWarning(scenarioId: Long) {
         Log.i(TAG, "All permissions are granted, request media projection")
-        projectionActivityResult.showMediaProjectionWarning(this, viewModel.isEntireScreenCaptureForced()) {
-            finish()
-        }
+
+        mediaProjectionRequest.showMediaProjectionWarning(
+            context = this,
+            forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
+            onSuccess = { resultCode, data -> startScenario(resultCode, data, scenarioId) },
+            onFailure = { showProjectionDeniedToast() },
+            onError = { showUnsupportedDeviceDialog() },
+        )
+    }
+
+    private fun startScenario(resultCode: Int, data: Intent, scenarioId: Long) {
+        viewModel.startSmartScenario(resultCode, data, scenarioId)
+        finish()
+    }
+
+    private fun showProjectionDeniedToast() {
+        Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    private fun showUnsupportedDeviceDialog() {
+        createNoMediaProjectionDialog { finish() }.show()
     }
 }
 

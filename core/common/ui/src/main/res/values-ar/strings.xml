@@ -52,6 +52,7 @@
         منعك من استخدام قائمة Klick\'r لإيقافها.\n\nفي هذه الحالة، يمكنك الضغط على
         زر \"خفض مستوى الصوت\" الفعلي لجهازك لإيقاف سيناريو التشغيل.</string>
     <string name="message_dont_show_again">لا تظهر هذه الرسالة مرة أخرى</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">جهازك لا يوفر مربع حوار إذن التقاط الشاشة القياسي لنظام Android. لن يتمكن Klick\'r من العمل عليه.</string>
 
 
     <string name="button_understood">مفهوم</string>
@@ -95,6 +96,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">رفض المستخدم إذن مشاركة الشاشة</string>
     <string name="toast_configure_single_click">المس الموضع للنقر عليه</string>
     <string name="toast_configure_swipe_from">المس الموضع لبدء التمرير السريع منه</string>
     <string name="toast_configure_swipe_to">المس الموضع لإنهاء التمرير السريع إليه</string>

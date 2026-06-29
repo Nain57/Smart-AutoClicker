@@ -85,8 +85,6 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">Isso irá excluir %1$s. Você tem certeza?</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">Seu dispositivo não fornece o padrão
-        diálogo de permissão de captura de tela do Android. O Klick\'r não conseguirá rodar nele.</string>
 
 
     <!--
@@ -97,7 +95,6 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
-    <string name="toast_denied_screen_sharing_permission">Permissão de compartilhamento de tela negada pelo usuário</string>
     <string name="toast_denied_foreground_permission">Permissão de serviço em primeiro plano negada pelo usuário</string>
 
     <!--

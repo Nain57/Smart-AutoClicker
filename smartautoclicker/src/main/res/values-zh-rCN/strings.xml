@@ -57,9 +57,7 @@
     <string name="message_empty_scenario_list">请创建首个场景，开始在手机上自动化任务</string>
 
     <string name="message_delete_scenario">将删除「%1$s」。是否确认？</string>
-    <string name="message_error_screen_capture_permission_dialog_not_found">您的设备未提供标准的 Android 屏幕捕获权限对话框，Klick\'r 无法在此设备上运行。</string>
 
-    <string name="toast_denied_screen_sharing_permission">用户已拒绝屏幕共享权限</string>
     <string name="toast_denied_foreground_permission">用户已拒绝前台服务权限</string>
 
     <string name="button_text_create_scenario">创建场景</string>

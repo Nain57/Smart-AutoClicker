@@ -53,6 +53,8 @@
         possibile premere il pulsante fisico \"Volume giù\" del dispositivo per interrompere lo
         scenario in corso.</string>
     <string name="message_dont_show_again">Non mostrare più questo messaggio</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Il tuo dispositivo non fornisce la finestra
+        di dialogo standard per l\'autorizzazione all\'acquisizione dello schermo Android. Klick\'r non potrà essere eseguito su di esso.</string>
 
 
     <string name="button_understood">Capito</string>
@@ -94,6 +96,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">L\'utente ha rifiutato l\'autorizzazione di condivisione schermo</string>
     <string name="toast_configure_single_click">Tocca la posizione da cliccare</string>
     <string name="toast_configure_swipe_from">Tocca la posizione da cui iniziare lo scorrimento</string>
     <string name="toast_configure_swipe_to">Tocca la posizione in cui finire lo scorrimento</string>

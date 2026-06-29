@@ -52,6 +52,8 @@
         bloquearle el uso del menú Klick\'r para detenerlo.\n\nEn ese caso, puede presionar el botón
         botón físico \"Bajar volumen\" de su dispositivo para detener el escenario en ejecución.</string>
     <string name="message_dont_show_again">No mostrar este mensaje nuevamente</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Tu dispositivo no provee el diálogo de
+        capturar pantalla estándar de Android. Smart AutoClicker no podrá ejecutarse.</string>
 
 
     <string name="button_understood">Comprendido</string>
@@ -95,6 +97,7 @@
       - Toast messages.
       - Can be pretty long (2 lines).
       -->
+    <string name="toast_denied_screen_sharing_permission">El usuario ha denegado el permiso de capturar pantalla</string>
     <string name="toast_configure_single_click">Toque la posición para hacer clic</string>
     <string name="toast_configure_swipe_from">Toque la posición para iniciar el deslizamiento desde</string>
     <string name="toast_configure_swipe_to">Toque la posición para finalizar el deslizamiento para</string>
