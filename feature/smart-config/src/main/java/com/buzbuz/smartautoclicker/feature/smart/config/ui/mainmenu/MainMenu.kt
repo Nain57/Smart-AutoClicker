@@ -29,9 +29,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager.Companion.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -43,7 +46,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.Li
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
-import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -73,6 +75,10 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { liveDebuggingViewModel() },
     )
+
+    private val tutorialNavigator: TutorialNavigator by lazy {
+        context.getTutorialNavigator()
+    }
 
     private var isHiddenForPaywall: Boolean = false
 
@@ -358,13 +364,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     private fun showStopVolumeDownTutorialDialog() {
-        context.createStopWithVolumeDownTutorialDialog(
-            theme = R.style.AppTheme,
-            onDismissed = { showAgain ->
-                if (!showAgain) viewModel.setStopWithVolumeDownDontShowAgain()
-                viewModel.toggleDetection(context)
-            }
-        ).showAsOverlay()
+        tutorialNavigator.showTipDialog(context, Tip.STOP_WITH_VOLUME_DOWN) {
+            viewModel.toggleDetection(context)
+        }
     }
 
     private fun showNativeLibErrorDialogIfNeeded(haveError: Boolean) {

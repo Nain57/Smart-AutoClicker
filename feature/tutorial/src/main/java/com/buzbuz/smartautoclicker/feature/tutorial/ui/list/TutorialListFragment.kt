@@ -16,11 +16,13 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -28,13 +30,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 
-import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
+import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
+import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialListBinding
 
 import dagger.hilt.android.AndroidEntryPoint
-
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class TutorialListFragment : Fragment() {
@@ -46,16 +49,15 @@ class TutorialListFragment : Fragment() {
     /** Adapter for the list of tutorials. */
     private lateinit var adapter: TutorialListAdapter
 
-    private var isOpeningTutorial: Boolean = false
+    /** The result launcher for the projection permission dialog. */
+    private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
 
-    @Inject lateinit var overlayManager: OverlayManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentTutorialListBinding.inflate(inflater, container, false)
 
-        adapter = TutorialListAdapter(
-            onGameClicked = ::onGameClicked,
-        )
+        adapter = TutorialListAdapter(onItemClicked = ::onItemClicked)
+        mediaProjectionRequest.registerForActivityResult(this)
 
         return viewBinding.root
     }
@@ -72,13 +74,39 @@ class TutorialListFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        overlayManager.hideAll()
+    override fun onResume() {
+        super.onResume()
+        viewModel.stopTutorial()
     }
 
-    private fun onGameClicked(gameIndex: Int) {
-        isOpeningTutorial = true
-        findNavController().navigate(TutorialListFragmentDirections.tutorialListToGame(gameIndex))
+    private fun onItemClicked(tutorialId: String) {
+        val tutorialActivity : AppCompatActivity = activity as? AppCompatActivity ?: return
+        viewModel.startPermissionFlowIfNeeded(
+            activity = tutorialActivity,
+            onAllGranted = { showMediaProjectionWarning(tutorialId) },
+        )
+    }
+
+    private fun showMediaProjectionWarning(tutorialId: String) {
+        mediaProjectionRequest.showMediaProjectionWarning(
+            context = requireContext(),
+            forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
+            onSuccess = { resultCode, data -> startTutorial(tutorialId, resultCode, data) },
+            onFailure = { showProjectionDeniedToast() },
+            onError = { showUnsupportedDeviceDialog() },
+        )
+    }
+
+    private fun showProjectionDeniedToast() {
+        Toast.makeText(activity, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showUnsupportedDeviceDialog() {
+        requireContext().createNoMediaProjectionDialog { activity?.finish() }.show()
+    }
+
+    private fun startTutorial(tutorialId: String, resultCode: Int, data: Intent) {
+        viewModel.startTutorial(tutorialId, resultCode, data)
+        findNavController().navigate(TutorialListFragmentDirections.tutorialListToGame())
     }
 }

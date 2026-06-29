@@ -26,14 +26,14 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.ItemTutorialBinding
 
 class TutorialListAdapter(
-    private val onGameClicked: (gameIndex: Int) -> Unit,
+    private val onItemClicked: (tutorialId: String) -> Unit,
 ) : ListAdapter<TutorialItem, TutorialItemViewHolder>(TutorialItemDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TutorialItemViewHolder =
         TutorialItemViewHolder(ItemTutorialBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: TutorialItemViewHolder, position: Int) {
-        holder.onBind(getItem(position), onGameClicked)
+        holder.onBind(getItem(position), onItemClicked)
     }
 }
 
@@ -48,11 +48,11 @@ object TutorialItemDiffUtilCallback : DiffUtil.ItemCallback<TutorialItem>() {
 
 class TutorialItemViewHolder(private val binding: ItemTutorialBinding) : ViewHolder(binding.root) {
 
-    fun onBind(item: TutorialItem, onGameClicked: (gameIndex: Int) -> Unit) {
+    fun onBind(item: TutorialItem, onItemClicked: (tutorialId: String) -> Unit) {
         binding.apply {
             choiceTitle.setText(item.nameResId)
             choiceDescription.setText(item.descResId)
-            root.setOnClickListener { onGameClicked(item.index) }
+            root.setOnClickListener { onItemClicked(item.tutorialId) }
         }
     }
 }

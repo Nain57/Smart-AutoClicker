@@ -22,9 +22,7 @@
         <activity
             android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity"
             android:theme="@style/AppTheme"
-            android:exported="false"
-            android:noHistory="true"
-            android:excludeFromRecents="true"/>
+            android:exported="false"/>
 
     </application>
 

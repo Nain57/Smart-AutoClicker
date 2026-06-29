@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,24 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 
-import android.graphics.Rect
-
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.CloseType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -43,60 +43,55 @@ class TutorialOverlayViewModel @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
 
-    val uiState: Flow<UiTutorialOverlayState?> = tutorialRepository.activeStep
-        .map { step -> if (step is TutorialStep.TutorialOverlay) step else null }
-        .flatMapLatest { tutorialOverlay ->
-            tutorialOverlay ?: return@flatMapLatest flowOf(null)
+    private val tutorialOverlayStep: Flow<TutorialStep.TutorialOverlay?> = tutorialRepository.tutorialState
+        .map { state ->
+            if (state !is TutorialState.Started) return@map null
+            state.currentStep as? TutorialStep.TutorialOverlay
+        }
 
-            when (tutorialOverlay.closeType) {
-                CloseType.NextButton -> flowOf(
-                    UiTutorialOverlayState(
-                        instructionsResId = tutorialOverlay.tutorialInstructionsResId,
-                        image = tutorialOverlay.getImage(),
-                        exitButton = TutorialExitButton.Next,
+    val uiState: StateFlow<TutorialFullscreenUiState?> = tutorialOverlayStep
+        .flatMapLatest { step ->
+            step ?: return@flatMapLatest flowOf(null)
+
+            when (val endCondition = step.stepEndCondition) {
+                TutorialStepEndCondition.NextButton -> flowOf(
+                    TutorialFullscreenUiState(
+                        instructionsResId = step.contentTextResId,
+                        image = step.getImage(),
+                        exitButton = TutorialExitButtonUiState.Next,
                     )
                 )
 
-                is CloseType.MonitoredViewClick -> {
-                    monitoredViewsManager.getViewPosition(tutorialOverlay.closeType.type)?.map { position ->
-                        UiTutorialOverlayState(
-                            instructionsResId = tutorialOverlay.tutorialInstructionsResId,
-                            image = tutorialOverlay.getImage(),
-                            exitButton = TutorialExitButton.MonitoredView(tutorialOverlay.closeType.type, position),
+                is TutorialStepEndCondition.MonitoredViewClicked -> {
+                    monitoredViewsManager.getViewPosition(endCondition.type)?.map { position ->
+                        TutorialFullscreenUiState(
+                            instructionsResId = step.contentTextResId,
+                            image = step.getImage(),
+                            exitButton = TutorialExitButtonUiState.MonitoredView(endCondition.type, position),
                             isDisplayedInTopHalf = position.centerY() > displayConfigManager.displayConfig.sizePx.y / 2,
                         )
-                    } ?: flowOf(UiTutorialOverlayState(tutorialOverlay.tutorialInstructionsResId))
+                    } ?: flowOf(TutorialFullscreenUiState(step.contentTextResId))
                 }
+
+                TutorialStepEndCondition.Immediate -> flowOf(null)
+                TutorialStepEndCondition.OverlayStackVisibilityChanged -> flowOf(null)
             }
         }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
+
+    fun performClickOnMonitoredView() {
+        val viewType = (uiState.value?.exitButton as? TutorialExitButtonUiState.MonitoredView)?.type ?: return
+        monitoredViewsManager.performClick(viewType)
+    }
 
     fun toNextTutorialStep() {
         tutorialRepository.nextTutorialStep()
     }
 
     fun toLastTutorialStep() {
-        tutorialRepository.lastTutorialStep()
+        tutorialRepository.skipToLastTutorialStep()
     }
 }
 
-data class UiTutorialOverlayState(
-    @field:StringRes val instructionsResId: Int,
-    val image: UiTutorialImage? = null,
-    val exitButton: TutorialExitButton? = null,
-    val isDisplayedInTopHalf: Boolean = true,
-)
-
-data class UiTutorialImage(
-    @field:DrawableRes val imageResId: Int,
-    @field:StringRes val imageDescResId: Int,
-)
-
-sealed class TutorialExitButton {
-    object Next : TutorialExitButton()
-    data class MonitoredView(val type: MonitoredViewType, val position: Rect) : TutorialExitButton()
-}
-
-private fun TutorialStep.TutorialOverlay.getImage() : UiTutorialImage? =
-    tutorialImage?.let {
-        UiTutorialImage(it.tutorialImageResId, it.tutorialImageDescResId)
-    }
+private fun TutorialStep.TutorialOverlay.getImage() : TutorialStepImageUiState? =
+    image?.let { TutorialStepImageUiState(it.imageResId, it.imageDescResId) }

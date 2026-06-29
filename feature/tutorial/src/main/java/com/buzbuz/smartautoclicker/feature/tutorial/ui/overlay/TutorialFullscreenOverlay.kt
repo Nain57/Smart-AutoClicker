@@ -53,7 +53,7 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         viewBinding = OverlayTutorialBinding.inflate(layoutInflater).apply {
             buttonSkipAll.setOnClickListener { onSkipAllClicked() }
             buttonNext.setOnClickListener { viewModel.toNextTutorialStep() }
-            tutorialBackground.onMonitoredViewClickedListener = viewModel::toNextTutorialStep
+            tutorialBackground.onMonitoredViewClickedListener = viewModel::performClickOnMonitoredView
         }
 
         instructionsViewBinding = IncludeTutorialInstructionsBinding.inflate(layoutInflater)
@@ -72,19 +72,20 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
     private fun onSkipAllClicked() {
         overlayManager.restoreVisibility()
         viewModel.toLastTutorialStep()
+        finish()
     }
 
-    private fun updateUiState(uiState: UiTutorialOverlayState?) {
+    private fun updateUiState(uiState: TutorialFullscreenUiState?) {
         uiState ?: return
 
         when(uiState.exitButton) {
-            TutorialExitButton.Next -> updateUiStateWithNextButton(uiState)
-            is TutorialExitButton.MonitoredView -> updateUiStateWithMonitoredViewHole(uiState)
+            TutorialExitButtonUiState.Next -> updateUiStateWithNextButton(uiState)
+            is TutorialExitButtonUiState.MonitoredView -> updateUiStateWithMonitoredViewHole(uiState)
             else -> updateUiStateWithoutButton(uiState)
         }
     }
 
-    private fun updateUiStateWithNextButton(uiState: UiTutorialOverlayState) {
+    private fun updateUiStateWithNextButton(uiState: TutorialFullscreenUiState) {
         viewBinding.apply {
             buttonNext.visibility = View.VISIBLE
             tutorialBackground.expectedViewPosition = null
@@ -94,8 +95,8 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         setInstructions(uiState)
     }
 
-    private fun updateUiStateWithMonitoredViewHole(uiState: UiTutorialOverlayState) {
-        val exitButton = uiState.exitButton as TutorialExitButton.MonitoredView
+    private fun updateUiStateWithMonitoredViewHole(uiState: TutorialFullscreenUiState) {
+        val exitButton = uiState.exitButton as TutorialExitButtonUiState.MonitoredView
 
         viewBinding.apply {
             buttonNext.visibility = View.GONE
@@ -106,7 +107,7 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         setInstructions(uiState)
     }
 
-    private fun updateUiStateWithoutButton(uiState: UiTutorialOverlayState) {
+    private fun updateUiStateWithoutButton(uiState: TutorialFullscreenUiState) {
         viewBinding.apply {
             buttonNext.visibility = View.GONE
             tutorialBackground.expectedViewPosition = null
@@ -116,7 +117,7 @@ class TutorialFullscreenOverlay : FullscreenOverlay(theme = R.style.AppTheme) {
         setInstructions(uiState)
     }
 
-    private fun setInstructions(uiState: UiTutorialOverlayState) {
+    private fun setInstructions(uiState: TutorialFullscreenUiState) {
         instructionsViewBinding.apply {
             textInstructions.setText(uiState.instructionsResId)
 

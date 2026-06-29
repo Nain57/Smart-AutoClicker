@@ -92,7 +92,7 @@ class OverlayManager @Inject internal constructor(
     val isStackHidden: StateFlow<Boolean> = _isStackHidden
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
-    val backStackTop: Flow<Overlay?> = isNavigating
+    val backStackTopFlow: Flow<Overlay?> = isNavigating
         .filter { navigating -> navigating == null }
         .combine(overlayBackStack.topFlow) { _, stackTop ->
             Log.d(TAG, "New back stack top: $stackTop")

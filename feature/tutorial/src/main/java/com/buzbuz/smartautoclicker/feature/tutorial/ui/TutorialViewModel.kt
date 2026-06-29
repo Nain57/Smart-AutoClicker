@@ -17,37 +17,18 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui
 
 import androidx.lifecycle.ViewModel
-import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 
-import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
 class TutorialViewModel @Inject constructor(
-    smartProcessingRepository: SmartProcessingRepository,
     private val tutorialRepository: TutorialRepository
 ) : ViewModel() {
 
-    val shouldBeStopped: Flow<Boolean> = smartProcessingRepository.detectionState
-        .map { it == DetectionState.INACTIVE }
-
-    val onFloatingUiVisibilityStep: Flow<Boolean> = tutorialRepository.activeStep
-        .filterIsInstance<TutorialStep.ChangeFloatingUiVisibility>()
-        .map { it.isVisible }
-
-    fun validateFloatingUiVisibilityStep() {
-        tutorialRepository.nextTutorialStep()
+    fun stopTutorial() {
+        tutorialRepository.stopTutorial()
     }
-
-    fun startTutorialMode(): Unit = tutorialRepository.setupTutorialMode()
-
-    fun stopTutorialMode(): Unit = tutorialRepository.stopTutorialMode()
 }

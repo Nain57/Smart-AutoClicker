@@ -99,4 +99,7 @@
     <string name="button_condition_migration_running">移行中</string>
     <string name="button_condition_migration_finished">OK</string>
 
+    <string name="field_tutorial_title">チュートリアル</string>
+    <string name="field_tutorial_desc">Klick\'r の使い方を学ぶ</string>
+
 </resources>

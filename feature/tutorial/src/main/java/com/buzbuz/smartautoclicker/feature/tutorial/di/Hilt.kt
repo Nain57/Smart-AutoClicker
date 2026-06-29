@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2024 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,42 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.di
 
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialsProvider
+import com.buzbuz.smartautoclicker.feature.tutorial.data.TutorialsProviderImpl
+import com.buzbuz.smartautoclicker.feature.tutorial.navigation.TutorialNavigatorImpl
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialOverlayViewModel
 
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @EntryPoint
 @InstallIn(OverlayComponent::class)
 interface TutorialViewModelsEntryPoint {
     fun tutorialOverlayViewModel(): TutorialOverlayViewModel
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object TutorialFeatureModule {
+
+    @Provides
+    @Singleton
+    internal fun providesTutorialsProvider(provider: TutorialsProviderImpl): TutorialsProvider =
+        provider
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal abstract class TutorialNavigationModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindTutorialNavigator(impl: TutorialNavigatorImpl): TutorialNavigator
 }

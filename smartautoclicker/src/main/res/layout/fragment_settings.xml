@@ -29,6 +29,17 @@
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:orientation="vertical">
 
+        <include layout="@layout/include_field_selector"
+            android:id="@+id/field_tutorials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            style="@style/AppTheme.Widget.Divider.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
         <include layout="@layout/include_field_switch"
             android:id="@+id/field_show_scenario_filters"
             android:layout_width="match_parent"

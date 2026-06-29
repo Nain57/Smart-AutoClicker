@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2023 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -34,16 +34,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.navArgs
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
-import dagger.hilt.android.AndroidEntryPoint
 
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,18 +52,21 @@ class TutorialGameFragment : Fragment() {
     private val viewModel: TutorialGameViewModel by viewModels()
     /** ViewBinding containing the views for this fragment. */
     private lateinit var viewBinding: FragmentTutorialGameBinding
-    /** Start arguments for this fragment. */
-    private val args: TutorialGameFragmentArgs by navArgs()
+    /** Tells if the time blinking animation is started or not. */
+    private var isTimeAnimationStarted: Boolean = false
 
     @Inject lateinit var overlayManager: OverlayManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.startTutorial(args.gameIndex)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewBinding = FragmentTutorialGameBinding.inflate(inflater, container, false)
+        viewBinding = FragmentTutorialGameBinding.inflate(inflater, container, false).apply {
+            blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
+            redTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.RED) }
+
+            val targetSize = root.context.resources.getDimensionPixelSize(R.dimen.tutorial_game_target_size)
+            buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area(), targetSize) }
+        }
+
         return viewBinding.root
     }
 
@@ -75,23 +76,11 @@ class TutorialGameFragment : Fragment() {
         lockMenuPosition()
         overlayManager.hideAll()
 
-        viewBinding.apply {
-            blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
-            redTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.RED) }
-
-            val targetSize = root.context.resources.getDimensionPixelSize(R.dimen.tutorial_game_target_size)
-            buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area(), targetSize) }
-        }
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.currentGame.collect(::onGameUpdated) }
-                launch { viewModel.isStarted.collect(::onGameStartedUpdated) }
-                launch { viewModel.gameTimerValue.collect(::onTimerUpdated) }
-                launch { viewModel.gameScore.collect(::onScoreUpdated) }
-                launch { viewModel.playRetryBtnVisibility.collect(::onPlayRetryButtonStateUpdated) }
-                launch { viewModel.gameTargets.collect(::onTargetsUpdated) }
+                launch { viewModel.uiState.collect(::updateUi) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
+                launch { viewModel.shouldDisplayFloatingUi.collect(::showHideFloatingUi) }
             }
         }
     }
@@ -102,50 +91,43 @@ class TutorialGameFragment : Fragment() {
         overlayManager.removeTopOverlay()
         overlayManager.navigateUpToRoot(requireContext()) {
             overlayManager.unlockMenuPosition()
-            viewModel.stopTutorial()
         }
     }
 
-    private fun onGameUpdated(tutorialGame: TutorialGame?) {
-        tutorialGame ?: return
+    private fun updateUi(uiState: TutorialGameUiState?) {
+        uiState ?: return
+
         viewBinding.apply {
-            textInstructions.setText(tutorialGame.instructionsResId)
-            textHighScore.text = root.context.getString(R.string.message_high_score, tutorialGame.highScore)
+            textInstructions.text = requireContext().getString(uiState.instructionsResId)
+            textHighScore.text = requireContext()
+                .getString(R.string.message_high_score, uiState.highScore)
+            footer.textTimeLeft.text = requireContext()
+                .getString(R.string.message_time_left, uiState.timerValue)
+            textScore.text = requireContext()
+                .getString(R.string.message_score, uiState.gameScore)
+
+            if (!uiState.isGameStarted) {
+                buttonStartRetry.visibility = View.VISIBLE
+                blueTarget.visibility = View.GONE
+                redTarget.visibility = View.GONE
+            } else {
+                buttonStartRetry.visibility = View.GONE
+
+                blueTarget.updateTargetState(uiState.targets[TutorialGameTargetType.BLUE])
+                redTarget.updateTargetState(uiState.targets[TutorialGameTargetType.RED])
+                gameArea.forceLayout()
+            }
+
+            if (uiState.isGameStarted && !isTimeAnimationStarted) {
+                isTimeAnimationStarted = true
+                footer.textTimeLeft.startAnimation(
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.anim_timer_blink)
+                )
+            } else if (!uiState.isGameStarted && isTimeAnimationStarted) {
+                isTimeAnimationStarted = false
+                footer.textTimeLeft.clearAnimation()
+            }
         }
-    }
-
-    private fun onGameStartedUpdated(isStarted: Boolean) {
-        if (isStarted) {
-            viewBinding.footer.textTimeLeft.startAnimation(
-                AnimationUtils.loadAnimation(requireContext(), R.anim.anim_timer_blink)
-            )
-        } else {
-            viewBinding.footer.textTimeLeft.clearAnimation()
-        }
-    }
-
-    private fun onTimerUpdated(timerValue: Int) {
-        viewBinding.footer.textTimeLeft.text = requireContext().getString(R.string.message_time_left, timerValue)
-    }
-
-    private fun onScoreUpdated(score: Int) {
-        viewBinding.textScore.text = requireContext().getString(R.string.message_score, score)
-    }
-
-    private fun onPlayRetryButtonStateUpdated(isVisible: Boolean) {
-        if (isVisible) {
-            viewBinding.buttonStartRetry.visibility = View.VISIBLE
-            viewBinding.blueTarget.visibility = View.GONE
-            viewBinding.redTarget.visibility = View.GONE
-        } else {
-            viewBinding.buttonStartRetry.visibility = View.GONE
-        }
-    }
-
-    private fun onTargetsUpdated(targets: Map<TutorialGameTargetType, PointF>) {
-        viewBinding.blueTarget.updateTargetState(targets[TutorialGameTargetType.BLUE])
-        viewBinding.redTarget.updateTargetState(targets[TutorialGameTargetType.RED])
-        viewBinding.gameArea.forceLayout()
     }
 
     private fun showHideStepOverlay(show: Boolean) {
@@ -158,6 +140,13 @@ class TutorialGameFragment : Fragment() {
         overlayManager.apply {
             if (show) setTopOverlay(TutorialFullscreenOverlay())
             else removeTopOverlay()
+        }
+    }
+
+    private fun showHideFloatingUi(show: Boolean) {
+        overlayManager.apply {
+            if (show) restoreVisibility()
+            else hideAll()
         }
     }
 

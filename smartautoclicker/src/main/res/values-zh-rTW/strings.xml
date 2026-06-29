@@ -99,4 +99,7 @@
     <string name="button_condition_migration_running">正在移轉</string>
     <string name="button_condition_migration_finished">確定</string>
 
+    <string name="field_tutorial_title">教程</string>
+    <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
+
 </resources>

@@ -152,4 +152,7 @@
     <string name="button_condition_migration_running">Міграція</string>
     <string name="button_condition_migration_finished">Добре</string>
 
+    <string name="field_tutorial_title">Навчання</string>
+    <string name="field_tutorial_desc">Навчитися користуватися Klick\'r</string>
+
 </resources>

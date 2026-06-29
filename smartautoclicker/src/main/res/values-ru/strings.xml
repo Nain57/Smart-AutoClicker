@@ -149,4 +149,7 @@
     <string name="button_condition_migration_running">Миграция</string>
     <string name="button_condition_migration_finished">ХОРОШО</string>
 
+    <string name="field_tutorial_title">Учебник</string>
+    <string name="field_tutorial_desc">Узнайте, как использовать Klick\'r</string>
+
 </resources>

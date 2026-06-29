@@ -37,13 +37,6 @@
         android:id="@+id/fragment_game"
         android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.TutorialGameFragment"
         android:label="fragment_two"
-        tools:layout="@layout/fragment_tutorial_game">
-
-        <argument
-            android:name="gameIndex"
-            app:argType="integer"
-            android:defaultValue="0" />
-
-    </fragment>
+        tools:layout="@layout/fragment_tutorial_game"/>
 
 </navigation>

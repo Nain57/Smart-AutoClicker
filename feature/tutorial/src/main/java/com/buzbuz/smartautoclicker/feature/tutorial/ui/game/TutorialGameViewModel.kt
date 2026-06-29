@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2024 Kevin Buzeau
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,29 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
-import android.graphics.PointF
 import android.graphics.Rect
-
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialStep
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGame
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
+
 import dagger.hilt.android.lifecycle.HiltViewModel
-
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,45 +47,44 @@ class TutorialGameViewModel @Inject constructor(
     private val tutorialRepository: TutorialRepository,
 ) : ViewModel() {
 
-    val currentGame: Flow<TutorialGame?> = tutorialRepository.activeGame
+    private val startedState: Flow<TutorialState.Started> = tutorialRepository.tutorialState
+        .filterIsInstance<TutorialState.Started>()
 
-    val shouldDisplayStepOverlay: Flow<Boolean> = tutorialRepository.activeStep
-        .map { step -> step != null && step is TutorialStep.TutorialOverlay }
+    val shouldDisplayStepOverlay: Flow<Boolean> = startedState
+        .map { state -> state.currentStep is TutorialStep.TutorialOverlay && state.isCurrentStepStarted }
 
-    val isStarted: Flow<Boolean> = currentGame
-        .flatMapLatest { it?.state?.map { it.isStarted } ?: flowOf(false) }
-        .distinctUntilChanged()
-
-    val gameTimerValue: Flow<Int> = currentGame
-        .flatMapLatest { it?.state?.map { it.timeLeft } ?: flowOf(0) }
-        .distinctUntilChanged()
-
-    val gameScore: Flow<Int> = currentGame
-        .flatMapLatest { it?.state?.map { it.score } ?: flowOf(0) }
-        .distinctUntilChanged()
-
-    val gameTargets: Flow<Map<TutorialGameTargetType, PointF>> = currentGame
-        .flatMapLatest { it?.targets ?: flowOf(emptyMap()) }
-        .distinctUntilChanged()
-
-    val playRetryBtnVisibility: Flow<Boolean> =
-        combine(currentGame, isStarted) { game, started ->
-            game != null && !started
+    val shouldDisplayFloatingUi: Flow<Boolean> = startedState
+        .mapNotNull { state ->
+            val step = state.currentStep
+            if (state.isCurrentStepStarted && step is TutorialStep.ChangeFloatingUiVisibility) step.newVisibility
+            else null
         }
+        .distinctUntilChanged()
 
-    fun startTutorial(gameIndex: Int) {
-        tutorialRepository.startTutorial(gameIndex)
-    }
+    val uiState: StateFlow<TutorialGameUiState?> = tutorialRepository.tutorialSubjectController
+        .flatMapLatest { controller -> controller?.state ?: emptyFlow() }
+        .filterIsInstance<TutorialSubjectState.Game?>()
+        .map { game -> game?.toUiState() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
     fun startGame(area: Rect, targetsSize: Int) {
-        tutorialRepository.startGame(area, targetsSize)
+        getGameController()?.startGame(area, targetsSize)
     }
 
     fun onTargetHit(color: TutorialGameTargetType) {
-        tutorialRepository.onGameTargetHit(color)
+        getGameController()?.onGameTargetHit(color)
     }
 
-    fun stopTutorial() {
-        tutorialRepository.stopTutorial()
-    }
+    private fun getGameController(): TutorialSubjectController.Game? =
+        tutorialRepository.tutorialSubjectController.value as? TutorialSubjectController.Game
+
+    private fun TutorialSubjectState.Game.toUiState(): TutorialGameUiState =
+        TutorialGameUiState(
+            instructionsResId = subject.instructionsResId,
+            highScore = subject.scoreToReach,
+            isGameStarted = !isFinished && timeLeft > 0,
+            timerValue = timeLeft,
+            gameScore = score,
+            targets = targets,
+        )
 }

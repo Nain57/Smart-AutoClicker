@@ -151,4 +151,7 @@
     <string name="button_condition_migration_running">Migrar</string>
     <string name="button_condition_migration_finished">DE ACUERDO</string>
 
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Aprende a usar Klick\'r</string>
+
 </resources>

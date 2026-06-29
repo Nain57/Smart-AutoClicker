@@ -149,4 +149,7 @@
     <string name="button_condition_migration_running">جارٍ الترحيل</string>
     <string name="button_condition_migration_finished">حسناً</string>
 
+    <string name="field_tutorial_title">درس تعليمي</string>
+    <string name="field_tutorial_desc">تعلم كيفية استخدام Klick\'r</string>
+
 </resources>

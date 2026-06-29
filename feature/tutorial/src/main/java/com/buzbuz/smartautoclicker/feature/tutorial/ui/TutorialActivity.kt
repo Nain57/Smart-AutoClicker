@@ -22,9 +22,6 @@ import androidx.activity.enableEdgeToEdge
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
@@ -32,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import dagger.hilt.android.AndroidEntryPoint
 
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,31 +49,11 @@ class TutorialActivity : AppCompatActivity() {
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment)
             .navController
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.shouldBeStopped.collect { shouldBeStopped ->
-                        if (shouldBeStopped) finish()
-                    }
-                }
-
-                launch {
-                    viewModel.onFloatingUiVisibilityStep.collect { newVisibility ->
-                        setFloatingUiVisibility(newVisibility)
-                        viewModel.validateFloatingUiVisibilityStep()
-                    }
-                }
-            }
-        }
-
-        viewModel.startTutorialMode()
     }
 
     override fun onDestroy() {
-        viewModel.stopTutorialMode()
+        viewModel.stopTutorial()
         super.onDestroy()
-        setFloatingUiVisibility(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -88,12 +64,5 @@ class TutorialActivity : AppCompatActivity() {
     private fun setupActionBar() {
         setSupportActionBar(findViewById(R.id.topAppBar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun setFloatingUiVisibility(isVisible: Boolean) {
-        overlayManager.apply {
-            if (isVisible) restoreVisibility()
-            else hideAll()
-        }
     }
 }

@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 
@@ -54,12 +53,6 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
         viewBinding = ContentMoreBinding.inflate(LayoutInflater.from(context), container, false).apply {
-            fieldStartTutorial.apply {
-                setTitle(context.getString(R.string.field_tutorial_title))
-                setupDescriptions(listOf(context.getString(R.string.field_tutorial_desc)))
-                setOnClickListener(::onTutorialClicked)
-            }
-
             fieldDebugOverlay.apply {
                 setTitle(context.getString(R.string.field_show_debug_view_title))
                 setDescription(context.getString(R.string.field_show_debug_view_desc))
@@ -106,17 +99,6 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
 
     override fun onDialogButtonClicked(buttonType: DialogNavigationButton) {
         if (buttonType == DialogNavigationButton.SAVE) viewModel.saveConfig()
-    }
-
-    private fun onTutorialClicked() {
-        debounceUserInteraction {
-            dialogController.back()
-
-            val intent = Intent()
-                .setComponent(viewModel.getTutorialActivityComponent())
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(intent)
-        }
     }
 
     private fun updateCountersDesc(desc: String) {

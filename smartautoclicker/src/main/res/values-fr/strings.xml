@@ -152,4 +152,7 @@
     <string name="button_condition_migration_running">Migration</string>
     <string name="button_condition_migration_finished">OK</string>
 
+    <string name="field_tutorial_title">Tutoriel</string>
+    <string name="field_tutorial_desc">Apprenez à utiliser Klick\'r</string>
+
 </resources>

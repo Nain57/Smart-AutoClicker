@@ -72,27 +72,33 @@
                         android:layout_marginBottom="@dimen/margin_vertical_default"
                         android:text="@string/menu_item_title_conditions"/>
 
-                    <include layout="@layout/include_field_event_children"
-                        android:id="@+id/field_image_conditions_selector"
+                    <FrameLayout
+                        android:id="@+id/layout_condition_selector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                        android:visibility="gone"
-                        tools:visibility="visible"/>
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default">
 
-                    <include layout="@layout/include_field_event_children"
-                        android:id="@+id/field_trigger_conditions_selector"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                        android:visibility="gone"/>
+                        <include layout="@layout/include_field_event_children"
+                            android:id="@+id/field_image_conditions_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
 
-                    <include layout="@layout/include_field_selector"
-                        android:id="@+id/field_empty_conditions_selector"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                        android:visibility="gone" />
+                        <include layout="@layout/include_field_event_children"
+                            android:id="@+id/field_trigger_conditions_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"/>
+
+                        <include layout="@layout/include_field_selector"
+                            android:id="@+id/field_empty_conditions_selector"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
+
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"

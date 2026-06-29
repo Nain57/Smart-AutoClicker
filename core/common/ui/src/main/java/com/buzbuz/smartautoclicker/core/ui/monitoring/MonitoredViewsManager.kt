@@ -63,6 +63,7 @@ class MonitoredViewsManager @Inject constructor(
         monitoredViews[type]?.position
 
     fun performClick(type: MonitoredViewType): Boolean {
+        notifyClick(type)
         return monitoredViews[type]?.performClick() ?: false
     }
 
@@ -71,5 +72,9 @@ class MonitoredViewsManager @Inject constructor(
             monitoredClicks.remove(type)
             listener()
         }
+    }
+
+    fun stopNextClickMonitoring(type: MonitoredViewType) {
+        monitoredClicks.remove(type)
     }
 }

@@ -39,8 +39,9 @@ dependencies {
     implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
     implementation(project(":core:common:display"))
+    implementation(project(":core:common:navigation"))
     implementation(project(":core:common:overlays"))
+    implementation(project(":core:common:tutorial"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:dumb"))
-    implementation(project(":feature:tutorial"))
 }

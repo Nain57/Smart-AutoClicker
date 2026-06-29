@@ -150,4 +150,7 @@
     <string name="button_condition_migration_running">Migração</string>
     <string name="button_condition_migration_finished">OK</string>
 
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Aprenda a usar o Klick\'r</string>
+
 </resources>

@@ -20,14 +20,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -35,7 +38,7 @@ import javax.inject.Inject
 class DumbMainMenuModel @Inject constructor(
     private val dumbEditionRepository: DumbEditionRepository,
     private val dumbEngine: DumbEngine,
-    private val tutorialRepository: TutorialRepository,
+    tutorialRepository: TutorialRepository,
 ) : ViewModel() {
 
     val canPlay: Flow<Boolean> =
@@ -44,6 +47,10 @@ class DumbMainMenuModel @Inject constructor(
         }
     val isPlaying: StateFlow<Boolean> =
         dumbEngine.isRunning
+
+    val shouldShowStopWithVolumeDownTip: StateFlow<Boolean> = tutorialRepository
+        .shouldShowTip(Tip.STOP_WITH_VOLUME_DOWN)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     fun startEdition(dumbScenarioId: Identifier, onStarted: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -84,8 +91,6 @@ class DumbMainMenuModel @Inject constructor(
     }
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        !isPlaying.value && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
+        !isPlaying.value && shouldShowStopWithVolumeDownTip.value
 
-    fun setStopWithVolumeDownDontShowAgain(): Unit =
-        tutorialRepository.setStopWithVolumeDownDontShowAgain()
 }

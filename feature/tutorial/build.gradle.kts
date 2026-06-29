@@ -40,12 +40,17 @@ dependencies {
 
     implementation(libs.google.material)
 
+    implementation(project(":core:common:accessibility"))
+    implementation(project(":core:common:navigation"))
     implementation(project(":core:common:base"))
     implementation(project(":core:common:bitmaps"))
     implementation(project(":core:common:display"))
     implementation(project(":core:common:overlays"))
+    implementation(project(":core:common:permissions"))
+    implementation(project(":core:common:settings"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:smart:database"))
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
+    implementation(project(":core:common:tutorial"))
 }

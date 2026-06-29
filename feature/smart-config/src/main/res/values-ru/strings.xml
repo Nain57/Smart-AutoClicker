@@ -142,9 +142,6 @@
     <string name="field_show_debug_report_desc_available">Отладочный отчёт доступен</string>
     <string name="field_show_debug_report_desc_not_available">Отладочный отчёт недоступен</string>
 
-    <string name="field_tutorial_title">Учебник</string>
-    <string name="field_tutorial_desc">Узнайте, как использовать Klick\'r</string>
-
 
     <!-- Dialog Event ============================================================================================== -->
 

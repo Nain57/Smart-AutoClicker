@@ -23,17 +23,18 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.ui.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.AreRequiredAlphabetModelsInstalledUseCase
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.TutorialRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -77,6 +78,10 @@ class MainMenuModel @Inject constructor(
     /** Tells if the paywall is currently displayed. */
     val paywallIsVisible: Flow<Boolean> =
         revenueRepository.isBillingFlowInProgress
+
+    val shouldShowStopWithVolumeDownTip: StateFlow<Boolean> = tutorialRepository
+        .shouldShowTip(Tip.STOP_WITH_VOLUME_DOWN)
+        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     /** The current of the detection. */
     val detectionState: StateFlow<UiState> = smartProcessingRepository.detectionState
@@ -217,10 +222,7 @@ class MainMenuModel @Inject constructor(
         !isMediaProjectionStarted.value
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        detectionState.value == UiState.Idle && tutorialRepository.shouldShowStopWithVolumeDownTutorialDialog()
-
-    fun setStopWithVolumeDownDontShowAgain(): Unit =
-        tutorialRepository.setStopWithVolumeDownDontShowAgain()
+        detectionState.value == UiState.Idle && shouldShowStopWithVolumeDownTip.value
 
     private fun UserBillingState.isAdRequested(): Boolean =
         this == UserBillingState.AD_REQUESTED

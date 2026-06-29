@@ -168,7 +168,6 @@
     <string name="warning_dialog_message_condition_delete_associated_action">此條件被其他操作引用。刪除該條件將同時刪除關聯操作。\n是否確認刪除？</string>
     <string name="warning_dialog_message_close_without_saving">存在未保存的更改，是否放棄？</string>
 
-    <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
     <string name="error_dialog_message_scenario_saving">由於內部錯誤，情境無法保存。要繼續編輯還是放棄所有更改？</string>
     <string name="error_dialog_message_error_native_lib">Klick\'r 安裝錯誤，無法啟動檢測。\n\n如果您是從合法的應用程式商店安裝的，請在 GitHub 上聯繫我們，這將有助於我們修復此問題。</string>
     <string name="error_dialog_message_screen_capture_unsupported">由於圖形驅動程式的限制，Klick\'r 無法讀取您裝置的螢幕。\n\n遺憾的是，這是一個無法繞過的硬體限制。請在 GitHub 上聯繫我們並提供您的裝置型號，以便我們追蹤受影響的裝置。</string>
@@ -180,7 +179,6 @@
     <string name="generic_condition_threshold_title">允許差異</string>
     <string name="field_scenario_quality_title">檢測解析度</string>
     <string name="field_intent_extra_value_title">參數值</string>
-    <string name="field_tutorial_title">教程</string>
 
     <!--
       - List header.

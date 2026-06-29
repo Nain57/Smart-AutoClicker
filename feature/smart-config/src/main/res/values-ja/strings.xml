@@ -86,8 +86,6 @@
     <string name="field_show_debug_report_title">レポートを表示する</string>
     <string name="field_show_debug_report_desc_available">デバッグレポートが利用可能です</string>
     <string name="field_show_debug_report_desc_not_available">利用可能なデバッグ レポートがありません</string>
-    <string name="field_tutorial_title">チュートリアル</string>
-    <string name="field_tutorial_desc">Klick\'r の使い方を学ぶ</string>
     <string name="dialog_title_image_event">画面イベント</string>
     <string name="dialog_title_trigger_event">トリガー</string>
     <string name="dialog_title_action_type">アクションの種類</string>
