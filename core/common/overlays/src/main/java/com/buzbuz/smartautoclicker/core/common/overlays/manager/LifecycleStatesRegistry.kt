@@ -27,14 +27,18 @@ internal class LifecycleStatesRegistry {
     fun saveStates(overlays: List<Overlay>) {
         overlaysLifecycleState.clear()
         overlays.forEach { overlay ->
-            val state = when {
-                overlay is OverlayMenu && overlay.resumeOnceShown -> Lifecycle.State.RESUMED
-                overlay is OverlayMenu && overlay.destroyOnceHidden -> Lifecycle.State.DESTROYED
+            val state = when (overlay) {
+                is OverlayMenu if overlay.resumeOnceShown -> Lifecycle.State.RESUMED
+                is OverlayMenu if overlay.destroyOnceHidden -> Lifecycle.State.DESTROYED
                 else -> overlay.lifecycle.currentState
             }
 
             overlaysLifecycleState[overlay] = state
         }
+    }
+
+    fun saveNewOverlayState(overlay: Overlay, state: Lifecycle.State) {
+        overlaysLifecycleState[overlay] = state
     }
 
     fun restoreStates(): Map<Overlay, Lifecycle.State> {

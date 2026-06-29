@@ -36,9 +36,11 @@ import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.update
 
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -85,7 +87,9 @@ class OverlayManager @Inject internal constructor(
     /** Notifies the caller of [navigateUpToRoot] once the all overlays above the root are destroyed. */
     private var navigateUpToRootCompletionListener: (() -> Unit)? = null
 
-    var onVisibilityChangedListener: (() -> Unit)? = null
+    /** The tells if the stack is hidden by [hideAll]. */
+    private val _isStackHidden: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isStackHidden: StateFlow<Boolean> = _isStackHidden
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTop: Flow<Overlay?> = isNavigating
@@ -173,7 +177,7 @@ class OverlayManager @Inject internal constructor(
      * Their lifecycles will be saved, and can be restored using [restoreVisibility].
      */
     fun hideAll() {
-        if (isStackHidden()) return
+        if (isOverlayStackHidden()) return
 
         Log.d(TAG, "Hide all overlays from the stack")
 
@@ -182,7 +186,7 @@ class OverlayManager @Inject internal constructor(
         // Hide from top to bottom of the stack
         overlayBackStack.forEachReversed { it.hide() }
 
-        onVisibilityChangedListener?.invoke()
+        _isStackHidden.update { true }
     }
 
     /**
@@ -190,7 +194,7 @@ class OverlayManager @Inject internal constructor(
      * The states must have been saved using [hideAll].
      */
     fun restoreVisibility() {
-        if (!isStackHidden()) return
+        if (!isOverlayStackHidden()) return
 
         val overlayStates = lifecyclesRegistry.restoreStates()
         if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return
@@ -211,12 +215,11 @@ class OverlayManager @Inject internal constructor(
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
 
-        onVisibilityChangedListener?.invoke()
+        _isStackHidden.update { false }
     }
 
     /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
-    fun isStackHidden(): Boolean =
-        lifecyclesRegistry.haveStates()
+    fun isOverlayStackHidden(): Boolean = _isStackHidden.value
 
     fun isOverlayStackVisible(): Boolean =
         getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
@@ -294,7 +297,13 @@ class OverlayManager @Inject internal constructor(
             if (request.hideCurrent) stop()
         }
 
-        request.overlay.start()
+        if (isOverlayStackHidden()) {
+            Log.d(TAG, "Stack is hidden, stay in created state")
+            lifecyclesRegistry.saveNewOverlayState(request.overlay, Lifecycle.State.RESUMED)
+        } else {
+            request.overlay.start()
+        }
+
         overlayBackStack.push(request.overlay)
 
         executeNextNavigationRequest(context)
@@ -328,7 +337,7 @@ class OverlayManager @Inject internal constructor(
         // If there is no more navigation requests, resume the top overlay
         if (overlayBackStack.isNotEmpty()) {
             // If the overlay stack was requested hidden, do nothing
-            if (!isStackHidden()) {
+            if (!isOverlayStackHidden()) {
                 Log.d(TAG, "No more pending request, resume stack top overlay")
                 overlayBackStack.peek().resume()
             } else {

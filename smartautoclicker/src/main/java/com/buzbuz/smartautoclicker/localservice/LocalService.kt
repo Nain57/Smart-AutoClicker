@@ -96,16 +96,18 @@ class LocalService(
         combine(dumbEngine.isRunning, smartProcessingRepository.detectionState) { dumbIsRunning, smartState ->
             dumbIsRunning || smartState == DetectionState.DETECTING
         }.onEach { isRunning ->
-            notificationController.updateNotification(context, isRunning, !overlayManager.isStackHidden())
+            notificationController.updateNotification(context, isRunning, !overlayManager.isOverlayStackHidden())
         }.launchIn(serviceScope)
 
-        overlayManager.onVisibilityChangedListener = {
-            notificationController.updateNotification(
-                context,
-                dumbEngine.isRunning.value || smartProcessingRepository.isRunning(),
-                !overlayManager.isStackHidden()
-            )
-        }
+        overlayManager.isStackHidden
+            .onEach { isStackHidden ->
+                notificationController.updateNotification(
+                    context,
+                    dumbEngine.isRunning.value || smartProcessingRepository.isRunning(),
+                    !isStackHidden
+                )
+            }
+            .launchIn(serviceScope)
     }
 
     override fun startDumbScenario(dumbScenario: DumbScenario) {
