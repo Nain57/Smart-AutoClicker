@@ -189,6 +189,7 @@ class EventDialog(
                 setDescription(context.getString(R.string.message_empty_screen_condition_list_desc))
                 setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
             }
+            layoutConditionSelector.setOnClickListener { debounceUserInteraction { showImageConditionsBriefMenu() } }
         } else {
             fieldImageConditionsSelector.root.visibility = View.GONE
             fieldTriggerConditionsSelector.apply {
@@ -201,6 +202,7 @@ class EventDialog(
                 setDescription(context.getString(R.string.message_empty_trigger_condition_list_desc))
                 setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
             }
+            layoutConditionSelector.setOnClickListener { debounceUserInteraction { showTriggerConditionsDialog() } }
         }
 
         fieldConditionsOperator.apply {
@@ -263,7 +265,7 @@ class EventDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorViews(
-            conditionsField = viewBinding.fieldImageConditionsSelector.root,
+            conditionsField = viewBinding.layoutConditionSelector,
             conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
             actionsField = viewBinding.fieldActionsSelector.root,
             saveButton = viewBinding.layoutTopBar.buttonSave,

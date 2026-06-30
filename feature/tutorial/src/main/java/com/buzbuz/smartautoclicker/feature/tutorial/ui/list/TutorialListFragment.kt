@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,9 +32,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
+import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
+import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
 import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialListBinding
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -45,16 +49,26 @@ class TutorialListFragment : Fragment() {
     /** ViewModel providing the state of the UI. */
     private val viewModel: TutorialListViewModel by viewModels()
     /** ViewBinding containing the views for this fragment. */
-    private lateinit var viewBinding: FragmentTutorialListBinding
+    private lateinit var viewBinding: IncludeLoadableListBinding
     /** Adapter for the list of tutorials. */
     private lateinit var adapter: TutorialListAdapter
 
     /** The result launcher for the projection permission dialog. */
     private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
+    /** Handles back navigation: browse up a category, or let the activity handle it when at the root. */
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (!viewModel.browseParent()) {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
+            }
+        }
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewBinding = FragmentTutorialListBinding.inflate(inflater, container, false)
+        viewBinding = IncludeLoadableListBinding.inflate(inflater, container, false)
 
         adapter = TutorialListAdapter(onItemClicked = ::onItemClicked)
         mediaProjectionRequest.registerForActivityResult(this)
@@ -67,9 +81,12 @@ class TutorialListFragment : Fragment() {
 
         viewBinding.list.adapter = adapter
 
+        requireActivity().onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, backPressedCallback)
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.items.collect(adapter::submitList)
+                launch { viewModel.uiState.collect(::updateUi) }
             }
         }
     }
@@ -79,19 +96,37 @@ class TutorialListFragment : Fragment() {
         viewModel.stopTutorial()
     }
 
-    private fun onItemClicked(tutorialId: String) {
-        val tutorialActivity : AppCompatActivity = activity as? AppCompatActivity ?: return
-        viewModel.startPermissionFlowIfNeeded(
-            activity = tutorialActivity,
-            onAllGranted = { showMediaProjectionWarning(tutorialId) },
-        )
+    private fun updateUi(uiState: TutorialCategoryUiState) {
+        when (uiState) {
+            TutorialCategoryUiState.Loading -> viewBinding.updateState(null)
+            is TutorialCategoryUiState.Loaded -> {
+                viewBinding.updateState(uiState.items)
+                adapter.submitList(uiState.items)
+            }
+        }
     }
 
-    private fun showMediaProjectionWarning(tutorialId: String) {
+    private fun onItemClicked(item: TutorialCategoryUiItems.Item) {
+        when (item) {
+            is TutorialCategoryUiItems.Item.Category -> {
+                viewModel.browseCategory(item)
+            }
+
+            is TutorialCategoryUiItems.Item.Tutorial -> {
+                val tutorialActivity : AppCompatActivity = activity as? AppCompatActivity ?: return
+                viewModel.startPermissionFlowIfNeeded(
+                    activity = tutorialActivity,
+                    onAllGranted = { showMediaProjectionWarning(item) },
+                )
+            }
+        }
+    }
+
+    private fun showMediaProjectionWarning(item: TutorialCategoryUiItems.Item.Tutorial) {
         mediaProjectionRequest.showMediaProjectionWarning(
             context = requireContext(),
             forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
-            onSuccess = { resultCode, data -> startTutorial(tutorialId, resultCode, data) },
+            onSuccess = { resultCode, data -> startTutorial(item, resultCode, data) },
             onFailure = { showProjectionDeniedToast() },
             onError = { showUnsupportedDeviceDialog() },
         )
@@ -105,8 +140,8 @@ class TutorialListFragment : Fragment() {
         requireContext().createNoMediaProjectionDialog { activity?.finish() }.show()
     }
 
-    private fun startTutorial(tutorialId: String, resultCode: Int, data: Intent) {
-        viewModel.startTutorial(tutorialId, resultCode, data)
+    private fun startTutorial(item: TutorialCategoryUiItems.Item.Tutorial, resultCode: Int, data: Intent) {
+        viewModel.startTutorial(item, resultCode, data)
         findNavController().navigate(TutorialListFragmentDirections.tutorialListToGame())
     }
 }

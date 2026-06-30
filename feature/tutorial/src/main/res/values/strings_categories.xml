@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Tutorials categories
+      - Tutorials are ordered in categories. Categories can be displayed in two ways:
+      -  * as a header, when browsing a category
+      -  * as a list item, when browsing a category containing other categories
+      -
+      - For each category, we can have the following keys:
+      -  * "tutorial_category_[categoryName]_name":
+      -      The display name of the category (mandatory)
+      -  * "tutorial_category_[categoryName]_desc_short":
+      -      The description when displayed as list item (all categories but Root)
+      -  * "tutorial_category_[categoryName]_desc_long":
+      -      The description when displayed as category header (mandatory)
+    -->
+
+    <!-- Root category is never displayed as an item, so no need for short description -->
+    <string name="tutorial_category_root_name">Tutorials</string>
+    <string name="tutorial_category_root_desc_long">Klick\'r automation is based on what is displayed on your screen,
+        which is pretty different from your time based regular autoclicker. Learn here how to use it.</string>
+
+    <string name="tutorial_category_basics_name">Scenario Basics</string>
+    <string name="tutorial_category_basics_desc_short">Learn how to use each Scenario elements.</string>
+    <string name="tutorial_category_basics_desc_long">A Scenario is the root element of your automation script. It
+        contains a list of ScreenEvents and a list of TriggerEvents list. An Event is a list of
+        ScreenConditions/TriggerConditions to fulfill in order to execute a list of Actions.</string>
+
+    <string name="tutorial_category_screen_condition_name">Screen Conditions</string>
+    <string name="tutorial_category_screen_condition_desc_short">Verify what\'s displayed on your screen.</string>
+    <string name="tutorial_category_screen_condition_desc_long"></string>
+
+    <string name="tutorial_category_color_condition_name">Color Conditions</string>
+    <string name="tutorial_category_color_condition_desc_short">Verify if a specific color is displayed</string>
+    <string name="tutorial_category_color_condition_desc_long"></string>
+
+    <string name="tutorial_category_image_condition_name">Image Conditions</string>
+    <string name="tutorial_category_image_condition_desc_short">Verify if a specific image is displayed</string>
+    <string name="tutorial_category_image_condition_desc_long"></string>
+
+    <string name="tutorial_category_number_condition_name">Number Conditions</string>
+    <string name="tutorial_category_number_condition_desc_short">Verify if a specific number is displayed</string>
+    <string name="tutorial_category_number_condition_desc_long"></string>
+
+    <string name="tutorial_category_text_condition_name">Text Conditions</string>
+    <string name="tutorial_category_text_condition_desc_short">Verify if a specific text is displayed</string>
+    <string name="tutorial_category_text_condition_desc_long"></string>
+
+    <string name="tutorial_category_trigger_condition_name">Trigger Conditions</string>
+    <string name="tutorial_category_trigger_condition_desc_short">Verify the state of the Scenario.</string>
+    <string name="tutorial_category_trigger_condition_desc_long"></string>
+
+    <string name="tutorial_category_action_name">Actions</string>
+    <string name="tutorial_category_action_desc_short">Execute something once your conditions are fulfilled</string>
+    <string name="tutorial_category_action_desc_long"></string>
+</resources>

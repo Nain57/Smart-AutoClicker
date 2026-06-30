@@ -25,6 +25,8 @@
     <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
 
+
+
     <!--
       - Tutorials definition
       - Each tutorial must contains the following strings:

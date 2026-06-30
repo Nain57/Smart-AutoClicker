@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 
@@ -47,6 +48,7 @@ internal class TutorialEngine @Inject constructor(
     private val overlayManager: OverlayManager,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val stepsOrchestrator: TutorialStepsOrchestrator,
+    private val tutorialCompletionStateDataSource: TutorialCompletionStateDataSource,
 ) {
 
     private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
@@ -130,9 +132,14 @@ internal class TutorialEngine @Inject constructor(
     private fun onTutorialCompleted() {
         Log.d(TAG, "onTutorialCompleted")
 
-        _tutorialState.update { old ->
-            if (old !is TutorialState.Started) old
-            else old.copy(isCompleted = true)
+        coroutineScopeIo.launch {
+            _tutorialState.update { old ->
+                if (old !is TutorialState.Started) old
+                else {
+                    tutorialCompletionStateDataSource.setTutorialCompleted(old.tutorial)
+                    old.copy(isCompleted = true)
+                }
+            }
         }
     }
 

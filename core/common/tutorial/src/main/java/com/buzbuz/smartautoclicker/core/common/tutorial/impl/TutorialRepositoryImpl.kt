@@ -28,12 +28,11 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialsProvider
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TipsStateDataSource
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.TutorialEngine
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -56,20 +55,17 @@ internal class TutorialRepositoryImpl @Inject constructor(
     private val displayConfigManager: DisplayConfigManager,
     private val accessibilityServiceConnection: LocalAccessibilityServiceConnection,
     private val smartRepository: IRepository,
-    private val tutorialsProvider: TutorialsProvider,
     private val tutorialEngine: TutorialEngine,
     private val tutorialTipsStateDataSource: TipsStateDataSource,
+    private val tutorialCompletionStateDataSource: TutorialCompletionStateDataSource,
 ) : TutorialRepository {
 
     private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     private val tutorialScenarioDbId: MutableStateFlow<Identifier?> = MutableStateFlow(null)
 
-    override val tutorialList: Flow<List<TutorialInfo>>
-        get() = tutorialsProvider.tutorialsInfo
-
     override val tutorialsCompletionState: Flow<Map<String, Boolean>>
-        get() = tutorialTipsStateDataSource.getTutorialsCompletionState()
+        get() = tutorialCompletionStateDataSource.getTutorialsCompletionState()
 
     override val tutorialSubjectController: StateFlow<TutorialSubjectController?>
         get() = tutorialEngine.tutorialSubjectController
@@ -77,9 +73,6 @@ internal class TutorialRepositoryImpl @Inject constructor(
     override val tutorialState: StateFlow<TutorialState>
         get() = tutorialEngine.tutorialState
 
-
-    override fun getTutorial(tutorialId: String): Tutorial? =
-        tutorialsProvider.getTutorial(tutorialId)
 
     override fun startTutorial(tutorial: Tutorial, mpResultCode: Int, mpData: Intent) {
         coroutineScope.launch {

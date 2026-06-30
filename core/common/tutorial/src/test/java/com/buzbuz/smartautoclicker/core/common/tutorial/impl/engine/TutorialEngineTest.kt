@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 
@@ -65,6 +66,7 @@ class TutorialEngineTest {
     @Mock private lateinit var mockMonitoredViewsManager: MonitoredViewsManager
     @Mock private lateinit var mockGameRules: TutorialGameRules
     @Mock private lateinit var mockOverlay: Overlay
+    @Mock private lateinit var mockTutorialCompletionStateDataSource: TutorialCompletionStateDataSource
 
     private val backStackTopFlow = MutableStateFlow<Overlay?>(null)
     private val isStackHiddenFlow = MutableStateFlow(false)
@@ -95,6 +97,7 @@ class TutorialEngineTest {
             overlayManager = mockOverlayManager,
             monitoredViewsManager = mockMonitoredViewsManager,
             stepsOrchestrator = orchestrator,
+            tutorialCompletionStateDataSource = mockTutorialCompletionStateDataSource,
         )
     }
 

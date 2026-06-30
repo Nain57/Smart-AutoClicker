@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityServiceConnection
@@ -26,13 +27,22 @@ import com.buzbuz.smartautoclicker.core.common.permissions.PermissionsController
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
-import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.GetTutorialCategoryUseCase
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,10 +52,18 @@ class TutorialListViewModel @Inject constructor(
     private val permissionsController: PermissionsController,
     private val settingsRepository: SettingsRepository,
     private val tutorialRepository: TutorialRepository,
+    private val getTutorialCategoryUseCase: GetTutorialCategoryUseCase,
 ) : ViewModel() {
 
-    val items: Flow<List<TutorialItem>> = tutorialRepository.tutorialList
-        .map { tutorials -> tutorials.map { tutorial -> tutorial.toItem() } }
+    private val categoryBackStack: MutableList<TutorialCategory.Type> = mutableListOf()
+
+    private val browsedCategoryType: MutableStateFlow<TutorialCategory.Type> =
+        MutableStateFlow(TutorialCategory.Type.ROOT)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<TutorialCategoryUiState> = browsedCategoryType
+        .flatMapLatest { browsedType -> getTutorialCategoryUseCase(browsedType) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), TutorialCategoryUiState.Loading)
 
 
     fun isEntireScreenCaptureForced(): Boolean =
@@ -66,18 +84,23 @@ class TutorialListViewModel @Inject constructor(
         )
     }
 
-    fun startTutorial(tutorialId: String, resultCode: Int, data: Intent) {
-        val tutorial = tutorialRepository.getTutorial(tutorialId) ?: return
-        tutorialRepository.startTutorial(tutorial, resultCode, data)
+    fun browseCategory(item: TutorialCategoryUiItems.Item.Category) {
+        categoryBackStack.add(browsedCategoryType.value)
+        browsedCategoryType.update { item.type }
+    }
+
+    fun browseParent(): Boolean {
+        if (browsedCategoryType.value == TutorialCategory.Type.ROOT) return false
+        val parentType = categoryBackStack.removeLastOrNull() ?: return false
+        browsedCategoryType.update { parentType }
+        return true
+    }
+
+    fun startTutorial(item: TutorialCategoryUiItems.Item.Tutorial, resultCode: Int, data: Intent) {
+        tutorialRepository.startTutorial(item.type.toTutorialItem().getTutorial(), resultCode, data)
     }
 
     fun stopTutorial() {
         tutorialRepository.stopTutorial()
     }
-    private fun TutorialInfo.toItem(): TutorialItem =
-        TutorialItem(
-            nameResId = nameResId,
-            descResId = descResId,
-            tutorialId = id,
-        )
 }

@@ -34,8 +34,6 @@ import kotlinx.coroutines.flow.StateFlow
  */
 interface TutorialRepository {
 
-    val tutorialList: Flow<List<TutorialInfo>>
-
     val tutorialsCompletionState: Flow<Map<String, Boolean>>
 
     val tutorialSubjectController: StateFlow<TutorialSubjectController?>
@@ -43,8 +41,6 @@ interface TutorialRepository {
     /** Current state of the tutorial engine. Emits [TutorialState.Stopped] when idle. */
     val tutorialState: StateFlow<TutorialState>
 
-
-    fun getTutorial(tutorialId: String): Tutorial?
 
     /**
      * Starts a new tutorial.

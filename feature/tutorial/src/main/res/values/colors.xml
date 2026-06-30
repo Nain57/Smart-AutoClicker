@@ -22,4 +22,6 @@
     <color name="tutorial_game_target_background_secondary">#4CAF50</color>
     <color name="tutorial_game_target_background_tertiary">#009688</color>
     <color name="tutorial_overlay_background">#BB000000</color>
+
+    <color name="tutorial_header_card_border">#000000</color>
 </resources>

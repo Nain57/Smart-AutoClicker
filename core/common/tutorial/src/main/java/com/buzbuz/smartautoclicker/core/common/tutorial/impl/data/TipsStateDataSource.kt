@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,34 +36,29 @@ import javax.inject.Singleton
 
 
 @Singleton
-internal class TipsStateDataSource @Inject constructor(
-    @ApplicationContext context: Context,
-    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
+internal class TipsStateDataSource(
+    private val dataStore: PreferencesDataStore,
 ) {
 
-    private companion object {
-        const val PREFERENCES_FILE_NAME = "TutorialPreferences"
-
-        const val PREFERENCES_KEY_SUFFIX_DONT_SHOW_AGAIN = "_dont_show_again"
-        fun Tip.getDontShowAgainKey(): Preferences.Key<Boolean> =
-            booleanPreferencesKey(name + PREFERENCES_KEY_SUFFIX_DONT_SHOW_AGAIN)
-
-        const val PREFERENCES_KEY_SUFFIX_TUTORIAL_COMPLETED = "_tutorial_completed"
-        fun Tutorial.getCompletionKey(): Preferences.Key<Boolean> =
-            booleanPreferencesKey(info.id + PREFERENCES_KEY_SUFFIX_TUTORIAL_COMPLETED)
-        fun Preferences.Key<*>.toTutorialId(): String? =
-            if (name.endsWith(PREFERENCES_KEY_SUFFIX_TUTORIAL_COMPLETED))
-                name.replace(PREFERENCES_KEY_SUFFIX_TUTORIAL_COMPLETED, "")
-            else null
-    }
-
-    private val dataStore: PreferencesDataStore =
+    @Inject constructor(
+        @ApplicationContext context: Context,
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
+    ) : this(
         PreferencesDataStore(
             context = context,
             dispatcher = ioDispatcher,
             fileName = PREFERENCES_FILE_NAME,
             migrations = listOf(LegacyPreferencesMigration(context)),
         )
+    )
+
+    companion object {
+        private const val PREFERENCES_FILE_NAME = "TutorialPreferences"
+
+        internal const val PREFERENCES_KEY_SUFFIX_DONT_SHOW_AGAIN = "_dont_show_again"
+        internal fun Tip.getDontShowAgainKey(): Preferences.Key<Boolean> =
+            booleanPreferencesKey(name + PREFERENCES_KEY_SUFFIX_DONT_SHOW_AGAIN)
+    }
 
     fun getTipsDontShowAgainValue(tips: Tip): Flow<Boolean> =
         dataStore.data.map { preferences ->
@@ -74,23 +68,6 @@ internal class TipsStateDataSource @Inject constructor(
     suspend fun setTipsDontShowAgain(tips: Tip) {
         dataStore.edit { preferences ->
             preferences[tips.getDontShowAgainKey()] = true
-        }
-    }
-
-    fun getTutorialsCompletionState(): Flow<Map<String, Boolean>> =
-        dataStore.data.map { preferences ->
-            buildMap {
-                preferences.asMap().keys.forEach { preferenceKey ->
-                    preferenceKey.toTutorialId()?.let { tutorialId ->
-                        put(tutorialId, (preferences[preferenceKey] == true))
-                    }
-                }
-            }
-        }
-
-    suspend fun setTutorialCompleted(tutorial: Tutorial) {
-        dataStore.edit { preferences ->
-            preferences[tutorial.getCompletionKey()] = true
         }
     }
 
@@ -121,4 +98,3 @@ internal class TipsStateDataSource @Inject constructor(
         }
     }
 }
-
