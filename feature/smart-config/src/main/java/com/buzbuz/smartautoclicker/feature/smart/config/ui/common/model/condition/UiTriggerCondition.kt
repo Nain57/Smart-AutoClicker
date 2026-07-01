@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation.*
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 
 data class UiTriggerCondition(
@@ -52,7 +53,7 @@ private fun TriggerCondition.getTriggerConditionDescription(context: Context): S
             R.string.item_counter_reached_details,
             counterName,
             getComparisonOperationDisplayName(context),
-            counterValue.value.toString(),
+            counterValue.toNaturalDisplayString(),
         )
 
         is TriggerCondition.OnTimerReached -> context.getString(

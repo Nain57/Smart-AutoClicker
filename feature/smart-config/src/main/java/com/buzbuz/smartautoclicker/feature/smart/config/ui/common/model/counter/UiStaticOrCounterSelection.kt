@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter
 
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 sealed class UiStaticOrCounterSelection {
     data class StaticValue(val value: Double): UiStaticOrCounterSelection()
@@ -31,6 +32,6 @@ enum class UiOperandType {
 fun UiStaticOrCounterSelection.toDisplayValue(): String =
     when (this) {
         is UiStaticOrCounterSelection.CounterValue -> counter?.counterName ?: "?"
-        is UiStaticOrCounterSelection.StaticValue -> value.toString()
+        is UiStaticOrCounterSelection.StaticValue -> value.toNaturalDisplayString()
     }
 

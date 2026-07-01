@@ -119,7 +119,12 @@ internal class SmartBackupDataSource(
         }
 
         if (!screenCompatWarning) {
-            screenCompatWarning = screenSize != Point(backup.screenWidth, backup.screenHeight)
+            screenCompatWarning = hasDifferentScreenSize(
+                currentWidth = screenSize.x,
+                currentHeight = screenSize.y,
+                backupWidth = backup.screenWidth,
+                backupHeight = backup.screenHeight,
+            )
         }
 
         Log.i(TAG, "Smart scenario is valid, has warnings: $screenCompatWarning")
@@ -158,3 +163,15 @@ internal class SmartBackupDataSource(
 
 /** Tag for logs. */
 private const val TAG = "SmartBackupEngine"
+
+internal fun hasDifferentScreenSize(
+    currentWidth: Int,
+    currentHeight: Int,
+    backupWidth: Int,
+    backupHeight: Int,
+): Boolean {
+    val sameOrientation = currentWidth == backupWidth && currentHeight == backupHeight
+    val rotatedOrientation = currentWidth == backupHeight && currentHeight == backupWidth
+
+    return !sameOrientation && !rotatedOrientation
+}

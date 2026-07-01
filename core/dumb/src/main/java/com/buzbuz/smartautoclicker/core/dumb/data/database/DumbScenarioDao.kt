@@ -118,7 +118,7 @@ interface DumbScenarioDao {
      *
      * @return the scenario stats.
      */
-    @Query("SELECT * FROM dumb_scenario_stats_table WHERE id=:scenarioId")
+    @Query("SELECT * FROM dumb_scenario_stats_table WHERE dumb_scenario_id=:scenarioId")
     suspend fun getScenarioStats(scenarioId: Long): DumbScenarioStatsEntity?
 
     /**

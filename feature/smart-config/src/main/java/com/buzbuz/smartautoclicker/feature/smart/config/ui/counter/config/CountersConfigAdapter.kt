@@ -28,9 +28,9 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListe
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCounterConfigBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 import com.google.android.material.textfield.TextInputLayout
-import java.util.Locale
 
 /**
  * Adapter for the list of counters in the configuration.
@@ -132,7 +132,7 @@ class CountersConfigViewHolder(
                 readByButton.visibility = View.VISIBLE
                 deleteButton.visibility = View.VISIBLE
 
-                val startingValueText = String.format(Locale.getDefault(), "%s", newItem.startingValue)
+                val startingValueText = newItem.startingValue.toNaturalDisplayString()
                 layoutStartingValue.setText(startingValueText, InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
             } else {
                 buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_down)

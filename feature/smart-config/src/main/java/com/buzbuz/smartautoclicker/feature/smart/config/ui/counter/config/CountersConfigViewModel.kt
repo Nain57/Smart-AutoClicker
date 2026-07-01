@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.G
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.model.CounterReference
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterWriteReferencesUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.ReplaceCounterUseCase
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -171,8 +172,10 @@ private fun Context.getDescription(referencesCount: Int, isExpanded: Boolean, st
         if (referencesCount == 0) getString(R.string.item_counter_desc_expanded_no_reference)
         else getString(R.string.item_counter_desc_expanded_referenced, referencesCount)
     } else {
-        if (referencesCount == 0) getString(R.string.item_counter_desc_collapsed_no_reference, startingValue)
-        else getString(R.string.item_counter_desc_collapsed_referenced, referencesCount, startingValue)
+        val startingValueText = startingValue.toNaturalDisplayString(maxFractionDigits = 2)
+
+        if (referencesCount == 0) getString(R.string.item_counter_desc_collapsed_no_reference, startingValueText)
+        else getString(R.string.item_counter_desc_collapsed_referenced, referencesCount, startingValueText)
     }
 
 private fun Context.getSetByButtonText(actionsCount: Int): String =

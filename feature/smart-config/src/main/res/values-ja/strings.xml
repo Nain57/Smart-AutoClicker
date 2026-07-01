@@ -293,8 +293,8 @@
     <string name="dialog_title_counters_config">カウンター</string>
     <string name="message_empty_counter_name_list_title">カウンターが未定義です</string>
     <string name="message_empty_counter_name_list_desc">カウンターには数値が格納され、アクションや条件式内でその値を変更、検証、または使用することができます</string>
-    <string name="item_counter_desc_collapsed_no_reference">このカウンターは未使用です。(%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">このカウンターは %1$d 回参照されています。(%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">このカウンターは未使用です。(%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">このカウンターは %1$d 回参照されています。(%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">このカウンターは未使用です。</string>
     <string name="item_counter_desc_expanded_referenced">このカウンターは %1$d 回参照されています。</string>
     <string name="field_label_counter_starting_value">初期値</string>
@@ -309,7 +309,7 @@
     <string name="field_new_counter_starting_value">初期値</string>
     <string name="field_counter_name_already_declared">このカウンター名はすでに存在します</string>
     <string name="field_counter_selection_title_empty">カウンターが選択されていません</string>
-    <string name="field_counter_selection_desc">初期値: %1$.2f</string>
+    <string name="field_counter_selection_desc">初期値: %1$s</string>
     <string name="field_counter_selection_desc_empty">ここをクリックしてカウンターを選択</string>
 
     <string name="dialog_title_copy_fix">問題を解決</string>

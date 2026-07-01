@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.databinding.ItemEventCardBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState.Item.ScenarioItem.Valid.Smart.EventItem
 
 import kotlinx.coroutines.Job
@@ -109,7 +110,7 @@ class EventCardViewHolder(
                     conditionText.visibility = View.VISIBLE
 
                     conditionText.text = condition.comparisonOperation
-                        .toEffectDescription(root.context, operand = condition.counterValue.value.toString())
+                        .toEffectDescription(root.context, operand = condition.counterValue.toNaturalDisplayString())
                 }
 
                 is ScreenCondition.Text -> {

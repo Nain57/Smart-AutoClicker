@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeStaticOrCounterSelectionBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
@@ -104,7 +105,7 @@ fun IncludeStaticOrCounterSelectionBinding.setValueInfo(uiState: UiStaticOrCount
             counterValueLayout.root.visibility = View.GONE
 
             staticValueLayout.setText(
-                uiState.value.toString(),
+                uiState.value.toNaturalDisplayString(),
                 InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
             )
         }

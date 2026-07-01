@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 
 @DrawableRes
@@ -36,5 +37,5 @@ internal fun ChangeCounter.getDescription(context: Context, inError: Boolean): S
             ChangeCounter.OperationType.MINUS -> "-"
             ChangeCounter.OperationType.SET -> "="
         },
-        operationValue.value.toString(),
+        operationValue.toNaturalDisplayString(),
     )

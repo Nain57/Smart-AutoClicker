@@ -450,8 +450,8 @@
     <string name="dialog_title_counters_config">Contadores</string>
     <string name="message_empty_counter_name_list_title">Nenhum contador definido</string>
     <string name="message_empty_counter_name_list_desc">Um contador armazena um valor numérico que pode ser alterado, verificado ou utilizado nas suas ações ou condições</string>
-    <string name="item_counter_desc_collapsed_no_reference">Este contador não está sendo usado. (%1$.2f)</string>
-    <string name="item_counter_desc_collapsed_referenced">Este contador é referenciado %1$d vezes. (%2$.2f)</string>
+    <string name="item_counter_desc_collapsed_no_reference">Este contador não está sendo usado. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">Este contador é referenciado %1$d vezes. (%2$s)</string>
     <string name="item_counter_desc_expanded_no_reference">Este contador não está sendo usado.</string>
     <string name="item_counter_desc_expanded_referenced">Este contador é referenciado %1$d vezes.</string>
     <string name="field_label_counter_starting_value">Valor inicial</string>
@@ -466,7 +466,7 @@
     <string name="field_new_counter_starting_value">Valor inicial</string>
     <string name="field_counter_name_already_declared">Este nome de contador já existe</string>
     <string name="field_counter_selection_title_empty">Nenhum contador selecionado</string>
-    <string name="field_counter_selection_desc">Valor inicial: %1$.2f</string>
+    <string name="field_counter_selection_desc">Valor inicial: %1$s</string>
     <string name="field_counter_selection_desc_empty">Toque aqui para selecionar um contador</string>
 
     <string name="dialog_title_copy_fix">Resolver problemas</string>

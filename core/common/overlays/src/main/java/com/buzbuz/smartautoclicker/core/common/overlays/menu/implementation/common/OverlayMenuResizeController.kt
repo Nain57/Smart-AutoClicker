@@ -136,16 +136,25 @@ internal class OverlayMenuResizeController(
         val width = if (firstChild == null || firstChild.id == resizedContainer.id) {
             resizedContainer.width
         } else {
-            firstChild.children.fold(0) { acc, child ->
-                acc + (
-                    if (child.isGone) 0
-                    else child.width + child.marginStart + child.marginEnd
-                )
-            }
+            firstChild.visibleHorizontalContentSpan()
         }
 
         return Size(width, height)
     }
+}
+
+private fun ViewGroup.visibleHorizontalContentSpan(): Int {
+    var leftBound = Int.MAX_VALUE
+    var rightBound = Int.MIN_VALUE
+
+    children
+        .filterNot { it.isGone }
+        .forEach { child ->
+            leftBound = minOf(leftBound, child.left - child.marginStart)
+            rightBound = maxOf(rightBound, child.right + child.marginEnd)
+        }
+
+    return if (leftBound == Int.MAX_VALUE) 0 else rightBound - leftBound
 }
 
 private data class OverlayTransition(
