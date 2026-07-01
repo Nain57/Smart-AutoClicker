@@ -103,7 +103,7 @@ interface ScenarioDao {
      *
      * @return the scenario stats.
      */
-    @Query("SELECT * FROM $SCENARIO_USAGE_TABLE WHERE id=:scenarioId")
+    @Query("SELECT * FROM $SCENARIO_USAGE_TABLE WHERE scenario_id=:scenarioId")
     suspend fun getScenarioStats(scenarioId: Long): ScenarioStatsEntity?
 
     /**
