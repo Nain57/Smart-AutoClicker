@@ -41,6 +41,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -135,7 +136,9 @@ internal class TutorialRepositoryImpl @Inject constructor(
 
     override fun shouldShowTip(tip: Tip): Flow<Boolean> =
         tutorialTipsStateDataSource.getTipsDontShowAgainValue(tip)
-            .map { dontShowAgain -> !dontShowAgain }
+            .combine(tutorialState) { dontShowAgain, state ->
+                !dontShowAgain && state is TutorialState.Stopped
+            }
 
     override fun dontShowTipAgain(tip: Tip) {
         coroutineScope.launch {
