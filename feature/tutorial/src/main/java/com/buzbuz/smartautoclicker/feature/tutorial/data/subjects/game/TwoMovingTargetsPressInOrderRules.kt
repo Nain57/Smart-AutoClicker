@@ -38,6 +38,7 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         score
 
     override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+        score = 0
         targetsArea = RectF(
             area.left.toFloat() + TARGET_MARGIN,
             area.top.toFloat() + TARGET_MARGIN,

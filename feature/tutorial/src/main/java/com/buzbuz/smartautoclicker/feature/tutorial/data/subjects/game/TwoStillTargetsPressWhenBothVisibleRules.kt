@@ -31,6 +31,7 @@ internal class TwoStillTargetsPressWhenBothVisibleRules : TutorialGameRules {
         score
 
     override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+        score = 0
         redTargetPosition = PointF(area.width() - (targetSize * 1.5f), (area.height() - targetSize) / 2f)
 
         return toggleRedVisibility(

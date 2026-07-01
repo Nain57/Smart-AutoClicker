@@ -27,10 +27,12 @@ internal class OneStillTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect, targetSize: Int) =
-        mapOf(
+    override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+        score = 0
+        return mapOf(
             TutorialGameTargetType.BLUE to PointF((area.width() - targetSize) / 2f, (area.height() - targetSize) / 2f),
         )
+    }
 
     override fun onValidTargetHit(
         current: Map<TutorialGameTargetType, PointF>,
