@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_screen_condition_moving_target">動いているターゲットを押す</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">ランダムに動くターゲットをクリックするようにイベントを変更します</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">動く青いボタンをできるだけ早くクリックしてください</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">ゲームをもう少し複雑にしてみましょう。さて、ターゲットはランダムです\n        動いている。\n\nまずはゲームを開始して自分で勝てるか確認してみましょう。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">やはり手動で勝つのは無理そうなのでスマートを使いましょう\n        オートクリッカー。\n\n前のチュートリアルのシナリオは保持され、このチュートリアルでも読み込まれますが、\n        この新しいゲームに勝つには、いくつかのパラメータを変更する必要があります。\n\nシナリオ設定アイコンをクリックして、\n        新しいシナリオの更新を開始します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">まだ青い文字をクリックしたいのですが、これはまだ単に\n        1 つの条件と 1 つのアクションが必要なので、イベントは 1 つだけです。\n\n使用例は前作とほぼ同じなので、\n        イベントを保持し、単に更新するだけです。\n\n以前に作成したイベントをクリックして編集します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">初めて、青色を検出する条件を更新します。\n        キャラクター。\n\n「条件」フィールドをクリックして「条件」リストを表示します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">前のチュートリアルと同様に、青い文字を検出する必要がありますが、ここでは\n        それは動いています。\n\n前の条件ではすでに青い文字が検出されていますが、検出されているのは 1 つの位置だけです。それであなたは\n        以前の条件にはすでにスクリーンショットが含まれているため、新しいスクリーンショットを撮る必要はありません。変更するだけで済みます。\n        パラメータ。\n\n条件をクリックして編集を開始します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_7">現在、条件検出タイプは「正確」に設定されています。\n        キャプチャ位置でのみ検証されます。\n\nこのゲームに勝つには、同じ条件を検証する必要がありますが、\n        画面全体。\n\n「画面全体」タイプを選択すると、画面上の任意の場所にある青い文字が検出されます。\n        画面。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">画面全体で検出すると、正確な検出よりも時間がかかります。\n        シナリオの実行タイミングが重要な場合は、その点に留意してください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_8">それでおしまい！\n検出タイプを変更するだけで済みました。\n        私たちのニーズに合ったあなたの条件を。\n\n保存ボタンをクリックすると登録され、条件一覧に戻ります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_9">条件リストを閉じて、イベント設定に戻ります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_10">状態画像が更新されました。\n\nこの状態では、シナリオは次のようになります。\n        画面上のどこかに青い文字が表示されるたびにクリックが実行されますが、このクリックは\n        前のチュートリアルで選択したものと同じ位置です。したがって、アクションを更新する必要があります。\n\n\n        「アクション」フィールドをクリックして「アクション」リストを表示します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_11">シングルクリックを実行したいのですが、今回は\n        固定された位置ではなく、条件に基づいて。\n\nこれはまだワンクリックなので、必要なアクションは 1 つだけです。\n        前回のクリックを編集してみましょう。\n\nアクションをクリックして編集を開始します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_12">現在、クリック アクション「クリック」は「選択した位置」に設定されています。\n        つまり、クリックされる位置を手動で設定する必要があります。もう 1 つの選択肢は「条件」です。これは、アクションが条件をクリックすることを意味します。\n        検出された条件座標。\n\nまさにそれがゲームに勝つために必要なことだ。青い文字が出るたびに\n        が検出されると、このアクションはそれをクリックします。\n\nアクションで使用するにはそれを選択します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_13">[条件セレクター] オプションをクリックして、検出された条件を選択します\n        をクリックしてください。\nイベントには複数の条件を含めることができるため、これを指定する必要があります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_14">私たちのユースケースの場合、それは簡単です。条件は 1 つだけ、青い文字だけです。\n\n\n        画面上でこの条件が検出された場合は、それを選択してクリックします。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_15">それでおしまい！\nこれで、クリック アクションが正しく設定され、\n        ゲーム。\n\n保存ボタンをクリックして登録し、アクションリストに戻ります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_16">[アクション] リストを閉じて、イベント設定に戻ります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_17">条件とアクションを更新しました。他に行うことはありません。\n        する。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_18">最後にもう一度保存して、新しい変更をデータベースに登録し、\n        設定ダイアログ。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">これで、シナリオはこの新しいチュートリアルを超えるように構成されました。\n\nを開始します。\n        フローティングメニューのプレイボタンで検出し、ゲームを開始します。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">おめでとう！\n\n静止しているシングルまたは動いているシングルを追跡する方法がわかりました。\n        目標は達成しましたが、学ぶべきことはまだたくさんあります。</string>
+</resources>

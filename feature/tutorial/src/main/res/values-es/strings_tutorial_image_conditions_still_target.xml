@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">Presionar un objetivo fijo</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">Aprende cómo crear tu primer evento para hacer clic en un objetivo fijo</string>
+    <string name="message_game_tutorial_screen_condition_still_target">Haz clic en el botón azul lo más rápido posible</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">¡Bienvenido a tu primer tutorial!\n\nAquí, intentarás superar la puntuación más alta
+        de un juego con la ayuda de Smart AutoClicker.\n\nPrimero, inicia el juego y trata de ganar por ti mismo.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">¿Difícil, verdad?\n¡Vamos a usar Smart AutoClicker para superarlo!\n\n
+        Haz clic en el icono de configuración del escenario para comenzar a editar tu nuevo escenario.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">Un escenario es la estructura principal de la automatización de Smart AutoClicker.\n\n
+        Contiene la configuración general de detección y una lista de eventos que describen lo que se ejecutará al ejecutar
+        tu escenario. \n\nHaz clic en el botón de crear evento para crear tu primer evento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">Un evento describe qué acciones (clic, deslizamiento…) ejecutar cuando se cumplen
+        ciertas condiciones.\n\nDebes crear al menos una condición y una acción para crear un evento válido y usarlo en tu escenario.\n\n
+        Haz clic en la pestaña de Condiciones para mostrar la lista de condiciones.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">Una condición es una parte de una captura de pantalla que se comparará con cada fotograma
+        de la pantalla de tu dispositivo.\n\nPara ganar el juego, queremos hacer clic en el personaje azul cuando esté visible, por lo
+        que necesitamos una condición que se cumpla cuando el personaje se muestre en la pantalla de tu dispositivo.\n\nHaz clic en el
+        botón de crear condición para crear tu primera condición.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">El primer paso para crear una condición es tomar una captura de pantalla para ella.\n\n
+        Como queremos hacer clic cuando el personaje azul esté visible, la captura de pantalla debe contenerlo. Inicia el juego de nuevo
+        para mostrarlo y luego toma la captura de pantalla.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">Utiliza el botón de captura en el menú flotante para tomar la captura de pantalla.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">Una vez que se ha tomado la captura de pantalla, puedes recortarla para obtener solo la parte
+        que es interesante para la detección.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">Si tu captura de pantalla no contiene al personaje azul, puedes presionar este botón
+        para tomar una nueva.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">Para este juego, la parte interesante es el personaje azul, así que recorta tu captura de pantalla
+        para obtener solo eso.\n\nPuedes hacer zoom en la captura de pantalla para obtener una mejor precisión en el selector de recorte.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">Asegúrate de que el personaje esté completo en el selector y trata de recortarlo lo más cerca posible
+        para facilitar la detección de la imagen.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">¡Tu imagen de condición está registrada ahora!\n\nHay varios ajustes que se pueden hacer,
+        pero la configuración predeterminada se adapta a nuestro caso de uso básico. Como nuestro objetivo no se mueve, solo se detectará en
+        la posición de captura, que es más rápido que detectar en toda la pantalla.\n\nHaz clic en el botón de guardar para registrarlo
+        y volver al diálogo de configuración del evento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">Con esta condición, el escenario sabe cuándo desencadenar las acciones.\n\n
+        Ahora debes definir qué acciones desencadenar, así que para este juego, un clic en el personaje azul.\n\nHaz clic en la pestaña
+        de Acciones para mostrar la lista de acciones.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">Una acción es algo que se ejecuta una vez que se cumplen las condiciones de su evento.\n\n
+        Puede ser un clic, un deslizamiento, una pausa, un Intent (una interacción con otra aplicación) o un cambio en la ejecución del
+        escenario, y se pueden definir múltiples acciones para el mismo evento.\n\nHaz clic en el botón de crear acción para crear tu
+        primera acción.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">En primer lugar, debemos elegir un tipo para tu acción.\n\nPara este juego, simplemente
+        necesitamos hacer clic en el personaje azul, así que elige "Clic" para crear una nueva acción de clic.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">Una acción de clic está definida por una posición y una duración de presión.\n\n
+        Como queremos hacer clic lo más rápido posible, podemos mantener la duración predeterminada de presión de 1 ms, que es el valor más
+        bajo posible. Así que solo necesitamos definir una posición.\n\nHaz clic en el botón de selección de posición para seleccionar
+        la posición de clic.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">Necesitas seleccionar la posición exacta en la que se hará clic, así que debes iniciar
+        el juego de nuevo para mostrar el personaje azul y luego seleccionar su posición.\n\nUna vez que la posición sea correcta,
+        haz clic en el botón de validar para guardarla.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">¡El clic está configurado correctamente ahora!\n\nHaz clic en el botón de guardar para registrarlo
+        y volver al diálogo de configuración del evento.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">No puedes interactuar con el juego mientras el selector de posición esté
+        visible, pero puede usar este botón para mostrarlo y ocultarlo, lo que le permitirá eliminar esa restricción a voluntad.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">Tu evento ahora tiene una condición y una acción, lo que significa que sabe qué ejecutar
+        y cuándo ejecutarlo.\n\nHaz clic en el botón de guardar para registrarlo y volver al diálogo del escenario.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">El único requisito para un escenario es tener al menos un evento.\n
+        Como nuestro evento ya cubre cómo ganar el juego, no necesitamos nada más.\n\nHaz clic en el botón de guardar para guardar el
+        escenario en la base de datos y cerrar los diálogos de configuración.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">Como puedes ver, el botón de reproducción ahora está disponible, lo que significa que
+        tu escenario es válido y se puede usar para la detección\n\nHaz clic en él para iniciar la detección.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">¡Está jugando pero no pasa nada?\n\n¡Eso es normal, solo hará clic cuando el personaje azul esté
+        visible, ¿recuerdas? Mientras mantienes el escenario en ejecución, presiona el botón de iniciar juego y observa cómo Smart AutoClicker lo
+        hará por ti!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">¡Felicidades!\n\nAhora conoces lo básico de Smart AutoClicker, pero no todos los casos de uso
+        serán tan simples como este juego.\nEcha un vistazo al siguiente tutorial para aprender cómo rastrear un objetivo en movimiento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">¿Se está reproduciendo pero no pasa nada?\n\nEso es normal, solo hará clic
+        cuando el carácter azul sea visible, ¿recuerdas? Mientras mantienes el escenario en marcha, presiona el botón de iniciar juego.
+        ¡Y simplemente mira cómo Klick\'r lo supera por ti!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">¡Felicitaciones!\n\nAhora conoces los conceptos básicos de Klick\'r, pero no
+        Todos los casos de uso serán tan simples como este juego.\nEcha un vistazo al siguiente tutorial para aprender cómo rastrear un movimiento.
+        objetivo</string>
+</resources>

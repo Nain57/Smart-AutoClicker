@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_screen_condition_not_visible_target">Combinez plusieurs conditions</string>
+    <string name="item_desc_tutorial_screen_condition_not_visible_target">Créez et combinez plusieurs conditions pour votre événement</string>
+    <string name="message_game_tutorial_screen_condition_not_visible_target">Cliquez sur le bouton bleu uniquement lorsque le bouton rouge est visible</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_1">Changeons à nouveau les règles du jeu. La cible bleue a cessé de bouger, mais elle ne doit être cliquée
+        que lorsque la cible rouge est visible.\n\nTout d\'abord, lancez le jeu et vérifiez si vous pouvez gagner par vous-même.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_3">Encore une fois, il semble impossible de gagner manuellement, alors utilisons Smart
+        AutoClicker.\n\nVotre scénario du tutoriel précédent a été conservé et chargé pour ce tutoriel, mais nous devrons
+        changer quelques paramètres pour gagner ce nouveau jeu.\n\nCliquez sur l\'icône de configuration du scénario pour
+        commencer à mettre à jour votre nouveau scénario.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_4">Nous voulons toujours cliquer sur la cible bleue, mais seulement lorsque la cible rouge est visible.\n
+        Nous devons donc ajouter une condition pour cette cible rouge dans notre Événement.\n\nCliquez sur l\'Événement que vous avez
+        précédemment créé pour le modifier.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_5">Nous allons combiner plusieurs conditions, nous devons donc vérifier l\'opérateur de Condition
+        pour cet événement.\n\nL\'opérateur de Condition indique comment plusieurs conditions seront interprétées ensemble.\n
+        \'Un\' signifie qu\'une seule des conditions de cet Événement doit être remplie pour exécuter les actions.\n\n
+        \'Toutes\' signifie que toutes les conditions de cet Événement doivent être remplies pour exécuter les actions.\n\n
+        Comme nous voulons détecter si deux choses sont affichées ensemble, nous utiliserons \'Toutes\'.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_6">Maintenant, nous devons mettre à jour nos Conditions.\n\nCliquez sur le champ "Conditions" pour afficher
+        la liste des Conditions.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_7">La Condition précédente de détection de la cible bleue est toujours correcte, mais nous avons besoin
+        d\'une nouvelle pour la cible rouge.\n\nCliquez sur le bouton de création de Condition pour créer une nouvelle Condition pour celle-ci.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_8">Tout comme pour la cible bleue, commencez le jeu afin de montrer la cible rouge. Une fois qu\'elle est visible,
+        prenez une capture d\'écran !</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_8">Utilisez le bouton de capture dans le menu flottant pour prendre la capture d\'écran.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_9">Votre capture d\'écran contient-elle la cible rouge ? Vous pouvez la recadrer pour obtenir uniquement la
+        partie intéressante pour la détection, la cible rouge.</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_9">Si votre capture d\'écran ne contient pas la cible rouge, vous pouvez appuyer sur ce bouton pour en prendre une nouvelle.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_10">Votre image de Condition est maintenant enregistrée ! Comme la cible rouge ne bouge pas, nous pouvons
+        conserver la configuration par défaut.\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la liste des Conditions.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_11">Fermez la liste des Conditions pour revenir à la configuration de l\'Événement</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_12">Nous avons maintenant deux Conditions, une pour chaque cible, et les Actions ne seront exécutées que si les
+        deux sont détectées.\n\nCliquez sur le champ "Actions" pour afficher la liste des Actions pour notre Événement.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_13">L\'action est déjà configurée pour cliquer sur le personnage bleu, et elle ne sera exécutée que lorsque les personnages bleu et rouge sont visibles ensemble.\n\nC\'est exactement le comportement dont nous avons besoin pour battre le
+        jeu, donc pas besoin de modifier notre Action de clic.\n\nFermez la liste des Actions pour revenir à la configuration de l\'Événement.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_14">Cliquez sur le bouton "Enregistrer" pour revenir à la configuration du Scénario.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_15">Toutes les modifications doivent être enregistrées dans votre scénario pour être enregistrées.\n\nCliquez
+        sur le bouton "Enregistrer" pour enregistrer vos modifications.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_16">Nous sommes prêts à gagner ce jeu !\n\nCliquez sur le bouton de démarrage pour lancer la
+        détection, puis démarrez le jeu.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_17">Félicitations !\n\nVous savez désormais comment combiner plusieurs conditions pour un Événement, mais il y a encore beaucoup à apprendre !</string>
+</resources>

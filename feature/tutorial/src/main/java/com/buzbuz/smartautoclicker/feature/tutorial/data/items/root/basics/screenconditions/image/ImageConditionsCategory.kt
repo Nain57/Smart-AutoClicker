@@ -30,8 +30,6 @@ internal fun getImageConditionsCategory() =
         content = listOf(
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_STILL_TARGET),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_MOVING_TARGET),
-            TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_TWO_MOVING_TARGETS_PRESS_IN_ORDER),
-            TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_ONE),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH),
         ),
     )

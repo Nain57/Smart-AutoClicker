@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_screen_condition_moving_target">Appuyez sur une cible mobile</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">Modifiez votre événement pour cliquer sur une cible en mouvement aléatoire</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">Cliquez sur le bouton bleu en mouvement le plus rapidement possible</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">Commençons par compliquer un peu le jeu. Maintenant, la cible se déplace
+        aléatoirement.\n\nD\'abord, lancez le jeu et vérifiez si vous pouvez gagner par vous-même.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">Encore une fois, il semble impossible de gagner manuellement, alors utilisons Smart
+        AutoClicker.\n\nVotre scénario du tutoriel précédent a été conservé et chargé pour ce tutoriel, mais nous devrons
+        changer quelques paramètres pour gagner ce nouveau jeu.\n\nCliquez sur l\'icône de configuration du scénario pour
+        commencer à mettre à jour votre nouveau scénario.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">Nous voulons toujours cliquer sur le personnage bleu, ce qui signifie que nous avons
+        toujours besoin d\'une seule Condition et d\'une seule Action, donc un seul Événement.\n\nComme le cas d\'utilisation est
+        assez similaire au jeu précédent, nous allons conserver notre Événement et simplement le mettre à jour.\n\nCliquez sur
+        l\'Événement que vous avez précédemment créé pour le modifier.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Dans un premier temps, nous allons mettre à jour la Condition qui détecte le personnage bleu.\n\n
+        Cliquez sur le champ "Conditions" pour afficher la liste des Conditions.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">Comme dans le tutoriel précédent, nous devons détecter le personnage bleu, mais maintenant,
+        il se déplace.\n\nNotre Condition précédente détecte déjà le personnage bleu, mais seulement à une position. Vous n\'avez donc
+        pas besoin de prendre une nouvelle capture d\'écran, car votre Condition précédente la contient déjà, nous devons simplement
+        changer ses paramètres.\n\nCliquez sur votre Condition pour commencer à la modifier.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">Actuellement, le type de détection de la Condition est réglé sur "Exact", ce qui signifie qu\'il
+        ne sera vérifié qu\'à sa position de capture.\n\nPour gagner ce jeu, nous devons vérifier la même Condition, mais sur l\'ensemble de
+        l\'écran.\n\nSélectionnez le type "Tout l\'écran" pour détecter le personnage bleu n\'importe où à l\'écran.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">La détection sur l\'ensemble de l\'écran prend plus de temps que la position exacte, gardez
+        cela à l\'esprit lorsque le timing de l\'exécution de votre scénario est important.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">C\'est tout !\nNous n\'avions besoin que de changer le type de détection pour que votre Condition
+        corresponde à nos besoins.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la liste des Conditions.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">Fermez la liste des Conditions pour revenir à la configuration de l\'Événement</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">Votre image de Condition est désormais mise à jour !\n\nÀ ce stade, le scénario exécutera
+        désormais un clic chaque fois que le personnage bleu sera visible n\'importe où à l\'écran, mais ce clic sera à la même position, celle
+        sélectionnée lors du tutoriel précédent. Nous devons donc mettre à jour notre Action.\n\nCliquez sur le champ "Actions" pour afficher la liste des Actions.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">Nous voulons toujours exécuter un simple clic, mais cette fois, nous voulons cliquer sur la Condition
+        et non sur une position fixe.\n\nComme il s\'agit toujours d\'un clic, nous n\'avons toujours besoin que d\'une seule Action, alors
+        modifions votre clic précédent.\n\nCliquez sur votre Action pour commencer à la modifier.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">Actuellement, l\'Action de clic "Clic sur" est réglée sur "Position sélectionnée", ce qui signifie
+        que vous devez définir manuellement la position à cliquer. L\'autre choix est "Condition", ce qui signifie que l\'Action cliquera sur les coordonnées de la Condition
+        détectée.\n\nC\'est exactement ce dont nous avons besoin pour battre le jeu. Chaque fois que le personnage bleu sera détecté, cette
+        Action cliquera dessus.\n\nSélectionnez-le pour l\'utiliser dans votre Action.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">Cliquez sur l\'option de sélection de la Condition pour choisir quelle Condition détectée cliquer.
+        Nous devons le spécifier car nous pouvons avoir plusieures Conditions dans notre Événement.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">Pour notre cas d\'utilisation, c\'est facile, nous n\'avons qu\'une seule condition, le personnage bleu.\n\n
+        Sélectionnez-la pour cliquer sur cette Condition lorsqu\'elle est détectée sur votre écran.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">C\'est tout !\nVotre Action de clic est désormais correctement configurée pour battre le
+        jeu.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la liste des Actions.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">Fermez la liste des Actions pour revenir à la configuration de l\'Événement</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">Vous avez mis à jour la Condition et votre Action, il n\'y a rien d\'autre à faire.\n\nCliquez sur
+        le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue du Scénario.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">Un dernier enregistrement pour enregistrer vos nouvelles modifications dans la base de données et fermer les boîtes de dialogue de configuration.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">Votre scénario est maintenant configuré pour battre ce nouveau tutoriel.\n\nLancez la détection
+        avec le bouton de lecture du menu flottant, puis lancez le jeu.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Félicitations !\n\nVous savez maintenant comment suivre une cible unique, qu\'elle soit immobile ou en mouvement, mais il y a encore beaucoup à apprendre !</string>
+</resources>

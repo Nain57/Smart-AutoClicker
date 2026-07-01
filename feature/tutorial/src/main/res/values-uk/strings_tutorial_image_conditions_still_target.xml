@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">Натискання на нерухому ціль</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">Навчіться створювати вашу першу подію для натискання на нерухому ціль</string>
+    <string name="message_game_tutorial_screen_condition_still_target">Клікніть на синю кнопку якомога швидше</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">Ласкаво просимо до вашого першого навчання!\n\nТут ви спробуєте побити рекорд
+        гри за допомогою Klick\'r.\n\nСпочатку запустіть гру і спробуйте виграти самостійно.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">Складно, чи не так?\nДавайте використаємо Klick\'r, щоб побити його!\n\n
+        Клікніть на іконку налаштування сценарію, щоб почати редагування вашого нового сценарію.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">Сценарій є кореневою структурою автоматизації Klick\'r.           Він містить загальні налаштування виявлення та список подій, що описують, що буде виконано при запуску         вашого сценарію.  Клікніть на кнопку створення події, щоб створити вашу першу подію.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">Подія описує, які дії (клік, свайп…) виконувати, коли певні
+        умови виконані.\n\nВи повинні створити принаймні одну умову та одну дію, щоб створити дійсну подію
+        та використовувати її у вашому сценарії\n\nКлікніть на поле умов, щоб відобразити список умов.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">Умова це частина знімка екрана, яка буде порівнюватися з кожним кадром екрана         вашого пристрою.  Щоб побити гру, ми хочемо клікнути на синього персонажа, коли він видимий, тому нам потрібна         умова, яка виконується, коли персонаж показаний на екрані вашого пристрою.  Клікніть на кнопку створення         умови, щоб створити вашу першу умову.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">Перший крок створення умови - зробити знімок екрана для неї.\n\n
+        Оскільки ви хочемо клікнути, коли синій персонаж видимий, знімок екрана повинен містити його. Запустіть гру знову,
+        щоб відобразити його, а потім зробіть знімок екрана.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">Використовуйте кнопку захоплення в плаваючому меню, щоб зробити знімок екрана.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">Після того, як знімок екрана зроблено, ви можете обрізати його, щоб отримати лише частину,
+        яка цікава для виявлення.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">Якщо ваш знімок екрана не містить синього персонажа, ви можете
+        натиснути цю кнопку, щоб зробити новий.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">Для цієї гри цікавою частиною є синій персонаж, тому обріжте ваш
+        знімок екрана, щоб отримати лише його.\n\nВи можете розтягнути знімок екрана, щоб збільшити його і отримати кращу точність для
+        селектора обрізки.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">Переконайтеся, що персонаж повністю в селекторі. Також спробуйте
+        обрізати його якомога ближче до нього, щоб полегшити виявлення зображення.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">Зображення вашої умови тепер записано!\n\nТепер є кілька налаштувань,
+        які можна зробити для неї, але стандартні налаштування підходять для нашого базового випадку використання. Оскільки наша ціль не рухається, вона буде
+        виявлятися лише в позиції захоплення, що швидше, ніж виявлення на всьому екрані.\n\nКлікніть на кнопку збереження,
+        щоб зареєструвати її та повернутися до списку умов.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">Закрийте список умов, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">З цією умовою сценарій знає, коли запускати дії.\n\n
+        Тепер вам потрібно визначити, які дії запускати, тому для цієї гри - клік на синього персонажа.\n\nКлікніть на
+        поле дій, щоб відобразити список дій.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">Дія - це те, що виконується, коли умови її події
+        виконані.\n\nЦе може бути клік, свайп, пауза, Intent (взаємодія з іншою програмою) або
+        зміна в виконанні сценарію, і кілька дій може бути визначено для однієї події.\n\nКлікніть на кнопку створення
+        дії, щоб створити вашу першу дію.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">Спочатку нам потрібно вибрати тип для вашої дії.\n\nДля цієї гри нам просто
+        потрібно клікнути на синього персонажа, тому виберіть клік, щоб створити нову дію кліку.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">Дія кліку визначається позицією та тривалістю натискання.\n\nОскільки ми
+        хочемо клікнути якомога швидше, ми можемо зберегти стандартну тривалість натискання 1мс, яка є найнижчою
+        можливою величиною. Тому нам потрібно лише визначити позицію.\n\nКлікніть на кнопку вибору позиції, щоб вибрати позицію
+        дії кліку.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">Вам потрібно вибрати точну позицію для кліку, тому вам потрібно запустати
+        гру знову, щоб відобразити синього персонажа, а потім вибрати його позицію.\n\nКоли позиція правильна,
+        клікніть на кнопку підтвердження, щоб зберегти її.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">Ви не можете взаємодіяти з грою, поки селектор позиції
+        видимий, але ви можете використовувати цю кнопку, щоб показати та приховати його, дозволяючи вам усунути це обмеження за бажанням.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">Клік тепер правильно налаштований!\n\nКлікніть на кнопку збереження, щоб
+        зареєструвати його та повернутися до списку дій.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">Закрийте список дій, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">Ваша подія тепер має умову та дію, що означає, що вона знає, що
+        виконувати та коли це виконувати.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу сценарію.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">Єдина вимога для сценарію - мати принаймні одну подію.\n
+        Оскільки наша подія вже охоплює, як виграти гру, нам більше нічого не потрібно.\n\nКлікніть на кнопку збереження, щоб
+        зберегти сценарій в базі даних та закрити діалоги налаштування.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
+        сценарій дійсний і може використовуватися для виявлення\n\nКлікніть на неї, щоб почати виявлення.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">Воно працює, але нічого не відбувається?\n\nЦе нормально, воно буде клікати лише
+        коли синій персонаж видимий, пам\'ятаєте? Залишаючи сценарій запущеним, натисніть кнопку початку гри
+        і просто спостерігайте, як Klick\'r переможе її для вас!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">Вітаємо!\n\nТепер ви знаєте основи Klick\'r, але не
+        всі випадки використання будуть такими простими, як ця гра.\nПодивіться на наступне навчання, щоб дізнатися, як відстежувати рухому
+        ціль</string>
+</resources>

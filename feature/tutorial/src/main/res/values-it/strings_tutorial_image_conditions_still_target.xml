@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">Clicca su un bersaglio fermo</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">Impara come creare il tuo primo evento per cliccare su un bersaglio fermo</string>
+    <string name="message_game_tutorial_screen_condition_still_target">Clicca sul pulsante blu il più velocemente possibile</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">Benvenuto al tuo primo tutorial!\n\nQui proverai a battere il punteggio più alto di un gioco
+    con l\'aiuto di Klick\'r.\n\nInizia prima il gioco e cerca di vincere da solo.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">Difficile, vero?\nUtilizziamo Klick\'r per batterlo!\n\nClicca sull\'icona di configurazione
+    dello scenario per iniziare a modificare il tuo nuovo scenario.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">Uno Scenario è la struttura principale dell\'automazione di Klick\'r.\n\n
+    Contiene le impostazioni generali di rilevamento e un elenco di Eventi che descrivono cosa verrà eseguito quando si esegue il tuo
+    Scenario.\n\nClicca sul pulsante crea evento per creare il tuo primo evento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">Un Evento descrive quali Azioni (clic, swipe…) eseguire quando vengono soddisfatte determinate
+    Condizioni.\n\nDevi creare almeno una Condizione e un\'Azione per creare un Evento valido e usarlo nel tuo scenario.\n\nFare clic sul
+    campo Condizioni per visualizzare l\'elenco delle Condizioni.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">Una Condizione è una parte di uno screenshot che verrà confrontata con ogni fotogramma dello schermo
+    del tuo dispositivo.\n\nPer battere il gioco, vogliamo cliccare sul personaggio blu quando è visibile, quindi abbiamo bisogno di una
+    Condizione che sia soddisfatta quando il personaggio è mostrato sullo schermo del tuo dispositivo.\n\nClicca sul pulsante crea
+    Condizione per creare la tua prima Condizione.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">Il primo passo per la creazione di una Condizione è catturare uno screenshot per essa.\n\nPoiché
+    vogliamo cliccare quando il personaggio blu è visibile, lo screenshot deve contenerlo. Inizia il gioco di nuovo per visualizzarlo
+    e quindi scatta lo screenshot.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">Usa il pulsante di cattura nel menu fluttuante per scattare lo screenshot.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">Una volta acquisito lo screenshot, puoi ritagliarlo per ottenere solo la parte interessante per
+    il rilevamento.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">Se il tuo screenshot non contiene il personaggio blu, puoi premere questo pulsante per
+    farne uno nuovo.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">Per questo gioco, la parte interessante è il personaggio blu, quindi ritaglia il tuo screenshot
+    per ottenere solo lui.\n\nPuoi pizzicare lo screenshot per ingrandirlo e ottenere una maggiore precisione per il selettore di ritaglio.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">Assicurati che il personaggio sia completo nel selettore. Inoltre, cerca di ritagliarlo il
+    più possibile vicino a lui per facilitare il rilevamento dell\'immagine.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">La tua immagine di Condizione è ora registrata!\n\nCi sono diverse regolazioni che possono essere
+    fatte ad essa, ma le impostazioni predefinite sono adatte al nostro caso d\'uso di base. Poiché il nostro bersaglio non si muove, verrà
+    rilevato solo nella posizione di acquisizione, il che è più veloce rispetto al rilevamento su tutto lo schermo.\n\nFare clic sul
+    pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">Con questa Condizione, lo scenario sa quando attivare le Azioni.\n\nOra devi definire quali Azioni
+    attivare, quindi per questo gioco, un clic sul personaggio blu.\n\nClicca sulla campo Azioni per visualizzare l\'elenco delle Azioni.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento sono soddisfatte.\n\n
+    Può essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra applicazione) o una modifica nell\'esecuzione dello Scenario,
+    e possono essere definite più Azioni per lo stesso Evento.\n\nClicca sul pulsante crea Azione per creare la tua prima Azione.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">Innanzitutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer questo gioco, abbiamo solo bisogno
+    di cliccare sul personaggio blu, quindi scegli Clicca per creare una nuova Azione di Clicca.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">Un\'Azione di Clicca è definita da una posizione e una durata della pressione.\n\nPoiché vogliamo
+    cliccare il più rapidamente possibile, possiamo mantenere la durata di pressione predefinita di 1 ms, che è il valore più basso possibile.
+    Quindi dobbiamo solo definire una posizione.\n\nClicca sul pulsante selezionatore di posizione per selezionare la posizione del Clicca.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">Devi selezionare l\'esatta posizione su cui fare clic, quindi devi avviare nuovamente il gioco per
+    visualizzare il personaggio blu e quindi selezionare la sua posizione.\n\nUna volta che la posizione è corretta, fai clic sul pulsante
+    di convalida per salvarla.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">Non puoi interagire con il gioco mentre il selettore di posizione è visibile, ma puoi
+    utilizzare questo pulsante per mostrarlo e nasconderlo, consentendoti di rimuovere tale restrizione a tuo piacimento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">Il clic è ora configurato correttamente!\n\nFare clic sul pulsante Salva per
+    registrarlo e tornare all\'elenco delle azioni.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nClicca sul pulsante Salva
+    per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">L\'unico requisito per uno scenario è avere almeno un evento.\nPoiché il nostro evento spiega già come
+        vincere la partita, non abbiamo bisogno di nient\'altro.\n\nFai clic sul pulsante Salva persalvare lo scenario nel database e chiudere
+        le finestre di dialogo di configurazione.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il tuo
+        Lo scenario è valido e può essere utilizzato per il rilevamento\n\nFare clic su di esso per avviare il rilevamento.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">Sta giocando ma non succede nulla?\n\nÈ normale, si limita a fare clic
+        quando è visibile il carattere blu, ricordi? Mentre mantieni lo scenario in esecuzione, premi il pulsante di avvio del gioco
+        e guarda come Klick\'r batterà per te!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">Congratulazioni!\n\nOra conosci le basi di Klick\'r, ma non tutti i casi d\'uso saranno
+        semplici come questo gioco.\nGuarda il tutorial successivo per imparare come tracciare un bersaglio in movimento.</string>
+</resources>

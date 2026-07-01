@@ -221,7 +221,6 @@ internal class TutorialEngine @Inject constructor(
     private fun monitorStepStartCondition(step: TutorialStep, onConditionReached: () -> Unit) =
         when (val condition = step.stepStartCondition) {
             is TutorialStepStartCondition.MonitoredViewClicked -> {
-                println("TOTO: step start monitor ${condition.type}")
                 monitoredViewsManager.monitorNextClick(
                     type = condition.type,
                     listener = onConditionReached,

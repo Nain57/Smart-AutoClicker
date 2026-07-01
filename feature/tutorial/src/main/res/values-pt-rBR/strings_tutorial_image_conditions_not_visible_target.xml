@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_screen_condition_not_visible_target">Combinação de múltiplas condições</string>
+    <string name="item_desc_tutorial_screen_condition_not_visible_target">Crie e combine múltiplas condições para seu evento</string>
+    <string name="message_game_tutorial_screen_condition_not_visible_target">Clique no botão azul apenas quando o botão vermelho estiver visível</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_1">Vamos mudar as regras do jogo novamente. O alvo azul parou de se mover,
+            mas agora só deve ser clicado quando o alvo vermelho estiver visível.\n\nPrimeiro, inicie o jogo e veja se você consegue
+            vencer por conta própria.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_3">Mais uma vez, parece impossível vencer manualmente, então vamos usar o
+            Smart AutoClicker.\n\nSeu cenário do tutorial anterior foi mantido e carregado para este tutorial, mas precisaremos
+            alterar alguns parâmetros para vencer este novo jogo.\n\nClique no ícone de configuração de cenário para começar a
+            atualizar seu novo cenário.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_4">Ainda queremos clicar no alvo azul, mas apenas quando o vermelho estiver visível.\n
+            Então, precisamos adicionar uma condição para este alvo vermelho em nosso Evento.\n\nClique no evento criado anteriormente
+            para editá-lo.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_5">Vamos combinar várias condições, então precisamos verificar o Operador de Condição
+            para este evento.\n\nO Operador de Condição indica como múltiplas condições serão interpretadas juntas.\n
+            \'Um\' significa que apenas uma das Condições deste Evento deve ser cumprida para executar as Ações.\n\n\'Todos\' significa
+            que todas as Condições deste Evento devem ser cumpridas para executar as Ações.\n\nComo queremos detectar se dois
+            elementos estão sendo exibidos juntos, vamos usar \'Todos\'.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_6">Agora precisamos atualizar nossas Condições.\n\nClique na campo Condições para
+            exibir a lista de Condições.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_7">A Condição anterior de detecção do alvo azul ainda está correta, mas precisamos
+            de uma nova para o alvo vermelho.\n\nClique no botão de criar Condição para criar uma nova Condição para ele.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_8">Assim como para o alvo azul, inicie o jogo para mostrar o alvo vermelho.
+            Assim que ele estiver visível, tire uma captura de tela dele!</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_8">Use o botão de captura no menu flutuante para tirar a captura de tela.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_9">Sua captura de tela contém o alvo vermelho? Você pode recortá-la para obter apenas
+            a parte interessante para a detecção, o alvo vermelho.</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_9">Se sua captura de tela não contém o alvo vermelho, você pode
+            pressionar este botão para tirar uma nova.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_10">Sua imagem de Condição está agora registrada!\nComo o alvo vermelho não está se movendo,
+            podemos manter a configuração padrão.\nClique no botão Salvar para registrá-la e retornar à lista de condições.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_11">Feche a lista de condições para retornar à configuração do evento.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_12">Agora temos duas Condições, uma para cada alvo, e as Ações serão executadas
+            apenas se ambos forem detectados.\n\nClique na campo Ações para exibir a lista de Ações para nosso Evento.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_13">A ação já está configurada para clicar no personagem azul, e só será
+            executada quando os personagens azul e vermelho estiverem visíveis juntos.\n\nEste é exatamente o comportamento
+            que precisamos para vencer o jogo, então não há necessidade de editar nossa Ação de clique.\n\nClique no botão
+            Salvar para registrá-la e retornar à lista de ações.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_14">Clique no botão Salvar para salvar seu evento.</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_15">Todas as mudanças devem ser salvas no seu cenário para serem registradas.\n
+            Clique no botão de salvar para salvar suas alterações.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_16">Estamos prontos para vencer este jogo!\n\nClique no botão de iniciar para iniciar
+            a detecção e, em seguida, inicie o jogo.</string>
+    
+    <string name="message_tutorial_screen_condition_not_visible_target_step_17">Parabéns!\n\nAgora você sabe como combinar múltiplas Condições para um Evento,
+            mas há muito mais para aprender!</string>
+</resources>

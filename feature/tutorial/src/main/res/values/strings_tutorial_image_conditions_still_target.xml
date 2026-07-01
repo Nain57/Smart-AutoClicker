@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">Press a still target</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">Learn how to create your first event in order to click on a still target</string>
+    <string name="message_game_tutorial_screen_condition_still_target">Click on the blue button as fast as possible</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">Welcome to your first tutorial!\n\nHere, you will try to beat the high score
+        of a game with the help of Klick\'r.\n\nFirst, start the game and try to win by yourself.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">Difficult, isn\'t it?\nLet\'s use Klick\'r to beat it !\n\n
+        Click on the scenario configuration icon to start editing your new scenario.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">A Scenario is the root structure of Klick\'r automation.\n\n
+        It contains the general detection settings and a list of Events describing what will be executed when running
+        your Scenario. \n\nClick on the create event button to create your first event.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">An Event describe what Actions (click, swipe…) to execute when certain
+        Conditions are met.\n\nYou must create at least one Condition and one Action in order to create a valid Event
+        and use it in your scenario\n\nClick on the Conditions field to display the Conditions list.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">A Condition is a part of a screenshot that will be compared to each screen
+        frame of your device.\n\nTo beat the game, we want to click on the blue character when it\'s visible, so we need
+        a Condition that is fulfilled when the character is shown on your device screen.\n\nClick on the create
+        Condition button to create your first Condition.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_7">In this tutorial, we want to learn how to detect
+        an image on the screen, so select Image Condition</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">The first step of a Condition creation is to take a screenshot for it.\n\n
+        As we want to click when the blue character is visible, the screenshot must contains it. Start the game again in
+        order to display it, and then take the screenshot.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">Use the capture button in the floating menu to take the screenshot.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">Once the screenshot is taken, you can crop it in order to only get the part
+        that is interesting for the detection.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">If your screenshot does not contains the blue character, you can
+        press this button to take a new one.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">For this game, the interesting part is the blue character, so crop your
+        screenshot to only get him.\n\nYou can pinch on the screenshot to zoom on it and get a better accuracy for the
+        crop selector.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">Ensure the character is complete in the selector. Also try to
+        crop it as close as possible to him in order to ease the image detection.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">Your Condition image is now recorded!\n\nThere is now several adjustments
+        that can be made to it, but the default settings suits our basic use case. As our target is not moving, it will
+        only detect at the capture position, which is faster than detecting on the whole screen.\n\nClick on the save
+        button to register it and return to the Conditions list.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">Close the Conditions list to return to the Event configuration.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">With this Condition, the scenario knows when to trigger the Actions.\n\n
+        You now need to define what Actions to trigger, so for this game, a click on the blue character.\n\nClick on the
+        Actions field to display the Actions list.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">An Action is something that is executed once the Conditions of its Event
+        are fulfilled.\n\nIt can be a click, a swipe, a pause, an Intent (an interaction with another application) or a
+        change in the Scenario execution, and multiple Actions can be defined for the same Event.\n\nClick on the create
+        Action button to create your first Action.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">First, we need to pick a type for your Action.\n\nFor this game, we simply
+        need to click on the blue character, so choose Click to create a new Click Action.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">A Click Action is defined by a position and a press duration.\n\nAs we
+        want to click as quickly as possible, we can keep the default press duration of 1ms, which is the lowest
+        possible value. So we only need to define a position.\n\nClick on the position picker button to select the Click
+        Action position.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">You need to select the exact position to be clicked, so you need to start
+        the game again to display the blue character, and then select its position.\n\nOnce the position is correct,
+        click on the validate button to save it.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">You can\'t interact with the game while the position selector is
+        visible, but you can use this button to show and hide it, allowing you to remove that restriction at will.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">The click is now correctly configured!\n\nClick on the save button to
+        register it and return to the Actions list.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">Close the Actions list to return to the Event configuration.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">Your Event now have a Condition and an Action, which means it knows what
+        to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">The only requirement for a Scenario is to have at least one Event.\n
+        As our Event already cover how to win the game, we don\'t need anything else.\n\nClick on the save button the
+        save the Scenario in database and close the configuration dialogs.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">As you can see, the play button is now available, meaning that your
+        Scenario is valid and can be used for detection\n\nClick on it to start the detection.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
+        when the blue character is visible, remember? While keeping the scenario running, press the start game button
+        and just watch as Klick\'r will beat it for you!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">Congratulations!\n\nYou now know the basics of Klick\'r, but not
+        all use cases will be as simple as this game.\nTake a look at the next tutorial to learn how to track a moving
+        target</string>
+</resources>

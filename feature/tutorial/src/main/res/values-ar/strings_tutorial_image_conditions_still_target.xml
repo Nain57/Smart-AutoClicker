@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">اضغط على هدف ثابت</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">تعرف على كيفية إنشاء حدثك الأول من أجل النقر على هدف ثابت</string>
+    <string name="message_game_tutorial_screen_condition_still_target">انقر على الزر الأزرق في أسرع وقت ممكن</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">مرحبًا بك في البرنامج التعليمي الأول!\n\nهنا، ستحاول تحقيق أعلى الدرجات
+        لعبة بمساعدة Klick\'r.\n\nأولاً، ابدأ اللعبة وحاول الفوز بنفسك.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">الأمر صعب، أليس كذلك؟\nدعونا نستخدم Klick\'r للتغلب عليه!\n\n
+        انقر على أيقونة تكوين السيناريو لبدء تحرير السيناريو الجديد.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">"السيناريو" هو البنية الجذرية لأتمتة Klick\'r.\n\n
+        يحتوي على إعدادات الكشف العامة وقائمة الأحداث التي تصف ما سيتم تنفيذه عند التشغيل
+        السيناريو الخاص بك. \n\nانقر فوق زر إنشاء حدث لإنشاء حدثك الأول.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">يصف الحدث الإجراءات (انقر، اسحب…) التي سيتم تنفيذها عند التأكد منها
+        تم استيفاء الشروط.\n\nيجب عليك إنشاء شرط واحد وإجراء واحد على الأقل لإنشاء حدث صالح
+        واستخدمها في السيناريو الخاص بك\n\nانقر فوق حقل الشروط لعرض قائمة الشروط.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">الشرط هو جزء من لقطة الشاشة التي سيتم مقارنتها بكل شاشة
+        إطار جهازك.\n\nللتغلب على اللعبة، نريد النقر على الحرف الأزرق عندما يكون مرئيًا، لذلك نحتاج
+        الشرط الذي يتم استيفاؤه عند ظهور الشخصية على شاشة جهازك.\n\nانقر فوق "إنشاء".
+        زر الشرط لإنشاء شرطك الأول.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">الخطوة الأولى لإنشاء الشرط هي التقاط لقطة شاشة له.\n\n
+        وبما أننا نريد النقر عندما يكون الحرف الأزرق مرئيًا، فيجب أن تحتوي عليه لقطة الشاشة. ابدأ اللعبة مرة أخرى
+        لعرضه، ثم التقط لقطة الشاشة.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">استخدم زر الالتقاط في القائمة العائمة لالتقاط لقطة الشاشة.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">بمجرد التقاط لقطة الشاشة، يمكنك قصها للحصول على الجزء فقط
+        وهذا مثير للاهتمام للكشف.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">إذا كانت لقطة الشاشة الخاصة بك لا تحتوي على الحرف الأزرق، فيمكنك ذلك
+        اضغط على هذا الزر لاتخاذ واحدة جديدة.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">في هذه اللعبة، الجزء المثير للاهتمام هو الشخصية الزرقاء، لذا قم بقصها
+        لقطة شاشة للحصول عليه فقط.\n\nيمكنك الضغط على لقطة الشاشة لتكبيرها والحصول على دقة أفضل
+        محدد المحاصيل.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">تأكد من اكتمال الحرف في المحدد. حاول أيضًا أن
+        قم بقصها في أقرب وقت ممكن منه لتسهيل اكتشاف الصورة.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">تم الآن تسجيل صورة الحالة الخاصة بك!\n\nتوجد الآن عدة تعديلات
+        يمكن إجراؤها عليه، لكن الإعدادات الافتراضية تناسب حالة الاستخدام الأساسية لدينا. وبما أن هدفنا لا يتحرك، فإنه سوف يتحرك
+        يتم الكشف فقط في موضع الالتقاط، وهو أسرع من الاكتشاف على الشاشة بأكملها.\n\nانقر فوق "حفظ".
+        زر لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">قم بإغلاق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">مع هذا الشرط، يعرف السيناريو متى يتم تشغيل الإجراءات.\n\n
+        أنت الآن بحاجة إلى تحديد الإجراءات التي سيتم تشغيلها، لذلك بالنسبة لهذه اللعبة، انقر فوق الحرف الأزرق.\n\nانقر فوق
+        حقل الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">الإجراء هو الشيء الذي يتم تنفيذه بمجرد توافر شروط الحدث الخاص به
+        يتم استيفاؤها.\n\nيمكن أن تكون نقرة، أو تمريرة سريعة، أو توقفًا مؤقتًا، أو نية (تفاعل مع تطبيق آخر) أو
+        تغيير في تنفيذ السيناريو، ويمكن تحديد إجراءات متعددة لنفس الحدث.\n\nانقر فوق "إنشاء"
+        زر الإجراء لإنشاء الإجراء الأول الخاص بك.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">أولاً، نحتاج إلى اختيار نوع الإجراء الخاص بك.\n\nبالنسبة لهذه اللعبة، نحن ببساطة
+        تحتاج إلى النقر على الحرف الأزرق، لذا اختر "انقر" لإنشاء إجراء نقر جديد.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">يتم تحديد إجراء النقر من خلال الموضع ومدة الضغط.\n\nكما نحن
+        تريد النقر في أسرع وقت ممكن، يمكننا الحفاظ على مدة الضغط الافتراضية البالغة 1 مللي ثانية، وهي الأقل
+        القيمة الممكنة. لذلك نحتاج فقط إلى تحديد موضع.\n\nانقر فوق زر منتقي الموضع لتحديد النقر
+        موقف العمل.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">تحتاج إلى تحديد الموضع الدقيق الذي تريد النقر عليه، لذلك عليك أن تبدأ
+        اللعبة مرة أخرى لعرض الحرف الأزرق، ثم تحديد موضعه.\n\nبمجرد أن يصبح الموضع صحيحًا،
+        انقر على زر التحقق من الصحة لحفظه.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">لا يمكنك التفاعل مع اللعبة أثناء وجود محدد الموضع
+        مرئيًا، ولكن يمكنك استخدام هذا الزر لإظهاره وإخفائه، مما يسمح لك بإزالة هذا القيد حسب الرغبة.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">تم الآن تكوين النقرة بشكل صحيح!\n\nانقر فوق زر الحفظ
+        قم بتسجيله والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">أصبح لحدثك الآن شرط وإجراء، مما يعني أنه يعرف ماذا
+        للتنفيذ ووقت التنفيذ.\n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">الشرط الوحيد للسيناريو هو أن يكون هناك حدث واحد على الأقل.\n
+        نظرًا لأن حدثنا يغطي بالفعل كيفية الفوز باللعبة، فلا نحتاج إلى أي شيء آخر.\n\nانقر فوق زر الحفظ
+        احفظ السيناريو في قاعدة البيانات وأغلق مربعات حوار التكوين.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">كما ترون، أصبح زر التشغيل متاحًا الآن، مما يعني أن جهازك
+        السيناريو صالح ويمكن استخدامه للكشف.\n\nانقر عليه لبدء الكشف.</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">يتم تشغيله ولكن لا يحدث شيء؟\n\nهذا طبيعي، سيتم النقر فقط
+        عندما يكون الحرف الأزرق مرئيا، تذكر؟ أثناء استمرار تشغيل السيناريو، اضغط على زر بدء اللعبة
+        وشاهد فقط كيف سيهزمك Klick\'r!</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">تهانينا!\n\nأنت تعرف الآن أساسيات Klick\'r، ولكنك لا تعرفها
+        ستكون جميع حالات الاستخدام بسيطة مثل هذه اللعبة.\nألق نظرة على البرنامج التعليمي التالي لتتعلم كيفية تتبع حركة متحركة
+        الهدف</string>
+</resources>

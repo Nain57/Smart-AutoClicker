@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_screen_condition_not_visible_target">组合多个条件</string>
+    <string name="item_desc_tutorial_screen_condition_not_visible_target">为您的事件创建和组合多个条件</string>
+    <string name="message_game_tutorial_screen_condition_not_visible_target">只有在红色按钮可见时才点击蓝色按钮</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_1">让我们再次改变游戏规则。蓝色目标停止移动，但现在只有在红色目标可见时才能点击。\n\n首先，开始游戏并检查是否能自己赢得比赛。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_3">再次尝试手动赢得比赛似乎不可能，所以让我们使用Klick\'r。\n\n你之前教程的场景已经被保留并加载到这个教程中，但是为了赢得这场新比赛，我们需要更改一些参数。\n\n点击场景配置图标开始更新你的新场景。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_4">我们仍然想要点击蓝色目标，但只有在红色目标可见时才能点击。\n
+所以我们需要在事件中为这个红色目标添加一个条件。\n\n点击你之前创建的事件以进行编辑。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_5">我们将结合多个条件，所以我们需要检查此事件的条件运算符。\n\n条件运算符表示如何一起解释多个条件。\n
+‘单一’表示此事件的条件中只需满足一个条件即可执行操作。\n\n‘所有’表示此事件的所有条件必须满足才能执行操作。\n\n由于我们要检测两个事物是否同时显示，所以我们将使用「所有」</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_6">现在我们需要更新我们的条件。\n\n单击条件字段以显示 条件列表。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_7">检测蓝色目标的先前条件仍然正确，但我们需要一个新的条件来检测红色目标。\n\n点击创建条件按钮以为其创建一个新条件。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_8">就像蓝色目标一样，开始游戏以显示红色目标。一旦它可见，就拍摄一张屏幕截图！</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_8">使用浮动菜单中的截屏按钮来拍摄截图。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_9">你的截图是否包含红色目标？您可以裁剪它，以便仅获得检测所需的红色目标部分。</string>
+    <string name="message_tutorial_screen_condition_not_visible_target_step_secondary_9">如果你的截图不包含红色目标，你可以按此按钮拍摄新的截图。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_10">你的条件图像现在已记录！由于红色目标不会移动，我们可以保留默认配置。\n单击保存 按钮进行注册，然后返回条件列表。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_11">关闭条件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_12">现在我们有了两个条件，一个用于每个目标，只有在两者都检测到时，操作才会执行。\n\n单击 “操作 ”字段，显示事件的操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_13">该操作已设置为点击蓝色角色，只有在蓝色和红色角色同时可见时才会执行。\n\n这正是我们赢得比赛所需的行为，因此无需编辑我们的点击操作。\n\n关闭操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_14">点击保存按钮，保存您的活动</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_15">所有更改都必须保存到你的场景中以进行注册。\n\n点击保存按钮以保存你的更改。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_16">我们准备好赢得这场比赛了！\n\n点击开始按钮以开始检测，然后开始游戏。</string>
+
+    <string name="message_tutorial_screen_condition_not_visible_target_step_17">恭喜！\n\n你现在知道如何为事件组合多个条件，但还有很多东西要学习！</string>
+</resources>

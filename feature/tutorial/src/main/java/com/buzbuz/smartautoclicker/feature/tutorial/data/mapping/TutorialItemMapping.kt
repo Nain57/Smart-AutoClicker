@@ -18,18 +18,14 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.mapping
 
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem.Type.*
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.OneMovingTargetTutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.OneStillTargetTutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.TwoMovingTargetsPressInOrderTutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.TwoStillTargetsPressWhenBothVisibleTutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.TwoStillTargetsPressWhenOneVisibleTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsMovingTargetTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsStillTargetTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsNotVisibleTargetTutorial
 
 
 internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
     when (this) {
-        IMAGE_DETECTION_MOVING_TARGET -> OneMovingTargetTutorial
-        IMAGE_DETECTION_STILL_TARGET -> OneStillTargetTutorial
-        IMAGE_DETECTION_TWO_MOVING_TARGETS_PRESS_IN_ORDER -> TwoMovingTargetsPressInOrderTutorial
-        IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH -> TwoStillTargetsPressWhenBothVisibleTutorial
-        IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_ONE -> TwoStillTargetsPressWhenOneVisibleTutorial
+        IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
+        IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial
+        IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH -> ImageConditionsNotVisibleTargetTutorial
     }

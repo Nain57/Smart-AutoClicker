@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_screen_condition_moving_target">点击移动目标</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">将您的事件更改为点击随机移动目标</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">尽可能快地点击移动的蓝色按钮</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">让我们再增加游戏的难度。现在，目标是随机移动的。\n\n首先，开始游戏并查看自己是否能够赢得比赛。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">再次尝试手动赢得比赛似乎不可能，所以让我们使用Klick\'r。\n\n你之前教程的场景已经被保存并加载到这个教程中，但是为了赢得这场新比赛，我们需要更改一些参数。\n\n点击场景配置图标开始更新你的新场景。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">我们仍然想点击蓝色角色，这意味着我们仍然只需要一个条件和一个操作，所以只需要一个事件。\n\n由于用例与之前的游戏非常相似，我们将保留我们的事件并简单地对其进行更新。\n\n点击你之前创建的事件以进行编辑。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">首先，我们将更新检测蓝色角色的条件。\n\n单击条件字段，显示条件列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">与之前的教程一样，我们需要检测蓝色角色，但现在它在移动。\n\n我们之前的条件已经在检测蓝色角色，但只在一个位置。所以你不需要拍摄新的截图，因为你之前的条件已经有了它，我们只需要更改它的参数。\n\n点击条件以开始编辑它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">当前，条件检测类型设置为“精确”，这意味着它只会在捕获位置进行验证。\n\n为了赢得这个游戏，我们需要在整个屏幕上验证相同的条件。\n\n选择“整个屏幕”类型以在屏幕的任何位置检测蓝色角色。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">在整个屏幕上进行检测需要更多时间，当你的场景执行时间很重要时请记住这一点。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">就是这样！\n我们只需要更改检测类型，以使你的条件符合我们的需求。\n\n单击保存 按钮进行注册，然后返回条件列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">关闭条件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">你的条件图像现在已经更新！\n在这种状态下，场景现在会在屏幕的任何位置检测到蓝色角色时执行一次点击，但这次点击将在上一个教程中选择的相同位置上进行。所以，我们需要更新我们的操作。\n\n单击 “操作 ”字段，显示 “操作 ”列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">我们仍然想执行单击操作，但这次我们想要单击条件，而不是一个固定位置。\n\n由于这仍然是一个单击，我们仍然只需要一个操作，所以让我们编辑你之前的单击操作。\n\n点击操作以开始编辑它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">目前，单击操作“单击位置”设置为“选择的位置”，这意味着你必须手动设置要点击的位置。另一个选择是“条件”，这意味着操作将单击检测到的条件坐标。\n\n这正是我们打赢比赛所需要的。每次检测到蓝色角色时，此操作将对其进行单击。\n\n选择它以在你的操作中使用它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">点击条件选择器选项以选择要单击的检测条件。\n我们需要指定它，因为我们的事件中可以有多个条件。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">对于我们的用例来说很容易，我们只有一个条件，即蓝色角色。\n\n
+    选择它以在屏幕上检测到此条件时单击它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">就是这样！\n你的单击操作现在已经正确配置以打赢比赛。\n\n单击保存按钮 注册并返回操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">关闭操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">你已经更新了条件和操作，没有其他要做的了。\n\n点击保存按钮以注册它并返回场景对话框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">最后一次保存，将你的新更改注册到数据库中并关闭配置对话框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">你的场景现在已经配置为打赢这个新教程。\n\n使用浮动菜单播放按钮开始检测，然后开始游戏。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">恭喜！\n\n你现在知道如何跟踪静止或移动的单一目标，但还有很多东西要学！</string>
+</resources>

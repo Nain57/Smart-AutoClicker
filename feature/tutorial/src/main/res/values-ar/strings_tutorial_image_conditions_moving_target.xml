@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_screen_condition_moving_target">اضغط على هدف متحرك</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">قم بتغيير الحدث الخاص بك للنقر على هدف متحرك بشكل عشوائي</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">انقر على الزر الأزرق المتحرك في أسرع وقت ممكن</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">دعونا تعقيد اللعبة أكثر قليلا. الآن، الهدف عشوائي
+        تتحرك.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كان بإمكانك الفوز بنفسك.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">مرة أخرى، يبدو من المستحيل الفوز يدويًا، لذلك دعونا نستخدم Smart
+        AutoClicker.\n\nتم الاحتفاظ بالسيناريو الخاص بالبرنامج التعليمي السابق وتحميله لهذا البرنامج التعليمي، ولكننا سنفعل ذلك
+        بحاجة إلى تغيير بعض المعلمات للفوز بهذه اللعبة الجديدة.\n\nانقر فوق رمز تكوين السيناريو
+        ابدأ في تحديث السيناريو الجديد الخاص بك.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">ما زلنا نريد النقر على الحرف الأزرق، وهذا يعني أننا لا نزال فقط
+        تحتاج إلى شرط واحد وإجراء واحد، لذا حدث واحد فقط.\n\nنظرًا لأن حالة الاستخدام تشبه إلى حد كبير اللعبة السابقة،
+        سنحتفظ بالحدث الخاص بنا ونقوم ببساطة بتحديثه.\n\nانقر فوق الحدث الذي قمت بإنشائه مسبقًا لتعديله.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">في المرة الأولى، سنقوم بتحديث الحالة التي تكتشف اللون الأزرق
+        الحرف.\n\nانقر فوق حقل الشروط لعرض قائمة الشروط.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">كما في البرنامج التعليمي السابق، نحن بحاجة إلى الكشف عن الحرف الأزرق، ولكن الآن
+        إنه يتحرك.\n\nلقد اكتشف الشرط السابق بالفعل الحرف الأزرق، ولكن في موضع واحد فقط. إذن أنت
+        لا تحتاج إلى التقاط لقطة شاشة جديدة، نظرًا لأن حالتك السابقة موجودة بالفعل، نحتاج فقط إلى تغييرها
+        المعلمات.\n\nانقر فوق الشرط الخاص بك لبدء تحريره.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">حاليًا، تم تعيين نوع اكتشاف الحالة على \"تام\"، وهذا يعني ذلك
+        سيتم التحقق منها فقط في موقع الالتقاط الخاص بها.\n\nللفوز بهذه اللعبة، نحتاج إلى التحقق من نفس الحالة، ولكن تشغيلها
+        الشاشة بأكملها.\n\nحدد نوع \"الشاشة بأكملها\" لاكتشاف الحرف الأزرق في أي مكان
+        الشاشة.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">يستغرق الاكتشاف على الشاشة بأكملها وقتًا أطول من الوقت المحدد
+        الموقف، ضع ذلك في الاعتبار عندما يكون توقيت تنفيذ السيناريو مهمًا.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">هذا كل شيء!\nنحن بحاجة فقط إلى تغيير نوع الكشف من أجل ذلك
+        شرطك يناسب احتياجاتنا.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">قم بإغلاق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">تم الآن تحديث صورة الحالة الخاصة بك!\n\nفي هذه الحالة، سيتم تحديث السيناريو
+        قم الآن بتنفيذ نقرة في كل مرة يكون فيها الحرف الأزرق مرئيًا في أي مكان على الشاشة، ولكن هذه النقرة ستكون في
+        نفس الموضع، الذي تم تحديده أثناء البرنامج التعليمي السابق. لذا، نحن بحاجة إلى تحديث الإجراء الخاص بنا.\n\n
+        انقر فوق حقل الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">ما زلنا نريد تنفيذ نقرة واحدة، ولكن هذه المرة، نريد النقر
+        على الشرط وليس على موضع ثابت.\n\nبما أن هذه لا تزال نقرة واحدة، فإننا لا نزال بحاجة إلى إجراء واحد فقط، لذا
+        دعنا نعدل نقرتك السابقة.\n\nانقر على الإجراء الخاص بك لبدء تحريره.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">حاليًا، تم تعيين إجراء النقر \"النقر على\" على \"الموضع المحدد\"،
+        مما يعني أنه يتعين عليك ضبط الموضع المراد النقر عليه يدويًا. الخيار الآخر هو \"الشرط\"، مما يعني أن الإجراء سيتم النقر عليه
+        تم اكتشاف إحداثيات الحالة.\n\nهذا بالضبط ما نحتاجه للتغلب على اللعبة. في كل مرة الطابع الأزرق
+        سيتم اكتشافه، وسيقوم هذا الإجراء بالنقر عليه.\n\nحدده لاستخدامه في الإجراء الخاص بك.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">انقر فوق خيار محدد الحالة لتحديد الحالة المكتشفة
+        للنقر عليها.\nنحن بحاجة إلى تحديدها لأنه يمكن أن يكون لدينا شروط متعددة في الحدث الخاص بنا.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، وهو الحرف الأزرق.\n\n
+        حدده للنقر على هذا الشرط عندما يتم اكتشافه على شاشتك.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">هذا كل شيء!\nتم الآن تكوين إجراء النقر بشكل صحيح للتغلب على
+        اللعبة.\n\nانقر على زر الحفظ لتسجيلها والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">لقد قمت بتحديث الشرط والإجراء الخاص بك، ولا يوجد شيء أكثر من ذلك
+        افعل ذلك.\n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">حفظ أخير لتسجيل تغييراتك الجديدة في قاعدة البيانات وإغلاق الملف
+        مربعات حوار التكوين.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">تم الآن تكوين السيناريو الخاص بك للتغلب على هذا البرنامج التعليمي الجديد.\n\nابدأ
+        الكشف باستخدام زر تشغيل القائمة العائمة ثم ابدأ اللعبة.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">تهانينا!\n\nأنت تعرف الآن كيفية تتبع الأغنية المنفردة الثابتة أو المتحركة
+        الهدف، ولكن هناك الكثير لنتعلمه!.</string>
+</resources>

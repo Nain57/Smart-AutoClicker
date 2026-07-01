@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_screen_condition_moving_target">Натискання на рухому ціль</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">Змініть вашу подію, щоб клікати на випадково рухому ціль</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">Клікніть на рухому синю кнопку якомога швидше</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">Давайте ускладнимо гру трохи більше. Тепер ціль випадково
+        рухається.\n\nСпочатку запустіть гру та перевірте, чи можете ви виграти самостійно.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">Знову ж таки, здається неможливим виграти вручну, тому давайте використаємо Smart
+        AutoClicker.\n\nВаш сценарій з попереднього навчання було збережено та завантажено для цього навчання, але нам потрібно
+        буде змінити кілька параметрів, щоб виграти цю нову гру.\n\nКлікніть на іконку налаштування сценарію, щоб
+        почати оновлення вашого нового сценарію.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">Ми все ще хочемо клікнути на синього персонажа, що означає, що нам все ще потрібна лише
+        одна умова та одна дія, тому лише одна подія.\n\nОскільки випадок використання дуже схожий на попередню гру,
+        ми збережемо нашу подію та просто оновимо її.\n\nКлікніть на вашу попередньо створену подію, щоб редагувати її.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Спочатку ми оновимо умову, яка виявляє синього
+        персонажа.\n\nКлікніть на поле умов, щоб відобразити список умов.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">Як і в попередньому навчанні, нам потрібно виявити синього персонажа, але тепер
+        він рухається.\n\nНаша попередня умова вже виявляє синього персонажа, але лише в одній позиції. Тому вам
+        не потрібно робити новий знімок екрана, оскільки ваша попередня умова вже має його, нам потрібно лише змінити її
+        параметри.\n\nКлікніть на вашу умову, щоб почати її редагування.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">Наразі тип виявлення умови встановлено на "Точний", що означає, що він
+        буде перевірятися лише в позиції захоплення.\n\nЩоб виграти цю гру, нам потрібно перевірити ту ж умову, але на
+        всьому екрані.\n\nВиберіть тип "Весь екран", щоб виявляти синього персонажа будь-де на
+        екрані.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">Виявлення на всьому екрані займає більше часу, ніж точна
+        позиція, майте це на увазі, коли час виконання вашого сценарію важливий.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">Ось і все!\nНам потрібно було лише змінити тип виявлення, щоб
+        ваша умова підходила нашим потребам.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку умов.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">Закрийте список умов, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">Зображення вашої умови тепер оновлено!\n\nВ цьому стані сценарій тепер
+        буде виконувати клік щоразу, коли синій персонаж видимий будь-де на екрані, але цей клік буде в
+        тій же позиції, обраній під час попереднього навчання. Тому нам потрібно оновити нашу дію.\n\n
+        Клікніть на поле дій, щоб відобразити список дій.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">Ми все ще хочемо виконати один клік, але цього разу ми хочемо клікнути
+        на умову, а не на фіксовану позицію.\n\nОскільки це все ще один клік, нам все ще потрібна лише одна дія, тому
+        давайте відредагуємо ваш попередній клік.\n\nКлікніть на вашу дію, щоб почати її редагування.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">Наразі дія кліку "Клікнути на" встановлена на "Вибрана позиція\",
+        що означає, що ви повинні вручну встановити позицію для кліку. Інший вибір - "Умова", що означає, що дія буде клікати на
+        координати виявленої умови.\n\nЦе саме те, що нам потрібно для перемоги в грі. Кожен раз, коли синього персонажа
+        буде виявлено, ця дія буде клікати на нього.\n\nВиберіть її для використання у вашій дії.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">Клікніть на опцію селектора умови, щоб вибрати, на яку виявлену умову
+        клікати.\nНам потрібно вказати це, оскільки ми можемо мати кілька умов в нашій події.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">Для нашого випадку використання це легко, у нас є лише одна умова - синій персонаж.\n\n
+        Виберіть її, щоб клікати на цю умову, коли вона виявлена на вашому екрані.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">Ось і все!\nВаша дія кліку тепер правильно налаштована для перемоги в
+        грі.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку дій.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">Закрийте список дій, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">Ви оновили умову та вашу дію, більше нічого робити не потрібно. Клікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу сценарію.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">Останнє збереження для реєстрації ваших нових змін у базі даних та закриття
+        діалогів налаштування.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">Ваш сценарій тепер налаштований для перемоги в цьому новому навчанні.\n\nПочніть
+        виявлення за допомогою кнопки відтворення плаваючого меню, а потім запустіть гру.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Вітаємо!  Тепер ви знаєте, як відстежувати нерухому або рухому         ціль, але є ще багато чого вивчити!</string>
+</resources>

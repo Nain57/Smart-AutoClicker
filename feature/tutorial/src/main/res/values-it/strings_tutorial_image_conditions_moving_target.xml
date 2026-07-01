@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One moving target tutorial -->
+    <string name="item_title_tutorial_screen_condition_moving_target">Clicca su un bersaglio in movimento</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">Cambia il tuo evento per cliccare su un bersaglio in movimento casualmente</string>
+    <string name="message_game_tutorial_screen_condition_moving_target">Clicca sul pulsante blu in movimento il più velocemente possibile</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">Complichiamo un po\' il gioco. Ora, il bersaglio si muove casualmente.\n\nInizia prima il gioco e
+    verifica se riesci a vincere da solo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">Ancora una volta, sembra impossibile vincere manualmente, quindi utilizziamo Klick\'r.\n\nLo
+    scenario per il tutorial precedente è stato mantenuto e caricato per questo tutorial, ma dovremo apportare alcune modifiche per
+    vincere questo nuovo gioco.\n\nClicca sull\'icona di configurazione dello scenario per iniziare a aggiornare il tuo nuovo scenario.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">Vogliamo ancora cliccare sul personaggio blu, il che significa che abbiamo ancora bisogno di una Condizione e
+    di un\'Azione, quindi solo un Evento.\n\nPoiché il caso d\'uso è piuttosto simile al gioco precedente, manterremo il nostro Evento e lo
+    aggiorneremo semplicemente.\n\nClicca sul tuo evento creato in precedenza per modificarlo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Inizialmente, aggiorneremo la Condizione che rileva il personaggio blu.\n\nClicca sulla campo delle
+    Condizioni per visualizzare l\'elenco delle Condizioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">Come nel tutorial precedente, dobbiamo rilevare il personaggio blu, ma ora si muove.\n\nLa nostra
+    precedente Condizione sta già rilevando il personaggio blu, ma solo in una posizione. Quindi non è necessario scattare uno screenshot,
+    poiché la tua Condizione precedente lo contiene già, dobbiamo solo cambiare i suoi parametri.\n\nFai clic sulla tua Condizione per
+    iniziare a modificarla.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">Attualmente, il tipo di rilevamento della Condizione è impostato su "Esatto", il che significa che
+    verrà verificato solo nella sua posizione di acquisizione.\n\nPer vincere questo gioco, dobbiamo verificare la stessa Condizione, ma
+    su tutto lo schermo.\n\nSeleziona il tipo "Tutto lo schermo" per rilevare il personaggio blu ovunque sullo schermo.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">Il rilevamento su tutto lo schermo richiede più tempo rispetto alla posizione esatta, quindi
+    tienilo presente quando la tempistica dell\'esecuzione dello Scenario è importante.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">È fatta!\n\nDovevamo solo cambiare il tipo di rilevamento per fare in modo che la tua Condizione soddisfacesse
+    le nostre esigenze.\n\nFare clic sul pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">La tua immagine di Condizione è ora aggiornata!\n\nIn questo stato, lo scenario eseguirà un clic ogni
+    volta che il personaggio blu sarà visibile ovunque sullo schermo, ma questo clic sarà nella stessa posizione, quella selezionata durante
+    il tutorial precedente. Quindi, dobbiamo aggiornare la nostra Azione.\n\nFai clic sulla campo delle Azioni per visualizzare l\'elenco delle Azioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">Vogliamo ancora eseguire un singolo clic, ma questa volta vogliamo fare clic sulla Condizione e non su
+    una posizione fissa.\n\nPoiché si tratta comunque di un clic, abbiamo ancora bisogno di una sola Azione, quindi modifichiamo il tuo clic
+    precedente.\n\nFai clic sulla tua Azione per iniziare a modificarla.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">Attualmente, l\'Azione di Clicca "Clicca su" è impostata su "Posizione selezionata", il che significa che
+    devi impostare manualmente la posizione su cui fare clic. L\'altro tipo è "Condizione", il che significa che l\'Azione farà clic sulle coordinate della Condizione
+    rilevate.\n\nÈ esattamente ciò di cui abbiamo bisogno per vincere il gioco. Ogni volta che il personaggio blu verrà rilevato, questa Azione
+    ci farà clic sopra.\n\nSelezionala per utilizzarla nella tua Azione.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">Fai clic sull\'opzione selettore di Condizione per selezionare quale Condizione rilevata fare clic.\nDobbiamo
+    specificarlo perché possiamo avere più Condizioni nel nostro Evento.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, quella del personaggio blu.\n\n
+    Selezionala per fare clic su questa Condizione quando viene rilevata sullo schermo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">È fatta!\n\nLa tua Azione di Clicca è ora configurata correttamente per battere il gioco.\n\n
+    Fare clic sul pulsante Salva perregistrarlo e tornare all\'elenco delle azioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nFai clic sul pulsante Salva
+    per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">Un ultimo salvataggio per registrare le tue nuove modifiche nel database e chiudere le finestre di configurazione.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">Il tuo Scenario è ora configurato per battere questo nuovo tutorial.\n\nAvvia la rilevazione con il pulsante
+    di riproduzione del menu fluttuante e quindi inizia il gioco.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Congratulazioni!\n\nOra sai come tracciare un bersaglio fermo o in movimento con Klick\'r.\n\n
+    Continua a sperimentare e scopri come personalizzare ulteriormente le tue automazioni per diverse applicazioni e giochi.</string>
+</resources>

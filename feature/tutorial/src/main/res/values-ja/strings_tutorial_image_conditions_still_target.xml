@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_screen_condition_still_target">静止しているターゲットを押します</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">静止ターゲットをクリックするための最初のイベントを作成する方法を学びます。</string>
+    <string name="message_game_tutorial_screen_condition_still_target">青いボタンをできるだけ早くクリックしてください</string>
+    <string name="message_tutorial_screen_condition_still_target_step_1">最初のチュートリアルへようこそ!\n\nここでハイスコアを目指しましょう\n        Klick\'r の助けを借りたゲームの様子。\n\nまずはゲームをスタートして、自分だけで勝ってみよう。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_3">難しいですね。\nKlick\'rを使って倒しましょう！\n\n\n        シナリオ設定アイコンをクリックして、新しいシナリオの編集を開始します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_4">シナリオは、Klick\'r オートメーションのルート構造です。\n\n\n        これには、一般的な検出設定と、実行時に実行される内容を説明するイベントのリストが含まれています。\n        あなたのシナリオ。 \n\n「イベントの作成」ボタンをクリックして最初のイベントを作成します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_5">イベントは、特定の場合に実行するアクション (クリック、スワイプなど) を記述します。\n        条件は満たされています。\n\n有効なイベントを作成するには、少なくとも 1 つの条件と 1 つのアクションを作成する必要があります\n        そしてそれをあなたのシナリオで使用してください\n\n「条件」フィールドをクリックして「条件」リストを表示します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_6">条件は、各画面と比較されるスクリーンショットの一部です。\n        デバイスのフレーム。\n\nゲームに勝つには、青いキャラクターが表示されているときにクリックする必要があるため、\n        キャラクターがデバイス画面に表示されたときに満たされる条件。\n\n「作成」をクリックします\n        最初の条件を作成するための条件ボタン。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_8">条件作成の最初のステップは、条件のスクリーンショットを撮ることです。\n\n\n        青い文字が表示されているときにクリックしたいので、スクリーンショットに青い文字が含まれている必要があります。でゲームを再度開始します\n        表示してからスクリーンショットを撮ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">フローティング メニューのキャプチャ ボタンを使用してスクリーンショットを撮ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_9">スクリーンショットを撮ったら、その部分だけを取得するために切り取ることができます\n        それは検出にとって興味深いことです。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">スクリーンショットに青い文字が含まれていない場合は、\n        新しいボタンを押すには、このボタンを押してください。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_10">このゲームの場合、興味深い部分は青いキャラクターなので、トリミングしてください。\n        彼だけを取得するためのスクリーンショット。\n\nスクリーンショットをピンチしてズームすると、スクリーンショットの精度が向上します。\n        クロップセレクター。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">セレクター内で文字が完全であることを確認してください。も試してみてください\n        画像の検出を容易にするために、できるだけ彼の近くでトリミングしてください。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_11">あなたのコンディション画像が記録されました！\n\n現在、いくつかの調整が行われています\n        変更することもできますが、基本的な使用例にはデフォルト設定が適しています。ターゲットは動いていないので、\n        キャプチャ位置のみを検出するため、画面全体で検出するよりも高速です。\n\n保存をクリックします\n        ボタンを押すと登録され、条件一覧に戻ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_12">条件リストを閉じて、イベント設定に戻ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_13">この条件により、シナリオはアクションをいつトリガーするかを認識します。\n\n\n        次に、トリガーするアクションを定義する必要があります。このゲームでは、青い文字をクリックします。\n\nをクリックしてください\n        [アクション] フィールドにアクション リストを表示します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_14">アクションとは、イベントの条件が満たされると実行されるものです。\n        満たされています。\n\nクリック、スワイプ、一時停止、インテント (別のアプリケーションとの対話)、または\n        シナリオの実行時に変更され、同じイベントに対して複数のアクションを定義できます。\n\n「作成」をクリックします\n        最初のアクションを作成するためのアクション ボタン。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_15">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは、単純に、\n        青い文字をクリックする必要があるため、[クリック] を選択して新しいクリック アクションを作成します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_16">クリック アクションは、位置と押し続ける時間によって定義されます。\n\n私たちとしては\n        できるだけ早くクリックしたい場合は、デフォルトの押下時間を最低値の 1ms のままにします。\n        可能な値。したがって、位置を定義するだけで済みます。\n\n位置ピッカー ボタンをクリックしてクリックを選択します。\n        アクションポジション。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_17">クリックする正確な位置を選択する必要があるため、開始する必要があります。\n        もう一度ゲームを起動すると青いキャラクターが表示され、その位置を選択します。\n\n位置が正しくなったら、\n        検証ボタンをクリックして保存します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">ポジションセレクターがオンになっている間はゲームを操作できません。\n        表示されていますが、このボタンを使用して表示または非表示にすることができ、その制限を自由に解除できます。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_18">これでクリックが正しく設定されました。\n\n保存ボタンをクリックして、\n        それを登録し、アクションリストに戻ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_19">[アクション] リストを閉じて、イベント設定に戻ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_20">イベントには条件とアクションが追加されました。これは、イベントが何を認識しているかを意味します。\n        実行するか、いつ実行するか。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ります。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_21">シナリオの唯一の要件は、少なくとも 1 つのイベントがあることです。\n\n        イベントでゲームに勝つ方法はすでにカバーされているため、他に何も必要ありません。\n\n保存ボタンをクリックして、\n        シナリオをデータベースに保存し、設定ダイアログを閉じます。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_22">ご覧のとおり、再生ボタンが使用できるようになりました。\n        シナリオは有効であり、検出に使用できます\n\nそれをクリックして検出を開始します。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_23">再生中ですが何も起こりませんか？\n\nそれは正常です、クリックするだけです\n        青い文字が表示されたら、覚えていますか?シナリオ実行中にゲーム開始ボタンを押す\n        そして、Klick\'r があなたのためにそれを倒すのを見てください!</string>
+    <string name="message_tutorial_screen_condition_still_target_step_24">おめでとう！\n\nKlick\'r の基本はわかりましたが、まだわかっていません。\n        すべてのユースケースはこのゲームと同じくらい単純になります。\n移動を追跡する方法については、次のチュートリアルをご覧ください。\n        ターゲット</string>
+</resources>

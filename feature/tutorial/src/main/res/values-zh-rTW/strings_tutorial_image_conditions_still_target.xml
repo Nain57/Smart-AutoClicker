@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- One still target tutorial -->
+    <string name="item_title_tutorial_screen_condition_still_target">點擊靜止目標</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">學習如何創建你的第一個事件，以便點擊靜止目標</string>
+    <string name="message_game_tutorial_screen_condition_still_target">儘可能快地點擊藍色按鈕</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_1">歡迎來到你的第一個教程！\n\n在這裡，你將嘗試在Klick\'r的幫助下打破遊戲的最高分記錄。\n\n首先，開始遊戲並嘗試自己贏得比賽。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_3">難度很大，不是嗎？\n讓我們使用Klick\'r來戰勝它！\n\n
+    點擊場景配置圖標開始編輯你的新場景。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_4">場景是Klick\'r自動化的根結構。\n\n
+    它包含了通用檢測設置和描述在運行你的場景時將執行的事件列表。\n\n點擊創建事件按鈕以創建你的第一個事件。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_5">事件描述了在滿足特定條件時執行的操作（點擊、滑動等）。\n\n為了創建一個有效的事件並在場景中使用它，你必須至少創建一個條件和一個操作。\n\n單擊條件欄位，顯示條件列表。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_6">條件是將與你的設備螢幕的每個螢幕幀進行比較的截圖的一部分。\n\n為了打贏遊戲，我們希望在藍色角色顯示在螢幕上時進行點擊，因此我們需要一個在角色顯示在你的設備螢幕上時滿足的條件。\n\n點擊創建條件按鈕以創建你的第一個條件。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_8">創建條件的第一步是為其拍攝截圖。\n\n
+    由於我們希望在藍色角色可見時進行點擊，因此截圖必須包含它。再次開始遊戲以顯示它，然後拍攝截圖。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">使用浮動菜單中的拍攝按鈕來拍攝截圖。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_9">一旦截圖被拍攝，你可以裁剪它，以獲取感興趣的部分。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">如果你的截圖不包含藍色角色，你可以按下此按鈕以拍攝新截圖。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_10">對於這個遊戲，感興趣的部分是藍色角色，所以裁剪你的截圖以只獲取他。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">確保選擇器中的角色完整。也儘量將其裁剪得離他越近越好，以便簡化圖像檢測。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_11">你的條件圖像現在已經記錄下來！\n\n現在可以對它進行幾個調整，但是默認設置適用於我們的基本用例。由於我們的目標不在移動，它只會在捕獲位置進行檢測，這比在整個螢幕上檢測更快。\n\n單擊保存 按鈕進行註冊，然後返回條件列表。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_12">關閉條件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_13">有了這個條件，場景就知道何時觸發操作了。\n\n
+    現在你需要定義要觸發的操作，所以對於這個遊戲，是對藍色角色進行點擊。\n\n單擊 操作欄位，顯示操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_14">操作是在其事件的條件滿足時執行的操作。\n\n它可以是點擊、滑動、暫停、意圖（與另一個應用程式的交互）或場景執行的更改，可以為同一個事件定義多個操作。\n\n點擊創建操作按鈕以創建你的第一個操作。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_15">首先，需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們只需要點擊藍色角色，所以選擇點擊來創建新的點擊操作。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_16">點擊操作由位置和按壓持續時間定義。\n\n由於我們希望儘快點擊，我們可以保持默認的按壓持續時間為1毫秒，這是最低可能的值。所以我們只需要定義一個位置。\n\n點擊位置選擇器按鈕來選擇點擊操作的位置。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_17">你需要選擇要點擊的確切位置，因此你需要重新開始遊戲以顯示藍色角色，然後選擇其位置。\n\n位置正確後，點擊驗證按鈕以保存它。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">在位置選擇器可見時，你無法與遊戲進行交互，但你可以使用此按鈕來顯示和隱藏它，以便隨時取消該限制。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_18">點擊現在已經正確配置！\n\n單擊保存按鈕 註冊並返回操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_19">關閉操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_20">你的事件現在有一個條件和一個操作，這意味著它知道何時執行操作。\n\n點擊保存按鈕以保存它並返回場景對話框。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_21">場景的唯一要求是至少有一個事件。\n
+    由於我們的事件已經涵蓋了如何贏得比賽，我們不需要其他任何東西。\n\n點擊保存按鈕以將場景保存在資料庫中並關閉配置對話框。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_22">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於檢測\n\n點擊它以開始檢測。</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_23">它正在運行，但沒有發生任何事情？\n\n那是正常的，它只會在藍色角色可見時點擊，記住嗎？在保持場景運行的同時，按下開始遊戲按鈕，只需觀看Klick\'r將為你贏得比賽！</string>
+
+    <string name="message_tutorial_screen_condition_still_target_step_24">恭喜！\n\n你現在了解了Klick\'r的基礎知識，但並非所有用例都像這個遊戲那麼簡單。\n看看下一個教程，了解如何跟蹤移動目標</string>
+</resources>
