@@ -40,6 +40,8 @@
         besoin d\'une condition qui sera remplie lorsque le personnage apparaît à l\'écran de votre appareil.\n\nCliquez sur le bouton
         de création de condition pour créer votre première condition.</string>
 
+    <string name="message_tutorial_screen_condition_still_target_step_7">Dans ce tutoriel, nous voulons apprendre à détecter une image à l\'écran, sélectionnez donc Condition Image</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">La première étape de la création d\'une condition consiste à prendre une capture
         d\'écran.\n\nComme nous voulons cliquer lorsque le personnage bleu est visible, la capture d\'écran doit le contenir.
         Relancez le jeu pour l\'afficher, puis prenez la capture d\'écran.</string>

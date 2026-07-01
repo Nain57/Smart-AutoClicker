@@ -33,6 +33,8 @@
 
     <string name="message_tutorial_screen_condition_still_target_step_6">條件是將與你的設備螢幕的每個螢幕幀進行比較的截圖的一部分。\n\n為了打贏遊戲，我們希望在藍色角色顯示在螢幕上時進行點擊，因此我們需要一個在角色顯示在你的設備螢幕上時滿足的條件。\n\n點擊創建條件按鈕以創建你的第一個條件。</string>
 
+    <string name="message_tutorial_screen_condition_still_target_step_7">在本教學中，我們想要學習如何偵測螢幕上的圖像，請選擇圖像條件</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">創建條件的第一步是為其拍攝截圖。\n\n
     由於我們希望在藍色角色可見時進行點擊，因此截圖必須包含它。再次開始遊戲以顯示它，然後拍攝截圖。</string>
     <string name="message_tutorial_screen_condition_still_target_step_secondary_8">使用浮動菜單中的拍攝按鈕來拍攝截圖。</string>

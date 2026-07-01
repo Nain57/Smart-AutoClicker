@@ -18,77 +18,100 @@
 <resources>
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">Pressione um alvo móvel</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">Altere seu evento para clicar em um alvo móvel aleatório</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">Aprenda a criar um evento para clicar em um alvo que se move aleatoriamente</string>
     <string name="message_game_tutorial_screen_condition_moving_target">Clique no botão azul móvel o mais rápido possível</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_1">Vamos complicar um pouco mais o jogo. Agora, o alvo está se movendo
-            aleatoriamente.\n\nPrimeiro, inicie o jogo e veja se você consegue vencer por conta própria.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_3">Mais uma vez, parece impossível vencer manualmente, então vamos usar o
-            Smart AutoClicker.\n\nSeu cenário do tutorial anterior foi mantido e carregado para este tutorial, mas precisaremos
-            alterar alguns parâmetros para vencer este novo jogo.\n\nClique no ícone de configuração de cenário para começar
-            a atualizar seu novo cenário.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_4">Ainda queremos clicar no personagem azul, o que significa que ainda só
-            precisamos de uma Condição e uma Ação, ou seja, apenas um Evento.\n\nComo o caso de uso é bastante semelhante ao
-            jogo anterior, manteremos nosso Evento e simplesmente o atualizaremos.\n\nClique no botão Salvar para registrá-lo e
-            retornar à lista de condições.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Inicialmente, vamos atualizar a Condição que detecta o personagem azul.\n\n
-            Clique na campo Condições para exibir a lista de Condições.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_6">Como no tutorial anterior, precisamos detectar o personagem azul, mas agora
-            ele está se movendo.\n\nNossa Condição anterior já está detectando o personagem azul, mas apenas em uma posição.
-            Portanto, não precisamos tirar uma nova captura de tela, pois sua Condição anterior já a possui, apenas precisamos
-            alterar seus parâmetros.\n\nClique na sua Condição para começar a editá-la.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_7">Atualmente, o tipo de detecção da Condição está definido como "Exata",
-            o que significa que será verificada apenas na posição de captura.\n\nPara vencer este jogo, precisamos verificar
-            a mesma Condição, mas em toda a tela.\n\nSelecione o tipo "Tela inteira" para detectar o personagem azul em qualquer
-            lugar da tela.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">Detectar na tela inteira leva mais tempo do que na posição exata,
-            tenha isso em mente quando a temporização da execução do seu Cenário for importante.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_8">É isso aí!\nSó precisamos mudar o tipo de detecção para que sua Condição atenda
-            às nossas necessidades.\n\nClique no botão Salvar para registrá-la e retornar à lista de condições.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_9">Feche a lista de condições para retornar à configuração do evento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">Bem-vindo ao seu segundo tutorial!\n\nEsta vez, o alvo está se movendo aleatoriamente
+        pela tela.\n\nPrimeiro, inicie o jogo e veja se você consegue vencer por conta própria.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_10">Sua imagem de Condição está agora atualizada!\nNeste estado, o cenário agora
-            executará um clique toda vez que o personagem azul estiver visível em qualquer lugar da tela, mas este clique será
-            na mesma posição selecionada durante o tutorial anterior. Portanto, precisamos atualizar nossa Ação.\n\n
-            Clique na campo Ações para exibir a lista de Ações.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_11">Ainda queremos executar um único clique, mas desta vez, queremos clicar na
-            Condição e não em uma posição fixa.\n\nComo ainda é apenas um clique, precisamos apenas de uma Ação, então vamos
-            editar seu clique anterior.\n\nClique na sua Ação para começar a editá-la.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_12">Atualmente, a Ação de Clique "Clique em" está definida como "Posição selecionada",
-            o que significa que você precisa definir manualmente a posição a ser clicada. A outra opção é "Condição", o que
-            significa que a Ação clicará nas coordenadas de uma Condição detectada.\n\nÉ exatamente isso que precisamos para
-            vencer o jogo. Sempre que o personagem azul for detectado, esta Ação clicará nele.\n\nSelecione isso para usá-lo
-            em sua Ação.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_13">Clique na opção seletor de Condição para selecionar qual condição detectada
-            clicar.\nPrecisamos especificá-lo porque podemos ter várias Condições em nosso Evento.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_14">Para nosso caso de uso é fácil, temos apenas uma condição, o personagem azul.\n\n
-            Selecione-o para clicar nesta Condição quando ela for detectada na sua tela.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_15">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
-            o jogo.\n\nClique no botão Salvar para registrá-la e retornar à lista de ações.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">Difícil, não é?\nVamos usar o Klick\'r para superá-lo!\n\n
+        Clique no ícone de configuração de cenário para começar a editar seu novo cenário.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_16">Feche a lista de ações para retornar à configuração do evento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">Um Cenário é a estrutura básica da automação Klick\'r.\n\n
+        Ele contém as configurações gerais de detecção e uma lista de Eventos descrevendo o que será executado ao
+        rodar seu Cenário.\n\nClique no botão de criar evento para criar seu primeiro Evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_17">Você atualizou a Condição e sua Ação, não há mais nada a fazer.\n\nClique no
-            botão de salvar para registrá-lo e retornar à caixa de diálogo de Cenário.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_18">Mais um último salvamento para registrar suas novas alterações no banco de dados
-            e fechar as caixas de diálogo de configuração.</string>
-    
-    <string name="message_tutorial_screen_condition_moving_target_step_19">Seu cenário agora está configurado para vencer este novo tutorial.\n\nInicie o
-            detecção com o botão de reprodução do menu flutuante e, em seguida, inicie o jogo.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Um Evento descreve quais Ações (clique, deslize…) devem ser executadas quando
+        certas Condições são atendidas.\n\nPara vencer este jogo, precisamos detectar o personagem azul enquanto ele se move pela tela.
+        \n\nClique na campo Condições para exibir a lista de Condições.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Parabéns!\n\nAgora você sabe como rastrear um alvo único, seja ele fixo ou em movimento, mas há muito mais para aprender!</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">Uma Condição de imagem é uma parte de uma captura de tela que será comparada com cada
+        quadro de tela do seu dispositivo.\n\nPara vencer o jogo, queremos clicar no personagem azul quando ele estiver
+        visível, então precisamos de uma Condição que seja cumprida quando o personagem estiver na tela do seu
+        dispositivo.\n\nClique no botão de criar Condição para criar sua primeira Condição.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">Neste tutorial, queremos aprender a detectar uma imagem na tela,
+        então selecione Condição de Imagem</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">O primeiro passo na criação de uma Condição de tela é tirar uma captura de tela
+        para ela.\n\nComo queremos clicar quando o personagem azul estiver visível, a captura de tela deve
+        contê-lo. Inicie o jogo novamente para exibi-lo e, em seguida, faça a captura de tela.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">Use o botão de captura no menu flutuante para tirar a captura de tela.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">Depois de tirar a captura de tela, você pode recortá-la para obter apenas a
+        parte que é interessante para a detecção.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">Se sua captura de tela não contém o personagem azul, você pode
+        pressionar este botão para tirar uma nova.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">Para este jogo, a parte interessante é o personagem azul, então recorte sua
+        captura de tela para obter apenas ele.\n\nVocê pode dar zoom na captura de tela para obter uma precisão melhor
+        para o seletor de recorte.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">Certifique-se de que o personagem está completo no seletor. Tente
+        recortá-lo o mais próximo possível dele para facilitar a detecção da imagem.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">Sua imagem de Condição já foi capturada!\n\nPor padrão, o tipo de detecção está definido
+        como "Exata", o que significa que o Klick\'r só irá procurá-la na posição de captura. Como o personagem azul pode
+        aparecer em qualquer lugar da área de jogo, selecione "Em uma área".</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">A terceira opção é "Tela inteira". Quanto maior a área de detecção, mais lenta será
+        a detecção. Tenha isso em mente quando a temporização da execução do seu Cenário for importante.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">Clique no seletor de área para alterar a área de detecção.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">Redimensione o retângulo de detecção ao tamanho da área de jogo, pois os alvos não
+        aparecerão fora dela. Quando o tamanho estiver correto, pressione o botão de validação para salvá-lo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">É isso aí!\nSó precisamos definir a área de detecção para que sua Condição atenda
+        às nossas necessidades.\n\nClique no botão Salvar para registrá-la e retornar à lista de Condições.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">Feche a lista de Condições para retornar à configuração do Evento.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">Sua Condição agora está configurada! Com ela, o cenário sabe quando o personagem
+        azul está visível em qualquer lugar da tela.\n\nNo entanto, como o personagem pode aparecer em qualquer lugar, não podemos
+        usar uma posição de clique fixa — precisamos clicar onde a Condição for detectada.\n\n
+        Clique na campo Ações para exibir a lista de Ações.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">Uma Ação é algo que é executado uma vez que as Condições de seu Evento são cumpridas.\n\n
+        Para este jogo, precisamos de uma Ação de Clique que clica onde o personagem azul for detectado.
+        \n\nClique no botão de criar Ação para criar uma nova Ação.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">Primeiro, precisamos escolher um tipo para sua Ação.\n\nPara este jogo,
+        precisamos clicar no personagem azul, então escolha Clique para criar uma nova Ação de Clique.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">Uma Ação de Clique é definida por uma posição e uma duração de pressão.\n\n
+        Como o personagem azul está se movendo, não podemos usar uma posição fixa. Altere a configuração "Clique em" para "Condição"
+        para clicar onde uma Condição detectada for encontrada.\n\nSelecione-a para usá-la em sua Ação.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Clique no seletor de Condição para escolher em qual Condição detectada clicar.
+        \n\nPrecisamos especificá-la porque um Evento pode ter várias Condições.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_21">Para nosso caso de uso é fácil, temos apenas uma Condição, o personagem azul.
+        \n\nSelecione-a para clicar nesta Condição quando ela for detectada na sua tela.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_22">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
+        o jogo.\n\nClique no botão Salvar para registrá-la e retornar à lista de Ações.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Feche a lista de Ações para retornar à configuração do Evento.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_24">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele sabe o que
+        executar e quando executá-lo.\n\nClique no botão de salvar para registrá-lo e retornar à caixa de diálogo de Cenário.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_25">O único requisito para um Cenário é ter pelo menos um Evento.\n
+        Como nosso Evento já cobre como vencer o jogo, não precisamos de mais nada.\n\nClique no botão de salvar para
+        salvar o Cenário no banco de dados e fechar as caixas de diálogo de configuração.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Como você pode ver, o botão de reprodução agora está disponível, o que significa que
+        seu Cenário é válido e pode ser usado para detecção.\n\nClique nele para iniciar a detecção e depois inicie o jogo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">Parabéns!\n\nAgora você sabe como rastrear um alvo em movimento usando o tipo de
+        detecção "Tela inteira" e o recurso "Clicar em Condição"!</string>
 </resources>

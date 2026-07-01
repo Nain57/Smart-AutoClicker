@@ -18,46 +18,62 @@
 <resources>
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">点击移动目标</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">将您的事件更改为点击随机移动目标</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">学习如何创建事件以点击随机移动的目标</string>
     <string name="message_game_tutorial_screen_condition_moving_target">尽可能快地点击移动的蓝色按钮</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_1">让我们再增加游戏的难度。现在，目标是随机移动的。\n\n首先，开始游戏并查看自己是否能够赢得比赛。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">欢迎来到你的第二个教程！\n\n这次，目标在屏幕上随机移动。\n\n首先，开始游戏并查看自己是否能够赢得比赛。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_3">再次尝试手动赢得比赛似乎不可能，所以让我们使用Klick\'r。\n\n你之前教程的场景已经被保存并加载到这个教程中，但是为了赢得这场新比赛，我们需要更改一些参数。\n\n点击场景配置图标开始更新你的新场景。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">难度很大，不是吗？\n让我们使用Klick\'r来战胜它！\n\n点击场景配置图标开始编辑你的新场景。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_4">我们仍然想点击蓝色角色，这意味着我们仍然只需要一个条件和一个操作，所以只需要一个事件。\n\n由于用例与之前的游戏非常相似，我们将保留我们的事件并简单地对其进行更新。\n\n点击你之前创建的事件以进行编辑。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">场景是Klick\'r自动化的根结构。\n\n它包含了通用检测设置和描述在运行你的场景时将执行的事件列表。\n\n点击创建事件按钮以创建你的第一个事件。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">首先，我们将更新检测蓝色角色的条件。\n\n单击条件字段，显示条件列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">事件描述了在满足特定条件时执行的操作（点击、滑动等）。\n\n为了打赢这个游戏，我们需要检测蓝色角色在屏幕上移动时的位置。\n\n单击条件字段，显示条件列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_6">与之前的教程一样，我们需要检测蓝色角色，但现在它在移动。\n\n我们之前的条件已经在检测蓝色角色，但只在一个位置。所以你不需要拍摄新的截图，因为你之前的条件已经有了它，我们只需要更改它的参数。\n\n点击条件以开始编辑它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">图像条件是将与你的设备屏幕的每个屏幕帧进行比较的截图的一部分。\n\n为了打赢游戏，我们希望在蓝色角色显示在屏幕上时进行点击，因此我们需要一个在角色显示在你的设备屏幕上时满足的条件。\n\n点击创建条件按钮以创建你的第一个条件。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_7">当前，条件检测类型设置为“精确”，这意味着它只会在捕获位置进行验证。\n\n为了赢得这个游戏，我们需要在整个屏幕上验证相同的条件。\n\n选择“整个屏幕”类型以在屏幕的任何位置检测蓝色角色。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">在整个屏幕上进行检测需要更多时间，当你的场景执行时间很重要时请记住这一点。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_7">在本教程中，我们想要学习如何检测屏幕上的图像，请选择图像条件</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_8">就是这样！\n我们只需要更改检测类型，以使你的条件符合我们的需求。\n\n单击保存 按钮进行注册，然后返回条件列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_8">创建屏幕条件的第一步是为其拍摄截图。\n\n由于我们希望在蓝色角色可见时进行点击，因此截图必须包含它。再次开始游戏以显示它，然后拍摄截图。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">使用浮动菜单中的拍摄按钮来拍摄截图。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_9">关闭条件列表，返回事件配置。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_9">一旦截图被拍摄，你可以裁剪它，以获取感兴趣的部分。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">如果你的截图不包含蓝色角色，你可以按下此按钮以拍摄新截图。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_10">你的条件图像现在已经更新！\n在这种状态下，场景现在会在屏幕的任何位置检测到蓝色角色时执行一次点击，但这次点击将在上一个教程中选择的相同位置上进行。所以，我们需要更新我们的操作。\n\n单击 “操作 ”字段，显示 “操作 ”列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_10">对于这个游戏，感兴趣的部分是蓝色角色，所以裁剪你的截图以只获取他。\n\n你可以捏合截图进行缩放，以获得更好的裁剪精度。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">确保选择器中的角色完整。也尽量将其裁剪得离他越近越好，以便简化图像检测。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_11">我们仍然想执行单击操作，但这次我们想要单击条件，而不是一个固定位置。\n\n由于这仍然是一个单击，我们仍然只需要一个操作，所以让我们编辑你之前的单击操作。\n\n点击操作以开始编辑它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_11">你的条件图像现在已经捕获！\n\n默认情况下，检测类型设置为"精确"，这意味着Klick\'r只会在捕获位置查找它。由于蓝色角色可以出现在游戏区域的任何位置，请选择"在区域内"。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">第三个选项是"整个屏幕"。检测区域越大，检测速度越慢。当你的场景执行时间很重要时请记住这一点。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_12">目前，单击操作“单击位置”设置为“选择的位置”，这意味着你必须手动设置要点击的位置。另一个选择是“条件”，这意味着操作将单击检测到的条件坐标。\n\n这正是我们打赢比赛所需要的。每次检测到蓝色角色时，此操作将对其进行单击。\n\n选择它以在你的操作中使用它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_12">点击区域选择器以更改检测区域。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_13">点击条件选择器选项以选择要单击的检测条件。\n我们需要指定它，因为我们的事件中可以有多个条件。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_13">将检测矩形调整为游戏区域的大小，因为目标不会出现在其外部。尺寸正确后，按验证按钮保存。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_14">对于我们的用例来说很容易，我们只有一个条件，即蓝色角色。\n\n
-    选择它以在屏幕上检测到此条件时单击它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_14">就是这样！\n我们只需要定义检测区域，以使你的条件符合我们的需求。\n\n单击保存按钮进行注册，然后返回条件列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_15">就是这样！\n你的单击操作现在已经正确配置以打赢比赛。\n\n单击保存按钮 注册并返回操作列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_15">关闭条件列表，返回事件配置。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_16">关闭操作列表，返回事件配置。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_16">你的条件现在已配置！有了它，场景就知道蓝色角色何时在屏幕上的任何位置可见。\n\n然而，由于角色可以出现在任何地方，我们无法使用固定的点击位置——我们需要在检测到条件的地方点击。\n\n单击操作字段，显示操作列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_17">你已经更新了条件和操作，没有其他要做的了。\n\n点击保存按钮以注册它并返回场景对话框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_17">操作是在其事件的条件满足时执行的操作。\n\n对于这个游戏，我们需要一个点击操作，在检测到蓝色角色的地方点击。\n\n点击创建操作按钮以创建新操作。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_18">最后一次保存，将你的新更改注册到数据库中并关闭配置对话框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_18">首先，需要为你的操作选择一个类型。\n\n对于这个游戏，我们需要点击蓝色角色，所以选择点击来创建新的点击操作。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">你的场景现在已经配置为打赢这个新教程。\n\n使用浮动菜单播放按钮开始检测，然后开始游戏。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">点击操作由位置和按压持续时间定义。\n\n由于蓝色角色在移动，我们无法使用固定位置。将"点击位置"设置更改为"条件"，以在找到检测到的条件的地方点击。\n\n选择它以在你的操作中使用它。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">恭喜！\n\n你现在知道如何跟踪静止或移动的单一目标，但还有很多东西要学！</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">点击条件选择器以选择要点击的检测条件。\n\n我们需要指定它，因为一个事件可以有多个条件。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_21">对于我们的用例来说很容易，我们只有一个条件，即蓝色角色。\n\n选择它以在屏幕上检测到此条件时单击它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_22">就是这样！\n你的点击操作现在已经正确配置以打赢比赛。\n\n单击保存按钮注册并返回操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_23">关闭操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_24">你的事件现在有一个条件和一个操作，这意味着它知道何时执行操作。\n\n点击保存按钮以保存它并返回场景对话框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_25">场景的唯一要求是至少有一个事件。\n由于我们的事件已经涵盖了如何赢得比赛，我们不需要其他任何东西。\n\n点击保存按钮以将场景保存在数据库中并关闭配置对话框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_26">正如你所看到的，播放按钮现在可用，这意味着你的场景有效并且可以用于检测。\n\n点击它以开始检测，然后开始游戏。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">恭喜！\n\n你现在知道如何使用"整个屏幕"检测类型和"点击条件"功能来跟踪移动目标！</string>
 </resources>

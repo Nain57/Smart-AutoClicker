@@ -18,71 +18,99 @@
 <resources>
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">Clicca su un bersaglio in movimento</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">Cambia il tuo evento per cliccare su un bersaglio in movimento casualmente</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">Impara a creare un evento per cliccare su un bersaglio in movimento casualmente</string>
     <string name="message_game_tutorial_screen_condition_moving_target">Clicca sul pulsante blu in movimento il più velocemente possibile</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_1">Complichiamo un po\' il gioco. Ora, il bersaglio si muove casualmente.\n\nInizia prima il gioco e
-    verifica se riesci a vincere da solo.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">Benvenuto al tuo secondo tutorial!\n\nQuesta volta, il bersaglio si muove casualmente
+        sullo schermo.\n\nInizia prima il gioco e verifica se riesci a vincere da solo.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_3">Ancora una volta, sembra impossibile vincere manualmente, quindi utilizziamo Klick\'r.\n\nLo
-    scenario per il tutorial precedente è stato mantenuto e caricato per questo tutorial, ma dovremo apportare alcune modifiche per
-    vincere questo nuovo gioco.\n\nClicca sull\'icona di configurazione dello scenario per iniziare a aggiornare il tuo nuovo scenario.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">Difficile, vero?\nUtilizziamo Klick\'r per batterlo!\n\n
+        Clicca sull\'icona di configurazione dello scenario per iniziare a modificare il tuo nuovo scenario.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_4">Vogliamo ancora cliccare sul personaggio blu, il che significa che abbiamo ancora bisogno di una Condizione e
-    di un\'Azione, quindi solo un Evento.\n\nPoiché il caso d\'uso è piuttosto simile al gioco precedente, manterremo il nostro Evento e lo
-    aggiorneremo semplicemente.\n\nClicca sul tuo evento creato in precedenza per modificarlo.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">Uno Scenario è la struttura principale dell\'automazione di Klick\'r.\n\n
+        Contiene le impostazioni generali di rilevamento e un elenco di Eventi che descrivono cosa verrà eseguito quando si esegue il tuo
+        Scenario.\n\nClicca sul pulsante crea evento per creare il tuo primo Evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Inizialmente, aggiorneremo la Condizione che rileva il personaggio blu.\n\nClicca sulla campo delle
-    Condizioni per visualizzare l\'elenco delle Condizioni.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Un Evento descrive quali Azioni (clic, swipe…) eseguire quando vengono soddisfatte determinate
+        Condizioni.\n\nPer battere questo gioco, dobbiamo rilevare il personaggio blu mentre si muove sullo schermo.
+        \n\nFare clic sul campo Condizioni per visualizzare l\'elenco delle Condizioni.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_6">Come nel tutorial precedente, dobbiamo rilevare il personaggio blu, ma ora si muove.\n\nLa nostra
-    precedente Condizione sta già rilevando il personaggio blu, ma solo in una posizione. Quindi non è necessario scattare uno screenshot,
-    poiché la tua Condizione precedente lo contiene già, dobbiamo solo cambiare i suoi parametri.\n\nFai clic sulla tua Condizione per
-    iniziare a modificarla.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">Una Condizione immagine è una parte di uno screenshot che verrà confrontata con ogni fotogramma
+        dello schermo del tuo dispositivo.\n\nPer battere il gioco, vogliamo cliccare sul personaggio blu quando è visibile, quindi abbiamo
+        bisogno di una Condizione che sia soddisfatta quando il personaggio è mostrato sullo schermo del tuo dispositivo.\n\nClicca sul
+        pulsante crea Condizione per creare la tua prima Condizione.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_7">Attualmente, il tipo di rilevamento della Condizione è impostato su "Esatto", il che significa che
-    verrà verificato solo nella sua posizione di acquisizione.\n\nPer vincere questo gioco, dobbiamo verificare la stessa Condizione, ma
-    su tutto lo schermo.\n\nSeleziona il tipo "Tutto lo schermo" per rilevare il personaggio blu ovunque sullo schermo.</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">Il rilevamento su tutto lo schermo richiede più tempo rispetto alla posizione esatta, quindi
-    tienilo presente quando la tempistica dell\'esecuzione dello Scenario è importante.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_7">In questo tutorial, vogliamo imparare a rilevare un\'immagine sullo schermo,
+        quindi seleziona Condizione Immagine</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_8">È fatta!\n\nDovevamo solo cambiare il tipo di rilevamento per fare in modo che la tua Condizione soddisfacesse
-    le nostre esigenze.\n\nFare clic sul pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_8">Il primo passo per la creazione di una Condizione schermo è catturare uno screenshot per essa.\n\n
+        Poiché vogliamo cliccare quando il personaggio blu è visibile, lo screenshot deve contenerlo. Inizia il gioco di nuovo per
+        visualizzarlo e quindi scatta lo screenshot.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">Usa il pulsante di cattura nel menu fluttuante per scattare lo screenshot.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_9">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_9">Una volta acquisito lo screenshot, puoi ritagliarlo per ottenere solo la parte interessante per
+        il rilevamento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">Se il tuo screenshot non contiene il personaggio blu, puoi premere questo pulsante per
+        farne uno nuovo.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_10">La tua immagine di Condizione è ora aggiornata!\n\nIn questo stato, lo scenario eseguirà un clic ogni
-    volta che il personaggio blu sarà visibile ovunque sullo schermo, ma questo clic sarà nella stessa posizione, quella selezionata durante
-    il tutorial precedente. Quindi, dobbiamo aggiornare la nostra Azione.\n\nFai clic sulla campo delle Azioni per visualizzare l\'elenco delle Azioni.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_10">Per questo gioco, la parte interessante è il personaggio blu, quindi ritaglia il tuo screenshot
+        per ottenere solo lui.\n\nPuoi pizzicare lo screenshot per ingrandirlo e ottenere una maggiore precisione per il selettore di ritaglio.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">Assicurati che il personaggio sia completo nel selettore. Inoltre, cerca di ritagliarlo il
+        più possibile vicino a lui per facilitare il rilevamento dell\'immagine.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_11">Vogliamo ancora eseguire un singolo clic, ma questa volta vogliamo fare clic sulla Condizione e non su
-    una posizione fissa.\n\nPoiché si tratta comunque di un clic, abbiamo ancora bisogno di una sola Azione, quindi modifichiamo il tuo clic
-    precedente.\n\nFai clic sulla tua Azione per iniziare a modificarla.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_11">La tua immagine di Condizione è ora catturata!\n\nPer impostazione predefinita, il tipo di
+        rilevamento è impostato su "Esatto", il che significa che Klick\'r lo cercherà solo nella posizione di acquisizione. Poiché il
+        personaggio blu può apparire ovunque nell\'area di gioco, seleziona "In un\'area".</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">La terza opzione è "Tutto lo schermo". Più grande è la zona di rilevamento, più lento
+        sarà il rilevamento. Tienilo presente quando la tempistica dell\'esecuzione dello Scenario è importante.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_12">Attualmente, l\'Azione di Clicca "Clicca su" è impostata su "Posizione selezionata", il che significa che
-    devi impostare manualmente la posizione su cui fare clic. L\'altro tipo è "Condizione", il che significa che l\'Azione farà clic sulle coordinate della Condizione
-    rilevate.\n\nÈ esattamente ciò di cui abbiamo bisogno per vincere il gioco. Ogni volta che il personaggio blu verrà rilevato, questa Azione
-    ci farà clic sopra.\n\nSelezionala per utilizzarla nella tua Azione.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_12">Clicca sul selettore di area per modificare l\'area di rilevamento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_13">Fai clic sull\'opzione selettore di Condizione per selezionare quale Condizione rilevata fare clic.\nDobbiamo
-    specificarlo perché possiamo avere più Condizioni nel nostro Evento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_13">Ridimensiona il rettangolo di rilevamento alle dimensioni dell\'area di gioco, poiché i
+        bersagli non appariranno al di fuori di essa. Una volta che la dimensione è corretta, premi il pulsante di convalida per salvarlo.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_14">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, quella del personaggio blu.\n\n
-    Selezionala per fare clic su questa Condizione quando viene rilevata sullo schermo.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_14">È fatta!\nDovevamo solo definire l\'area di rilevamento per fare in modo che la tua Condizione
+        soddisfacesse le nostre esigenze.\n\nFare clic sul pulsante Salva per registrarla e tornare all\'elenco delle Condizioni.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_15">È fatta!\n\nLa tua Azione di Clicca è ora configurata correttamente per battere il gioco.\n\n
-    Fare clic sul pulsante Salva perregistrarlo e tornare all\'elenco delle azioni.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_15">Chiudere l\'elenco delle Condizioni per tornare alla configurazione degli eventi.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_16">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_16">La tua Condizione è ora configurata! Con essa, lo scenario sa quando il personaggio blu
+        è visibile ovunque sullo schermo.\n\nTuttavia, poiché il personaggio può apparire ovunque, non possiamo usare una posizione di
+        clic fissa — dobbiamo cliccare dove la Condizione viene rilevata.\n\n
+        Fare clic sul campo Azioni per visualizzare l\'elenco delle Azioni.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_17">Hai aggiornato la Condizione e la tua Azione, non c\'è nient\'altro da fare.\n\nFai clic sul pulsante Salva
-    per registrarla e tornare alla finestra di dialogo dello Scenario.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_17">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento sono
+        soddisfatte.\n\nPer questo gioco, abbiamo bisogno di un\'Azione di Clicca che clicca dove il personaggio blu viene rilevato.
+        \n\nClicca sul pulsante crea Azione per creare una nuova Azione.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_18">Un ultimo salvataggio per registrare le tue nuove modifiche nel database e chiudere le finestre di configurazione.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_18">Innanzitutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer questo gioco, dobbiamo
+        cliccare sul personaggio blu, quindi scegli Clicca per creare una nuova Azione di Clicca.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">Il tuo Scenario è ora configurato per battere questo nuovo tutorial.\n\nAvvia la rilevazione con il pulsante
-    di riproduzione del menu fluttuante e quindi inizia il gioco.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">Un\'Azione di Clicca è definita da una posizione e una durata della pressione.\n\nPoiché il
+        personaggio blu si muove, non possiamo usare una posizione fissa. Cambia l\'impostazione "Clicca su" in "Condizione"
+        per cliccare dove viene trovata una Condizione rilevata.\n\nSelezionala per utilizzarla nella tua Azione.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Congratulazioni!\n\nOra sai come tracciare un bersaglio fermo o in movimento con Klick\'r.\n\n
-    Continua a sperimentare e scopri come personalizzare ulteriormente le tue automazioni per diverse applicazioni e giochi.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Clicca sul selettore di Condizione per scegliere su quale Condizione rilevata cliccare.
+        \n\nDobbiamo specificarlo perché un Evento può avere più Condizioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_21">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, il personaggio blu.
+        \n\nSelezionala per cliccare su questa Condizione quando viene rilevata sullo schermo.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_22">È fatta!\nLa tua Azione di Clicca è ora correttamente configurata per battere il
+        gioco.\n\nFare clic sul pulsante Salva per registrarla e tornare all\'elenco delle Azioni.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_24">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che sa cosa
+        eseguire e quando eseguirlo.\n\nFare clic sul pulsante Salva per registrarlo e tornare alla finestra di dialogo dello Scenario.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_25">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
+        Poiché il nostro Evento già copre come vincere il gioco, non abbiamo bisogno di altro.\n\nFai clic sul pulsante Salva per
+        salvare lo Scenario nel database e chiudere le finestre di dialogo di configurazione.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il
+        tuo Scenario è valido e può essere utilizzato per il rilevamento.\n\nFai clic su di esso per avviare il rilevamento e poi inizia il gioco.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">Congratulazioni!\n\nOra sai come tracciare un bersaglio in movimento usando il tipo di
+        rilevamento "Tutto lo schermo" e la funzione "Clicca su Condizione"!</string>
 </resources>

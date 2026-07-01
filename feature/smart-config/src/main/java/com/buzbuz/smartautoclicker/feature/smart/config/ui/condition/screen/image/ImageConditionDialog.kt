@@ -178,7 +178,8 @@ class ImageConditionDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
-        viewModel.monitorDetectionTypeItemWholeScreenView(viewBinding.fieldDetectionType.multiStateButton.buttonMiddle)
+        viewModel.monitorDetectionTypeItemInAreaView(viewBinding.fieldDetectionType.multiStateButton.buttonRight)
+        viewModel.monitorDetectionAreaSelector(viewBinding.fieldSelectArea.root)
     }
 
     override fun onStop() {

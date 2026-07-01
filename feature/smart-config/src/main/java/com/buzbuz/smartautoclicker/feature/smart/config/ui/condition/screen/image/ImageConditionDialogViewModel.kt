@@ -156,13 +156,18 @@ class ImageConditionViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
-    fun monitorDetectionTypeItemWholeScreenView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN, view)
+    fun monitorDetectionTypeItemInAreaView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA, view)
+    }
+
+    fun monitorDetectionAreaSelector(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_WHOLE_SCREEN)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA)
+        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_AREA_SELECTOR)
     }
 
     private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {

@@ -18,46 +18,62 @@
 <resources>
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">點擊移動目標</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">將您的事件更改為點擊隨機移動目標</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">學習如何創建事件以點擊隨機移動的目標</string>
     <string name="message_game_tutorial_screen_condition_moving_target">儘可能快地點擊移動的藍色按鈕</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_1">讓我們再增加遊戲的難度。現在，目標是隨機移動的。\n\n首先，開始遊戲並查看自己是否能夠贏得比賽。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">歡迎來到你的第二個教學！\n\n這次，目標在螢幕上隨機移動。\n\n首先，開始遊戲並查看自己是否能夠贏得比賽。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_3">再次嘗試手動贏得比賽似乎不可能，所以讓我們使用Klick\'r。\n\n你之前教程的場景已經被保存並加載到這個教程中，但是為了贏得這場新比賽，我們需要更改一些參數。\n\n點擊場景配置圖標開始更新你的新場景。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">難度很大，不是嗎？\n讓我們使用Klick\'r來戰勝它！\n\n點擊場景配置圖標開始編輯你的新場景。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_4">我們仍然想點擊藍色角色，這意味著我們仍然只需要一個條件和一個操作，所以只需要一個事件。\n\n由於用例與之前的遊戲非常相似，我們將保留我們的事件並簡單地對其進行更新。\n\n點擊你之前創建的事件以進行編輯。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">場景是Klick\'r自動化的根結構。\n\n它包含了通用檢測設置和描述在運行你的場景時將執行的事件列表。\n\n點擊創建事件按鈕以創建你的第一個事件。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">首先，我們將更新檢測藍色角色的條件。\n\n單擊條件欄位，顯示條件列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">事件描述了在滿足特定條件時執行的操作（點擊、滑動等）。\n\n為了打贏這個遊戲，我們需要檢測藍色角色在螢幕上移動時的位置。\n\n單擊條件欄位，顯示條件列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_6">與之前的教程一樣，我們需要檢測藍色角色，但現在它在移動。\n\n我們之前的條件已經在檢測藍色角色，但只在一個位置。所以你不需要拍攝新的截圖，因為你之前的條件已經有了它，我們只需要更改它的參數。\n\n點擊條件以開始編輯它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">圖像條件是將與你的設備螢幕的每個螢幕幀進行比較的截圖的一部分。\n\n為了打贏遊戲，我們希望在藍色角色顯示在螢幕上時進行點擊，因此我們需要一個在角色顯示在你的設備螢幕上時滿足的條件。\n\n點擊創建條件按鈕以創建你的第一個條件。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_7">當前，條件檢測類型設置為「精確」，這意味著它只會在捕獲位置進行驗證。\n\n為了贏得這個遊戲，我們需要在整個螢幕上驗證相同的條件。\n\n選擇「整個螢幕」類型以在螢幕的任何位置檢測藍色角色。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">在整個螢幕上進行檢測需要更多時間，當你的場景執行時間很重要時請記住這一點。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_7">在本教學中，我們想要學習如何偵測螢幕上的圖像，請選擇圖像條件</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_8">就是這樣！\n我們只需要更改檢測類型，以使你的條件符合我們的需求。\n\n單擊保存 按鈕進行註冊，然後返回條件列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_8">創建螢幕條件的第一步是為其拍攝截圖。\n\n由於我們希望在藍色角色可見時進行點擊，因此截圖必須包含它。再次開始遊戲以顯示它，然後拍攝截圖。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">使用浮動菜單中的拍攝按鈕來拍攝截圖。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_9">關閉條件列表，返回事件配置。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_9">一旦截圖被拍攝，你可以裁剪它，以獲取感興趣的部分。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">如果你的截圖不包含藍色角色，你可以按下此按鈕以拍攝新截圖。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_10">你的條件圖像現在已經更新！\n在這種狀態下，場景現在會在螢幕的任何位置檢測到藍色角色時執行一次點擊，但這次點擊將在上一個教程中選擇的相同位置上進行。所以，我們需要更新我們的操作。\n\n單擊 「操作 」欄位，顯示 「操作 」列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_10">對於這個遊戲，感興趣的部分是藍色角色，所以裁剪你的截圖以只獲取他。\n\n你可以捏合截圖進行縮放，以獲得更好的裁剪精度。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">確保選擇器中的角色完整。也儘量將其裁剪得離他越近越好，以便簡化圖像檢測。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_11">我們仍然想執行單擊操作，但這次我們想要單擊條件，而不是一個固定位置。\n\n由於這仍然是一個單擊，我們仍然只需要一個操作，所以讓我們編輯你之前的單擊操作。\n\n點擊操作以開始編輯它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_11">你的條件圖像現在已經捕獲！\n\n默認情況下，檢測類型設置為「精確」，這意味著Klick\'r只會在捕獲位置查找它。由於藍色角色可以出現在遊戲區域的任何位置，請選擇「在區域內」。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">第三個選項是「整個螢幕」。檢測區域越大，檢測速度越慢。當你的場景執行時間很重要時請記住這一點。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_12">目前，單擊操作「單擊位置」設置為「選擇的位置」，這意味著你必須手動設置要點擊的位置。另一個選擇是「條件」，這意味著操作將單擊檢測到的條件坐標。\n\n這正是我們打贏比賽所需要的。每次檢測到藍色角色時，此操作將對其進行單擊。\n\n選擇它以在你的操作中使用它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_12">點擊區域選擇器以更改檢測區域。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_13">點擊條件選擇器選項以選擇要單擊的檢測條件。\n我們需要指定它，因為我們的事件中可以有多個條件。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_13">將檢測矩形調整為遊戲區域的大小，因為目標不會出現在其外部。尺寸正確後，按驗證按鈕保存。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_14">對於我們的用例來說很容易，我們只有一個條件，即藍色角色。\n\n
-    選擇它以在螢幕上檢測到此條件時單擊它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_14">就是這樣！\n我們只需要定義檢測區域，以使你的條件符合我們的需求。\n\n單擊保存按鈕進行註冊，然後返回條件列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_15">就是這樣！\n你的單擊操作現在已經正確配置以打贏比賽。\n\n單擊保存按鈕 註冊並返回操作列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_15">關閉條件列表，返回事件配置。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_16">關閉操作列表，返回事件配置。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_16">你的條件現在已配置！有了它，場景就知道藍色角色何時在螢幕上的任何位置可見。\n\n然而，由於角色可以出現在任何地方，我們無法使用固定的點擊位置——我們需要在檢測到條件的地方點擊。\n\n單擊操作欄位，顯示操作列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_17">你已經更新了條件和操作，沒有其他要做的了。\n\n點擊保存按鈕以註冊它並返回場景對話框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_17">操作是在其事件的條件滿足時執行的操作。\n\n對於這個遊戲，我們需要一個點擊操作，在檢測到藍色角色的地方點擊。\n\n點擊創建操作按鈕以創建新操作。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_18">最後一次保存，將你的新更改註冊到資料庫中並關閉配置對話框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_18">首先，需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們需要點擊藍色角色，所以選擇點擊來創建新的點擊操作。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">你的場景現在已經配置為打贏這個新教程。\n\n使用浮動菜單播放按鈕開始檢測，然後開始遊戲。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">點擊操作由位置和按壓持續時間定義。\n\n由於藍色角色在移動，我們無法使用固定位置。將「點擊位置」設置更改為「條件」，以在找到檢測到的條件的地方點擊。\n\n選擇它以在你的操作中使用它。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">恭喜！\n\n你現在知道如何跟蹤靜止或移動的單一目標，但還有很多東西要學！</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">點擊條件選擇器以選擇要點擊的檢測條件。\n\n我們需要指定它，因為一個事件可以有多個條件。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_21">對於我們的用例來說很容易，我們只有一個條件，即藍色角色。\n\n選擇它以在螢幕上檢測到此條件時單擊它。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_22">就是這樣！\n你的點擊操作現在已經正確配置以打贏比賽。\n\n單擊保存按鈕註冊並返回操作列表。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_23">關閉操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_24">你的事件現在有一個條件和一個操作，這意味著它知道何時執行操作。\n\n點擊保存按鈕以保存它並返回場景對話框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_25">場景的唯一要求是至少有一個事件。\n由於我們的事件已經涵蓋了如何贏得比賽，我們不需要其他任何東西。\n\n點擊保存按鈕以將場景保存在資料庫中並關閉配置對話框。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_26">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於檢測。\n\n點擊它以開始檢測，然後開始遊戲。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">恭喜！\n\n你現在知道如何使用「整個螢幕」檢測類型和「點擊條件」功能來跟蹤移動目標！</string>
 </resources>

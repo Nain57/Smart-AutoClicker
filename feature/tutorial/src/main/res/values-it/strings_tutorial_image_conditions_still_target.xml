@@ -40,6 +40,8 @@
     Condizione che sia soddisfatta quando il personaggio è mostrato sullo schermo del tuo dispositivo.\n\nClicca sul pulsante crea
     Condizione per creare la tua prima Condizione.</string>
 
+    <string name="message_tutorial_screen_condition_still_target_step_7">In questo tutorial, vogliamo imparare a rilevare un\'immagine sullo schermo, quindi seleziona Condizione Immagine</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">Il primo passo per la creazione di una Condizione è catturare uno screenshot per essa.\n\nPoiché
     vogliamo cliccare quando il personaggio blu è visibile, lo screenshot deve contenerlo. Inizia il gioco di nuovo per visualizzarlo
     e quindi scatta lo screenshot.</string>

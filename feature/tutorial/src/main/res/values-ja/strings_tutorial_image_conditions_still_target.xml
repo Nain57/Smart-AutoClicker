@@ -24,6 +24,8 @@
     <string name="message_tutorial_screen_condition_still_target_step_4">シナリオは、Klick\'r オートメーションのルート構造です。\n\n\n        これには、一般的な検出設定と、実行時に実行される内容を説明するイベントのリストが含まれています。\n        あなたのシナリオ。 \n\n「イベントの作成」ボタンをクリックして最初のイベントを作成します。</string>
     <string name="message_tutorial_screen_condition_still_target_step_5">イベントは、特定の場合に実行するアクション (クリック、スワイプなど) を記述します。\n        条件は満たされています。\n\n有効なイベントを作成するには、少なくとも 1 つの条件と 1 つのアクションを作成する必要があります\n        そしてそれをあなたのシナリオで使用してください\n\n「条件」フィールドをクリックして「条件」リストを表示します。</string>
     <string name="message_tutorial_screen_condition_still_target_step_6">条件は、各画面と比較されるスクリーンショットの一部です。\n        デバイスのフレーム。\n\nゲームに勝つには、青いキャラクターが表示されているときにクリックする必要があるため、\n        キャラクターがデバイス画面に表示されたときに満たされる条件。\n\n「作成」をクリックします\n        最初の条件を作成するための条件ボタン。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_7">このチュートリアルでは、画面上の画像を検出する方法を学びます。画像条件を選択してください</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">条件作成の最初のステップは、条件のスクリーンショットを撮ることです。\n\n\n        青い文字が表示されているときにクリックしたいので、スクリーンショットに青い文字が含まれている必要があります。でゲームを再度開始します\n        表示してからスクリーンショットを撮ります。</string>
     <string name="message_tutorial_screen_condition_still_target_step_secondary_8">フローティング メニューのキャプチャ ボタンを使用してスクリーンショットを撮ります。</string>
     <string name="message_tutorial_screen_condition_still_target_step_9">スクリーンショットを撮ったら、その部分だけを取得するために切り取ることができます\n        それは検出にとって興味深いことです。</string>

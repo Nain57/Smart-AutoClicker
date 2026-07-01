@@ -18,75 +18,100 @@
 <resources>
     <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">اضغط على هدف متحرك</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">قم بتغيير الحدث الخاص بك للنقر على هدف متحرك بشكل عشوائي</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">تعرف على كيفية إنشاء حدث للنقر على هدف يتحرك بشكل عشوائي</string>
     <string name="message_game_tutorial_screen_condition_moving_target">انقر على الزر الأزرق المتحرك في أسرع وقت ممكن</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_1">دعونا تعقيد اللعبة أكثر قليلا. الآن، الهدف عشوائي
-        تتحرك.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كان بإمكانك الفوز بنفسك.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_1">مرحبًا بك في البرنامج التعليمي الثاني!\n\nهذه المرة، الهدف يتحرك بشكل عشوائي
+        عبر الشاشة.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كان بإمكانك الفوز بنفسك.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_3">مرة أخرى، يبدو من المستحيل الفوز يدويًا، لذلك دعونا نستخدم Smart
-        AutoClicker.\n\nتم الاحتفاظ بالسيناريو الخاص بالبرنامج التعليمي السابق وتحميله لهذا البرنامج التعليمي، ولكننا سنفعل ذلك
-        بحاجة إلى تغيير بعض المعلمات للفوز بهذه اللعبة الجديدة.\n\nانقر فوق رمز تكوين السيناريو
-        ابدأ في تحديث السيناريو الجديد الخاص بك.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_3">الأمر صعب، أليس كذلك؟\nدعونا نستخدم Klick\'r للتغلب عليه!\n\n
+        انقر فوق رمز تكوين السيناريو لبدء تحرير السيناريو الجديد.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_4">ما زلنا نريد النقر على الحرف الأزرق، وهذا يعني أننا لا نزال فقط
-        تحتاج إلى شرط واحد وإجراء واحد، لذا حدث واحد فقط.\n\nنظرًا لأن حالة الاستخدام تشبه إلى حد كبير اللعبة السابقة،
-        سنحتفظ بالحدث الخاص بنا ونقوم ببساطة بتحديثه.\n\nانقر فوق الحدث الذي قمت بإنشائه مسبقًا لتعديله.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_4">"السيناريو" هو البنية الجذرية لأتمتة Klick\'r.\n\n
+        يحتوي على إعدادات الكشف العامة وقائمة الأحداث التي تصف ما سيتم تنفيذه عند التشغيل.
+        \n\nانقر فوق زر إنشاء حدث لإنشاء حدثك الأول.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">في المرة الأولى، سنقوم بتحديث الحالة التي تكتشف اللون الأزرق
-        الحرف.\n\nانقر فوق حقل الشروط لعرض قائمة الشروط.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">يصف الحدث الإجراءات (انقر، اسحب…) التي سيتم تنفيذها عند استيفاء شروط معينة.
+        \n\nللتغلب على هذه اللعبة، نحتاج إلى اكتشاف الحرف الأزرق أثناء تحركه عبر الشاشة.
+        \n\nانقر فوق حقل الشروط لعرض قائمة الشروط.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_6">كما في البرنامج التعليمي السابق، نحن بحاجة إلى الكشف عن الحرف الأزرق، ولكن الآن
-        إنه يتحرك.\n\nلقد اكتشف الشرط السابق بالفعل الحرف الأزرق، ولكن في موضع واحد فقط. إذن أنت
-        لا تحتاج إلى التقاط لقطة شاشة جديدة، نظرًا لأن حالتك السابقة موجودة بالفعل، نحتاج فقط إلى تغييرها
-        المعلمات.\n\nانقر فوق الشرط الخاص بك لبدء تحريره.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_6">شرط الصورة هو جزء من لقطة الشاشة التي سيتم مقارنتها بكل إطار من شاشة
+        جهازك.\n\nللتغلب على اللعبة، نريد النقر على الحرف الأزرق عندما يكون مرئيًا، لذلك نحتاج
+        إلى شرط يتم استيفاؤه عند ظهور الشخصية على شاشة جهازك.\n\nانقر فوق زر إنشاء
+        الشرط لإنشاء شرطك الأول.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_7">حاليًا، تم تعيين نوع اكتشاف الحالة على \"تام\"، وهذا يعني ذلك
-        سيتم التحقق منها فقط في موقع الالتقاط الخاص بها.\n\nللفوز بهذه اللعبة، نحتاج إلى التحقق من نفس الحالة، ولكن تشغيلها
-        الشاشة بأكملها.\n\nحدد نوع \"الشاشة بأكملها\" لاكتشاف الحرف الأزرق في أي مكان
-        الشاشة.</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">يستغرق الاكتشاف على الشاشة بأكملها وقتًا أطول من الوقت المحدد
-        الموقف، ضع ذلك في الاعتبار عندما يكون توقيت تنفيذ السيناريو مهمًا.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_7">في هذا البرنامج التعليمي، نريد تعلم كيفية الكشف عن صورة على الشاشة،
+        لذا اختر شرط الصورة</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_8">هذا كل شيء!\nنحن بحاجة فقط إلى تغيير نوع الكشف من أجل ذلك
-        شرطك يناسب احتياجاتنا.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_8">الخطوة الأولى لإنشاء شرط الشاشة هي التقاط لقطة شاشة له.\n\n
+        وبما أننا نريد النقر عندما يكون الحرف الأزرق مرئيًا، فيجب أن تحتوي عليه لقطة الشاشة. ابدأ اللعبة مرة أخرى
+        لعرضه، ثم التقط لقطة الشاشة.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">استخدم زر الالتقاط في القائمة العائمة لالتقاط لقطة الشاشة.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_9">قم بإغلاق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_9">بمجرد التقاط لقطة الشاشة، يمكنك قصها للحصول على الجزء فقط
+        وهذا مثير للاهتمام للكشف.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">إذا كانت لقطة الشاشة الخاصة بك لا تحتوي على الحرف الأزرق، فيمكنك
+        اضغط على هذا الزر لاتخاذ واحدة جديدة.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_10">تم الآن تحديث صورة الحالة الخاصة بك!\n\nفي هذه الحالة، سيتم تحديث السيناريو
-        قم الآن بتنفيذ نقرة في كل مرة يكون فيها الحرف الأزرق مرئيًا في أي مكان على الشاشة، ولكن هذه النقرة ستكون في
-        نفس الموضع، الذي تم تحديده أثناء البرنامج التعليمي السابق. لذا، نحن بحاجة إلى تحديث الإجراء الخاص بنا.\n\n
+    <string name="message_tutorial_screen_condition_moving_target_step_10">في هذه اللعبة، الجزء المثير للاهتمام هو الشخصية الزرقاء، لذا قم بقصها
+        لقطة شاشة للحصول عليه فقط.\n\nيمكنك الضغط على لقطة الشاشة لتكبيرها والحصول على دقة أفضل
+        لمحدد الاقتصاص.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">تأكد من اكتمال الحرف في المحدد. حاول أيضًا أن
+        قم بقصها في أقرب وقت ممكن منه لتسهيل اكتشاف الصورة.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">تم الآن التقاط صورة الشرط الخاصة بك!\n\nافتراضيًا، تم تعيين نوع الاكتشاف على
+        "تام"، مما يعني أن Klick\'r سيبحث عنه فقط في موضع الالتقاط. نظرًا لأن الحرف الأزرق يمكن أن
+        يظهر في أي مكان في منطقة اللعبة، حدد "في منطقة".</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">الخيار الثالث هو "الشاشة بأكملها". كلما كانت منطقة الاكتشاف أكبر، كان الاكتشاف أبطأ.
+        ضع ذلك في الاعتبار عندما يكون توقيت تنفيذ السيناريو مهمًا.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">انقر فوق محدد المنطقة لتغيير منطقة الاكتشاف.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">قم بتغيير حجم مستطيل الاكتشاف إلى حجم منطقة اللعبة، حيث لن تظهر الأهداف خارجها.
+        بمجرد أن يكون الحجم صحيحًا، اضغط على زر التحقق لحفظه.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">هذا كل شيء!\nنحن بحاجة فقط إلى تحديد منطقة الكشف لكي يناسب شرطك
+        احتياجاتنا.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">قم بإغلاق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">تم الآن تكوين شرطك! بفضله، يعرف السيناريو متى يكون الحرف الأزرق
+        مرئيًا في أي مكان على الشاشة.\n\nومع ذلك، نظرًا لأن الشخصية يمكن أن تظهر في أي مكان، لا يمكننا
+        استخدام موضع نقر ثابت — نحتاج إلى النقر حيث يتم اكتشاف الشرط.\n\n
         انقر فوق حقل الإجراءات لعرض قائمة الإجراءات.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_11">ما زلنا نريد تنفيذ نقرة واحدة، ولكن هذه المرة، نريد النقر
-        على الشرط وليس على موضع ثابت.\n\nبما أن هذه لا تزال نقرة واحدة، فإننا لا نزال بحاجة إلى إجراء واحد فقط، لذا
-        دعنا نعدل نقرتك السابقة.\n\nانقر على الإجراء الخاص بك لبدء تحريره.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_17">الإجراء هو شيء يتم تنفيذه بمجرد استيفاء شروط حدثه.\n\n
+        لهذه اللعبة، نحتاج إلى إجراء نقر يقوم بالنقر حيث يتم اكتشاف الحرف الأزرق.
+        \n\nانقر فوق زر إنشاء إجراء لإنشاء إجراء جديد.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_12">حاليًا، تم تعيين إجراء النقر \"النقر على\" على \"الموضع المحدد\"،
-        مما يعني أنه يتعين عليك ضبط الموضع المراد النقر عليه يدويًا. الخيار الآخر هو \"الشرط\"، مما يعني أن الإجراء سيتم النقر عليه
-        تم اكتشاف إحداثيات الحالة.\n\nهذا بالضبط ما نحتاجه للتغلب على اللعبة. في كل مرة الطابع الأزرق
-        سيتم اكتشافه، وسيقوم هذا الإجراء بالنقر عليه.\n\nحدده لاستخدامه في الإجراء الخاص بك.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_18">أولاً، نحتاج إلى اختيار نوع لإجراءك.\n\nلهذه اللعبة، نحتاج
+        إلى النقر على الحرف الأزرق، لذا اختر "انقر" لإنشاء إجراء نقر جديد.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_13">انقر فوق خيار محدد الحالة لتحديد الحالة المكتشفة
-        للنقر عليها.\nنحن بحاجة إلى تحديدها لأنه يمكن أن يكون لدينا شروط متعددة في الحدث الخاص بنا.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">يتم تحديد إجراء النقر من خلال الموضع ومدة الضغط.\n\nنظرًا لأن
+        الحرف الأزرق يتحرك، لا يمكننا استخدام موضع ثابت. غيّر إعداد "النقر على" إلى "الشرط"
+        للنقر حيث يوجد شرط مكتشف.\n\nحدده لاستخدامه في إجراءك.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_14">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، وهو الحرف الأزرق.\n\n
-        حدده للنقر على هذا الشرط عندما يتم اكتشافه على شاشتك.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">انقر فوق محدد الشرط لاختيار الشرط المكتشف الذي تريد النقر عليه.
+        \n\nنحتاج إلى تحديده لأن الحدث يمكن أن يحتوي على شروط متعددة.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_15">هذا كل شيء!\nتم الآن تكوين إجراء النقر بشكل صحيح للتغلب على
-        اللعبة.\n\nانقر على زر الحفظ لتسجيلها والعودة إلى قائمة الإجراءات.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_21">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، وهو الحرف الأزرق.
+        \n\nحدده للنقر على هذا الشرط عندما يتم اكتشافه على شاشتك.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_16">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">هذا كل شيء!\nتم الآن تكوين إجراء النقر بشكل صحيح للتغلب على
+        اللعبة.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الإجراءات.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_17">لقد قمت بتحديث الشرط والإجراء الخاص بك، ولا يوجد شيء أكثر من ذلك
-        افعل ذلك.\n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_23">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_18">حفظ أخير لتسجيل تغييراتك الجديدة في قاعدة البيانات وإغلاق الملف
-        مربعات حوار التكوين.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_24">أصبح لحدثك الآن شرط وإجراء، مما يعني أنه يعرف ماذا يُنفذ ومتى يُنفذ.
+        \n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">تم الآن تكوين السيناريو الخاص بك للتغلب على هذا البرنامج التعليمي الجديد.\n\nابدأ
-        الكشف باستخدام زر تشغيل القائمة العائمة ثم ابدأ اللعبة.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_25">الشرط الوحيد للسيناريو هو أن يكون هناك حدث واحد على الأقل.\n
+        نظرًا لأن حدثنا يغطي بالفعل كيفية الفوز باللعبة، فلا نحتاج إلى أي شيء آخر.\n\nانقر فوق زر الحفظ
+        لحفظ السيناريو في قاعدة البيانات وإغلاق مربعات حوار التكوين.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">تهانينا!\n\nأنت تعرف الآن كيفية تتبع الأغنية المنفردة الثابتة أو المتحركة
-        الهدف، ولكن هناك الكثير لنتعلمه!.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_26">كما ترون، أصبح زر التشغيل متاحًا الآن، مما يعني أن السيناريو الخاص بك
+        صالح ويمكن استخدامه للكشف.\n\nانقر عليه لبدء الكشف ثم ابدأ اللعبة.</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">تهانينا!\n\nأنت تعرف الآن كيفية تتبع هدف متحرك باستخدام نوع الاكتشاف
+        "الشاشة بأكملها" وميزة "النقر على الشرط"!</string>
 </resources>

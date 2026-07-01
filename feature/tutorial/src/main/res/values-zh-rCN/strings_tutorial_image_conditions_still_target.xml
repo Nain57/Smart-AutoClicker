@@ -33,6 +33,8 @@
 
     <string name="message_tutorial_screen_condition_still_target_step_6">条件是将与你的设备屏幕的每个屏幕帧进行比较的截图的一部分。\n\n为了打赢游戏，我们希望在蓝色角色显示在屏幕上时进行点击，因此我们需要一个在角色显示在你的设备屏幕上时满足的条件。\n\n点击创建条件按钮以创建你的第一个条件。</string>
 
+    <string name="message_tutorial_screen_condition_still_target_step_7">在本教程中，我们想要学习如何检测屏幕上的图像，请选择图像条件</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">创建条件的第一步是为其拍摄截图。\n\n
     由于我们希望在蓝色角色可见时进行点击，因此截图必须包含它。再次开始游戏以显示它，然后拍摄截图。</string>
     <string name="message_tutorial_screen_condition_still_target_step_secondary_8">使用浮动菜单中的拍摄按钮来拍摄截图。</string>

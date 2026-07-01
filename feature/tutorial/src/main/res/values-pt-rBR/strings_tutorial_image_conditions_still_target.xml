@@ -40,6 +40,8 @@
         visível, então precisamos de uma Condição que seja cumprida quando o personagem estiver na tela do seu
         dispositivo.\n\nClique no botão de criar Condição para criar sua primeira Condição.</string>
 
+    <string name="message_tutorial_screen_condition_still_target_step_7">Neste tutorial, queremos aprender a detectar uma imagem na tela, então selecione Condição de Imagem</string>
+
     <string name="message_tutorial_screen_condition_still_target_step_8">O primeiro passo na criação de uma Condição é tirar uma captura de tela
         para ela.\n\nComo queremos clicar quando o personagem azul estiver visível, a captura de tela deve
         contê-lo. Inicie o jogo novamente para exibi-lo e, em seguida, faça a captura de tela.</string>

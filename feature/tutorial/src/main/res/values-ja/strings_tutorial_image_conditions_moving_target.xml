@@ -16,27 +16,64 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
+    <!-- One moving target tutorial -->
     <string name="item_title_tutorial_screen_condition_moving_target">動いているターゲットを押す</string>
-    <string name="item_desc_tutorial_screen_condition_moving_target">ランダムに動くターゲットをクリックするようにイベントを変更します</string>
+    <string name="item_desc_tutorial_screen_condition_moving_target">ランダムに動くターゲットをクリックするイベントの作成方法を学ぶ</string>
     <string name="message_game_tutorial_screen_condition_moving_target">動く青いボタンをできるだけ早くクリックしてください</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_1">ゲームをもう少し複雑にしてみましょう。さて、ターゲットはランダムです\n        動いている。\n\nまずはゲームを開始して自分で勝てるか確認してみましょう。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_3">やはり手動で勝つのは無理そうなのでスマートを使いましょう\n        オートクリッカー。\n\n前のチュートリアルのシナリオは保持され、このチュートリアルでも読み込まれますが、\n        この新しいゲームに勝つには、いくつかのパラメータを変更する必要があります。\n\nシナリオ設定アイコンをクリックして、\n        新しいシナリオの更新を開始します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_4">まだ青い文字をクリックしたいのですが、これはまだ単に\n        1 つの条件と 1 つのアクションが必要なので、イベントは 1 つだけです。\n\n使用例は前作とほぼ同じなので、\n        イベントを保持し、単に更新するだけです。\n\n以前に作成したイベントをクリックして編集します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_5">初めて、青色を検出する条件を更新します。\n        キャラクター。\n\n「条件」フィールドをクリックして「条件」リストを表示します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_6">前のチュートリアルと同様に、青い文字を検出する必要がありますが、ここでは\n        それは動いています。\n\n前の条件ではすでに青い文字が検出されていますが、検出されているのは 1 つの位置だけです。それであなたは\n        以前の条件にはすでにスクリーンショットが含まれているため、新しいスクリーンショットを撮る必要はありません。変更するだけで済みます。\n        パラメータ。\n\n条件をクリックして編集を開始します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_7">現在、条件検出タイプは「正確」に設定されています。\n        キャプチャ位置でのみ検証されます。\n\nこのゲームに勝つには、同じ条件を検証する必要がありますが、\n        画面全体。\n\n「画面全体」タイプを選択すると、画面上の任意の場所にある青い文字が検出されます。\n        画面。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_secondary_7">画面全体で検出すると、正確な検出よりも時間がかかります。\n        シナリオの実行タイミングが重要な場合は、その点に留意してください。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_8">それでおしまい！\n検出タイプを変更するだけで済みました。\n        私たちのニーズに合ったあなたの条件を。\n\n保存ボタンをクリックすると登録され、条件一覧に戻ります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_9">条件リストを閉じて、イベント設定に戻ります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_10">状態画像が更新されました。\n\nこの状態では、シナリオは次のようになります。\n        画面上のどこかに青い文字が表示されるたびにクリックが実行されますが、このクリックは\n        前のチュートリアルで選択したものと同じ位置です。したがって、アクションを更新する必要があります。\n\n\n        「アクション」フィールドをクリックして「アクション」リストを表示します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_11">シングルクリックを実行したいのですが、今回は\n        固定された位置ではなく、条件に基づいて。\n\nこれはまだワンクリックなので、必要なアクションは 1 つだけです。\n        前回のクリックを編集してみましょう。\n\nアクションをクリックして編集を開始します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_12">現在、クリック アクション「クリック」は「選択した位置」に設定されています。\n        つまり、クリックされる位置を手動で設定する必要があります。もう 1 つの選択肢は「条件」です。これは、アクションが条件をクリックすることを意味します。\n        検出された条件座標。\n\nまさにそれがゲームに勝つために必要なことだ。青い文字が出るたびに\n        が検出されると、このアクションはそれをクリックします。\n\nアクションで使用するにはそれを選択します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_13">[条件セレクター] オプションをクリックして、検出された条件を選択します\n        をクリックしてください。\nイベントには複数の条件を含めることができるため、これを指定する必要があります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_14">私たちのユースケースの場合、それは簡単です。条件は 1 つだけ、青い文字だけです。\n\n\n        画面上でこの条件が検出された場合は、それを選択してクリックします。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_15">それでおしまい！\nこれで、クリック アクションが正しく設定され、\n        ゲーム。\n\n保存ボタンをクリックして登録し、アクションリストに戻ります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_16">[アクション] リストを閉じて、イベント設定に戻ります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_17">条件とアクションを更新しました。他に行うことはありません。\n        する。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ります。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_18">最後にもう一度保存して、新しい変更をデータベースに登録し、\n        設定ダイアログ。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_19">これで、シナリオはこの新しいチュートリアルを超えるように構成されました。\n\nを開始します。\n        フローティングメニューのプレイボタンで検出し、ゲームを開始します。</string>
-    <string name="message_tutorial_screen_condition_moving_target_step_20">おめでとう！\n\n静止しているシングルまたは動いているシングルを追跡する方法がわかりました。\n        目標は達成しましたが、学ぶべきことはまだたくさんあります。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_1">2つ目のチュートリアルへようこそ！\n\n今回は、ターゲットが画面上をランダムに動きます。\n\nまずゲームを開始して、自分で勝てるか試してみてください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_3">難しいですよね？\nKlick\'rを使って攻略しましょう！\n\nシナリオ設定アイコンをクリックして、新しいシナリオの編集を開始してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_4">シナリオはKlick\'r自動化の基本構造です。\n\n一般的な検出設定と、シナリオ実行時に何が実行されるかを記述したイベントのリストが含まれます。\n\nイベント作成ボタンをクリックして、最初のイベントを作成してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_5">イベントは、特定の条件が満たされたときに実行されるアクション（クリック、スワイプ等）を記述します。\n\nこのゲームに勝つには、青いキャラクターが画面上を動いている間、その位置を検出する必要があります。\n\n条件フィールドをクリックして、条件リストを表示してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_6">画像条件とは、デバイス画面の各フレームと比較されるスクリーンショットの一部です。\n\nゲームに勝つには、青いキャラクターが見えているときにクリックしたいので、キャラクターがデバイス画面に表示されているときに満たされる条件が必要です。\n\n条件作成ボタンをクリックして、最初の条件を作成してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_7">このチュートリアルでは、画面上の画像を検出する方法を学びたいので、画像条件を選択してください</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_8">スクリーン条件を作成する最初のステップは、スクリーンショットを撮ることです。\n\n青いキャラクターが見えているときにクリックしたいので、スクリーンショットにはそれが含まれている必要があります。再度ゲームを開始して表示させ、スクリーンショットを撮ってください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_8">フローティングメニューのキャプチャボタンを使ってスクリーンショットを撮ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_9">スクリーンショットが撮られたら、検出に必要な部分だけを切り取ることができます。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_9">スクリーンショットに青いキャラクターが含まれていない場合は、このボタンを押して新しいものを撮ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_10">このゲームでは、興味深い部分は青いキャラクターなので、そこだけを切り取ってください。\n\nスクリーンショットをピンチしてズームインし、切り取りセレクターの精度を上げることができます。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_10">セレクター内でキャラクターが完全に収まっているか確認してください。また、画像検出を簡単にするため、できるだけ近くに切り取ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_11">条件の画像がキャプチャされました！\n\nデフォルトでは、検出タイプは「正確」に設定されており、Klick\'rはキャプチャ位置でのみ検索します。青いキャラクターはゲームエリアのどこにでも現れる可能性があるため、「エリア内」を選択してください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_secondary_11">3番目のオプションは「画面全体」です。検出エリアが大きいほど、検出は遅くなります。シナリオの実行タイミングが重要な場合はこの点に注意してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_12">エリアセレクターをクリックして検出エリアを変更してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_13">検出矩形をゲームエリアのサイズに変更してください。ターゲットはその外には現れません。サイズが正しくなったら、確認ボタンを押して保存してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_14">以上です！\n検出エリアを定義するだけで、条件がニーズに合うようになりました。\n\n保存ボタンをクリックして登録し、条件リストに戻ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_15">条件リストを閉じてイベント設定に戻ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_16">条件の設定が完了しました！これにより、シナリオは青いキャラクターが画面上のどこに表示されているかを知ることができます。\n\nただし、キャラクターはどこにでも現れる可能性があるため、固定のクリック位置は使えません—条件が検出された場所をクリックする必要があります。\n\nアクションフィールドをクリックして、アクションリストを表示してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_17">アクションとは、イベントの条件が満たされると実行されるものです。\n\nこのゲームでは、青いキャラクターが検出された場所をクリックするクリックアクションが必要です。\n\nアクション作成ボタンをクリックして、新しいアクションを作成してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_18">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは青いキャラクターをクリックする必要があるため、クリックを選択して新しいクリックアクションを作成してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_19">クリックアクションは位置と押下時間で定義されます。\n\n青いキャラクターは動いているため、固定位置は使えません。「クリック対象」の設定を「条件」に変更して、検出された条件が見つかった場所をクリックするようにしてください。\n\nアクションで使用するためにそれを選択してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_20">条件セレクターをクリックして、クリックする検出条件を選択してください。\n\nイベントには複数の条件が含まれる場合があるため、指定する必要があります。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_21">今回の使用例では簡単です。条件は1つだけ、青いキャラクターです。\n\nそれを選択して、画面上でこの条件が検出されたときにクリックするようにしてください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_22">以上です！\nクリックアクションがゲームに勝つよう正しく設定されました。\n\n保存ボタンをクリックして登録し、アクションリストに戻ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_23">アクションリストを閉じてイベント設定に戻ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_24">イベントに条件とアクションが設定されました。これにより、何をいつ実行するかが分かります。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ってください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_25">シナリオの唯一の要件は、少なくとも1つのイベントを持つことです。\nイベントがゲームに勝つ方法をすでにカバーしているため、他に必要なものはありません。\n\n保存ボタンをクリックして、シナリオをデータベースに保存し、設定ダイアログを閉じてください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_26">ご覧のとおり、再生ボタンが利用可能になりました。これはシナリオが有効で検出に使用できることを意味します。\n\nそれをクリックして検出を開始し、ゲームを開始してください。</string>
+
+    <string name="message_tutorial_screen_condition_moving_target_step_27">おめでとうございます！\n\n「画面全体」検出タイプと「条件をクリック」機能を使って動いているターゲットを追跡する方法を学びました！</string>
 </resources>
