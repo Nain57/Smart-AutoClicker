@@ -37,9 +37,12 @@ import androidx.navigation.fragment.findNavController
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.tutorial.R
+import com.buzbuz.smartautoclicker.feature.tutorial.databinding.DialogTutorialSuccessBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -80,6 +83,7 @@ class TutorialGameFragment : Fragment() {
                 launch { viewModel.uiState.collect(::updateUi) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
                 launch { viewModel.shouldDisplayFloatingUi.collect(::showHideFloatingUi) }
+                launch { viewModel.shouldDisplayCompletionDialog.collect(::showCompletionDialog) }
                 launch {
                     viewModel.shouldStopGame.collect { shouldStop ->
                         if (shouldStop) findNavController().navigateUp()
@@ -166,6 +170,26 @@ class TutorialGameFragment : Fragment() {
             if (show) restoreVisibility()
             else hideAll()
         }
+    }
+
+    private fun showCompletionDialog(show: Boolean) {
+        if (!show) return
+
+        val dialogContext = requireContext().getDynamicColorsContext(R.style.AppTheme)
+        val dialogViewBinding = DialogTutorialSuccessBinding.inflate(LayoutInflater.from(dialogContext))
+        val dialog = MaterialAlertDialogBuilder(dialogContext)
+            .setView(dialogViewBinding.root)
+            .create()
+
+        dialogViewBinding.apply {
+            buttonKeepPlaying.setOnClickListener { dialog.dismiss() }
+            buttonClose.setOnClickListener {
+                dialog.dismiss()
+                findNavController().navigateUp()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun lockMenuPosition() {

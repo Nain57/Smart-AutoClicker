@@ -61,7 +61,9 @@ class TutorialGameViewModel @Inject constructor(
         .debounce(1.seconds)
 
     val shouldDisplayStepOverlay: Flow<Boolean> = startedState
-        .map { state -> state.currentStep is TutorialStep.TutorialOverlay && state.isCurrentStepStarted }
+        .map { state ->
+            state.currentStep is TutorialStep.TutorialOverlay && state.isCurrentStepStarted && !state.isCompleted
+        }
 
     val shouldDisplayFloatingUi: StateFlow<Boolean> = startedState
         .mapNotNull { state ->
@@ -70,6 +72,9 @@ class TutorialGameViewModel @Inject constructor(
             else null
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), true)
+
+    val shouldDisplayCompletionDialog: Flow<Boolean> = startedState
+        .map { state -> state.isCompleted }
 
     val uiState: StateFlow<TutorialGameUiState?> = tutorialRepository.tutorialSubjectController
         .flatMapLatest { controller -> controller?.state ?: emptyFlow() }

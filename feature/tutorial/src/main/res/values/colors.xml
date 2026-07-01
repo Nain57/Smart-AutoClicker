@@ -24,4 +24,6 @@
     <color name="tutorial_overlay_background">#BB000000</color>
 
     <color name="tutorial_header_card_border">#000000</color>
+
+    <color name="tutorial_completed_gold">#FFC107</color>
 </resources>
