@@ -26,7 +26,6 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -38,13 +37,14 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.ScreenConditionTypeChoice
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.allScreenConditionChoices
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionTypeChoice
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.allScreenConditionChoices
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.ColorConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.capture.ColorCaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.CaptureMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.ImageConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number.NumberConditionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
@@ -190,22 +190,22 @@ class ScreenConditionsBriefMenu(
     private fun showScreenConditionTypeSelectionDialog() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = MultiChoiceDialog(
-                theme = R.style.AppTheme,
-                dialogTitleText = R.string.dialog_title_screen_condition_type,
+            newOverlay = ScreenConditionTypeSelectionDialog(
                 choices = allScreenConditionChoices(),
-                onChoiceSelected = { choice ->
+                onChoiceSelectedListener = { choice ->
                     when (choice) {
                         ScreenConditionTypeChoice.OnColorDetected -> showNewColorCaptureOverlay()
                         ScreenConditionTypeChoice.OnImageDetected -> showNewImageCaptureOverlay()
                         ScreenConditionTypeChoice.OnNumberDetected -> viewModel.createNumberCondition(context) { condition ->
                             showScreenConditionConfigDialog(condition)
                         }
+
                         ScreenConditionTypeChoice.OnTextDetected -> viewModel.createTextCondition(context) { condition ->
                             showScreenConditionConfigDialog(condition)
                         }
                     }
                 },
+                onCancelledListener = {},
             ),
             hideCurrent = false,
         )

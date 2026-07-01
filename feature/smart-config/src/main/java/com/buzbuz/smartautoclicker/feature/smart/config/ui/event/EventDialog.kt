@@ -246,6 +246,8 @@ class EventDialog(
 
             setOnClickListener { debounceUserInteraction { showActionsOverlay() } }
         }
+
+        layoutActionsSelector.setOnClickListener { debounceUserInteraction { showActionsOverlay() } }
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
@@ -267,7 +269,7 @@ class EventDialog(
         viewModel.monitorViews(
             conditionsField = viewBinding.layoutConditionSelector,
             conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
-            actionsField = viewBinding.fieldActionsSelector.root,
+            actionsField = viewBinding.layoutActionsSelector,
             saveButton = viewBinding.layoutTopBar.buttonSave,
         )
     }
