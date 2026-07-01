@@ -28,7 +28,5 @@ class TutorialViewModel @Inject constructor(
     private val tutorialRepository: TutorialRepository
 ) : ViewModel() {
 
-    fun stopTutorial() {
-        tutorialRepository.stopTutorial()
-    }
+
 }

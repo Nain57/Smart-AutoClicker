@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
@@ -34,6 +33,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
@@ -74,24 +74,42 @@ class TutorialGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lockMenuPosition()
-        overlayManager.hideAll()
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect(::updateUi) }
                 launch { viewModel.shouldDisplayStepOverlay.collect(::showHideStepOverlay) }
                 launch { viewModel.shouldDisplayFloatingUi.collect(::showHideFloatingUi) }
+                launch {
+                    viewModel.shouldStopGame.collect { shouldStop ->
+                        if (shouldStop) findNavController().navigateUp()
+                    }
+                }
             }
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        if (viewModel.shouldDisplayFloatingUi.value && overlayManager.isOverlayStackHidden()) {
+            overlayManager.restoreVisibility()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopDetection()
+
+        if (viewModel.shouldDisplayFloatingUi.value) {
+            overlayManager.hideAll()
+        }
+        overlayManager.removeTopOverlay()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-
-        overlayManager.removeTopOverlay()
-        overlayManager.navigateUpToRoot(requireContext()) {
-            overlayManager.unlockMenuPosition()
-        }
+        viewModel.stopTutorial()
     }
 
     private fun updateUi(uiState: TutorialGameUiState?) {

@@ -51,6 +51,11 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 rules = OneStillTargetRules(),
             ),
             steps = listOf(
+                // Beginning, hide the overlay for now
+                TutorialStep.ChangeFloatingUiVisibility(
+                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    newVisibility = false,
+                ),
                 // Start screen, before first play
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_1,

@@ -45,11 +45,6 @@ class TutorialActivity : AppCompatActivity() {
         setupActionBar()
     }
 
-    override fun onDestroy() {
-        viewModel.stopTutorial()
-        super.onDestroy()
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
