@@ -35,39 +35,78 @@
     <!-- Root category is never displayed as an item, so no need for short description -->
     <string name="tutorial_category_root_name">Tutorials</string>
     <string name="tutorial_category_root_desc_long">Klick\'r automation is based on what is displayed on your screen,
-        which is pretty different from your time based regular autoclicker. Learn here how to use it.</string>
+        which is pretty different from your time-based regular autoclicker.\n\nLearn here how to use it.</string>
 
     <string name="tutorial_category_basics_name">Scenario Basics</string>
-    <string name="tutorial_category_basics_desc_short">Learn how to use each Scenario elements.</string>
+    <string name="tutorial_category_basics_desc_short">Learn how to use each Scenario element</string>
     <string name="tutorial_category_basics_desc_long">A Scenario is the root element of your automation script. It
-        contains a list of ScreenEvents and a list of TriggerEvents list. An Event is a list of
-        ScreenConditions/TriggerConditions to fulfill in order to execute a list of Actions.</string>
+        contains a list of ScreenEvents and a list of TriggerEvents.\nAn Event is a list of
+        ScreenConditions/TriggerConditions to fulfill in order to execute a list of Actions.\n\n Learn here how to use
+        each element of a Scenario.</string>
 
     <string name="tutorial_category_screen_condition_name">Screen Conditions</string>
-    <string name="tutorial_category_screen_condition_desc_short">Verify what\'s displayed on your screen.</string>
-    <string name="tutorial_category_screen_condition_desc_long"></string>
+    <string name="tutorial_category_screen_condition_desc_short">Verify what\'s displayed on your screen</string>
+    <string name="tutorial_category_screen_condition_desc_long">A Screen Condition is the \"when\" part of your Screen
+        Event: When an Event\'s Screen Conditions are fulfilled, then this Event\'s Actions are executed.\nFor a Screen
+        Condition to be fulfilled, the content of your device screen must match a given color, image, text or number.
+        \n\n Learn here how to use them with simple interactive use cases.</string>
 
     <string name="tutorial_category_color_condition_name">Color Conditions</string>
     <string name="tutorial_category_color_condition_desc_short">Verify if a specific color is displayed</string>
-    <string name="tutorial_category_color_condition_desc_long"></string>
+    <string name="tutorial_category_color_condition_desc_long">A Color Condition checks the color of a specific pixel
+        on your screen and compares it to a target color. It is the lightest condition type, with no image
+        processing involved.\n\n Learn here how to use it to react to color changes on your screen.</string>
 
     <string name="tutorial_category_image_condition_name">Image Conditions</string>
     <string name="tutorial_category_image_condition_desc_short">Verify if a specific image is displayed</string>
-    <string name="tutorial_category_image_condition_desc_long"></string>
+    <string name="tutorial_category_image_condition_desc_long">An Image Condition captures a screenshot of a part of
+        your screen and looks for it later, either at an exact position, anywhere on the screen, or within a defined
+        area. A threshold controls how strict the match must be.\n\n Learn here how to use it to react to images
+        appearing on your screen.</string>
 
     <string name="tutorial_category_number_condition_name">Number Conditions</string>
     <string name="tutorial_category_number_condition_desc_short">Verify if a specific number is displayed</string>
-    <string name="tutorial_category_number_condition_desc_long"></string>
+    <string name="tutorial_category_number_condition_desc_long">A Number Condition reads a number displayed in a defined
+        area on your screen and compares it to a fixed value or a Counter using operators such as equal, greater
+        than, or less than.\n\n Learn here how to use it to react to numeric values displayed on your screen.</string>
 
     <string name="tutorial_category_text_condition_name">Text Conditions</string>
-    <string name="tutorial_category_text_condition_desc_short">Verify if a specific text is displayed</string>
-    <string name="tutorial_category_text_condition_desc_long"></string>
+    <string name="tutorial_category_text_condition_desc_short">Verify if specific text is displayed</string>
+    <string name="tutorial_category_text_condition_desc_long">A Text Condition reads text displayed in a defined area
+        on your screen and checks whether it matches a given value.\n\n Learn here how to use it to react to text
+        appearing on your screen.</string>
+
+    <string name="tutorial_category_counters_name">Counters</string>
+    <string name="tutorial_category_counters_desc_short">Track and use numeric values in your Scenario.</string>
+    <string name="tutorial_category_counters_desc_long">A Counter is a named numeric variable scoped to your Scenario.
+        It starts at a default value and can be read by Conditions or Actions, and written by the
+        Change Counter Action.\n\n Learn here how to use Counters to build smarter automation scripts.</string>
+
+    <string name="tutorial_category_combine_conditions_name">Combine Conditions</string>
+    <string name="tutorial_category_combine_conditions_desc_short">Trigger events using multiple conditions together.
+    </string>
+    <string name="tutorial_category_combine_conditions_desc_long">Each Event has a condition operator:AND requires all
+        conditions to be fulfilled, while OR requires at least one. Mixing condition types and operators lets you handle
+        complex real-world scenarios.\n\n Learn here how to combine conditions effectively.</string>
+
+    <string name="tutorial_category_event_state_name">Event State</string>
+    <string name="tutorial_category_event_state_desc_short">Enable or disable Events dynamically.</string>
+    <string name="tutorial_category_event_state_desc_long">Events can be enabled or disabled at runtime using the
+        ToggleEvent Action. This lets you build multistep automation flows where earlier steps gate later ones, or
+        where certain events are only active under specific conditions.\n\n Learn here how to control Event state to
+        build advanced Scenarios.</string>
 
     <string name="tutorial_category_trigger_condition_name">Trigger Conditions</string>
-    <string name="tutorial_category_trigger_condition_desc_short">Verify the state of the Scenario.</string>
-    <string name="tutorial_category_trigger_condition_desc_long"></string>
+    <string name="tutorial_category_trigger_condition_desc_short">Verify the state of the Scenario</string>
+    <string name="tutorial_category_trigger_condition_desc_long">A Trigger Condition is the \"when\" part of a Trigger
+        Event: it fires based on non-visual signals such as a timer expiring, a Counter reaching a value, or an
+        Android broadcast being received.\n\n Learn here how to use them to build time-based or state-driven
+        automation flows.</string>
 
     <string name="tutorial_category_action_name">Actions</string>
     <string name="tutorial_category_action_desc_short">Execute something once your conditions are fulfilled</string>
-    <string name="tutorial_category_action_desc_long"></string>
+    <string name="tutorial_category_action_desc_long">An Action is executed when an Event\'s Conditions are fulfilled.
+        Actions range from gestures (Click, Swipe) to flow control (ToggleEvent, ChangeCounter, Pause) and system
+        interactions (Intent, Notification, SystemAction, SetText).\n\n Learn here how to use each Action type to
+        build your automation scripts.</string>
 </resources>

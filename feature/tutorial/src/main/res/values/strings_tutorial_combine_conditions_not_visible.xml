@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Condition visibility</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Use the Visibility option to click when the target is not displayed</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Click on the blue button only when the red button is not visible</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Let\'s change the rules of the game again. The blue target has stopped moving,
+        but now it should only be clicked when the red target is not visible.\n\nFirst, start the game and check if you can win
+        by yourself.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Once again, it seems impossible to win manually, so let\'s use Klick\'r.
+        \n\nClick on the Scenario configuration button to start automating this game.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">We want to click at the same spot when the red target is not displayed.\n
+        We need to create an Event that will handle that, click on the create Event button to continue.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">First, we need to add an Image Condition. Click on the Conditions field to display
+        the Conditions list.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Then, click on create a new Screen Condition.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">In this tutorial, we want to learn how to detect if an image is not on the screen,
+        so select Image Condition</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">We need to take a screenshot of the red target, so start the game to make it visible.
+        Once it is visible, take a screenshot of it!</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">Use the capture button in the floating menu to take the screenshot.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Is your screenshot containing the red target? You can crop it in order to only
+        get the part that is interesting for the detection, the red target.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">If your screenshot does not contain the red target, you can
+        press this button to take a new one.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">Your Condition image is now recorded!\n\nAs the red target isn\'t moving, we
+        can keep the default area configuration, which will verify only at the capture position.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">We want to verify if the target is NOT displayed, so we need to uncheck the
+        \"Visible\" option. With this, the Image Condition will be fulfilled for each screen frames that does not display the red target.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">The Image Condition is now correctly configured.
+        Click on the save button to register it and return to the Conditions list.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">Close the Conditions list to return to the Event configuration.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">The condition will be fulfilled when the red target is not visible,
+        now we need to define the action to trigger when this happens. Click on the Action field to display the Action list.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">For now, we have no Action. Click on create a new Action.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">We need to click on the blue target, so select Click.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">The blue target is never moving, so we can simply define a static position for our Click.\n\n
+        \n\nClick on the position picker to select the Click position.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_18">You need to select the exact position to be clicked, so you need to start
+        the game again to display the blue character, and then select its position.\n\nOnce the position is correct, click on the validate button to save it.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_18">You can\'t interact with the game while the position selector is
+        visible, but you can use this button to show and hide it, allowing you to remove that restriction at will.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_19">As we want to click as quickly as possible, we can keep the default press duration of 1ms,
+        which is the lowest possible value. The click is now correctly configured!\n\nClick on the save button to register it and return to the Actions list.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_20">Close the Actions list to return to the Event configuration.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_21">Your Event now have a Condition and an Action, which means it knows what
+        to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_22">All changes must be saved in your scenario in order to be registered.\n\nClick
+        on the save button to save your changes.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_23">We are ready to win this game!\n\nClick on the start button to start the
+        detection and then, start the game.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_24">Congratulations!\n\n
+        You now know how to execute something when an Image is not visible on the screen!</string>
+</resources>

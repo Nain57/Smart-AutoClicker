@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Combinar múltiples condiciones</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Crea y combina múltiples condiciones para tu evento</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Haz clic en el botón azul solo cuando el botón rojo sea visible</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Cambiemos las reglas del juego nuevamente. El objetivo azul ha dejado de moverse,
+        pero ahora solo debe hacer clic cuando el objetivo rojo sea visible.\n\nPrimero, inicia el juego y verifica si puedes ganar por ti mismo.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Una vez más, parece imposible ganar manualmente, así que usemos Smart
+        AutoClicker.\n\nTu escenario del tutorial anterior se ha mantenido y se carga para este tutorial, pero necesitaremos cambiar
+        algunos parámetros para ganar este nuevo juego.\n\nHaz clic en el icono de configuración del escenario para comenzar a actualizar
+        tu nuevo escenario.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Todavía queremos hacer clic en el objetivo azul, pero solo cuando el rojo esté
+        visible.\nAsí que necesitamos agregar una condición para este objetivo rojo en nuestro evento.\n\nHaz clic en el evento que creaste
+        previamente para editarlo.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Combinaremos varias condiciones, así que necesitamos verificar el operador de condición
+        para este evento.\n\nEl operador de condición indica cómo se interpretarán juntas varias condiciones.\n
+        \'Uno\' significa que solo una de las condiciones de este evento debe cumplirse para ejecutar las acciones.\n\n
+        \'Todos\' significa que todas las condiciones de este evento deben cumplirse para ejecutar las acciones.\n\n
+        Como queremos detectar si dos cosas se muestran juntas, usaremos \'Todos\'.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Ahora necesitamos actualizar nuestras condiciones.\n\nHaz clic en el campo \"Condiciones\" para mostrar
+        la lista de condiciones.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">La condición anterior de detectar el objetivo azul sigue siendo correcta, pero necesitamos
+        una nueva para el objetivo rojo.\n\nHaz clic en el botón de crear condición para crear una nueva condición para él.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Al igual que con el objetivo azul, inicia el juego para mostrar el objetivo rojo.
+        Una vez que sea visible, ¡toma una captura de pantalla!</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">Utiliza el botón de captura en el menú flotante para tomar la captura de pantalla.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">¿Tu captura de pantalla contiene el objetivo rojo? Puedes recortarla para obtener solo la
+        parte interesante para la detección, el objetivo rojo.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">Si tu captura de pantalla no contiene el objetivo rojo, puedes
+        pulsar este botón para tomar una nueva.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">¡Tu imagen de condición ya está registrada!\n\nComo el objetivo rojo no se mueve, podemos
+        mantener la configuración predeterminada.\nHaz clic en el botón de guardar para registrarla y volver a la lista de condiciones.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Cierra la lista de condiciones para volver a la configuración del evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">Ahora tenemos dos condiciones, una para cada objetivo, y las acciones se ejecutarán
+        solo si ambas se detectan.\n\nHaz clic en el campo \"Acciones\" para mostrar la lista de acciones de nuestro evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">La acción ya está configurada para hacer clic en el personaje azul, y solo se ejecutará
+        cuando los personajes azul y rojo sean visibles juntos.\n\nEste es exactamente el comportamiento que necesitamos para ganar el
+        juego, así que no hace falta editar nuestra acción de clic.\n\nCierra la lista de acciones para volver a la configuración del evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">Haz clic en el botón de guardar para guardar tu evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">Todos los cambios deben guardarse en tu escenario para registrarse.\n\nHaz clic
+        en el botón de guardar para guardar tus cambios.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">¡Estamos listos para ganar este juego!\n\nHaz clic en el botón de inicio para iniciar la
+        detección y luego inicia el juego.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">¡Felicitaciones!\n\nAhora sabes cómo combinar varias condiciones para un evento.
+        ¡pero hay mucho más que aprender!</string>
+</resources>

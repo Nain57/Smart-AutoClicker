@@ -17,7 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.color
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 internal fun getColorConditionsCategory() =
     TutorialCategory(
@@ -26,5 +27,7 @@ internal fun getColorConditionsCategory() =
         shortDescriptionRes = R.string.tutorial_category_color_condition_desc_short,
         longDescriptionRes = R.string.tutorial_category_color_condition_desc_long,
         iconRes = R.drawable.ic_color_condition,
-        content = listOf(),
+        content = listOf(
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.COLOR_CONDITION),
+        ),
     )

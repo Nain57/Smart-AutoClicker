@@ -18,15 +18,19 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.col
 
 import android.graphics.Bitmap
 import android.graphics.PointF
+import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.graphics.get
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.toRgbaHexString
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 
@@ -37,13 +41,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import javax.inject.Inject
 
 class ColorCaptureViewModel @Inject constructor(
+    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val displayRecorder: DisplayRecorder,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     private var screenshotJob: Job? = null
@@ -68,7 +75,12 @@ class ColorCaptureViewModel @Inject constructor(
 
             val screenshot = displayRecorder.takeScreenshot()
             _uiState.update {
-                if (screenshot == null) capturingState() else pixelSelectionState(screenshot, initialFocusPosition)
+                if (screenshot == null) capturingState() else {
+                    withContext(mainDispatcher) {
+                        monitoredViewsManager.notifyClick(MonitoredViewType.SCREEN_CONDITION_CAPTURE_MENU_BUTTON_CAPTURE)
+                    }
+                    pixelSelectionState(screenshot, initialFocusPosition)
+                }
             }
         }
     }

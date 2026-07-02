@@ -14,31 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.counters
 
-data class TutorialCategory(
-    val type: Type,
-    val nameRes: Int,
-    val shortDescriptionRes: Int,
-    val longDescriptionRes: Int,
-    val iconRes: Int,
-    val content: List<Content>,
-) {
+import com.buzbuz.smartautoclicker.feature.tutorial.R
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
-    sealed interface Content {
-        data class Category(val type: Type) : Content
-        data class Tutorial(val type: TutorialItem.Type) : Content
-    }
 
-    enum class Type {
-        ACTIONS,
-        BASICS,
-        COLOR_CONDITION,
-        IMAGE_CONDITION,
-        NUMBER_CONDITION,
-        ROOT,
-        SCREEN_CONDITIONS,
-        TEXT_CONDITION,
-        TRIGGER_CONDITIONS,
-    }
-}
+internal fun getCountersCategory() =
+    TutorialCategory(
+        type = TutorialCategory.Type.COUNTERS,
+        nameRes = R.string.tutorial_category_counters_name,
+        shortDescriptionRes = R.string.tutorial_category_counters_desc_short,
+        longDescriptionRes = R.string.tutorial_category_counters_desc_long,
+        iconRes = R.drawable.ic_counter_reached,
+        content = listOf(
+
+        ),
+    )

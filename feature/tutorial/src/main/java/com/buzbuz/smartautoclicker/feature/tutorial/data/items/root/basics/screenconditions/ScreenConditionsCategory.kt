@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
 internal fun getScreenConditionsCategory() =
     TutorialCategory(
@@ -27,9 +27,9 @@ internal fun getScreenConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_screen_condition_desc_long,
         iconRes = R.drawable.ic_screen_event,
         content = listOf(
-            TutorialCategory.Content.Category(TutorialCategory.Type.COLOR_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.IMAGE_CONDITION),
-            TutorialCategory.Content.Category(TutorialCategory.Type.NUMBER_CONDITION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.COLOR_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.TEXT_CONDITION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.NUMBER_CONDITION),
         ),
     )

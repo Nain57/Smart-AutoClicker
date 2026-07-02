@@ -16,16 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.data.mapping
 
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem.Type.*
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.color.ColorConditionsTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem.Type.*
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsMovingTargetTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsStillTargetTutorial
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsNotVisibleTargetTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsNotVisibleTargetTutorial
 
 
 internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
     when (this) {
+        COLOR_CONDITION -> ColorConditionsTutorial
+        COMBINE_CONDITIONS_NOT_VISIBLE -> CombineConditionsNotVisibleTargetTutorial
         IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
         IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial
-        IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH -> ImageConditionsNotVisibleTargetTutorial
     }

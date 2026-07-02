@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Combina condizioni multiple</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Crea e combina condizioni multiple per il tuo evento</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Clicca sul pulsante blu solo quando il pulsante rosso è visibile</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Cambiamo di nuovo le regole del gioco. Il bersaglio blu ha smesso di muoversi,
+    ma ora dovrebbe essere cliccato solo quando il bersaglio rosso è visibile.\n\nInizia il gioco e verifica se puoi vincere
+    da solo.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Ancora una volta, sembra impossibile vincere manualmente, quindi utilizziamo Smart
+    AutoClicker.\n\nIl tuo scenario per il tutorial precedente è stato conservato e caricato per questo tutorial, ma dovremo
+    apportare alcune modifiche per vincere questo nuovo gioco.\n\nFai clic sull\'icona di configurazione dello scenario per
+    iniziare a aggiornare il tuo nuovo scenario.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Vogliamo ancora cliccare sul bersaglio blu, ma solo quando è visibile il rosso.\n
+    Quindi dobbiamo aggiungere una condizione per questo bersaglio rosso nel nostro evento.\n\nFai clic sull\'evento creato
+    in precedenza per modificarlo.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Combineremo diverse condizioni, quindi dobbiamo verificare l\'operatore di condizione
+    per questo evento.\n\nL\'operatore di condizione indica come verranno interpretate insieme più condizioni.\n
+    "Uno" significa che solo una delle condizioni per questo evento deve essere soddisfatta per
+    eseguire le azioni.\n\n"Tutte" significa che tutte le condizioni per questo evento devono essere soddisfatte per eseguire
+    le azioni. \n\nPoiché vogliamo rilevare se due cose sono visualizzate insieme, useremo "Tutte".</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Ora dobbiamo aggiornare le nostre condizioni.\n\nFai clic sulla campo Condizioni per
+    visualizzare l\'elenco delle condizioni.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">La condizione precedente che rileva il bersaglio blu è ancora corretta, ma ne abbiamo bisogno
+    di una nuova per il bersaglio rosso.\n\nFai clic sul pulsante Crea condizione per creare una nuova condizione per esso.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Come per il bersaglio blu, avvia il gioco per mostrare il bersaglio rosso.
+    Una volta che è visibile, scatta uno screenshot di esso!</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">Utilizza il pulsante di acquisizione nel menu a comparsa per scattare lo screenshot.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Il tuo screenshot contiene il bersaglio rosso? Puoi ritagliarlo in modo da ottenere solo
+    la parte interessante per il rilevamento, ovvero il bersaglio rosso.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">Se il tuo screenshot non contiene il bersaglio rosso, puoi premere questo pulsante per scattarne uno nuovo.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">La tua immagine di condizione è ora registrata!\n\nPoiché il bersaglio rosso non si sta muovendo,
+    possiamo mantenere la configurazione predefinita.\nFare clic sul pulsante Salva per registrarlo e tornare all\'elenco delle condizioni.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Chiudere l\'elenco delle condizioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">Ora abbiamo due condizioni, una per ciascun bersaglio, e le azioni verranno eseguite
+    solo se entrambe sono rilevate.\n\nFai clic sulla campo Azioni per visualizzare l\'elenco delle azioni per il nostro evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">L\'azione è già impostata per fare clic sul personaggio blu e verrà eseguita solo quando
+    i personaggi blu e rosso saranno visibili insieme.\n\nQuesto è esattamente il comportamento di cui abbiamo bisogno per vincere
+    il gioco, quindi non c\'è bisogno di modificare l\'azione di clic.\n\nChiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">Fare clic sul pulsante Salva per salvare l\'evento.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">Tutte le modifiche devono essere salvate nel tuo scenario per essere registrate.\n\nFai
+    clic sul pulsante Salva per salvare le tue modifiche.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">Siamo pronti per vincere questo gioco!\n\nFai clic sul pulsante Avvia per avviare la
+    rilevazione e quindi avvia il gioco.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">Congratulazioni!\n\nOra sai come combinare condizioni multiple per un evento, ma c\'è ancora molto da imparare!</string>
+</resources>

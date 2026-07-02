@@ -43,6 +43,11 @@ fun IncludeFieldSwitchBinding.setChecked(isChecked: Boolean) {
 }
 
 fun IncludeFieldSwitchBinding.setOnClickListener(listener: (() -> Unit)?) {
-    if (listener == null) toggleSwitch.setOnClickListener(null)
-    else toggleSwitch.setOnClickListener { listener() }
+    if (listener == null) {
+        toggleSwitch.setOnClickListener(null)
+        root.setOnClickListener(null)
+    } else {
+        toggleSwitch.setOnClickListener { listener() }
+        root.setOnClickListener { listener() }
+    }
 }

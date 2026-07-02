@@ -29,7 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverl
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.GetTutorialCategoryUseCase
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems

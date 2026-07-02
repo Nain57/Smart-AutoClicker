@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.data.mapping
 
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory.Type.*
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory.Type.*
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.getActionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.getBasicsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.color.getColorConditionsCategory
@@ -26,6 +26,9 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.number.getNumberConditionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.getTextConditionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getTriggerConditionsCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.getCombineConditionsCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.counters.getCountersCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.eventstate.getEventStateCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.getRootCategory
 
 
@@ -34,6 +37,9 @@ internal fun TutorialCategory.Type.toTutorialCategory(): TutorialCategory =
         ACTIONS -> getActionsCategory()
         BASICS -> getBasicsCategory()
         COLOR_CONDITION -> getColorConditionsCategory()
+        COMBINE_CONDITIONS -> getCombineConditionsCategory()
+        COUNTERS -> getCountersCategory()
+        EVENT_STATE -> getEventStateCategory()
         IMAGE_CONDITION -> getImageConditionsCategory()
         NUMBER_CONDITION -> getNumberConditionsCategory()
         ROOT -> getRootCategory()

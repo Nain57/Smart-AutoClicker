@@ -180,6 +180,7 @@ class ImageConditionDialog(
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
         viewModel.monitorDetectionTypeItemInAreaView(viewBinding.fieldDetectionType.multiStateButton.buttonRight)
         viewModel.monitorDetectionAreaSelector(viewBinding.fieldSelectArea.root)
+        viewModel.monitorVisibilityView(viewBinding.fieldShouldAppear.root)
     }
 
     override fun onStop() {

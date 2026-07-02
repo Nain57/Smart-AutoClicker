@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_color_conditions">Визначення кольору пікселя</string>
+    <string name="item_desc_tutorial_color_conditions">Навчіться визначати певний колір на екрані та натискати, коли він з\'являється</string>
+    <string name="message_game_tutorial_color_conditions">Натисніть на синю кнопку якомога швидше</string>
+
+    <string name="message_tutorial_color_conditions_step_1">Ласкаво просимо до навчального матеріалу з кольорових умов!\n\nТут ви
+        спробуєте побити рекорд гри за допомогою Klick\'r.\n\nСпочатку можна спробувати натиснути Почати гру, або відразу
+        перейти до налаштування Сценарію.</string>
+
+    <string name="message_tutorial_color_conditions_step_2">Як і для будь-якої іншої умови екрана, спочатку потрібно створити
+        подію екрана.</string>
+
+    <string name="message_tutorial_color_conditions_step_3">Тепер натисніть на поле Умови, щоб відкрити список умов.</string>
+
+    <string name="message_tutorial_color_conditions_step_4">Потрібно створити умову. Натисніть Створити.</string>
+
+    <string name="message_tutorial_color_conditions_step_5">У цьому навчальному матеріалі ми хочемо навчитися визначати
+        колір на екрані, тому виберіть Кольорова умова.</string>
+
+    <string name="message_tutorial_color_conditions_step_6">Перший крок створення умови — зробити знімок екрана та вибрати
+        для нього колір.\n\n Оскільки ми хочемо натискати, коли синя кнопка видима, знімок екрана повинен її містити.
+        Запустіть гру знову, щоб відобразити її, а потім зробіть знімок.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_6">Використовуйте кнопку захоплення у плаваючому меню, щоб зробити знімок екрана.</string>
+
+    <string name="message_tutorial_color_conditions_step_7">Тепер ви можете вибрати піксель, колір якого хочете відстежувати.
+        Натисніть безпосередньо на екран, щоб вибрати піксель; з\'явиться збільшений вигляд, щоб допомогти вам побачити,
+        що відбувається.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_7">Ви можете натиснути на збільшений вигляд, щоб вибрати піксель
+        точніше.</string>
+
+    <string name="message_tutorial_color_conditions_step_8">Спробуйте вибрати точку на зеленій або синій частині цілі,
+        адже саме це ми хочемо виявити для перемоги в грі.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_8">Після правильного вибору пікселя натисніть на цю
+        іконку для підтвердження.</string>
+
+    <string name="message_tutorial_color_conditions_step_9">Колір вашої умови тепер записано!\n\nТепер можна зробити кілька
+        налаштувань, але параметри за замовчуванням підходять для нашого базового випадку.\n\nНатисніть кнопку Зберегти,
+        щоб зареєструвати його та повернутися до списку умов.</string>
+
+    <string name="message_tutorial_color_conditions_step_10">Закрийте список умов, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_color_conditions_step_11">З цією умовою сценарій знає, коли запускати дії.\n\n
+        Тепер вам потрібно визначити, які дії запускати; для цієї гри — натискання на синю кнопку.\n\nНатисніть поле
+        Дії, щоб відобразити список дій.</string>
+
+    <string name="message_tutorial_color_conditions_step_12">Дія — це те, що виконується після виконання умов її події.\n\nЦе
+        може бути натискання, свайп, пауза, Intent (взаємодія з іншим додатком) або зміна в виконанні сценарію. Для одної
+        події можна визначити кілька дій.\n\nНатисніть кнопку Створити дію, щоб створити свою першу дію.</string>
+
+    <string name="message_tutorial_color_conditions_step_13">Спочатку нам потрібно вибрати тип для вашої дії.\n\nДля цієї гри нам
+        просто потрібно натиснути на синю кнопку, тому виберіть Натискання, щоб створити нову дію Натискання.</string>
+
+    <string name="message_tutorial_color_conditions_step_14">Дія Натискання визначається позицією та тривалістю натискання.\n\n
+        Оскільки ми хочемо натискати якомога швидше, можна залишити тривалість натискання за замовчуванням 1 мс, що є
+        мінімальним значенням. Тому нам потрібно лише визначити позицію.\n\nНатисніть кнопку вибору позиції, щоб вибрати
+        позицію дії Натискання.</string>
+
+    <string name="message_tutorial_color_conditions_step_15">Вам потрібно вибрати точну позицію для натискання, тому запустіть
+        гру знову, щоб відобразити синю кнопку, а потім виберіть її позицію.\n\nКоли позиція правильна, натисніть кнопку
+        підтвердження, щоб зберегти її.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_15">Ви не можете взаємодіяти з грою, поки видимий селектор позиції,
+        але ви можете використовувати цю кнопку, щоб показати або приховати його, знімаючи це обмеження за бажанням.</string>
+
+    <string name="message_tutorial_color_conditions_step_16">Натискання тепер правильно налаштовано!\n\nНатисніть кнопку Зберегти,
+        щоб зареєструвати його та повернутися до списку дій.</string>
+
+    <string name="message_tutorial_color_conditions_step_17">Закрийте список дій, щоб повернутися до налаштування події.</string>
+
+    <string name="message_tutorial_color_conditions_step_18">Ваша подія тепер має умову та дію, що означає, що вона знає, що
+        виконувати і коли.\n\nНатисніть кнопку Зберегти, щоб зареєструвати її та повернутися до діалогу сценарію.</string>
+
+    <string name="message_tutorial_color_conditions_step_19">Єдина вимога до сценарію — мати принаймні одну подію.\n
+        Оскільки наша подія вже охоплює спосіб перемоги в грі, нам більше нічого не потрібно.\n\nНатисніть кнопку Зберегти,
+        щоб зберегти сценарій у базі даних і закрити вікна налаштування.</string>
+
+    <string name="message_tutorial_color_conditions_step_20">Як бачите, кнопка відтворення тепер доступна, що означає, що ваш
+        сценарій дійсний і може використовуватися для виявлення.\n\nНатисніть її, щоб запустити виявлення.</string>
+
+    <string name="message_tutorial_color_conditions_step_21">Працює, але нічого не відбувається?\n\nЦе нормально — він
+        натискатиме лише тоді, коли синя кнопка буде видима, пам\'ятаєте? Поки сценарій працює, натисніть кнопку Почати гру
+        і спостерігайте, як Klick\'r перемагає за вас!</string>
+
+    <string name="message_tutorial_color_conditions_step_22">Вітаємо!\n\nТепер ви знаєте основи Klick\'r, але не всі випадки
+        будуть такими простими, як ця гра.\nПерегляньте інші навчальні матеріали, щоб відкрити більше можливостей.</string>
+</resources>

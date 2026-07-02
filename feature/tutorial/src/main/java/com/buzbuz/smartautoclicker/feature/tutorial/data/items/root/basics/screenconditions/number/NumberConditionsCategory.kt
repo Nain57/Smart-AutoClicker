@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.number
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
 internal fun getNumberConditionsCategory() =
     TutorialCategory(

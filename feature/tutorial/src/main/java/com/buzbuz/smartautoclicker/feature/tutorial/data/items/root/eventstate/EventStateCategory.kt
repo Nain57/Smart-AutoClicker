@@ -14,22 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.eventstate
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
+import com.buzbuz.smartautoclicker.feature.tutorial.R
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
-interface TutorialItem {
 
-    fun getType(): Type
-    fun getTutorialInfo(): TutorialInfo
-    fun getTutorial(): Tutorial
+internal fun getEventStateCategory() =
+    TutorialCategory(
+        type = TutorialCategory.Type.EVENT_STATE,
+        nameRes = R.string.tutorial_category_event_state_name,
+        shortDescriptionRes = R.string.tutorial_category_event_state_desc_short,
+        longDescriptionRes = R.string.tutorial_category_event_state_desc_long,
+        iconRes = R.drawable.ic_toggle_event,
+        content = listOf(
 
-    enum class Type {
-        IMAGE_DETECTION_MOVING_TARGET,
-        IMAGE_DETECTION_STILL_TARGET,
-        IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH;
-        fun toTutorialId(): String = name
-    }
-
-}
+        ),
+    )

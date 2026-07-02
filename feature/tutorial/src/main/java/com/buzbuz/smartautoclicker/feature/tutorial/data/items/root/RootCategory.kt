@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
 
 internal fun getRootCategory() =
@@ -28,6 +28,9 @@ internal fun getRootCategory() =
         longDescriptionRes = R.string.tutorial_category_root_desc_long,
         iconRes = R.drawable.ic_tutorials,
         content = listOf(
-            TutorialCategory.Content.Category(TutorialCategory.Type.BASICS)
+            TutorialCategory.Content.Category(TutorialCategory.Type.BASICS),
+            TutorialCategory.Content.Category(TutorialCategory.Type.COMBINE_CONDITIONS),
+            TutorialCategory.Content.Category(TutorialCategory.Type.EVENT_STATE),
+            TutorialCategory.Content.Category(TutorialCategory.Type.COUNTERS),
         ),
     )

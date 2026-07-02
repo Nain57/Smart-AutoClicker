@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_color_conditions">特定のピクセルの色を検出する</string>
+    <string name="item_desc_tutorial_color_conditions">画面上の特定の色を検出し、それが現れたときにクリックする方法を学ぶ</string>
+    <string name="message_game_tutorial_color_conditions">できるだけ速く青いボタンをクリックしてください</string>
+
+    <string name="message_tutorial_color_conditions_step_1">色の条件チュートリアルへようこそ！\n\nここでは、Klick\'r の助けを借りて
+        ゲームのハイスコアを更新してみます。\n\nまず「ゲームを開始」を押して試してみるか、直接シナリオの設定に進むことが
+        できます。</string>
+
+    <string name="message_tutorial_color_conditions_step_2">他の画面条件と同様に、まず画面イベントを作成する必要があります。</string>
+
+    <string name="message_tutorial_color_conditions_step_3">次に、「条件」フィールドをタップして条件リストを開きます。</string>
+
+    <string name="message_tutorial_color_conditions_step_4">条件を作成する必要があります。「作成」をタップしてください。</string>
+
+    <string name="message_tutorial_color_conditions_step_5">このチュートリアルでは、画面上の色を検出する方法を学びたいので、
+        「色の条件」を選択してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_6">条件作成の最初のステップは、スクリーンショットを撮影してから色を
+        選択することです。\n\n 青いボタンが見えたときにクリックしたいので、スクリーンショットにそれが含まれている必要
+        があります。ゲームをもう一度起動して表示させ、スクリーンショットを撮影してください。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_6">フローティングメニューのキャプチャボタンを使ってスクリーンショットを撮影してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_7">次に、色を監視したいピクセルを選択できます。画面を直接タップして
+        ピクセルを選択すると、ズームビューが表示されて状況を確認しやすくなります。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_7">ズームビューをタップすると、より正確にピクセルを選択できます。</string>
+
+    <string name="message_tutorial_color_conditions_step_8">ゲームに勝つために検出したい、ターゲットの緑または青の部分を
+        選んでみてください。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_8">ピクセルが正しく選択されたら、このアイコンをタップして確定してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_9">条件の色が記録されました！\n\nいくつかの調整が可能ですが、デフォルトの
+        設定で基本的なユースケースには十分です。\n\n保存ボタンをタップして登録し、条件リストに戻ります。</string>
+
+    <string name="message_tutorial_color_conditions_step_10">条件リストを閉じてイベントの設定に戻ります。</string>
+
+    <string name="message_tutorial_color_conditions_step_11">この条件により、シナリオはいつアクションを起動するかを把握しています。\n\n
+        次に、起動するアクションを定義する必要があります。このゲームでは、青いボタンをクリックします。\n\nアクションフィールドを
+        タップしてアクションリストを表示してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_12">アクションとは、イベントの条件が満たされたときに実行されるものです。\n\n
+        クリック、スワイプ、一時停止、Intent（別のアプリとのやり取り）、またはシナリオ実行の変更などがあります。同じイベントに
+        複数のアクションを定義することもできます。\n\n「アクションを作成」ボタンをタップして最初のアクションを作成してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_13">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは、
+        青いボタンをクリックするだけなので、「クリック」を選んで新しいクリックアクションを作成してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_14">クリックアクションは位置と押下時間で定義されます。\n\nできるだけ速く
+        クリックしたいので、最小値である 1ms のデフォルト押下時間を維持できます。あとは位置を定義するだけです。\n\n位置
+        選択ボタンをタップしてクリックアクションの位置を選択してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_15">クリックする正確な位置を選択する必要があるので、ゲームをもう一度
+        起動して青いボタンを表示させ、その位置を選択してください。\n\n位置が正しければ、確定ボタンをタップして保存してください。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_15">位置セレクターが表示されている間はゲームを操作できませんが、
+        このボタンを使って表示・非表示を切り替えることで、その制限をいつでも解除できます。</string>
+
+    <string name="message_tutorial_color_conditions_step_16">クリックが正しく設定されました！\n\n保存ボタンをタップして登録し、
+        アクションリストに戻ります。</string>
+
+    <string name="message_tutorial_color_conditions_step_17">アクションリストを閉じてイベントの設定に戻ります。</string>
+
+    <string name="message_tutorial_color_conditions_step_18">イベントに条件とアクションが設定され、何をいつ実行するかが決まりました。\n\n
+        保存ボタンをタップして登録し、シナリオダイアログに戻ります。</string>
+
+    <string name="message_tutorial_color_conditions_step_19">シナリオに必要な唯一の条件は、少なくとも1つのイベントを持つことです。\n
+        私たちのイベントはすでにゲームの勝ち方をカバーしているので、他には何も必要ありません。\n\n保存ボタンをタップして
+        シナリオをデータベースに保存し、設定ダイアログを閉じます。</string>
+
+    <string name="message_tutorial_color_conditions_step_20">ご覧のように、再生ボタンが使えるようになりました。シナリオが有効で
+        検出に使用できることを意味します。\n\nタップして検出を開始してください。</string>
+
+    <string name="message_tutorial_color_conditions_step_21">動いているのに何も起こらない？\n\n正常です。青いボタンが見えたとき
+        だけクリックすることを覚えていますか？シナリオを動かしたまま、「ゲームを開始」ボタンを押して、Klick\'r が代わりに
+        ゲームを攻略するのを見てください！</string>
+
+    <string name="message_tutorial_color_conditions_step_22">おめでとうございます！\n\nKlick\'r の基本を学びましたが、すべての
+        ユースケースがこのゲームほど単純ではありません。\n他のチュートリアルも見て、さらに多くのユースケースを発見してください。</string>
+</resources>

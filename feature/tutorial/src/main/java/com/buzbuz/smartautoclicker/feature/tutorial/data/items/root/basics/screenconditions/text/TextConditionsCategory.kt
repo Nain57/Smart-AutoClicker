@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 
 internal fun getTextConditionsCategory() =
     TutorialCategory(

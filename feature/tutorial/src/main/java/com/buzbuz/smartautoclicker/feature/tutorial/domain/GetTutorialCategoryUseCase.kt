@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.domain
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_color_conditions">检测指定像素的颜色</string>
+    <string name="item_desc_tutorial_color_conditions">学习如何检测屏幕上的特定颜色并在其出现时点击</string>
+    <string name="message_game_tutorial_color_conditions">尽快点击蓝色按钮</string>
+
+    <string name="message_tutorial_color_conditions_step_1">欢迎来到颜色条件教程！\n\n在这里，您将借助 Klick\'r 尝试打破一个
+        游戏的最高分。\n\n您可以先按下"开始游戏"体验一下，或直接进入场景配置。</string>
+
+    <string name="message_tutorial_color_conditions_step_2">与任何其他屏幕条件一样，我们首先需要创建一个屏幕事件。</string>
+
+    <string name="message_tutorial_color_conditions_step_3">现在，点击"条件"字段以打开条件列表。</string>
+
+    <string name="message_tutorial_color_conditions_step_4">我们需要创建条件。点击"创建"。</string>
+
+    <string name="message_tutorial_color_conditions_step_5">在本教程中，我们想学习如何检测屏幕上的颜色，
+        因此选择"颜色条件"。</string>
+
+    <string name="message_tutorial_color_conditions_step_6">创建条件的第一步是截图，然后从中选择颜色。\n\n 由于我们想在
+        蓝色按钮可见时点击，截图必须包含它。重新启动游戏以显示它，然后截图。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_6">使用浮动菜单中的截图按钮来截图。</string>
+
+    <string name="message_tutorial_color_conditions_step_7">现在您可以选择要监控颜色的像素。您可以直接点击屏幕来选择像素，
+        放大视图将出现以帮助您看清发生的情况。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_7">您可以点击放大视图以更精确地选择像素。</string>
+
+    <string name="message_tutorial_color_conditions_step_8">尝试在目标的绿色或蓝色部分选择一个点，因为这是我们想要检测
+        以赢得游戏的颜色。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_8">像素正确选择后，点击此图标进行确认。</string>
+
+    <string name="message_tutorial_color_conditions_step_9">您的条件颜色已记录！\n\n现在可以进行一些调整，但默认设置适合我们的
+        基本用例。\n\n点击保存按钮以注册它并返回条件列表。</string>
+
+    <string name="message_tutorial_color_conditions_step_10">关闭条件列表以返回事件配置。</string>
+
+    <string name="message_tutorial_color_conditions_step_11">有了这个条件，场景就知道何时触发动作了。\n\n现在您需要定义触发哪些
+        动作；对于这个游戏，就是点击蓝色按钮。\n\n点击"动作"字段以显示动作列表。</string>
+
+    <string name="message_tutorial_color_conditions_step_12">动作是在其事件的条件满足后执行的操作。\n\n它可以是点击、滑动、暂停、
+        Intent（与另一个应用的交互）或场景执行中的更改，同一事件可以定义多个动作。\n\n点击"创建动作"按钮以创建您的
+        第一个动作。</string>
+
+    <string name="message_tutorial_color_conditions_step_13">首先，我们需要为您的动作选择类型。\n\n对于这个游戏，我们只需点击
+        蓝色按钮，因此选择"点击"以创建新的点击动作。</string>
+
+    <string name="message_tutorial_color_conditions_step_14">点击动作由位置和按下时长定义。\n\n由于我们想尽快点击，可以保持
+        默认的 1ms 按下时长，这是最小值。因此我们只需定义位置。\n\n点击位置选择按钮以选择点击动作的位置。</string>
+
+    <string name="message_tutorial_color_conditions_step_15">您需要选择精确的点击位置，因此重新启动游戏以显示蓝色按钮，然后
+        选择其位置。\n\n位置正确后，点击确认按钮保存它。</string>
+    <string name="message_tutorial_color_conditions_step_secondary_15">位置选择器可见时您无法与游戏交互，但可以使用此按钮来显示
+        或隐藏它，随时解除该限制。</string>
+
+    <string name="message_tutorial_color_conditions_step_16">点击现已正确配置！\n\n点击保存按钮以注册它并返回动作列表。</string>
+
+    <string name="message_tutorial_color_conditions_step_17">关闭动作列表以返回事件配置。</string>
+
+    <string name="message_tutorial_color_conditions_step_18">您的事件现在有了条件和动作，这意味着它知道执行什么以及何时执行。\n\n
+        点击保存按钮以注册它并返回场景对话框。</string>
+
+    <string name="message_tutorial_color_conditions_step_19">场景唯一的要求是至少有一个事件。\n我们的事件已经涵盖了赢得游戏的
+        方法，不需要其他任何东西。\n\n点击保存按钮将场景保存到数据库并关闭配置对话框。</string>
+
+    <string name="message_tutorial_color_conditions_step_20">如您所见，播放按钮现在可用，这意味着您的场景有效且可用于检测。\n\n
+        点击它开始检测。</string>
+
+    <string name="message_tutorial_color_conditions_step_21">它在运行但什么都没发生？\n\n这是正常的，它只会在蓝色按钮可见时点击，
+        还记得吗？在保持场景运行的同时，按下"开始游戏"按钮，看 Klick\'r 替您赢得游戏！</string>
+
+    <string name="message_tutorial_color_conditions_step_22">恭喜！\n\n您现在已经了解了 Klick\'r 的基础知识，但并非所有用例都
+        像这个游戏这么简单。\n查看其他教程以发现更多用例。</string>
+</resources>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_color_conditions">Rilevare un colore su un pixel</string>
+    <string name="item_desc_tutorial_color_conditions">Impara a rilevare un colore specifico sullo schermo e a fare clic quando appare</string>
+    <string name="message_game_tutorial_color_conditions">Fai clic sul pulsante blu il più velocemente possibile</string>
+
+    <string name="message_tutorial_color_conditions_step_1">Benvenuto nel tutorial sulle condizioni di colore!\n\nQui proverai
+        a battere il punteggio massimo di un gioco con l\'aiuto di Klick\'r.\n\nPuoi prima provarlo premendo Avvia gioco,
+        o passare direttamente alla configurazione dello Scenario.</string>
+
+    <string name="message_tutorial_color_conditions_step_2">Come per qualsiasi altra Condizione dello schermo, dobbiamo prima
+        creare un Evento dello schermo.</string>
+
+    <string name="message_tutorial_color_conditions_step_3">Ora premi sul campo Condizioni per aprire la lista delle Condizioni.</string>
+
+    <string name="message_tutorial_color_conditions_step_4">Dobbiamo creare la Condizione. Premi su Crea.</string>
+
+    <string name="message_tutorial_color_conditions_step_5">In questo tutorial, vogliamo imparare a rilevare
+        un colore sullo schermo, quindi seleziona Condizione di colore.</string>
+
+    <string name="message_tutorial_color_conditions_step_6">Il primo passo per creare una Condizione è fare uno
+        screenshot e poi selezionare un colore.\n\n Poiché vogliamo fare clic quando il pulsante blu è visibile,
+        lo screenshot deve contenerlo. Avvia di nuovo il gioco per visualizzarlo, poi fai lo screenshot.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_6">Usa il pulsante di acquisizione nel menu flottante per fare lo screenshot.</string>
+
+    <string name="message_tutorial_color_conditions_step_7">Ora puoi selezionare il pixel di cui vuoi monitorare il colore.
+        Puoi premere direttamente sullo schermo per selezionare un pixel; la vista ingrandita apparirà per aiutarti a
+        visualizzare cosa sta succedendo.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_7">Puoi premere sulla vista ingrandita per selezionare un pixel
+        con maggiore precisione.</string>
+
+    <string name="message_tutorial_color_conditions_step_8">Cerca di scegliere un punto sulla parte verde o blu del bersaglio,
+        poiché è quello che vogliamo rilevare per vincere il gioco.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_8">Una volta che il pixel è selezionato correttamente, premi
+        su questa icona per validare.</string>
+
+    <string name="message_tutorial_color_conditions_step_9">Il colore della tua Condizione è ora registrato!\n\nOra è possibile
+        effettuare diverse regolazioni, ma le impostazioni predefinite sono adatte al nostro caso d\'uso base.\n\nPremi il
+        pulsante Salva per registrarla e tornare alla lista delle Condizioni.</string>
+
+    <string name="message_tutorial_color_conditions_step_10">Chiudi la lista delle Condizioni per tornare alla configurazione dell\'Evento.</string>
+
+    <string name="message_tutorial_color_conditions_step_11">Con questa Condizione, lo scenario sa quando attivare le Azioni.\n\n
+        Ora devi definire quali Azioni attivare; per questo gioco, un clic sul pulsante blu.\n\nPremi sul campo Azioni
+        per visualizzare la lista delle Azioni.</string>
+
+    <string name="message_tutorial_color_conditions_step_12">Un\'Azione è qualcosa che viene eseguito una volta che le Condizioni del
+        suo Evento sono soddisfatte.\n\nPuò essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra
+        applicazione) o un cambiamento nell\'esecuzione dello Scenario. Più Azioni possono essere definite per lo stesso
+        Evento.\n\nPremi il pulsante Crea Azione per creare la tua prima Azione.</string>
+
+    <string name="message_tutorial_color_conditions_step_13">Prima di tutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer
+        questo gioco, dobbiamo semplicemente fare clic sul pulsante blu, quindi scegli Clic per creare una nuova Azione Clic.</string>
+
+    <string name="message_tutorial_color_conditions_step_14">Un\'Azione Clic è definita da una posizione e una durata di pressione.\n\n
+        Poiché vogliamo fare clic il più velocemente possibile, possiamo mantenere la durata di pressione predefinita di 1ms,
+        che è il valore minimo. Dobbiamo quindi solo definire una posizione.\n\nPremi il pulsante selettore di posizione
+        per scegliere la posizione dell\'Azione Clic.</string>
+
+    <string name="message_tutorial_color_conditions_step_15">Devi selezionare la posizione esatta in cui fare clic, quindi avvia
+        di nuovo il gioco per visualizzare il pulsante blu e poi seleziona la sua posizione.\n\nUna volta che la posizione
+        è corretta, premi il pulsante di validazione per salvarla.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_15">Non puoi interagire con il gioco mentre il selettore di posizione
+        è visibile, ma puoi usare questo pulsante per mostrarlo o nasconderlo, consentendoti di rimuovere quella restrizione
+        quando vuoi.</string>
+
+    <string name="message_tutorial_color_conditions_step_16">Il clic è ora configurato correttamente!\n\nPremi il pulsante Salva
+        per registrarlo e tornare alla lista delle Azioni.</string>
+
+    <string name="message_tutorial_color_conditions_step_17">Chiudi la lista delle Azioni per tornare alla configurazione dell\'Evento.</string>
+
+    <string name="message_tutorial_color_conditions_step_18">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che
+        sa cosa eseguire e quando eseguirlo.\n\nPremi il pulsante Salva per registrarlo e tornare alla finestra dello Scenario.</string>
+
+    <string name="message_tutorial_color_conditions_step_19">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
+        Poiché il nostro Evento copre già come vincere il gioco, non abbiamo bisogno di altro.\n\nPremi il pulsante Salva per
+        salvare lo Scenario nel database e chiudere le finestre di configurazione.</string>
+
+    <string name="message_tutorial_color_conditions_step_20">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che
+        significa che il tuo Scenario è valido e può essere usato per il rilevamento.\n\nPremi su di esso per avviare
+        il rilevamento.</string>
+
+    <string name="message_tutorial_color_conditions_step_21">Sta funzionando ma non succede nulla?\n\nÈ normale, farà clic solo
+        quando il pulsante blu è visibile, ricordi? Mentre mantieni lo scenario in esecuzione, premi il pulsante Avvia gioco
+        e guarda Klick\'r batterlo al posto tuo!</string>
+
+    <string name="message_tutorial_color_conditions_step_22">Congratulazioni!\n\nOra conosci le basi di Klick\'r, ma non tutti i
+        casi d\'uso saranno semplici come questo gioco.\nDai un\'occhiata agli altri tutorial per scoprire altri casi d\'uso.</string>
+</resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_category_root_name">Обучение</string>
+    <string name="tutorial_category_root_desc_long">Автоматизация Klick\'r основана на том, что отображается на вашем
+        экране, что существенно отличается от обычных автокликеров, работающих по таймеру. Узнайте здесь, как ею
+        пользоваться.</string>
+
+    <string name="tutorial_category_basics_name">Основы сценария</string>
+    <string name="tutorial_category_basics_desc_short">Изучите использование каждого элемента сценария</string>
+    <string name="tutorial_category_basics_desc_long">Сценарий — это корневой элемент вашего скрипта автоматизации.
+        Он содержит список событий экрана и список триггерных событий. Событие — это список условий, которые
+        необходимо выполнить для запуска списка действий.\n\n Узнайте здесь, как использовать каждый элемент
+        сценария.</string>
+
+    <string name="tutorial_category_screen_condition_name">Условия экрана</string>
+    <string name="tutorial_category_screen_condition_desc_short">Проверяйте, что отображается на вашем экране</string>
+    <string name="tutorial_category_screen_condition_desc_long">Условие экрана — это часть «когда» события экрана:
+        когда условия экрана события выполнены, его действия запускаются. Чтобы условие экрана было выполнено,
+        содержимое экрана должно соответствовать заданному цвету, изображению, тексту или числу.\n\n Узнайте здесь,
+        как использовать их с простыми интерактивными примерами.</string>
+
+    <string name="tutorial_category_color_condition_name">Условия цвета</string>
+    <string name="tutorial_category_color_condition_desc_short">Проверяйте, отображается ли определённый цвет</string>
+    <string name="tutorial_category_color_condition_desc_long">Условие цвета проверяет цвет конкретного пикселя на
+        вашем экране и сравнивает его с целевым цветом. Это самый лёгкий тип условия без обработки изображений.\n\n
+        Узнайте здесь, как использовать его для реагирования на изменения цвета на экране.</string>
+
+    <string name="tutorial_category_image_condition_name">Условия изображения</string>
+    <string name="tutorial_category_image_condition_desc_short">Проверяйте, отображается ли определённое изображение</string>
+    <string name="tutorial_category_image_condition_desc_long">Условие изображения делает снимок части вашего экрана
+        и ищет его позже — на точной позиции, в любом месте экрана или в заданной области. Порог определяет точность
+        совпадения.\n\n Узнайте здесь, как использовать его для реагирования на изображения, появляющиеся на
+        экране.</string>
+
+    <string name="tutorial_category_number_condition_name">Числовые условия</string>
+    <string name="tutorial_category_number_condition_desc_short">Проверяйте, отображается ли определённое число</string>
+    <string name="tutorial_category_number_condition_desc_long">Числовое условие считывает число, отображённое в
+        заданной области экрана, и сравнивает его с фиксированным значением или счётчиком с помощью операторов: равно,
+        больше или меньше.\n\n Узнайте здесь, как использовать его для реагирования на числовые значения на
+        экране.</string>
+
+    <string name="tutorial_category_text_condition_name">Текстовые условия</string>
+    <string name="tutorial_category_text_condition_desc_short">Проверяйте, отображается ли определённый текст</string>
+    <string name="tutorial_category_text_condition_desc_long">Текстовое условие считывает текст, отображённый в
+        заданной области экрана, и проверяет, соответствует ли он заданному значению.\n\n Узнайте здесь, как
+        использовать его для реагирования на текст, появляющийся на экране.</string>
+
+    <string name="tutorial_category_counters_name">Счётчики</string>
+    <string name="tutorial_category_counters_desc_short">Отслеживайте и используйте числовые значения в сценарии</string>
+    <string name="tutorial_category_counters_desc_long">Счётчик — это именованная числовая переменная, привязанная к
+        вашему сценарию. Он начинается со значения по умолчанию и может быть прочитан условиями или действиями, а
+        также изменён действием «Изменить счётчик».\n\n Узнайте здесь, как использовать счётчики для создания более
+        умных скриптов автоматизации.</string>
+
+    <string name="tutorial_category_combine_conditions_name">Объединение условий</string>
+    <string name="tutorial_category_combine_conditions_desc_short">Запускайте события с помощью нескольких условий</string>
+    <string name="tutorial_category_combine_conditions_desc_long">Каждое событие имеет оператор условий: И требует
+        выполнения всех условий, тогда как ИЛИ требует хотя бы одного. Сочетание типов условий и операторов позволяет
+        справляться со сложными сценариями.\n\n Узнайте здесь, как эффективно объединять условия.</string>
+
+    <string name="tutorial_category_event_state_name">Состояние события</string>
+    <string name="tutorial_category_event_state_desc_short">Включайте или отключайте события динамически</string>
+    <string name="tutorial_category_event_state_desc_long">События можно включать или отключать во время выполнения с
+        помощью действия ToggleEvent. Это позволяет создавать многошаговые потоки автоматизации, где определённые
+        события активны только при конкретных условиях.\n\n Узнайте здесь, как управлять состоянием событий для
+        создания сложных сценариев.</string>
+
+    <string name="tutorial_category_trigger_condition_name">Триггерные условия</string>
+    <string name="tutorial_category_trigger_condition_desc_short">Проверяйте состояние сценария</string>
+    <string name="tutorial_category_trigger_condition_desc_long">Триггерное условие — это часть «когда» триггерного
+        события: оно срабатывает на основе невизуальных сигналов, таких как истечение таймера, достижение счётчиком
+        значения или получение Android broadcast.\n\n Узнайте здесь, как использовать их для создания потоков
+        автоматизации, основанных на времени или состоянии.</string>
+
+    <string name="tutorial_category_action_name">Действия</string>
+    <string name="tutorial_category_action_desc_short">Выполняйте что-то, когда условия выполнены</string>
+    <string name="tutorial_category_action_desc_long">Действие выполняется, когда условия события выполнены. Действия
+        варьируются от жестов (Click, Swipe) до управления потоком (ToggleEvent, ChangeCounter, Pause) и системных
+        взаимодействий (Intent, Notification, SystemAction, SetText).\n\n Узнайте здесь, как использовать каждый тип
+        действия для создания скриптов автоматизации.</string>
+</resources>

@@ -20,8 +20,8 @@ import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
 

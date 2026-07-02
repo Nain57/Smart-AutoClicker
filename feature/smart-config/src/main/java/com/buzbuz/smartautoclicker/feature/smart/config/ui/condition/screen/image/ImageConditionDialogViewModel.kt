@@ -153,21 +153,26 @@ class ImageConditionViewModel @Inject constructor(
 
 
     fun monitorSaveButtonView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE, view)
+        monitoredViewsManager.attach(MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
     fun monitorDetectionTypeItemInAreaView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA, view)
+        monitoredViewsManager.attach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA, view)
     }
 
     fun monitorDetectionAreaSelector(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
+        monitoredViewsManager.attach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
+    }
+
+    fun monitorVisibilityView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_VISIBILITY, view)
     }
 
     fun stopViewMonitoring() {
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA)
-        monitoredViewsManager.detach(MonitoredViewType.CONDITION_DIALOG_FIELD_AREA_SELECTOR)
+        monitoredViewsManager.detach(MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.detach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA)
+        monitoredViewsManager.detach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_AREA_SELECTOR)
+        monitoredViewsManager.detach(MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_VISIBILITY)
     }
 
     private fun sanitizeAreaForCondition(area: Rect, conditionArea: Rect): Rect {

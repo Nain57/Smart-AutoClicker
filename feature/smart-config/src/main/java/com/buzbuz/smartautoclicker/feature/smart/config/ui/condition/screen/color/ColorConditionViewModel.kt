@@ -18,11 +18,14 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.col
 
 import android.graphics.PointF
 import android.graphics.Rect
+import android.view.View
 import androidx.annotation.ColorInt
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.getBlueValue
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.getGreenValue
@@ -43,6 +46,7 @@ import javax.inject.Inject
 
 class ColorConditionViewModel  @Inject constructor(
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel()  {
 
     /** The condition being configured by the user. */
@@ -98,6 +102,14 @@ class ColorConditionViewModel  @Inject constructor(
         updateEditedCondition { oldCondition ->
             oldCondition.copy(threshold = value)
         }
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE)
     }
 
     private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Color) -> ScreenCondition.Color?) {

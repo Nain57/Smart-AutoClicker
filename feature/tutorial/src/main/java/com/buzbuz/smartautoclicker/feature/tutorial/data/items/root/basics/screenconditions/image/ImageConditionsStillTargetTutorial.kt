@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.OneStillTargetRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 
 object ImageConditionsStillTargetTutorial : TutorialItem {
@@ -125,7 +125,7 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                         imageDescResId = R.string.message_tutorial_screen_condition_still_target_step_secondary_9,
                     ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
+                        MonitoredViewType.SCREEN_CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
                     ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
@@ -144,7 +144,7 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_11,
                     stepStartCondition = TutorialStepStartCondition.NextOverlay,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                        MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
                     ),
                 ),
                 // Close condition list

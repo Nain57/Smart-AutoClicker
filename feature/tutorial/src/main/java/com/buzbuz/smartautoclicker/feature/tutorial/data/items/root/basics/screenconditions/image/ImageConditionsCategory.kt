@@ -17,8 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 internal fun getImageConditionsCategory() =
     TutorialCategory(
@@ -30,6 +30,5 @@ internal fun getImageConditionsCategory() =
         content = listOf(
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_STILL_TARGET),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_MOVING_TARGET),
-            TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH),
         ),
     )

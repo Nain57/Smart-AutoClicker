@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.OneMovingTargetRules
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 
 object ImageConditionsMovingTargetTutorial : TutorialItem {
@@ -125,7 +125,7 @@ object ImageConditionsMovingTargetTutorial : TutorialItem {
                         imageDescResId = R.string.message_tutorial_screen_condition_moving_target_step_secondary_9,
                     ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
+                        MonitoredViewType.SCREEN_CONDITION_CAPTURE_MENU_BUTTON_CAPTURE,
                     ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
@@ -148,7 +148,7 @@ object ImageConditionsMovingTargetTutorial : TutorialItem {
                     ),
                     stepStartCondition = TutorialStepStartCondition.NextOverlay,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA,
+                        MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_TYPE_ITEM_IN_AREA,
                     ),
                 ),
                 // Click on area selector
@@ -156,7 +156,7 @@ object ImageConditionsMovingTargetTutorial : TutorialItem {
                     contentTextResId = R.string.message_tutorial_screen_condition_moving_target_step_12,
                     stepStartCondition = TutorialStepStartCondition.Immediate,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_DIALOG_FIELD_AREA_SELECTOR,
+                        MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_AREA_SELECTOR,
                     ),
                 ),
                 // Select Area
@@ -170,7 +170,7 @@ object ImageConditionsMovingTargetTutorial : TutorialItem {
                     contentTextResId = R.string.message_tutorial_screen_condition_moving_target_step_14,
                     stepStartCondition = TutorialStepStartCondition.NextOverlay,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITION_DIALOG_BUTTON_SAVE,
+                        MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
                     ),
                 ),
                 // Close condition list

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_category_root_name">الدروس التعليمية</string>
+    <string name="tutorial_category_root_desc_long">تعتمد أتمتة Klick\'r على ما يُعرض على شاشتك، وهو ما يختلف تماماً
+        عن برامج النقر التلقائي العادية المعتمدة على الوقت. تعلّم هنا كيفية استخدامها.</string>
+
+    <string name="tutorial_category_basics_name">أساسيات السيناريو</string>
+    <string name="tutorial_category_basics_desc_short">تعلّم كيفية استخدام كل عنصر من عناصر السيناريو</string>
+    <string name="tutorial_category_basics_desc_long">السيناريو هو العنصر الجذري في سكريبت الأتمتة الخاص بك. يحتوي
+        على قائمة من أحداث الشاشة وقائمة من أحداث التشغيل. الحدث هو قائمة من الشروط التي يجب استيفاؤها لتنفيذ
+        قائمة من الإجراءات.\n\n تعلّم هنا كيفية استخدام كل عنصر من عناصر السيناريو.</string>
+
+    <string name="tutorial_category_screen_condition_name">شروط الشاشة</string>
+    <string name="tutorial_category_screen_condition_desc_short">تحقق مما يُعرض على شاشتك</string>
+    <string name="tutorial_category_screen_condition_desc_long">شرط الشاشة هو الجزء «متى» من حدث الشاشة الخاص بك:
+        عندما تُستوفى شروط الشاشة لحدث ما، يتم تنفيذ إجراءاته. لاستيفاء شرط الشاشة، يجب أن يتطابق محتوى الشاشة
+        مع لون أو صورة أو نص أو رقم معين.\n\n تعلّم هنا كيفية استخدامها مع حالات استخدام تفاعلية بسيطة.</string>
+
+    <string name="tutorial_category_color_condition_name">شروط اللون</string>
+    <string name="tutorial_category_color_condition_desc_short">تحقق مما إذا كان لون معين معروضاً</string>
+    <string name="tutorial_category_color_condition_desc_long">يتحقق شرط اللون من لون بكسل محدد على شاشتك ويقارنه
+        بلون مستهدف. إنه أخف أنواع الشروط، ولا ينطوي على معالجة للصور.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع
+        تغييرات الألوان على شاشتك.</string>
+
+    <string name="tutorial_category_image_condition_name">شروط الصورة</string>
+    <string name="tutorial_category_image_condition_desc_short">تحقق مما إذا كانت صورة معينة معروضة</string>
+    <string name="tutorial_category_image_condition_desc_long">يلتقط شرط الصورة لقطة شاشة من جزء من شاشتك ويبحث عنها
+        لاحقاً، إما في موضع محدد أو في أي مكان على الشاشة أو ضمن منطقة محددة. يتحكم حد العتبة في مدى دقة
+        التطابق.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع الصور التي تظهر على شاشتك.</string>
+
+    <string name="tutorial_category_number_condition_name">شروط الأرقام</string>
+    <string name="tutorial_category_number_condition_desc_short">تحقق مما إذا كان رقم معين معروضاً</string>
+    <string name="tutorial_category_number_condition_desc_long">يقرأ شرط الأرقام رقماً معروضاً في منطقة محددة من
+        شاشتك ويقارنه بقيمة ثابتة أو عداد باستخدام عوامل تشغيل مثل يساوي أو أكبر من أو أصغر من.\n\n تعلّم هنا
+        كيفية استخدامه للتفاعل مع القيم الرقمية المعروضة على شاشتك.</string>
+
+    <string name="tutorial_category_text_condition_name">شروط النص</string>
+    <string name="tutorial_category_text_condition_desc_short">تحقق مما إذا كان نص معين معروضاً</string>
+    <string name="tutorial_category_text_condition_desc_long">يقرأ شرط النص النص المعروض في منطقة محددة من شاشتك
+        ويتحقق مما إذا كان يتطابق مع قيمة معينة.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع النصوص التي تظهر
+        على شاشتك.</string>
+
+    <string name="tutorial_category_counters_name">العدادات</string>
+    <string name="tutorial_category_counters_desc_short">تتبع القيم الرقمية واستخدمها في سيناريوك</string>
+    <string name="tutorial_category_counters_desc_long">العداد هو متغير رقمي مُسمّى مرتبط بسيناريوك. يبدأ بقيمة
+        افتراضية ويمكن قراءته بواسطة الشروط أو الإجراءات، وتعديله بواسطة إجراء تغيير العداد.\n\n تعلّم هنا
+        كيفية استخدام العدادات لبناء سكريبتات أتمتة أكثر ذكاءً.</string>
+
+    <string name="tutorial_category_combine_conditions_name">دمج الشروط</string>
+    <string name="tutorial_category_combine_conditions_desc_short">شغّل الأحداث باستخدام شروط متعددة معاً</string>
+    <string name="tutorial_category_combine_conditions_desc_long">لكل حدث عامل تشغيل للشروط: AND يتطلب استيفاء جميع
+        الشروط، بينما OR يتطلب استيفاء شرط واحد على الأقل. يتيح لك مزج أنواع الشروط والعوامل التعامل مع سيناريوهات
+        معقدة.\n\n تعلّم هنا كيفية دمج الشروط بفاعلية.</string>
+
+    <string name="tutorial_category_event_state_name">حالة الحدث</string>
+    <string name="tutorial_category_event_state_desc_short">فعّل أو عطّل الأحداث بشكل ديناميكي</string>
+    <string name="tutorial_category_event_state_desc_long">يمكن تفعيل الأحداث أو تعطيلها أثناء التشغيل باستخدام
+        إجراء ToggleEvent. يتيح لك ذلك بناء تدفقات أتمتة متعددة الخطوات حيث تكون بعض الأحداث نشطة فقط في ظروف
+        محددة.\n\n تعلّم هنا كيفية التحكم في حالة الأحداث لبناء سيناريوهات متقدمة.</string>
+
+    <string name="tutorial_category_trigger_condition_name">شروط التشغيل</string>
+    <string name="tutorial_category_trigger_condition_desc_short">تحقق من حالة السيناريو</string>
+    <string name="tutorial_category_trigger_condition_desc_long">شرط التشغيل هو الجزء «متى» من حدث التشغيل: يُطلق
+        بناءً على إشارات غير مرئية مثل انتهاء مؤقت، أو وصول عداد إلى قيمة، أو استقبال broadcast من Android.\n\n
+        تعلّم هنا كيفية استخدامها لبناء تدفقات أتمتة مبنية على الوقت أو الحالة.</string>
+
+    <string name="tutorial_category_action_name">الإجراءات</string>
+    <string name="tutorial_category_action_desc_short">نفّذ شيئاً عند استيفاء شروطك</string>
+    <string name="tutorial_category_action_desc_long">يتم تنفيذ الإجراء عند استيفاء شروط الحدث. تتراوح الإجراءات بين
+        الإيماءات (Click, Swipe) والتحكم في التدفق (ToggleEvent, ChangeCounter, Pause) والتفاعلات مع النظام (Intent,
+        Notification, SystemAction, SetText).\n\n تعلّم هنا كيفية استخدام كل نوع من الإجراءات لبناء سكريبتات
+        الأتمتة الخاصة بك.</string>
+</resources>

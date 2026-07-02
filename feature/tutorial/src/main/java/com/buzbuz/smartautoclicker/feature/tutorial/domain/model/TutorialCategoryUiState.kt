@@ -18,8 +18,6 @@ package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.TutorialItem
 
 
 sealed interface TutorialCategoryUiState {

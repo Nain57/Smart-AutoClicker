@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_category_root_name">チュートリアル</string>
+    <string name="tutorial_category_root_desc_long">Klick\'r の自動化は、画面に表示されている内容を基にしており、時間ベースの通常の
+        オートクリッカーとは大きく異なります。ここでの使い方を学びましょう。</string>
+
+    <string name="tutorial_category_basics_name">シナリオの基本</string>
+    <string name="tutorial_category_basics_desc_short">シナリオの各要素の使い方を学ぶ</string>
+    <string name="tutorial_category_basics_desc_long">シナリオは自動化スクリプトのルート要素です。画面イベントのリストと
+        トリガーイベントのリストを含んでいます。イベントはアクションのリストを実行するために満たすべき条件のリストです。\n\n
+        ここでシナリオの各要素の使い方を学びましょう。</string>
+
+    <string name="tutorial_category_screen_condition_name">画面条件</string>
+    <string name="tutorial_category_screen_condition_desc_short">画面に表示されている内容を確認する</string>
+    <string name="tutorial_category_screen_condition_desc_long">画面条件は画面イベントの「いつ」の部分です：イベントの画面条件が
+        満たされると、そのアクションが実行されます。画面条件が満たされるには、画面の内容が指定した色、画像、テキスト、または
+        数値と一致する必要があります。\n\n ここでシンプルなインタラクティブな例を使って学びましょう。</string>
+
+    <string name="tutorial_category_color_condition_name">色の条件</string>
+    <string name="tutorial_category_color_condition_desc_short">特定の色が表示されているか確認する</string>
+    <string name="tutorial_category_color_condition_desc_long">色の条件は、画面上の特定のピクセルの色を確認し、目標の色と比較します。
+        画像処理を必要としない最も軽量な条件タイプです。\n\n ここで画面の色の変化に反応する方法を学びましょう。</string>
+
+    <string name="tutorial_category_image_condition_name">画像の条件</string>
+    <string name="tutorial_category_image_condition_desc_short">特定の画像が表示されているか確認する</string>
+    <string name="tutorial_category_image_condition_desc_long">画像の条件は、画面の一部のスクリーンショットを撮影し、後でそれを
+        探します。正確な位置、画面のどこか、または定義された範囲内で検索できます。しきい値で一致の厳密さを制御します。\n\n
+        ここで画面に表示される画像に反応する方法を学びましょう。</string>
+
+    <string name="tutorial_category_number_condition_name">数値の条件</string>
+    <string name="tutorial_category_number_condition_desc_short">特定の数値が表示されているか確認する</string>
+    <string name="tutorial_category_number_condition_desc_long">数値の条件は、画面上の定義された領域に表示されている数値を読み取り、
+        等しい・より大きい・より小さいなどの演算子を使って固定値やカウンターと比較します。\n\n ここで画面に表示される数値に
+        反応する方法を学びましょう。</string>
+
+    <string name="tutorial_category_text_condition_name">テキストの条件</string>
+    <string name="tutorial_category_text_condition_desc_short">特定のテキストが表示されているか確認する</string>
+    <string name="tutorial_category_text_condition_desc_long">テキストの条件は、画面上の定義された領域に表示されているテキストを
+        読み取り、指定した値と一致するか確認します。\n\n ここで画面に表示されるテキストに反応する方法を学びましょう。</string>
+
+    <string name="tutorial_category_counters_name">カウンター</string>
+    <string name="tutorial_category_counters_desc_short">シナリオ内で数値を追跡・使用する</string>
+    <string name="tutorial_category_counters_desc_long">カウンターはシナリオに紐付けられた名前付きの数値変数です。デフォルト値から
+        始まり、条件やアクションで読み取ることができ、カウンター変更アクションで書き込むことができます。\n\n ここでカウンターを
+        使ってより賢い自動化スクリプトを作る方法を学びましょう。</string>
+
+    <string name="tutorial_category_combine_conditions_name">条件の組み合わせ</string>
+    <string name="tutorial_category_combine_conditions_desc_short">複数の条件を組み合わせてイベントを起動する</string>
+    <string name="tutorial_category_combine_conditions_desc_long">各イベントには条件演算子があります：AND はすべての条件が満たされる
+        ことを要求し、OR は少なくとも1つを要求します。条件の種類と演算子を組み合わせることで、複雑なシナリオに対応できます。\n\n
+        ここで条件を効果的に組み合わせる方法を学びましょう。</string>
+
+    <string name="tutorial_category_event_state_name">イベントの状態</string>
+    <string name="tutorial_category_event_state_desc_short">イベントを動的に有効化・無効化する</string>
+    <string name="tutorial_category_event_state_desc_long">イベントはToggleEventアクションを使って実行中に有効化・無効化できます。
+        これにより、特定の条件下でのみ特定のイベントが有効になる多段階の自動化フローを構築できます。\n\n ここでイベントの状態を
+        制御して高度なシナリオを作る方法を学びましょう。</string>
+
+    <string name="tutorial_category_trigger_condition_name">トリガー条件</string>
+    <string name="tutorial_category_trigger_condition_desc_short">シナリオの状態を確認する</string>
+    <string name="tutorial_category_trigger_condition_desc_long">トリガー条件はトリガーイベントの「いつ」の部分です：タイマーの
+        満了、カウンターが値に達した時、またはAndroidのブロードキャストを受信した時など、非視覚的なシグナルに基づいて起動します。
+        \n\n ここで時間ベースまたは状態ベースの自動化フローを作る方法を学びましょう。</string>
+
+    <string name="tutorial_category_action_name">アクション</string>
+    <string name="tutorial_category_action_desc_short">条件が満たされたときに何かを実行する</string>
+    <string name="tutorial_category_action_desc_long">アクションはイベントの条件が満たされると実行されます。アクションはジェスチャー
+        （Click、Swipe）からフロー制御（ToggleEvent、ChangeCounter、Pause）、システム操作（Intent、Notification、
+        SystemAction、SetText）まで多岐にわたります。\n\n ここで各アクションタイプを使って自動化スクリプトを作る方法を
+        学びましょう。</string>
+</resources>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_category_root_name">教學</string>
+    <string name="tutorial_category_root_desc_long">Klick\'r 的自動化基於螢幕上顯示的內容，這與基於時間的一般自動點擊器大不相同。
+        在這裡學習如何使用它。</string>
+
+    <string name="tutorial_category_basics_name">情境基礎</string>
+    <string name="tutorial_category_basics_desc_short">學習如何使用情境中的每個元素</string>
+    <string name="tutorial_category_basics_desc_long">情境是自動化腳本的根元素。它包含螢幕事件清單和觸發事件清單。事件是一系列需要
+        滿足的條件，滿足條件後將執行一系列動作。\n\n 在這裡學習如何使用情境中的每個元素。</string>
+
+    <string name="tutorial_category_screen_condition_name">螢幕條件</string>
+    <string name="tutorial_category_screen_condition_desc_short">驗證螢幕上顯示的內容</string>
+    <string name="tutorial_category_screen_condition_desc_long">螢幕條件是螢幕事件中「何時」的部分：當事件的螢幕條件滿足時，該事件的
+        動作將被執行。要滿足螢幕條件，裝置螢幕的內容必須與指定的顏色、圖片、文字或數字相符。\n\n 在這裡透過簡單的互動範例學習如何
+        使用它們。</string>
+
+    <string name="tutorial_category_color_condition_name">顏色條件</string>
+    <string name="tutorial_category_color_condition_desc_short">驗證是否顯示特定顏色</string>
+    <string name="tutorial_category_color_condition_desc_long">顏色條件檢測螢幕上特定像素的顏色，並與目標顏色進行比較。這是最輕量的
+        條件類型，無需圖片處理。\n\n 在這裡學習如何使用它來回應螢幕上的顏色變化。</string>
+
+    <string name="tutorial_category_image_condition_name">圖片條件</string>
+    <string name="tutorial_category_image_condition_desc_short">驗證是否顯示特定圖片</string>
+    <string name="tutorial_category_image_condition_desc_long">圖片條件擷取螢幕的一部分，然後在螢幕上搜尋它，可以在精確位置、螢幕任意
+        位置或定義的區域內搜尋。閾值控制比對的嚴格程度。\n\n 在這裡學習如何使用它來回應螢幕上出現的圖片。</string>
+
+    <string name="tutorial_category_number_condition_name">數字條件</string>
+    <string name="tutorial_category_number_condition_desc_short">驗證是否顯示特定數字</string>
+    <string name="tutorial_category_number_condition_desc_long">數字條件讀取螢幕上特定區域顯示的數字，並使用等於、大於或小於等運算子
+        將其與固定值或計數器進行比較。\n\n 在這裡學習如何使用它來回應螢幕上顯示的數值。</string>
+
+    <string name="tutorial_category_text_condition_name">文字條件</string>
+    <string name="tutorial_category_text_condition_desc_short">驗證是否顯示特定文字</string>
+    <string name="tutorial_category_text_condition_desc_long">文字條件讀取螢幕上特定區域顯示的文字，並檢查是否與給定值相符。僅在
+        \n\n 在這裡學習如何使用它來回應螢幕上出現的文字。</string>
+
+    <string name="tutorial_category_counters_name">計數器</string>
+    <string name="tutorial_category_counters_desc_short">在情境中追蹤並使用數值</string>
+    <string name="tutorial_category_counters_desc_long">計數器是與情境綁定的命名數值變數。它從預設值開始，可以被條件或動作讀取，
+        並透過變更計數器動作進行寫入。\n\n 在這裡學習如何使用計數器來建構更智慧的自動化腳本。</string>
+
+    <string name="tutorial_category_combine_conditions_name">組合條件</string>
+    <string name="tutorial_category_combine_conditions_desc_short">使用多個條件組合觸發事件</string>
+    <string name="tutorial_category_combine_conditions_desc_long">每個事件都有一個條件運算子：AND 要求滿足所有條件，而 OR 只需滿足
+        至少一個。混合使用條件類型和運算子可以應對複雜的現實場景。\n\n 在這裡學習如何有效地組合條件。</string>
+
+    <string name="tutorial_category_event_state_name">事件狀態</string>
+    <string name="tutorial_category_event_state_desc_short">動態啟用或停用事件</string>
+    <string name="tutorial_category_event_state_desc_long">可以在執行時使用 ToggleEvent 動作啟用或停用事件。這讓您能夠建構多步驟
+        自動化流程，其中某些事件僅在特定條件下才處於活動狀態。\n\n 在這裡學習如何控制事件狀態來建構進階情境。</string>
+
+    <string name="tutorial_category_trigger_condition_name">觸發條件</string>
+    <string name="tutorial_category_trigger_condition_desc_short">驗證情境的狀態</string>
+    <string name="tutorial_category_trigger_condition_desc_long">觸發條件是觸發事件中「何時」的部分：它基於非視覺訊號觸發，例如計時器
+        到期、計數器達到某個值或收到 Android 廣播。\n\n 在這裡學習如何使用它們來建構基於時間或狀態的自動化流程。</string>
+
+    <string name="tutorial_category_action_name">動作</string>
+    <string name="tutorial_category_action_desc_short">在條件滿足時執行某些操作</string>
+    <string name="tutorial_category_action_desc_long">當事件的條件滿足時，動作將被執行。動作涵蓋手勢（Click、Swipe）、流程控制
+        （ToggleEvent、ChangeCounter、Pause）和系統互動（Intent、Notification、SystemAction、SetText）。\n\n 在這裡學習如何
+        使用每種動作類型來建構自動化腳本。</string>
+</resources>

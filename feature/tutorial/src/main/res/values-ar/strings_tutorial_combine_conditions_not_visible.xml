@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <!-- Two still targets press when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">الجمع بين شروط متعددة</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">قم بإنشاء ودمج شروط متعددة لحدثك</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">انقر على الزر الأزرق فقط عندما يكون الزر الأحمر مرئيًا</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">دعونا نغير قواعد اللعبة مرة أخرى. توقف الهدف الأزرق عن الحركة،
+        ولكن الآن يجب النقر عليه فقط عندما يكون الهدف الأحمر مرئيًا.\n\nأولاً، ابدأ اللعبة وتحقق مما إذا كان بإمكانك الفوز
+        بنفسك.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">مرة أخرى، يبدو من المستحيل الفوز يدويًا، لذلك دعونا نستخدم Smart
+        AutoClicker.\n\nتم الاحتفاظ بالسيناريو الخاص بالبرنامج التعليمي السابق وتحميله لهذا البرنامج التعليمي، ولكننا سنفعل ذلك
+        بحاجة إلى تغيير بعض المعلمات للفوز بهذه اللعبة الجديدة.\n\nانقر فوق رمز تكوين السيناريو
+        ابدأ في تحديث السيناريو الجديد الخاص بك.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">ما زلنا نريد النقر على الهدف الأزرق، ولكن فقط عندما يكون اللون الأحمر مرئيًا.\n
+        لذا نحتاج إلى إضافة شرط لهذا الهدف الأحمر في حدثنا.\n\nانقر على الحدث الذي أنشأته مسبقًا لتعديله.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">سنقوم بدمج عدة شروط، لذلك نحن بحاجة إلى التحقق من عامل الشرط
+        لهذا الحدث.\n\nيشير عامل الشرط إلى كيفية تفسير الشروط المتعددة معًا.\n
+        \'واحد\' يعني أنه يجب استيفاء شرط واحد فقط من شروط هذا الحدث بالترتيب
+        لتنفيذ الإجراءات.\n\n\'الكل\' يعني أنه يجب استيفاء جميع شروط هذا الحدث من أجل تنفيذ الإجراءات.
+        \n\nبما أننا نريد اكتشاف ما إذا كان هناك شيئين معروضين معًا، فسنستخدم \'الكل\'</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">نحن الآن بحاجة إلى تحديث شروطنا.\n\nانقر فوق حقل الشروط لعرضه
+        قائمة الشروط.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">الشرط السابق لكشف الهدف الأزرق لا يزال صحيحا، ولكننا بحاجة
+        جديد للهدف الأحمر.\n\nانقر فوق الزر "إنشاء شرط" لإنشاء شرط جديد له.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">تمامًا كما هو الحال مع الهدف الأزرق، ابدأ اللعبة لإظهار الهدف الأحمر.
+        بمجرد ظهوره، التقط لقطة شاشة له!</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">استخدم زر الالتقاط في القائمة العائمة لالتقاط لقطة الشاشة.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">هل تحتوي لقطة الشاشة على الهدف الأحمر؟ يمكنك قصه من أجل فقط
+        احصل على الجزء المثير للاهتمام للكشف، وهو الهدف الأحمر.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">إذا كانت لقطة الشاشة الخاصة بك لا تحتوي على الهدف الأحمر، فيمكنك ذلك
+        اضغط على هذا الزر لاتخاذ واحدة جديدة.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">تم الآن تسجيل صورة الحالة الخاصة بك!\n\nبما أن الهدف الأحمر لا يتحرك، فإننا
+        يمكنه الاحتفاظ بالتكوين الافتراضي.\nانقر فوق زر الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">قم بإغلاق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">لدينا الآن شرطان، واحد لكل هدف، وسيتم تنفيذ الإجراءات
+        فقط في حالة اكتشاف كليهما.\n\nانقر فوق حقل "الإجراءات" لعرض قائمة الإجراءات الخاصة بالحدث الخاص بنا.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">تم بالفعل ضبط الإجراء للنقر على الحرف الأزرق، وسيكون كذلك
+        يتم تنفيذه عندما تكون الأحرف الزرقاء والحمراء مرئية معًا.\n\nهذا هو بالضبط السلوك الذي نحتاجه للتغلب على
+        اللعبة، لذا لا داعي لتعديل النقر على الإجراء.\n\nأغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">انقر على زر حفظ لحفظ الحدث الخاص بك.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">يجب حفظ كافة التغييرات في السيناريو الخاص بك حتى يتم تسجيلها.\n\nانقر فوق
+        زر الحفظ لحفظ التغييرات.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">نحن مستعدون للفوز بهذه اللعبة!\n\nانقر على زر البدء لبدء اللعبة
+        الكشف ثم ابدأ اللعبة.</string>
+
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">تهانينا!\n\nأنت تعرف الآن كيفية الجمع بين شروط متعددة لحدث ما،
+        ولكن هناك الكثير لنتعلمه!</string>
+</resources>

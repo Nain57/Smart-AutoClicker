@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_color_conditions">Detectar uma cor em um pixel</string>
+    <string name="item_desc_tutorial_color_conditions">Aprenda a detectar uma cor específica na tela e a clicar quando ela aparecer</string>
+    <string name="message_game_tutorial_color_conditions">Clique no botão azul o mais rápido possível</string>
+
+    <string name="message_tutorial_color_conditions_step_1">Bem-vindo ao tutorial de condições de cor!\n\nAqui você tentará
+        bater o recorde de pontuação de um jogo com a ajuda do Klick\'r.\n\nVocê pode experimentar primeiro pressionando
+        Iniciar jogo, ou ir direto para a configuração do Cenário.</string>
+
+    <string name="message_tutorial_color_conditions_step_2">Assim como qualquer outra Condição de tela, precisamos primeiro
+        criar um Evento de tela.</string>
+
+    <string name="message_tutorial_color_conditions_step_3">Agora, toque no campo Condições para abrir a lista de Condições.</string>
+
+    <string name="message_tutorial_color_conditions_step_4">Precisamos criar a Condição. Toque em Criar.</string>
+
+    <string name="message_tutorial_color_conditions_step_5">Neste tutorial, queremos aprender a detectar
+        uma cor na tela, então selecione Condição de cor.</string>
+
+    <string name="message_tutorial_color_conditions_step_6">O primeiro passo para criar uma Condição é tirar uma
+        captura de tela e depois selecionar uma cor.\n\n Como queremos clicar quando o botão azul estiver visível,
+        a captura de tela deve contê-lo. Inicie o jogo novamente para exibi-lo e, em seguida, tire a captura.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_6">Use o botão de captura no menu flutuante para tirar a captura de tela.</string>
+
+    <string name="message_tutorial_color_conditions_step_7">Agora você pode selecionar o pixel do qual deseja monitorar a cor.
+        Você pode tocar diretamente na tela para selecionar um pixel; a visão ampliada aparecerá para ajudá-lo a visualizar
+        o que está acontecendo.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_7">Você pode tocar na visão ampliada para selecionar um pixel
+        com mais precisão.</string>
+
+    <string name="message_tutorial_color_conditions_step_8">Tente escolher um ponto na parte verde ou azul do alvo,
+        pois é isso que queremos detectar para vencer o jogo.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_8">Assim que o pixel estiver corretamente selecionado, toque
+        neste ícone para validar.</string>
+
+    <string name="message_tutorial_color_conditions_step_9">A cor da sua Condição foi registrada!\n\nAgora é possível fazer vários
+        ajustes, mas as configurações padrão são adequadas para o nosso caso de uso básico.\n\nToque no botão Salvar para
+        registrá-la e voltar à lista de Condições.</string>
+
+    <string name="message_tutorial_color_conditions_step_10">Feche a lista de Condições para voltar à configuração do Evento.</string>
+
+    <string name="message_tutorial_color_conditions_step_11">Com esta Condição, o cenário sabe quando acionar as Ações.\n\n
+        Agora você precisa definir quais Ações acionar; para este jogo, um clique no botão azul.\n\nToque no campo Ações
+        para exibir a lista de Ações.</string>
+
+    <string name="message_tutorial_color_conditions_step_12">Uma Ação é algo que é executado quando as Condições do seu Evento
+        são cumpridas.\n\nPode ser um clique, um swipe, uma pausa, um Intent (uma interação com outro aplicativo) ou uma
+        mudança na execução do Cenário. Várias Ações podem ser definidas para o mesmo Evento.\n\nToque no botão Criar Ação
+        para criar sua primeira Ação.</string>
+
+    <string name="message_tutorial_color_conditions_step_13">Primeiro, precisamos escolher um tipo para a sua Ação.\n\nPara este
+        jogo, simplesmente precisamos clicar no botão azul, então escolha Clique para criar uma nova Ação de Clique.</string>
+
+    <string name="message_tutorial_color_conditions_step_14">Uma Ação de Clique é definida por uma posição e uma duração de pressão.\n\n
+        Como queremos clicar o mais rápido possível, podemos manter a duração de pressão padrão de 1ms, que é o valor mínimo.
+        Portanto, só precisamos definir uma posição.\n\nToque no botão seletor de posição para selecionar a posição da Ação
+        de Clique.</string>
+
+    <string name="message_tutorial_color_conditions_step_15">Você precisa selecionar a posição exata a ser clicada, então inicie
+        o jogo novamente para exibir o botão azul e depois selecione sua posição.\n\nAssim que a posição estiver correta,
+        toque no botão de validar para salvá-la.</string>
+    <string name="message_tutorial_color_conditions_step_secondary_15">Você não pode interagir com o jogo enquanto o seletor de posição
+        estiver visível, mas pode usar este botão para mostrá-lo ou ocultá-lo, permitindo remover essa restrição quando quiser.</string>
+
+    <string name="message_tutorial_color_conditions_step_16">O clique está agora configurado corretamente!\n\nToque no botão Salvar
+        para registrá-lo e voltar à lista de Ações.</string>
+
+    <string name="message_tutorial_color_conditions_step_17">Feche a lista de Ações para voltar à configuração do Evento.</string>
+
+    <string name="message_tutorial_color_conditions_step_18">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele
+        sabe o que executar e quando executar.\n\nToque no botão Salvar para registrá-lo e voltar ao diálogo do Cenário.</string>
+
+    <string name="message_tutorial_color_conditions_step_19">O único requisito para um Cenário é ter pelo menos um Evento.\n
+        Como nosso Evento já cobre como vencer o jogo, não precisamos de mais nada.\n\nToque no botão Salvar para salvar o
+        Cenário no banco de dados e fechar os diálogos de configuração.</string>
+
+    <string name="message_tutorial_color_conditions_step_20">Como você pode ver, o botão de reprodução já está disponível, o que
+        significa que seu Cenário é válido e pode ser usado para detecção.\n\nToque nele para iniciar a detecção.</string>
+
+    <string name="message_tutorial_color_conditions_step_21">Está funcionando mas nada acontece?\n\nIsso é normal, ele só clicará
+        quando o botão azul estiver visível, lembra? Enquanto mantém o cenário em execução, pressione o botão Iniciar jogo
+        e veja o Klick\'r vencê-lo por você!</string>
+
+    <string name="message_tutorial_color_conditions_step_22">Parabéns!\n\nAgora você conhece os conceitos básicos do Klick\'r, mas
+        nem todos os casos de uso serão tão simples quanto este jogo.\nDê uma olhada nos outros tutoriais para descobrir mais
+        casos de uso.</string>
+</resources>
