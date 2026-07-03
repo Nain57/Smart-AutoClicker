@@ -19,16 +19,20 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.SystemClock
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.ViewParent
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.ViewTreeObserver.OnScrollChangedListener
+import android.widget.EditText
 import androidx.core.widget.NestedScrollView
 
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 internal class ViewMonitor(private val displayConfigManager: DisplayConfigManager) {
 
@@ -41,6 +45,14 @@ internal class ViewMonitor(private val displayConfigManager: DisplayConfigManage
         OnScrollChangedListener {
             refreshViewSize()
         }
+
+    private val editTextListener: TextWatcher =
+        object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+            override fun afterTextChanged(s: Editable?) { _text.update { s?.toString() } }
+        }
+
     private val settledVisibilityCheckRunnable = Runnable {
         monitoredView?.scrollIntoViewIfNeeded()
     }
@@ -52,6 +64,10 @@ internal class ViewMonitor(private val displayConfigManager: DisplayConfigManage
     private val _position: MutableStateFlow<Rect> = MutableStateFlow(Rect())
     val position: StateFlow<Rect> = _position
 
+    private val _text: MutableStateFlow<String?> = MutableStateFlow(null)
+    val text: StateFlow<String?> = _text
+
+
     fun attachView(view: View, type: ViewPositioningType) {
         monitoredView = view
         positioningType = type
@@ -61,6 +77,8 @@ internal class ViewMonitor(private val displayConfigManager: DisplayConfigManage
         view.viewTreeObserver.addOnGlobalLayoutListener(onMonitoredViewLayoutChangedListener)
         view.viewTreeObserver.addOnScrollChangedListener(onMonitoredViewScrollChangedListener)
 
+        if (view is EditText) view.addTextChangedListener(editTextListener)
+
         scheduleSettledVisibilityCheck()
     }
 
@@ -69,10 +87,13 @@ internal class ViewMonitor(private val displayConfigManager: DisplayConfigManage
             view.viewTreeObserver.removeOnGlobalLayoutListener(onMonitoredViewLayoutChangedListener)
             view.viewTreeObserver.removeOnScrollChangedListener(onMonitoredViewScrollChangedListener)
             view.removeCallbacks(settledVisibilityCheckRunnable)
+
+            if (view is EditText) view.removeTextChangedListener(editTextListener)
         }
         monitoredView = null
 
         _position.value = Rect()
+        _text.update { null }
     }
 
     fun performClick(): Boolean =

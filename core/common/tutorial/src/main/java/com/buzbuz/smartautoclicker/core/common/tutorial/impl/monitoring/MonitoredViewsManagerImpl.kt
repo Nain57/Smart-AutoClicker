@@ -19,21 +19,33 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring
 import android.graphics.Rect
 import android.view.View
 
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.set
 
 @Singleton
-class MonitoredViewsManagerImpl @Inject constructor(
+internal class MonitoredViewsManagerImpl @Inject constructor(
+    @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
 ) : MonitoredViewsManager {
 
+    private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
     private val monitoredViews: MutableMap<MonitoredViewType, ViewMonitor> = mutableMapOf()
     private val monitoredClicks: MutableMap<MonitoredViewType, () -> Unit> = mutableMapOf()
+
+    private var textMonitoringJob: Job? = null
 
     override fun attach(
         type: MonitoredViewType,
@@ -52,16 +64,6 @@ class MonitoredViewsManagerImpl @Inject constructor(
         monitoredClicks[type]?.invoke()
     }
 
-    override fun setExpectedViews(types: Set<MonitoredViewType>) {
-        types.forEach { type ->
-            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayConfigManager)
-        }
-    }
-
-    override fun clearExpectedViews() {
-        monitoredViews.clear()
-    }
-
     override fun getViewPosition(type: MonitoredViewType): StateFlow<Rect>? =
         monitoredViews[type]?.position
 
@@ -70,14 +72,44 @@ class MonitoredViewsManagerImpl @Inject constructor(
         return monitoredViews[type]?.performClick() ?: false
     }
 
-    override fun monitorNextClick(type: MonitoredViewType, listener: () -> Unit) {
+    fun setExpectedViews(types: Set<MonitoredViewType>) {
+        types.forEach { type ->
+            if (!monitoredViews.contains(type)) monitoredViews[type] = ViewMonitor(displayConfigManager)
+        }
+    }
+
+    fun clearExpectedViews() {
+        monitoredViews.clear()
+    }
+
+    fun monitorNextClick(type: MonitoredViewType, listener: () -> Unit) {
         monitoredClicks[type] = {
             monitoredClicks.remove(type)
             listener()
         }
     }
 
-    override fun stopNextClickMonitoring(type: MonitoredViewType) {
+    fun stopNextClickMonitoring(type: MonitoredViewType) {
         monitoredClicks.remove(type)
+    }
+
+    fun monitorText(type: MonitoredViewType, text: String, listener: () -> Unit) {
+        textMonitoringJob = coroutineScopeIo.launch {
+            monitoredViews[type]?.text?.collect { viewText ->
+                if (text != viewText) return@collect
+
+                monitoredClicks.remove(type)
+                listener()
+
+                textMonitoringJob?.cancel()
+                textMonitoringJob = null
+            }
+        }
+    }
+
+    fun stopTextMonitoring(type: MonitoredViewType) {
+        monitoredClicks.remove(type)
+        textMonitoringJob?.cancel()
+        textMonitoringJob = null
     }
 }

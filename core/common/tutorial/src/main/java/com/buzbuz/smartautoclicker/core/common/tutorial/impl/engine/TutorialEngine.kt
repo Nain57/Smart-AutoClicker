@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +46,7 @@ import javax.inject.Inject
 internal class TutorialEngine @Inject constructor(
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val overlayManager: OverlayManager,
-    private val monitoredViewsManager: MonitoredViewsManager,
+    private val monitoredViewsManager: MonitoredViewsManagerImpl,
     private val stepsOrchestrator: TutorialStepsOrchestrator,
     private val tutorialCompletionStateDataSource: TutorialCompletionStateDataSource,
 ) {
@@ -156,6 +156,10 @@ internal class TutorialEngine @Inject constructor(
                 stepConditionMonitoringJob = null
             }
 
+            is TutorialStepStartCondition.MonitoredTextInput -> {
+                monitoredViewsManager.stopTextMonitoring(startCondition.type)
+            }
+
             TutorialStepStartCondition.GameLost,
             TutorialStepStartCondition.GameWon -> {
                 getSubjectController<TutorialGameEngine>()?.monitorNextCompletion(null)
@@ -239,6 +243,12 @@ internal class TutorialEngine @Inject constructor(
                 }
             }
 
+            is TutorialStepStartCondition.MonitoredTextInput -> {
+                monitoredViewsManager.monitorText(condition.type, condition.expectedText) {
+                    onConditionReached()
+                }
+            }
+
             TutorialStepStartCondition.GameLost ->
                 getSubjectController<TutorialGameEngine>()?.monitorNextCompletion { isWon ->
                     if (isWon) return@monitorNextCompletion
@@ -297,7 +307,7 @@ internal class TutorialEngine @Inject constructor(
 
 }
 
-private fun MonitoredViewsManager.setTutorialExpectedViews(tutorial: Tutorial) {
+private fun MonitoredViewsManagerImpl.setTutorialExpectedViews(tutorial: Tutorial) {
     setExpectedViews(
         buildSet {
             tutorial.steps.forEach { step ->

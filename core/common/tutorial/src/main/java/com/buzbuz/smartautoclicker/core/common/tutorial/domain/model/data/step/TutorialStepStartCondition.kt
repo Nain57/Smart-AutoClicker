@@ -44,6 +44,14 @@ sealed class TutorialStepStartCondition {
      */
     data class MonitoredViewClicked(val type: MonitoredViewType) : TutorialStepStartCondition()
 
+    /**
+     * Step starts when the specified monitored UI edit text contains the expected text.
+     *
+     * @property type the UI element to monitor the text of
+     * @property expectedText the text expected.
+     */
+    data class MonitoredTextInput(val type: MonitoredViewType, val expectedText: String) : TutorialStepStartCondition()
+
 
     /**
      * Step starts when the expected overlay is pushed on top of the back stack.
