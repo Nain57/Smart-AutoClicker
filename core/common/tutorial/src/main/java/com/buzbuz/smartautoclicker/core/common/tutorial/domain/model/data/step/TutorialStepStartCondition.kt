@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step
 
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 
@@ -30,13 +31,6 @@ sealed class TutorialStepStartCondition {
     /** Step starts as soon as it becomes the current step — no waiting. */
     data object Immediate : TutorialStepStartCondition()
 
-    /**
-     * Step starts when a new overlay is pushed on top of the back stack.
-     *
-     * Useful for steps that should activate only after the user opens a dialog or screen.
-     */
-    data object NextOverlay : TutorialStepStartCondition()
-
     /** Step starts after the game subject ends with a winning result. */
     data object GameWon : TutorialStepStartCondition()
 
@@ -49,4 +43,13 @@ sealed class TutorialStepStartCondition {
      * @property type the UI element whose click event triggers this condition.
      */
     data class MonitoredViewClicked(val type: MonitoredViewType) : TutorialStepStartCondition()
+
+
+    /**
+     * Step starts when the expected overlay is pushed on top of the back stack.
+     * Useful for steps that should activate only after the user opens a dialog or screen.
+     *
+     * @property type the type of the expected overlay.
+     */
+    data class MonitoredOverlayDisplayed(val type: MonitoredOverlayType) : TutorialStepStartCondition()
 }

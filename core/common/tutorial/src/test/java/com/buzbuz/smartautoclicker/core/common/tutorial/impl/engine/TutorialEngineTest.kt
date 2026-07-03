@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 
@@ -502,7 +503,7 @@ class TutorialEngineTest {
     @Test
     fun `NextOverlay start condition does not mark step as started initially`() {
         val step = makeStep(
-            startCondition = TutorialStepStartCondition.NextOverlay,
+            startCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(MonitoredOverlayType.MAIN_MENU),
             endCondition = TutorialStepEndCondition.NextButton,
         )
         engine.startTutorial(makeTutorial(step))
@@ -512,14 +513,14 @@ class TutorialEngineTest {
     }
 
     @Test
-    fun `NextOverlay start condition marks step as started when backStackTopFlow emits new top`() {
+    fun `NextOverlay start condition marks step as started when backStackTopFlow emits matching overlay`() {
+        whenever(mockOverlay.tutorialMonitoringTag()).thenReturn(MonitoredOverlayType.MAIN_MENU.name)
         val step = makeStep(
-            startCondition = TutorialStepStartCondition.NextOverlay,
+            startCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(MonitoredOverlayType.MAIN_MENU),
             endCondition = TutorialStepEndCondition.NextButton,
         )
         engine.startTutorial(makeTutorial(step))
 
-        // getBackStackTop() returns null by default; emitting a non-null overlay is a "new" top
         backStackTopFlow.value = mockOverlay
 
         val state = engine.tutorialState.value as TutorialState.Started
@@ -527,16 +528,16 @@ class TutorialEngineTest {
     }
 
     @Test
-    fun `NextOverlay start condition does not fire when backStackTopFlow emits the same top`() {
-        // getBackStackTop() returns null by default; keep flow at null too
+    fun `NextOverlay start condition does not fire when backStackTopFlow emits non-matching overlay`() {
+        // mockOverlay returns "" by default from tutorialMonitoringTag(), which won't match MAIN_MENU
         val step = makeStep(
-            startCondition = TutorialStepStartCondition.NextOverlay,
+            startCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(MonitoredOverlayType.MAIN_MENU),
             endCondition = TutorialStepEndCondition.NextButton,
         )
         engine.startTutorial(makeTutorial(step))
 
-        // Emitting the same value (null) should not trigger the condition
-        backStackTopFlow.value = null
+        // Emitting an overlay whose tag doesn't match MAIN_MENU must not trigger the condition
+        backStackTopFlow.value = mockOverlay
 
         val state = engine.tutorialState.value as TutorialState.Started
         assertFalse(state.isCurrentStepStarted)
@@ -544,15 +545,16 @@ class TutorialEngineTest {
 
     @Test
     fun `NextOverlay onStepEnded cancels the monitoring job`() {
+        whenever(mockOverlay.tutorialMonitoringTag()).thenReturn(MonitoredOverlayType.MAIN_MENU.name)
         val step0 = makeStep(
-            startCondition = TutorialStepStartCondition.NextOverlay,
+            startCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(MonitoredOverlayType.MAIN_MENU),
             endCondition = TutorialStepEndCondition.NextButton,
             textResId = 0,
         )
         val step1 = makeStep(textResId = 1)
         engine.startTutorial(makeTutorial(step0, step1))
 
-        // Fire the NextOverlay condition and then advance via NextButton
+        // Fire the MonitoredOverlayDisplayed condition and then advance via NextButton
         backStackTopFlow.value = mockOverlay
         engine.onNextStepButtonPressed()
 

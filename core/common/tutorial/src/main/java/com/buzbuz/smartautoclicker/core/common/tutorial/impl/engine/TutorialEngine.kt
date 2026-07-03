@@ -151,7 +151,7 @@ internal class TutorialEngine @Inject constructor(
                 monitoredViewsManager.stopNextClickMonitoring(startCondition.type)
             }
 
-            TutorialStepStartCondition.NextOverlay -> {
+            is TutorialStepStartCondition.MonitoredOverlayDisplayed -> {
                 stepConditionMonitoringJob?.cancel()
                 stepConditionMonitoringJob = null
             }
@@ -227,11 +227,10 @@ internal class TutorialEngine @Inject constructor(
                 )
             }
 
-            TutorialStepStartCondition.NextOverlay -> {
+            is TutorialStepStartCondition.MonitoredOverlayDisplayed -> {
                 stepConditionMonitoringJob = coroutineScopeIo.launch {
-                    val backstackTop = overlayManager.getBackStackTop()
                     overlayManager.backStackTopFlow.collect { newTop ->
-                        if (backstackTop == newTop) return@collect
+                        if (condition.type.name != newTop?.tutorialMonitoringTag()) return@collect
 
                         onConditionReached()
                         stepConditionMonitoringJob?.cancel()

@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepImage
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image.OneStillTargetRules
@@ -78,7 +79,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Create a new event
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_4,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SCENARIO,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT,
                     ),
@@ -86,7 +89,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Select condition tab
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_5,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.EVENT,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS,
                     ),
@@ -94,7 +99,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Create a new condition
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_6,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                     ),
@@ -102,7 +109,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Select Image Condition type
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_7,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SCREEN_CONDITION_TYPE_SELECTION,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCREEN_CONDITION_TYPE_SELECTION_IMAGE,
                     ),
@@ -114,7 +123,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                         imageResId = R.drawable.ic_capture,
                         imageDescResId = R.string.message_tutorial_screen_condition_still_target_step_secondary_8,
                     ),
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.CAPTURE_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Ensure target is captured or retry
@@ -142,7 +153,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Save condition
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_11,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.IMAGE_CONDITION,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
                     ),
@@ -150,7 +163,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Close condition list
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_12,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
                     ),
@@ -158,7 +173,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Select action tab
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_13,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.EVENT,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                     ),
@@ -166,7 +183,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Create a new action
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_14,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_CREATE_ACTION,
                     ),
@@ -174,7 +193,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Create a new click
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_15,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.ACTION_TYPE_SELECTION,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION,
                     ),
@@ -182,7 +203,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Select click location
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_16,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.CLICK,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
                     ),
@@ -194,13 +217,17 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                         imageResId = R.drawable.ic_visible_on,
                         imageDescResId = R.string.message_tutorial_screen_condition_still_target_step_secondary_17,
                     ),
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.CLICK_POSITION,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Save click
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_18,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.CLICK,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
                     ),
@@ -208,7 +235,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Close action list
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_19,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE,
                     ),
@@ -216,7 +245,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Save event
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_20,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.EVENT,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE,
                     ),
@@ -224,7 +255,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Save scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_21,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SCENARIO,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
                     ),
@@ -232,7 +265,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 // Play scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_22,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.MAIN_MENU_BUTTON_PLAY,
                     ),

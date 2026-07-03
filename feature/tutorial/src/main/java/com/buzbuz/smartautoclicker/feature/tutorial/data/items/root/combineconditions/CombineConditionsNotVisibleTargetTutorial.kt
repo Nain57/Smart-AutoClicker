@@ -12,7 +12,6 @@ import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image.TwoStillTargetsPressWhenOneVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
-// TODO: we need to guard the not visible with another visible condition, or a click spam will block the tutorial
 object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
 
     override fun getType(): TutorialItem.Type =
@@ -34,7 +33,9 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 durationSeconds = 10,
                 rules = TwoStillTargetsPressWhenOneVisibleRules(),
             ),
+            // TODO: we need to guard the not visible with another visible condition, or a click spam will block the tutorial
             steps = listOf(
+                /*
                 // Beginning, hide the overlay for now
                 TutorialStep.ChangeFloatingUiVisibility(
                     stepStartCondition = TutorialStepStartCondition.Immediate,
@@ -62,7 +63,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Create Event
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_4,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT,
                     ),
@@ -70,7 +71,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Select condition field
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_5,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS,
                     ),
@@ -78,7 +79,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Create a new condition
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_6,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                     ),
@@ -86,7 +87,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Create a new condition
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_7,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCREEN_CONDITION_TYPE_SELECTION_IMAGE,
                     ),
@@ -98,7 +99,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                         imageResId = R.drawable.ic_capture,
                         imageDescResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_secondary_8,
                     ),
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Ensure target is captured or retry
@@ -116,7 +117,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Talk about area
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_10,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Change visibility
@@ -135,11 +136,10 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                         MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
                     ),
                 ),
-                // TODO: create 2 conditions
                 // Close condition list
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_13,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_SAVE,
                     ),
@@ -147,7 +147,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Select action field
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_14,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                     ),
@@ -155,7 +155,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Create a new action
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_15,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_CREATE_ACTION,
                     ),
@@ -163,7 +163,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Create a new click
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_16,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION,
                     ),
@@ -171,7 +171,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Select click location
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_17,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
                     ),
@@ -183,13 +183,13 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                         imageResId = R.drawable.ic_visible_on,
                         imageDescResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_secondary_18,
                     ),
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Save click
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_19,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE,
                     ),
@@ -197,7 +197,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Close action list
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_20,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.ACTIONS_BRIEF_MENU_BUTTON_SAVE,
                     ),
@@ -213,7 +213,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Save scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_22,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE,
                     ),
@@ -221,7 +221,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 // Play scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_23,
-                    stepStartCondition = TutorialStepStartCondition.NextOverlay,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.MAIN_MENU_BUTTON_PLAY,
                     ),
@@ -232,6 +232,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                     stepStartCondition = TutorialStepStartCondition.GameWon,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
+                */
             )
         )
 
