@@ -25,7 +25,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
@@ -42,8 +41,8 @@ import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.DialogTutorialSuccessBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -63,11 +62,13 @@ class TutorialGameFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentTutorialGameBinding.inflate(inflater, container, false).apply {
-            blueTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.BLUE) }
-            redTarget.setOnClickListener { viewModel.onTargetHit(TutorialGameTargetType.RED) }
+            TutorialGameTargetType.entries.forEach { targetType ->
+                getTargetView(targetType).setOnClickListener {
+                    viewModel.onTargetHit(targetType)
+                }
+            }
 
-            val targetSize = root.context.resources.getDimensionPixelSize(R.dimen.tutorial_game_target_size)
-            buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area(), targetSize) }
+            buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area()) }
         }
 
         return viewBinding.root
@@ -76,6 +77,7 @@ class TutorialGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewBinding.gameArea.forceLayout()
         lockMenuPosition()
 
         lifecycleScope.launch {
@@ -130,14 +132,10 @@ class TutorialGameFragment : Fragment() {
 
             if (!uiState.isGameStarted) {
                 buttonStartRetry.visibility = View.VISIBLE
-                blueTarget.visibility = View.GONE
-                redTarget.visibility = View.GONE
+                updateTargetsState(emptyMap())
             } else {
                 buttonStartRetry.visibility = View.GONE
-
-                blueTarget.updateTargetState(uiState.targets[TutorialGameTargetType.BLUE])
-                redTarget.updateTargetState(uiState.targets[TutorialGameTargetType.RED])
-                gameArea.forceLayout()
+                updateTargetsState(uiState.targets)
             }
 
             if (uiState.isGameStarted && !isTimeAnimationStarted) {
@@ -203,17 +201,31 @@ class TutorialGameFragment : Fragment() {
             )
         )
     }
-}
 
-private fun AppCompatImageView.updateTargetState(position: PointF?) {
-    if (position == null) {
-        visibility = View.GONE
-        return
+    private fun updateTargetsState(state: Map<TutorialGameTargetType, PointF>) {
+        TutorialGameTargetType.entries.forEach { targetType ->
+            val targetView = viewBinding.getTargetView(targetType)
+            val position = state[targetType]
+
+            if (position == null) {
+                targetView.visibility = View.GONE
+            } else {
+                targetView.x = position.x - targetView.width / 2f
+                targetView.y = position.y - targetView.height / 2f
+                targetView.visibility = View.VISIBLE
+            }
+        }
     }
 
-    visibility = View.VISIBLE
-    x = position.x
-    y = position.y
+    private fun FragmentTutorialGameBinding.getTargetView(type: TutorialGameTargetType): View =
+        when (type) {
+            TutorialGameTargetType.IMAGE_BLUE -> blueTarget
+            TutorialGameTargetType.IMAGE_RED -> redTarget
+            TutorialGameTargetType.TEXT_AFTERNOON -> afternoonTarget
+            TutorialGameTargetType.TEXT_GOODBYE -> goodbyeTarget
+            TutorialGameTargetType.TEXT_HELLO -> helloTarget
+            TutorialGameTargetType.TEXT_MORNING -> morningTarget
+        }
 }
 
 private fun FrameLayout.area(): Rect =

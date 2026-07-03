@@ -51,9 +51,8 @@ sealed interface TutorialSubjectController {
          * Starts the game loop.
          *
          * @param area the screen region in which targets may be placed.
-         * @param targetSize side length in pixels used by the rules to position targets.
          */
-        fun startGame(area: Rect, targetSize: Int)
+        fun startGame(area: Rect)
 
         /**
          * Notifies the controller that the user tapped a valid target.

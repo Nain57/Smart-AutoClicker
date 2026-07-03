@@ -53,14 +53,14 @@ internal class TutorialGameEngine (
     override val state: StateFlow<TutorialSubjectState.Game> = _state
 
 
-    override fun startGame(area: Rect, targetSize: Int) {
+    override fun startGame(area: Rect) {
         if (gameJob != null) return
 
         gameJob = coroutineScopeIo.launch {
             Log.d(TAG, "Start game")
 
             // Init game values
-            val initialTargets = game.rules.onStart(area, targetSize)
+            val initialTargets = game.rules.onStart(area)
             val gameDuration = game.durationSeconds
             _state.update { old ->
                 old.copy(

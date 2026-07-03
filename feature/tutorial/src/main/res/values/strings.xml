@@ -25,6 +25,11 @@
     <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
 
+    <string name="button_text_hello">Hello</string>
+    <string name="button_text_goodbye">Goodbye</string>
+    <string name="button_text_morning">Morning</string>
+    <string name="button_text_afternoon">Afternoon</string>
+
     <!-- Two still targets press when only one is visible tutorial -->
     <string name="item_title_tutorial_4">Negative conditions</string>
     <string name="item_desc_tutorial_4">Verify that something is not displayed before executing an action</string>
@@ -37,5 +42,7 @@
     <string name="message_tutorial_completed">You have completed this tutorial!</string>
     <string name="button_tutorial_completed_keep_playing">Keep toying around</string>
     <string name="button_tutorial_completed_close">Close</string>
+
+
 
 </resources>

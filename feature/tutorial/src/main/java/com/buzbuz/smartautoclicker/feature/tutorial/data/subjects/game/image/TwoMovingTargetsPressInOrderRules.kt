@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
 import android.graphics.Rect
@@ -31,21 +31,19 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
     private val random: Random = Random(System.currentTimeMillis())
 
     private var targetsArea: RectF? = null
-    private var targetHalfSize: Float? = null
     private var score: Int = 0
 
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
         score = 0
         targetsArea = RectF(
             area.left.toFloat() + TARGET_MARGIN,
             area.top.toFloat() + TARGET_MARGIN,
-            area.right.toFloat() - targetSize - TARGET_MARGIN,
-            area.bottom.toFloat() - targetSize - TARGET_MARGIN,
+            area.right.toFloat() - TARGET_MARGIN,
+            area.bottom.toFloat() - TARGET_MARGIN,
         )
-        targetHalfSize = targetSize / 2f
 
         return getNewTargets()
     }
@@ -55,10 +53,10 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         type: TutorialGameTargetType
     ): Map<TutorialGameTargetType, PointF> =
         when (type) {
-            TutorialGameTargetType.RED if current.containsKey(TutorialGameTargetType.RED) && current.containsKey(TutorialGameTargetType.BLUE) ->
+            TutorialGameTargetType.IMAGE_RED if current.containsKey(TutorialGameTargetType.IMAGE_RED) && current.containsKey(TutorialGameTargetType.IMAGE_BLUE) ->
                 removeRedTarget(current)
 
-            TutorialGameTargetType.BLUE if !current.containsKey(TutorialGameTargetType.RED) && current.containsKey(TutorialGameTargetType.BLUE) -> {
+            TutorialGameTargetType.IMAGE_BLUE if !current.containsKey(TutorialGameTargetType.IMAGE_RED) && current.containsKey(TutorialGameTargetType.IMAGE_BLUE) -> {
                 score += 2
                 getNewTargets()
             }
@@ -76,23 +74,22 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
 
     private fun getNewTargets(): Map<TutorialGameTargetType, PointF> {
         val area = targetsArea ?: return emptyMap()
-        val targetHalfSize = targetHalfSize ?: return emptyMap()
 
-        // Find two positions and ensure the target will not overlaps
+        // Find two positions and ensure the targets do not overlap
         val bluePosition = random.nextPositionIn(area)
         var redPosition: PointF
         do {
             redPosition = random.nextPositionIn(area)
-        } while (bluePosition.enclosingRectIntersects(redPosition, targetHalfSize))
+        } while (bluePosition.enclosingRectIntersects(redPosition, TARGET_HALF_SIZE))
 
         return mapOf(
-            TutorialGameTargetType.BLUE to bluePosition,
-            TutorialGameTargetType.RED to redPosition,
+            TutorialGameTargetType.IMAGE_BLUE to bluePosition,
+            TutorialGameTargetType.IMAGE_RED to redPosition,
         )
     }
 
     private fun removeRedTarget(targets: Map<TutorialGameTargetType, PointF>): Map<TutorialGameTargetType, PointF> =
-        targets.toMutableMap().apply { remove(TutorialGameTargetType.RED) }
+        targets.toMutableMap().apply { remove(TutorialGameTargetType.IMAGE_RED) }
 }
 
 private fun PointF.enclosingRectIntersects(other: PointF, shapeHalfSize: Float): Boolean =
@@ -102,3 +99,4 @@ private fun PointF.toEnclosingRect(halfSize: Float): RectF =
     RectF(x - halfSize, y - halfSize, x + halfSize, y + halfSize)
 
 private const val TARGET_MARGIN = 10
+private const val TARGET_HALF_SIZE = 50f

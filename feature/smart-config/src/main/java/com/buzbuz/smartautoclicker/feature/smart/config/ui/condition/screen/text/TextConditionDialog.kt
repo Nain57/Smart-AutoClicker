@@ -153,6 +153,17 @@ class TextConditionDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
+        viewModel.monitorDetectionAreaSelectorView(viewBinding.fieldSelectArea.root)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun back() {
         if (viewModel.hasUnsavedModifications()) {
             context.showCloseWithoutSavingDialog {

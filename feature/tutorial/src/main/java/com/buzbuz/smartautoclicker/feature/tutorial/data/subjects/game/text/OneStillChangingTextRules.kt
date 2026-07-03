@@ -14,32 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text
 
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
-internal class OneStillTargetRules : TutorialGameRules {
+internal class OneStillChangingTextRules : TutorialGameRules {
 
     private var score: Int = 0
+    private var targetPosition: PointF = PointF(0f, 0f)
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+        targetPosition = PointF(area.width() / 2f, area.height() / 2f)
         score = 0
-        return mapOf(
-            TutorialGameTargetType.BLUE to PointF((area.width() - targetSize) / 2f, (area.height() - targetSize) / 2f),
-        )
+
+        return mapOf(TutorialGameTargetType.TEXT_HELLO to targetPosition)
     }
 
     override fun onValidTargetHit(
         current: Map<TutorialGameTargetType, PointF>,
         type: TutorialGameTargetType
     ): Map<TutorialGameTargetType, PointF> {
-        if (type != TutorialGameTargetType.BLUE) return current
-        score++
+        if (type == TutorialGameTargetType.TEXT_HELLO) score++
+        else score--
 
         return current
     }
@@ -47,6 +48,12 @@ internal class OneStillTargetRules : TutorialGameRules {
     override fun onTimerTick(
         current: Map<TutorialGameTargetType, PointF>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, PointF> = current
+    ): Map<TutorialGameTargetType, PointF> {
+        val newType =
+            if (timeLeft % 2 == 1L) TutorialGameTargetType.TEXT_HELLO
+            else TutorialGameTargetType.TEXT_GOODBYE
+
+        return mapOf(newType to targetPosition)
+    }
 
 }

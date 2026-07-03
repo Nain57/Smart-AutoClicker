@@ -161,6 +161,9 @@ class OverlayManager @Inject internal constructor(
             overlayNavigationRequestStack.push(OverlayNavigationRequest.NavigateUp)
         }
         if (isNavigating.value == null) executeNextNavigationRequest(context)
+
+        // Once everything is closed, reset the stack hidden state
+        _isStackHidden.value = false
     }
 
     /** Propagate the provided touch event to the focused overlay, if any. */

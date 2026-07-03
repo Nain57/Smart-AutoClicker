@@ -18,10 +18,13 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.tex
 
 import android.content.Context
 import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getDisplayNameResId
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
@@ -42,6 +45,7 @@ import javax.inject.Inject
 class TextConditionViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The condition being configured by the user. */
@@ -95,6 +99,19 @@ class TextConditionViewModel @Inject constructor(
         updateEditedCondition { oldCondition ->
             oldCondition.copy(threshold = value)
         }
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TEXT_CONDITION_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun monitorDetectionAreaSelectorView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.TEXT_CONDITION_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.detach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_AREA_SELECTOR)
     }
 
     private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Text) -> ScreenCondition.Text?) {

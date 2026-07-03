@@ -25,7 +25,6 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
@@ -38,12 +37,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -57,10 +54,9 @@ class TutorialGameEngineTest {
         private const val TEST_DURATION_SECONDS = 5L
         private const val TEST_SCORE_TO_REACH = 3
         private val TEST_AREA = Rect(0, 0, 1080, 1920)
-        private const val TEST_TARGET_SIZE = 100
-        private val INITIAL_TARGETS = mapOf(TutorialGameTargetType.BLUE to PointF(100f, 100f))
-        private val TICK_TARGETS = mapOf(TutorialGameTargetType.BLUE to PointF(200f, 200f))
-        private val HIT_TARGETS = mapOf(TutorialGameTargetType.RED to PointF(300f, 300f))
+        private val INITIAL_TARGETS = mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(100f, 100f))
+        private val TICK_TARGETS = mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(200f, 200f))
+        private val HIT_TARGETS = mapOf(TutorialGameTargetType.IMAGE_RED to PointF(300f, 300f))
     }
 
     @Mock private lateinit var mockRules: TutorialGameRules
@@ -72,7 +68,7 @@ class TutorialGameEngineTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        whenever(mockRules.onStart(any(), any())).thenReturn(INITIAL_TARGETS)
+        whenever(mockRules.onStart(any())).thenReturn(INITIAL_TARGETS)
         whenever(mockRules.onTimerTick(any(), any())).thenReturn(TICK_TARGETS)
         whenever(mockRules.onValidTargetHit(any(), any())).thenReturn(HIT_TARGETS)
         whenever(mockRules.getScore()).thenReturn(0)
@@ -95,7 +91,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1) // let coroutine launch and reach first state update
 
         assertEquals(TEST_DURATION_SECONDS, engine.state.value.timeLeft)
@@ -106,7 +102,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1)
 
         assertEquals(INITIAL_TARGETS, engine.state.value.targets)
@@ -117,11 +113,11 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1)
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE) // second call should be no-op
+        engine.startGame(TEST_AREA) // second call should be no-op
 
-        verify(mockRules, times(1)).onStart(any(), any())
+        verify(mockRules, times(1)).onStart(any())
     }
 
     // --- timer loop ---
@@ -131,7 +127,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001) // past the first 1-second delay
 
         assertEquals(TEST_DURATION_SECONDS - 1, engine.state.value.timeLeft)
@@ -142,7 +138,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001)
 
         assertEquals(TICK_TARGETS, engine.state.value.targets)
@@ -155,7 +151,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001)
 
         assertEquals(2, engine.state.value.score)
@@ -168,7 +164,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         // advance past all ticks (duration * 1s each)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
@@ -180,7 +176,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertEquals(0L, engine.state.value.timeLeft)
@@ -191,7 +187,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertTrue(engine.state.value.targets.isEmpty())
@@ -204,7 +200,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertTrue(engine.state.value.isWon == true)
@@ -217,7 +213,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertFalse(engine.state.value.isWon == true)
@@ -230,7 +226,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertFalse(engine.state.value.isWon == true)
@@ -243,7 +239,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
         engine.stop()
 
@@ -257,7 +253,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
         engine.stop()
 
@@ -269,7 +265,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001)
         engine.stop()
 
@@ -281,7 +277,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001)
         engine.stop()
 
@@ -293,7 +289,7 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1_001)
         engine.stop()
 
@@ -310,10 +306,10 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1)
 
-        engine.onGameTargetHit(TutorialGameTargetType.BLUE)
+        engine.onGameTargetHit(TutorialGameTargetType.IMAGE_BLUE)
 
         assertEquals(HIT_TARGETS, engine.state.value.targets)
     }
@@ -325,10 +321,10 @@ class TutorialGameEngineTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(1)
 
-        engine.onGameTargetHit(TutorialGameTargetType.BLUE)
+        engine.onGameTargetHit(TutorialGameTargetType.IMAGE_BLUE)
 
         assertEquals(1, engine.state.value.score)
     }
@@ -345,7 +341,7 @@ class TutorialGameEngineTest {
         var callbackResult: Boolean? = null
         engine.monitorNextCompletion { isWon -> callbackResult = isWon }
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertEquals(true, callbackResult)
@@ -361,7 +357,7 @@ class TutorialGameEngineTest {
         var callbackResult: Boolean? = null
         engine.monitorNextCompletion { isWon -> callbackResult = isWon }
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertEquals(false, callbackResult)
@@ -376,7 +372,7 @@ class TutorialGameEngineTest {
         engine.monitorNextCompletion { callbackInvoked = true }
         engine.monitorNextCompletion(null)
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertFalse(callbackInvoked)
@@ -390,11 +386,11 @@ class TutorialGameEngineTest {
         var invokeCount = 0
         engine.monitorNextCompletion { invokeCount++ }
 
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         // Start a second game — callback must not fire again
-        engine.startGame(TEST_AREA, TEST_TARGET_SIZE)
+        engine.startGame(TEST_AREA)
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertEquals(1, invokeCount)

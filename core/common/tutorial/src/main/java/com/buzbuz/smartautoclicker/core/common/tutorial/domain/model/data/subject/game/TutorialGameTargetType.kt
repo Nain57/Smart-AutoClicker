@@ -24,7 +24,15 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subje
  */
 enum class TutorialGameTargetType {
     /** A blue-coloured target. */
-    BLUE,
+    IMAGE_BLUE,
     /** A red-coloured target. */
-    RED,
+    IMAGE_RED,
+
+    TEXT_AFTERNOON,
+
+    TEXT_GOODBYE,
+
+    TEXT_HELLO,
+
+    TEXT_MORNING,
 }

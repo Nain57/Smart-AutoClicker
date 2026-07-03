@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
-internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
+internal class TwoStillTargetsPressWhenBothVisibleRules : TutorialGameRules {
 
     private var redTargetPosition: PointF? = null
     private var score: Int = 0
@@ -30,12 +30,12 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
         score = 0
-        redTargetPosition = PointF(area.width() - (targetSize * 1.5f), (area.height() - targetSize) / 2f)
+        redTargetPosition = PointF(area.width() * 0.75f, area.height() / 2f)
 
         return toggleRedVisibility(
-            mapOf(TutorialGameTargetType.BLUE to PointF(targetSize / 2f, (area.height() - targetSize) / 2f))
+            mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(area.width() * 0.25f, area.height() / 2f))
         )
     }
 
@@ -43,10 +43,10 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
         current: Map<TutorialGameTargetType, PointF>,
         type: TutorialGameTargetType
     ): Map<TutorialGameTargetType, PointF> {
-        val blueIsVisible = current.containsKey(TutorialGameTargetType.BLUE)
-        val redIsVisible = current.containsKey(TutorialGameTargetType.RED)
+        val blueIsVisible = current.containsKey(TutorialGameTargetType.IMAGE_BLUE)
+        val redIsVisible = current.containsKey(TutorialGameTargetType.IMAGE_RED)
 
-        if (type == TutorialGameTargetType.BLUE && blueIsVisible && !redIsVisible) score++
+        if (type == TutorialGameTargetType.IMAGE_BLUE && blueIsVisible && redIsVisible) score++
         else score--
 
         return current
@@ -62,8 +62,8 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
         val redPosition = redTargetPosition ?: return targets
 
         val newTargets = targets.toMutableMap().apply {
-            if (containsKey(TutorialGameTargetType.RED)) remove(TutorialGameTargetType.RED)
-            else put(TutorialGameTargetType.RED, redPosition)
+            if (containsKey(TutorialGameTargetType.IMAGE_RED)) remove(TutorialGameTargetType.IMAGE_RED)
+            else put(TutorialGameTargetType.IMAGE_RED, redPosition)
         }
 
         return newTargets

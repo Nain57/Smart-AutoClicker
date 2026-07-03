@@ -124,14 +124,46 @@
             android:layout_width="@dimen/tutorial_game_target_size"
             android:layout_height="@dimen/tutorial_game_target_size"
             app:srcCompat="@drawable/ic_game_target_primary"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/red_target"
             android:layout_width="@dimen/tutorial_game_target_size"
             android:layout_height="@dimen/tutorial_game_target_size"
             app:srcCompat="@drawable/ic_game_target_secondary"
-            android:visibility="gone" />
+            android:visibility="invisible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/hello_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_hello"
+            android:visibility="invisible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/goodbye_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_goodbye"
+            android:visibility="invisible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/morning_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_morning"
+            android:visibility="invisible"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/afternoon_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_afternoon"
+            android:visibility="invisible"/>
 
     </com.google.android.material.card.MaterialCardView>
 

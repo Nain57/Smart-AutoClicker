@@ -36,10 +36,9 @@ interface TutorialGameRules {
      * Called once when the game starts.
      *
      * @param area the screen region available for placing targets.
-     * @param targetSize the side length in pixels of each target, for layout calculations.
-     * @return initial target positions to display.
+     * @return initial target center positions to display.
      */
-    fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF>
+    fun onStart(area: Rect): Map<TutorialGameTargetType, PointF>
 
     /**
      * Called each time the user successfully hits a valid target.

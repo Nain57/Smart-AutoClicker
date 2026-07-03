@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
 import android.graphics.Rect
@@ -35,13 +35,13 @@ internal class OneMovingTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect, targetSize: Int): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
         score = 0
         targetsArea = RectF(
             area.left.toFloat() + TARGET_MARGIN,
             area.top.toFloat() + TARGET_MARGIN,
-            area.right.toFloat() - targetSize - TARGET_MARGIN,
-            area.bottom.toFloat() - targetSize - TARGET_MARGIN,
+            area.right.toFloat() - TARGET_MARGIN,
+            area.bottom.toFloat() - TARGET_MARGIN,
         )
 
         return updateTargetPosition()
@@ -52,7 +52,7 @@ internal class OneMovingTargetRules : TutorialGameRules {
         type: TutorialGameTargetType,
     ): Map<TutorialGameTargetType, PointF> {
 
-        if (type != TutorialGameTargetType.BLUE) return current
+        if (type != TutorialGameTargetType.IMAGE_BLUE) return current
 
         score++
         return updateTargetPosition()
@@ -67,7 +67,7 @@ internal class OneMovingTargetRules : TutorialGameRules {
         val area = targetsArea ?: return emptyMap()
 
         return mapOf(
-            TutorialGameTargetType.BLUE to PointF(
+            TutorialGameTargetType.IMAGE_BLUE to PointF(
                 random.nextFloat(area.left, area.right),
                 random.nextFloat(area.top, area.bottom),
             ),

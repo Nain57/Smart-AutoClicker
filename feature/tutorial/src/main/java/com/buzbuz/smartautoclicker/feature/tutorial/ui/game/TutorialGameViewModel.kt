@@ -82,8 +82,8 @@ class TutorialGameViewModel @Inject constructor(
         .map { game -> game?.toUiState() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
-    fun startGame(area: Rect, targetsSize: Int) {
-        getGameController()?.startGame(area, targetsSize)
+    fun startGame(area: Rect) {
+        getGameController()?.startGame(area)
     }
 
     fun onTargetHit(color: TutorialGameTargetType) {

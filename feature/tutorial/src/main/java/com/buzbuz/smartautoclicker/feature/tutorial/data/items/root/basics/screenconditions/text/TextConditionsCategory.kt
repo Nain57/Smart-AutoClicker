@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scre
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 internal fun getTextConditionsCategory() =
     TutorialCategory(
@@ -26,5 +27,7 @@ internal fun getTextConditionsCategory() =
         shortDescriptionRes = R.string.tutorial_category_text_condition_desc_short,
         longDescriptionRes = R.string.tutorial_category_text_condition_desc_long,
         iconRes = R.drawable.ic_text_condition,
-        content = listOf(),
+        content = listOf(
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_STILL_TEXT),
+        ),
     )
