@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ActionTypeSelectionDialog(
     choices: List<ActionTypeChoice>,
@@ -34,6 +35,8 @@ class ActionTypeSelectionDialog(
     onChoiceSelected = onChoiceSelectedListener,
     onCanceled = onCancelledListener,
 ) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.ACTION_TYPE_SELECTION.name
 
     /** View model for this content. */
     private val viewModel: ActionTypeSelectionViewModel by viewModels(

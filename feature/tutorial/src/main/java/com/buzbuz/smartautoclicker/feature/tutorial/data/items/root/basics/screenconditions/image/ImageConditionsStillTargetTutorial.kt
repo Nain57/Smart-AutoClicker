@@ -23,7 +23,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepImage
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image.OneStillTargetRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem

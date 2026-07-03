@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.col
 
 import android.graphics.Bitmap
 import android.graphics.PointF
-import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.graphics.get
 import androidx.lifecycle.ViewModel
@@ -29,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.toRgbaHexString
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 

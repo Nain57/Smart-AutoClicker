@@ -20,8 +20,8 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import javax.inject.Inject
 
 class ActionTypeSelectionViewModel @Inject constructor(

@@ -45,6 +45,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [OverlayDialog] implementation for displaying an intent extra and providing a button to delete it.
@@ -59,6 +60,8 @@ class ExtraConfigDialog(
     private val onDeleteClicked: () -> Unit,
     private val onDismissClicked: () -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.EXTRA_CONFIG.name
 
     /** The view model for the data displayed in this dialog. */
     private val viewModel: ExtraConfigModel by viewModels(

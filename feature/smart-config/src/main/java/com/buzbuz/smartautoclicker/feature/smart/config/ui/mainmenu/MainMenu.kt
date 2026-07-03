@@ -51,6 +51,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [OverlayMenu] implementation for displaying the main menu overlay.
@@ -63,6 +64,8 @@ import kotlinx.coroutines.launch
  * Activities displayed below it.
  */
 class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.MAIN_MENU.name
 
     /** The view model for this menu. */
     private val viewModel: MainMenuModel by viewModels(

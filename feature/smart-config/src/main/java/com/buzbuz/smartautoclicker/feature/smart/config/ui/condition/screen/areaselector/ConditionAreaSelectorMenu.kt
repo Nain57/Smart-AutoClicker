@@ -33,10 +33,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayValid
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ConditionAreaSelectorMenu(
     private val onAreaSelected: (Rect) -> Unit
 ) : OverlayMenu() {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CONDITION_AREA_SELECTOR_MENU.name
 
     /** The view model for this dialog. */
     private val viewModel: ConditionAreaSelectorViewModel by viewModels(

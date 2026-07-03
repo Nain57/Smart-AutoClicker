@@ -38,8 +38,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COUNTER_CREATION.name
 
     /** View model for this dialog. */
     private val viewModel: CountersCreationViewModel by viewModels(

@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
@@ -44,6 +45,8 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     noItemText = R.string.brief_empty_actions,
     initialItemIndex = initialItemIndex,
 ) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU.name
 
     /** The view model for this dialog. */
     private val viewModel: SmartActionsBriefViewModel by viewModels(

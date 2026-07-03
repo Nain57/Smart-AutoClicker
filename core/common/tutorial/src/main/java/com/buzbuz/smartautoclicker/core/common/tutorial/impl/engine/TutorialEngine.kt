@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

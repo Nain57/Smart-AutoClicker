@@ -36,12 +36,15 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCardZ
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class ColorCaptureMenu (
     private val defaultPosition: PointF? = null,
     private val onColorSelected: (position: PointF, colorInt: Int) -> Unit,
 ) : OverlayMenu(theme = R.style.AppTheme, recreateOverlayViewOnRotation = true) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COLOR_CAPTURE_MENU.name
 
     /** The view model for this menu. */
     private val viewModel: ColorCaptureViewModel by viewModels(

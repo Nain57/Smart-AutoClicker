@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.di
 
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.TutorialRepositoryImpl
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import dagger.Module
 import dagger.Provides
@@ -34,4 +36,9 @@ object SmartTutorialModule {
     @Singleton
     internal fun providesTutorialRepository(repository: TutorialRepositoryImpl): TutorialRepository =
         repository
+
+    @Provides
+    @Singleton
+    internal fun providesMonitoredViewManager(impl: MonitoredViewsManagerImpl): MonitoredViewsManager =
+        impl
 }

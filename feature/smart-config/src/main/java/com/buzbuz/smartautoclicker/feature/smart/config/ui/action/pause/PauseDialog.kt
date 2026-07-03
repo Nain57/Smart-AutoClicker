@@ -48,10 +48,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCl
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class PauseDialog(
     private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.PAUSE.name
 
     /** The view model for this dialog. */
     private val viewModel: PauseViewModel by viewModels(

@@ -16,7 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step
 
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 
 /**

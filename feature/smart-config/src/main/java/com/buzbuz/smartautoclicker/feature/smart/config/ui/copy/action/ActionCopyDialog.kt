@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildre
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [CopyDialog] implementation for displaying the whole list of actions for a copy.
@@ -40,6 +41,9 @@ import kotlinx.coroutines.launch
 class ActionCopyDialog(
     private val onActionsCopied: (List<Action>) -> Unit,
 ) : CopyDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.ACTION_COPY.name
+
 
     /** View model for this content. */
     private val viewModel: ActionCopyViewModel by viewModels(

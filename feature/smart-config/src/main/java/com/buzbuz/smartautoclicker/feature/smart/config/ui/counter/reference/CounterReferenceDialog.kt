@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * Dialog displaying all references to a counter in the scenario.
@@ -44,6 +45,8 @@ class CounterReferenceDialog(
     private val counterName: String,
     private val type: ReferencesType,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COUNTER_REFERENCE.name
 
     enum class ReferencesType {
         READ,

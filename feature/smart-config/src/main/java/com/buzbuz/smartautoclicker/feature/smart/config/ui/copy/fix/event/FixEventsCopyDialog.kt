@@ -41,12 +41,15 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsCop
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class FixEventsCopyDialog(
     private val eventsToCopy: List<Event>,
     private val onFixConfirmed: (List<Event>) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.FIX_EVENTS_COPY.name
 
     /** View model for this content. */
     private val viewModel: FixEventsCopyViewModel by viewModels(

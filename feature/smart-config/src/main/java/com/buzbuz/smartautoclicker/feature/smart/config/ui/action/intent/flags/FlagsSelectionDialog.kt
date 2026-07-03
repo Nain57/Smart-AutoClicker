@@ -38,12 +38,15 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newWe
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class FlagsSelectionDialog (
     private val currentFlags: Int,
     private val startActivityFlags: Boolean,
     private val onConfigComplete: (flags: Int) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.FLAGS_SELECTION.name
 
     /** The view model for this dialog. */
     private val viewModel: FlagsSelectionViewModel by viewModels(

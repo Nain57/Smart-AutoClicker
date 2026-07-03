@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepositor
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

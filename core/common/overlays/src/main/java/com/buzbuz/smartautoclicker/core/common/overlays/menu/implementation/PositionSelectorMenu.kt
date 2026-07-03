@@ -38,9 +38,10 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescri
  *
  * @param itemBriefDescription the description of the action positions to edit.
  * @param onConfirm listener on the validation of the actions positions.
- * @param onDismiss listener on the dismiss of the position selection.
+ * @param onDismiss listener on dismiss of the position selection.
  */
 class PositionSelectorMenu(
+    private val tutorialMonitoringTag: String = "PositionSelectorMenu",
     private val itemBriefDescription: ItemBriefDescription,
     private val onConfirm: (ItemBriefDescription) -> Unit,
     private val onDismiss: (() -> Unit)? = null,
@@ -56,6 +57,8 @@ class PositionSelectorMenu(
 
     private var confirmListener: (() -> Unit)? = null
     private var cancelListener: (() -> Unit)? = null
+
+    override fun tutorialMonitoringTag(): String = tutorialMonitoringTag
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayPositionSelectionMenuBinding.inflate(layoutInflater)

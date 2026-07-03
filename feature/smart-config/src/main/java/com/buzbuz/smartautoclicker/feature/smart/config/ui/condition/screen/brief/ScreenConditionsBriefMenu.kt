@@ -49,6 +49,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class ScreenConditionsBriefMenu(
@@ -58,6 +59,8 @@ class ScreenConditionsBriefMenu(
     noItemText = R.string.brief_empty_image_conditions,
     initialItemIndex = initialFocusedIndex,
 ) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU.name
 
     /** The view model for this dialog. */
     private val viewModel: ScreenConditionsBriefViewModel by viewModels(

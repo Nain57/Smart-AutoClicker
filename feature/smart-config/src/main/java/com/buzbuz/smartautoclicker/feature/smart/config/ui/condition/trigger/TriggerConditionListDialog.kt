@@ -47,9 +47,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.tim
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.TRIGGER_CONDITION_LIST.name
 
     private val viewModel: TriggerConditionListViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,

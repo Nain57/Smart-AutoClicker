@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [OverlayDialog] implementation for displaying a list of Android activities.
@@ -50,6 +51,8 @@ import kotlinx.coroutines.launch
 class ActivitySelectionDialog(
     private val onApplicationSelected: (ComponentName) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.ACTIVITY_SELECTION.name
 
     /** The view model for this dialog. */
     private val viewModel: ActivitySelectionModel by viewModels(

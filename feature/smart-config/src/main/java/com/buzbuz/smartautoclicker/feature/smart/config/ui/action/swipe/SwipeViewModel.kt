@@ -49,7 +49,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 class SwipeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
 
@@ -76,6 +76,7 @@ class SwipeViewModel @Inject constructor(
         editionRepository.editionState.editedActionState,
     ) { swipe, actionState ->
         swipe.toDialogUiState(
+            context = context,
             hasUnsavedModifications = actionState.hasChanged,
             canBeSaved = actionState.canBeSaved,
         )
@@ -125,6 +126,7 @@ class SwipeViewModel @Inject constructor(
     }
 
     private fun Swipe.toDialogUiState(
+        context: Context,
         hasUnsavedModifications: Boolean,
         canBeSaved: Boolean,
     ): SwipeUiState {

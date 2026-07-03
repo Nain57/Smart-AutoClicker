@@ -39,10 +39,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class IntentDialog(
     private val listener: OnActionConfigCompleteListener,
 ) : NavBarDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.INTENT.name
 
     /** The view model for this dialog. */
     private val viewModel: IntentViewModel by viewModels(

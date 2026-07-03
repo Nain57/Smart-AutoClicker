@@ -46,12 +46,15 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.Cou
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class FixEventChildrenCopyDialog(
     private val dialogArguments: Arguments,
     private val onFixConfirmed: (Event) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.FIX_EVENT_CHILDREN_COPY.name
 
     data class Arguments(
         val resultingEventList: List<Event>,

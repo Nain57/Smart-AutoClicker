@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.imageselector.ImageSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayValidationMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [OverlayMenu] implementation for displaying the area selection menu and the area to be captured in order
@@ -40,6 +41,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 class CaptureMenu(
     private val onConditionSelected: (ScreenCondition.Image) -> Unit
 ) : OverlayMenu() {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CAPTURE_MENU.name
 
     private companion object {
 

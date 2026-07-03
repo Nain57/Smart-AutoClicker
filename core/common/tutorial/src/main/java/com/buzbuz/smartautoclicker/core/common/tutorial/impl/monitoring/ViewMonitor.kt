@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.monitoring
+package com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring
 
 import android.graphics.Point
 import android.graphics.Rect
@@ -29,11 +29,6 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-/** How long after attach a monitored view's container keeps reflowing (e.g. async content loading, IME insets
- *  settling) before we stop trying to scroll it into view, so we never fight a user's own manual scrolling. */
-private const val SETTLE_WINDOW_MS = 2_000L
-private const val SETTLE_CHECK_DELAY_MS = 150L
 
 internal class ViewMonitor(private val displayConfigManager: DisplayConfigManager) {
 
@@ -161,3 +156,9 @@ enum class ViewPositioningType {
     WINDOW,
     SCREEN,
 }
+
+
+/** How long after attach a monitored view's container keeps reflowing (e.g. async content loading, IME insets
+ *  settling) before we stop trying to scroll it into view, so we never fight a user's own manual scrolling. */
+private const val SETTLE_WINDOW_MS = 2_000L
+private const val SETTLE_CHECK_DELAY_MS = 150L

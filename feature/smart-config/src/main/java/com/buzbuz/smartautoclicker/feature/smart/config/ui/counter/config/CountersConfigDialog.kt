@@ -40,9 +40,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.reference.Cou
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class CountersConfigDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COUNTERS_CONFIG.name
 
     /** View model for this dialog. */
     private val viewModel: CountersConfigViewModel by viewModels(

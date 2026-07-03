@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildre
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [CopyDialog] implementation for displaying the whole list of conditions for a copy.
@@ -55,7 +56,10 @@ class ConditionCopyDialog(
     override val searchHintRes: Int = R.string.search_view_hint_condition_copy
     override val emptyRes: Int = R.string.message_empty_copy
 
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CONDITION_COPY.name
+
     override fun onDialogCreated(dialog: BottomSheetDialog) {
+
         viewModel.setCopyListType(requestTriggerConditions)
         conditionAdapter = ConditionCopyAdapter(
             conditionClickedListener = { selectedCondition, index ->

@@ -42,11 +42,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.Job
 import kotlin.getValue
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ScreenConditionSelectionDialog(
     private val conditionList: List<UiScreenCondition>,
     private val onConditionSelected: (ScreenCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.SCREEN_CONDITION_SELECTION.name
 
     /** View model for this content. */
     private val viewModel: ScreenConditionSelectionViewModel by viewModels(

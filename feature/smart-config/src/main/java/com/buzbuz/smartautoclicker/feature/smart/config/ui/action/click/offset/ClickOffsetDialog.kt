@@ -41,9 +41,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class ClickOffsetDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CLICK_OFFSET.name
 
     private val viewModel: ClickOffsetViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,

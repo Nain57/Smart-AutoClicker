@@ -52,10 +52,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCl
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class SwipeDialog(
     private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.SWIPE.name
 
     /** The view model for this dialog. */
     private val viewModel: SwipeViewModel by viewModels(
@@ -165,6 +168,7 @@ class SwipeDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
+                    tutorialMonitoringTag = MonitoredOverlayType.SWIPE_POSITION.name,
                     itemBriefDescription = SwipeDescription(
                         from = swipe.from?.toPointF(),
                         to = swipe.to?.toPointF(),

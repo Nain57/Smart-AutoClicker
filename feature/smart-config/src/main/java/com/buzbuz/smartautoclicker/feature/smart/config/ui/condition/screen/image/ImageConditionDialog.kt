@@ -65,10 +65,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ImageConditionDialog(
     private val listener: OnConditionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.IMAGE_CONDITION.name
 
     /** The view model for this dialog. */
     private val viewModel: ImageConditionViewModel by viewModels(

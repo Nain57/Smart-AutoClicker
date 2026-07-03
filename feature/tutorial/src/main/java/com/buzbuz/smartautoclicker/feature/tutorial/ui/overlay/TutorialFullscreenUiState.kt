@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay
 import android.graphics.Rect
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.ui.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 
 data class TutorialFullscreenUiState(

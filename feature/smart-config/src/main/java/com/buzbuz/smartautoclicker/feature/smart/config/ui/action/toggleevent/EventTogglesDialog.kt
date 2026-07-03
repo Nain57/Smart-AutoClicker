@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class EventTogglesDialog(
     private val toggleEventAction: ToggleEvent,
@@ -48,6 +49,8 @@ class EventTogglesDialog(
     private val onConfirmClicked: (List<EventToggle>) -> Unit,
     private val onDismissed: (() -> Unit)? = null,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.EVENT_TOGGLES.name
 
     /** The view model for this dialog. */
     private val viewModel: EventTogglesViewModel by viewModels(

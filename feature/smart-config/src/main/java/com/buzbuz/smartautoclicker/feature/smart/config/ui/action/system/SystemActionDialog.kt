@@ -43,11 +43,14 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCl
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class SystemActionDialog(
     private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.SYSTEM_ACTION.name
 
     /** The view model for this dialog. */
     private val viewModel: SystemActionViewModel by viewModels(

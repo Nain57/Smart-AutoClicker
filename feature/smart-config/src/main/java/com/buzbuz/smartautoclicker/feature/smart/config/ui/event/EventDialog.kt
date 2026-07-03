@@ -63,12 +63,15 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventt
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class EventDialog(
     private val onConfigComplete: () -> Unit,
     private val onDelete: () -> Unit,
     private val onDismiss: () -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.EVENT.name
 
     /** View model for this dialog. */
     private val viewModel: EventDialogViewModel by viewModels(

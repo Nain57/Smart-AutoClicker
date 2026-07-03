@@ -66,10 +66,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.sele
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ClickDialog(
     private val listener: OnActionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CLICK.name
 
     /** The view model for this dialog. */
     private val viewModel: ClickViewModel by viewModels(
@@ -254,6 +257,7 @@ class ClickDialog(
             overlayManager.navigateTo(
                 context = context,
                 newOverlay = PositionSelectorMenu(
+                    tutorialMonitoringTag = MonitoredOverlayType.CLICK_POSITION.name,
                     itemBriefDescription = ClickDescription(
                         position = click.position?.toPointF(),
                         pressDurationMs = click.pressDuration ?: 1L,

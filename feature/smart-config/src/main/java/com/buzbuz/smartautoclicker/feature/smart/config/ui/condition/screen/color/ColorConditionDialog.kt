@@ -61,10 +61,13 @@ import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.math.roundToInt
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ColorConditionDialog(
     private val listener: OnConditionConfigCompleteListener,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COLOR_CONDITION.name
 
     /** The view model for this dialog. */
     private val viewModel: ColorConditionViewModel by viewModels(

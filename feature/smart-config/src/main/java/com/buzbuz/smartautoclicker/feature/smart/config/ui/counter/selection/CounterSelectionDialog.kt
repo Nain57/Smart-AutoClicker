@@ -36,10 +36,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.creation.Coun
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class CounterSelectionDialog(
     private val onCounterSelected: (String) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
+
+    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COUNTER_SELECTION.name
 
     /** The view model for this dialog. */
     private val viewModel: CounterSelectionViewModel by viewModels(
