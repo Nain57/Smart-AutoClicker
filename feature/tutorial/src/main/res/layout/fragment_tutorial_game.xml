@@ -150,19 +150,19 @@
             android:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/morning_target"
+            android:id="@+id/day_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/button_text_morning"
+            android:text="@string/button_text_day"
             android:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/afternoon_target"
+            android:id="@+id/night_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/button_text_afternoon"
+            android:text="@string/button_text_night"
             android:visibility="invisible"/>
 
     </com.google.android.material.card.MaterialCardView>

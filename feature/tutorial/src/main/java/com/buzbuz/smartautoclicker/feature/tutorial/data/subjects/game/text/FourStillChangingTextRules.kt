@@ -43,8 +43,8 @@ internal class FourStillChangingTextRules : TutorialGameRules {
         return mapOf(
             TutorialGameTargetType.TEXT_HELLO to topLeftPosition,
             TutorialGameTargetType.TEXT_GOODBYE to topRightPosition,
-            TutorialGameTargetType.TEXT_MORNING to bottomLeftPosition,
-            TutorialGameTargetType.TEXT_AFTERNOON to bottomRightPosition,
+            TutorialGameTargetType.TEXT_NIGHT to bottomLeftPosition,
+            TutorialGameTargetType.TEXT_DAY to bottomRightPosition,
         )
     }
 
@@ -66,8 +66,8 @@ internal class FourStillChangingTextRules : TutorialGameRules {
         return mapOf(
             TutorialGameTargetType.TEXT_HELLO to positions[0],
             TutorialGameTargetType.TEXT_GOODBYE to positions[1],
-            TutorialGameTargetType.TEXT_MORNING to positions[2],
-            TutorialGameTargetType.TEXT_AFTERNOON to positions[3],
+            TutorialGameTargetType.TEXT_NIGHT to positions[2],
+            TutorialGameTargetType.TEXT_DAY to positions[3],
         )
     }
 

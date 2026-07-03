@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_still_text">画面上のテキストを検出する</string>
+    <string name="item_desc_tutorial_text_conditions_still_text">画面上の特定のテキストを検出し、それが現れたときにクリックする方法を学ぶ</string>
+    <string name="message_game_tutorial_text_conditions_still_text">ボタンが \"Hello\" と表示したら、できるだけ速くクリックしてください</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_1">テキスト条件チュートリアルへようこそ！\n\nここでは、Klick\'r の助けを借りて
+        ゲームのハイスコアを更新してみます。\n\nまず「ゲームを開始」を押して試してみるか、直接シナリオの設定に進むことが
+        できます。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_2">他の画面条件と同様に、まず画面イベントを作成する必要があります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_3">次に、「条件」フィールドをタップして条件リストを開きます。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_4">条件を作成する必要があります。「作成」をタップしてください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_5">このチュートリアルでは、画面上のテキストを検出する方法を学びたいので、
+        「テキスト条件」を選択してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_6">テキスト条件は、検出するテキストとそれを検索する画面の領域によって
+        定義されます。\n\nゲームのボタンが \"Hello\" を表示したときにクリックしたいので、テキスト検出フィールドに Hello と
+        入力してください。</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_6">「アルファベット」フィールドは、検出するテキストの文字体系を定義します。
+        \"Hello\" はラテン文字を使用するため、デフォルト値を維持できますが、非ラテン文字のテキストを検出する場合は
+        忘れずに変更してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_7">次に、Klick\'r にテキストをどこで検索するかを指定する必要があります。\n\n
+        検出エリアセレクターをタップして定義してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_8">検出矩形を配置・サイズ変更して、ゲームのボタンを覆うようにしてください。
+        そこに \"Hello\" が表示されます。エリアが正しければ、確定ボタンをタップして保存してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_8">検出するテキストの周囲に余白を保ちながら、できるだけ小さなボックスを
+        使用するようにしてください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_9">条件が設定されました！\n\nいくつかの調整が可能ですが、デフォルトの
+        設定で基本的なユースケースには十分です。\n\n保存ボタンをタップして登録し、条件リストに戻ります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_10">条件リストを閉じてイベントの設定に戻ります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_11">この条件により、シナリオはいつアクションを起動するかを把握しています。\n\n
+        次に、起動するアクションを定義する必要があります。このゲームでは、ボタンをクリックします。\n\nアクションフィールドを
+        タップしてアクションリストを表示してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_12">アクションとは、イベントの条件が満たされたときに実行されるものです。\n\n
+        クリック、スワイプ、一時停止、Intent（別のアプリとのやり取り）、またはシナリオ実行の変更などがあります。同じイベントに
+        複数のアクションを定義することもできます。\n\n「アクションを作成」ボタンをタップして最初のアクションを作成してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_13">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは、
+        ボタンをクリックするだけなので、「クリック」を選んで新しいクリックアクションを作成してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_14">クリックアクションは位置と押下時間で定義されます。\n\nできるだけ速く
+        クリックしたいので、最小値である 1ms のデフォルト押下時間を維持できます。あとは位置を定義するだけです。\n\n位置
+        選択ボタンをタップしてクリックアクションの位置を選択してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_15">クリックする正確な位置を選択する必要があるので、ゲームをもう一度
+        起動してボタンを表示させ、その位置を選択してください。\n\n位置が正しければ、確定ボタンをタップして保存してください。</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_15">位置セレクターが表示されている間はゲームを操作できませんが、
+        このボタンを使って表示・非表示を切り替えることで、その制限をいつでも解除できます。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_16">クリックが正しく設定されました！\n\n保存ボタンをタップして登録し、
+        アクションリストに戻ります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_17">アクションリストを閉じてイベントの設定に戻ります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_18">イベントに条件とアクションが設定され、何をいつ実行するかが決まりました。\n\n
+        保存ボタンをタップして登録し、シナリオダイアログに戻ります。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_19">シナリオに必要な唯一の条件は、少なくとも1つのイベントを持つことです。\n
+        私たちのイベントはすでにゲームの勝ち方をカバーしているので、他には何も必要ありません。\n\n保存ボタンをタップして
+        シナリオをデータベースに保存し、設定ダイアログを閉じます。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_20">ご覧のように、再生ボタンが使えるようになりました。シナリオが有効で
+        検出に使用できることを意味します。\n\nタップして検出を開始してください。</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_21">動いているのに何も起こらない？\n\n正常です。ボタンが \"Hello\" と
+        表示したときだけクリックすることを覚えていますか？シナリオを動かしたまま、「ゲームを開始」ボタンを押して、Klick\'r が代わりに
+        ゲームを攻略するのを見てください！</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_22">おめでとうございます！\n\n画面に表示されたテキストを検出する方法を学びました。\n他のチュートリアルも見て、さらに多くのユースケースを発見してください。</string>
+</resources>

@@ -25,10 +25,10 @@
     <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
 
-    <string name="button_text_hello">Hello</string>
-    <string name="button_text_goodbye">Goodbye</string>
-    <string name="button_text_morning">Morning</string>
-    <string name="button_text_afternoon">Afternoon</string>
+    <string name="button_text_hello" translatable="false">Hello</string>
+    <string name="button_text_goodbye" translatable="false">Goodbye</string>
+    <string name="button_text_day" translatable="false">Day</string>
+    <string name="button_text_night" translatable="false">Night</string>
 
     <!-- Two still targets press when only one is visible tutorial -->
     <string name="item_title_tutorial_4">Negative conditions</string>

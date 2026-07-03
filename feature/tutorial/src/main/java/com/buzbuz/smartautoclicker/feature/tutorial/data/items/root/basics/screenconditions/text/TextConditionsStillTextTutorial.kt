@@ -118,7 +118,10 @@ object TextConditionsStillTextTutorial : TutorialItem {
                 // Open the detection area selector
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_text_conditions_still_text_step_7,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredTextInput(
+                        type = MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_TEXT_TO_DETECT,
+                        expectedText = "Hello",
+                    ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_AREA_SELECTOR,
                     ),
@@ -126,6 +129,10 @@ object TextConditionsStillTextTutorial : TutorialItem {
                 // Select the detection area
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_text_conditions_still_text_step_8,
+                    image = TutorialStepImage(
+                        imageResId = R.drawable.tutorial_instructions_text_capture_sizing,
+                        imageDescResId = R.string.message_tutorial_text_conditions_still_text_step_secondary_8,
+                    ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.CONDITION_AREA_SELECTOR_MENU,
                     ),

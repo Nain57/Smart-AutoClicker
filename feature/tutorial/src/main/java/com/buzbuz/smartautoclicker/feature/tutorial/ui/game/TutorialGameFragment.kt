@@ -221,10 +221,10 @@ class TutorialGameFragment : Fragment() {
         when (type) {
             TutorialGameTargetType.IMAGE_BLUE -> blueTarget
             TutorialGameTargetType.IMAGE_RED -> redTarget
-            TutorialGameTargetType.TEXT_AFTERNOON -> afternoonTarget
+            TutorialGameTargetType.TEXT_DAY -> dayTarget
             TutorialGameTargetType.TEXT_GOODBYE -> goodbyeTarget
             TutorialGameTargetType.TEXT_HELLO -> helloTarget
-            TutorialGameTargetType.TEXT_MORNING -> morningTarget
+            TutorialGameTargetType.TEXT_NIGHT -> nightTarget
         }
 }
 

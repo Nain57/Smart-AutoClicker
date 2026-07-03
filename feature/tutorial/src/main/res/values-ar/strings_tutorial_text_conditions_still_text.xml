@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_still_text">اكتشاف نص على الشاشة</string>
+    <string name="item_desc_tutorial_text_conditions_still_text">تعلّم كيفية اكتشاف نص معين على الشاشة والنقر عند ظهوره</string>
+    <string name="message_game_tutorial_text_conditions_still_text">انقر على الزر عندما يعرض \"Hello\"، بأسرع ما يمكن</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_1">مرحباً بك في درس شروط النص!\n\nهنا ستحاول تحقيق أعلى
+        نقطة في لعبة بمساعدة Klick\'r.\n\nيمكنك تجربتها أولاً بالضغط على بدء اللعبة، أو الانتقال مباشرةً إلى
+        إعداد السيناريو.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_2">كما هو الحال مع أي شرط شاشة آخر، نحتاج أولاً إلى إنشاء
+        حدث شاشة.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_3">الآن، اضغط على حقل الشروط لفتح قائمة الشروط.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_4">نحتاج إلى إنشاء الشرط. اضغط على إنشاء.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_5">في هذا الدرس، نريد تعلّم كيفية اكتشاف
+        نص على الشاشة، لذا اختر شرط النص.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_6">يُعرَّف شرط النص بالنص المراد اكتشافه ومنطقة الشاشة للبحث فيها.\n\n
+        بما أننا نريد النقر على زر اللعبة عندما يعرض \"Hello\"، اكتب Hello في حقل النص المراد اكتشافه.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_6">يحدد حقل الأبجدية نظام الكتابة للنص المراد اكتشافه.
+        يستخدم \"Hello\" الحروف اللاتينية، لذا يمكنك الإبقاء على القيمة الافتراضية، لكن لا تنسَ تغييرها عند اكتشاف
+        نصوص غير لاتينية.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_7">الآن نحتاج إلى إخبار Klick\'r بمكان البحث عن النص.\n\n
+        اضغط على محدد منطقة الاكتشاف لتعريفها.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_8">ضع مستطيل الاكتشاف وغيّر حجمه ليغطي زر اللعبة، إذ هناك
+        سيظهر \"Hello\". بمجرد أن تكون المنطقة صحيحة، اضغط على زر التحقق لحفظها.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_8">حاول استخدام أصغر مربع ممكن مع الإبقاء على هامش
+        حول النص المراد اكتشافه.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_9">تم إعداد شرطك الآن!\n\nيمكن إجراء عدة تعديلات عليه، لكن
+        الإعدادات الافتراضية مناسبة لحالة الاستخدام الأساسية لدينا.\n\nاضغط على زر الحفظ لتسجيله والعودة إلى
+        قائمة الشروط.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_10">أغلق قائمة الشروط للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_11">بهذا الشرط، يعرف السيناريو متى يُشغّل الإجراءات.\n\n
+        تحتاج الآن إلى تحديد الإجراءات التي ستُشغَّل؛ في هذه اللعبة، النقر على الزر.\n\nاضغط على حقل
+        الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_12">الإجراء هو شيء يُنفَّذ بمجرد استيفاء شروط حدثه.\n\nيمكن
+        أن يكون نقرة أو سحباً أو إيقافاً مؤقتاً أو Intent (تفاعل مع تطبيق آخر) أو تغييراً في تنفيذ السيناريو.
+        ويمكن تعريف إجراءات متعددة لنفس الحدث.\n\nاضغط على زر إنشاء إجراء لإنشاء إجراءك الأول.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_13">أولاً، نحتاج إلى اختيار نوع لإجراءك.\n\nفي هذه اللعبة،
+        نحتاج ببساطة إلى النقر على الزر، لذا اختر نقرة لإنشاء إجراء نقرة جديد.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_14">يُعرَّف إجراء النقرة بموضع ومدة ضغط.\n\nبما أننا نريد
+        النقر بأسرع ما يمكن، يمكننا الإبقاء على مدة الضغط الافتراضية البالغة 1 مللي ثانية، وهي أدنى قيمة ممكنة.
+        لذا نحتاج فقط إلى تحديد موضع.\n\nاضغط على زر اختيار الموضع لتحديد موضع إجراء النقرة.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_15">تحتاج إلى تحديد الموضع الدقيق للنقر، لذا أعد تشغيل
+        اللعبة لعرض الزر ثم حدد موضعه.\n\nبمجرد أن يكون الموضع صحيحاً، اضغط على زر التحقق لحفظه.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_15">لا يمكنك التفاعل مع اللعبة أثناء ظهور محدد الموضع،
+        لكن يمكنك استخدام هذا الزر لإظهاره أو إخفائه، مما يتيح لك إزالة هذا القيد متى شئت.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_16">تم إعداد النقرة بشكل صحيح!\n\nاضغط على زر الحفظ لتسجيلها
+        والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_17">أغلق قائمة الإجراءات للعودة إلى إعداد الحدث.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_18">يمتلك حدثك الآن شرطاً وإجراءً، مما يعني أنه يعرف ما يجب
+        تنفيذه ومتى.\n\nاضغط على زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_19">المتطلب الوحيد للسيناريو هو وجود حدث واحد على الأقل.\n
+        بما أن حدثنا يغطي بالفعل طريقة الفوز باللعبة، لا نحتاج إلى شيء آخر.\n\nاضغط على زر الحفظ لحفظ السيناريو
+        في قاعدة البيانات وإغلاق نوافذ الإعداد.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_20">كما ترى، زر التشغيل متاح الآن، مما يعني أن سيناريوك صالح
+        ويمكن استخدامه للاكتشاف.\n\nاضغط عليه لبدء الاكتشاف.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_21">إنه يعمل لكن لا يحدث شيء؟\n\nهذا طبيعي، سينقر فقط عندما
+        يعرض الزر \"Hello\"، أتذكر؟ أثناء تشغيل السيناريو، اضغط على زر بدء اللعبة وشاهد Klick\'r يهزمها
+        عنك!</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_22">تهانيّ!\n\nأنت تعرف الآن كيفية اكتشاف نص معروض على الشاشة.\nألقِ نظرة على الدروس الأخرى لاكتشاف المزيد من حالات الاستخدام.</string>
+</resources>

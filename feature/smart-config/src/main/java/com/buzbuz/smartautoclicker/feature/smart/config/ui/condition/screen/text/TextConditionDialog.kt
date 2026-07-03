@@ -160,6 +160,7 @@ class TextConditionDialog(
         super.onStart()
         viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
         viewModel.monitorDetectionAreaSelectorView(viewBinding.fieldSelectArea.root)
+        viewModel.monitorTextToDetectField(viewBinding.fieldTextToSearch.textField)
     }
 
     override fun onStop() {

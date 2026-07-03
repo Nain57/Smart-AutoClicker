@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_still_text">Rilevare un testo sullo schermo</string>
+    <string name="item_desc_tutorial_text_conditions_still_text">Impara a rilevare un testo specifico sullo schermo e a fare clic quando appare</string>
+    <string name="message_game_tutorial_text_conditions_still_text">Fai clic sul pulsante quando mostra \"Hello\", il più velocemente possibile</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_1">Benvenuto nel tutorial sulle condizioni di testo!\n\nQui proverai
+        a battere il punteggio massimo di un gioco con l\'aiuto di Klick\'r.\n\nPuoi prima provarlo premendo Avvia gioco,
+        o passare direttamente alla configurazione dello Scenario.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_2">Come per qualsiasi altra Condizione dello schermo, dobbiamo prima
+        creare un Evento dello schermo.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_3">Ora premi sul campo Condizioni per aprire la lista delle Condizioni.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_4">Dobbiamo creare la Condizione. Premi su Crea.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_5">In questo tutorial, vogliamo imparare a rilevare
+        un testo sullo schermo, quindi seleziona Condizione di testo.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_6">Una Condizione di testo è definita dal testo da rilevare e dall\'area
+        dello schermo in cui cercarlo.\n\nPoiché vogliamo fare clic sul pulsante del gioco quando mostra \"Hello\", digita Hello
+        nel campo del testo da rilevare.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_6">Il campo Alfabeto definisce il sistema di scrittura del
+        testo da rilevare. \"Hello\" usa l\'alfabeto latino, quindi puoi mantenere il valore predefinito, ma ricorda di
+        cambiarlo quando rilevi testi non latini.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_7">Ora dobbiamo indicare a Klick\'r dove cercare il
+        testo.\n\nPremi sul selettore dell\'area di rilevamento per definirla.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_8">Posiziona e ridimensiona il rettangolo di rilevamento in modo che copra il
+        pulsante del gioco, poiché è lì che verrà mostrato \"Hello\". Una volta che l\'area è corretta, premi il pulsante di validazione per salvarla.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_8">Cerca di usare la casella più piccola possibile
+        mantenendo un margine attorno al testo da rilevare.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_9">La tua Condizione è ora configurata!\n\nPossono essere effettuate diverse
+        regolazioni, ma le impostazioni predefinite sono adatte al nostro caso d\'uso base.\n\nPremi il pulsante Salva
+        per registrarla e tornare alla lista delle Condizioni.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_10">Chiudi la lista delle Condizioni per tornare alla configurazione dell\'Evento.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_11">Con questa Condizione, lo scenario sa quando attivare le Azioni.\n\n
+        Ora devi definire quali Azioni attivare; per questo gioco, un clic sul pulsante.\n\nPremi sul campo Azioni
+        per visualizzare la lista delle Azioni.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_12">Un\'Azione è qualcosa che viene eseguito una volta che le Condizioni del
+        suo Evento sono soddisfatte.\n\nPuò essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra
+        applicazione) o un cambiamento nell\'esecuzione dello Scenario. Più Azioni possono essere definite per lo stesso
+        Evento.\n\nPremi il pulsante Crea Azione per creare la tua prima Azione.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_13">Prima di tutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer
+        questo gioco, dobbiamo semplicemente fare clic sul pulsante, quindi scegli Clic per creare una nuova Azione Clic.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_14">Un\'Azione Clic è definita da una posizione e una durata di pressione.\n\n
+        Poiché vogliamo fare clic il più velocemente possibile, possiamo mantenere la durata di pressione predefinita di 1ms,
+        che è il valore minimo. Dobbiamo quindi solo definire una posizione.\n\nPremi il pulsante selettore di posizione
+        per scegliere la posizione dell\'Azione Clic.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_15">Devi selezionare la posizione esatta in cui fare clic, quindi avvia
+        di nuovo il gioco per visualizzare il pulsante e poi seleziona la sua posizione.\n\nUna volta che la posizione
+        è corretta, premi il pulsante di validazione per salvarla.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_15">Non puoi interagire con il gioco mentre il selettore di posizione
+        è visibile, ma puoi usare questo pulsante per mostrarlo o nasconderlo, consentendoti di rimuovere quella restrizione
+        quando vuoi.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_16">Il clic è ora configurato correttamente!\n\nPremi il pulsante Salva
+        per registrarlo e tornare alla lista delle Azioni.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_17">Chiudi la lista delle Azioni per tornare alla configurazione dell\'Evento.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_18">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che
+        sa cosa eseguire e quando eseguirlo.\n\nPremi il pulsante Salva per registrarlo e tornare alla finestra dello Scenario.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_19">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
+        Poiché il nostro Evento copre già come vincere il gioco, non abbiamo bisogno di altro.\n\nPremi il pulsante Salva per
+        salvare lo Scenario nel database e chiudere le finestre di configurazione.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_20">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che
+        significa che il tuo Scenario è valido e può essere usato per il rilevamento.\n\nPremi su di esso per avviare
+        il rilevamento.</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_21">Sta funzionando ma non succede nulla?\n\nÈ normale, farà clic solo
+        quando il pulsante mostra \"Hello\", ricordi? Mentre mantieni lo scenario in esecuzione, premi il pulsante Avvia gioco
+        e guarda Klick\'r batterlo al posto tuo!</string>
+
+    <string name="message_tutorial_text_conditions_still_text_step_22">Congratulazioni!\n\nOra sai come rilevare un testo sullo schermo.\nDai un\'occhiata agli altri tutorial per scoprire altri casi d\'uso.</string>
+</resources>

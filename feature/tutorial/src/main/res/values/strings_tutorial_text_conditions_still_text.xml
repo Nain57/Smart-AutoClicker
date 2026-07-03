@@ -48,6 +48,9 @@
     <string name="message_tutorial_text_conditions_still_text_step_8">Position and resize the detection rectangle so it covers the
         game button, as that\'s where \"Hello\" will be displayed. Once the area is correct, press the validate button to save it.</string>
 
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_8">Try to use the smaller possible box
+        while keeping a margin around the text to detect.</string>
+
     <string name="message_tutorial_text_conditions_still_text_step_9">Your Condition is now configured!\n\nThere are now several
         adjustments that can be made to it, but the default settings suits our basic use case.\n\nClick on the save
         button to register it and return to the Conditions list.</string>

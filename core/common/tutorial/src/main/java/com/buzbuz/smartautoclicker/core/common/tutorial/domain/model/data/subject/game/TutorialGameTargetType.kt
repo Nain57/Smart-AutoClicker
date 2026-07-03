@@ -28,11 +28,11 @@ enum class TutorialGameTargetType {
     /** A red-coloured target. */
     IMAGE_RED,
 
-    TEXT_AFTERNOON,
+    TEXT_DAY,
 
     TEXT_GOODBYE,
 
     TEXT_HELLO,
 
-    TEXT_MORNING,
+    TEXT_NIGHT,
 }

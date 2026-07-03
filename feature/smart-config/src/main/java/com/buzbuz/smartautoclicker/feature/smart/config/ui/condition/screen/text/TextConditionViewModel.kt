@@ -105,6 +105,10 @@ class TextConditionViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.TEXT_CONDITION_DIALOG_BUTTON_SAVE, view)
     }
 
+    fun monitorTextToDetectField(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_TEXT_TO_DETECT, view)
+    }
+
     fun monitorDetectionAreaSelectorView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
     }
@@ -112,6 +116,7 @@ class TextConditionViewModel @Inject constructor(
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.TEXT_CONDITION_DIALOG_BUTTON_SAVE)
         monitoredViewsManager.detach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_AREA_SELECTOR)
+        monitoredViewsManager.detach(MonitoredViewType.TEXT_CONDITION_DIALOG_FIELD_TEXT_TO_DETECT)
     }
 
     private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Text) -> ScreenCondition.Text?) {
