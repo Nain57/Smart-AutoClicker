@@ -46,6 +46,7 @@ internal class MonitoredViewsManagerImpl @Inject constructor(
     private val monitoredClicks: MutableMap<MonitoredViewType, () -> Unit> = mutableMapOf()
 
     private var textMonitoringJob: Job? = null
+    private var numberMonitoringJob: Job? = null
 
     override fun attach(
         type: MonitoredViewType,
@@ -107,9 +108,28 @@ internal class MonitoredViewsManagerImpl @Inject constructor(
         }
     }
 
-    fun stopTextMonitoring(type: MonitoredViewType) {
+    fun monitorNumber(type: MonitoredViewType, number: Double, listener: () -> Unit) {
+        numberMonitoringJob = coroutineScopeIo.launch {
+            monitoredViews[type]?.text?.collect { viewText ->
+                val value = viewText?.toDoubleOrNull()
+                if (value != number) return@collect
+
+                monitoredClicks.remove(type)
+                listener()
+
+                numberMonitoringJob?.cancel()
+                numberMonitoringJob = null
+            }
+        }
+    }
+
+    fun stopMonitoring(type: MonitoredViewType) {
         monitoredClicks.remove(type)
+
         textMonitoringJob?.cancel()
         textMonitoringJob = null
+
+        numberMonitoringJob?.cancel()
+        numberMonitoringJob = null
     }
 }

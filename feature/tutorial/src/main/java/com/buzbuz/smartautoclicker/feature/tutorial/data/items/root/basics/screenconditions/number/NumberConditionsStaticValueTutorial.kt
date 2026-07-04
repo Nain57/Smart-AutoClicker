@@ -142,9 +142,9 @@ object NumberConditionsStaticValueTutorial : TutorialItem {
                 // Open the detection area selector
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_number_conditions_static_value_step_10,
-                    stepStartCondition = TutorialStepStartCondition.MonitoredTextInput(
+                    stepStartCondition = TutorialStepStartCondition.MonitoredNumberInput(
                         type = MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_VALUE_TO_DETECT,
-                        expectedText = "9000.0",
+                        expectedNumber = 9000.0,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_AREA_SELECTOR,

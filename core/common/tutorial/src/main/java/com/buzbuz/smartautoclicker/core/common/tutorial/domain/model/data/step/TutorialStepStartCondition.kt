@@ -52,6 +52,14 @@ sealed class TutorialStepStartCondition {
      */
     data class MonitoredTextInput(val type: MonitoredViewType, val expectedText: String) : TutorialStepStartCondition()
 
+    /**
+     * Step starts when the specified monitored UI edit text contains the expected number.
+     *
+     * @property type the UI element to monitor the text of
+     * @property expectedNumber the number expected.
+     */
+    data class MonitoredNumberInput(val type: MonitoredViewType, val expectedNumber: Double) : TutorialStepStartCondition()
+
 
     /**
      * Step starts when the expected overlay is pushed on top of the back stack.

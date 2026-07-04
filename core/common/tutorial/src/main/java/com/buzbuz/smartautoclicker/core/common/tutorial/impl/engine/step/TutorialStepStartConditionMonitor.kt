@@ -86,7 +86,12 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
 
             TutorialStepStartCondition.Immediate ->
                 onConditionReached()
-        }
+
+        is TutorialStepStartCondition.MonitoredNumberInput ->
+            monitoredViewsManager.monitorNumber(condition.type, condition.expectedNumber) {
+                onConditionReached()
+            }
+    }
 
     fun stopMonitoring(condition: TutorialStepStartCondition, subjectController: TutorialSubjectController) {
         when (condition) {
@@ -100,7 +105,11 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
             }
 
             is TutorialStepStartCondition.MonitoredTextInput -> {
-                monitoredViewsManager.stopTextMonitoring(condition.type)
+                monitoredViewsManager.stopMonitoring(condition.type)
+            }
+
+            is TutorialStepStartCondition.MonitoredNumberInput -> {
+                monitoredViewsManager.stopMonitoring(condition.type)
             }
 
             TutorialStepStartCondition.GameLost,
