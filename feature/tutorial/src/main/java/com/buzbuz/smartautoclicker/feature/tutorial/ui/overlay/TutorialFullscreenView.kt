@@ -42,10 +42,17 @@ class TutorialFullscreenView @JvmOverloads constructor(
         isAntiAlias = true
         color = context.getColor(R.color.tutorial_overlay_background)
     }
+    private val holeBorderPaint: Paint = Paint().apply {
+        isAntiAlias = true
+        color = context.getColor(android.R.color.white)
+        style = Paint.Style.STROKE
+        strokeWidth = context.resources.getDimension(R.dimen.tutorial_hole_border_width)
+    }
     private val drawPath: Path =
         Path().apply {
             fillType = Path.FillType.WINDING
         }
+    private val holePath: Path = Path()
 
     var expectedViewPosition: Rect? = null
         set(value) {
@@ -71,11 +78,16 @@ class TutorialFullscreenView @JvmOverloads constructor(
             addBackgroundRect()
             addExpectedViewHole()
         }
+        holePath.apply {
+            reset()
+            addExpectedViewHole()
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawPath(drawPath, backgroundPaint)
+        canvas.drawPath(holePath, holeBorderPaint)
     }
 
     @SuppressLint("ClickableViewAccessibility")
