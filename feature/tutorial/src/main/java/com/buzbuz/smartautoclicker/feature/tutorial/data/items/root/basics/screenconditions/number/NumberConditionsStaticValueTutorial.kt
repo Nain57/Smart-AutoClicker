@@ -62,7 +62,9 @@ object NumberConditionsStaticValueTutorial : TutorialItem {
                 // Open edit scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_number_conditions_static_value_step_1,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Create Event

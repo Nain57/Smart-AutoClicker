@@ -60,7 +60,9 @@ object ColorConditionsTutorial : TutorialItem {
                 // Open edit scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_color_conditions_step_1,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Create Event

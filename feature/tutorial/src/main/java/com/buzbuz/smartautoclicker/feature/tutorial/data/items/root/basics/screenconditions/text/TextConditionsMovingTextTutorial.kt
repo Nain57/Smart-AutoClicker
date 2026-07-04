@@ -60,7 +60,9 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 // Open edit scenario
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_1,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Create Event
