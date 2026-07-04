@@ -131,47 +131,54 @@
             android:layout_width="@dimen/tutorial_game_target_size"
             android:layout_height="@dimen/tutorial_game_target_size"
             app:srcCompat="@drawable/ic_game_target_primary"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/red_target"
             android:layout_width="@dimen/tutorial_game_target_size"
             android:layout_height="@dimen/tutorial_game_target_size"
             app:srcCompat="@drawable/ic_game_target_secondary"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/hello_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/button_text_hello"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/goodbye_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/button_text_goodbye"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/day_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/button_text_day"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/night_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/button_text_night"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/number_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            tools:text="42"/>
 
     </com.google.android.material.card.MaterialCardView>
 

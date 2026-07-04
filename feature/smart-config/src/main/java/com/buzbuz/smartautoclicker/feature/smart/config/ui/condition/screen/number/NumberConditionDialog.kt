@@ -117,6 +117,9 @@ class NumberConditionDialog(
                             viewModel.setOperationValue(CounterOperationValue.Counter(counterSelected))
                         }
                     },
+                    onItemBound = { item, view ->
+                        viewModel.monitorDropdownItem(item, view)
+                    }
                 )
                 hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
@@ -149,6 +152,19 @@ class NumberConditionDialog(
                 launch { viewModel.uiState.collect(::updateUi) }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
+        viewModel.monitorDetectionAreaField(viewBinding.fieldSelectArea.root)
+        viewModel.monitorOperatorField(viewBinding.editValueLayout.operatorField.root)
+        viewModel.monitorValueToDetectField(viewBinding.editValueLayout.staticValueLayout.textField)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
     }
 
     override fun back() {

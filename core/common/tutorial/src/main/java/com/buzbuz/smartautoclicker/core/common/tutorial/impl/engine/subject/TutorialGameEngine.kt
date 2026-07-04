@@ -112,7 +112,7 @@ internal class TutorialGameEngine (
 
     override fun onGameTargetHit(target: TutorialGameTargetType) {
         _state.update { old ->
-            val newTargets = game.rules.onValidTargetHit(old.targets, target)
+            val newTargets = game.rules.onTargetHit(old.targets, target)
             old.copy(
                 targets = newTargets,
                 score = game.rules.getScore(),

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">画面上の数字を検出する</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">画面に表示された数字を事前定義された値と比較する</string>
+    <string name="message_game_tutorial_number_conditions_static_value">値が9000を超えたときだけクリックしてください！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">数字条件チュートリアルへようこそ！\n\nここでは、Klick\'rの助けを借りて
+        ゲームのハイスコアを更新してみます。\n\nまずスタートゲームを押して試してみるか、
+        直接シナリオの設定に進むこともできます。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">他のスクリーン条件と同様に、まず
+        スクリーンイベントを作成する必要があります。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">次に、条件フィールドをクリックして条件リストを開いてください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">条件を作成する必要があります。作成をクリックしてください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">このチュートリアルでは、画面上の数字を検出する方法を学びたいので、
+        数字条件を選択してください</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">数字条件は、検出する数字と
+        それに適用する比較によって定義されます。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">このチュートリアルでは、検出した数字を静的な値とのみ比較しますが、
+        カウンターの値と比較することも可能です。この機能についての詳細は、
+        カウンター専用のチュートリアルを参照してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">表示されている値が9000を超えるかどうかを検出したいと思います。
+        まず、比較演算子を変更するために演算子をクリックしてください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8"><![CDATA[>]]> 演算子を選択してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">次に、比較する値を入力する必要があります。
+        次のチュートリアルステップに進むために、値フィールドに「9000」と入力してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">次に、Klick\'rに数字をどこで検索するかを指定する必要があります。
+        \n\n検出エリアセレクターをクリックして設定してください</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">表示された数字をカバーするように検出矩形を配置してサイズを調整してください。
+        ゲームを起動してどこに表示されるか確認できます。エリアが正しくなったら確認ボタンを押して保存してください。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">検出する数字の周囲に余白を残しながら
+        できるだけ小さいボックスを使うようにしてください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">条件の設定が完了しました！\n\nいくつかの
+        調整も可能ですが、デフォルト設定でも基本的な使用例には十分です。\n\n保存ボタンをクリックして登録し、条件リストに戻ってください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">条件リストを閉じてイベント設定に戻ってください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">この条件により、シナリオはいつアクションを起動するかを知ることができます。\n\n
+        次は起動するアクションを定義する必要があります。このゲームでは、ボタンをクリックします。\n\n
+        アクションフィールドをクリックしてアクションリストを表示してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">アクションとは、イベントの条件が満たされると実行されるものです。\n\n
+        クリック、スワイプ、一時停止、Intent（他のアプリとのやり取り）、またはシナリオ実行の変更などがあり、
+        同じイベントに複数のアクションを定義できます。\n\nアクション作成ボタンをクリックして最初のアクションを作成してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは単純に
+        ボタンをクリックすればよいので、クリックを選択して新しいクリックアクションを作成してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">クリックアクションは位置と押下時間で定義されます。\n\nできるだけ速くクリックしたいので、
+        最小値である1msのデフォルトの押下時間を維持できます。そのため、位置だけを設定する必要があります。\n\n位置ピッカーボタンをクリックして
+        クリックアクションの位置を選択してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">クリックする正確な位置を選択する必要があるため、ゲームを再起動して
+        ボタンを表示させ、その位置を選択してください。\n\n位置が正しくなったら、
+        確認ボタンをクリックして保存してください。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">位置セレクターが表示されている間はゲームを操作できませんが、
+        このボタンを使って表示・非表示を切り替えることで、いつでもその制限を解除できます。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">クリックが正しく設定されました！\n\n保存ボタンをクリックして登録し、アクションリストに戻ってください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">アクションリストを閉じてイベント設定に戻ってください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">イベントに条件とアクションが設定されました。これにより、何をいつ実行するかが分かります。
+        \n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ってください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">シナリオの唯一の要件は、少なくとも1つのイベントを持つことです。\n
+        イベントがゲームに勝つ方法をすでにカバーしているため、他に必要なものはありません。\n\n保存ボタンをクリックして、シナリオをデータベースに保存し、設定ダイアログを閉じてください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">ご覧のとおり、再生ボタンが利用可能になりました。これはシナリオが有効で検出に使用できることを意味します。
+        \n\nそれをクリックして検出を開始してください。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">動いているのに何も起きない？\n\nそれは正常です。ボタンが9000を超える数字を表示したときだけクリックします。
+        シナリオを実行したまま、スタートゲームボタンを押して、Klick\'rがあなたの代わりに勝つのを見守ってください！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">おめでとうございます！\n\n画面に表示された数字を検出する方法を学びました。
+        \n他のチュートリアルをご覧いただき、さらに多くの使用例をご確認ください。</string>
+
+</resources>

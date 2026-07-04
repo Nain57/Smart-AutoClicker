@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 internal class OneStillTargetRules : TutorialGameRules {
@@ -27,17 +28,19 @@ internal class OneStillTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
         return mapOf(
-            TutorialGameTargetType.IMAGE_BLUE to PointF(area.width() / 2f, area.height() / 2f),
+            TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
+                position = PointF(area.width() / 2f, area.height() / 2f),
+            )
         )
     }
 
-    override fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    override fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType
-    ): Map<TutorialGameTargetType, PointF> {
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
         if (type != TutorialGameTargetType.IMAGE_BLUE) return current
         score++
 
@@ -45,8 +48,8 @@ internal class OneStillTargetRules : TutorialGameRules {
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, PointF>,
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, PointF> = current
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
 
 }

@@ -42,11 +42,13 @@ fun IncludeStaticOrCounterSelectionBinding.setup(
     onChangeTypeClicked: (UiOperandType) -> Unit,
     onStaticValueChangedListener: (Double) -> Unit,
     onOpenCounterSelectionClicked: () -> Unit,
+    onItemBound: ((UiCounterOperatorDropdownItem, View?) -> Unit)? = null,
 ) {
     operatorField.setItems(
         label = root.context.getString(R.string.dropdown_comparison_operator_label),
         items = dropdownItems,
         onItemSelected = onOperatorSelected,
+        onItemBound = onItemBound,
     )
 
     valueTypeMultiStateButton.apply {

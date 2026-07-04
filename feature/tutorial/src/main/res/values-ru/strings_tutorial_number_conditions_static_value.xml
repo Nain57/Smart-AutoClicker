@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">Обнаружение числа на экране</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">Сравните число, отображённое на экране, с заранее заданным значением</string>
+    <string name="message_game_tutorial_number_conditions_static_value">Нажимайте только когда значение превышает 9000!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">Добро пожаловать в обучение по числовому условию!\n\nЗдесь вы
+        попробуете побить рекорд игры с помощью Klick\'r.\n\nСначала можете попробовать самостоятельно, нажав кнопку начать игру,
+        или сразу перейти к настройке Сценария.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">Как и для любого другого Условия экрана, сначала необходимо
+        создать Событие экрана.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">Теперь нажмите на поле Условия, чтобы открыть список Условий.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">Нам нужно создать Условие. Нажмите Создать.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">В этом уроке мы хотим научиться обнаруживать
+        число на экране, поэтому выберите Числовое условие</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">Числовое условие определяется числом для обнаружения
+        и сравнением, которое к нему применяется.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">В этом уроке мы будем сравнивать только
+        обнаруженное число со статическим значением, но его можно также сравнить со значением счётчика. Обратитесь к
+        специальным урокам по счётчикам, если вам нужна информация об этой функции.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">Мы хотим определить, превышает ли отображаемое значение 9000.
+        Поэтому сначала нажмите на оператор, чтобы изменить оператор сравнения.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">Выберите оператор <![CDATA[>]]>.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">Теперь вам нужно ввести значение для сравнения.
+        Просто введите «9000» в поле значения, чтобы перейти к следующему шагу урока.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">Теперь нам нужно указать Klick\'r, где искать
+        число.\n\nКликните на селектор области обнаружения, чтобы задать её</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">Расположите и измените размер прямоугольника обнаружения так, чтобы он охватывал
+        отображаемое число. Вы можете запустить игру, чтобы увидеть, где оно показано. Когда область будет правильной, нажмите кнопку
+        подтверждения для сохранения.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">Старайтесь использовать как можно меньшую область,
+        оставляя поля вокруг числа для обнаружения.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">Ваше Условие теперь настроено!\n\nМожно внести ещё ряд
+        настроек, но параметры по умолчанию подходят для нашего базового случая.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться в список Условий.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">Закройте список Условий, чтобы вернуться к настройке События.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">С этим Условием сценарий знает, когда активировать Действия.\n\n
+        Теперь вам нужно определить, какие Действия активировать — для этой игры это клик по кнопке.\n\nКликните на
+        поле Действия, чтобы отобразить список Действий.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">Действие — это то, что выполняется, когда условия его события выполнены.\n\n
+        Это может быть клик, свайп, пауза, Intent (взаимодействие с другим приложением) или
+        изменение в выполнении Сценария, и для одного События можно задать несколько Действий.\n\nКликните на кнопку создания
+        Действия, чтобы создать ваше первое Действие.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">Сначала нам нужно выбрать тип для вашего Действия.\n\nДля этой игры нам нужно
+        просто кликнуть на кнопку, поэтому выберите Клик для создания нового Действия клика.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">Действие клика определяется позицией и продолжительностью нажатия.\n\nПоскольку мы
+        хотим кликать как можно быстрее, можно оставить стандартную продолжительность нажатия 1мс — это минимально
+        возможное значение. Поэтому нам нужно только задать позицию.\n\nКликните на кнопку выбора позиции, чтобы указать позицию
+        Действия клика.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">Вам нужно выбрать точную позицию для клика, поэтому сначала запустите
+        игру снова, чтобы отобразить кнопку, а затем выберите её позицию.\n\nКогда позиция будет правильной,
+        нажмите кнопку подтверждения для сохранения.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">Вы не можете взаимодействовать с игрой, пока виден селектор позиции,
+        но вы можете использовать эту кнопку, чтобы показывать и скрывать его, снимая это ограничение по желанию.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">Клик теперь правильно настроен!\n\nКликните на кнопку сохранения, чтобы
+        зарегистрировать его и вернуться в список Действий.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">Закройте список Действий, чтобы вернуться к настройке События.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">Ваше Событие теперь имеет Условие и Действие, что означает, что оно знает, что
+        выполнять и когда.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться к диалогу Сценария.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">Единственное требование для Сценария — иметь хотя бы одно Событие.\n
+        Поскольку наше Событие уже охватывает, как выиграть игру, нам больше ничего не нужно.\n\nКликните на кнопку сохранения, чтобы
+        сохранить Сценарий в базе данных и закрыть диалоги настройки.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">Как вы видите, кнопка воспроизведения теперь доступна, что означает, что ваш
+        Сценарий действителен и может использоваться для обнаружения.\n\nКликните на неё, чтобы начать обнаружение.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">Воспроизводится, но ничего не происходит?\n\nЭто нормально, он будет кликать только
+        когда кнопка показывает число больше 9000, помните? Не останавливая сценарий, нажмите кнопку начать игру
+        и просто наблюдайте, как Klick\'r побеждает за вас!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">Поздравляем!\n\nТеперь вы знаете, как обнаружить число, отображаемое на
+        экране.\nОзнакомьтесь с другими уроками, чтобы узнать о других сценариях использования.</string>
+
+</resources>

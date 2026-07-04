@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">检测屏幕上的数字</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">将屏幕上显示的数字与预定义值进行比较</string>
+    <string name="message_game_tutorial_number_conditions_static_value">只在数值超过9000时点击！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">欢迎来到数字条件教程！\n\n在这里，你将借助Klick\'r挑战
+        游戏的最高分。\n\n你可以先按下开始游戏来试玩，
+        也可以直接进行场景配置。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">与其他任何屏幕条件一样，我们首先需要
+        创建一个屏幕事件。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">现在，单击条件字段以打开条件列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">我们需要创建条件。点击创建。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">在本教程中，我们想学习如何检测
+        屏幕上的数字，所以请选择数字条件</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">数字条件由要检测的数字
+        和要对其应用的比较来定义。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">在本教程中，我们只将检测到的数字与静态值进行比较，
+        但也可以将其与计数器的值进行比较。如需了解此功能的更多信息，
+        请参阅计数器专项教程。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">我们想检测显示的值是否超过9000。
+        因此首先，点击运算符以更改比较运算符。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">选择 <![CDATA[>]]> 运算符。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">现在，你需要输入要比较的值。
+        只需在值字段中输入"9000"即可进行到下一个教程步骤。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">现在我们需要告诉Klick\'r在哪里搜索
+        数字。\n\n点击检测区域选择器来定义它</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">调整检测矩形的位置和大小，使其覆盖
+        显示的数字。你可以启动游戏查看它显示的位置。区域正确后，按验证按钮保存。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">尽量使用尽可能小的检测框，
+        同时在要检测的数字周围保留一定边距。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">你的条件现在已配置好！\n\n还有几项
+        调整可以进行，但默认设置已适合我们的基本用例。\n\n单击保存按钮进行注册，然后返回条件列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">关闭条件列表，返回事件配置。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">有了这个条件，场景就知道何时触发操作了。\n\n
+        现在你需要定义触发哪些操作，对于这个游戏，就是点击按钮。\n\n单击操作字段，
+        显示操作列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">操作是在其事件的条件满足时执行的内容。\n\n
+        可以是点击、滑动、暂停、Intent（与其他应用的交互）或
+        场景执行中的变化，同一个事件可以定义多个操作。\n\n点击创建操作按钮以创建你的第一个操作。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">首先，我们需要为你的操作选择一个类型。\n\n对于这个游戏，我们只需
+        点击按钮，所以选择点击来创建新的点击操作。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">点击操作由位置和按压持续时间定义。\n\n由于我们
+        想尽可能快地点击，可以保留默认的1ms按压时长，这是最低可能值。
+        因此我们只需定义一个位置。\n\n点击位置选择器按钮来选择点击操作的位置。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">你需要选择要点击的精确位置，因此需要重新启动
+        游戏以显示按钮，然后选择其位置。\n\n位置正确后，
+        点击验证按钮保存。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">位置选择器可见时无法与游戏交互，
+        但你可以使用此按钮显示和隐藏它，以便随时解除该限制。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">点击现已正确配置！\n\n点击保存按钮
+        注册并返回操作列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">关闭操作列表，返回事件配置。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">你的事件现在有一个条件和一个操作，这意味着它知道何时执行什么。
+        \n\n点击保存按钮以保存它并返回场景对话框。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">场景的唯一要求是至少有一个事件。\n由于我们的事件已经涵盖了如何赢得比赛，
+        我们不需要其他任何东西。\n\n点击保存按钮以将场景保存在数据库中并关闭配置对话框。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">正如你所看到的，播放按钮现在可用，这意味着你的场景有效并且可以用于检测。
+        \n\n点击它以开始检测。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">正在运行但什么都没发生？\n\n这是正常的，它只会在
+        按钮显示超过9000的数字时才点击，还记得吗？在保持场景运行的同时，按下开始游戏按钮
+        然后看Klick\'r替你赢得比赛！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">恭喜！\n\n你现在知道如何检测屏幕上显示的数字了。
+        \n查看其他教程以发现更多用例。</string>
+
+</resources>

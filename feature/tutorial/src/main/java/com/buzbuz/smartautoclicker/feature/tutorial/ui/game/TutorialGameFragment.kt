@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
 import android.graphics.Point
-import android.graphics.PointF
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
@@ -35,6 +35,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.tutorial.R
@@ -202,10 +203,11 @@ class TutorialGameFragment : Fragment() {
         )
     }
 
-    private fun updateTargetsState(state: Map<TutorialGameTargetType, PointF>) {
+    private fun updateTargetsState(state: Map<TutorialGameTargetType, TutorialGameTargetState>) {
         TutorialGameTargetType.entries.forEach { targetType ->
             val targetView = viewBinding.getTargetView(targetType)
-            val position = state[targetType]
+            val state = state[targetType]
+            val position = state?.position
 
             if (position == null) {
                 targetView.visibility = View.GONE
@@ -213,6 +215,10 @@ class TutorialGameFragment : Fragment() {
                 targetView.x = position.x - targetView.width / 2f
                 targetView.y = position.y - targetView.height / 2f
                 targetView.visibility = View.VISIBLE
+
+                if (state is TutorialGameTargetState.ChangingContent && targetView is TextView) {
+                    targetView.text = state.content.toString()
+                }
             }
         }
     }
@@ -225,6 +231,7 @@ class TutorialGameFragment : Fragment() {
             TutorialGameTargetType.TEXT_GOODBYE -> goodbyeTarget
             TutorialGameTargetType.TEXT_HELLO -> helloTarget
             TutorialGameTargetType.TEXT_NIGHT -> nightTarget
+            TutorialGameTargetType.NUMBER -> numberTarget
         }
 }
 

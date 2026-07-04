@@ -22,6 +22,7 @@ import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextFloat
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 import kotlin.random.Random
@@ -35,7 +36,7 @@ internal class OneMovingTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
         targetsArea = RectF(
             area.left.toFloat() + TARGET_MARGIN,
@@ -47,10 +48,10 @@ internal class OneMovingTargetRules : TutorialGameRules {
         return updateTargetPosition()
     }
 
-    override fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    override fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType,
-    ): Map<TutorialGameTargetType, PointF> {
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
 
         if (type != TutorialGameTargetType.IMAGE_BLUE) return current
 
@@ -59,17 +60,19 @@ internal class OneMovingTargetRules : TutorialGameRules {
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, PointF>,
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long,
-    ): Map<TutorialGameTargetType, PointF> = current
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
 
-    private fun updateTargetPosition() : Map<TutorialGameTargetType, PointF> {
+    private fun updateTargetPosition() : Map<TutorialGameTargetType, TutorialGameTargetState> {
         val area = targetsArea ?: return emptyMap()
 
         return mapOf(
-            TutorialGameTargetType.IMAGE_BLUE to PointF(
-                random.nextFloat(area.left, area.right),
-                random.nextFloat(area.top, area.bottom),
+            TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
+                position = PointF(
+                    random.nextFloat(area.left, area.right),
+                    random.nextFloat(area.top, area.bottom),
+                )
             ),
         )
     }

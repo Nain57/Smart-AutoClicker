@@ -14,15 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.number
 
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import kotlin.random.Random
 
-internal class OneStillChangingTextRules : TutorialGameRules {
+internal class OneStillChangingNumberClickWhenOverRules(
+    private val validWhenClickIsOver: Int,
+    private val maxValue: Int,
+) : TutorialGameRules {
+
+    private val random = Random(System.currentTimeMillis())
 
     private var score: Int = 0
     private var targetPosition: PointF = PointF(0f, 0f)
@@ -33,28 +39,38 @@ internal class OneStillChangingTextRules : TutorialGameRules {
         targetPosition = PointF(area.width() / 2f, area.height() / 2f)
         score = 0
 
-        return mapOf(TutorialGameTargetType.TEXT_HELLO to TutorialGameTargetState.StaticContent(targetPosition))
+        return mapOf(TutorialGameTargetType.NUMBER to TutorialGameTargetState.ChangingContent(
+            position = targetPosition,
+            content = getNextRandomNumberTargetType(false),
+        ))
     }
 
     override fun onTargetHit(
         current: Map<TutorialGameTargetType, TutorialGameTargetState>,
-        type: TutorialGameTargetType
+        type: TutorialGameTargetType,
     ): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        if (type == TutorialGameTargetType.TEXT_HELLO) score++
-        else score--
+        if (type == TutorialGameTargetType.NUMBER) {
+            val state = current[type]
+            if (state is TutorialGameTargetState.ChangingContent && state.content >= validWhenClickIsOver) {
+                score++
+                return current
+            }
+        }
 
+        score--
         return current
     }
 
     override fun onTimerTick(
         current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        val newType =
-            if (timeLeft % 2 == 1L) TutorialGameTargetType.TEXT_HELLO
-            else TutorialGameTargetType.TEXT_GOODBYE
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
+        mapOf(TutorialGameTargetType.NUMBER to TutorialGameTargetState.ChangingContent(
+            position = targetPosition,
+            content =  getNextRandomNumberTargetType(valid = timeLeft % 2 == 1L)
+        ))
 
-        return mapOf(newType to TutorialGameTargetState.StaticContent(targetPosition))
-    }
-
+    private fun getNextRandomNumberTargetType(valid: Boolean): Int =
+        if (valid) random.nextInt(validWhenClickIsOver + 1 , maxValue)
+        else random.nextInt(0, validWhenClickIsOver + 1)
 }

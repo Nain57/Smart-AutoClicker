@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state
 
-import android.graphics.PointF
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 /**
@@ -46,7 +46,7 @@ sealed interface TutorialSubjectState {
         val isWon: Boolean?,
         val timeLeft: Long,
         val score: Int,
-        val targets: Map<TutorialGameTargetType, PointF>,
+        val targets: Map<TutorialGameTargetType, TutorialGameTargetState>,
     ) : TutorialSubjectState
 
 }

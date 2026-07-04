@@ -18,8 +18,12 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.num
 
 import android.content.Context
 import android.graphics.Rect
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
@@ -48,6 +52,7 @@ import javax.inject.Inject
 class NumberConditionViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The condition being configured by the user. */
@@ -116,6 +121,45 @@ class NumberConditionViewModel @Inject constructor(
         updateEditedCondition { oldCondition ->
             oldCondition.copy(threshold = value)
         }
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.NUMBER_CONDITION_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun monitorValueToDetectField(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_VALUE_TO_DETECT, view)
+    }
+
+    fun monitorOperatorField(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_OPERATOR_DROPDOWN, view)
+    }
+
+    fun monitorDetectionAreaField(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_AREA_SELECTOR, view)
+    }
+
+    fun monitorDropdownItem(item: UiCounterOperatorDropdownItem, view: View?) {
+        if (item !is UiCounterOperatorDropdownItem.Comparison.GreaterItem) return
+
+        if (view != null) {
+            monitoredViewsManager.attach(
+                type = MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_OPERATOR_DROPDOWN_ITEM_GREATER,
+                monitoredView = view,
+            )
+        } else {
+            monitoredViewsManager.detach(
+                MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_OPERATOR_DROPDOWN_ITEM_GREATER,
+            )
+        }
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.NUMBER_CONDITION_DIALOG_BUTTON_SAVE)
+        monitoredViewsManager.detach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_VALUE_TO_DETECT)
+        monitoredViewsManager.detach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_OPERATOR_DROPDOWN)
+        monitoredViewsManager.detach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_OPERATOR_DROPDOWN_ITEM_GREATER)
+        monitoredViewsManager.detach(MonitoredViewType.NUMBER_CONDITION_DIALOG_FIELD_AREA_SELECTOR)
     }
 
     private fun updateEditedCondition(closure: (oldValue: ScreenCondition.Number) -> ScreenCondition.Number?) {

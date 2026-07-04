@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
-import android.graphics.PointF
 import androidx.annotation.StringRes
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 data class TutorialGameUiState(
@@ -26,5 +26,5 @@ data class TutorialGameUiState(
     val isGameStarted: Boolean,
     val timerValue: Long,
     val gameScore: Int,
-    val targets: Map<TutorialGameTargetType, PointF>,
+    val targets: Map<TutorialGameTargetType, TutorialGameTargetState>,
 )

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">Detectar un número en la pantalla</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">Compara un número mostrado en tu pantalla con un valor predefinido</string>
+    <string name="message_game_tutorial_number_conditions_static_value">¡Haz clic solo cuando el valor supere 9000!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">¡Bienvenido al tutorial de condición numérica!\n\nAquí intentarás
+        batir la puntuación máxima de un juego con la ayuda de Klick\'r.\n\nPrimero puedes probarlo presionando iniciar juego,
+        o ir directamente a la configuración del Escenario.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">Al igual que con cualquier otra Condición de pantalla, primero
+        necesitamos crear un Evento de pantalla.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">Ahora, haz clic en el campo Condiciones para abrir la lista de Condiciones.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">Necesitamos crear la Condición. Haz clic en Crear.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">En este tutorial queremos aprender a detectar
+        un número en la pantalla, así que selecciona Condición de Número</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">Una Condición de Número está definida por el número a detectar
+        y una comparación a aplicarle.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">En este tutorial, solo compararemos
+        el número detectado con un valor estático, pero es posible compararlo con el valor de un contador. Consulta los
+        tutoriales específicos de contadores si necesitas información sobre esta función.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">Queremos detectar si el valor mostrado supera 9000.
+        Por lo tanto, primero haz clic en el operador para cambiar el operador de comparación.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">Selecciona el operador <![CDATA[>]]>.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">Ahora debes introducir el valor con el que comparar.
+        Simplemente escribe \"9000\" en el campo de valor para pasar al siguiente paso del tutorial.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">Ahora necesitamos indicarle a Klick\'r dónde buscar el
+        número.\n\nHaz clic en el selector de área de detección para definirlo</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">Posiciona y redimensiona el rectángulo de detección para que cubra el
+        número mostrado. Puedes iniciar el juego para ver dónde aparece. Una vez que el área sea correcta, pulsa el botón
+        de validación para guardarlo.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">Intenta usar el recuadro más pequeño posible
+        manteniendo un margen alrededor del número a detectar.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">¡Tu Condición ya está configurada!\n\nHay varios
+        ajustes que se pueden hacer, pero la configuración predeterminada es adecuada para nuestro caso básico.\n\nHaz clic en el botón
+        guardar para registrarla y volver a la lista de Condiciones.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">Cierra la lista de Condiciones para volver a la configuración del Evento.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">Con esta Condición, el escenario sabe cuándo activar las Acciones.\n\n
+        Ahora necesitas definir qué Acciones activar, por lo que para este juego, un clic en el botón.\n\nHaz clic en el
+        campo Acciones para mostrar la lista de Acciones.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">Una Acción es algo que se ejecuta una vez que se cumplen las Condiciones de su Evento.\n\n
+        Puede ser un clic, un deslizamiento, una pausa, un Intent (una interacción con otra aplicación) o un
+        cambio en la ejecución del Escenario, y se pueden definir varias Acciones para el mismo Evento.\n\nHaz clic en el botón de crear
+        Acción para crear tu primera Acción.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">Primero, necesitamos elegir un tipo para tu Acción.\n\nPara este juego, simplemente
+        necesitamos hacer clic en el botón, así que elige Clic para crear una nueva Acción de clic.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">Una Acción de clic está definida por una posición y una duración de presión.\n\nComo
+        queremos hacer clic lo más rápido posible, podemos mantener la duración de presión predeterminada de 1ms, que es el valor
+        más bajo posible. Por lo tanto, solo necesitamos definir una posición.\n\nHaz clic en el botón selector de posición para seleccionar la posición
+        de la Acción de clic.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">Debes seleccionar la posición exacta a pulsar, por lo que necesitas reiniciar
+        el juego para mostrar el botón y luego seleccionar su posición.\n\nUna vez que la posición sea correcta,
+        haz clic en el botón de validación para guardarla.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">No puedes interactuar con el juego mientras el selector de posición esté
+        visible, pero puedes usar este botón para mostrarlo y ocultarlo, permitiéndote eliminar esa restricción cuando quieras.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">¡El clic ahora está correctamente configurado!\n\nHaz clic en el botón guardar para
+        registrarlo y volver a la lista de Acciones.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">Cierra la lista de Acciones para volver a la configuración del Evento.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">Tu Evento ahora tiene una Condición y una Acción, lo que significa que sabe qué
+        ejecutar y cuándo ejecutarlo.\n\nHaz clic en el botón guardar para registrarlo y volver al diálogo del Escenario.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">El único requisito para un Escenario es tener al menos un Evento.\n
+        Como nuestro Evento ya cubre cómo ganar el juego, no necesitamos nada más.\n\nHaz clic en el botón
+        guardar para guardar el Escenario en la base de datos y cerrar los diálogos de configuración.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">Como puedes ver, el botón de reproducción ya está disponible, lo que significa que
+        tu Escenario es válido y puede usarse para la detección.\n\nHaz clic en él para iniciar la detección.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">¿Está funcionando pero no ocurre nada?\n\nEso es normal, solo hará clic
+        cuando el botón muestre un número superior a 9000, ¿recuerdas? Mientras mantienes el escenario en ejecución, pulsa el botón iniciar juego
+        ¡y observa cómo Klick\'r lo gana por ti!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">¡Felicidades!\n\nAhora sabes cómo detectar un número mostrado en la
+        pantalla.\nEcha un vistazo a los otros tutoriales para descubrir más casos de uso.</string>
+
+</resources>

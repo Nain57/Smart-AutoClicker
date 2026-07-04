@@ -38,7 +38,7 @@ interface TutorialGameRules {
      * @param area the screen region available for placing targets.
      * @return initial target center positions to display.
      */
-    fun onStart(area: Rect): Map<TutorialGameTargetType, PointF>
+    fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState>
 
     /**
      * Called each time the user successfully hits a valid target.
@@ -50,10 +50,10 @@ interface TutorialGameRules {
      * @param type the target type that was hit.
      * @return updated target positions after the hit.
      */
-    fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType,
-    ): Map<TutorialGameTargetType, PointF>
+    ): Map<TutorialGameTargetType, TutorialGameTargetState>
 
     /**
      * Called on every timer tick (once per second) while the game is running.
@@ -62,7 +62,10 @@ interface TutorialGameRules {
      * @param timeLeft remaining game duration in milliseconds at the time of the tick.
      * @return updated target positions for this tick.
      */
-    fun onTimerTick(current: Map<TutorialGameTargetType, PointF>, timeLeft: Long): Map<TutorialGameTargetType, PointF>
+    fun onTimerTick(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
+        timeLeft: Long,
+    ): Map<TutorialGameTargetType, TutorialGameTargetState>
 
     /** Returns the player's current score. Called by the engine after each tick and hit. */
     fun getScore(): Int

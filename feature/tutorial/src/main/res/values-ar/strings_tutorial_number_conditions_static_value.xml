@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">اكتشاف رقم على الشاشة</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">قارن رقمًا معروضًا على شاشتك بقيمة محددة مسبقًا</string>
+    <string name="message_game_tutorial_number_conditions_static_value">انقر فقط عندما تتجاوز القيمة 9000!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">مرحبًا بك في البرنامج التعليمي للشرط الرقمي!\n\nهنا ستحاول
+        تحقيق أعلى نقطة في لعبة بمساعدة Klick\'r.\n\nيمكنك تجربتها أولاً بالضغط على بدء اللعبة،
+        أو المتابعة مباشرةً إلى تكوين السيناريو.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">تمامًا كأي شرط شاشة آخر، نحتاج أولاً
+        إلى إنشاء حدث شاشة.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">الآن، انقر على حقل الشروط لفتح قائمة الشروط.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">نحتاج إلى إنشاء الشرط. انقر على إنشاء.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">في هذا البرنامج التعليمي، نريد تعلم كيفية اكتشاف
+        رقم على الشاشة، لذا اختر شرط الرقم</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">يُعرَّف شرط الرقم بالرقم المراد اكتشافه
+        ومقارنة تُطبَّق عليه.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">في هذا البرنامج التعليمي، سنقارن فقط
+        الرقم المكتشف بقيمة ثابتة، لكن يمكن مقارنته بقيمة عداد. ارجع إلى
+        البرامج التعليمية الخاصة بالعدادات إذا كنت بحاجة إلى معلومات حول هذه الميزة.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">نريد اكتشاف ما إذا كانت القيمة المعروضة تتجاوز 9000.
+        لذا أولاً، انقر على المشغّل لتغيير مشغّل المقارنة.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">اختر المشغّل <![CDATA[>]]>.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">الآن، تحتاج إلى إدخال القيمة للمقارنة بها.
+        ببساطة أدخل \"9000\" في حقل القيمة للمتابعة إلى الخطوة التالية من البرنامج التعليمي.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">الآن، نحتاج إلى إخبار Klick\'r بمكان البحث عن
+        الرقم.\n\nانقر على محدد منطقة الاكتشاف لتحديدها</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">ضع مستطيل الاكتشاف وغيِّر حجمه ليغطي الرقم
+        المعروض. يمكنك بدء اللعبة لترى أين يُعرض. بمجرد أن تكون المنطقة صحيحة، اضغط على زر التحقق لحفظها.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">حاول استخدام أصغر مربع ممكن
+        مع الاحتفاظ بهامش حول الرقم المراد اكتشافه.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">تم تكوين شرطك الآن!\n\nهناك عدة
+        تعديلات يمكن إجراؤها، لكن الإعدادات الافتراضية تناسب حالة الاستخدام الأساسية لدينا.\n\nانقر على زر
+        الحفظ لتسجيله والعودة إلى قائمة الشروط.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">أغلق قائمة الشروط للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">بفضل هذا الشرط، يعرف السيناريو متى يُشغِّل الإجراءات.\n\n
+        تحتاج الآن إلى تحديد الإجراءات التي ستُشغَّل، ففي هذه اللعبة سنضغط على الزر.\n\nانقر على
+        حقل الإجراءات لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">الإجراء هو شيء يتم تنفيذه بمجرد استيفاء شروط حدثه.\n\n
+        يمكن أن يكون نقرًا أو سحبًا أو توقفًا مؤقتًا أو Intent (تفاعلاً مع تطبيق آخر) أو
+        تغييرًا في تنفيذ السيناريو، ويمكن تعريف عدة إجراءات للحدث نفسه.\n\nانقر فوق زر إنشاء
+        الإجراء لإنشاء إجراءك الأول.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">أولاً، نحتاج إلى اختيار نوع لإجراءك.\n\nلهذه اللعبة، نحتاج ببساطة
+        إلى النقر على الزر، لذا اختر نقر لإنشاء إجراء نقر جديد.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">يتم تحديد إجراء النقر من خلال الموضع ومدة الضغط.\n\nبما أننا
+        نريد النقر بأسرع وقت ممكن، يمكننا الإبقاء على مدة الضغط الافتراضية 1ms وهي أدنى قيمة ممكنة.
+        لذا نحتاج فقط إلى تحديد موضع.\n\nانقر على زر محدد الموضع لاختيار موضع إجراء النقر.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">تحتاج إلى تحديد الموضع الدقيق للنقر، لذا عليك إعادة تشغيل
+        اللعبة لعرض الزر ثم تحديد موضعه.\n\nبمجرد أن يكون الموضع صحيحًا،
+        انقر على زر التحقق لحفظه.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">لا يمكنك التفاعل مع اللعبة بينما محدد الموضع
+        مرئي، لكن يمكنك استخدام هذا الزر لإظهاره وإخفائه، مما يتيح لك إزالة هذا القيد متى شئت.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">تم الآن تكوين النقر بشكل صحيح!\n\nانقر على زر الحفظ
+        لتسجيله والعودة إلى قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">أصبح لحدثك الآن شرط وإجراء، مما يعني أنه يعرف ماذا يُنفذ ومتى يُنفذ.
+        \n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">الشرط الوحيد للسيناريو هو أن يكون هناك حدث واحد على الأقل.\n
+        نظرًا لأن حدثنا يغطي بالفعل كيفية الفوز باللعبة، فلا نحتاج إلى أي شيء آخر.\n\nانقر فوق زر الحفظ
+        لحفظ السيناريو في قاعدة البيانات وإغلاق مربعات حوار التكوين.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">كما ترون، أصبح زر التشغيل متاحًا الآن، مما يعني أن السيناريو الخاص بك
+        صالح ويمكن استخدامه للكشف.\n\nانقر عليه لبدء الكشف.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">يعمل لكن لا يحدث شيء؟\n\nهذا طبيعي، فهو سينقر فقط
+        عندما يعرض الزر رقمًا يتجاوز 9000، أتذكر؟ بينما السيناريو يعمل، اضغط زر بدء اللعبة
+        وراقب كيف يفوز بها Klick\'r عوضًا عنك!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">تهانينا!\n\nأنت تعرف الآن كيفية اكتشاف رقم معروض على
+        الشاشة.\nأطَّلع على البرامج التعليمية الأخرى لاكتشاف المزيد من حالات الاستخدام.</string>
+
+</resources>

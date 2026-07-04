@@ -22,6 +22,7 @@ import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextPositionIn
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 import kotlin.random.Random
@@ -36,7 +37,7 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
         targetsArea = RectF(
             area.left.toFloat() + TARGET_MARGIN,
@@ -48,10 +49,10 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         return getNewTargets()
     }
 
-    override fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    override fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType
-    ): Map<TutorialGameTargetType, PointF> =
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
         when (type) {
             TutorialGameTargetType.IMAGE_RED if current.containsKey(TutorialGameTargetType.IMAGE_RED) && current.containsKey(TutorialGameTargetType.IMAGE_BLUE) ->
                 removeRedTarget(current)
@@ -68,11 +69,11 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, PointF>,
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, PointF> = current
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
 
-    private fun getNewTargets(): Map<TutorialGameTargetType, PointF> {
+    private fun getNewTargets(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         val area = targetsArea ?: return emptyMap()
 
         // Find two positions and ensure the targets do not overlap
@@ -83,12 +84,14 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         } while (bluePosition.enclosingRectIntersects(redPosition, TARGET_HALF_SIZE))
 
         return mapOf(
-            TutorialGameTargetType.IMAGE_BLUE to bluePosition,
-            TutorialGameTargetType.IMAGE_RED to redPosition,
+            TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(bluePosition),
+            TutorialGameTargetType.IMAGE_RED to TutorialGameTargetState.StaticContent(redPosition),
         )
     }
 
-    private fun removeRedTarget(targets: Map<TutorialGameTargetType, PointF>): Map<TutorialGameTargetType, PointF> =
+    private fun removeRedTarget(
+        targets: Map<TutorialGameTargetType, TutorialGameTargetState>,
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
         targets.toMutableMap().apply { remove(TutorialGameTargetType.IMAGE_RED) }
 }
 

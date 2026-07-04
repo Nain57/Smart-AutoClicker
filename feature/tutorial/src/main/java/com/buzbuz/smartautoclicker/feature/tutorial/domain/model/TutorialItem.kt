@@ -30,8 +30,8 @@ interface TutorialItem {
         COLOR_CONDITION,
         IMAGE_DETECTION_MOVING_TARGET,
         IMAGE_DETECTION_STILL_TARGET,
+        NUMBER_CONDITION_STATIC_VALUE,
         TEXT_CONDITION_MOVING_TEXT,
-
         TEXT_CONDITION_STILL_TEXT;
         fun toTutorialId(): String = name
     }

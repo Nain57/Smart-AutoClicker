@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">Виявлення числа на екрані</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">Порівняйте число, відображене на екрані, з попередньо заданим значенням</string>
+    <string name="message_game_tutorial_number_conditions_static_value">Натискайте лише коли значення перевищує 9000!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">Ласкаво просимо до навчання з числової умови!\n\nТут ви
+        спробуєте побити рекорд гри за допомогою Klick\'r.\n\nСпочатку ви можете спробувати самостійно, натиснувши кнопку почати гру,
+        або відразу перейти до налаштування Сценарію.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">Як і для будь-якої іншої Умови екрана, спочатку
+        потрібно створити Подію екрана.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">Тепер клікніть на поле Умови, щоб відкрити список Умов.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">Нам потрібно створити Умову. Клікніть Створити.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">У цьому уроці ми хочемо навчитися виявляти
+        число на екрані, тому виберіть Числову умову</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">Числова умова визначається числом для виявлення
+        та порівнянням, яке до нього застосовується.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">У цьому уроці ми будемо порівнювати лише
+        виявлене число зі статичним значенням, але його можна також порівняти зі значенням лічильника. Зверніться до
+        спеціальних уроків з лічильників, якщо вам потрібна інформація про цю функцію.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">Ми хочемо визначити, чи перевищує відображуване значення 9000.
+        Тому спочатку натисніть на оператор, щоб змінити оператор порівняння.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">Виберіть оператор <![CDATA[>]]>.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">Тепер вам потрібно ввести значення для порівняння.
+        Просто введіть «9000» у поле значення, щоб перейти до наступного кроку уроку.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">Тепер нам потрібно вказати Klick\'r, де шукати
+        число.\n\nКлікніть на селектор зони виявлення, щоб визначити її</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">Розташуйте та змініть розмір прямокутника виявлення так, щоб він охоплював
+        відображуване число. Ви можете запустити гру, щоб побачити, де воно показано. Коли область буде правильною, натисніть кнопку
+        підтвердження для збереження.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">Намагайтеся використовувати найменшу можливу область,
+        залишаючи поля навколо числа для виявлення.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">Ваша Умова тепер налаштована!\n\nМожна внести ще ряд
+        налаштувань, але параметри за замовчуванням підходять для нашого базового випадку.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку Умов.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">Закрийте список Умов, щоб повернутися до налаштування Події.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">З цією Умовою сценарій знає, коли активувати Дії.\n\n
+        Тепер вам потрібно визначити, які Дії активувати — для цієї гри це клік по кнопці.\n\nКлікніть на
+        поле Дії, щоб відобразити список Дій.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">Дія — це те, що виконується, коли умови її події виконані.\n\n
+        Це може бути клік, свайп, пауза, Intent (взаємодія з іншим додатком) або
+        зміна у виконанні Сценарію, і для однієї події можна задати кілька Дій.\n\nКлікніть на кнопку створення
+        Дії, щоб створити вашу першу Дію.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">Спочатку нам потрібно вибрати тип для вашої Дії.\n\nДля цієї гри нам потрібно
+        просто клікнути на кнопку, тому виберіть Клік для створення нової Дії кліку.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">Дія кліку визначається позицією та тривалістю натискання.\n\nОскільки ми
+        хочемо клікати якомога швидше, можна залишити стандартну тривалість натискання 1мс — це мінімально
+        можливе значення. Тому нам потрібно лише задати позицію.\n\nКлікніть на кнопку вибору позиції, щоб вказати позицію
+        Дії кліку.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">Вам потрібно вибрати точну позицію для кліку, тому спочатку запустіть
+        гру знову, щоб відобразити кнопку, а потім виберіть її позицію.\n\nКоли позиція буде правильною,
+        натисніть кнопку підтвердження для збереження.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">Ви не можете взаємодіяти з грою, поки видимий селектор позиції,
+        але ви можете використовувати цю кнопку, щоб показувати і приховувати його, знімаючи це обмеження за бажанням.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">Клік тепер правильно налаштований!\n\nКлікніть на кнопку збереження, щоб
+        зареєструвати його та повернутися до списку Дій.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">Закрийте список Дій, щоб повернутися до налаштування Події.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">Ваша Подія тепер має Умову та Дію, що означає, що вона знає, що виконувати та
+        коли.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу Сценарію.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">Єдина вимога для Сценарію — мати принаймні одну Подію.\n
+        Оскільки наша Подія вже охоплює, як виграти гру, нам більше нічого не потрібно.\n\nКлікніть на кнопку збереження, щоб
+        зберегти Сценарій в базі даних та закрити діалоги налаштування.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
+        Сценарій дійсний і може використовуватися для виявлення.\n\nКлікніть на неї, щоб почати виявлення.</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">Відтворюється, але нічого не відбувається?\n\nЦе нормально, він буде клікати лише
+        коли кнопка показує число більше 9000, пам\'ятаєте? Не зупиняючи сценарій, натисніть кнопку почати гру
+        і просто спостерігайте, як Klick\'r перемагає за вас!</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">Вітаємо!\n\nТепер ви знаєте, як виявляти число, що відображається на
+        екрані.\nОзнайомтеся з іншими уроками, щоб дізнатися про інші сценарії використання.</string>
+
+</resources>

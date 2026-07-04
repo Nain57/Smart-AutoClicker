@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scre
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 internal fun getNumberConditionsCategory() =
     TutorialCategory(
@@ -26,5 +27,7 @@ internal fun getNumberConditionsCategory() =
         shortDescriptionRes = R.string.tutorial_category_number_condition_desc_short,
         longDescriptionRes = R.string.tutorial_category_number_condition_desc_long,
         iconRes = R.drawable.ic_number_condition,
-        content = listOf(),
+        content = listOf(
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.NUMBER_CONDITION_STATIC_VALUE),
+        ),
     )

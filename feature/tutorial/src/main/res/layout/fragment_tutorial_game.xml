@@ -165,6 +165,14 @@
             android:text="@string/button_text_night"
             android:visibility="invisible"/>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/number_target"
+            style="@style/AppTheme.Widget.TextButtonOutlined"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            tools:text="42"/>
+
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton

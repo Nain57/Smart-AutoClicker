@@ -16,18 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game
 
-/**
- * Distinguishes the target types that can appear in a [TutorialSubject.Game].
- *
- * [TutorialGameRules] returns a map keyed by this enum to specify which targets are active and
- * where they are positioned. The feature layer uses it to render and colour the targets correctly.
- */
-enum class TutorialGameTargetType {
-    IMAGE_BLUE,
-    IMAGE_RED,
-    NUMBER,
-    TEXT_DAY,
-    TEXT_GOODBYE,
-    TEXT_HELLO,
-    TEXT_NIGHT,
+import android.graphics.PointF
+
+sealed interface TutorialGameTargetState {
+
+    val position: PointF
+
+    data class StaticContent(
+        override val position: PointF,
+    ) : TutorialGameTargetState
+
+    data class ChangingContent(
+        override val position: PointF,
+        val content: Int,
+    ) : TutorialGameTargetState
 }

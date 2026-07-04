@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2023 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 internal class FourStillChangingTextRules : TutorialGameRules {
@@ -33,7 +34,7 @@ internal class FourStillChangingTextRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
         topLeftPosition = PointF(area.width() / 4f, area.height() / 4f)
         topRightPosition = PointF(area.width() * 3f / 4f, area.height() / 4f)
         bottomLeftPosition = PointF(area.width() / 4f, area.height() * 3f / 4f)
@@ -41,17 +42,17 @@ internal class FourStillChangingTextRules : TutorialGameRules {
         score = 0
 
         return mapOf(
-            TutorialGameTargetType.TEXT_HELLO to topLeftPosition,
-            TutorialGameTargetType.TEXT_GOODBYE to topRightPosition,
-            TutorialGameTargetType.TEXT_NIGHT to bottomLeftPosition,
-            TutorialGameTargetType.TEXT_DAY to bottomRightPosition,
+            TutorialGameTargetType.TEXT_HELLO to TutorialGameTargetState.StaticContent(topLeftPosition),
+            TutorialGameTargetType.TEXT_GOODBYE to TutorialGameTargetState.StaticContent(topRightPosition),
+            TutorialGameTargetType.TEXT_NIGHT to TutorialGameTargetState.StaticContent(bottomLeftPosition),
+            TutorialGameTargetType.TEXT_DAY to TutorialGameTargetState.StaticContent(bottomRightPosition),
         )
     }
 
-    override fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    override fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType
-    ): Map<TutorialGameTargetType, PointF> {
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
         if (type == TutorialGameTargetType.TEXT_HELLO) score++
         else score--
 
@@ -59,15 +60,15 @@ internal class FourStillChangingTextRules : TutorialGameRules {
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, PointF>,
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, PointF> {
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
         val positions = listOf(topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition).shuffled()
         return mapOf(
-            TutorialGameTargetType.TEXT_HELLO to positions[0],
-            TutorialGameTargetType.TEXT_GOODBYE to positions[1],
-            TutorialGameTargetType.TEXT_NIGHT to positions[2],
-            TutorialGameTargetType.TEXT_DAY to positions[3],
+            TutorialGameTargetType.TEXT_HELLO to TutorialGameTargetState.StaticContent(positions[0]),
+            TutorialGameTargetType.TEXT_GOODBYE to TutorialGameTargetState.StaticContent(positions[1]),
+            TutorialGameTargetType.TEXT_NIGHT to TutorialGameTargetState.StaticContent(positions[2]),
+            TutorialGameTargetType.TEXT_DAY to TutorialGameTargetState.StaticContent(positions[3]),
         )
     }
 

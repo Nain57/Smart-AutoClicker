@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">偵測螢幕上的數字</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">將螢幕上顯示的數字與預定義值進行比較</string>
+    <string name="message_game_tutorial_number_conditions_static_value">只在數值超過9000時點擊！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_1">歡迎來到數字條件教學！\n\n在這裡，你將借助Klick\'r挑戰
+        遊戲的最高分。\n\n你可以先按下開始遊戲來試玩，
+        也可以直接進行場景設定。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_2">與其他任何螢幕條件一樣，我們首先需要
+        建立一個螢幕事件。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_3">現在，單擊條件欄位以開啟條件列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_4">我們需要建立條件。點擊建立。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_5">在本教學中，我們想學習如何偵測
+        螢幕上的數字，所以請選擇數字條件</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_6">數字條件由要偵測的數字
+        和要對其應用的比較來定義。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">在本教學中，我們只將偵測到的數字與靜態值進行比較，
+        但也可以將其與計數器的值進行比較。如需了解此功能的更多資訊，
+        請參閱計數器專項教學。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_7">我們想偵測顯示的值是否超過9000。
+        因此首先，點擊運算子以更改比較運算子。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_8">選擇 <![CDATA[>]]> 運算子。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_9">現在，你需要輸入要比較的值。
+        只需在值欄位中輸入「9000」即可進行到下一個教學步驟。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_10">現在我們需要告訴Klick\'r在哪裡搜尋
+        數字。\n\n點擊偵測區域選擇器來定義它</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_11">調整偵測矩形的位置和大小，使其涵蓋
+        顯示的數字。你可以啟動遊戲查看它顯示的位置。區域正確後，按驗證按鈕儲存。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">盡量使用盡可能小的偵測框，
+        同時在要偵測的數字周圍保留一定邊距。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_12">你的條件現在已設定完成！\n\n還有幾項
+        調整可以進行，但預設設定已適合我們的基本使用案例。\n\n單擊儲存按鈕進行登錄，然後返回條件列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_13">關閉條件列表，返回事件設定。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_14">有了這個條件，場景就知道何時觸發操作了。\n\n
+        現在你需要定義觸發哪些操作，對於這個遊戲，就是點擊按鈕。\n\n單擊操作欄位，
+        顯示操作列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_15">操作是在其事件的條件滿足時執行的內容。\n\n
+        可以是點擊、滑動、暫停、Intent（與其他應用程式的互動）或
+        場景執行中的變化，同一個事件可以定義多個操作。\n\n點擊建立操作按鈕以建立你的第一個操作。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_16">首先，我們需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們只需
+        點擊按鈕，所以選擇點擊來建立新的點擊操作。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_17">點擊操作由位置和按壓持續時間定義。\n\n由於我們
+        想盡可能快地點擊，可以保留預設的1ms按壓時長，這是最低可能值。
+        因此我們只需定義一個位置。\n\n點擊位置選擇器按鈕來選擇點擊操作的位置。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_18">你需要選擇要點擊的精確位置，因此需要重新啟動
+        遊戲以顯示按鈕，然後選擇其位置。\n\n位置正確後，
+        點擊驗證按鈕儲存。</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">位置選擇器可見時無法與遊戲互動，
+        但你可以使用此按鈕顯示和隱藏它，以便隨時解除該限制。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_19">點擊現已正確設定！\n\n點擊儲存按鈕
+        登錄並返回操作列表。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_20">關閉操作列表，返回事件設定。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_21">你的事件現在有一個條件和一個操作，這意味著它知道何時執行什麼。
+        \n\n點擊儲存按鈕以儲存它並返回場景對話框。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_22">場景的唯一要求是至少有一個事件。\n由於我們的事件已經涵蓋了如何贏得比賽，
+        我們不需要其他任何東西。\n\n點擊儲存按鈕以將場景儲存在資料庫中並關閉設定對話框。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_23">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於偵測。
+        \n\n點擊它以開始偵測。</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_24">正在運行但什麼都沒發生？\n\n這是正常的，它只會在
+        按鈕顯示超過9000的數字時才點擊，還記得嗎？在保持場景運行的同時，按下開始遊戲按鈕
+        然後看Klick\'r替你贏得比賽！</string>
+
+    <string name="message_tutorial_number_conditions_static_value_step_25">恭喜！\n\n你現在知道如何偵測螢幕上顯示的數字了。
+        \n查看其他教學以發現更多使用案例。</string>
+
+</resources>

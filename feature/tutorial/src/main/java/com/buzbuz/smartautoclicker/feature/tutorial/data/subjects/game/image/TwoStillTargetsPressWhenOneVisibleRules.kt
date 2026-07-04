@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 import android.graphics.PointF
 import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
@@ -30,19 +31,20 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, PointF> {
+    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
         redTargetPosition = PointF(area.width() * 0.75f, area.height() / 2f)
 
         return toggleRedVisibility(
-            mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(area.width() * 0.25f, area.height() / 2f))
+            mapOf(TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
+                PointF(area.width() * 0.25f, area.height() / 2f)))
         )
     }
 
-    override fun onValidTargetHit(
-        current: Map<TutorialGameTargetType, PointF>,
+    override fun onTargetHit(
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         type: TutorialGameTargetType
-    ): Map<TutorialGameTargetType, PointF> {
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
         val blueIsVisible = current.containsKey(TutorialGameTargetType.IMAGE_BLUE)
         val redIsVisible = current.containsKey(TutorialGameTargetType.IMAGE_RED)
 
@@ -53,17 +55,19 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, PointF>,
+        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, PointF> =
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
         toggleRedVisibility(current)
 
-    private fun toggleRedVisibility(targets: Map<TutorialGameTargetType, PointF>): Map<TutorialGameTargetType, PointF> {
+    private fun toggleRedVisibility(
+        targets: Map<TutorialGameTargetType, TutorialGameTargetState>
+    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
         val redPosition = redTargetPosition ?: return targets
 
         val newTargets = targets.toMutableMap().apply {
             if (containsKey(TutorialGameTargetType.IMAGE_RED)) remove(TutorialGameTargetType.IMAGE_RED)
-            else put(TutorialGameTargetType.IMAGE_RED, redPosition)
+            else put(TutorialGameTargetType.IMAGE_RED, TutorialGameTargetState.StaticContent(redPosition))
         }
 
         return newTargets

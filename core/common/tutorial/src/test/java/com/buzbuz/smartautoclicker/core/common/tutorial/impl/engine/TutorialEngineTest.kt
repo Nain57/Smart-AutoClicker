@@ -89,7 +89,7 @@ class TutorialEngineTest {
         whenever(mockOverlayManager.isStackHidden).thenReturn(isStackHiddenFlow)
         whenever(mockGameRules.onStart(any(), any())).thenReturn(emptyMap())
         whenever(mockGameRules.onTimerTick(any(), any())).thenReturn(emptyMap())
-        whenever(mockGameRules.onValidTargetHit(any(), any())).thenReturn(emptyMap())
+        whenever(mockGameRules.onTargetHit(any(), any())).thenReturn(emptyMap())
         whenever(mockGameRules.getScore()).thenReturn(0)
 
         orchestrator = TutorialStepsOrchestrator()

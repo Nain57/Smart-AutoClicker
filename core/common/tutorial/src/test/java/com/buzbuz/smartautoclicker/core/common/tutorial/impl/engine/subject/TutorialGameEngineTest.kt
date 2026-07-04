@@ -70,7 +70,7 @@ class TutorialGameEngineTest {
 
         whenever(mockRules.onStart(any())).thenReturn(INITIAL_TARGETS)
         whenever(mockRules.onTimerTick(any(), any())).thenReturn(TICK_TARGETS)
-        whenever(mockRules.onValidTargetHit(any(), any())).thenReturn(HIT_TARGETS)
+        whenever(mockRules.onTargetHit(any(), any())).thenReturn(HIT_TARGETS)
         whenever(mockRules.getScore()).thenReturn(0)
 
         game = TutorialSubject.Game(
