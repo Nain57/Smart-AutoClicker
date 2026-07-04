@@ -97,7 +97,9 @@ internal class ViewMonitor(private val displayConfigManager: DisplayConfigManage
     }
 
     fun performClick(): Boolean =
-        monitoredView?.performClick() ?: false
+        if (monitoredView?.isEnabled == true) monitoredView?.performClick() ?: false
+        else false
+
 
     private fun refreshViewSize() {
         val view = monitoredView ?: return
