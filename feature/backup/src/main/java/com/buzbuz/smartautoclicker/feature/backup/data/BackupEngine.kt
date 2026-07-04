@@ -65,7 +65,7 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
         // Create the zip file containing the scenarios and their events conditions.
         withContext(Dispatchers.IO) {
             try {
-                ZipOutputStream(contentResolver.openOutputStream(zipFileUri)).use { zipStream ->
+                ZipOutputStream(contentResolver.openOutputStream(zipFileUri, "wt")).use { zipStream ->
                     dumbScenarios.forEach { dumbScenario ->
                         Log.d(TAG, "Backup dumb scenario ${dumbScenario.scenario.id}")
 
@@ -83,9 +83,9 @@ internal class BackupEngine(appDataDir: File, private val contentResolver: Conte
                         currentProgress++
                         progress.onProgressChanged(currentProgress, smartScenarios.size)
                     }
-
-                    progress.onCompleted(dumbScenarios, smartScenarios, 0, false)
                 }
+
+                progress.onCompleted(dumbScenarios, smartScenarios, 0, false)
             } catch (ioEx: IOException) {
                 Log.e(TAG, "Error while creating backup archive.")
                 progress.onError()
