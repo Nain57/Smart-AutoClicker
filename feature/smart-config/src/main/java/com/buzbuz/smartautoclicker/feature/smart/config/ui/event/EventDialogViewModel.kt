@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
@@ -65,6 +66,7 @@ class EventDialogViewModel @Inject constructor(
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val settingsRepository: SettingsRepository,
+    private val tutorialRepository: TutorialRepository,
 ) : ViewModel() {
 
     private val userEventCooldownTimeUnit: MutableStateFlow<TimeUnitDropDownItem?> =
@@ -96,7 +98,7 @@ class EventDialogViewModel @Inject constructor(
         editionRepository.editionState.isEditedEventReferencedByAction()
 
     fun isLegacyActionUiEnabled(): Boolean =
-        settingsRepository.isLegacyActionUiEnabled()
+        settingsRepository.isLegacyActionUiEnabled() && !tutorialRepository.isTutorialStarted()
 
     fun getTryInfo(): Pair<Scenario, ScreenEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
