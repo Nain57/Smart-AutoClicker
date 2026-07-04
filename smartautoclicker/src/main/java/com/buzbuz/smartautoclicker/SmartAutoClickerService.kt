@@ -34,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -85,6 +86,7 @@ class SmartAutoClickerService : AccessibilityService() {
     @Inject lateinit var appComponentsProvider: AppComponentsProvider
     @Inject lateinit var actionExecutor: AndroidActionExecutor
     @Inject lateinit var debuggingRepository: DebuggingRepository
+    @Inject lateinit var tutorialRepository: TutorialRepository
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -117,6 +119,7 @@ class SmartAutoClickerService : AccessibilityService() {
                 revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
                 debuggingRepository = debuggingRepository,
+                tutorialRepository = tutorialRepository,
                 onStart = ::onLocalServiceStarted,
                 onStop = ::onLocalServiceStopped,
             )

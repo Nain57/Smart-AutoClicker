@@ -120,11 +120,17 @@ internal class TutorialRepositoryImpl @Inject constructor(
             tutorialEngine.stopTutorial()
             localService.stopScenario()
 
-            tutorialScenarioDbId.value?.let { scenarioDbId ->
-                smartRepository.deleteScenario(scenarioDbId)
+            tutorialScenarioDbId.update { scenarioDbId ->
+                scenarioDbId?.let { id ->
+                    smartRepository.deleteScenario(id)
+                }
+                null
             }
         }
     }
+
+    override fun isTutorialStarted(): Boolean =
+        tutorialState.value is TutorialState.Started
 
     override fun nextTutorialStep() {
         tutorialEngine.nextStep()

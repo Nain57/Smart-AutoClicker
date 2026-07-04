@@ -166,6 +166,7 @@ dependencies {
     implementation(project(":core:common:permissions"))
     implementation(project(":core:common:quality"))
     implementation(project(":core:common:settings"))
+    implementation(project(":core:common:tutorial"))
     implementation(project(":core:common:ui"))
     implementation(project(":core:dumb"))
     implementation(project(":core:smart:debugging"))

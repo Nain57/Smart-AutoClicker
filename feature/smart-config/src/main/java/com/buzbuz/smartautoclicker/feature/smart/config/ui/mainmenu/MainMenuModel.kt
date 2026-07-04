@@ -134,7 +134,7 @@ class MainMenuModel @Inject constructor(
         when (detectionState.value) {
             UiState.Detecting -> stopDetection()
             UiState.Idle -> {
-                if (revenueRepository.userBillingState.value.isAdRequested()) startPaywall(context)
+                if (shouldStartPaywall()) startPaywall(context)
                 else startDetection(context)
             }
         }
@@ -147,6 +147,10 @@ class MainMenuModel @Inject constructor(
         smartProcessingRepository.stopDetection()
         return true
     }
+
+    private fun shouldStartPaywall(): Boolean =
+        revenueRepository.userBillingState.value.isAdRequested() &&
+                !tutorialRepository.isTutorialStarted()
 
     private fun startPaywall(context: Context) {
         revenueRepository.startPaywallUiFlow(context)

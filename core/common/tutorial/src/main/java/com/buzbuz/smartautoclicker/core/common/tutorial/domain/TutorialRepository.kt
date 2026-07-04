@@ -53,6 +53,8 @@ interface TutorialRepository {
 
     fun stopTutorial()
 
+    fun isTutorialStarted(): Boolean
+
     fun nextTutorialStep()
     fun skipToLastTutorialStep()
 

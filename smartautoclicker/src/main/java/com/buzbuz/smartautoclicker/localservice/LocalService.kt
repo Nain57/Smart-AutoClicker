@@ -25,6 +25,7 @@ import android.view.KeyEvent
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -57,6 +58,7 @@ class LocalService(
     private val settingsRepository: SettingsRepository,
     private val smartProcessingRepository: SmartProcessingRepository,
     private val dumbEngine: DumbEngine,
+    private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val debuggingRepository: DebuggingRepository,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
@@ -205,7 +207,7 @@ class LocalService(
     private fun play() {
         serviceScope.launch {
             if (state.isSmartLoaded && !smartProcessingRepository.isRunning()) {
-                if (revenueRepository.userBillingState.value == UserBillingState.AD_REQUESTED) startPaywall()
+                if (shouldStartPaywall()) startPaywall()
                 else startSmartScenario()
             } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {
                 dumbEngine.startDumbScenario()
@@ -221,6 +223,10 @@ class LocalService(
             }
         }
     }
+
+    private fun shouldStartPaywall(): Boolean =
+        revenueRepository.userBillingState.value == UserBillingState.AD_REQUESTED &&
+                !tutorialRepository.isTutorialStarted()
 
     private fun startPaywall() {
         revenueRepository.startPaywallUiFlow(context)
