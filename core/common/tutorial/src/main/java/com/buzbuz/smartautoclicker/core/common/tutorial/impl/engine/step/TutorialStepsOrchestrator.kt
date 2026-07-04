@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine
+package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step
 
 import android.util.Log
 

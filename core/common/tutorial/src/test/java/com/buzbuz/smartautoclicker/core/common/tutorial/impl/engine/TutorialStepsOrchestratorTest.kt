@@ -21,6 +21,7 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepsOrchestrator
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

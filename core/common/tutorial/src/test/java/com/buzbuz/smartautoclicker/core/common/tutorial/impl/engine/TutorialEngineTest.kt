@@ -31,7 +31,10 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.Tutor
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepEndConditionMonitor
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepStartConditionMonitor
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepsOrchestrator
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +67,7 @@ import org.robolectric.annotation.Config
 class TutorialEngineTest {
 
     @Mock private lateinit var mockOverlayManager: OverlayManager
-    @Mock private lateinit var mockMonitoredViewsManager: MonitoredViewsManager
+    @Mock private lateinit var mockMonitoredViewsManager: MonitoredViewsManagerImpl
     @Mock private lateinit var mockGameRules: TutorialGameRules
     @Mock private lateinit var mockOverlay: Overlay
     @Mock private lateinit var mockTutorialCompletionStateDataSource: TutorialCompletionStateDataSource
@@ -73,6 +76,8 @@ class TutorialEngineTest {
     private val isStackHiddenFlow = MutableStateFlow(false)
 
     private lateinit var orchestrator: TutorialStepsOrchestrator
+    private lateinit var stepEndConditionMonitor: TutorialStepEndConditionMonitor
+    private lateinit var stepStartConditionMonitor: TutorialStepStartConditionMonitor
     private lateinit var engine: TutorialEngine
     private lateinit var mockCloseable: AutoCloseable
 
@@ -87,18 +92,29 @@ class TutorialEngineTest {
 
         whenever(mockOverlayManager.backStackTopFlow).thenReturn(backStackTopFlow)
         whenever(mockOverlayManager.isStackHidden).thenReturn(isStackHiddenFlow)
-        whenever(mockGameRules.onStart(any(), any())).thenReturn(emptyMap())
+        whenever(mockGameRules.onStart(any())).thenReturn(emptyMap())
         whenever(mockGameRules.onTimerTick(any(), any())).thenReturn(emptyMap())
         whenever(mockGameRules.onTargetHit(any(), any())).thenReturn(emptyMap())
         whenever(mockGameRules.getScore()).thenReturn(0)
 
         orchestrator = TutorialStepsOrchestrator()
+        stepEndConditionMonitor = TutorialStepEndConditionMonitor(
+            ioDispatcher = UnconfinedTestDispatcher(),
+            monitoredViewsManager = mockMonitoredViewsManager,
+            overlayManager = mockOverlayManager,
+        )
+        stepStartConditionMonitor = TutorialStepStartConditionMonitor(
+            ioDispatcher = UnconfinedTestDispatcher(),
+            monitoredViewsManager = mockMonitoredViewsManager,
+            overlayManager = mockOverlayManager,
+        )
         engine = TutorialEngine(
             ioDispatcher = UnconfinedTestDispatcher(),
-            overlayManager = mockOverlayManager,
             monitoredViewsManager = mockMonitoredViewsManager,
             stepsOrchestrator = orchestrator,
-            tutorialCompletionStateDataSource = mockTutorialCompletionStateDataSource,
+            completionStateDataSource = mockTutorialCompletionStateDataSource,
+            stepEndConditionMonitor = stepEndConditionMonitor,
+            stepStartConditionMonitor = stepStartConditionMonitor,
         )
     }
 

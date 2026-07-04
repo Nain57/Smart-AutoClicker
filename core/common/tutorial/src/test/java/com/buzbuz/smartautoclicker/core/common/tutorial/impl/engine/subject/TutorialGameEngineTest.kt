@@ -22,6 +22,7 @@ import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,9 +55,9 @@ class TutorialGameEngineTest {
         private const val TEST_DURATION_SECONDS = 5L
         private const val TEST_SCORE_TO_REACH = 3
         private val TEST_AREA = Rect(0, 0, 1080, 1920)
-        private val INITIAL_TARGETS = mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(100f, 100f))
-        private val TICK_TARGETS = mapOf(TutorialGameTargetType.IMAGE_BLUE to PointF(200f, 200f))
-        private val HIT_TARGETS = mapOf(TutorialGameTargetType.IMAGE_RED to PointF(300f, 300f))
+        private val INITIAL_TARGETS: Map<TutorialGameTargetType, TutorialGameTargetState> = mapOf(TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(PointF(100f, 100f)))
+        private val TICK_TARGETS: Map<TutorialGameTargetType, TutorialGameTargetState> = mapOf(TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(PointF(200f, 200f)))
+        private val HIT_TARGETS: Map<TutorialGameTargetType, TutorialGameTargetState> = mapOf(TutorialGameTargetType.IMAGE_RED to TutorialGameTargetState.StaticContent(PointF(300f, 300f)))
     }
 
     @Mock private lateinit var mockRules: TutorialGameRules

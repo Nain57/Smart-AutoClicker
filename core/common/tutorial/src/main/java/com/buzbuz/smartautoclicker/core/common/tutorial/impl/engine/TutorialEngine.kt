@@ -20,7 +20,6 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
-import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
@@ -29,13 +28,15 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepEndConditionMonitor
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepStartConditionMonitor
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepsOrchestrator
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -45,14 +46,14 @@ import javax.inject.Inject
 
 internal class TutorialEngine @Inject constructor(
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val overlayManager: OverlayManager,
     private val monitoredViewsManager: MonitoredViewsManagerImpl,
     private val stepsOrchestrator: TutorialStepsOrchestrator,
-    private val tutorialCompletionStateDataSource: TutorialCompletionStateDataSource,
+    private val completionStateDataSource: TutorialCompletionStateDataSource,
+    private val stepEndConditionMonitor: TutorialStepEndConditionMonitor,
+    private val stepStartConditionMonitor: TutorialStepStartConditionMonitor,
 ) {
 
     private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
-    private var stepConditionMonitoringJob: Job? = null
 
     private val _tutorialState: MutableStateFlow<TutorialState> = MutableStateFlow(TutorialState.Stopped)
     val tutorialState: StateFlow<TutorialState> = _tutorialState
@@ -99,8 +100,8 @@ internal class TutorialEngine @Inject constructor(
     fun stopTutorial() {
         Log.d(TAG, "Stop tutorial")
 
-        stepConditionMonitoringJob?.cancel()
-        stepConditionMonitoringJob = null
+        stepStartConditionMonitor.clearMonitoring()
+        stepEndConditionMonitor.clearMonitoring()
         monitoredViewsManager.clearExpectedViews()
         stepsOrchestrator.clear()
 
@@ -129,61 +130,24 @@ internal class TutorialEngine @Inject constructor(
         }
     }
 
-    private fun onTutorialCompleted() {
-        Log.d(TAG, "onTutorialCompleted")
-
-        coroutineScopeIo.launch {
-            _tutorialState.update { old ->
-                if (old !is TutorialState.Started) old
-                else {
-                    tutorialCompletionStateDataSource.setTutorialCompleted(old.tutorial)
-                    old.copy(isCompleted = true)
-                }
-            }
-        }
-    }
-
     private fun onStepEnded(step: TutorialStep) {
+        val controller = _tutorialSubjectController.value ?: return
+
         Log.d(TAG, "onStepEnded: $step")
 
-        when (val startCondition = step.stepStartCondition) {
-            is TutorialStepStartCondition.MonitoredViewClicked -> {
-                monitoredViewsManager.stopNextClickMonitoring(startCondition.type)
-            }
+        stepStartConditionMonitor.stopMonitoring(
+            condition = step.stepStartCondition,
+            subjectController = controller,
+        )
 
-            is TutorialStepStartCondition.MonitoredOverlayDisplayed -> {
-                stepConditionMonitoringJob?.cancel()
-                stepConditionMonitoringJob = null
-            }
-
-            is TutorialStepStartCondition.MonitoredTextInput -> {
-                monitoredViewsManager.stopTextMonitoring(startCondition.type)
-            }
-
-            TutorialStepStartCondition.GameLost,
-            TutorialStepStartCondition.GameWon -> {
-                getSubjectController<TutorialGameEngine>()?.monitorNextCompletion(null)
-            }
-
-            TutorialStepStartCondition.Immediate -> Unit
-        }
-
-        when (val endCondition = step.stepEndCondition) {
-            is TutorialStepEndCondition.MonitoredViewClicked -> {
-                monitoredViewsManager.stopNextClickMonitoring(endCondition.type)
-            }
-
-            TutorialStepEndCondition.OverlayStackVisibilityChanged -> {
-                stepConditionMonitoringJob?.cancel()
-                stepConditionMonitoringJob = null
-            }
-
-            TutorialStepEndCondition.NextButton,
-            TutorialStepEndCondition.Immediate -> Unit
-        }
+        stepEndConditionMonitor.stopMonitoring(
+            condition = step.stepEndCondition,
+        )
     }
 
     private fun onNewStep(step: TutorialStep) {
+        val controller = _tutorialSubjectController.value ?: return
+
         Log.d(TAG, "onNewStep: $step")
 
         _tutorialState.update { old ->
@@ -194,8 +158,9 @@ internal class TutorialEngine @Inject constructor(
             )
         }
 
-        monitorStepStartCondition(
-            step = step,
+        stepStartConditionMonitor.monitorCondition(
+            condition = step.stepStartCondition,
+            subjectController = controller,
             onConditionReached = { onStepStartConditionReached(step) },
         )
     }
@@ -210,8 +175,8 @@ internal class TutorialEngine @Inject constructor(
         }
 
         // Start monitoring for end condition
-        monitorStepEndCondition(
-            step = step,
+        stepEndConditionMonitor.monitorCondition(
+            condition = step.stepEndCondition,
             onConditionReached = { onStepEndConditionReached(step) },
         )
     }
@@ -222,76 +187,19 @@ internal class TutorialEngine @Inject constructor(
         nextStep()
     }
 
-    private fun monitorStepStartCondition(step: TutorialStep, onConditionReached: () -> Unit) =
-        when (val condition = step.stepStartCondition) {
-            is TutorialStepStartCondition.MonitoredViewClicked -> {
-                monitoredViewsManager.monitorNextClick(
-                    type = condition.type,
-                    listener = onConditionReached,
-                )
-            }
+    private fun onTutorialCompleted() {
+        Log.d(TAG, "onTutorialCompleted")
 
-            is TutorialStepStartCondition.MonitoredOverlayDisplayed -> {
-                stepConditionMonitoringJob = coroutineScopeIo.launch {
-                    overlayManager.backStackTopFlow.collect { newTop ->
-                        if (condition.type.name != newTop?.tutorialMonitoringTag()) return@collect
-
-                        onConditionReached()
-                        stepConditionMonitoringJob?.cancel()
-                        stepConditionMonitoringJob = null
-                    }
+        coroutineScopeIo.launch {
+            _tutorialState.update { old ->
+                if (old !is TutorialState.Started) old
+                else {
+                    completionStateDataSource.setTutorialCompleted(old.tutorial)
+                    old.copy(isCompleted = true)
                 }
             }
-
-            is TutorialStepStartCondition.MonitoredTextInput -> {
-                monitoredViewsManager.monitorText(condition.type, condition.expectedText) {
-                    onConditionReached()
-                }
-            }
-
-            TutorialStepStartCondition.GameLost ->
-                getSubjectController<TutorialGameEngine>()?.monitorNextCompletion { isWon ->
-                    if (isWon) return@monitorNextCompletion
-                    onConditionReached()
-                }
-
-            TutorialStepStartCondition.GameWon ->
-                getSubjectController<TutorialGameEngine>()?.monitorNextCompletion { isWon ->
-                    if (!isWon) return@monitorNextCompletion
-                    onConditionReached()
-                }
-
-            TutorialStepStartCondition.Immediate ->
-                onConditionReached()
         }
-
-    private fun monitorStepEndCondition(step: TutorialStep, onConditionReached: () -> Unit) =
-        when (val condition = step.stepEndCondition) {
-            is TutorialStepEndCondition.MonitoredViewClicked -> {
-                monitoredViewsManager.monitorNextClick(
-                    type = condition.type,
-                    listener = onConditionReached,
-                )
-            }
-
-            TutorialStepEndCondition.OverlayStackVisibilityChanged -> {
-                val expectedVisibility = (step as? TutorialStep.ChangeFloatingUiVisibility)?.newVisibility
-                stepConditionMonitoringJob = coroutineScopeIo.launch {
-                    overlayManager.isStackHidden.collect { isStackHidden ->
-                        if (isStackHidden == expectedVisibility) return@collect
-
-                        onConditionReached()
-                        stepConditionMonitoringJob?.cancel()
-                        stepConditionMonitoringJob = null
-                    }
-                }
-            }
-
-            TutorialStepEndCondition.Immediate ->
-                onConditionReached()
-
-            TutorialStepEndCondition.NextButton -> Unit // handled via onNextStepButtonPressed
-        }
+    }
 
     private fun createController(tutorial: Tutorial): TutorialSubjectController =
         when (val tutorialSubject = tutorial.subject) {
@@ -300,11 +208,6 @@ internal class TutorialEngine @Inject constructor(
                 game = tutorialSubject,
             )
         }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <T : TutorialSubjectController> getSubjectController(): T? =
-        _tutorialSubjectController.value?.let { controller -> controller as? T }
-
 }
 
 private fun MonitoredViewsManagerImpl.setTutorialExpectedViews(tutorial: Tutorial) {

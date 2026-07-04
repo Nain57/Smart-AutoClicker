@@ -29,7 +29,7 @@ sealed class TutorialStepEndCondition {
     data object Immediate : TutorialStepEndCondition()
 
     /** Step ends once the overlay backstack visibility has changed. */
-    data object OverlayStackVisibilityChanged : TutorialStepEndCondition()
+    data class OverlayStackVisibilityChanged(val newVisibility: Boolean) : TutorialStepEndCondition()
 
     /**
      * Step ends when the user explicitly taps the "Next" button in the tutorial overlay.

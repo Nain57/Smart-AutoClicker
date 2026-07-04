@@ -74,7 +74,7 @@ class TutorialOverlayViewModel @Inject constructor(
                 }
 
                 TutorialStepEndCondition.Immediate -> flowOf(null)
-                TutorialStepEndCondition.OverlayStackVisibilityChanged -> flowOf(null)
+                is TutorialStepEndCondition.OverlayStackVisibilityChanged -> flowOf(null)
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)

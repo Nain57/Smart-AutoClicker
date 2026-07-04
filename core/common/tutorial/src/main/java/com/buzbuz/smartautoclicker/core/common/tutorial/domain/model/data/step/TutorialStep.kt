@@ -43,9 +43,10 @@ sealed class TutorialStep {
      * @property newVisibility `true` to show the overlay, `false` to hide it.
      */
     data class ChangeFloatingUiVisibility(
-        override val stepStartCondition: TutorialStepStartCondition,
-        override val stepEndCondition: TutorialStepEndCondition.OverlayStackVisibilityChanged = TutorialStepEndCondition.OverlayStackVisibilityChanged,
         val newVisibility: Boolean,
+        override val stepStartCondition: TutorialStepStartCondition,
+        override val stepEndCondition: TutorialStepEndCondition.OverlayStackVisibilityChanged =
+            TutorialStepEndCondition.OverlayStackVisibilityChanged(newVisibility),
     ) : TutorialStep()
 
     /**
