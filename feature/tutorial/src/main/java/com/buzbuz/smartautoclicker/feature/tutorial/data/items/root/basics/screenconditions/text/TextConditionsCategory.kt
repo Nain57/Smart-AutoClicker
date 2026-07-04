@@ -29,5 +29,6 @@ internal fun getTextConditionsCategory() =
         iconRes = R.drawable.ic_text_condition,
         content = listOf(
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_STILL_TEXT),
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_MOVING_TEXT),
         ),
     )

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_moving_text">偵測螢幕上的移動文字</string>
+    <string name="item_desc_tutorial_text_conditions_moving_text">學習如何建立事件以點擊隨機移動的文字</string>
+    <string name="message_game_tutorial_text_conditions_moving_text">只點擊「Hello」按鈕，盡可能快</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_1">歡迎來到移動文字條件教學！\n\n在這裡，你將借助Klick\'r挑戰
+        遊戲的最高分。\n\n你可以先按下開始遊戲來試玩，
+        也可以直接進行場景設定。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_2">與其他任何螢幕條件一樣，我們首先需要
+        建立一個螢幕事件。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_3">現在，單擊條件欄位以開啟條件列表。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_4">我們需要建立條件。點擊建立。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_5">在本教學中，我們想學習如何偵測
+        螢幕上的文字，所以請選擇文字條件</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_6">文字條件由要偵測的文字和
+        螢幕搜尋區域來定義。\n\n由於我們想在遊戲按鈕顯示「Hello」時點擊它，請在
+        偵測文字欄位中輸入Hello。</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_6">字母表欄位定義了要偵測文字的書寫系統。
+        「Hello」使用拉丁字母，因此這裡可以保持預設值，但偵測非拉丁文字時不要忘記
+        更改它。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_7">現在我們需要告訴Klick\'r在哪裡搜尋
+        文字。\n\n點擊偵測區域選擇器來定義它。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_8">調整偵測矩形的位置和大小，使其
+        涵蓋四個按鈕，因為「Hello」會隨機出現在這4個位置中的任意一個。區域正確後，按驗證按鈕儲存。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_8">和往常一樣，盡量使用盡可能小的偵測框，
+        同時在要偵測的文字周圍保留一定邊距。區域越小，偵測速度越快。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_9">你的條件現在已設定完成！\n\n還有幾項
+        調整可以進行，但預設設定已適合我們的基本使用案例。\n\n單擊儲存按鈕進行登錄，然後返回條件列表。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_10">關閉條件列表，返回事件設定。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_11">有了這個條件，場景就知道何時觸發操作了。\n\n
+        現在你需要定義觸發哪些操作，對於這個遊戲，就是點擊「Hello」按鈕。\n\n單擊操作欄位，
+        顯示操作列表。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_12">操作是在其事件的條件滿足時執行的內容。\n\n
+        可以是點擊、滑動、暫停、Intent（與其他應用程式的互動）或
+        場景執行中的變化，同一個事件可以定義多個操作。\n\n點擊建立操作按鈕以建立你的第一個操作。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_13">首先，我們需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們只需
+        點擊按鈕，所以選擇點擊來建立新的點擊操作。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_14">由於「Hello」在移動，我們無法使用
+        固定位置。將「點擊位置」設定更改為「條件」，以點擊偵測到的條件位置。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_15">點擊條件選擇器以選擇要點擊的偵測條件。
+        \n\n我們需要指定它，因為一個事件可以有多個條件。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_16">對於我們的使用案例來說很容易，我們只有一個條件，即文字「Hello」。
+        \n\n選擇它以在螢幕上偵測到此條件時點擊它。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_17">就是這樣！\n你的點擊操作現在已經正確設定以打贏比賽。\n\n單擊儲存按鈕登錄並返回操作列表。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_18">關閉操作列表，返回事件設定。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_19">你的事件現在有一個條件和一個操作，這意味著它知道何時執行什麼。
+        \n\n點擊儲存按鈕以儲存它並返回場景對話框。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_20">場景的唯一要求是至少有一個事件。\n由於我們的事件已經涵蓋了如何贏得比賽，
+        我們不需要其他任何東西。\n\n點擊儲存按鈕以將場景儲存在資料庫中並關閉設定對話框。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_21">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於偵測。
+        \n\n點擊它以開始偵測。</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_22">正在運行但什麼都沒發生？\n\n這是正常的，它只會在
+        按鈕顯示「Hello」時才點擊，還記得嗎？在保持場景運行的同時，按下開始遊戲按鈕
+        然後看Klick\'r替你贏得比賽！</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_23">恭喜！\n\n你現在知道如何偵測螢幕上顯示的移動文字了。
+        \n查看其他教學以發現更多使用案例。</string>
+</resources>

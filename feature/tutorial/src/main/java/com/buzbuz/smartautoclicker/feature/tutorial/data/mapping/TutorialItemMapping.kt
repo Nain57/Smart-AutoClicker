@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem.Type.*
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsMovingTargetTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.ImageConditionsStillTargetTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.TextConditionsMovingTextTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.TextConditionsStillTextTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsNotVisibleTargetTutorial
 
@@ -28,8 +29,12 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combinecondi
 internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
     when (this) {
         COLOR_CONDITION -> ColorConditionsTutorial
+
         COMBINE_CONDITIONS_NOT_VISIBLE -> CombineConditionsNotVisibleTargetTutorial
+
         IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
         IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial
+
+        TEXT_CONDITION_MOVING_TEXT -> TextConditionsMovingTextTutorial
         TEXT_CONDITION_STILL_TEXT -> TextConditionsStillTextTutorial
     }

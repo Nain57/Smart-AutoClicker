@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_moving_text">Виявлення рухомого тексту на екрані</string>
+    <string name="item_desc_tutorial_text_conditions_moving_text">Навчіться створювати подію для натискання на випадково переміщуваний текст</string>
+    <string name="message_game_tutorial_text_conditions_moving_text">Натискайте лише на кнопку \"Hello\" якомога швидше</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_1">Ласкаво просимо до навчання з умови рухомого тексту!\n\nТут ви
+        спробуєте побити рекорд гри за допомогою Klick\'r.\n\nСпочатку ви можете спробувати самостійно, натиснувши кнопку почати гру,
+        або відразу перейти до налаштування Сценарію.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_2">Як і для будь-якої іншої Умови екрана, спочатку
+        потрібно створити Подію екрана.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_3">Тепер клікніть на поле Умови, щоб відкрити список Умов.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_4">Нам потрібно створити Умову. Клікніть Створити.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_5">У цьому уроці ми хочемо навчитися виявляти
+        текст на екрані, тому виберіть Умову тексту</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_6">Умова тексту визначається текстом для виявлення та
+        областю екрана для його пошуку.\n\nОскільки ми хочемо клікнути на кнопку гри, коли вона показує «Hello», введіть Hello
+        у поле текст для виявлення.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_6">Поле Алфавіт визначає систему письма
+        тексту для виявлення. «Hello» використовує латинський алфавіт, тому тут можна залишити значення за замовчуванням, але не забудьте
+        змінити його при виявленні нелатинських текстів.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_7">Тепер нам потрібно вказати Klick\'r, де шукати
+        текст.\n\nКлікніть на селектор зони виявлення, щоб визначити її.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_8">Розташуйте та змініть розмір прямокутника виявлення так, щоб він
+        охоплював чотири кнопки, оскільки «Hello» може випадково з\'явитися в будь-якому з цих 4 місць. Коли область буде правильною, натисніть кнопку підтвердження для збереження.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_8">Як завжди, намагайтеся використовувати найменшу можливу область,
+        залишаючи поля навколо тексту для виявлення. Чим менша область, тим швидше виявлення.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_9">Ваша Умова тепер налаштована!\n\nМожна внести ще ряд
+        налаштувань, але параметри за замовчуванням підходять для нашого базового випадку.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку Умов.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_10">Закрийте список Умов, щоб повернутися до налаштування Події.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_11">З цією Умовою сценарій знає, коли активувати Дії.\n\n
+        Тепер вам потрібно визначити, які Дії активувати — для цієї гри це клік по кнопці «Hello».\n\nКлікніть на
+        поле Дії, щоб відобразити список Дій.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_12">Дія — це те, що виконується, коли умови її події виконані.\n\n
+        Це може бути клік, свайп, пауза, Intent (взаємодія з іншим додатком) або
+        зміна у виконанні Сценарію, і для однієї Події можна задати кілька Дій.\n\nКлікніть на кнопку створення
+        Дії, щоб створити вашу першу Дію.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_13">Спочатку нам потрібно вибрати тип для вашої Дії.\n\nДля цієї гри нам потрібно
+        просто клікнути на кнопку, тому виберіть Клік для створення нової Дії кліку.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_14">Оскільки «Hello» переміщується, ми не можемо використовувати
+        фіксовану позицію. Змініть параметр «Клікнути на» на «Умова», щоб клікати на виявлену Умову.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Клікніть на селектор Умови, щоб вибрати, на яку виявлену Умову клікати.
+        \n\nНам потрібно це вказати, оскільки подія може мати кілька Умов.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_16">Для нашого випадку використання це легко — у нас є лише одна Умова, текст «Hello».
+        \n\nВиберіть її, щоб клікати на цю Умову, коли вона виявлена на вашому екрані.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Ось і все!\nВаша Дія кліку тепер правильно налаштована для перемоги в
+        грі.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку Дій.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Закрийте список Дій, щоб повернутися до налаштування Події.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_19">Ваша Подія тепер має Умову та Дію, що означає, що вона знає, що виконувати та
+        коли.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу Сценарію.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Єдина вимога для Сценарію — мати принаймні одну Подію.\n
+        Оскільки наша Подія вже охоплює, як виграти гру, нам більше нічого не потрібно.\n\nКлікніть на кнопку збереження, щоб
+        зберегти Сценарій в базі даних та закрити діалоги налаштування.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
+        Сценарій дійсний і може використовуватися для виявлення.\n\nКлікніть на неї, щоб почати виявлення.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Відтворюється, але нічого не відбувається?\n\nЦе нормально, він буде клікати лише
+        коли кнопка показує «Hello», пам\'ятаєте? Не зупиняючи сценарій, натисніть кнопку почати гру
+        і просто спостерігайте, як Klick\'r перемагає за вас!</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_23">Вітаємо!\n\nТепер ви знаєте, як виявляти рухомий текст, що відображається на
+        екрані.\nОзнайомтеся з іншими уроками, щоб дізнатися про інші сценарії використання.</string>
+</resources>

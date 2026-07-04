@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_moving_text">Обнаружение движущегося текста на экране</string>
+    <string name="item_desc_tutorial_text_conditions_moving_text">Научитесь создавать событие для нажатия на случайно перемещающийся текст</string>
+    <string name="message_game_tutorial_text_conditions_moving_text">Нажимайте только на кнопку \"Hello\" как можно быстрее</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_1">Добро пожаловать в обучение по условию движущегося текста!\n\nЗдесь вы
+        попробуете побить рекорд игры с помощью Klick\'r.\n\nСначала можете попробовать самостоятельно, нажав кнопку начать игру,
+        или сразу перейти к настройке Сценария.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_2">Как и для любого другого Условия экрана, сначала необходимо
+        создать Событие экрана.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_3">Теперь нажмите на поле Условия, чтобы открыть список Условий.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_4">Нам нужно создать Условие. Нажмите Создать.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_5">В этом уроке мы хотим научиться обнаруживать
+        текст на экране, поэтому выберите Условие текста</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_6">Условие текста определяется текстом для обнаружения и
+        областью экрана для его поиска.\n\nПоскольку мы хотим кликнуть на кнопку игры, когда она показывает \"Hello\", введите Hello
+        в поле текст для обнаружения.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_6">Поле Алфавит определяет систему письма
+        обнаруживаемого текста. «Hello» использует латинский алфавит, поэтому здесь можно оставить значение по умолчанию, но не забудьте
+        изменить его при обнаружении нелатинских текстов.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_7">Теперь нам нужно указать Klick\'r, где искать
+        текст.\n\nКликните на селектор области обнаружения, чтобы задать её.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_8">Расположите и измените размер прямоугольника обнаружения так, чтобы он
+        охватывал четыре кнопки, так как «Hello» может случайно появиться в этих 4 местах. Когда область будет правильной, нажмите кнопку подтверждения для сохранения.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_secondary_8">Как обычно, старайтесь использовать как можно меньшую область,
+        оставляя поля вокруг обнаруживаемого текста. Чем меньше область, тем быстрее обнаружение.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_9">Ваше Условие теперь настроено!\n\nМожно внести ещё ряд
+        настроек, но параметры по умолчанию подходят для нашего базового случая.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться в список Условий.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_10">Закройте список Условий, чтобы вернуться к настройке События.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_11">С этим Условием сценарий знает, когда активировать Действия.\n\n
+        Теперь вам нужно определить, какие Действия активировать — для этой игры это клик по кнопке «Hello».\n\nКликните на
+        поле Действия, чтобы отобразить список Действий.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_12">Действие — это то, что выполняется, когда условия его события выполнены.\n\n
+        Это может быть клик, свайп, пауза, Intent (взаимодействие с другим приложением) или
+        изменение в выполнении Сценария, и для одного События можно задать несколько Действий.\n\nКликните на кнопку создания
+        Действия, чтобы создать ваше первое Действие.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_13">Сначала нам нужно выбрать тип для вашего Действия.\n\nДля этой игры нам нужно
+        просто кликнуть на кнопку, поэтому выберите Клик для создания нового Действия клика.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_14">Поскольку «Hello» перемещается, мы не можем использовать
+        фиксированную позицию. Измените параметр «Кликнуть на» на «Условие», чтобы кликать на обнаруженное Условие.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Кликните на селектор Условия, чтобы выбрать, на какое обнаруженное Условие кликать.
+        \n\nНам нужно это указать, поскольку событие может иметь несколько Условий.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_16">Для нашего случая использования это легко — у нас есть только одно Условие, текст «Hello».
+        \n\nВыберите его, чтобы кликать на это Условие, когда оно обнаружено на вашем экране.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Вот и всё!\nВаше Действие клика теперь правильно настроено для победы в
+        игре.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться в список Действий.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Закройте список Действий, чтобы вернуться к настройке События.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_19">Ваше Событие теперь имеет Условие и Действие, что означает, что оно знает, что
+        выполнять и когда.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться к диалогу Сценария.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Единственное требование для Сценария — иметь хотя бы одно Событие.\n
+        Поскольку наше Событие уже охватывает, как выиграть игру, нам больше ничего не нужно.\n\nКликните на кнопку сохранения, чтобы
+        сохранить Сценарий в базе данных и закрыть диалоги настройки.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Как вы видите, кнопка воспроизведения теперь доступна, что означает, что ваш
+        Сценарий действителен и может использоваться для обнаружения.\n\nКликните на неё, чтобы начать обнаружение.</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Воспроизводится, но ничего не происходит?\n\nЭто нормально, он будет кликать только
+        когда кнопка показывает «Hello», помните? Не останавливая сценарий, нажмите кнопку начать игру
+        и просто наблюдайте, как Klick\'r побеждает за вас!</string>
+
+    <string name="message_tutorial_text_conditions_moving_text_step_23">Поздравляем!\n\nТеперь вы знаете, как обнаружить движущийся текст, отображаемый на
+        экране.\nОзнакомьтесь с другими уроками, чтобы узнать о других сценариях использования.</string>
+</resources>
