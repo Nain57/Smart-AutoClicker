@@ -125,7 +125,7 @@ class TutorialListFragment : Fragment() {
     private fun showMediaProjectionWarning(item: TutorialCategoryUiItems.Item.Tutorial) {
         mediaProjectionRequest.showMediaProjectionWarning(
             context = requireContext(),
-            forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
+            forceEntireScreen = true,
             onSuccess = { resultCode, data -> startTutorial(item, resultCode, data) },
             onFailure = { showProjectionDeniedToast() },
             onError = { showUnsupportedDeviceDialog() },
