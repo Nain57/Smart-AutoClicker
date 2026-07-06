@@ -54,7 +54,9 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
             steps = listOf(
                 // Beginning, hide the overlay for now
                 TutorialStep.ChangeFloatingUiVisibility(
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     newVisibility = false,
                 ),
                 // Start screen, before first play
@@ -100,7 +102,7 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_screen_condition_still_target_step_6,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
-                        MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU,
+                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,

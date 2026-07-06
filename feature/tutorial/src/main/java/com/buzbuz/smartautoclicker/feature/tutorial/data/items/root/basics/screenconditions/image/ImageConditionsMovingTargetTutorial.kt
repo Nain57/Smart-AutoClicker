@@ -54,7 +54,9 @@ object ImageConditionsMovingTargetTutorial : TutorialItem {
             steps = listOf(
                 // Beginning, hide the overlay for now
                 TutorialStep.ChangeFloatingUiVisibility(
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.MAIN_MENU,
+                    ),
                     newVisibility = false,
                 ),
                 // Start screen, before first play
