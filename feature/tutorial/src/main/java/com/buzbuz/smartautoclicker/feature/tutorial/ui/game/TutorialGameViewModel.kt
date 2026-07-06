@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
-import android.graphics.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -81,8 +80,8 @@ class TutorialGameViewModel @Inject constructor(
         .map { game -> game?.toUiState() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
-    fun startGame(area: Rect) {
-        getGameController()?.startGame(area)
+    fun startGame() {
+        getGameController()?.startGame()
     }
 
     fun onTargetHit(color: TutorialGameTargetType) {

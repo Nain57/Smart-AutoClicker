@@ -22,6 +22,7 @@
     <dimen name="tutorial_instructions_image_max_width">144dp</dimen>
 
     <dimen name="tutorial_game_target_size">100dp</dimen>
+    <dimen name="tutorial_game_target_margin">8dp</dimen>
 
     <dimen name="tutorial_overlay_menu_width">56dp</dimen>
     <dimen name="tutorial_overlay_menu_height">152dp</dimen>

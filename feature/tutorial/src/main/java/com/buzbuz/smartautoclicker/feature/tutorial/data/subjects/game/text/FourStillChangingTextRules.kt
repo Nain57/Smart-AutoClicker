@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text
 
 import android.graphics.PointF
-import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
@@ -26,19 +25,15 @@ internal class FourStillChangingTextRules : TutorialGameRules {
 
     private var score: Int = 0
 
-    private var topLeftPosition: PointF = PointF(0f, 0f)
-    private var topRightPosition: PointF = PointF(0f, 0f)
-    private var bottomLeftPosition: PointF = PointF(0f, 0f)
-    private var bottomRightPosition: PointF = PointF(0f, 0f)
+    private val topLeftPosition: PointF = PointF(0.25f, 0.25f)
+    private val topRightPosition: PointF = PointF(0.75f, 0.25f)
+    private val bottomLeftPosition: PointF = PointF(0.25f, 0.75f)
+    private val bottomRightPosition: PointF = PointF(0.75f, 0.75f)
 
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        topLeftPosition = PointF(area.width() / 4f, area.height() / 4f)
-        topRightPosition = PointF(area.width() * 3f / 4f, area.height() / 4f)
-        bottomLeftPosition = PointF(area.width() / 4f, area.height() * 3f / 4f)
-        bottomRightPosition = PointF(area.width() * 3f / 4f, area.height() * 3f / 4f)
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
 
         return mapOf(

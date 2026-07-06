@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain
 
-import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import kotlinx.coroutines.flow.StateFlow
@@ -47,12 +46,8 @@ sealed interface TutorialSubjectController {
 
 
 
-        /**
-         * Starts the game loop.
-         *
-         * @param area the screen region in which targets may be placed.
-         */
-        fun startGame(area: Rect)
+        /** Starts the game loop. */
+        fun startGame()
 
         /**
          * Notifies the controller that the user tapped a valid target.

@@ -17,8 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
-import android.graphics.Rect
-import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextFloat
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
@@ -32,19 +30,11 @@ internal class OneMovingTargetRules : TutorialGameRules {
     private val random: Random = Random(System.currentTimeMillis())
 
     private var score: Int = 0
-    private var targetsArea: RectF? = null
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
-        targetsArea = RectF(
-            area.left.toFloat() + TARGET_MARGIN,
-            area.top.toFloat() + TARGET_MARGIN,
-            area.right.toFloat() - TARGET_MARGIN,
-            area.bottom.toFloat() - TARGET_MARGIN,
-        )
-
         return updateTargetPosition()
     }
 
@@ -64,18 +54,15 @@ internal class OneMovingTargetRules : TutorialGameRules {
         timeLeft: Long,
     ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
 
-    private fun updateTargetPosition() : Map<TutorialGameTargetType, TutorialGameTargetState> {
-        val area = targetsArea ?: return emptyMap()
-
-        return mapOf(
+    private fun updateTargetPosition() : Map<TutorialGameTargetType, TutorialGameTargetState> =
+        mapOf(
             TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
                 position = PointF(
-                    random.nextFloat(area.left, area.right),
-                    random.nextFloat(area.top, area.bottom),
+                    random.nextFloat(TARGET_MARGIN, 1f - TARGET_MARGIN),
+                    random.nextFloat(TARGET_MARGIN, 1f - TARGET_MARGIN),
                 )
             ),
         )
-    }
 }
 
-private const val TARGET_MARGIN = 10
+private const val TARGET_MARGIN = 0.05f

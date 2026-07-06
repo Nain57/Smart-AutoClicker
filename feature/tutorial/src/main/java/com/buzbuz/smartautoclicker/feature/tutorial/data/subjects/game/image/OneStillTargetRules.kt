@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
-import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
@@ -28,11 +27,11 @@ internal class OneStillTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
         return mapOf(
             TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
-                position = PointF(area.width() / 2f, area.height() / 2f),
+                position = PointF(0.5f, 0.5f),
             )
         )
     }

@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game
 
 import android.graphics.PointF
-import android.graphics.Rect
 
 
 /**
@@ -27,18 +26,19 @@ import android.graphics.Rect
  * declare a tutorial in the feature module and return updated target positions so the UI can
  * redraw them without knowing the game rules.
  *
- * All returned maps use [TutorialGameTargetType] as the key and a screen-coordinate [PointF]
- * (center of the target) as the value. An empty map means no targets should be displayed.
+ * All returned maps use [TutorialGameTargetType] as the key and a normalized [PointF]
+ * (center of the target, coordinates in [0, 1]) as the value. An empty map means no targets
+ * should be displayed. The UI layer is responsible for mapping normalized positions to actual
+ * view coordinates.
  */
 interface TutorialGameRules {
 
     /**
      * Called once when the game starts.
      *
-     * @param area the screen region available for placing targets.
-     * @return initial target center positions to display.
+     * @return initial target center positions in normalized [0, 1] coordinates.
      */
-    fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState>
+    fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState>
 
     /**
      * Called each time the user successfully hits a valid target.

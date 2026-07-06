@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject
 
-import android.graphics.Rect
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -53,14 +52,14 @@ internal class TutorialGameEngine (
     override val state: StateFlow<TutorialSubjectState.Game> = _state
 
 
-    override fun startGame(area: Rect) {
+    override fun startGame() {
         if (gameJob != null) return
 
         gameJob = coroutineScopeIo.launch {
             Log.d(TAG, "Start game")
 
             // Init game values
-            val initialTargets = game.rules.onStart(area)
+            val initialTargets = game.rules.onStart()
             val gameDuration = game.durationSeconds
             _state.update { old ->
                 old.copy(

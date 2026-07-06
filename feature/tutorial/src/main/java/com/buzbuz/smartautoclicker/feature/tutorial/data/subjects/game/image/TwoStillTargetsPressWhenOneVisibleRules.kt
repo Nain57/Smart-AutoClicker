@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
-import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
@@ -31,13 +30,12 @@ internal class TwoStillTargetsPressWhenOneVisibleRules : TutorialGameRules {
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
-        redTargetPosition = PointF(area.width() * 0.75f, area.height() / 2f)
+        redTargetPosition = PointF(0.75f, 0.5f)
 
         return toggleRedVisibility(
-            mapOf(TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
-                PointF(area.width() * 0.25f, area.height() / 2f)))
+            mapOf(TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(PointF(0.25f, 0.5f)))
         )
     }
 

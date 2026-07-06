@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text
 
 import android.graphics.PointF
-import android.graphics.Rect
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
@@ -25,12 +24,11 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 internal class OneStillChangingTextRules : TutorialGameRules {
 
     private var score: Int = 0
-    private var targetPosition: PointF = PointF(0f, 0f)
+    private val targetPosition: PointF = PointF(0.5f, 0.5f)
 
     override fun getScore(): Int = score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        targetPosition = PointF(area.width() / 2f, area.height() / 2f)
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
 
         return mapOf(TutorialGameTargetType.TEXT_HELLO to TutorialGameTargetState.StaticContent(targetPosition))

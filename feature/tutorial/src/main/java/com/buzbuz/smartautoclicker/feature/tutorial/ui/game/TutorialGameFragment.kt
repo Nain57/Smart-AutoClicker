@@ -17,14 +17,13 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
 
 import android.graphics.Point
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.view.doOnLayout
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
@@ -69,7 +68,7 @@ class TutorialGameFragment : Fragment() {
                 }
             }
 
-            buttonStartRetry.setOnClickListener { viewModel.startGame(gameArea.area()) }
+            buttonStartRetry.setOnClickListener { viewModel.startGame() }
         }
 
         return viewBinding.root
@@ -204,20 +203,26 @@ class TutorialGameFragment : Fragment() {
     }
 
     private fun updateTargetsState(state: Map<TutorialGameTargetType, TutorialGameTargetState>) {
+        val areaWidth = viewBinding.gameArea.width.toFloat()
+        val areaHeight = viewBinding.gameArea.height.toFloat()
+
         TutorialGameTargetType.entries.forEach { targetType ->
             val targetView = viewBinding.getTargetView(targetType)
-            val state = state[targetType]
-            val position = state?.position
+            val targetState = state[targetType]
+            val position = targetState?.position
 
             if (position == null) {
                 targetView.visibility = View.GONE
             } else {
-                targetView.x = position.x - targetView.width / 2f
-                targetView.y = position.y - targetView.height / 2f
                 targetView.visibility = View.VISIBLE
+                targetView.doOnLayout {
+                    val margin = resources.getDimension(R.dimen.tutorial_game_target_margin)
+                    it.x = (position.x * areaWidth - it.width / 2f).coerceIn(margin, areaWidth - it.width - margin)
+                    it.y = (position.y * areaHeight - it.height / 2f).coerceIn(margin, areaHeight - it.height - margin)
+                }
 
-                if (state is TutorialGameTargetState.ChangingContent && targetView is TextView) {
-                    targetView.text = state.content.toString()
+                if (targetState is TutorialGameTargetState.ChangingContent && targetView is TextView) {
+                    targetView.text = targetState.content.toString()
                 }
             }
         }
@@ -235,5 +240,3 @@ class TutorialGameFragment : Fragment() {
         }
 }
 
-private fun FrameLayout.area(): Rect =
-    Rect(0, 0, width, height)

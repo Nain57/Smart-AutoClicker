@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
 
 import android.graphics.PointF
-import android.graphics.Rect
 import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextPositionIn
@@ -31,21 +30,13 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
 
     private val random: Random = Random(System.currentTimeMillis())
 
-    private var targetsArea: RectF? = null
     private var score: Int = 0
 
     override fun getScore(): Int =
         score
 
-    override fun onStart(area: Rect): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
         score = 0
-        targetsArea = RectF(
-            area.left.toFloat() + TARGET_MARGIN,
-            area.top.toFloat() + TARGET_MARGIN,
-            area.right.toFloat() - TARGET_MARGIN,
-            area.bottom.toFloat() - TARGET_MARGIN,
-        )
-
         return getNewTargets()
     }
 
@@ -74,7 +65,7 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
     ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
 
     private fun getNewTargets(): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        val area = targetsArea ?: return emptyMap()
+        val area = RectF(TARGET_MARGIN, TARGET_MARGIN, 1f - TARGET_MARGIN, 1f - TARGET_MARGIN)
 
         // Find two positions and ensure the targets do not overlap
         val bluePosition = random.nextPositionIn(area)
@@ -101,5 +92,5 @@ private fun PointF.enclosingRectIntersects(other: PointF, shapeHalfSize: Float):
 private fun PointF.toEnclosingRect(halfSize: Float): RectF =
     RectF(x - halfSize, y - halfSize, x + halfSize, y + halfSize)
 
-private const val TARGET_MARGIN = 10
-private const val TARGET_HALF_SIZE = 50f
+private const val TARGET_MARGIN = 0.05f
+private const val TARGET_HALF_SIZE = 0.15f
