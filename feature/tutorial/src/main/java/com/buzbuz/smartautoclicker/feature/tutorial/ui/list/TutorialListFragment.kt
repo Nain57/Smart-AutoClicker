@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,16 +54,6 @@ class TutorialListFragment : Fragment() {
 
     /** The result launcher for the projection permission dialog. */
     private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
-    /** Handles back navigation: browse up a category, or let the activity handle it when at the root. */
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (!viewModel.browseParent()) {
-                isEnabled = false
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-                isEnabled = true
-            }
-        }
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -80,9 +69,6 @@ class TutorialListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.list.adapter = adapter
-
-        requireActivity().onBackPressedDispatcher
-            .addCallback(viewLifecycleOwner, backPressedCallback)
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -109,7 +95,9 @@ class TutorialListFragment : Fragment() {
     private fun onItemClicked(item: TutorialCategoryUiItems.Item) {
         when (item) {
             is TutorialCategoryUiItems.Item.Category -> {
-                viewModel.browseCategory(item)
+                findNavController().navigate(
+                    TutorialListFragmentDirections.tutorialListToCategory(item.type)
+                )
             }
 
             is TutorialCategoryUiItems.Item.Tutorial -> {

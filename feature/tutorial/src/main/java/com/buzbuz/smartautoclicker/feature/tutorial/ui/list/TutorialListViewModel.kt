@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.ui.list
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -29,24 +30,21 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverl
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.GetTutorialCategoryUseCase
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class TutorialListViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val appComponentsProvider: AppComponentsProvider,
     private val accessibilityServiceConnection: LocalAccessibilityServiceConnection,
     private val permissionsController: PermissionsController,
@@ -55,15 +53,12 @@ class TutorialListViewModel @Inject constructor(
     private val getTutorialCategoryUseCase: GetTutorialCategoryUseCase,
 ) : ViewModel() {
 
-    private val categoryBackStack: MutableList<TutorialCategory.Type> = mutableListOf()
+    private val categoryType: TutorialCategory.Type =
+        TutorialListFragmentArgs.fromSavedStateHandle(savedStateHandle).categoryType
 
-    private val browsedCategoryType: MutableStateFlow<TutorialCategory.Type> =
-        MutableStateFlow(TutorialCategory.Type.ROOT)
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val uiState: StateFlow<TutorialCategoryUiState> = browsedCategoryType
-        .flatMapLatest { browsedType -> getTutorialCategoryUseCase(browsedType) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), TutorialCategoryUiState.Loading)
+    val uiState: StateFlow<TutorialCategoryUiState> =
+        getTutorialCategoryUseCase(categoryType)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), TutorialCategoryUiState.Loading)
 
 
     fun isEntireScreenCaptureForced(): Boolean =
@@ -82,18 +77,6 @@ class TutorialListViewModel @Inject constructor(
             ),
             onAllGranted = onAllGranted,
         )
-    }
-
-    fun browseCategory(item: TutorialCategoryUiItems.Item.Category) {
-        categoryBackStack.add(browsedCategoryType.value)
-        browsedCategoryType.update { item.type }
-    }
-
-    fun browseParent(): Boolean {
-        if (browsedCategoryType.value == TutorialCategory.Type.ROOT) return false
-        val parentType = categoryBackStack.removeLastOrNull() ?: return false
-        browsedCategoryType.update { parentType }
-        return true
     }
 
     fun startTutorial(item: TutorialCategoryUiItems.Item.Tutorial, resultCode: Int, data: Intent) {

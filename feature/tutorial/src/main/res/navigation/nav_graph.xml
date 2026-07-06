@@ -27,9 +27,26 @@
         android:label="fragment_two"
         tools:layout="@layout/fragment_tutorial_list">
 
+        <argument
+            android:name="categoryType"
+            app:argType="com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory$Type"
+            android:defaultValue="ROOT"/>
+
+        <action
+            android:id="@+id/tutorial_list_to_category"
+            app:destination="@id/fragment_tutorial_list"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
         <action
             android:id="@+id/tutorial_list_to_game"
-            app:destination="@id/fragment_game"/>
+            app:destination="@id/fragment_game"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
 
     </fragment>
 
