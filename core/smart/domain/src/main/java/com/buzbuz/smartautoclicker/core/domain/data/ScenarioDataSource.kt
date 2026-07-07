@@ -530,7 +530,7 @@ internal class ScenarioDataSource @Inject constructor(
         }
 
         toBeRemoved.forEach { counter ->
-            currentDatabase.value.countersDao().deleteCounter(counter.name)
+            currentDatabase.value.countersDao().deleteCounter(counter.name, scenarioDbId)
         }
     }
 
