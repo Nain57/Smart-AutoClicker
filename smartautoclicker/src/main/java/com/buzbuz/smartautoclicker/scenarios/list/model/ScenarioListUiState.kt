@@ -21,8 +21,6 @@ import androidx.annotation.IntRange
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_DISABLED_ITEM_INT
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.ALPHA_ENABLED_ITEM_INT
 import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 
 /**
@@ -53,8 +51,8 @@ data class ScenarioListUiState(
         val searchItemState: Item = Item(false),
         val selectAllItemState: Item = Item(false),
         val cancelItemState: Item = Item(false),
-        val importItemState: Item = Item(false),
-        val exportItemState: Item = Item(false),
+        val importExportItemState: Item = Item(false),
+        val tutorialsItemState: Item = Item(false),
         val settingsItemState: Item = Item(false),
     ) {
 
@@ -76,27 +74,25 @@ data class ScenarioListUiState(
         data class Export(private val canExport: Boolean) : Menu(
             selectAllItemState = Item(true),
             cancelItemState = Item(true),
-            exportItemState = Item(
+            importExportItemState = Item(
                 visible = true,
                 enabled = canExport,
-                iconAlpha = if (canExport) ALPHA_ENABLED_ITEM_INT else ALPHA_DISABLED_ITEM_INT,
-            ),
+            )
         )
 
         data class Selection(
             private val searchEnabled: Boolean,
-            private val exportEnabled: Boolean,
         ) : Menu(
             searchItemState = Item(searchEnabled),
             selectAllItemState = Item(false),
             cancelItemState = Item(false),
-            importItemState = Item(
+            importExportItemState = Item(
                 visible = true,
                 enabled = true,
             ),
-            exportItemState = Item(
-                visible = exportEnabled,
-                enabled = exportEnabled,
+            tutorialsItemState = Item(
+                visible = true,
+                enabled = true,
             ),
             settingsItemState = Item(true),
         )

@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -28,14 +27,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
-import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
-import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setImageDrawable
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
 import com.buzbuz.smartautoclicker.databinding.FragmentSettingsBinding
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,9 +42,6 @@ class SettingsFragment : Fragment() {
     private val viewModel: SettingsViewModel by viewModels()
     private lateinit var viewBinding: FragmentSettingsBinding
 
-    private val tutorialNavigator: TutorialNavigator by lazy {
-        requireContext().getTutorialNavigator()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         viewBinding = FragmentSettingsBinding.inflate(inflater, container, false)
@@ -58,13 +50,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewBinding.fieldTutorials.apply {
-            setTitle(requireContext().getString(R.string.field_tutorial_title))
-            setupDescriptions(listOf(requireContext().getString(R.string.field_tutorial_desc)))
-            setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_tutorials))
-            setOnClickListener { tutorialNavigator.startTutorialActivity(requireContext()) }
-        }
 
         viewBinding.fieldShowScenarioFilters.apply {
             setTitle(requireContext().getString(R.string.field_show_scenario_filters_ui_title))

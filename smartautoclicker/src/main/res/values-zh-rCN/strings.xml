@@ -102,4 +102,9 @@
     <string name="field_tutorial_title">教程</string>
     <string name="field_tutorial_desc">了解如何使用 Klick\'r</string>
 
+    <string name="dialog_title_backup">备份</string>
+    <string name="message_backup">创建或导入场景的 zip 压缩包</string>
+    <string name="button_import">导入</string>
+    <string name="button_export">导出</string>
+
 </resources>

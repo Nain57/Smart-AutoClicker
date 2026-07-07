@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.scenarios.list
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioBackupSelection
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.scenarios.list.model.isEmpty
@@ -129,6 +129,12 @@ class ScenarioListViewModel @Inject constructor(
         settingsRepository.setScenarioSortShowSmart(show)
     }
 
+    fun getScenarioValidForBackupCount(): Int =
+        uiState.value?.listContent?.fold(initial = 0) { acc, item ->
+            if (item is ScenarioListUiState.Item.ScenarioItem.Valid) acc + 1
+            else acc
+        } ?: 0
+
     /** @return the list of selected dumb scenario identifiers. */
     fun getDumbScenariosSelectedForBackup(): Collection<Long> =
         selectedForBackup.value.dumbSelection.toList()
@@ -214,7 +220,6 @@ class ScenarioListViewModel @Inject constructor(
         )
         ScenarioListUiState.Type.SELECTION -> ScenarioListUiState.Menu.Selection(
             searchEnabled = scenarioItems.isNotEmpty(),
-            exportEnabled = scenarioItems.firstOrNull { it is ScenarioListUiState.Item.ScenarioItem.Valid } != null,
         )
     }
 

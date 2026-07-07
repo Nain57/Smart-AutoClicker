@@ -152,4 +152,9 @@
     <string name="field_tutorial_title">درس تعليمي</string>
     <string name="field_tutorial_desc">تعلم كيفية استخدام Klick\'r</string>
 
+    <string name="dialog_title_backup">نسخ احتياطي</string>
+    <string name="message_backup">أنشئ أو استورد أرشيف مضغوط من السيناريوهات</string>
+    <string name="button_import">استيراد</string>
+    <string name="button_export">تصدير</string>
+
 </resources>

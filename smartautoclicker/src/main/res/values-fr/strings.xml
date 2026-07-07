@@ -155,4 +155,9 @@
     <string name="field_tutorial_title">Tutoriel</string>
     <string name="field_tutorial_desc">Apprenez à utiliser Klick\'r</string>
 
+    <string name="dialog_title_backup">Sauvegarde</string>
+    <string name="message_backup">Créez ou importez une archive zip de scénarios</string>
+    <string name="button_import">Importer</string>
+    <string name="button_export">Exporter</string>
+
 </resources>

@@ -38,6 +38,10 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.core.base.extensions.applySafeContentInsets
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
+import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
+import com.buzbuz.smartautoclicker.databinding.DialogImportExportBinding
 import com.buzbuz.smartautoclicker.databinding.FragmentScenariosBinding
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment
 import com.buzbuz.smartautoclicker.feature.backup.ui.BackupDialogFragment.Companion.FRAGMENT_TAG_BACKUP_DIALOG
@@ -66,6 +70,10 @@ class ScenarioListFragment : Fragment() {
 
     interface Listener {
         fun startScenario(item: ScenarioListUiState.Item.ScenarioItem)
+    }
+
+    private val tutorialNavigator: TutorialNavigator by lazy {
+        requireContext().getTutorialNavigator()
     }
 
     /** ViewModel providing the scenarios data to the UI. */
@@ -137,16 +145,18 @@ class ScenarioListFragment : Fragment() {
         val uiState = scenarioListViewModel.uiState.value ?: return false
 
         when (item.itemId) {
-            R.id.action_export -> when {
-                uiState.type == ScenarioListUiState.Type.EXPORT -> showBackupDialog(
-                    isImport = false,
-                    smartScenariosToBackup = scenarioListViewModel.getSmartScenariosSelectedForBackup(),
-                    dumbScenariosToBackup = scenarioListViewModel.getDumbScenariosSelectedForBackup(),
-                )
-                else -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.EXPORT)
+            R.id.action_import_export -> {
+                if (uiState.type == ScenarioListUiState.Type.EXPORT) {
+                    showBackupDialog(
+                        isImport = false,
+                        smartScenariosToBackup = scenarioListViewModel.getSmartScenariosSelectedForBackup(),
+                        dumbScenariosToBackup = scenarioListViewModel.getDumbScenariosSelectedForBackup(),
+                    )
+                }
+                else if (scenarioListViewModel.getScenarioValidForBackupCount() == 0) showBackupDialog(isImport = true)
+                else showImportExportDialog()
             }
-
-            R.id.action_import -> showBackupDialog(true)
+            R.id.action_tutorials -> tutorialNavigator.startTutorialActivity(requireContext())
             R.id.action_cancel -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SELECTION)
             R.id.action_search -> scenarioListViewModel.setUiState(ScenarioListUiState.Type.SEARCH)
             R.id.action_select_all -> scenarioListViewModel.toggleAllScenarioSelectionForBackup()
@@ -172,8 +182,8 @@ class ScenarioListFragment : Fragment() {
         viewBinding.topAppBar.menu.apply {
             findItem(R.id.action_select_all)?.bind(menuState.selectAllItemState)
             findItem(R.id.action_cancel)?.bind(menuState.cancelItemState)
-            findItem(R.id.action_import)?.bind(menuState.importItemState)
-            findItem(R.id.action_export)?.bind(menuState.exportItemState)
+            findItem(R.id.action_import_export)?.bind(menuState.importExportItemState)
+            findItem(R.id.action_tutorials)?.bind(menuState.tutorialsItemState)
             findItem(R.id.action_search)?.apply {
                 bind(menuState.searchItemState)
                 actionView?.let { actionView ->
@@ -299,6 +309,28 @@ class ScenarioListFragment : Fragment() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .create())
+    }
+
+    private fun showImportExportDialog() {
+        val dialogContext = requireContext().getDynamicColorsContext(R.style.AppTheme)
+        val dialogViewBinding = DialogImportExportBinding.inflate(LayoutInflater.from(dialogContext))
+        val dialog = MaterialAlertDialogBuilder(dialogContext)
+            .setView(dialogViewBinding.root)
+            .create()
+
+        dialogViewBinding.apply {
+            buttonImport.setOnClickListener {
+                dialog.dismiss()
+                showBackupDialog(isImport = true)
+            }
+
+            buttonExport.setOnClickListener {
+                dialog.dismiss()
+                scenarioListViewModel.setUiState(ScenarioListUiState.Type.EXPORT)
+            }
+        }
+
+        dialog.show()
     }
 
     /**

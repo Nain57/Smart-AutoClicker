@@ -155,4 +155,9 @@
     <string name="field_tutorial_title">Навчання</string>
     <string name="field_tutorial_desc">Навчитися користуватися Klick\'r</string>
 
+    <string name="dialog_title_backup">Резервна копія</string>
+    <string name="message_backup">Створіть або імпортуйте zip-архів сценаріїв</string>
+    <string name="button_import">Імпорт</string>
+    <string name="button_export">Експорт</string>
+
 </resources>

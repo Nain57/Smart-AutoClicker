@@ -34,14 +34,7 @@
         android:visible="false"/>
 
     <item
-        android:id="@+id/action_export"
-        android:icon="@drawable/ic_menu_save"
-        app:showAsAction="always"
-        android:title="@string/menu_item_title_export"
-        tools:ignore="AlwaysShowAction" />
-
-    <item
-        android:id="@+id/action_import"
+        android:id="@+id/action_import_export"
         android:icon="@drawable/ic_load"
         app:showAsAction="always"
         android:title="@string/menu_item_title_import"
@@ -53,6 +46,13 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/menu_item_title_search" />
+
+    <item
+        android:id="@+id/action_tutorials"
+        android:icon="@drawable/ic_tutorials"
+        app:showAsAction="always"
+        android:title="@string/menu_item_title_export"
+        tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/action_settings"

@@ -147,6 +147,12 @@
     <string name="button_condition_migration_running">Migrating</string>
     <string name="button_condition_migration_finished">OK</string>
 
+
+    <string name="dialog_title_backup">Backup</string>
+    <string name="message_backup">Create or import a zip archive of scenarios</string>
+    <string name="button_import">Import</string>
+    <string name="button_export">Export</string>
+
     <string name="field_tutorial_title">Tutorial</string>
     <string name="field_tutorial_desc">Learn how to use Klick\'r</string>
 
