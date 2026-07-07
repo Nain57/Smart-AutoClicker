@@ -19,33 +19,28 @@ package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
-data class TutorialCategory(
+
+data class TutorialSlideshow(
     val type: Type,
     @field:StringRes val nameRes: Int,
     @field:StringRes val shortDescriptionRes: Int,
-    @field:StringRes val longDescriptionRes: Int,
-    @field:DrawableRes val iconRes: Int,
-    val content: List<Content>,
+    val slideshowItems: List<SlideshowItem>,
 ) {
 
-    sealed interface Content {
-        data class Category(val type: Type) : Content
-        data class Tutorial(val type: TutorialItem.Type) : Content
-        data class Slideshow(val type: TutorialSlideshow.Type) : Content
-    }
+    data class SlideshowItem(
+        @field:StringRes val titleRes: Int,
+        @field:StringRes val tutorialTextRes: Int,
+        @field:DrawableRes val tutorialImage: Int,
+    )
 
     enum class Type {
-        ACTIONS,
-        BASICS,
-        COLOR_CONDITION,
-        COMBINE_CONDITIONS,
-        COUNTERS,
-        EVENT_STATE,
-        IMAGE_CONDITION,
-        NUMBER_CONDITION,
-        ROOT,
-        SCREEN_CONDITIONS,
-        TEXT_CONDITION,
-        TRIGGER_CONDITIONS,
+        IMAGE_CONDITION_CAPTURE,
+        IMAGE_CONDITION_DETECTION_AREA,
+        /*
+        TEXT_CONDITION_DETECTION_AREA,
+        NUMBER_CONDITION_DETECTION_AREA,
+        SCREEN_CONDITION_THRESHOLD,
+        SCREEN_CONDITION_TIMINGS,
+        */
     }
 }

@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepositor
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.data.mapping.toTutorialSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
 
@@ -43,7 +44,18 @@ class GetTutorialCategoryUseCase @Inject constructor(
             categoryNameRes = nameRes,
             items = buildList {
                 add(this@toUiState.toHeaderUiItem())
-                addAll(content.map { categoryContent -> categoryContent.toUiItem(completionState)})
+
+                val items = content.filter { item -> item !is TutorialCategory.Content.Slideshow }
+                if (items.isNotEmpty()) {
+                    add(TutorialCategoryUiItems.SectionDivider)
+                    addAll(items.map { categoryContent -> categoryContent.toUiItem(completionState)})
+                }
+
+                val slideshows = content.filterIsInstance<TutorialCategory.Content.Slideshow>()
+                if (slideshows.isNotEmpty()) {
+                    add(TutorialCategoryUiItems.SectionDivider)
+                    addAll(slideshows.map { slideshow -> slideshow.toSlideshowUiItem() })
+                }
             }
         )
 
@@ -58,6 +70,7 @@ class GetTutorialCategoryUseCase @Inject constructor(
         when (this) {
             is TutorialCategory.Content.Category -> toCategoryUiItem()
             is TutorialCategory.Content.Tutorial -> toTutorialUiItem(completionState)
+            is TutorialCategory.Content.Slideshow -> toSlideshowUiItem()
         }
 
     private fun TutorialCategory.Content.Category.toCategoryUiItem(): TutorialCategoryUiItems.Item.Category {
@@ -82,6 +95,15 @@ class GetTutorialCategoryUseCase @Inject constructor(
             nameRes = info.nameResId,
             descriptionRes = info.descResId,
             tutorialCompleted = isCompleted,
+        )
+    }
+
+    private fun TutorialCategory.Content.Slideshow.toSlideshowUiItem(): TutorialCategoryUiItems.Item.Slideshow {
+        val slideshow = type.toTutorialSlideshow()
+        return TutorialCategoryUiItems.Item.Slideshow(
+            type = type,
+            nameRes = slideshow.nameRes,
+            descriptionRes = slideshow.shortDescriptionRes,
         )
     }
 

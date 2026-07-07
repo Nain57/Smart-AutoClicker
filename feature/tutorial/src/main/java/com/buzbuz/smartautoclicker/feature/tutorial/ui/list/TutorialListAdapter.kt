@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.ItemTutorialBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.ItemTutorialCategoryHeaderBinding
+import com.buzbuz.smartautoclicker.feature.tutorial.databinding.ItemTutorialCategoryDividerBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
 
 class TutorialListAdapter(
@@ -41,6 +42,7 @@ class TutorialListAdapter(
         when (getItem(position)) {
             is TutorialCategoryUiItems.Header -> R.layout.item_tutorial_category_header
             is TutorialCategoryUiItems.Item -> R.layout.item_tutorial
+            TutorialCategoryUiItems.SectionDivider -> R.layout.item_tutorial_category_divider
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -50,9 +52,14 @@ class TutorialListAdapter(
                     ItemTutorialCategoryHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 )
 
-            else ->
+            R.layout.item_tutorial ->
                 TutorialItemViewHolder(
                     ItemTutorialBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                )
+
+            else ->
+                TutorialCategoryDividerViewHolder(
+                    ItemTutorialCategoryDividerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 )
         }
 
@@ -60,6 +67,7 @@ class TutorialListAdapter(
         when (val item = getItem(position)) {
             is TutorialCategoryUiItems.Header -> (holder as TutorialCategoryHeaderViewHolder).onBind(item)
             is TutorialCategoryUiItems.Item -> (holder as TutorialItemViewHolder).onBind(item, onItemClicked)
+            TutorialCategoryUiItems.SectionDivider -> Unit // Nothing to do
         }
     }
 }
@@ -95,6 +103,10 @@ class TutorialCategoryHeaderViewHolder(
     }
 }
 
+class TutorialCategoryDividerViewHolder(
+    binding: ItemTutorialCategoryDividerBinding,
+) : ViewHolder(binding.root)
+
 class TutorialItemViewHolder(private val binding: ItemTutorialBinding) : ViewHolder(binding.root) {
 
     fun onBind(item: TutorialCategoryUiItems.Item, onItemClicked: (item: TutorialCategoryUiItems.Item) -> Unit) {
@@ -121,5 +133,7 @@ class TutorialItemViewHolder(private val binding: ItemTutorialBinding) : ViewHol
             is TutorialCategoryUiItems.Item.Tutorial ->
                 if (tutorialCompleted) R.drawable.ic_tutorial_completed
                 else R.drawable.ic_tutorial_not_completed
+
+            is TutorialCategoryUiItems.Item.Slideshow -> R.drawable.ic_tutorial_slideshow
         }
 }

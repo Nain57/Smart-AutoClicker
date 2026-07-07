@@ -26,7 +26,7 @@ sealed interface TutorialCategoryUiState {
 
     data class Loaded(
         @field:StringRes val categoryNameRes: Int,
-        val items: List<TutorialCategoryUiItems>
+        val items: List<TutorialCategoryUiItems>,
     ) : TutorialCategoryUiState
 }
 
@@ -37,6 +37,8 @@ sealed interface TutorialCategoryUiItems {
         @field:StringRes val descriptionRes: Int,
         @field:DrawableRes val iconRes: Int,
     ): TutorialCategoryUiItems
+
+    data object SectionDivider : TutorialCategoryUiItems
 
     sealed interface Item : TutorialCategoryUiItems {
 
@@ -55,6 +57,12 @@ sealed interface TutorialCategoryUiItems {
             @field:StringRes override val nameRes: Int,
             @field:StringRes override val descriptionRes: Int,
             val tutorialCompleted: Boolean,
+        ) : Item
+
+        data class Slideshow(
+            val type: TutorialSlideshow.Type,
+            @field:StringRes override val nameRes: Int,
+            @field:StringRes override val descriptionRes: Int,
         ) : Item
     }
 }

@@ -107,6 +107,10 @@ class TutorialListFragment : Fragment() {
                     onAllGranted = { showMediaProjectionWarning(item) },
                 )
             }
+
+            is TutorialCategoryUiItems.Item.Slideshow -> {
+
+            }
         }
     }
 

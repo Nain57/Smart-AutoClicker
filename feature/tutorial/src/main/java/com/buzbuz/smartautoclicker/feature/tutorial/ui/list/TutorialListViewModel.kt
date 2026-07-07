@@ -48,9 +48,8 @@ class TutorialListViewModel @Inject constructor(
     private val appComponentsProvider: AppComponentsProvider,
     private val accessibilityServiceConnection: LocalAccessibilityServiceConnection,
     private val permissionsController: PermissionsController,
-    private val settingsRepository: SettingsRepository,
     private val tutorialRepository: TutorialRepository,
-    private val getTutorialCategoryUseCase: GetTutorialCategoryUseCase,
+    getTutorialCategoryUseCase: GetTutorialCategoryUseCase,
 ) : ViewModel() {
 
     private val categoryType: TutorialCategory.Type =
@@ -59,10 +58,6 @@ class TutorialListViewModel @Inject constructor(
     val uiState: StateFlow<TutorialCategoryUiState> =
         getTutorialCategoryUseCase(categoryType)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), TutorialCategoryUiState.Loading)
-
-
-    fun isEntireScreenCaptureForced(): Boolean =
-        settingsRepository.isEntireScreenCaptureForced()
 
     fun startPermissionFlowIfNeeded(activity: AppCompatActivity, onAllGranted: () -> Unit) {
         permissionsController.startPermissionsUiFlow(
