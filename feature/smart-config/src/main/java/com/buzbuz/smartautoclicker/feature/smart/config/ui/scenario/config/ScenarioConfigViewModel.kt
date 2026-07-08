@@ -53,6 +53,8 @@ class ScenarioConfigViewModel @Inject constructor(
     private val userComputeRateUnit: MutableStateFlow<ComputeRateUnitDropdownItem?> =
         MutableStateFlow(editionRepository.editionState.getScenario()?.getInitialComputeRateUnitItem())
 
+    private var cachedComputeRate: Double = editionRepository.editionState.getScenario()?.computeRate?.takeIf { it > 0.0 } ?: FRAME_LIMIT_DEFAULT_VALUE
+
     val uiState: StateFlow<ScenarioConfigUiState?> = configuredScenario
         .combine(userComputeRateUnit) { scenario, userUnit ->
             scenario.toUiState(
@@ -95,7 +97,7 @@ class ScenarioConfigViewModel @Inject constructor(
         editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {
                 editionRepository.updateEditedScenario(
-                    scenario.copy(computeRate = if (scenario.computeRate != 0.0) 0.0 else FRAME_LIMIT_DEFAULT_VALUE)
+                    scenario.copy(computeRate = if (scenario.computeRate != 0.0) 0.0 else cachedComputeRate)
                 )
             }
         }
@@ -114,6 +116,8 @@ class ScenarioConfigViewModel @Inject constructor(
             else value
 
         if (newValue > FRAME_LIMIT_MAX_VALUE) return
+
+        cachedComputeRate = newValue
 
         editionRepository.editionState.getScenario()?.let { scenario ->
             viewModelScope.launch {

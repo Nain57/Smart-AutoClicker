@@ -72,6 +72,8 @@ class EventDialogViewModel @Inject constructor(
     private val userEventCooldownTimeUnit: MutableStateFlow<TimeUnitDropDownItem?> =
         MutableStateFlow(editionRepository.editionState.getEditedEvent<Event>()?.getInitialCooldownTimeUnit())
 
+    private var cachedCooldownMs: Long = editionRepository.editionState.getEditedEvent<ScreenEvent>()?.cooldownMs?.takeIf { it > 0 } ?: 100L
+
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
         .distinctUntilChanged()
@@ -135,8 +137,15 @@ class EventDialogViewModel @Inject constructor(
 
     fun toggleCooldownState() {
         updateEditedEvent { oldValue ->
-            if (oldValue is ScreenEvent) oldValue.copy(cooldownMs = if (oldValue.cooldownMs == 0L) 1 else 0)
-            else oldValue
+            if (oldValue is ScreenEvent) {
+                if (oldValue.cooldownMs == 0L) {
+                    val unit = if (cachedCooldownMs == 100L) TimeUnitDropDownItem.Milliseconds else userEventCooldownTimeUnit.value ?: TimeUnitDropDownItem.Milliseconds
+                    userEventCooldownTimeUnit.update { unit }
+                    oldValue.copy(cooldownMs = cachedCooldownMs)
+                } else {
+                    oldValue.copy(cooldownMs = 0L)
+                }
+            } else oldValue
         }
     }
 
@@ -148,14 +157,15 @@ class EventDialogViewModel @Inject constructor(
         if (value == null || value <= 0L) return
         val timeUnit = userEventCooldownTimeUnit.value ?: return
 
+        val newCooldownMs = when (timeUnit) {
+            TimeUnitDropDownItem.Minutes -> value * 60000
+            TimeUnitDropDownItem.Seconds -> value * 1000
+            else -> value
+        }
+        cachedCooldownMs = newCooldownMs
+
         updateEditedEvent { oldValue ->
-            if (oldValue is ScreenEvent) oldValue.copy(
-                cooldownMs = when (timeUnit) {
-                    TimeUnitDropDownItem.Minutes -> value * 60000
-                    TimeUnitDropDownItem.Seconds -> value * 1000
-                    else -> value
-                }
-            )
+            if (oldValue is ScreenEvent) oldValue.copy(cooldownMs = newCooldownMs)
             else oldValue
         }
     }

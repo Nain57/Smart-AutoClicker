@@ -21,6 +21,7 @@ import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.InputType
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 
 import androidx.lifecycle.Lifecycle
@@ -154,6 +155,11 @@ class ScenarioConfigContent(appContext: Context) : NavBarDialogContent(appContex
     private fun updateComputeRate(state: ComputeRateLimitUiState) {
         viewBinding.apply {
             fieldLimitFps.setChecked(state.isEnabled)
+
+            val visibility = if (state.isEnabled) View.VISIBLE else View.GONE
+            editFpsLimit.root.visibility = visibility
+            textSeparator.visibility = visibility
+            fpsTimeUnitField.root.visibility = visibility
 
             editFpsLimit.textLayout.isEnabled = state.isEnabled
             if (state.isEnabled) {

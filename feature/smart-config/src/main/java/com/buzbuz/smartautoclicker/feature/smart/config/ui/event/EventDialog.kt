@@ -353,6 +353,10 @@ class EventDialog(
             editCooldownValue.textLayout.isEnabled = uiState.cooldownEnabled
             dropdownCooldownTimeUnit.textLayout.isEnabled = uiState.cooldownEnabled
 
+            val cooldownVisibility = if (uiState.cooldownEnabled) View.VISIBLE else View.GONE
+            editCooldownValue.root.visibility = cooldownVisibility
+            dropdownCooldownTimeUnit.root.visibility = cooldownVisibility
+
             editCooldownValue.setText(uiState.cooldownValue, InputType.TYPE_CLASS_NUMBER)
             dropdownCooldownTimeUnit.setSelectedItem(uiState.cooldownUnit)
 
