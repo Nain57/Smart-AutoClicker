@@ -50,6 +50,8 @@ void TextMatchingResult::reset() {
     area.y = 0;
     area.width = 0;
     area.height = 0;
+    recognizerConfidence = 0.0;
+    recognizedNumber = invalidNumber;
 }
 
 bool TextMatchingResult::isDetected() const {
