@@ -101,6 +101,11 @@ class ScenarioAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val layoutParams = holder.itemView.layoutParams
+        if (layoutParams is androidx.recyclerview.widget.StaggeredGridLayoutManager.LayoutParams) {
+            layoutParams.isFullSpan = holder is SortViewHolder || holder is EmptyScenarioHolder
+        }
+
         when (holder) {
             is EmptyScenarioHolder -> holder.onBind(getItem(position) as ScenarioListUiState.Item.ScenarioItem.Empty)
             is DumbScenarioViewHolder -> holder.onBind(getItem(position) as ScenarioListUiState.Item.ScenarioItem.Valid.Dumb)
