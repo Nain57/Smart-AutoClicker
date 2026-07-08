@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Avanti</string>
+    <string name="tutorial_slideshow_button_close">Chiudi</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Acquisizione immagine</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Suggerimenti per un\'acquisizione ottimale delle immagini</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">Quando si acquisisce per una condizione immagine,
+        è necessario evitare le parti che cambiano, come lo sfondo. L\'acquisizione deve assomigliare il più possibile a ciò che
+        verrà visualizzato durante il rilevamento.\n\nProva sempre ad acquisire il più vicino possibile all\'obiettivo che vuoi abbinare
+        mantenendo sufficienti dettagli per il rilevamento.\n\nNota: Puoi eseguire il pizzico per zoomare sull\'acquisizione e controllare con più
+        precisione l\'area.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Fai attenzione con le immagini contenenti aree trasparenti.
+        Se lo sfondo dietro la superficie trasparente cambia, l\'algoritmo di rilevamento rileverà i cambiamenti
+        di colore o forma e non lo considererà rilevato. \n\nProva ad evitare le parti trasparenti nella tua condizione
+        mantenendo sufficienti dettagli statici per il rilevamento. Puoi anche modificare la tolleranza di rilevamento per
+        compensare le possibili variazioni in piccole aree trasparenti. \n\nSe c\'è un testo all\'interno dell\'obiettivo che
+        vuoi abbinare, potresti voler considerare l\'uso di una Condizione Testo, poiché sono meno influenzate dalle
+        variazioni del rumore di sfondo.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">Il rilevamento delle immagini è più accurato quando applicato
+        a oggetti da rilevare che hanno molti bordi. È anche più veloce se l\'immagine è più piccola, ma perderà
+        affidabilità se l\'immagine è troppo piccola e manca di dettagli. Cerca di tenerlo a mente quando crei nuove condizioni
+        immagine.\n\nSe stai cercando di rilevare cose molto piccole, potresti voler usare una o più Condizioni Colore
+        invece, sono più affidabili per tali casi, e molto più veloci.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Area di rilevamento</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Scopri l\'impatto sulle prestazioni del tuo scenario</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">Quando si crea una Condizione Immagine, è possibile definire
+        dove avverrà il rilevamento sullo schermo modificando il tipo di rilevamento.\n\nPer impostazione predefinita, una nuova Condizione Immagine
+        rileverà sempre nello stesso punto dell\'acquisizione. Questo è il modo più veloce per rilevare un\'immagine.
+        \n\nSe l\'immagine che devi rilevare può essere visualizzata in più punti, devi quindi utilizzare una delle altre
+        opzioni.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">Selezionando \"In area\", il campo di selezione area
+        si abiliterà; permettendoti di definire un\'area di rilevamento.\n\nPer impostazione predefinita, l\'area sarà uguale all\'area di acquisizione
+        ma puoi spostarla e ampliarla. Più grande è l\'area, più lento sarà il rilevamento, quindi cerca di includere solo
+        le parti interessanti dello schermo.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">L\'ultima opzione, \"Schermo intero\" cambierà
+        l\'area di rilevamento a tutto il display. \n\nQuesto è di gran lunga il tipo di rilevamento più lento e dovresti usarlo solo
+        come ultima risorsa.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Area di rilevamento testo</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Suggerimenti per un rilevamento ottimale del testo</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">Quando si rileva un testo sullo schermo, è necessario
+        definire un\'area di rilevamento che verrà analizzata per il testo durante il rilevamento. \n\nQuando si rileva testo statico,
+        si vuole che l\'area sia vicina al testo mantenendo un piccolo margine intorno. Il testo non deve toccare i
+        bordi dell\'area altrimenti l\'affidabilità del rilevamento diminuirà significativamente. \n\nNota: per testi molto piccoli,
+        potrebbe essere necessario aumentare la qualità di rilevamento del proprio scenario, poiché una risoluzione più alta aiuterà il rilevamento
+        di questi. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">Quando si rileva un testo che può apparire in più
+        posizioni, usa l\'area di rilevamento più piccola possibile. Più grande è l\'area di rilevamento, più lento sarà il rilevamento.
+        \n\nSe le diverse posizioni sono note e non casuali, potrebbe essere più veloce usare condizioni di testo separate
+        per ciascuna posizione piuttosto che una sola con un\'area molto grande. Puoi testare i tuoi tempi usando il report di debug
+        se sei interessato all\'ottimizzazione approfondita dei tempi del tuo scenario.</string>
+
+
+</resources>

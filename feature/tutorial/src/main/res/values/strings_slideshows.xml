@@ -25,28 +25,63 @@
     <string name="tutorial_slideshow_image_condition_capture_title">Image capture</string>
     <string name="tutorial_slideshow_image_condition_capture_desc">Tips about optimal image capture</string>
 
-    <string name="tutorial_slideshow_image_condition_capture_step_1_name">Crop</string>
-    <string name="tutorial_slideshow_image_condition_capture_step_1_text"></string>
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">When capturing for an image condition,
+        you need to avoid changing parts such as the background. The capture needs to look as close as possible to what
+        will be displayed when detecting.\n\nTry to always capture as close as possible to the target you want to match
+        while keeping enough details for detection.\n\nNote: You can pinch to zoom to the capture and control more
+        precisely the area.</string>
 
-    <string name="tutorial_slideshow_image_condition_capture_step_2_name">Transparency</string>
-    <string name="tutorial_slideshow_image_condition_capture_step_2_text"></string>
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Be careful with images containing transparent
+        areas. If the background behind the transparent surface changes, the detection algorithm will detect the changes
+        in color or shape and will not consider it as detected. \n\nTry to avoid transparent parts in your condition
+        while keeping enough static details for detection. You can also change the detection tolerance in order to
+        compensate for the possible changes in small transparent areas. \n\nIf there is a text within the target you
+        want to match, you might want to consider using a Text Condition, as they are less impacted by background
+        change noise.</string>
 
-    <string name="tutorial_slideshow_image_condition_capture_step_3_name">Size</string>
-    <string name="tutorial_slideshow_image_condition_capture_step_3_text"></string>
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">Image detection is more accurate when applied
+        to things to detect that have a lot of borders. It is also faster if the image is smaller, but it will lose
+        confidence if the image is too small and lacks details. Try to keep that in mind when creating new image
+        conditions.\n\nIf you are trying to detect very small things, you might want to use one or several Color Conditions
+        instead, they are more reliable for such cases, and way faster.</string>
 
 
     <!-- Image Condition Detection Area slideshow -->
     <string name="tutorial_slideshow_image_condition_area_title">Detection area</string>
     <string name="tutorial_slideshow_image_condition_area_desc">Learn about the impact on your scenario performances</string>
 
-    <string name="tutorial_slideshow_image_condition_area_step_1_name">At capture position</string>
-    <string name="tutorial_slideshow_image_condition_area_step_1_text"></string>
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">When creating an Image Condition, you can define
+        where the detection will occur on the screen by changing the detection type.\n\nBy default, a new Image
+        Condition will always detect at the same spot as the capture. This is the fastest way for detecting an image.
+        \n\nIf the image you need to detect can be displayed at several places, you then need to use one of the other
+        options.</string>
 
-    <string name="tutorial_slideshow_image_condition_area_step_2_name">Area selection</string>
-    <string name="tutorial_slideshow_image_condition_area_step_2_text"></string>
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">When selecting \"In area\", the area selection
+        field will enable; allowing you to define a detection area.\n\nBy default, the area will be the same as the capture
+        area, but you can move and expand it. The bigger the area is, the slower the detection will be, so try to only
+        include the interesting parts of the screen.</string>
 
-    <string name="tutorial_slideshow_image_condition_area_step_3_name">Whole screen</string>
-    <string name="tutorial_slideshow_image_condition_area_step_3_text"></string>
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">The last option, \"Whole screen\" will change the
+        detection area to the whole display. \n\nThis is by far the slowest detection type and you should use it only
+        as a last resort.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Text detection area</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Tips about optimal text detection</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">When detecting a text on the screen, you need to
+        define a detection area that will be scanned for text during detection. \n\nWhen detecting static text, you
+        want the area to be close to the text while keeping a small margin around it. The text should not touch the
+        borders of the area or the detection confidence will drop significantly. \n\nNote: for very small text,
+        you might need to increase the detection quality of your scenario, as higher resolution will help the detection
+        of those. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">When detecting a text that can appear in multiple
+        positions, use the smallest detection area possible. The bigger the detection area is, the slower the detection
+        will be. \n\nIf the different positions are known and not random, it might be faster to use separate text
+        conditions for each position than one with a very big area. You can test your timings using the debug report
+        if you are into deep optimization of your scenario timings.</string>
 
 
 </resources>

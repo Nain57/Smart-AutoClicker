@@ -48,6 +48,26 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
+        <action
+            android:id="@+id/tutorial_list_to_slideshow"
+            app:destination="@id/fragment_slideshow"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_slideshow"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.slideshow.TutorialSlideshowFragment"
+        android:label="fragment_slideshow"
+        tools:layout="@layout/fragment_tutorial_slideshow">
+
+        <argument
+            android:name="slideshowType"
+            app:argType="com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow$Type"/>
+
     </fragment>
 
     <fragment

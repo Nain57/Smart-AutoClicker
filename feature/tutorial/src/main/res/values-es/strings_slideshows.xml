@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Siguiente</string>
+    <string name="tutorial_slideshow_button_close">Cerrar</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Captura de imagen</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Consejos sobre la captura de imágenes óptima</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">Al capturar para una condición de imagen,
+        debes evitar partes cambiantes como el fondo. La captura debe parecerse lo más posible a lo que
+        se mostrará durante la detección.\n\nIntenta siempre capturar lo más cerca posible del objetivo que quieres comparar
+        manteniendo suficientes detalles para la detección.\n\nNota: Puedes pellizcar para hacer zoom en la captura y controlar con más
+        precisión el área.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Ten cuidado con las imágenes que contienen áreas transparentes.
+        Si el fondo detrás de la superficie transparente cambia, el algoritmo de detección detectará los cambios
+        en color o forma y no lo considerará como detectado. \n\nIntenta evitar partes transparentes en tu condición
+        manteniendo suficientes detalles estáticos para la detección. También puedes cambiar la tolerancia de detección para
+        compensar los posibles cambios en pequeñas áreas transparentes. \n\nSi hay un texto dentro del objetivo que
+        quieres comparar, puede que quieras considerar usar una Condición de Texto, ya que son menos afectadas por los cambios
+        de ruido de fondo.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">La detección de imágenes es más precisa cuando se aplica
+        a cosas a detectar que tienen muchos bordes. También es más rápida si la imagen es más pequeña, pero perderá
+        confianza si la imagen es demasiado pequeña y carece de detalles. Intenta tener eso en cuenta al crear nuevas condiciones
+        de imagen.\n\nSi intentas detectar cosas muy pequeñas, puede que quieras usar una o varias Condiciones de Color
+        en su lugar, son más fiables para esos casos y mucho más rápidas.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Área de detección</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Aprende sobre el impacto en el rendimiento de tu escenario</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">Al crear una Condición de Imagen, puedes definir
+        dónde ocurrirá la detección en la pantalla cambiando el tipo de detección.\n\nPor defecto, una nueva Condición de Imagen
+        siempre detectará en el mismo lugar que la captura. Esta es la forma más rápida de detectar una imagen.
+        \n\nSi la imagen que necesitas detectar puede mostrarse en varios lugares, entonces necesitas usar una de las otras
+        opciones.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">Al seleccionar \"En área\", el campo de selección de área
+        se habilitará; permitiéndote definir un área de detección.\n\nPor defecto, el área será la misma que el área de captura
+        pero puedes moverla y expandirla. Cuanto mayor sea el área, más lenta será la detección, así que intenta incluir solo
+        las partes interesantes de la pantalla.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">La última opción, \"Pantalla completa\" cambiará el
+        área de detección a toda la pantalla. \n\nEste es con diferencia el tipo de detección más lento y deberías usarlo solo
+        como último recurso.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Área de detección de texto</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Consejos sobre la detección óptima de texto</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">Al detectar un texto en la pantalla, necesitas
+        definir un área de detección que se escaneará en busca de texto durante la detección. \n\nAl detectar texto estático,
+        quieres que el área esté cerca del texto manteniendo un pequeño margen alrededor. El texto no debe tocar los
+        bordes del área o la confianza de detección caerá significativamente. \n\nNota: para texto muy pequeño,
+        puede que necesites aumentar la calidad de detección de tu escenario, ya que una mayor resolución ayudará a la detección
+        de estos. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">Al detectar un texto que puede aparecer en múltiples
+        posiciones, usa el área de detección más pequeña posible. Cuanto mayor sea el área de detección, más lenta será la detección.
+        \n\nSi las diferentes posiciones son conocidas y no aleatorias, puede ser más rápido usar condiciones de texto separadas
+        para cada posición que una con un área muy grande. Puedes probar tus tiempos usando el informe de depuración
+        si estás interesado en la optimización profunda de los tiempos de tu escenario.</string>
+
+
+</resources>

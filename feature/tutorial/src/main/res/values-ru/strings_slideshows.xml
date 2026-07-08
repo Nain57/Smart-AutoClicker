@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Далее</string>
+    <string name="tutorial_slideshow_button_close">Закрыть</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Захват изображения</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Советы по оптимальному захвату изображения</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">При захвате для условия изображения
+        необходимо избегать изменяющихся частей, например фона. Захват должен максимально соответствовать тому, что
+        будет отображаться при обнаружении.\n\nСтарайтесь всегда захватывать как можно ближе к цели, которую хотите сопоставить,
+        сохраняя при этом достаточно деталей для обнаружения.\n\nПримечание: Вы можете использовать жест щипка для масштабирования захвата и более
+        точного управления областью.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Будьте осторожны с изображениями, содержащими прозрачные
+        области. Если фон за прозрачной поверхностью изменится, алгоритм обнаружения обнаружит изменения
+        цвета или формы и не посчитает это обнаруженным. \n\nСтарайтесь избегать прозрачных частей в своём условии,
+        сохраняя при этом достаточно статичных деталей для обнаружения. Вы также можете изменить допуск обнаружения,
+        чтобы компенсировать возможные изменения в небольших прозрачных областях. \n\nЕсли внутри цели, которую
+        вы хотите сопоставить, есть текст, возможно, стоит рассмотреть использование текстового условия, так как они менее
+        подвержены влиянию шума изменения фона.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">Обнаружение изображения более точно при применении
+        к объектам с большим количеством границ. Оно также быстрее, если изображение меньше, но потеряет
+        достоверность, если изображение слишком маленькое и недостаточно детализированное. Старайтесь учитывать это при создании новых условий
+        изображения.\n\nЕсли вы пытаетесь обнаружить очень маленькие объекты, возможно, стоит использовать одно или несколько цветовых условий
+        вместо этого — они более надёжны для таких случаев и значительно быстрее.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Область обнаружения</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Узнайте о влиянии на производительность вашего сценария</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">При создании условия изображения можно задать
+        место обнаружения на экране, изменив тип обнаружения.\n\nПо умолчанию новое условие изображения
+        всегда будет обнаруживать в том же месте, что и захват. Это самый быстрый способ обнаружить изображение.
+        \n\nЕсли изображение, которое нужно обнаружить, может отображаться в нескольких местах, необходимо использовать один из других
+        вариантов.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">При выборе «В области» поле выбора области
+        станет активным, позволяя определить область обнаружения.\n\nПо умолчанию область будет совпадать с областью захвата,
+        но вы можете перемещать и расширять её. Чем больше область, тем медленнее будет обнаружение, поэтому старайтесь включать
+        только интересующие части экрана.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">Последний вариант — «Весь экран» — изменит
+        область обнаружения на весь дисплей. \n\nЭто самый медленный тип обнаружения, и его следует использовать только
+        в крайнем случае.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Область обнаружения текста</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Советы по оптимальному обнаружению текста</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">При обнаружении текста на экране необходимо
+        задать область обнаружения, которая будет сканироваться на наличие текста во время обнаружения. \n\nПри обнаружении статичного текста
+        область должна быть расположена близко к тексту с небольшим полем вокруг. Текст не должен касаться
+        границ области, иначе достоверность обнаружения значительно снизится. \n\nПримечание: для очень мелкого текста
+        может потребоваться повысить качество обнаружения вашего сценария, так как более высокое разрешение поможет
+        в обнаружении таких текстов. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">При обнаружении текста, который может появляться в нескольких
+        позициях, используйте наименьшую возможную область обнаружения. Чем больше область обнаружения, тем медленнее обнаружение.
+        \n\nЕсли различные позиции известны и не случайны, может быть быстрее использовать отдельные текстовые условия
+        для каждой позиции, чем одно с очень большой областью. Вы можете проверить временные показатели с помощью отчёта отладки,
+        если занимаетесь глубокой оптимизацией временных показателей вашего сценария.</string>
+
+
+</resources>

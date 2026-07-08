@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">التالي</string>
+    <string name="tutorial_slideshow_button_close">إغلاق</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">التقاط الصورة</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">نصائح حول الالتقاط الأمثل للصور</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">عند الالتقاط لشرط صورة،
+        تحتاج إلى تجنب الأجزاء المتغيرة كالخلفية. يجب أن يبدو الالتقاط قريبًا قدر الإمكان مما
+        سيُعرض أثناء الكشف.\n\nحاول دائمًا الالتقاط بأقرب ما يمكن من الهدف الذي تريد مطابقته
+        مع الاحتفاظ بتفاصيل كافية للكشف.\n\nملاحظة: يمكنك القرص للتكبير على الالتقاط والتحكم بشكل أدق
+        في المنطقة.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">كن حذرًا مع الصور التي تحتوي على مناطق شفافة.
+        إذا تغيرت الخلفية خلف السطح الشفاف، سيكتشف خوارزمية الكشف التغييرات
+        في اللون أو الشكل ولن تعتبرها مكتشفة. \n\nحاول تجنب الأجزاء الشفافة في شرطك
+        مع الاحتفاظ بتفاصيل ثابتة كافية للكشف. يمكنك أيضًا تغيير تسامح الكشف من أجل
+        التعويض عن التغييرات المحتملة في المناطق الشفافة الصغيرة. \n\nإذا كان هناك نص داخل الهدف الذي
+        تريد مطابقته، قد تفكر في استخدام شرط نصي، لأنها أقل تأثرًا بتغيير
+        ضوضاء الخلفية.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">يكون الكشف عن الصور أكثر دقة عند تطبيقه
+        على أشياء تحتوي على حواف كثيرة. كما أنه أسرع إذا كانت الصورة أصغر، لكنه سيفقد
+        الثقة إذا كانت الصورة صغيرة جدًا وتفتقر إلى التفاصيل. حاول أخذ ذلك في الاعتبار عند إنشاء شروط صور جديدة.\n\nإذا كنت تحاول اكتشاف أشياء صغيرة جدًا، قد ترغب في استخدام شرط لون واحد أو عدة شروط
+        بدلاً من ذلك، فهي أكثر موثوقية في مثل هذه الحالات وأسرع بكثير.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">منطقة الكشف</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">تعرف على التأثير على أداء السيناريو الخاص بك</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">عند إنشاء شرط صورة، يمكنك تحديد
+        مكان حدوث الكشف على الشاشة عن طريق تغيير نوع الكشف.\n\nبشكل افتراضي، سيكتشف شرط الصورة الجديد دائمًا في نفس موقع الالتقاط. هذه هي الطريقة الأسرع لاكتشاف صورة.
+        \n\nإذا كانت الصورة التي تحتاج إلى اكتشافها يمكن عرضها في عدة أماكن، فستحتاج إلى استخدام أحد الخيارات الأخرى.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">عند اختيار \"في منطقة\"، سيتمكن حقل تحديد المنطقة؛
+        مما يتيح لك تحديد منطقة الكشف.\n\nبشكل افتراضي، ستكون المنطقة هي نفس منطقة الالتقاط
+        ولكن يمكنك تحريكها وتوسيعها. كلما كانت المنطقة أكبر، كان الكشف أبطأ، لذا حاول فقط
+        تضمين الأجزاء المثيرة للاهتمام من الشاشة.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">الخيار الأخير، \"الشاشة بأكملها\" سيغير
+        منطقة الكشف إلى العرض بأكمله. \n\nهذا هو نوع الكشف الأبطأ على الإطلاق ويجب استخدامه فقط
+        كملاذ أخير.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">منطقة كشف النص</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">نصائح حول الكشف الأمثل عن النص</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">عند اكتشاف نص على الشاشة، تحتاج إلى
+        تحديد منطقة كشف سيتم فحصها للنص أثناء الكشف. \n\nعند اكتشاف نص ثابت،
+        تريد أن تكون المنطقة قريبة من النص مع الاحتفاظ بهامش صغير حوله. لا ينبغي أن يلمس النص حدود
+        المنطقة وإلا ستنخفض ثقة الكشف بشكل ملحوظ. \n\nملاحظة: للنص الصغير جدًا،
+        قد تحتاج إلى زيادة جودة الكشف في السيناريو الخاص بك، لأن الدقة الأعلى ستساعد على اكتشاف
+        تلك النصوص. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">عند اكتشاف نص يمكن أن يظهر في مواضع متعددة،
+        استخدم أصغر منطقة كشف ممكنة. كلما كانت منطقة الكشف أكبر، كان الكشف أبطأ.
+        \n\nإذا كانت المواضع المختلفة معروفة وغير عشوائية، قد يكون من الأسرع استخدام شروط نصية منفصلة
+        لكل موضع بدلاً من واحدة بمنطقة كبيرة جدًا. يمكنك اختبار توقيتاتك باستخدام تقرير التصحيح
+        إذا كنت تريد تحسينًا عميقًا لتوقيتات السيناريو الخاص بك.</string>
+
+
+</resources>

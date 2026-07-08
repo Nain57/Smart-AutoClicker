@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Далі</string>
+    <string name="tutorial_slideshow_button_close">Закрити</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Захоплення зображення</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Поради щодо оптимального захоплення зображень</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">При захопленні для умови зображення
+        потрібно уникати змінних частин, таких як фон. Захоплення має виглядати якомога ближче до того, що
+        відображатиметься під час виявлення.\n\nНамагайтеся завжди захоплювати якомога ближче до цілі, яку ви хочете зіставити,
+        зберігаючи при цьому достатньо деталей для виявлення.\n\nПримітка: Ви можете щипати для масштабування захоплення та точніше
+        контролювати область.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Будьте обережні із зображеннями, що містять прозорі
+        ділянки. Якщо фон за прозорою поверхнею зміниться, алгоритм виявлення виявить зміни
+        кольору або форми і не вважатиме це виявленим. \n\nНамагайтеся уникати прозорих частин у своїй умові,
+        зберігаючи при цьому достатньо статичних деталей для виявлення. Ви також можете змінити допуск виявлення,
+        щоб компенсувати можливі зміни в невеликих прозорих ділянках. \n\nЯкщо всередині цілі, яку
+        ви хочете зіставити, є текст, можливо, варто розглянути використання текстової умови, оскільки вони менш
+        схильні до впливу шуму зміни фону.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">Виявлення зображень є більш точним при застосуванні
+        до об\'єктів з великою кількістю меж. Воно також швидше, якщо зображення менше, але втратить
+        достовірність, якщо зображення занадто маленьке і не вистачає деталей. Намагайтеся пам\'ятати про це при створенні нових
+        умов зображення.\n\nЯкщо ви намагаєтеся виявити дуже маленькі речі, можливо, варто використати одну або кілька колірних умов
+        — вони більш надійні для таких випадків і значно швидші.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Область виявлення</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Дізнайтеся про вплив на продуктивність вашого сценарію</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">При створенні умови зображення можна визначити,
+        де на екрані відбуватиметься виявлення, змінивши тип виявлення.\n\nЗа замовчуванням нова умова зображення
+        завжди виявлятиме в тому ж місці, що й захоплення. Це найшвидший спосіб виявлення зображення.
+        \n\nЯкщо зображення, яке потрібно виявити, може відображатися в кількох місцях, необхідно використовувати один з інших
+        варіантів.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">При виборі «В області» поле вибору області
+        стане активним, дозволяючи визначити область виявлення.\n\nЗа замовчуванням область буде такою ж, як область захоплення,
+        але ви можете переміщати та розширювати її. Чим більша область, тим повільніше виявлення, тому намагайтеся включати лише
+        цікаві частини екрану.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">Останній варіант — «Весь екран» — змінить
+        область виявлення на весь дисплей. \n\nЦе найповільніший тип виявлення, і його слід використовувати лише
+        як останній засіб.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Область виявлення тексту</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Поради щодо оптимального виявлення тексту</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">При виявленні тексту на екрані потрібно
+        визначити область виявлення, яка буде сканована на наявність тексту під час виявлення. \n\nПри виявленні статичного тексту
+        бажано, щоб область була розташована близько до тексту з невеликим відступом навколо. Текст не повинен торкатися
+        меж області, інакше достовірність виявлення значно знизиться. \n\nПримітка: для дуже дрібного тексту
+        може знадобитися підвищити якість виявлення вашого сценарію, оскільки вища роздільна здатність допоможе
+        у виявленні таких текстів. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">При виявленні тексту, який може з\'являтися в кількох
+        позиціях, використовуйте найменшу можливу область виявлення. Чим більша область виявлення, тим повільніше виявлення.
+        \n\nЯкщо різні позиції відомі і не випадкові, може бути швидше використовувати окремі текстові умови
+        для кожної позиції, ніж одну з дуже великою областю. Ви можете перевірити часові показники за допомогою звіту налагодження,
+        якщо займаєтеся глибокою оптимізацією часових показників вашого сценарію.</string>
+
+
+</resources>

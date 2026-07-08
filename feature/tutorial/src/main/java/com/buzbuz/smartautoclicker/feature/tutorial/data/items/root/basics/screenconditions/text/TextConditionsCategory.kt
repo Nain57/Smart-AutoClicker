@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scre
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 internal fun getTextConditionsCategory() =
     TutorialCategory(
@@ -30,5 +31,6 @@ internal fun getTextConditionsCategory() =
         content = listOf(
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_STILL_TEXT),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_MOVING_TEXT),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.TEXT_CONDITION_DETECTION_AREA),
         ),
     )

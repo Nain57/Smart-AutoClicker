@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">次へ</string>
+    <string name="tutorial_slideshow_button_close">閉じる</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">画像キャプチャ</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">最適な画像キャプチャに関するヒント</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">画像条件のキャプチャを行う際は、
+        背景などの変化する部分を避ける必要があります。キャプチャは検出時に表示されるものと
+        できる限り近い見た目である必要があります。\n\n一致させたいターゲットにできるだけ近い位置でキャプチャするようにしてください。
+        ただし、検出に十分な詳細を保持してください。\n\n注意：キャプチャをピンチしてズームし、エリアを
+        より正確に制御することができます。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">透明な領域を含む画像には注意が必要です。
+        透明な表面の背後にある背景が変化すると、検出アルゴリズムは色や形の変化を検出し、
+        検出されたとは見なしません。\n\n検出のための十分な静的な詳細を保持しながら、条件内の透明な部分は
+        避けるようにしてください。また、小さな透明領域での変化を補償するために、検出の許容範囲を変更することもできます。
+        \n\n一致させたいターゲット内にテキストがある場合は、テキスト条件の使用を検討してください。
+        テキスト条件は背景の変化ノイズの影響を受けにくいです。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">画像検出は、多くのエッジを持つ対象に適用すると
+        より正確になります。画像が小さいほど速くなりますが、画像が小さすぎて詳細が不足すると
+        精度が低下します。新しい画像条件を作成する際はこの点を念頭に置いてください。\n\n非常に小さなものを検出しようとしている場合は、
+        代わりに1つまたは複数のカラー条件を使用することを検討してください。そのようなケースではより信頼性が高く、
+        はるかに高速です。</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">検出エリア</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">シナリオのパフォーマンスへの影響について学ぶ</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">画像条件を作成する際に、検出タイプを変更することで
+        画面上のどこで検出が行われるかを定義できます。\n\nデフォルトでは、新しい画像条件は常にキャプチャと同じ
+        位置で検出します。これが画像を検出する最も速い方法です。
+        \n\n検出する必要がある画像が複数の場所に表示される可能性がある場合は、他のオプションのいずれかを
+        使用する必要があります。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">「エリア内」を選択すると、エリア選択
+        フィールドが有効になり、検出エリアを定義できます。\n\nデフォルトでは、エリアはキャプチャエリアと
+        同じになりますが、移動および拡張できます。エリアが大きいほど検出が遅くなるため、
+        画面の重要な部分のみを含めるようにしてください。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">最後のオプション「画面全体」は検出エリアを
+        ディスプレイ全体に変更します。\n\nこれは最も遅い検出タイプであり、最終手段としてのみ使用してください。</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">テキスト検出エリア</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">最適なテキスト検出に関するヒント</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">画面上のテキストを検出する際は、検出中に
+        テキストをスキャンする検出エリアを定義する必要があります。\n\n静的なテキストを検出する場合は、
+        テキストに近く、その周囲に小さな余白を保った位置にエリアを設定してください。テキストがエリアの
+        境界に触れると、検出の信頼性が大幅に低下します。\n\n注意：非常に小さなテキストの場合は、
+        シナリオの検出品質を上げる必要があるかもしれません。高解像度にすることでそれらのテキストの
+        検出に役立ちます。</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">複数の位置に表示される可能性のあるテキストを
+        検出する場合は、できる限り小さな検出エリアを使用してください。検出エリアが大きいほど、検出は遅くなります。
+        \n\n異なる位置が分かっていてランダムでない場合は、非常に大きなエリアを持つ1つの条件よりも、
+        各位置に対して個別のテキスト条件を使用する方が速い場合があります。シナリオのタイミングを深く
+        最適化したい場合は、デバッグレポートを使用してタイミングをテストできます。</string>
+
+
+</resources>

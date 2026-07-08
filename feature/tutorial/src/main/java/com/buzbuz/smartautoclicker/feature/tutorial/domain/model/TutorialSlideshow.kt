@@ -28,19 +28,26 @@ data class TutorialSlideshow(
 ) {
 
     data class SlideshowItem(
-        @field:StringRes val titleRes: Int,
         @field:StringRes val tutorialTextRes: Int,
         @field:DrawableRes val tutorialImage: Int,
+        val tutorialImageFormat: ImageFormat,
     )
+
+    enum class ImageFormat(val widthDp: Int, val heightDp: Int) {
+        ICON(48, 48),
+        IMAGE_SQUARE(128, 128),
+        IMAGE_LARGE(256, 128),
+    }
 
     enum class Type {
         IMAGE_CONDITION_CAPTURE,
         IMAGE_CONDITION_DETECTION_AREA,
-        /*
+
         TEXT_CONDITION_DETECTION_AREA,
-        NUMBER_CONDITION_DETECTION_AREA,
-        SCREEN_CONDITION_THRESHOLD,
-        SCREEN_CONDITION_TIMINGS,
+        /*
+            NUMBER_CONDITION_DETECTION_AREA,
+            SCREEN_CONDITION_THRESHOLD,
+            SCREEN_CONDITION_TIMINGS,
         */
     }
 }

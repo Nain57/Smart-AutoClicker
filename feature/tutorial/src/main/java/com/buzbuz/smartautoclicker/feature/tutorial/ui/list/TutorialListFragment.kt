@@ -109,7 +109,9 @@ class TutorialListFragment : Fragment() {
             }
 
             is TutorialCategoryUiItems.Item.Slideshow -> {
-
+                findNavController().navigate(
+                    TutorialListFragmentDirections.tutorialListToSlideshow(item.type)
+                )
             }
         }
     }

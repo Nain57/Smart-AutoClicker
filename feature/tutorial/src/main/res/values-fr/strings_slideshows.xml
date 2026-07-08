@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Suivant</string>
+    <string name="tutorial_slideshow_button_close">Fermer</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Capture d\'image</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Conseils pour une capture d\'image optimale</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">Lors d\'une capture pour une condition d\'image,
+        vous devez éviter les parties changeantes telles que l\'arrière-plan. La capture doit ressembler le plus possible à ce qui
+        sera affiché lors de la détection.\n\nEssayez de toujours capturer aussi près que possible de la cible que vous souhaitez faire correspondre
+        tout en conservant suffisamment de détails pour la détection.\n\nNote : Vous pouvez pincer pour zoomer sur la capture et contrôler plus
+        précisément la zone.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Soyez prudent avec les images contenant des zones transparentes.
+        Si l\'arrière-plan derrière la surface transparente change, l\'algorithme de détection détectera les changements
+        de couleur ou de forme et ne le considérera pas comme détecté. \n\nEssayez d\'éviter les parties transparentes dans votre condition
+        tout en conservant suffisamment de détails statiques pour la détection. Vous pouvez également modifier la tolérance de détection afin de
+        compenser les éventuels changements dans les petites zones transparentes. \n\nS\'il y a un texte dans la cible que vous
+        souhaitez faire correspondre, vous pourriez envisager d\'utiliser une Condition de texte, car elles sont moins impactées par le bruit de
+        changement d\'arrière-plan.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">La détection d\'image est plus précise lorsqu\'elle est appliquée
+        à des éléments à détecter ayant beaucoup de contours. Elle est également plus rapide si l\'image est plus petite, mais perdra
+        en fiabilité si l\'image est trop petite et manque de détails. Essayez de garder cela à l\'esprit lors de la création de nouvelles conditions
+        d\'image.\n\nSi vous essayez de détecter de très petites choses, vous pourriez vouloir utiliser une ou plusieurs Conditions de couleur
+        à la place, elles sont plus fiables pour ces cas, et bien plus rapides.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Zone de détection</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Apprenez l\'impact sur les performances de votre scénario</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">Lors de la création d\'une Condition d\'image, vous pouvez définir
+        où la détection aura lieu sur l\'écran en modifiant le type de détection.\n\nPar défaut, une nouvelle Condition d\'image
+        détectera toujours au même endroit que la capture. C\'est la façon la plus rapide de détecter une image.
+        \n\nSi l\'image que vous devez détecter peut être affichée à plusieurs endroits, vous devez alors utiliser l\'une des autres
+        options.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">En sélectionnant \"Dans une zone\", le champ de sélection de zone
+        s\'activera, vous permettant de définir une zone de détection.\n\nPar défaut, la zone sera la même que la zone de capture
+        mais vous pouvez la déplacer et l\'agrandir. Plus la zone est grande, plus la détection sera lente, essayez donc d\'inclure uniquement
+        les parties intéressantes de l\'écran.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">La dernière option, \"Tout l\'écran\" changera la
+        zone de détection à tout l\'affichage. \n\nC\'est de loin le type de détection le plus lent et vous ne devriez l\'utiliser que
+        en dernier recours.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Zone de détection de texte</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Conseils pour une détection de texte optimale</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">Lors de la détection d\'un texte à l\'écran, vous devez
+        définir une zone de détection qui sera analysée pour le texte lors de la détection. \n\nPour la détection de texte statique,
+        vous voulez que la zone soit proche du texte tout en conservant une petite marge autour. Le texte ne doit pas toucher les
+        bords de la zone, sinon la fiabilité de la détection chutera significativement. \n\nNote : pour les textes très petits,
+        vous devrez peut-être augmenter la qualité de détection de votre scénario, car une résolution plus élevée aidera à la détection
+        de ceux-ci. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">Lors de la détection d\'un texte pouvant apparaître à plusieurs
+        positions, utilisez la zone de détection la plus petite possible. Plus la zone de détection est grande, plus la détection
+        sera lente. \n\nSi les différentes positions sont connues et non aléatoires, il peut être plus rapide d\'utiliser des conditions de texte séparées
+        pour chaque position plutôt qu\'une seule avec une très grande zone. Vous pouvez tester vos timings à l\'aide du rapport de débogage
+        si vous souhaitez optimiser en profondeur les timings de votre scénario.</string>
+
+
+</resources>

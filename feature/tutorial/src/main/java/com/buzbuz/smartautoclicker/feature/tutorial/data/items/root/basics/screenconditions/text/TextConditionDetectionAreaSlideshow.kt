@@ -14,30 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
-internal fun getImageConditionsCaptureSlideshow() =
+internal fun getTextConditionsDetectionAreaSlideshow() =
     TutorialSlideshow(
-        type = TutorialSlideshow.Type.IMAGE_CONDITION_CAPTURE,
-        nameRes = R.string.tutorial_slideshow_image_condition_capture_title,
-        shortDescriptionRes = R.string.tutorial_slideshow_image_condition_capture_desc,
+        type = TutorialSlideshow.Type.TEXT_CONDITION_DETECTION_AREA,
+        nameRes = R.string.tutorial_slideshow_text_condition_area_title,
+        shortDescriptionRes = R.string.tutorial_slideshow_text_condition_area_desc,
         slideshowItems = listOf(
             TutorialSlideshow.SlideshowItem(
-                tutorialTextRes = R.string.tutorial_slideshow_image_condition_capture_step_1_text,
-                tutorialImage = R.drawable.tutorial_instructions_capture_sizing,
+                tutorialTextRes = R.string.tutorial_slideshow_text_condition_area_step_1_text,
+                tutorialImage = R.drawable.tutorial_instructions_text_capture_sizing,
                 tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_SQUARE,
             ),
             TutorialSlideshow.SlideshowItem(
-                tutorialTextRes = R.string.tutorial_slideshow_image_condition_capture_step_2_text,
-                tutorialImage = R.drawable.tutorial_instructions_capture_transparency,
-                tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_SQUARE,
-            ),
-            TutorialSlideshow.SlideshowItem(
-                tutorialTextRes = R.string.tutorial_slideshow_image_condition_capture_step_3_text,
-                tutorialImage = R.drawable.tutorial_instructions_capture_sizing_small,
+                tutorialTextRes = R.string.tutorial_slideshow_text_condition_area_step_2_text,
+                tutorialImage = R.drawable.tutorial_instructions_text_capture_sizing_four,
                 tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_LARGE,
             ),
         ),

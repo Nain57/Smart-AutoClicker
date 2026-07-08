@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">下一步</string>
+    <string name="tutorial_slideshow_button_close">关闭</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">图像捕获</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">关于最佳图像捕获的提示</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">在为图像条件进行捕获时，
+        需要避免背景等会发生变化的部分。捕获内容需要尽可能接近检测时所显示的内容。\n\n尽量在尽可能靠近您想要匹配的目标位置进行捕获，
+        同时保留足够的细节以供检测。\n\n注意：您可以通过捏合手势缩放捕获区域，以更精确地控制范围。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">请注意含有透明区域的图像。
+        如果透明表面后面的背景发生变化，检测算法将检测到颜色或形状的变化，
+        并不会将其视为已检测到。\n\n尽量避免在条件中出现透明部分，同时保留足够的静态细节用于检测。
+        您也可以更改检测容差，以补偿小型透明区域中可能发生的变化。\n\n如果您想匹配的目标内包含文字，
+        可以考虑使用文字条件，因为文字条件受背景变化噪声的影响较小。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">图像检测在应用于具有大量边缘的目标时更为准确。
+        图像越小速度也越快，但如果图像太小且缺乏细节，则会降低置信度。创建新图像条件时请牢记这一点。\n\n如果您尝试检测非常小的物体，
+        可以考虑改用一个或多个颜色条件，它们在此类情况下更加可靠，而且速度更快。</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">检测区域</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">了解对您的场景性能的影响</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">创建图像条件时，您可以通过更改检测类型来定义
+        检测将在屏幕上的哪个位置进行。\n\n默认情况下，新的图像条件始终会在与捕获相同的位置进行检测。
+        这是检测图像最快的方式。\n\n如果您需要检测的图像可能在多个位置显示，则需要使用其他选项之一。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">选择"在区域内"时，区域选择字段将启用，
+        允许您定义检测区域。\n\n默认情况下，区域与捕获区域相同，但您可以移动和扩大它。
+        区域越大，检测速度越慢，因此请尽量只包含屏幕上感兴趣的部分。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">最后一个选项"整个屏幕"将把检测区域更改为整个显示屏。
+        \n\n这是迄今为止最慢的检测类型，您应该仅在万不得已时使用它。</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">文字检测区域</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">关于最佳文字检测的提示</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">在检测屏幕上的文字时，您需要定义一个检测区域，
+        该区域将在检测过程中扫描文字。\n\n检测静态文字时，您希望该区域靠近文字并在其周围保留小边距。
+        文字不应触及区域边界，否则检测置信度将显著下降。\n\n注意：对于非常小的文字，
+        您可能需要提高场景的检测质量，因为更高的分辨率将有助于检测这些文字。</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">检测可能出现在多个位置的文字时，请使用尽可能小的检测区域。
+        检测区域越大，检测速度越慢。\n\n如果不同位置是已知的且非随机的，为每个位置使用单独的文字条件
+        可能比使用一个面积非常大的条件更快。如果您需要深度优化场景时序，可以使用调试报告来测试时序。</string>
+
+
+</resources>

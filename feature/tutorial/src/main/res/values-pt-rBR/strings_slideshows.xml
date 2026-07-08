@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">Próximo</string>
+    <string name="tutorial_slideshow_button_close">Fechar</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">Captura de imagem</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">Dicas sobre a captura ideal de imagens</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">Ao capturar para uma condição de imagem,
+        você precisa evitar partes que mudam, como o fundo. A captura precisa parecer o mais próximo possível do que
+        será exibido durante a detecção.\n\nTente sempre capturar o mais próximo possível do alvo que você quer corresponder
+        enquanto mantém detalhes suficientes para a detecção.\n\nNota: Você pode usar o gesto de pinça para ampliar a captura e controlar com mais
+        precisão a área.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">Tenha cuidado com imagens contendo áreas transparentes.
+        Se o fundo atrás da superfície transparente mudar, o algoritmo de detecção detectará as mudanças
+        de cor ou forma e não as considerará como detectadas. \n\nTente evitar partes transparentes na sua condição
+        enquanto mantém detalhes estáticos suficientes para a detecção. Você também pode alterar a tolerância de detecção para
+        compensar possíveis mudanças em pequenas áreas transparentes. \n\nSe houver um texto dentro do alvo que
+        você quer corresponder, convém considerar o uso de uma Condição de Texto, pois elas são menos impactadas pelas
+        mudanças no ruído de fundo.</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">A detecção de imagem é mais precisa quando aplicada
+        a coisas a detectar que têm muitas bordas. Também é mais rápida se a imagem for menor, mas perderá
+        precisão se a imagem for muito pequena e faltar detalhes. Tente ter isso em mente ao criar novas condições
+        de imagem.\n\nSe você está tentando detectar coisas muito pequenas, convém usar uma ou várias Condições de Cor
+        em vez disso, elas são mais confiáveis para esses casos e muito mais rápidas.</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">Área de detecção</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">Aprenda sobre o impacto no desempenho do seu cenário</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">Ao criar uma Condição de Imagem, você pode definir
+        onde a detecção ocorrerá na tela alterando o tipo de detecção.\n\nPor padrão, uma nova Condição de Imagem
+        sempre detectará no mesmo local que a captura. Esta é a forma mais rápida de detectar uma imagem.
+        \n\nSe a imagem que você precisa detectar pode ser exibida em vários lugares, você precisa usar uma das outras
+        opções.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">Ao selecionar \"Em área\", o campo de seleção de área
+        será habilitado; permitindo que você defina uma área de detecção.\n\nPor padrão, a área será a mesma que a área de captura
+        mas você pode movê-la e expandi-la. Quanto maior a área, mais lenta será a detecção, então tente incluir apenas
+        as partes interessantes da tela.</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">A última opção, \"Tela inteira\" mudará a
+        área de detecção para todo o display. \n\nEste é de longe o tipo de detecção mais lento e você deve usá-lo apenas
+        como último recurso.</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">Área de detecção de texto</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">Dicas sobre a detecção ideal de texto</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">Ao detectar um texto na tela, você precisa
+        definir uma área de detecção que será verificada em busca de texto durante a detecção. \n\nAo detectar texto estático,
+        você quer que a área esteja perto do texto mantendo uma pequena margem ao redor. O texto não deve tocar as
+        bordas da área ou a confiança de detecção cairá significativamente. \n\nNota: para texto muito pequeno,
+        pode ser necessário aumentar a qualidade de detecção do seu cenário, pois uma resolução maior ajudará na detecção
+        desses textos. </string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">Ao detectar um texto que pode aparecer em múltiplas
+        posições, use a menor área de detecção possível. Quanto maior a área de detecção, mais lenta será a detecção.
+        \n\nSe as diferentes posições são conhecidas e não aleatórias, pode ser mais rápido usar condições de texto separadas
+        para cada posição do que uma com uma área muito grande. Você pode testar seus tempos usando o relatório de depuração
+        se estiver interessado em otimização profunda dos tempos do seu cenário.</string>
+
+
+</resources>

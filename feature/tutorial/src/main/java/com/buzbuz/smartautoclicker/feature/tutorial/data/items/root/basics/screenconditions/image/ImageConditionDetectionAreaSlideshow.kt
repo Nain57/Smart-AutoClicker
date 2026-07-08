@@ -25,6 +25,20 @@ internal fun getImageConditionsDetectionAreaSlideshow() =
         nameRes = R.string.tutorial_slideshow_image_condition_area_title,
         shortDescriptionRes = R.string.tutorial_slideshow_image_condition_area_desc,
         slideshowItems = listOf(
-
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_image_condition_area_step_1_text,
+                tutorialImage = R.drawable.ic_detect_exact,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.ICON,
+            ),
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_image_condition_area_step_2_text,
+                tutorialImage = R.drawable.ic_detect_in_area,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.ICON,
+            ),
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_image_condition_area_step_3_text,
+                tutorialImage = R.drawable.ic_detect_whole_screen,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.ICON,
+            ),
         ),
     )

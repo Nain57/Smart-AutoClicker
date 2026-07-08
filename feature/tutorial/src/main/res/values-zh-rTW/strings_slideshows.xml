@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_slideshow_button_next">下一步</string>
+    <string name="tutorial_slideshow_button_close">關閉</string>
+
+
+    <!-- Image Condition Capture slideshow -->
+    <string name="tutorial_slideshow_image_condition_capture_title">圖像擷取</string>
+    <string name="tutorial_slideshow_image_condition_capture_desc">關於最佳圖像擷取的提示</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_1_text">在為圖像條件進行擷取時，
+        需要避免背景等會發生變化的部分。擷取內容需要盡可能接近偵測時所顯示的內容。\n\n盡量在盡可能靠近您想要比對的目標位置進行擷取，
+        同時保留足夠的細節以供偵測。\n\n注意：您可以透過捏合手勢縮放擷取區域，以更精確地控制範圍。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_2_text">請注意含有透明區域的圖像。
+        如果透明表面後面的背景發生變化，偵測演算法將偵測到顏色或形狀的變化，
+        並不會將其視為已偵測到。\n\n盡量避免在條件中出現透明部分，同時保留足夠的靜態細節用於偵測。
+        您也可以更改偵測容差，以補償小型透明區域中可能發生的變化。\n\n如果您想比對的目標內包含文字，
+        可以考慮使用文字條件，因為文字條件受背景變化雜訊的影響較小。</string>
+
+    <string name="tutorial_slideshow_image_condition_capture_step_3_text">圖像偵測在應用於具有大量邊緣的目標時更為準確。
+        圖像越小速度也越快，但如果圖像太小且缺乏細節，則會降低信心度。建立新圖像條件時請牢記這一點。\n\n如果您嘗試偵測非常小的物體，
+        可以考慮改用一個或多個顏色條件，它們在此類情況下更加可靠，而且速度更快。</string>
+
+
+    <!-- Image Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_image_condition_area_title">偵測區域</string>
+    <string name="tutorial_slideshow_image_condition_area_desc">了解對您的情境效能的影響</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_1_text">建立圖像條件時，您可以透過更改偵測類型來定義
+        偵測將在螢幕上的哪個位置進行。\n\n預設情況下，新的圖像條件始終會在與擷取相同的位置進行偵測。
+        這是偵測圖像最快的方式。\n\n如果您需要偵測的圖像可能在多個位置顯示，則需要使用其他選項之一。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_2_text">選擇「在區域內」時，區域選擇欄位將啟用，
+        允許您定義偵測區域。\n\n預設情況下，區域與擷取區域相同，但您可以移動和擴大它。
+        區域越大，偵測速度越慢，因此請盡量只包含螢幕上感興趣的部分。</string>
+
+    <string name="tutorial_slideshow_image_condition_area_step_3_text">最後一個選項「整個螢幕」將把偵測區域更改為整個顯示器。
+        \n\n這是迄今為止最慢的偵測類型，您應該僅在萬不得已時使用它。</string>
+
+
+    <!-- Text Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_text_condition_area_title">文字偵測區域</string>
+    <string name="tutorial_slideshow_text_condition_area_desc">關於最佳文字偵測的提示</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_1_text">在偵測螢幕上的文字時，您需要定義一個偵測區域，
+        該區域將在偵測過程中掃描文字。\n\n偵測靜態文字時，您希望該區域靠近文字並在其周圍保留小邊距。
+        文字不應觸及區域邊界，否則偵測信心度將顯著下降。\n\n注意：對於非常小的文字，
+        您可能需要提高情境的偵測品質，因為更高的解析度將有助於偵測這些文字。</string>
+
+    <string name="tutorial_slideshow_text_condition_area_step_2_text">偵測可能出現在多個位置的文字時，請使用盡可能小的偵測區域。
+        偵測區域越大，偵測速度越慢。\n\n如果不同位置是已知的且非隨機的，為每個位置使用個別的文字條件
+        可能比使用一個面積非常大的條件更快。如果您需要深度最佳化情境時序，可以使用偵錯報告來測試時序。</string>
+
+
+</resources>

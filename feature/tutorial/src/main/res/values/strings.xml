@@ -24,6 +24,7 @@
 
     <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
+    <string name="button_text_tutorial_close">Close</string>
 
     <string name="button_text_hello" translatable="false">Hello</string>
     <string name="button_text_goodbye" translatable="false">Goodbye</string>
