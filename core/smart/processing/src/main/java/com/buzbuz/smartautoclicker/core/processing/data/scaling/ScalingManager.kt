@@ -122,8 +122,8 @@ class ScalingManager @Inject constructor(
             screenCondition = this,
             detectionArea = detectionArea
                 .scaleDown()
-                .ensureMinSize()
                 .coerceIn(bounds = scaledScreenSize.toArea())
+                .ensureMinSize()
         )
 
     private fun ScreenCondition.Text.toTextScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Text =
@@ -131,8 +131,8 @@ class ScalingManager @Inject constructor(
             screenCondition = this,
             detectionArea = detectionArea
                 .scaleDown()
-                .ensureMinSize()
                 .coerceIn(bounds = scaledScreenSize.toArea())
+                .ensureMinSize()
         )
 
     private fun ScreenCondition.Number.toNumberScalingInfo(scaledScreenSize: Point): ScreenConditionScalingInfo.Number =
@@ -140,8 +140,8 @@ class ScalingManager @Inject constructor(
             screenCondition = this,
             detectionArea = detectionArea
                 .scaleDown()
-                .ensureMinSize()
                 .coerceIn(bounds = scaledScreenSize.toArea())
+                .ensureMinSize()
         )
 
     private fun List<ScreenEvent>.toConditionsList(): List<ScreenCondition> =

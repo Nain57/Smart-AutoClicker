@@ -123,7 +123,7 @@ TextMatchingResult* TextMatcher::matchNumber(
 }
 
 bool TextMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi) {
-    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+    if (roi.width <= 0 || roi.height <= 0 || !isRoiContainsOrEquals(screenRoi, roi)) {
         LOGD("TextMatcher", "Can't detect text, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
              roi.x, roi.y, roi.width, roi.height,
              screenRoi.width, screenRoi.height);

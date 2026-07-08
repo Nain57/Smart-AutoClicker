@@ -35,7 +35,7 @@ ColorMatchingResult *ColorMatcher::getMatchingResults() {
 }
 
 bool ColorMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv::Rect& roi) {
-    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+    if (roi.width <= 0 || roi.height <= 0 || !isRoiContainsOrEquals(screenRoi, roi)) {
         LOGD("Detector", "Can't detect color, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
              roi.x, roi.y, roi.width, roi.height,
              screenRoi.width, screenRoi.height);
