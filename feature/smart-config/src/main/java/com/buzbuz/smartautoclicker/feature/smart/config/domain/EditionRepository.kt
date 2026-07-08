@@ -53,7 +53,7 @@ class EditionRepository @Inject constructor(
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
     /** Provides creators for all elements in an edited scenario. */
-    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(repository, bitmapRepository, scenarioEditor)
+    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(bitmapRepository, scenarioEditor)
     /** Provides the states of all elements in the edited scenario. */
     val editionState: IEditionState = EditionState(scenarioEditor)
 

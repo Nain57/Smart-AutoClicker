@@ -22,7 +22,6 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
 import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
 import com.buzbuz.smartautoclicker.core.database.dao.EventDao
 import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
@@ -65,11 +64,6 @@ class RepositoryTests {
     @Mock private lateinit var mockEventDao: EventDao
     @Mock private lateinit var mockConditionDao: ConditionDao
 
-    @Mock private lateinit var mockTutoDatabase: TutorialDatabase
-    @Mock private lateinit var mockTutoScenarioDao: ScenarioDao
-    @Mock private lateinit var mockTutoEventDao: EventDao
-    @Mock private lateinit var mockTutoConditionDao: ConditionDao
-
     /** Object under tests. */
     private lateinit var repository: Repository
 
@@ -84,11 +78,7 @@ class RepositoryTests {
         mockWhen(mockDatabase.eventDao()).thenReturn(mockEventDao)
         mockWhen(mockDatabase.conditionDao()).thenReturn(mockConditionDao)
 
-        mockWhen(mockTutoDatabase.scenarioDao()).thenReturn(mockTutoScenarioDao)
-        mockWhen(mockTutoDatabase.eventDao()).thenReturn(mockTutoEventDao)
-        mockWhen(mockTutoDatabase.conditionDao()).thenReturn(mockTutoConditionDao)
-
-        val dataSource = ScenarioDataSource(mockDatabase, mockTutoDatabase)
+        val dataSource = ScenarioDataSource(mockDatabase)
         repository = Repository(UnconfinedTestDispatcher(), dataSource, mockBitmapManager)
         clearInvocations(mockScenarioDao, mockEventDao, mockConditionDao)
     }

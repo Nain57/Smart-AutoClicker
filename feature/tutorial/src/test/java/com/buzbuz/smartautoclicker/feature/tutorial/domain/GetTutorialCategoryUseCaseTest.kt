@@ -87,9 +87,18 @@ class GetTutorialCategoryUseCaseTest {
         val header = state.items[0] as TutorialCategoryUiItems.Header
         assertEquals(R.string.tutorial_category_root_name, header.categoryNameRes)
 
-        assertEquals(2, state.items.size)
-        val categoryItem = state.items[1] as TutorialCategoryUiItems.Item.Category
-        assertEquals(TutorialCategory.Type.BASICS, categoryItem.type)
+        // Header + SectionDivider + BASICS + COMBINE_CONDITIONS + EVENT_STATE + COUNTERS
+        assertEquals(6, state.items.size)
+        assertTrue(state.items[1] is TutorialCategoryUiItems.SectionDivider)
+        assertEquals(
+            listOf(
+                TutorialCategory.Type.BASICS,
+                TutorialCategory.Type.COMBINE_CONDITIONS,
+                TutorialCategory.Type.EVENT_STATE,
+                TutorialCategory.Type.COUNTERS,
+            ),
+            state.items.filterIsInstance<TutorialCategoryUiItems.Item.Category>().map { it.type },
+        )
     }
 
     @Test
@@ -101,9 +110,6 @@ class GetTutorialCategoryUseCaseTest {
             listOf(
                 TutorialItem.Type.IMAGE_DETECTION_STILL_TARGET,
                 TutorialItem.Type.IMAGE_DETECTION_MOVING_TARGET,
-                TutorialItem.Type.IMAGE_DETECTION_TWO_MOVING_TARGETS_PRESS_IN_ORDER,
-                TutorialItem.Type.IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_ONE,
-                TutorialItem.Type.IMAGE_DETECTION_TWO_STILL_TARGETS_PRESS_WHEN_BOTH,
             ),
             tutorialItems.map { it.type },
         )

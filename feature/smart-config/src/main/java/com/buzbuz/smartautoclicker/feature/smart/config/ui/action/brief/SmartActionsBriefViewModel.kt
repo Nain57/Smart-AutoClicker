@@ -28,7 +28,6 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -41,6 +40,8 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
@@ -66,6 +67,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -77,12 +79,12 @@ import javax.inject.Inject
 
 class SmartActionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    repository: IRepository,
     isActionCopyAvailableUseCase: IsActionCopyAvailableUseCase,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val smartProcessingRepository: SmartProcessingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
+    tutorialRepository: TutorialRepository,
     settingsRepository: SettingsRepository,
 ) : ViewModel(), ActionConfigurator {
 
@@ -140,7 +142,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val isTutorialModeEnabled: Flow<Boolean> =
-        repository.isTutorialModeEnabled
+        tutorialRepository.tutorialState.map { it is TutorialState.Started }
 
     fun startGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value

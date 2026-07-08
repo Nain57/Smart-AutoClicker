@@ -24,13 +24,6 @@ import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.areComplete
 import com.buzbuz.smartautoclicker.core.database.ClickDatabase
-import com.buzbuz.smartautoclicker.core.database.ScenarioDatabase
-import com.buzbuz.smartautoclicker.core.database.TutorialDatabase
-import com.buzbuz.smartautoclicker.core.database.dao.ActionDao
-import com.buzbuz.smartautoclicker.core.database.dao.ConditionDao
-import com.buzbuz.smartautoclicker.core.database.dao.CountersDao
-import com.buzbuz.smartautoclicker.core.database.dao.EventDao
-import com.buzbuz.smartautoclicker.core.database.dao.ScenarioDao
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
@@ -61,139 +54,105 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 
 import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 internal class ScenarioDataSource @Inject constructor(
-    private val normalDatabase: ClickDatabase,
-    private val tutorialDatabase: TutorialDatabase,
+    private val database: ClickDatabase,
 ) {
-
-    /** The database currently in use. */
-    private val currentDatabase: MutableStateFlow<ScenarioDatabase> = MutableStateFlow(normalDatabase)
-
-    /** The Dao for accessing the scenario. */
-    private val scenarioDaoFlow: Flow<ScenarioDao> = currentDatabase.map { it.scenarioDao() }
-    /** The Dao for accessing the events. */
-    private val eventDaoFlow: Flow<EventDao> = currentDatabase.map { it.eventDao() }
-    /** The Dao for accessing the conditions. */
-    private val conditionsDaoFlow: Flow<ConditionDao> = currentDatabase.map { it.conditionDao() }
-    /** The Dao for accessing the actions. */
-    private val actionDaoFlow: Flow<ActionDao> = currentDatabase.map { it.actionDao() }
-    /** The Dao for accessing the counters */
-    private val countersDaoFlow: Flow<CountersDao> = currentDatabase.map { it.countersDao() }
 
     /** State of scenario during an update, to keep track of ids mapping. */
     private val scenarioUpdateState = ScenarioUpdateState()
 
-    val isTutorialModeEnabled: Flow<Boolean> =
-        currentDatabase.map { it == tutorialDatabase }
+    fun scenarios(): Flow<List<ScenarioWithEvents>> =
+        database.scenarioDao().getScenariosWithEvents()
 
-    val scenarios: Flow<List<ScenarioWithEvents>> =
-        scenarioDaoFlow.flatMapLatest { it.getScenariosWithEvents() }
+    fun allTriggerEvents(): Flow<List<CompleteEventEntity>> =
+        database.eventDao().getAllTriggerEventsFlow()
 
-    val allTriggerEvents: Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getAllTriggerEventsFlow() }
+    fun allImageEvents(): Flow<List<CompleteEventEntity>> =
+        database.eventDao().getAllScreenEventsFlow()
 
-    val allImageEvents: Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getAllScreenEventsFlow() }
+    fun screenEventsCount(): Flow<Int> =
+        database.eventDao().getScreenEventsCount()
 
-    val screenEventsCount: Flow<Int> =
-        eventDaoFlow.flatMapLatest { it.getScreenEventsCount() }
+    fun triggerEventsCount(): Flow<Int> =
+        database.eventDao().getTriggerEventsCount()
 
-    val triggerEventsCount: Flow<Int> =
-        eventDaoFlow.flatMapLatest { it.getTriggerEventsCount() }
+    fun screenConditionsCount(): Flow<Int> =
+        database.conditionDao().getScreenConditionsCount()
 
-    val screenConditionsCount: Flow<Int> =
-        conditionsDaoFlow.flatMapLatest { it.getScreenConditionsCount() }
+    fun triggerConditionsCount(): Flow<Int> =
+        database.conditionDao().getTriggerConditionsCount()
 
-    val triggerConditionsCount: Flow<Int> =
-        conditionsDaoFlow.flatMapLatest { it.getTriggerConditionsCount() }
-
-    val actionsCount: Flow<Int> =
-        actionDaoFlow.flatMapLatest { it.getActionsCount() }
-
-
-    fun useTutorialDatabase() {
-        currentDatabase.value = tutorialDatabase
-    }
-
-    fun useNormalDatabase() {
-        currentDatabase.value = normalDatabase
-    }
-
-    fun isUsingTutorialDatabase(): Boolean =
-        currentDatabase.value == tutorialDatabase
+    fun actionsCount(): Flow<Int> =
+        database.actionDao().getActionsCount()
 
 
     suspend fun getScenario(scenarioId: Long): ScenarioWithEvents? =
-        currentDatabase.value.scenarioDao().getScenario(scenarioId)
+        database.scenarioDao().getScenario(scenarioId)
 
     suspend fun getCompleteScenario(scenarioId: Long): CompleteScenario? =
-        currentDatabase.value.scenarioDao().getCompleteScenario(scenarioId)
+        database.scenarioDao().getCompleteScenario(scenarioId)
 
     fun getScenarioFlow(scenarioId: Long): Flow<ScenarioWithEvents?> =
-        scenarioDaoFlow.flatMapLatest { it.getScenarioFlow(scenarioId) }
+        database.scenarioDao().getScenarioFlow(scenarioId)
 
     suspend fun getScreenEvents(scenarioId: Long): List<CompleteEventEntity> =
-        currentDatabase.value.eventDao().getCompleteScreenEvents(scenarioId)
+        database.eventDao().getCompleteScreenEvents(scenarioId)
 
     fun getScreenEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getCompleteScreenEventsFlow(scenarioId) }
+        database.eventDao().getCompleteScreenEventsFlow(scenarioId)
 
     suspend fun getTriggerEvents(scenarioId: Long): List<CompleteEventEntity> =
-        currentDatabase.value.eventDao().getCompleteTriggerEvents(scenarioId)
+        database.eventDao().getCompleteTriggerEvents(scenarioId)
 
     fun getTriggerEventsFlow(scenarioId: Long): Flow<List<CompleteEventEntity>> =
-        eventDaoFlow.flatMapLatest { it.getCompleteTriggerEventsFlow(scenarioId) }
+        database.eventDao().getCompleteTriggerEventsFlow(scenarioId)
 
     fun getAllConditions(): Flow<List<ConditionEntity>> =
-        conditionsDaoFlow.flatMapLatest { it.getAllConditions() }
+        database.conditionDao().getAllConditions()
 
     fun getAllActions(): Flow<List<CompleteActionEntity>> =
-        actionDaoFlow.flatMapLatest { it.getAllActions() }
+        database.actionDao().getAllActions()
 
     fun getCountersFlow(scenarioId: Long): Flow<List<CountersEntity>> =
-        countersDaoFlow.flatMapLatest { it.getScenarioCountersFlow(scenarioId) }
+        database.countersDao().getScenarioCountersFlow(scenarioId)
 
     suspend fun getCounters(scenarioId: Long): List<CountersEntity> =
-        currentDatabase.value.countersDao().getScenarioCounters(scenarioId)
+        database.countersDao().getScenarioCounters(scenarioId)
 
     suspend fun getImageConditionPathUsageCount(path: String): Int =
-        currentDatabase.value.conditionDao().getValidPathCount(path)
+        database.conditionDao().getValidPathCount(path)
 
     suspend fun getConditionName(conditionId: Long): String? =
-        currentDatabase.value.conditionDao().getConditionName(conditionId)
+        database.conditionDao().getConditionName(conditionId)
 
     suspend fun getEventName(eventId: Long): String? =
-        currentDatabase.value.eventDao().getEventName(eventId)
+        database.eventDao().getEventName(eventId)
 
     suspend fun addScenario(scenario: Scenario): Long {
         Log.d(TAG, "Add scenario to the database: ${scenario.id}")
-        return currentDatabase.value.scenarioDao().add(scenario.toEntity())
+        return database.scenarioDao().add(scenario.toEntity())
     }
 
     suspend fun deleteScenario(scenarioId: Identifier, onImageConditionsRemoved: suspend (List<String>) -> Unit) {
         Log.d(TAG, "Delete scenario from the database: $scenarioId")
 
         val removedConditionsPath = mutableListOf<String>()
-        currentDatabase.value.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
-            currentDatabase.value.conditionDao().getConditionsPaths(eventId).forEach { path ->
+        database.eventDao().getEventsIds(scenarioId.databaseId).forEach { eventId ->
+            database.conditionDao().getConditionsPaths(eventId).forEach { path ->
                 if (!removedConditionsPath.contains(path)) removedConditionsPath.add(path)
             }
         }
 
-        currentDatabase.value.scenarioDao().delete(scenarioId.databaseId)
+        database.scenarioDao().delete(scenarioId.databaseId)
         onImageConditionsRemoved(removedConditionsPath)
     }
 
@@ -210,10 +169,10 @@ internal class ScenarioDataSource @Inject constructor(
             throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
 
         return try {
-            currentDatabase.value.withTransaction {
+            database.withTransaction {
                 // First insert the scenario to get its database id, and put it in all events
                 val scenarioId = Identifier(
-                    databaseId = currentDatabase.value.scenarioDao().add(scenario.toEntity())
+                    databaseId = database.scenarioDao().add(scenario.toEntity())
                 )
 
                 updateEvents(
@@ -244,9 +203,9 @@ internal class ScenarioDataSource @Inject constructor(
         Log.d(TAG, "Update scenario in the database: ${scenario.id}")
 
         return try {
-            currentDatabase.value.withTransaction {
+            database.withTransaction {
                 // Update scenario entity values
-                currentDatabase.value.scenarioDao().update(scenario.toEntity())
+                database.scenarioDao().update(scenario.toEntity())
                 // Update scenario content
                 updateEvents(
                     scenarioDbId = scenario.id.databaseId,
@@ -268,7 +227,7 @@ internal class ScenarioDataSource @Inject constructor(
     }
 
     suspend fun markAsUsed(scenarioDbId: Long) {
-        currentDatabase.value.scenarioDao().let { scenarioDao ->
+        database.scenarioDao().let { scenarioDao ->
             val previousStats = scenarioDao.getScenarioStats(scenarioDbId)
             if (previousStats != null) {
                 scenarioDao.updateScenarioStats(
@@ -290,21 +249,15 @@ internal class ScenarioDataSource @Inject constructor(
         }
     }
 
-    suspend fun getLegacyImageConditions(forTutorial: Boolean): List<ConditionEntity> =
-        if (forTutorial) tutorialDatabase.conditionDao().getLegacyImageConditions()
-        else normalDatabase.conditionDao().getLegacyImageConditions()
+    suspend fun getLegacyImageConditions(): List<ConditionEntity> =
+        database.conditionDao().getLegacyImageConditions()
 
-    fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>> =
-        combine(
-            normalDatabase.conditionDao().getLegacyImageConditionsFlow(),
-            tutorialDatabase.conditionDao().getLegacyImageConditionsFlow(),
-        ) { normalLegacy, tutorialLegacy -> normalLegacy + tutorialLegacy }
+    fun getLegacyImageConditionsFlow(): Flow<List<ConditionEntity>> = flow {
+        emitAll(database.conditionDao().getLegacyImageConditionsFlow())
+    }
 
-    suspend fun updateLegacyImageCondition(condition: ConditionEntity, newPath: String, forTutorial: Boolean) {
-        val updatedCondition = condition.copy(path = newPath)
-
-        if (forTutorial) tutorialDatabase.conditionDao().updateCondition(updatedCondition)
-        else normalDatabase.conditionDao().updateCondition(updatedCondition)
+    suspend fun updateLegacyImageCondition(condition: ConditionEntity, newPath: String) {
+        database.conditionDao().updateCondition(condition.copy(path = newPath))
     }
 
     private suspend fun updateEvents(
@@ -317,7 +270,7 @@ internal class ScenarioDataSource @Inject constructor(
 
         Log.d(TAG, "Updating events in the database for scenario $scenarioDbId")
         updater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.eventDao().getEvents(scenarioDbId),
+            currentEntities = database.eventDao().getEvents(scenarioDbId),
             newItems = events,
             mappingClosure = { event ->
                 event.toEntity().apply {
@@ -327,7 +280,7 @@ internal class ScenarioDataSource @Inject constructor(
         )
         Log.d(TAG, "Events updater: $updater")
 
-        currentDatabase.value.eventDao().let { eventDao ->
+        database.eventDao().let { eventDao ->
             updater.executeUpdate(
                 addList = eventDao::addEvents,
                 updateList = eventDao::updateEvent,
@@ -382,7 +335,7 @@ internal class ScenarioDataSource @Inject constructor(
 
         Log.d(TAG, "Updating conditions in the database for event $eventDbId")
         updater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.conditionDao().getConditions(eventDbId),
+            currentEntities = database.conditionDao().getConditions(eventDbId),
             newItems = newConditions,
             mappingClosure = { condition ->
                 condition.copyWithNewId(evtId = Identifier(databaseId = eventDbId)).toEntity()
@@ -390,7 +343,7 @@ internal class ScenarioDataSource @Inject constructor(
         )
         Log.d(TAG, "Conditions updater: $updater")
 
-        currentDatabase.value.conditionDao().let { conditionDao ->
+        database.conditionDao().let { conditionDao ->
             updater.executeUpdate(
                 addList = conditionDao::addConditions,
                 updateList = conditionDao::updateConditions,
@@ -407,7 +360,7 @@ internal class ScenarioDataSource @Inject constructor(
     }
 
     private suspend fun updateActions(eventDbId: Long, newActions: List<Action>) {
-        val currentCompleteActions = currentDatabase.value.actionDao().getCompleteActions(eventDbId)
+        val currentCompleteActions = database.actionDao().getCompleteActions(eventDbId)
         val currentActionsEntities = currentCompleteActions.map { it.action }
         val updater = DatabaseListUpdater<Action, ActionEntity>()
 
@@ -424,7 +377,7 @@ internal class ScenarioDataSource @Inject constructor(
         )
         Log.d(TAG, "Actions updater: $updater")
 
-        currentDatabase.value.actionDao().let { actionDao ->
+        database.actionDao().let { actionDao ->
             updater.executeUpdate(
                 addList = actionDao::addActions,
                 updateList = actionDao::updateActions,
@@ -471,7 +424,7 @@ internal class ScenarioDataSource @Inject constructor(
         val updater = DatabaseListUpdater<IntentExtra<out Any>, IntentExtraEntity>()
 
         updater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.actionDao().getIntentExtras(actionDbId),
+            currentEntities = database.actionDao().getIntentExtras(actionDbId),
             newItems = newExtras,
             mappingClosure = { item ->
                 item.toEntity().apply {
@@ -481,7 +434,7 @@ internal class ScenarioDataSource @Inject constructor(
         )
         Log.d(TAG, "IntentExtra updater $updater")
 
-        currentDatabase.value.actionDao().let { actionDao ->
+        database.actionDao().let { actionDao ->
             updater.executeUpdate(
                 addList = actionDao::addIntentExtras,
                 updateList = actionDao::updateIntentExtras,
@@ -494,7 +447,7 @@ internal class ScenarioDataSource @Inject constructor(
         val updater = DatabaseListUpdater<EventToggle, EventToggleEntity>()
 
         updater.refreshUpdateValues(
-            currentEntities = currentDatabase.value.actionDao().getEventsToggles(actionDbId),
+            currentEntities = database.actionDao().getEventsToggles(actionDbId),
             newItems = newToggles,
             mappingClosure = { item ->
                 item.toEntity().apply {
@@ -505,7 +458,7 @@ internal class ScenarioDataSource @Inject constructor(
         )
         Log.d(TAG, "EventToggle updater $updater")
 
-        currentDatabase.value.actionDao().let { actionDao ->
+        database.actionDao().let { actionDao ->
             updater.executeUpdate(
                 addList = actionDao::addEventToggles,
                 updateList = actionDao::updateEventToggles,
@@ -515,7 +468,7 @@ internal class ScenarioDataSource @Inject constructor(
     }
 
     private suspend fun updateCounters(scenarioDbId: Long, newCounters: List<Counter>) {
-        val toBeRemoved = currentDatabase.value.countersDao()
+        val toBeRemoved = database.countersDao()
             .getScenarioCounters(scenarioDbId)
             .toMutableList()
 
@@ -524,13 +477,13 @@ internal class ScenarioDataSource @Inject constructor(
             val oldIndex = toBeRemoved.indexOfFirst { oldCounter -> oldCounter.name == counter.counterName }
             if (oldIndex in toBeRemoved.indices) toBeRemoved.remove(toBeRemoved[oldIndex])
 
-            currentDatabase.value.countersDao().upsertCounter(
+            database.countersDao().upsertCounter(
                 counter.toEntity().copy(scenarioId = scenarioDbId)
             )
         }
 
         toBeRemoved.forEach { counter ->
-            currentDatabase.value.countersDao().deleteCounter(counter.name, scenarioDbId)
+            database.countersDao().deleteCounter(counter.name, scenarioDbId)
         }
     }
 

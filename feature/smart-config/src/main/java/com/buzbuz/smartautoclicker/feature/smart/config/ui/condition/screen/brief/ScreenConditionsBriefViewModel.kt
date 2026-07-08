@@ -32,7 +32,6 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
-import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
@@ -41,6 +40,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionDescription
@@ -76,7 +77,7 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
-    repository: IRepository,
+    tutorialRepository: TutorialRepository,
     bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
@@ -120,7 +121,7 @@ class ScreenConditionsBriefViewModel @Inject constructor(
     }
 
     val isTutorialModeEnabled: Flow<Boolean> =
-        repository.isTutorialModeEnabled
+        tutorialRepository.tutorialState.map { it is TutorialState.Started }
 
     fun setFocusedItemIndex(index: Int) {
         currentFocusItemIndex.value = index

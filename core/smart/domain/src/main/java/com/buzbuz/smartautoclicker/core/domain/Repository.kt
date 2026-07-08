@@ -65,41 +65,38 @@ internal class Repository @Inject internal constructor(
     private val coroutineScopeIo: CoroutineScope =
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    override val isTutorialModeEnabled: Flow<Boolean> =
-        dataSource.isTutorialModeEnabled
+    override val scenarios: Flow<List<Scenario>>
+        get() = dataSource.scenarios().mapList { it.toDomain() }
 
-    override val scenarios: Flow<List<Scenario>> =
-        dataSource.scenarios.mapList { it.toDomain() }
+    override val allScreenEvents: Flow<List<ScreenEvent>>
+        get() = dataSource.allImageEvents().mapList { it.toDomainScreenEvent() }
 
-    override val allScreenEvents: Flow<List<ScreenEvent>> =
-        dataSource.allImageEvents.mapList { it.toDomainScreenEvent() }
+    override val allTriggerEvents: Flow<List<TriggerEvent>>
+        get() = dataSource.allTriggerEvents().mapList { it.toDomainTriggerEvent() }
 
-    override val allTriggerEvents: Flow<List<TriggerEvent>> =
-        dataSource.allTriggerEvents.mapList { it.toDomainTriggerEvent() }
+    override val allConditions: Flow<List<Condition>>
+        get() = dataSource.getAllConditions().mapList { it.toDomain() }
 
-    override val allConditions: Flow<List<Condition>> =
-        dataSource.getAllConditions().mapList { it.toDomain() }
+    override val allActions: Flow<List<Action>>
+        get() = dataSource.getAllActions().mapList { it.toDomain() }
 
-    override val allActions: Flow<List<Action>> =
-        dataSource.getAllActions().mapList { it.toDomain() }
+    override val screenEventsCount: Flow<Int>
+        get() = dataSource.screenEventsCount()
 
-    override val screenEventsCount: Flow<Int> =
-        dataSource.screenEventsCount
+    override val triggerEventsCount: Flow<Int>
+        get() = dataSource.triggerEventsCount()
 
-    override val triggerEventsCount: Flow<Int> =
-        dataSource.triggerEventsCount
+    override val screenConditionsCount: Flow<Int>
+        get() = dataSource.screenConditionsCount()
 
-    override val screenConditionsCount: Flow<Int> =
-        dataSource.screenConditionsCount
+    override val triggerConditionsCount: Flow<Int>
+        get() = dataSource.triggerConditionsCount()
 
-    override val triggerConditionsCount: Flow<Int> =
-        dataSource.triggerConditionsCount
+    override val actionsCount: Flow<Int>
+        get() = dataSource.actionsCount()
 
-    override val actionsCount: Flow<Int> =
-        dataSource.actionsCount
-
-    override val legacyConditionsCount: Flow<Int> =
-        dataSource.getLegacyImageConditionsFlow()
+    override val legacyConditionsCount: Flow<Int>
+        get() = dataSource.getLegacyImageConditionsFlow()
             .map { it.size }
             .distinctUntilChanged()
 
@@ -172,25 +169,8 @@ internal class Repository @Inject internal constructor(
     override suspend fun updateScenario(scenario: Scenario, events: List<Event>, counters: List<Counter>): Boolean =
         dataSource.updateScenario(scenario, events, counters, ::clearRemovedConditionsBitmaps)
 
-    override fun startTutorialMode() {
-        Log.d(TAG, "Start tutorial mode, use tutorial database")
-        dataSource.useTutorialDatabase()
-    }
-
-    override fun stopTutorialMode() {
-        Log.d(TAG, "Stop tutorial mode, use regular database")
-        dataSource.useNormalDatabase()
-    }
-
-    override fun isTutorialModeEnabled(): Boolean =
-        dataSource.isUsingTutorialDatabase()
-
     override suspend fun migrateLegacyImageConditions(): Boolean {
-        return migrateLegacyImageConditions(false) && migrateLegacyImageConditions(true)
-    }
-
-    private suspend fun migrateLegacyImageConditions(forTutorial: Boolean): Boolean {
-        val legacyConditions = dataSource.getLegacyImageConditions(forTutorial)
+        val legacyConditions = dataSource.getLegacyImageConditions()
         Log.i(TAG, "Migrating ${legacyConditions.size} image conditions...")
 
         var success = true
@@ -218,7 +198,6 @@ internal class Repository @Inject internal constructor(
             dataSource.updateLegacyImageCondition(
                 condition = conditionEntity,
                 newPath = newPath,
-                forTutorial = forTutorial,
             )
         }
 
