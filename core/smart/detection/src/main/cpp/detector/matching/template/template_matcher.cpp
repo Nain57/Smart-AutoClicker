@@ -41,7 +41,7 @@ bool TemplateMatcher::isRoiValidForMatching(const cv::Rect& screenRoi, const cv:
         return false;
     }
 
-    if (!isRoiContainsOrEquals(screenRoi, roi)) {
+    if (roi.width <= 0 || roi.height <= 0 || !isRoiContainsOrEquals(screenRoi, roi)) {
         LOGD("Detector", "Can't detectCondition, detection area (x=%d, y=%d, w=%d, h=%d) is not contained in screen (w=%d, h=%d)",
              roi.x, roi.y, roi.width, roi.height,
              screenRoi.width, screenRoi.height);
