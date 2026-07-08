@@ -82,4 +82,50 @@
         最適化したい場合は、デバッグレポートを使用してタイミングをテストできます。</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">数値検出エリア</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">最適な数値検出に関するヒント</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">ここでのヒントはテキスト条件と同じです：
+        画面上の数値を検出する際は、検出中に数値をスキャンする検出エリアを定義する必要があります。
+        \n\n静的な数値を検出する場合は、数値に近く、その周囲に小さな余白を保った位置にエリアを設定してください。
+        数値がエリアの境界に触れると、検出の信頼性が大幅に低下します。\n\n注意：非常に小さな数値の場合は、
+        シナリオの検出品質を上げる必要があるかもしれません。高解像度にすることでそれらの数値の検出に役立ちます。 </string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">画面条件の種類</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">用途に応じてどれを使うか学ぶ</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">カラー条件はKlick\'rで最も速く検出する方法です。
+        画面上のピクセルの色を確認するだけです。\n\nこの条件は、ボタンの色や進捗バーの完了などのシンプルなUI要素、
+        または小さな変化を検出しようとするときに便利です。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">画像条件はカラー条件より遅いですが、
+        画面コンテンツの検出に柔軟性があります。小さなエリアで検出する場合の実行時間は非常に短いですが、
+        エリアが大きくなると大幅に増加する可能性があります。\n\nこの条件は、カードのコンテンツやアイコンなど、
+        明確な形状と色を検出しようとするときに便利です。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">テキスト条件と数値条件はどちらも同じ検出プロセスを使用します。
+        \n\nテキスト検出は最も遅い検出タイプですが、画像検出とは異なり、透明度に影響されず、複雑な検出シーンでより高い精度を
+        実現します。実行時間は検出エリアのサイズとともに増加し、選択したアルファベットにも依存します。\n\nこの条件は、
+        テキストや数値がどのように表示されているかに関わらず検出しようとするときに便利です。</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">検出の信頼性</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">検出の信頼性に関するヒント</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'rはプロセスを高速化し、バッテリーへの影響を
+        軽減するために、画面条件を検索する前に多くの前処理を行います。これにより、信頼性スコアとして表される結果の不確実性と
+        近似値が生じます。\n\n条件が期待通りに機能していることを確認するには、画面条件リストで条件にフォーカスしながら
+        再生矢印ボタンを押して個別にテストできます。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">画面条件をテストすると、検出の信頼性スコアが表示され、
+        ここで許容差を直接変更することができます。これにより、誤検知を排除したり、許容される結果をより柔軟に設定したりできます。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">検出結果は検出解像度にも影響されます。
+        シナリオダイアログで利用可能なこの設定では、Klick\'rが処理前に画面コンテンツをどれだけダウンスケールするかを変更できます。
+        \n\nこれはすべての画面条件の信頼性スコアに影響を与える可能性があり、解像度が高いほど検出が良くなりますが、
+        実行時間も遅くなります。</string>
+
+
 </resources>

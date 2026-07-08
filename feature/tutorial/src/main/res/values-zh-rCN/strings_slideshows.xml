@@ -70,4 +70,44 @@
         可能比使用一个面积非常大的条件更快。如果您需要深度优化场景时序，可以使用调试报告来测试时序。</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">数字检测区域</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">关于最佳数字检测的提示</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">这里的提示与文字条件相同：在检测屏幕上的数字时，您需要定义一个
+        检测区域，该区域将在检测过程中扫描数字。\n\n检测静态数字时，您希望该区域靠近数字并在其周围保留小边距。数字不应触及
+        区域边界，否则检测置信度将显著下降。\n\n注意：对于非常小的数字，您可能需要提高场景的检测质量，因为更高的分辨率将有助于
+        检测这些数字。</string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">屏幕条件类型</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">根据您的使用场景了解选择哪种类型</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">颜色条件是使用 Klick\'r 检测最快的方式。它仅验证屏幕上某个
+        像素的颜色。\n\n当尝试检测简单的 UI 元素（如按钮颜色或进度条完成情况）或微小变化时，此条件非常方便。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">图像条件比颜色条件慢，但对屏幕内容检测提供了更多灵活性。
+        在小区域内检测时执行时间相当短，但当区域较大时可能会大幅增加。\n\n当尝试检测清晰的形状和颜色（如卡片内容或图标）时，
+        此条件非常方便。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">文字条件和数字条件使用相同的检测过程。\n\n文字检测是最慢的
+        检测类型，但与图像检测不同，它对透明度不敏感，并且在复杂检测场景中精度更高。执行时间随检测区域大小增加，还取决于所选
+        字母表。\n\n当尝试检测文字或数字（无论其如何显示）时，此条件非常方便。</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">检测置信度</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">关于检测置信度的提示</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'r 在搜索您的屏幕条件之前会进行大量预处理，以加快
+        过程并减少电池消耗。这会在结果中产生不确定性和近似值，以置信度分数表示。\n\n为确保您的条件按预期工作，您可以在屏幕条件
+        列表中聚焦某个条件时，按下播放箭头按钮来单独测试它们。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">测试屏幕条件时，将显示检测置信度分数，您可以直接在此
+        修改允许的差异，从而消除误报或对允许的结果更加灵活。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">检测结果还受检测分辨率影响。在场景对话框中可用，它允许
+        您更改 Klick\'r 在处理之前对屏幕内容的缩小程度。\n\n这可能会影响所有屏幕条件的置信度分数，分辨率越高意味着检测越好，
+        但执行时间也越慢。</string>
+
+
 </resources>

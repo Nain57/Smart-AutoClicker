@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scre
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 internal fun getScreenConditionsCategory() =
     TutorialCategory(
@@ -31,5 +32,7 @@ internal fun getScreenConditionsCategory() =
             TutorialCategory.Content.Category(TutorialCategory.Type.COLOR_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.TEXT_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.NUMBER_CONDITION),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_TYPE),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_DETECTION_THRESHOLD),
         ),
     )

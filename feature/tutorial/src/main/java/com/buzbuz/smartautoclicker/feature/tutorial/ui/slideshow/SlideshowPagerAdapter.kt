@@ -48,10 +48,12 @@ internal class SlideshowPagerAdapter(
             val metrics = binding.imageTutorial.context.resources.displayMetrics
             val widthPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, item.tutorialImageFormat.widthDp.toFloat(), metrics).toInt()
             val heightPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, item.tutorialImageFormat.heightDp.toFloat(), metrics).toInt()
-            binding.imageTutorial.layoutParams = binding.imageTutorial.layoutParams.apply {
+            val marginPx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, item.tutorialImageFormat.marginDp.toFloat(), metrics).toInt()
+            (binding.imageTutorial.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
                 width = widthPx
                 height = heightPx
-            }
+                setMargins(marginPx, marginPx, marginPx, marginPx)
+            }?.let { binding.imageTutorial.layoutParams = it }
         }
     }
 }

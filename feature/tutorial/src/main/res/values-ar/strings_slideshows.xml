@@ -81,4 +81,51 @@
         إذا كنت تريد تحسينًا عميقًا لتوقيتات السيناريو الخاص بك.</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">منطقة كشف الأرقام</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">نصائح حول الكشف الأمثل عن الأرقام</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">النصائح هنا هي نفسها المتعلقة بشرط النص:
+        عند اكتشاف رقم على الشاشة، تحتاج إلى تحديد منطقة كشف سيتم فحصها بحثًا عن الأرقام أثناء الكشف.
+        \n\nعند اكتشاف رقم ثابت، تريد أن تكون المنطقة قريبة من الرقم مع الاحتفاظ بهامش صغير حوله. لا ينبغي أن يلمس الرقم
+        حدود المنطقة وإلا ستنخفض ثقة الكشف بشكل ملحوظ. \n\nملاحظة: للأرقام الصغيرة جدًا، قد تحتاج إلى
+        زيادة جودة الكشف في السيناريو الخاص بك، لأن الدقة الأعلى ستساعد على اكتشاف تلك الأرقام. </string>
+
+    <!-- Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">أنواع شروط الشاشة</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">تعرف على أيها تستخدم حسب حالة الاستخدام الخاصة بك</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">شرط اللون هو أسرع طريقة للكشف مع Klick\'r.
+        يتحقق ببساطة من لون بكسل على شاشتك. \n\nهذا الشرط مناسب عند محاولة اكتشاف عناصر واجهة مستخدم بسيطة
+        مثل لون زر أو اكتمال شريط التقدم، أو التغييرات الصغيرة.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">شرط الصورة أبطأ من شرط اللون،
+        لكنه يتيح مرونة أكبر لكشف محتوى الشاشة. وقت التنفيذ منخفض جدًا عند الكشف في منطقة صغيرة،
+        لكنه قد يزيد كثيرًا عندما تكون المنطقة أكبر. \n\nهذا الشرط مناسب عند محاولة اكتشاف أشكال وألوان
+        واضحة، مثل محتوى بطاقة أو أيقونة.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">تستخدم شروط النص وشروط الأرقام
+        نفس عملية الكشف. \n\nكشف النص هو أبطأ أنواع الكشف، لكن على عكس كشف الصور، فهو غير حساس للشفافية
+        ويتيح دقة أكبر في مشاهد الكشف المعقدة. يزيد وقت التنفيذ مع حجم منطقة الكشف ويعتمد أيضًا على
+        الأبجدية المحددة. \n\nهذا الشرط مناسب عند محاولة اكتشاف نص أو رقم بغض النظر عن طريقة عرضه.</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">ثقة الكشف</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">نصائح حول ثقة الكشف</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">يقوم Klick\'r بالكثير من المعالجة المسبقة
+        قبل البحث عن شرط الشاشة الخاص بك لتسريع العملية وتقليل استهلاك البطارية. هذا يخلق حالات عدم يقين
+        وتقريبات في النتائج تُعبَّر عنها كدرجة الثقة. \n\nلضمان عمل شروطك كما هو متوقع، يمكنك اختبارها
+        بشكل فردي بالضغط على زر السهم للتشغيل أثناء التركيز على شرط معين في قائمة شروط الشاشة.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">عند اختبار شرط شاشة، سيتم عرض
+        درجة ثقة الكشف، ويمكنك تعديل الفرق المسموح به مباشرةً هنا، مما يتيح لك التخلص من النتائج
+        الإيجابية الخاطئة أو أن تكون أكثر مرونة مع النتائج المسموح بها.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">تتأثر نتائج الكشف أيضًا بدقة الكشف.
+        المتاح في مربع حوار السيناريو، يتيح لك تغيير مقدار تقليل دقة محتوى شاشتك قبل معالجته بواسطة Klick\'r.
+        \n\nيمكن أن يؤثر هذا على درجة الثقة لجميع شروط الشاشة لديك، إذ تعني الدقة الأعلى كشفًا أفضل،
+        لكنها تعني أيضًا وقت تنفيذ أبطأ.</string>
+
+
 </resources>

@@ -84,4 +84,54 @@
         se estiver interessado em otimização profunda dos tempos do seu cenário.</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">Área de detecção de números</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">Dicas sobre a detecção ideal de números</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">As dicas aqui são as mesmas que para a Condição de Texto:
+        ao detectar um número na tela, você precisa definir uma área de detecção que será verificada em busca de números durante
+        a detecção. \n\nAo detectar um número estático, você quer que a área esteja perto do número mantendo uma pequena margem
+        ao redor. O número não deve tocar as bordas da área ou a confiança de detecção cairá significativamente.
+        \n\nNota: para números muito pequenos, pode ser necessário aumentar a qualidade de detecção do seu cenário, pois uma
+        resolução maior ajudará na detecção desses números. </string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">Tipos de condição de tela</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">Aprenda qual usar dependendo do seu caso de uso</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">A condição de cor é a forma mais rápida de detectar com
+        o Klick\'r. Ela simplesmente verifica a cor de um pixel na sua tela. \n\nEsta condição é conveniente quando se tenta
+        detectar elementos simples de interface como a cor de um botão ou a conclusão de uma barra de progresso, ou pequenas mudanças.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">A condição de imagem é mais lenta que uma condição de cor,
+        mas permite mais flexibilidade para a detecção de conteúdo na tela. O tempo de execução é bastante baixo quando se detecta
+        em uma área pequena, mas pode aumentar muito quando a área é maior. \n\nEsta condição é conveniente quando se tenta detectar
+        formas e cores claras, como o conteúdo de um cartão ou um ícone.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">As condições de texto e as condições de número usam
+        o mesmo processo de detecção. \n\nA detecção de texto é o tipo de detecção mais lento, mas ao contrário da detecção de
+        imagem, não é sensível à transparência e permite mais precisão em cenas de detecção complexas. O tempo de execução aumenta
+        com o tamanho da área de detecção e também depende do alfabeto selecionado. \n\nEsta condição é conveniente quando se tenta
+        detectar um texto ou um número independentemente de como é exibido.</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">Confiança de detecção</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">Dicas sobre confiança de detecção</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">O Klick\'r faz muito pré-processamento antes de
+        procurar sua condição de tela para acelerar o processo e reduzir o impacto na bateria. Isso cria incertezas e aproximações
+        nos resultados que são expressas como a pontuação de confiança. \n\nPara garantir que suas condições estão funcionando como
+        esperado, você pode testá-las individualmente pressionando o botão de seta de reprodução enquanto focaliza uma condição
+        na lista de condições de tela.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">Ao testar uma condição de tela, a pontuação de
+        confiança de detecção será exibida, e você pode modificar a diferença tolerada diretamente aqui, permitindo que você
+        elimine falsos positivos ou seja mais flexível com os resultados permitidos.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">Os resultados de detecção também são impactados pela
+        resolução de detecção. Disponível no diálogo de Cenário, ela permite que você altere o quanto o Klick\'r reduz a escala do
+        conteúdo da sua tela antes de processá-lo. \n\nIsso pode impactar a pontuação de confiança de todas as suas condições de
+        tela, com maior resolução significando melhor detecção, mas também tempo de execução mais lento.</string>
+
+
 </resources>

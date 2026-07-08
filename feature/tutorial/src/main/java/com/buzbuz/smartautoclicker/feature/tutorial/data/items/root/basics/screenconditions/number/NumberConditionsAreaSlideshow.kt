@@ -17,19 +17,18 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.number
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
-internal fun getNumberConditionsCategory() =
-    TutorialCategory(
-        type = TutorialCategory.Type.NUMBER_CONDITION,
-        nameRes = R.string.tutorial_category_number_condition_name,
-        shortDescriptionRes = R.string.tutorial_category_number_condition_desc_short,
-        longDescriptionRes = R.string.tutorial_category_number_condition_desc_long,
-        iconRes = R.drawable.ic_number_condition,
-        content = listOf(
-            TutorialCategory.Content.Tutorial(TutorialItem.Type.NUMBER_CONDITION_STATIC_VALUE),
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.NUMBER_CONDITION_DETECTION_AREA),
+internal fun getNumberConditionsDetectionAreaSlideshow() =
+    TutorialSlideshow(
+        type = TutorialSlideshow.Type.NUMBER_CONDITION_DETECTION_AREA,
+        nameRes = R.string.tutorial_slideshow_number_condition_area_title,
+        shortDescriptionRes = R.string.tutorial_slideshow_number_condition_area_desc,
+        slideshowItems = listOf(
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_number_condition_area_step_1_text,
+                tutorialImage = R.drawable.tutorial_instructions_number_capture_sizing,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_SQUARE,
+            ),
         ),
     )

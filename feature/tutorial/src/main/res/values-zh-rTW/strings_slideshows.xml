@@ -70,4 +70,44 @@
         可能比使用一個面積非常大的條件更快。如果您需要深度最佳化情境時序，可以使用偵錯報告來測試時序。</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">數字偵測區域</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">關於最佳數字偵測的提示</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">這裡的提示與文字條件相同：在偵測螢幕上的數字時，您需要定義一個
+        偵測區域，該區域將在偵測過程中掃描數字。\n\n偵測靜態數字時，您希望該區域靠近數字並在其周圍保留小邊距。數字不應觸及
+        區域邊界，否則偵測信心度將顯著下降。\n\n注意：對於非常小的數字，您可能需要提高情境的偵測品質，因為更高的解析度將有助於
+        偵測這些數字。</string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">螢幕條件類型</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">根據您的使用情境了解選擇哪種類型</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">顏色條件是使用 Klick\'r 偵測最快的方式。它僅驗證螢幕上某個
+        像素的顏色。\n\n當嘗試偵測簡單的 UI 元素（如按鈕顏色或進度條完成情況）或細微變化時，此條件非常方便。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">圖像條件比顏色條件慢，但對螢幕內容偵測提供了更多彈性。
+        在小區域內偵測時執行時間相當短，但當區域較大時可能會大幅增加。\n\n當嘗試偵測清晰的形狀和顏色（如卡片內容或圖示）時，
+        此條件非常方便。</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">文字條件和數字條件使用相同的偵測過程。\n\n文字偵測是最慢的
+        偵測類型，但與圖像偵測不同，它對透明度不敏感，並且在複雜偵測場景中精度更高。執行時間隨偵測區域大小增加，還取決於所選
+        字母表。\n\n當嘗試偵測文字或數字（無論其如何顯示）時，此條件非常方便。</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">偵測信心度</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">關於偵測信心度的提示</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'r 在搜尋您的螢幕條件之前會進行大量預處理，以加快
+        過程並減少電池消耗。這會在結果中產生不確定性和近似值，以信心度分數表示。\n\n為確保您的條件按預期工作，您可以在螢幕條件
+        清單中聚焦某個條件時，按下播放箭頭按鈕來單獨測試它們。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">測試螢幕條件時，將顯示偵測信心度分數，您可以直接在此
+        修改允許的差異，從而消除誤報或對允許的結果更加彈性。</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">偵測結果還受偵測解析度影響。在情境對話框中可用，它允許
+        您更改 Klick\'r 在處理之前對螢幕內容的縮小程度。\n\n這可能會影響所有螢幕條件的信心度分數，解析度越高意味著偵測越好，
+        但執行時間也越慢。</string>
+
+
 </resources>

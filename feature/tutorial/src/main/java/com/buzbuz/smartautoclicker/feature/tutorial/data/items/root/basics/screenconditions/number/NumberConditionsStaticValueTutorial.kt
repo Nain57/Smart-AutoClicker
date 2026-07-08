@@ -156,7 +156,7 @@ object NumberConditionsStaticValueTutorial : TutorialItem {
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_number_conditions_static_value_step_11,
                     image = TutorialStepImage(
-                        imageResId = R.drawable.tutorial_instructions_text_capture_sizing,
+                        imageResId = R.drawable.tutorial_instructions_number_capture_sizing,
                         imageDescResId = R.string.message_tutorial_number_conditions_static_value_step_secondary_11,
                     ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(

@@ -84,4 +84,56 @@
         si vous souhaitez optimiser en profondeur les timings de votre scénario.</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">Zone de détection des nombres</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">Conseils pour une détection optimale des nombres</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">Les conseils ici sont les mêmes que pour la Condition de texte :
+        lors de la détection d\'un nombre à l\'écran, vous devez définir une zone de détection qui sera analysée pour les nombres
+        lors de la détection. \n\nPour la détection d\'un nombre statique, vous voulez que la zone soit proche du nombre tout en
+        conservant une petite marge autour. Le nombre ne doit pas toucher les bords de la zone, sinon la fiabilité de la détection
+        chutera significativement. \n\nNote : pour les nombres très petits, vous devrez peut-être augmenter la qualité de détection
+        de votre scénario, car une résolution plus élevée aidera à la détection de ceux-ci. </string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">Types de conditions d\'écran</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">Découvrez laquelle utiliser selon votre cas d\'utilisation</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">La condition de couleur est le moyen le plus rapide de détecter
+        avec Klick\'r. Elle vérifie simplement la couleur d\'un pixel sur votre écran. \n\nCette condition est pratique lorsqu\'on
+        essaie de détecter des éléments d\'interface simples tels qu\'une couleur de bouton ou la complétion d\'une barre de
+        progression, ou de petits changements.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">La condition d\'image est plus lente qu\'une condition de couleur,
+        mais elle permet plus de flexibilité pour la détection du contenu d\'écran. Le temps d\'exécution est assez bas lors d\'une
+        détection dans une petite zone, mais peut considérablement augmenter lorsque la zone est plus grande. \n\nCette condition est
+        pratique lorsqu\'on essaie de détecter des formes et des couleurs claires, comme le contenu d\'une carte ou une icône.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">Les conditions de texte et les conditions de nombre utilisent
+        toutes deux le même processus de détection. \n\nLa détection de texte est le type de détection le plus lent, mais contrairement
+        à la détection d\'image, elle n\'est pas sensible à la transparence et permet plus de précision dans les scènes de détection
+        complexes. Le temps d\'exécution augmente avec la taille de la zone de détection et dépend également de l\'alphabet sélectionné.
+        \n\nCette condition est pratique lorsqu\'on essaie de détecter un texte ou un nombre indépendamment de la façon dont il est
+        affiché.</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">Fiabilité de détection</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">Conseils sur la fiabilité de détection</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'r effectue beaucoup de pré-traitement avant de
+        rechercher votre condition d\'écran afin d\'accélérer le processus et réduire l\'impact sur la batterie. Cela crée des
+        incertitudes et des approximations dans les résultats qui sont exprimées sous forme de score de fiabilité. \n\nPour vous
+        assurer que vos conditions fonctionnent comme prévu, vous pouvez les tester individuellement en appuyant sur le bouton
+        flèche de lecture tout en vous concentrant sur une condition de la liste des conditions d\'écran.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">Lors du test d\'une condition d\'écran, le score de
+        fiabilité de détection sera affiché, et vous pouvez modifier directement ici la différence tolérée, vous permettant de
+        vous débarrasser des faux positifs ou d\'être plus flexible avec les résultats autorisés.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">Les résultats de détection sont également impactés par la
+        résolution de détection. Disponible dans le dialogue Scénario, elle vous permet de modifier la quantité de réduction d\'échelle
+        du contenu de votre écran avant traitement par Klick\'r. \n\nCela peut impacter le score de fiabilité de toutes vos conditions
+        d\'écran, une résolution plus élevée signifiant une meilleure détection, mais aussi un temps d\'exécution plus lent.</string>
+
+
 </resources>

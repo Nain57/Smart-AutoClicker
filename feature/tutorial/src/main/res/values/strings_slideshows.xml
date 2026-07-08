@@ -83,5 +83,53 @@
         conditions for each position than one with a very big area. You can test your timings using the debug report
         if you are into deep optimization of your scenario timings.</string>
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">Number detection area</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">Tips about optimal number detection</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">The tips here are the same as for the Text Condition:
+        when detecting a number on the screen, you need to define a detection area that will be scanned for numbers
+        during detection. \n\nWhen detecting a static number, you want the area to be close to the number while keeping a
+        small margin around it. The number should not touch the borders of the area or the detection confidence will drop
+        significantly. \n\nNote: for very small numbers, you might need to increase the detection quality of your scenario,
+        as higher resolution will help the detection of those. </string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">Screen condition types</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">Learn which one to use depending on your use case</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">Color condition is the fastest way of detecting
+        with Klick\'r. It simply verifies the color of a pixel on your screen. \n\nThis condition is convenient when
+        trying to detect simple UI elements such as a button color or progress bar completion, or small changes.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">Image condition is slower than a color condition,
+        but it allows more flexibility for the screen content detection. Execution time is pretty low when detecting
+        in a small area, but it can greatly increase when the area is bigger. \n\nThis condition is convenient when
+        trying to detect clear shapes and colors, like the content of a card, or an icon.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">Text conditions and Number conditions both use
+        the same detection process. \n\nText detection is the slowest detection type, but unlike the image detection, it is
+        not sensitive to transparency and allows more precision in complex detection scenes. Execution time increase with
+        detection area size and also depends on the alphabet selected. \n\nThis condition is convenient when
+        trying to detect a text or a number independently of how it is displayed.</string>
+
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">Detection confidence</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">Tips about detection confidence</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'r does a lot of pre-processing before
+        looking for your screen condition in order to speed up the process and reduce battery impact. This creates
+        uncertainties and approximations in the results that are expressed as the confidence score. \n\nTo ensure your conditions are working
+        as expected, you can test them individually by pressing the play arrow button while focusing a condition on the
+        screen condition list.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">When testing a screen condition, the
+        detection confidence score will be displayed, and you can modify the tolerated difference directly here,
+        allowing you to get rid of false positive or be more flexible with allowed results.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">Detection results are also impacted by the
+        detection resolution. Available in the Scenario dialog, it allows you to change how much Klick\'r downscales
+        your screen content before processing it. \n\nThis can impact the confidence score of all of your screen
+        conditions, with higher resolution meaning better detection, but also slower execution time.</string>
 
 </resources>

@@ -84,4 +84,56 @@
         se sei interessato all\'ottimizzazione approfondita dei tempi del tuo scenario.</string>
 
 
+    <!-- Number Condition Detection Area slideshow -->
+    <string name="tutorial_slideshow_number_condition_area_title">Area di rilevamento dei numeri</string>
+    <string name="tutorial_slideshow_number_condition_area_desc">Suggerimenti per un rilevamento ottimale dei numeri</string>
+
+    <string name="tutorial_slideshow_number_condition_area_step_1_text">I suggerimenti qui sono gli stessi della Condizione Testo:
+        quando si rileva un numero sullo schermo, è necessario definire un\'area di rilevamento che verrà analizzata per i numeri
+        durante il rilevamento. \n\nQuando si rileva un numero statico, si vuole che l\'area sia vicina al numero mantenendo un
+        piccolo margine intorno. Il numero non deve toccare i bordi dell\'area altrimenti l\'affidabilità del rilevamento diminuirà
+        significativamente. \n\nNota: per numeri molto piccoli, potrebbe essere necessario aumentare la qualità di rilevamento del
+        proprio scenario, poiché una risoluzione più alta aiuterà il rilevamento di questi. </string>
+
+    <!--Screen Condition type selection -->
+    <string name="tutorial_slideshow_screen_condition_type_title">Tipi di condizione schermo</string>
+    <string name="tutorial_slideshow_screen_condition_type_desc">Scopri quale usare in base al tuo caso d\'uso</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_1_text">La condizione colore è il modo più veloce di rilevare con Klick\'r.
+        Verifica semplicemente il colore di un pixel sullo schermo. \n\nQuesta condizione è utile quando si tenta di rilevare elementi
+        dell\'interfaccia utente semplici come il colore di un pulsante o il completamento di una barra di avanzamento,
+        o piccoli cambiamenti.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_2_text">La condizione immagine è più lenta di una condizione colore,
+        ma consente maggiore flessibilità per il rilevamento del contenuto dello schermo. Il tempo di esecuzione è piuttosto basso
+        quando si rileva in un\'area piccola, ma può aumentare notevolmente quando l\'area è più grande. \n\nQuesta condizione è
+        utile quando si tenta di rilevare forme e colori chiari, come il contenuto di una scheda o un\'icona.</string>
+
+    <string name="tutorial_slideshow_screen_condition_type_step_3_text">Le condizioni di testo e le condizioni di numero utilizzano
+        entrambe lo stesso processo di rilevamento. \n\nIl rilevamento del testo è il tipo di rilevamento più lento, ma a differenza
+        del rilevamento delle immagini, non è sensibile alla trasparenza e consente maggiore precisione in scene di rilevamento
+        complesse. Il tempo di esecuzione aumenta con le dimensioni dell\'area di rilevamento e dipende anche dall\'alfabeto
+        selezionato. \n\nQuesta condizione è utile quando si tenta di rilevare un testo o un numero indipendentemente da come
+        viene visualizzato.</string>
+
+    <!-- Detection confidence slideshow -->
+    <string name="tutorial_slideshow_screen_condition_threshold_title">Affidabilità del rilevamento</string>
+    <string name="tutorial_slideshow_screen_condition_threshold_desc">Suggerimenti sull\'affidabilità del rilevamento</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_1_text">Klick\'r esegue molte pre-elaborazioni prima di cercare
+        la tua condizione schermo per velocizzare il processo e ridurre l\'impatto sulla batteria. Questo crea incertezze e
+        approssimazioni nei risultati che vengono espresse come punteggio di affidabilità. \n\nPer assicurarti che le tue condizioni
+        funzionino come previsto, puoi testarle individualmente premendo il pulsante freccia di riproduzione mentre ci si concentra
+        su una condizione nell\'elenco delle condizioni schermo.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_2_text">Durante il test di una condizione schermo, verrà
+        visualizzato il punteggio di affidabilità del rilevamento, e puoi modificare direttamente qui la differenza tollerata,
+        permettendoti di eliminare i falsi positivi o essere più flessibile con i risultati consentiti.</string>
+
+    <string name="tutorial_slideshow_screen_condition_threshold_step_3_text">I risultati del rilevamento sono influenzati anche dalla
+        risoluzione di rilevamento. Disponibile nella finestra di dialogo Scenario, ti permette di cambiare quanto Klick\'r ridimensiona
+        il contenuto dello schermo prima di elaborarlo. \n\nQuesto può influire sul punteggio di affidabilità di tutte le tue condizioni
+        schermo, con una risoluzione più alta che significa un rilevamento migliore, ma anche un tempo di esecuzione più lento.</string>
+
+
 </resources>
