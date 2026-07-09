@@ -54,6 +54,8 @@ internal class SlideshowPagerAdapter(
                 height = heightPx
                 setMargins(marginPx, marginPx, marginPx, marginPx)
             }?.let { binding.imageTutorial.layoutParams = it }
+
+            binding.root.post { binding.root.scrollTo(0, 0) }
         }
     }
 }

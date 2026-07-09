@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/margin_horizontal_default"
         android:paddingVertical="@dimen/margin_vertical_large"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="top">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_tutorial"
@@ -36,7 +36,8 @@
             android:layout_marginTop="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/text_description">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/image_tutorial"
@@ -58,6 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_tutorial"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/tutorial_slideshow_image_condition_area_step_1_text"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,13 +15,14 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppTheme.Dialog.BackgroundLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/title_card"
@@ -30,10 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_vertical_extra_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/view_pager"
+        app:cardElevation="0dp"
         app:strokeColor="@color/tutorial_header_card_border"
         app:strokeWidth="2dp">
 
@@ -66,12 +64,9 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/button_next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_card"
+        android:layout_weight="1"
         tools:listitem="@layout/item_tutorial_slideshow_page"
         tools:itemCount="3"/>
 
@@ -82,10 +77,6 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/margin_vertical_extra_large"
         android:layout_marginHorizontal="@dimen/margin_horizontal_extra_large"
-        android:text="@string/button_text_tutorial_next"
-        app:layout_constraintTop_toBottomOf="@id/view_pager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/button_text_tutorial_next"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
