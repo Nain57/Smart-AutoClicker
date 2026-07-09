@@ -135,6 +135,11 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <!-- Style for a outlined icon button -->
+    <style name="AppTheme.Widget.IconButtonOutlined" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <!-- Style for a radio button without text -->
     <style name="AppTheme.Widget.RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
         <item name="android:layout_width">wrap_content</item>

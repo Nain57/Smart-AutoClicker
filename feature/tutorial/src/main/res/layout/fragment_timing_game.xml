@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/space_overlay_menu"
+        style="@style/AppTheme.Widget.CardOutlined"
+        android:layout_width="@dimen/tutorial_overlay_menu_width"
+        android:layout_height="@dimen/tutorial_overlay_menu_height"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_large"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/card_target_diff"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_target_diff"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        app:layout_constraintEnd_toStartOf="@id/card_total_diff"
+        app:layout_constraintStart_toEndOf="@id/space_overlay_menu"
+        app:layout_constraintTop_toTopOf="@id/space_overlay_menu"
+        app:layout_constraintBottom_toTopOf="@id/card_click_count">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_target_diff"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:gravity="center"
+            android:maxLines="2"
+            tools:text="@string/message_target_diff" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_total_diff"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/card_target_diff"
+        app:layout_constraintTop_toTopOf="@id/card_target_diff"
+        app:layout_constraintBottom_toBottomOf="@id/card_target_diff">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_total_diff"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:maxLines="2"
+            android:gravity="center"
+            tools:text="@string/message_total_diff" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_click_count"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        app:layout_constraintEnd_toStartOf="@id/card_last"
+        app:layout_constraintStart_toStartOf="@id/card_target_diff"
+        app:layout_constraintTop_toBottomOf="@id/card_target_diff">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_score"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:text="@string/message_score"
+            android:gravity="center_horizontal"
+            android:maxLines="2"
+            tools:text="@string/message_click_count"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_last"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/card_click_count"
+        app:layout_constraintTop_toTopOf="@id/card_click_count">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_last"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:text="@string/message_high_score"
+            android:gravity="center_horizontal"
+            tools:text="@string/message_last_diff"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_timing"
+        style="@style/AppTheme.Widget.IconButtonOutlined"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        app:iconGravity="textEnd"
+        app:icon="@drawable/ic_tutorial_timer"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_retry"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_retry"
+        style="@style/AppTheme.Widget.IconButtonFilled"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="@dimen/margin_horizontal_default"
+        app:iconGravity="textEnd"
+        app:icon="@drawable/ic_tutorial_retry"
+        app:layout_constraintStart_toEndOf="@id/button_timing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_instructions"
+        style="@style/AppTheme.Widget.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_instructions"
+            style="@style/AppTheme.TextAppearance.BodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            android:text="@string/message_high_score"
+            android:gravity="center_horizontal"
+            tools:text="@string/message_game_tutorial_timer_reached_conditions"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

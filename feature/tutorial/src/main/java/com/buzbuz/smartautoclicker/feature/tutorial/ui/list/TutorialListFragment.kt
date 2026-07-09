@@ -37,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiItems
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategoryUiState
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -136,6 +137,11 @@ class TutorialListFragment : Fragment() {
 
     private fun startTutorial(item: TutorialCategoryUiItems.Item.Tutorial, resultCode: Int, data: Intent) {
         viewModel.startTutorial(item, resultCode, data)
-        findNavController().navigate(TutorialListFragmentDirections.tutorialListToGame())
+        val action = if (item.type == TutorialItem.Type.TIMER_REACHED_CONDITION) {
+            TutorialListFragmentDirections.tutorialListToTimingGame()
+        } else {
+            TutorialListFragmentDirections.tutorialListToGame()
+        }
+        findNavController().navigate(action)
     }
 }

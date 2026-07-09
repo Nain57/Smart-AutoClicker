@@ -49,6 +49,14 @@
             app:popExitAnim="@anim/slide_out_right"/>
 
         <action
+            android:id="@+id/tutorial_list_to_timing_game"
+            app:destination="@id/fragment_timing_game"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
             android:id="@+id/tutorial_list_to_slideshow"
             app:destination="@id/fragment_slideshow"
             app:enterAnim="@anim/slide_in_right"
@@ -75,5 +83,11 @@
         android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.clickcount.ClickCountGameFragment"
         android:label="fragment_two"
         tools:layout="@layout/fragment_click_count_game"/>
+
+    <fragment
+        android:id="@+id/fragment_timing_game"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.timing.TimingGameFragment"
+        android:label="fragment_timing_game"
+        tools:layout="@layout/fragment_timing_game"/>
 
 </navigation>
