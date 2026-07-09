@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.number.NumberConditionsStaticValueTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.TextConditionsMovingTextTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.TextConditionsStillTextTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.TimerReachedConditionTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsNotVisibleTargetTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem.Type.*
@@ -36,8 +37,10 @@ internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
         IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
         IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial
 
+        NUMBER_CONDITION_STATIC_VALUE -> NumberConditionsStaticValueTutorial
+
         TEXT_CONDITION_MOVING_TEXT -> TextConditionsMovingTextTutorial
         TEXT_CONDITION_STILL_TEXT -> TextConditionsStillTextTutorial
 
-        NUMBER_CONDITION_STATIC_VALUE -> NumberConditionsStaticValueTutorial
+        TIMER_REACHED_CONDITION -> TimerReachedConditionTutorial
     }

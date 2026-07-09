@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Temporizador atingido</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Aprenda como acionar uma ação em um ciclo determinado.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Clique no botão a cada segundo durante 5 segundos. Tente ser consistente para obter uma pontuação mais alta!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Bem-vindo ao tutorial da condição Temporizador atingido!
+        \n\nAqui, você tentará acionar uma ação em um ciclo determinado. Você pode tentar vencer o jogo primeiro ou pular
+        diretamente para a configuração do cenário para começar a automatizá-lo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Os Eventos de gatilho estão em uma lista separada dos
+        Eventos de tela, clique no ícone de Evento de gatilho para abri-la.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Agora, clique em criar para criar um novo Evento de gatilho.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Como você pode ver, a estrutura do Evento de gatilho é
+        praticamente a mesma do Evento de tela. Precisamos primeiro definir quando queremos executar nossas ações.
+        \n\nClique no campo Condições de gatilho para abrir a lista de condições.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Por enquanto, a lista está vazia. Clique no botão criar
+        para criar uma nova Condição de gatilho.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Para vencer o jogo, precisamos clicar em um momento específico,
+        então selecione o tipo de condição Temporizador atingido.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">A condição de temporizador atingido é considerada cumprida após
+        um determinado período de tempo. Queremos clicar a cada segundo, então vamos usar 1000 ms.
+        \n\nO tutorial continuará assim que você inserir 1000 na caixa «Após».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">Por padrão, as condições Temporizador atingido são acionadas
+        apenas uma vez, mas aqui queremos clicar a cada segundo, não apenas um segundo após o início.
+        \n\nClique na caixa de seleção para reiniciar o temporizador da condição assim que ele for atingido.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Nossa condição está agora configurada para ser cumprida a cada
+        segundo. Tenha em mente que os outros elementos do seu cenário ainda precisarão ser processados, portanto, um cenário
+        com muitos Eventos habilitados pode atrasar esta condição.
+        \n\nClique em salvar para fechar o diálogo e retornar à lista de Condições de gatilho.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">Essas são todas as condições que precisamos. Feche o diálogo
+        para retornar à configuração do Evento de gatilho.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Agora o evento sabe quando acionar suas ações, mas ainda
+        precisamos definir o que acionar. Clique no campo Ação para exibir a lista de ações.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Quando a condição for cumprida (ou seja, a cada segundo),
+        precisamos clicar no botão do jogo. Simplesmente crie uma nova ação Clique e defina sua posição no botão do jogo.
+        \n\nO tutorial prosseguirá assim que você retornar à lista de eventos com seu evento criado.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Nosso Evento de gatilho sabe quando agir e o que fazer,
+        agora podemos salvar nosso cenário e tentar vencer o jogo.
+        \n\nO tutorial prosseguirá assim que você salvar o cenário.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Agora reinicie o jogo, inicie seu cenário e assista
+        Klick\'r vencer o jogo por você!</string>
+</resources>

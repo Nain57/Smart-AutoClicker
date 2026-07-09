@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">计时器到达</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">学习如何在指定周期触发操作。</string>
+    <string name="message_game_tutorial_timer_reached_conditions">在5秒内每秒点击一次按钮。尽量保持节奏稳定以获得更高分数！</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">欢迎来到计时器到达条件教程！
+        \n\n在这里，您将尝试在指定周期触发操作。您可以先尝试挑战游戏，或直接进入场景配置开始自动化。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">触发器事件在与屏幕事件不同的列表中，点击触发器事件图标将其打开。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">现在，点击创建以创建新的触发器事件。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">如您所见，触发器事件的结构与屏幕事件大致相同。我们首先需要定义何时执行操作。
+        \n\n点击触发器条件字段以打开条件列表。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">目前列表为空。点击创建按钮以创建新的触发器条件。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">要赢得游戏，我们需要在特定时间点击，因此请选择计时器到达条件类型。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">计时器到达条件在指定时间过后被视为满足。我们希望每秒点击一次，所以使用1000毫秒。
+        \n\n在"之后"框中输入1000后教程将继续。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">默认情况下，计时器到达条件只触发一次，但我们希望每秒点击一次，
+        而不仅仅是开始后一秒。
+        \n\n点击复选框以在条件到达后重新启动条件计时器。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">我们的条件现在已配置为每秒满足一次。请注意，您的其他场景元素仍需要处理，
+        因此启用了大量事件的场景可能会延迟此条件。
+        \n\n点击保存关闭对话框并返回触发器条件列表。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">这就是我们需要的所有条件。关闭对话框以返回触发器事件配置。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">现在事件知道何时触发其操作，但我们还需要定义触发什么。
+        点击操作字段以显示操作列表。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">当条件满足时（即每秒），我们需要点击游戏按钮。只需创建一个新的点击操作
+        并将其位置设置在游戏按钮上。
+        \n\n创建事件后返回事件列表，教程将继续。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">我们的触发器事件知道何时行动以及做什么，现在我们可以保存场景并尝试赢得游戏。
+        \n\n保存场景后教程将继续。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">现在重启游戏，启动您的场景，看着Klick\'r替您赢得游戏！</string>
+</resources>

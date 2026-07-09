@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Temporizador alcanzado</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Aprende a activar una acción en un ciclo dado.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Haz clic en el botón cada segundo durante 5 segundos. ¡Intenta ser constante para obtener una puntuación más alta!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">¡Bienvenido al tutorial de la condición Temporizador alcanzado!
+        \n\nAquí, intentarás activar una acción en un ciclo dado. Puedes intentar ganar el juego primero, o saltar
+        directamente a la configuración del escenario para empezar a automatizarlo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Los Eventos de disparo están en una lista separada de los
+        Eventos de pantalla, haz clic en el icono de Evento de disparo para abrirla.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Ahora, haz clic en crear para crear un nuevo Evento de disparo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Como puedes ver, la estructura del Evento de disparo es
+        prácticamente la misma que la del Evento de pantalla. Primero debemos declarar cuándo queremos ejecutar nuestras acciones.
+        \n\nHaz clic en el campo Condiciones de disparo para abrir la lista de condiciones.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Por ahora, la lista está vacía. Haz clic en el botón crear
+        para crear una nueva Condición de disparo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Para ganar el juego, necesitamos hacer clic en un momento dado,
+        así que selecciona el tipo de condición Temporizador alcanzado.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">La condición de temporizador alcanzado se considera cumplida
+        después de un período de tiempo determinado. Queremos hacer clic cada segundo, así que usemos 1000 ms.
+        \n\nEl tutorial continuará una vez que introduzcas 1000 en el cuadro «Después».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">De forma predeterminada, las condiciones Temporizador alcanzado
+        se activan solo una vez, pero aquí queremos hacer clic cada segundo, no solo un segundo después del inicio.
+        \n\nHaz clic en la casilla de verificación para reiniciar el temporizador de condición una vez que se haya alcanzado.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Nuestra condición ahora está configurada para cumplirse cada
+        segundo. Ten en cuenta que los demás elementos de tu escenario aún deberán procesarse, por lo que un escenario con muchos
+        Eventos habilitados puede retrasar esta condición.
+        \n\nHaz clic en guardar para cerrar el diálogo y volver a la lista de Condiciones de disparo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">Eso es todo lo que necesitamos en cuanto a condiciones. Cierra
+        el diálogo para volver a la configuración del Evento de disparo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Ahora el evento sabe cuándo activar sus acciones, pero aún
+        necesitamos definir qué activar. Haz clic en el campo Acción para mostrar la lista de acciones.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Cuando la condición se cumpla (es decir, cada segundo),
+        necesitamos hacer clic en el botón del juego. Simplemente crea una nueva acción Clic y establece su posición en el
+        botón del juego. \n\nEl tutorial continuará una vez que regreses a la lista de eventos con tu evento creado.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Nuestro Evento de disparo sabe cuándo actuar y qué hacer,
+        ahora podemos guardar nuestro escenario e intentar ganar el juego.
+        \n\nEl tutorial continuará una vez que guardes el escenario.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">¡Ahora reinicia el juego, inicia tu escenario y observa
+        cómo Klick\'r gana el juego por ti!</string>
+</resources>

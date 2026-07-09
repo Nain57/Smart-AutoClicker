@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Minuterie atteinte</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Apprenez à déclencher une action à un cycle donné.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Cliquez sur le bouton toutes les secondes pendant 5 secondes. Essayez d\'être régulier pour obtenir un meilleur score !</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Bienvenue dans le tutoriel sur la condition Minuterie atteinte !
+        \n\nIci, vous allez essayer de déclencher une action à un cycle donné. Vous pouvez d\'abord essayer de battre le jeu, ou
+        passer directement à la configuration du scénario pour commencer à l\'automatiser.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Les Événements de déclenchement se trouvent dans une liste séparée
+        des Événements d\'écran, cliquez sur l\'icône Événement de déclenchement pour l\'ouvrir.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Maintenant, cliquez sur créer pour créer un nouvel Événement de déclenchement.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Comme vous pouvez le voir, la structure de l\'Événement de déclenchement
+        est à peu près la même que celle de l\'Événement d\'écran. Nous devons d\'abord définir quand nous voulons exécuter nos actions.
+        \n\nCliquez sur le champ Conditions de déclenchement pour ouvrir la liste des conditions.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Pour l\'instant, la liste est vide. Cliquez sur le bouton créer
+        pour créer une nouvelle Condition de déclenchement.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Pour battre le jeu, nous devons cliquer à un moment donné,
+        alors sélectionnez le type de condition Minuterie atteinte.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">La condition Minuterie atteinte est considérée comme remplie après
+        un certain temps. Nous voulons cliquer toutes les secondes, donc utilisons 1000 ms.
+        \n\nLe tutoriel continuera une fois que vous aurez saisi 1000 dans la case « Après ».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">Par défaut, les conditions Minuterie atteinte ne se déclenchent
+        qu\'une seule fois, mais ici nous voulons cliquer toutes les secondes, pas seulement une seconde après le démarrage.
+        \n\nCliquez sur la case à cocher pour redémarrer le minuteur de condition une fois qu\'il a été atteint.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Notre condition est maintenant configurée pour être remplie toutes
+        les secondes. Gardez à l\'esprit que les autres éléments de votre scénario devront toujours être traités, donc un scénario
+        avec de nombreux Événements activés peut retarder cette condition.
+        \n\nCliquez sur enregistrer pour fermer la boîte de dialogue et revenir à la liste des Conditions de déclenchement.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">C\'est tout ce dont nous avons besoin comme conditions. Fermez
+        la boîte de dialogue pour revenir à la configuration de l\'Événement de déclenchement.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Maintenant l\'événement sait quand déclencher ses actions, mais
+        nous devons encore définir quoi déclencher. Cliquez sur le champ Action pour afficher la liste des actions.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Lorsque la condition est remplie (donc, toutes les secondes), nous
+        devons cliquer sur le bouton du jeu. Créez simplement une nouvelle action Clic et définissez sa position sur le bouton du jeu.
+        \n\nLe tutoriel continuera une fois que vous serez revenu à la liste des événements avec votre événement créé.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Notre Événement de déclenchement sait quand agir et quoi faire,
+        nous pouvons maintenant sauvegarder notre scénario et essayer de battre le jeu.
+        \n\nLe tutoriel continuera une fois que vous aurez sauvegardé le scénario.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Maintenant redémarrez le jeu, lancez votre scénario et regardez
+        Klick\'r battre le jeu pour vous !</string>
+</resources>

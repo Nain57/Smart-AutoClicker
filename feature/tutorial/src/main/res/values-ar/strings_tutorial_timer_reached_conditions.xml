@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">تم الوصول إلى المؤقت</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">تعلم كيفية تشغيل إجراء في دورة محددة.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">انقر على الزر كل ثانية لمدة 5 ثوانٍ. حاول أن تكون منتظماً للحصول على نقاط أعلى!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">مرحباً بك في درس شرط «تم الوصول إلى المؤقت»!
+        \n\nهنا، ستحاول تشغيل إجراء في دورة محددة. يمكنك محاولة الفوز باللعبة أولاً، أو الانتقال مباشرة إلى
+        تكوين السيناريو لبدء أتمتته.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">أحداث التشغيل موجودة في قائمة منفصلة عن أحداث الشاشة،
+        انقر على أيقونة حدث التشغيل لفتحها.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">الآن، انقر على إنشاء لإنشاء حدث تشغيل جديد.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">كما ترى، هيكل حدث التشغيل مشابه تقريباً لهيكل حدث الشاشة.
+        نحتاج أولاً إلى تحديد وقت تنفيذ إجراءاتنا.
+        \n\nانقر على حقل شروط التشغيل لفتح قائمة الشروط.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">في الوقت الحالي، القائمة فارغة. انقر على زر الإنشاء
+        لإنشاء شرط تشغيل جديد.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">للفوز باللعبة، نحتاج إلى النقر في وقت محدد، لذا اختر
+        نوع شرط «تم الوصول إلى المؤقت».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">يُعتبر شرط «تم الوصول إلى المؤقت» مستوفىً بعد مرور مقدار
+        محدد من الوقت. نريد النقر كل ثانية، لذا لنستخدم 1000 مللي ثانية.
+        \n\nسيستمر الدرس بمجرد إدخال 1000 في خانة «بعد».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">بشكل افتراضي، يتم تشغيل شروط «تم الوصول إلى المؤقت» مرة
+        واحدة فقط، لكننا هنا نريد النقر كل ثانية، وليس ثانية واحدة فقط بعد البدء.
+        \n\nانقر على مربع الاختيار لإعادة تشغيل مؤقت الشرط بمجرد الوصول إليه.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">تم الآن تكوين شرطنا ليتحقق كل ثانية. ضع في اعتبارك أن
+        العناصر الأخرى في سيناريوك ستحتاج أيضاً إلى معالجة، لذا قد يؤخر سيناريو يحتوي على أحداث ممكّنة كثيرة هذا الشرط.
+        \n\nانقر على حفظ لإغلاق مربع الحوار والعودة إلى قائمة شروط التشغيل.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">هذه كل الشروط التي نحتاجها. أغلق مربع الحوار للعودة
+        إلى تكوين حدث التشغيل.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">الآن يعرف الحدث متى يُشغّل إجراءاته، لكننا لا نزال بحاجة
+        إلى تحديد ما يجب تشغيله. انقر على حقل الإجراء لعرض قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">عندما يتحقق الشرط (أي كل ثانية)، نحتاج إلى النقر على زر
+        اللعبة. ببساطة أنشئ إجراء نقر جديد وحدد موضعه على زر اللعبة.
+        \n\nسيتابع الدرس بمجرد عودتك إلى قائمة الأحداث بحدثك المُنشأ.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">يعرف حدث التشغيل لدينا متى يتصرف وماذا يفعل، يمكننا الآن
+        حفظ سيناريونا ومحاولة الفوز باللعبة.
+        \n\nسيتابع الدرس بمجرد حفظ السيناريو.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">الآن أعد تشغيل اللعبة، وابدأ سيناريوك وشاهد
+        Klick\'r يفوز باللعبة عنك!</string>
+</resources>

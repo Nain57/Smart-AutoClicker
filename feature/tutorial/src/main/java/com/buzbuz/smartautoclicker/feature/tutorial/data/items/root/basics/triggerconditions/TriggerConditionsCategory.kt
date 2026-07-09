@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.trig
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 internal fun getTriggerConditionsCategory() =
     TutorialCategory(
@@ -26,5 +27,7 @@ internal fun getTriggerConditionsCategory() =
         shortDescriptionRes = R.string.tutorial_category_trigger_condition_desc_short,
         longDescriptionRes = R.string.tutorial_category_trigger_condition_desc_long,
         iconRes = R.drawable.ic_trigger_event,
-        content = listOf(),
+        content = listOf(
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.TIMER_REACHED_CONDITION)
+        ),
     )

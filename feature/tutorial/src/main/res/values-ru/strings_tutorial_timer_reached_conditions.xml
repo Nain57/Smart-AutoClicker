@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Таймер достигнут</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Узнайте, как запускать действие через заданный цикл.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Нажимайте кнопку каждую секунду в течение 5 секунд. Старайтесь быть последовательным, чтобы получить более высокий балл!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Добро пожаловать в учебник по условию «Таймер достигнут»!
+        \n\nЗдесь вы попробуете запустить действие через заданный цикл. Можете сначала попробовать выиграть игру или сразу
+        перейти к настройке сценария и приступить к его автоматизации.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Триггерные события находятся в отдельном списке от событий
+        экрана. Нажмите на значок триггерного события, чтобы открыть его.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Теперь нажмите «Создать», чтобы создать новое триггерное событие.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Как видите, структура триггерного события примерно такая же,
+        как у события экрана. Сначала нам нужно определить, когда мы хотим выполнять наши действия.
+        \n\nНажмите на поле «Условия триггера», чтобы открыть список условий.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Пока список пуст. Нажмите кнопку «Создать», чтобы создать
+        новое условие триггера.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Чтобы выиграть игру, нам нужно нажимать в определённое время,
+        поэтому выберите тип условия «Таймер достигнут».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">Условие «Таймер достигнут» считается выполненным по истечении
+        заданного времени. Мы хотим нажимать каждую секунду, поэтому используем 1000 мс.
+        \n\nУчебник продолжится, когда вы введёте 1000 в поле «После».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">По умолчанию условия «Таймер достигнут» срабатывают только
+        один раз, но здесь мы хотим нажимать каждую секунду, а не только через секунду после старта.
+        \n\nНажмите на флажок, чтобы перезапустить таймер условия после его достижения.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Наше условие теперь настроено на выполнение каждую секунду.
+        Учтите, что остальные элементы вашего сценария всё равно должны обрабатываться, поэтому сценарий с большим количеством
+        включённых событий может задержать это условие.
+        \n\nНажмите «Сохранить», чтобы закрыть диалог и вернуться к списку условий триггера.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">Это всё необходимые нам условия. Закройте диалог, чтобы
+        вернуться к настройке триггерного события.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Теперь событие знает, когда запускать свои действия, но нам
+        ещё нужно определить, что именно запускать. Нажмите на поле «Действие», чтобы отобразить список действий.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Когда условие выполнено (то есть каждую секунду), нам нужно
+        нажать на кнопку игры. Просто создайте новое действие «Нажатие» и установите его позицию на кнопке игры.
+        \n\nУчебник продолжится, когда вы вернётесь к списку событий с созданным событием.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Наше триггерное событие знает, когда действовать и что делать.
+        Теперь мы можем сохранить сценарий и попробовать выиграть игру.
+        \n\nУчебник продолжится, когда вы сохраните сценарий.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Теперь перезапустите игру, запустите сценарий и наблюдайте,
+        как Klick\'r выиграет игру за вас!</string>
+</resources>

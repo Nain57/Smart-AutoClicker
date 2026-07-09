@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">タイマー到達</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">指定したサイクルでアクションを実行する方法を学びましょう。</string>
+    <string name="message_game_tutorial_timer_reached_conditions">5秒間、毎秒ボタンをクリックしてください。一定のリズムを保つと高スコアが狙えます！</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">タイマー到達条件のチュートリアルへようこそ！
+        \n\nここでは、指定したサイクルでアクションを実行することに挑戦します。まずゲームをプレイしてみるか、
+        シナリオ設定に直接進んで自動化を始めることができます。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">トリガーイベントはスクリーンイベントとは別のリストにあります。
+        トリガーイベントのアイコンをタップして開いてください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">次に、「作成」をタップして新しいトリガーイベントを作成してください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">ご覧の通り、トリガーイベントの構造はスクリーンイベントとほぼ同じです。
+        まず、いつアクションを実行したいかを定義する必要があります。
+        \n\nトリガー条件フィールドをタップして条件リストを開いてください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">現在、リストは空です。「作成」ボタンをタップして新しいトリガー条件を
+        作成してください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">ゲームに勝つには特定の時刻にクリックする必要があるため、
+        「タイマー到達」条件タイプを選択してください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">タイマー到達条件は、指定した時間が経過すると達成されたと見なされます。
+        毎秒クリックしたいので、1000ミリ秒を使用しましょう。
+        \n\n「以降」ボックスに1000を入力するとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">デフォルトでは、タイマー到達条件は一度しかトリガーされませんが、
+        ここでは開始から1秒後だけでなく毎秒クリックしたいのです。
+        \n\nチェックボックスをタップして、条件に達した後にタイマーをリセットしてください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">条件は毎秒達成されるように設定されました。他のシナリオ要素も処理が
+        必要なため、有効なイベントが多いシナリオではこの条件が遅延する可能性があることに注意してください。
+        \n\n「保存」をタップしてダイアログを閉じ、トリガー条件リストに戻ってください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">これで必要な条件はすべてです。ダイアログを閉じてトリガーイベントの
+        設定に戻ってください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">イベントはいつアクションをトリガーするかを知っていますが、何を
+        トリガーするかをまだ定義する必要があります。「アクション」フィールドをタップしてアクションリストを表示してください。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">条件が達成されるたびに（つまり毎秒）、ゲームボタンをクリックする
+        必要があります。新しい「クリック」アクションを作成し、その位置をゲームボタンに設定してください。
+        \n\n作成したイベントとともにイベントリストに戻るとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">トリガーイベントはいつ何をすべきかを知っています。シナリオを保存して
+        ゲームに挑戦しましょう。
+        \n\nシナリオを保存するとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">ゲームを再起動し、シナリオを起動して、Klick\'rがゲームを代わりに
+        攻略するのを見てください！</string>
+</resources>

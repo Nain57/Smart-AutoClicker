@@ -153,6 +153,7 @@ class TimerReachedConditionDialog(
         viewModel.monitorViews(
             afterEditText = viewBinding.editDurationLayout.textField,
             restartCheckBox = viewBinding.fieldIsReset.toggleSwitch,
+            saveButton = viewBinding.layoutTopBar.buttonSave,
         )
     }
 

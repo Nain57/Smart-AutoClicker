@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Timer raggiunto</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Impara come attivare un\'azione a un ciclo specifico.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Fai clic sul pulsante ogni secondo per 5 secondi. Cerca di essere costante per ottenere un punteggio più alto!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Benvenuto nel tutorial sulla condizione Timer raggiunto!
+        \n\nQui proverai ad attivare un\'azione a un ciclo specifico. Puoi prima provare a battere il gioco, oppure
+        passare direttamente alla configurazione dello scenario per iniziare ad automatizzarlo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Gli Eventi di attivazione si trovano in un elenco separato
+        dagli Eventi schermo, fai clic sull\'icona Evento di attivazione per aprirlo.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Ora fai clic su crea per creare un nuovo Evento di attivazione.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Come puoi vedere, la struttura dell\'Evento di attivazione è
+        praticamente uguale a quella dell\'Evento schermo. Dobbiamo prima dichiarare quando vogliamo eseguire le nostre azioni.
+        \n\nFai clic sul campo Condizioni di attivazione per aprire l\'elenco delle condizioni.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Per ora l\'elenco è vuoto. Fai clic sul pulsante crea
+        per creare una nuova Condizione di attivazione.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Per battere il gioco, dobbiamo fare clic in un momento specifico,
+        quindi seleziona il tipo di condizione Timer raggiunto.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">La condizione timer raggiunto è considerata soddisfatta dopo un
+        determinato periodo di tempo. Vogliamo fare clic ogni secondo, quindi usiamo 1000 ms.
+        \n\nIl tutorial continuerà una volta inserito 1000 nella casella «Dopo».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">Per impostazione predefinita, le condizioni Timer raggiunto
+        vengono attivate solo una volta, ma qui vogliamo fare clic ogni secondo, non solo un secondo dopo l\'avvio.
+        \n\nFai clic sulla casella di controllo per riavviare il timer della condizione una volta raggiunto.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">La nostra condizione è ora configurata per essere soddisfatta
+        ogni secondo. Tieni presente che gli altri elementi del tuo scenario dovranno comunque essere elaborati, quindi uno
+        scenario con molti Eventi abilitati può ritardare questa condizione.
+        \n\nFai clic su salva per chiudere la finestra di dialogo e tornare all\'elenco delle Condizioni di attivazione.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">Queste sono tutte le condizioni di cui abbiamo bisogno. Chiudi
+        la finestra di dialogo per tornare alla configurazione dell\'Evento di attivazione.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Ora l\'evento sa quando attivare le sue azioni, ma dobbiamo
+        ancora definire cosa attivare. Fai clic sul campo Azione per visualizzare l\'elenco delle azioni.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Quando la condizione è soddisfatta (cioè ogni secondo),
+        dobbiamo fare clic sul pulsante del gioco. Crea semplicemente una nuova azione Clic e imposta la sua posizione sul
+        pulsante del gioco. \n\nIl tutorial continuerà una volta tornato all\'elenco degli eventi con il tuo evento creato.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Il nostro Evento di attivazione sa quando agire e cosa fare,
+        ora possiamo salvare il nostro scenario e provare a battere il gioco.
+        \n\nIl tutorial continuerà una volta salvato lo scenario.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Ora riavvia il gioco, avvia il tuo scenario e guarda
+        Klick\'r battere il gioco per te!</string>
+</resources>

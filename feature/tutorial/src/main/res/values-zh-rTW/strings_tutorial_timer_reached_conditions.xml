@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">計時器到達</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">學習如何在指定週期觸發操作。</string>
+    <string name="message_game_tutorial_timer_reached_conditions">在5秒內每秒點擊一次按鈕。盡量保持節奏穩定以獲得更高分數！</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">歡迎來到計時器到達條件教學！
+        \n\n在這裡，您將嘗試在指定週期觸發操作。您可以先嘗試挑戰遊戲，或直接進入場景設定開始自動化。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">觸發器事件在與螢幕事件不同的清單中，點擊觸發器事件圖示將其開啟。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">現在，點擊建立以建立新的觸發器事件。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">如您所見，觸發器事件的結構與螢幕事件大致相同。我們首先需要定義何時執行操作。
+        \n\n點擊觸發器條件欄位以開啟條件清單。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">目前清單為空。點擊建立按鈕以建立新的觸發器條件。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">要贏得遊戲，我們需要在特定時間點擊，因此請選擇計時器到達條件類型。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">計時器到達條件在指定時間過後被視為滿足。我們希望每秒點擊一次，所以使用1000毫秒。
+        \n\n在「之後」框中輸入1000後教學將繼續。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">預設情況下，計時器到達條件只觸發一次，但我們希望每秒點擊一次，
+        而不僅僅是開始後一秒。
+        \n\n點擊核取方塊以在條件到達後重新啟動條件計時器。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">我們的條件現在已設定為每秒滿足一次。請注意，您的其他場景元素仍需要處理，
+        因此啟用了大量事件的場景可能會延遲此條件。
+        \n\n點擊儲存關閉對話框並返回觸發器條件清單。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">這就是我們需要的所有條件。關閉對話框以返回觸發器事件設定。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">現在事件知道何時觸發其操作，但我們還需要定義觸發什麼。
+        點擊操作欄位以顯示操作清單。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">當條件滿足時（即每秒），我們需要點擊遊戲按鈕。只需建立一個新的點擊操作
+        並將其位置設定在遊戲按鈕上。
+        \n\n建立事件後返回事件清單，教學將繼續。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">我們的觸發器事件知道何時行動以及做什麼，現在我們可以儲存場景並嘗試贏得遊戲。
+        \n\n儲存場景後教學將繼續。</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">現在重啟遊戲，啟動您的場景，看著Klick\'r替您贏得遊戲！</string>
+</resources>

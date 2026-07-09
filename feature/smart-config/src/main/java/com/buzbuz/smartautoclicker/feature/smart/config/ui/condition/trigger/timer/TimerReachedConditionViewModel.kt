@@ -133,15 +133,17 @@ class TimerReachedConditionViewModel@Inject constructor(
         }
     }
 
-    fun monitorViews(afterEditText: View, restartCheckBox: View) {
+    fun monitorViews(afterEditText: View, restartCheckBox: View, saveButton: View) {
         monitoredViewsManager.attach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_AFTER, afterEditText)
         monitoredViewsManager.attach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_RESTART, restartCheckBox)
+        monitoredViewsManager.attach(MonitoredViewType.TIMER_REACHED_CONDITION_BUTTON_SAVE, saveButton)
 
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_AFTER)
         monitoredViewsManager.detach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_RESTART)
+        monitoredViewsManager.detach(MonitoredViewType.TIMER_REACHED_CONDITION_BUTTON_SAVE)
     }
 
     private fun updateEditedCondition(

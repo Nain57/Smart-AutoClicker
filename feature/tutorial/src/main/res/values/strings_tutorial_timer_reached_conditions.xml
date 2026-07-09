@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">On Timer Reached</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Learn how to trigger an action at a given cycle.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Click every second on the button for 5 seconds. Try to
+        stay consistent to get a higher score!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Welcome to the Timer reached condition tutorial!
+        \n\nHere, you will try to trigger an action at a given cycle. You can try to beat the game first, or skip
+        directly to the scenario configuration to start automating it.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">The Trigger Events are in a separate list from the
+        Screen Events, click on Trigger Event icon to open it.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Now, click on create to create a new Trigger Event.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">As you can see, the Trigger Event structure is
+        roughly the same as the Screen Event. We need first to declare when we want to execute our actions. \n\nClick
+        on the Trigger Conditions field to open the condition list.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">For now, the list is empty. Click on the create
+        button to create a new Trigger Condition.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">To beat the game, we need to click at a given time,
+        so select the Timer Reached condition type.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">The timer reached condition is considered fulfilled
+        after a given amount of time. We want to click every second, so let\'s use 1000 ms. \n\nThe tutorial will
+        continue once you input 1000 in the \"After\" box.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">By default, Timer Reached Conditions are
+        triggered only once, but here we want to click every second, not just one second after start. \n\nClick on the
+        checkbox to restart the condition timer once it has been reached.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Our condition is now configured to be fulfilled
+        every second. Keep in mind that your other scenario elements will still need to be processed, so a scenario
+        with plenty of enabled Events can delay this condition. \n\nClick on save to close the dialog and return to the
+        Trigger Condition list.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">That\'s all the conditions we need. Close the
+        dialog to return to the Trigger Event configuration.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Now the event knows when to trigger its actions, but
+        we still need to define what to trigger. Click on the Action field to display the action list.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">When the condition is fulfilled (so, every second),
+        we need to click on the game button. Simply create a new Click action and set its position on the game button.
+        \n\nTutorial will proceed once you return to the event list with your created event.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Our Trigger Event knows when to act and what to do,
+        we can now save our scenario and try to beat the game. \n\nTutorial will proceed once you save the scenario.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Now restart the game, start your scenario and watch
+        Klick\'r beat the game for you!</string>
+</resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Таймер досягнуто</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Дізнайтеся, як запускати дію через заданий цикл.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Натискайте кнопку кожну секунду протягом 5 секунд. Намагайтеся бути послідовним, щоб отримати вищий бал!</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_1">Ласкаво просимо до навчального посібника з умови «Таймер досягнуто»!
+        \n\nТут ви спробуєте запустити дію через заданий цикл. Ви можете спочатку спробувати виграти гру або одразу
+        перейти до налаштування сценарію та почати його автоматизацію.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_2">Тригерні події знаходяться в окремому списку від подій екрана.
+        Натисніть на значок тригерної події, щоб відкрити його.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_3">Тепер натисніть «Створити», щоб створити нову тригерну подію.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_4">Як бачите, структура тригерної події приблизно така сама,
+        як і події екрана. Спочатку нам потрібно визначити, коли ми хочемо виконувати наші дії.
+        \n\nНатисніть на поле «Умови тригера», щоб відкрити список умов.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_5">Наразі список порожній. Натисніть кнопку «Створити», щоб
+        створити нову умову тригера.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_6">Щоб виграти гру, нам потрібно натискати у певний час, тому
+        виберіть тип умови «Таймер досягнуто».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_7">Умова «Таймер досягнуто» вважається виконаною після закінчення
+        заданого часу. Ми хочемо натискати кожну секунду, тому використаємо 1000 мс.
+        \n\nНавчальний посібник продовжиться, коли ви введете 1000 у поле «Після».</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_8">За замовчуванням умови «Таймер досягнуто» спрацьовують лише
+        один раз, але тут ми хочемо натискати кожну секунду, а не лише через секунду після старту.
+        \n\nНатисніть на прапорець, щоб перезапустити таймер умови після його досягнення.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_9">Наша умова тепер налаштована для виконання кожну секунду.
+        Майте на увазі, що інші елементи вашого сценарію все одно потрібно буде обробити, тому сценарій із великою
+        кількістю увімкнених подій може затримати цю умову.
+        \n\nНатисніть «Зберегти», щоб закрити діалог і повернутися до списку умов тригера.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_10">Це всі необхідні нам умови. Закрийте діалог, щоб
+        повернутися до налаштування тригерної події.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_11">Тепер подія знає, коли запускати свої дії, але нам ще
+        потрібно визначити, що саме запускати. Натисніть на поле «Дія», щоб відобразити список дій.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_12">Коли умова виконана (тобто кожну секунду), нам потрібно
+        натискати на кнопку гри. Просто створіть нову дію «Натискання» та встановіть її позицію на кнопці гри.
+        \n\nНавчальний посібник продовжиться, коли ви повернетеся до списку подій зі створеною подією.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_13">Наша тригерна подія знає, коли діяти і що робити. Тепер ми
+        можемо зберегти сценарій і спробувати виграти гру.
+        \n\nНавчальний посібник продовжиться, коли ви збережете сценарій.</string>
+
+    <string name="message_tutorial_timer_reached_conditions_step_14">Тепер перезапустіть гру, запустіть сценарій і спостерігайте,
+        як Klick\'r виграє гру за вас!</string>
+</resources>
