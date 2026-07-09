@@ -72,8 +72,8 @@
 
     <fragment
         android:id="@+id/fragment_game"
-        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.TutorialGameFragment"
+        android:name="com.buzbuz.smartautoclicker.feature.tutorial.ui.game.clickcount.ClickCountGameFragment"
         android:label="fragment_two"
-        tools:layout="@layout/fragment_tutorial_game"/>
+        tools:layout="@layout/fragment_click_count_game"/>
 
 </navigation>

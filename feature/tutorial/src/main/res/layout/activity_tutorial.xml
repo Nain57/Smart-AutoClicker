@@ -46,6 +46,6 @@
         android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
-        tools:layout="@layout/fragment_tutorial_game"/>
+        tools:layout="@layout/fragment_click_count_game"/>
 
 </LinearLayout>

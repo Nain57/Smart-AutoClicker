@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image.OneStillTargetRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image.OneStillTargetRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 
@@ -45,7 +45,7 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
     override fun getTutorial(): Tutorial =
         Tutorial(
             info = getTutorialInfo(),
-            subject = TutorialSubject.Game(
+            subject = TutorialSubject.QuickClickGame(
                 instructionsResId = R.string.message_game_tutorial_screen_condition_still_target,
                 scoreToReach = 100,
                 durationSeconds = 10,

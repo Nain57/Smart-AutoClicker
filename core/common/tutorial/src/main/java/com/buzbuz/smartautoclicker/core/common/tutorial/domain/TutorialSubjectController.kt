@@ -16,7 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,28 +34,30 @@ sealed interface TutorialSubjectController {
     /** Live game state: score, time left, target positions, and finish/win flags. */
     val state: StateFlow<TutorialSubjectState>
 
+    /** Starts the subject. */
+    fun start()
+
     /** Stops the subject and releases any ongoing work (coroutines, timers). */
     fun stop()
 
-    /**
-     * Controller for a [TutorialSubject.Game] subject.
-     *
-     * The feature layer calls [startGame] once the game area is known, then forwards user
-     * interactions via [onGameTargetHit]. Game progress is observed through [state].
-     */
-    interface Game : TutorialSubjectController {
 
-
-
-        /** Starts the game loop. */
-        fun startGame()
+    /** Controller for a [TutorialSubject.QuickClickGame] subject. */
+    interface QuickClickGame : TutorialSubjectController {
 
         /**
          * Notifies the controller that the user tapped a valid target.
          *
          * @param target the type of target that was hit.
          */
-        fun onGameTargetHit(target: TutorialGameTargetType)
+        fun onGameTargetHit(target: QuickClickGameTargetType)
     }
 
+    /** Controller for a [TutorialSubject.TimingGame] subject. */
+    interface TimingGame : TutorialSubjectController {
+
+        /**
+         * Notifies the controller that the user tapped the timing button
+         */
+        fun onGameTimingButtonHit()
+    }
 }

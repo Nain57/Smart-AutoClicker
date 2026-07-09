@@ -148,6 +148,19 @@ class TimerReachedConditionDialog(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.monitorViews(
+            afterEditText = viewBinding.editDurationLayout.textField,
+            restartCheckBox = viewBinding.fieldIsReset.toggleSwitch,
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun back() {
         if (viewModel.hasUnsavedModifications()) {
             context.showCloseWithoutSavingDialog {

@@ -31,7 +31,8 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialComple
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepEndConditionMonitor
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepStartConditionMonitor
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepsOrchestrator
-import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.QuickClickGameEngine
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TimingGameEngine
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -203,8 +204,12 @@ internal class TutorialEngine @Inject constructor(
 
     private fun createController(tutorial: Tutorial): TutorialSubjectController =
         when (val tutorialSubject = tutorial.subject) {
-            is TutorialSubject.Game -> TutorialGameEngine(
+            is TutorialSubject.QuickClickGame -> QuickClickGameEngine(
                 ioDispatcher = ioDispatcher,
+                game = tutorialSubject,
+            )
+
+            is TutorialSubject.TimingGame -> TimingGameEngine(
                 game = tutorialSubject,
             )
         }

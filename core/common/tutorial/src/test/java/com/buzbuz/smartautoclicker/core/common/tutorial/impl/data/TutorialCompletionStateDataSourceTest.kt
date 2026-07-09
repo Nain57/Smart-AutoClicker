@@ -49,7 +49,7 @@ import java.util.UUID
 @Config(sdk = [Build.VERSION_CODES.Q])
 class TutorialCompletionStateDataSourceTest {
 
-    @Mock private lateinit var mockGameRules: com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+    @Mock private lateinit var mockGameRules: com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
 
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -74,7 +74,7 @@ class TutorialCompletionStateDataSourceTest {
     private fun makeTutorial(id: String): Tutorial =
         Tutorial(
             info = TutorialInfo(id = id, nameResId = 0, descResId = 0),
-            subject = TutorialSubject.Game(
+            subject = TutorialSubject.QuickClickGame(
                 instructionsResId = 0,
                 scoreToReach = 3,
                 durationSeconds = 10L,

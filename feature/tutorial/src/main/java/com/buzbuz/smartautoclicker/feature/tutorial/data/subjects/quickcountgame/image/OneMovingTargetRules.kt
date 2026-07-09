@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image
 
 import android.graphics.PointF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextFloat
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 
 import kotlin.random.Random
 
-internal class OneMovingTargetRules : TutorialGameRules {
+internal class OneMovingTargetRules : QuickClickGameRules {
 
     private val random: Random = Random(System.currentTimeMillis())
 
@@ -33,30 +33,30 @@ internal class OneMovingTargetRules : TutorialGameRules {
 
     override fun getScore(): Int = score
 
-    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
         score = 0
         return updateTargetPosition()
     }
 
     override fun onTargetHit(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
-        type: TutorialGameTargetType,
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
+        type: QuickClickGameTargetType,
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
 
-        if (type != TutorialGameTargetType.IMAGE_BLUE) return current
+        if (type != QuickClickGameTargetType.IMAGE_BLUE) return current
 
         score++
         return updateTargetPosition()
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
         timeLeft: Long,
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> = current
 
-    private fun updateTargetPosition() : Map<TutorialGameTargetType, TutorialGameTargetState> =
+    private fun updateTargetPosition() : Map<QuickClickGameTargetType, QuickClickGameTargetState> =
         mapOf(
-            TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(
+            QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(
                 position = PointF(
                     random.nextFloat(TARGET_MARGIN, 1f - TARGET_MARGIN),
                     random.nextFloat(TARGET_MARGIN, 1f - TARGET_MARGIN),

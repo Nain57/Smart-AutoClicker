@@ -2,14 +2,9 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combinecond
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepImage
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image.TwoStillTargetsPressWhenOneVisibleRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image.TwoStillTargetsPressWhenOneVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
@@ -27,7 +22,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
     override fun getTutorial(): Tutorial =
         Tutorial(
             info = getTutorialInfo(),
-            subject = TutorialSubject.Game(
+            subject = TutorialSubject.QuickClickGame(
                 instructionsResId = R.string.message_game_tutorial_combine_conditions_not_visible_target,
                 scoreToReach = 30,
                 durationSeconds = 10,

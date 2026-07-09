@@ -47,6 +47,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -115,7 +116,14 @@ internal class EditionState internal constructor(
 
             if (editor is ScreenEventsEditor)
                 editor.conditionsEditor.listState
-            else emptyFlow()
+            else flowOf(
+                EditedListState(
+                    value = emptyList(),
+                    itemValidity = emptyList(),
+                    hasChanged = false,
+                    canBeSaved = true,
+                )
+            )
         }
 
     override val editedScreenConditionState: Flow<EditedElementState<ScreenCondition>> =

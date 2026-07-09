@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.number
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.number
 
 import android.graphics.PointF
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 import kotlin.random.Random
 
 internal class OneStillChangingNumberClickWhenOverRules(
     private val validWhenClickIsOver: Int,
     private val maxValue: Int,
-) : TutorialGameRules {
+) : QuickClickGameRules {
 
     private val random = Random(System.currentTimeMillis())
 
@@ -34,22 +34,22 @@ internal class OneStillChangingNumberClickWhenOverRules(
 
     override fun getScore(): Int = score
 
-    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
         score = 0
 
-        return mapOf(TutorialGameTargetType.NUMBER to TutorialGameTargetState.ChangingContent(
+        return mapOf(QuickClickGameTargetType.NUMBER to QuickClickGameTargetState.ChangingContent(
             position = targetPosition,
             content = getNextRandomNumberTargetType(false),
         ))
     }
 
     override fun onTargetHit(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
-        type: TutorialGameTargetType,
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> {
-        if (type == TutorialGameTargetType.NUMBER) {
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
+        type: QuickClickGameTargetType,
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
+        if (type == QuickClickGameTargetType.NUMBER) {
             val state = current[type]
-            if (state is TutorialGameTargetState.ChangingContent && state.content >= validWhenClickIsOver) {
+            if (state is QuickClickGameTargetState.ChangingContent && state.content >= validWhenClickIsOver) {
                 score++
                 return current
             }
@@ -60,10 +60,10 @@ internal class OneStillChangingNumberClickWhenOverRules(
     }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
-        mapOf(TutorialGameTargetType.NUMBER to TutorialGameTargetState.ChangingContent(
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> =
+        mapOf(QuickClickGameTargetType.NUMBER to QuickClickGameTargetState.ChangingContent(
             position = targetPosition,
             content =  getNextRandomNumberTargetType(valid = timeLeft % 2 == 1L)
         ))

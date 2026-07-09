@@ -32,7 +32,9 @@ interface TutorialItem {
         IMAGE_DETECTION_STILL_TARGET,
         NUMBER_CONDITION_STATIC_VALUE,
         TEXT_CONDITION_MOVING_TEXT,
-        TEXT_CONDITION_STILL_TEXT;
+        TEXT_CONDITION_STILL_TEXT,
+        TIMER_REACHED_CONDITION;
+
         fun toTutorialId(): String = name
     }
 

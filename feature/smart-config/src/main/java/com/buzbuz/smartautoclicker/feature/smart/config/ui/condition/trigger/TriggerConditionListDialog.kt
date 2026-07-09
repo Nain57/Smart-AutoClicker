@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MultiChoiceDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.selection.TriggerConditionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.tim
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.selection.allTriggerConditionChoices
 
 
 class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
@@ -99,6 +100,19 @@ class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.monitorViews(
+            createConditionButton = viewBinding.buttonNew,
+            closeButton = viewBinding.layoutTopBar.buttonDismiss,
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopViewMonitoring()
+    }
+
     private fun updateCopyButton(visible: Boolean) {
         viewBinding.buttonCopy.visibility = if (visible) View.VISIBLE else View.GONE
     }
@@ -114,11 +128,9 @@ class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
     private fun showTriggerConditionTypeSelectionDialog() {
         overlayManager.navigateTo(
             context = context,
-            newOverlay = MultiChoiceDialog(
-                theme = R.style.AppTheme,
-                dialogTitleText = R.string.dialog_title_trigger_condition_type,
+            newOverlay = TriggerConditionTypeSelectionDialog(
                 choices = allTriggerConditionChoices(),
-                onChoiceSelected = { choice ->
+                onChoiceSelectedListener = { choice ->
                     showTriggerConditionDialog(viewModel.createNewTriggerCondition(context, choice))
                 },
             ),

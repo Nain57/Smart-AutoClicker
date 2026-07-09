@@ -17,14 +17,18 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.ViewModel
 
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsTriggerConditionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.selection.TriggerConditionTypeChoice
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +40,7 @@ class TriggerConditionListViewModel @Inject constructor(
     @ApplicationContext context: Context,
     isTriggerConditionCopyAvailableUseCase: IsTriggerConditionCopyAvailableUseCase,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     val configuredTriggerConditions: Flow<List<UiTriggerCondition>> =
@@ -77,4 +82,14 @@ class TriggerConditionListViewModel @Inject constructor(
 
     /** Drop all changes made to the currently edited event. */
     fun dismissEditedCondition() = editionRepository.stopConditionEdition()
+
+    fun monitorViews(createConditionButton: View, closeButton: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TRIGGER_CONDITION_LIST_DIALOG_BUTTON_CREATE, createConditionButton)
+        monitoredViewsManager.attach(MonitoredViewType.TRIGGER_CONDITION_LIST_DIALOG_BUTTON_CLOSE, closeButton)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.TRIGGER_CONDITION_LIST_DIALOG_BUTTON_CREATE)
+        monitoredViewsManager.detach(MonitoredViewType.TRIGGER_CONDITION_LIST_DIALOG_BUTTON_CLOSE)
+    }
 }

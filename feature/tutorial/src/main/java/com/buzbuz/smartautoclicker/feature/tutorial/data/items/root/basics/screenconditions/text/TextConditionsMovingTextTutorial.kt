@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.text.FourStillChangingTextRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.text.FourStillChangingTextRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
 
@@ -45,7 +45,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
     override fun getTutorial(): Tutorial =
         Tutorial(
             info = getTutorialInfo(),
-            subject = TutorialSubject.Game(
+            subject = TutorialSubject.QuickClickGame(
                 instructionsResId = R.string.message_game_tutorial_text_conditions_moving_text,
                 scoreToReach = 20,
                 durationSeconds = 10,

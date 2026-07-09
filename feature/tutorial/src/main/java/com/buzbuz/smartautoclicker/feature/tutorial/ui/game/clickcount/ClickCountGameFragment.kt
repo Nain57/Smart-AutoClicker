@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
+package com.buzbuz.smartautoclicker.feature.tutorial.ui.game.clickcount
 
 import android.graphics.Point
 import android.os.Bundle
@@ -34,12 +34,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.databinding.DialogTutorialSuccessBinding
-import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentTutorialGameBinding
+import com.buzbuz.smartautoclicker.feature.tutorial.databinding.FragmentClickCountGameBinding
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.overlay.TutorialFullscreenOverlay
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -48,12 +48,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TutorialGameFragment : Fragment() {
+class ClickCountGameFragment : Fragment() {
 
     /** ViewModel providing the state of the UI. */
-    private val viewModel: TutorialGameViewModel by viewModels()
+    private val viewModel: ClickCountGameViewModel by viewModels()
     /** ViewBinding containing the views for this fragment. */
-    private lateinit var viewBinding: FragmentTutorialGameBinding
+    private lateinit var viewBinding: FragmentClickCountGameBinding
     /** Tells if the time blinking animation is started or not. */
     private var isTimeAnimationStarted: Boolean = false
 
@@ -61,8 +61,8 @@ class TutorialGameFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewBinding = FragmentTutorialGameBinding.inflate(inflater, container, false).apply {
-            TutorialGameTargetType.entries.forEach { targetType ->
+        viewBinding = FragmentClickCountGameBinding.inflate(inflater, container, false).apply {
+            QuickClickGameTargetType.entries.forEach { targetType ->
                 getTargetView(targetType).setOnClickListener {
                     viewModel.onTargetHit(targetType)
                 }
@@ -118,7 +118,7 @@ class TutorialGameFragment : Fragment() {
         viewModel.stopTutorial()
     }
 
-    private fun updateUi(uiState: TutorialGameUiState?) {
+    private fun updateUi(uiState: ClickCountGameUiState?) {
         uiState ?: return
 
         viewBinding.apply {
@@ -202,11 +202,11 @@ class TutorialGameFragment : Fragment() {
         )
     }
 
-    private fun updateTargetsState(state: Map<TutorialGameTargetType, TutorialGameTargetState>) {
+    private fun updateTargetsState(state: Map<QuickClickGameTargetType, QuickClickGameTargetState>) {
         val areaWidth = viewBinding.gameArea.width.toFloat()
         val areaHeight = viewBinding.gameArea.height.toFloat()
 
-        TutorialGameTargetType.entries.forEach { targetType ->
+        QuickClickGameTargetType.entries.forEach { targetType ->
             val targetView = viewBinding.getTargetView(targetType)
             val targetState = state[targetType]
             val position = targetState?.position
@@ -221,22 +221,22 @@ class TutorialGameFragment : Fragment() {
                     it.y = (position.y * areaHeight - it.height / 2f).coerceIn(margin, areaHeight - it.height - margin)
                 }
 
-                if (targetState is TutorialGameTargetState.ChangingContent && targetView is TextView) {
+                if (targetState is QuickClickGameTargetState.ChangingContent && targetView is TextView) {
                     targetView.text = targetState.content.toString()
                 }
             }
         }
     }
 
-    private fun FragmentTutorialGameBinding.getTargetView(type: TutorialGameTargetType): View =
+    private fun FragmentClickCountGameBinding.getTargetView(type: QuickClickGameTargetType): View =
         when (type) {
-            TutorialGameTargetType.IMAGE_BLUE -> blueTarget
-            TutorialGameTargetType.IMAGE_RED -> redTarget
-            TutorialGameTargetType.TEXT_DAY -> dayTarget
-            TutorialGameTargetType.TEXT_GOODBYE -> goodbyeTarget
-            TutorialGameTargetType.TEXT_HELLO -> helloTarget
-            TutorialGameTargetType.TEXT_NIGHT -> nightTarget
-            TutorialGameTargetType.NUMBER -> numberTarget
+            QuickClickGameTargetType.IMAGE_BLUE -> blueTarget
+            QuickClickGameTargetType.IMAGE_RED -> redTarget
+            QuickClickGameTargetType.TEXT_DAY -> dayTarget
+            QuickClickGameTargetType.TEXT_GOODBYE -> goodbyeTarget
+            QuickClickGameTargetType.TEXT_HELLO -> helloTarget
+            QuickClickGameTargetType.TEXT_NIGHT -> nightTarget
+            QuickClickGameTargetType.NUMBER -> numberTarget
         }
 }
 

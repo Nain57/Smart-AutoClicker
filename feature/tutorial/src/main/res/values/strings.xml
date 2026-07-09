@@ -18,30 +18,29 @@
 <resources>
     <string name="activity_tutorial_name">Tutorial</string>
 
-    <string name="message_score">Player: %1$d</string>
-    <string name="message_high_score">Best: %1$d</string>
-    <string name="message_time_left">Time left: %1$d</string>
-
+    <!-- Generics tutorial buttons -->
     <string name="button_text_tutorial_start_game">Start game</string>
     <string name="button_text_tutorial_next">Next</string>
     <string name="button_text_tutorial_close">Close</string>
 
-    <string name="button_text_hello" translatable="false">Hello</string>
-    <string name="button_text_goodbye" translatable="false">Goodbye</string>
-    <string name="button_text_day" translatable="false">Day</string>
-    <string name="button_text_night" translatable="false">Night</string>
-
-    <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Negative conditions</string>
-    <string name="item_desc_tutorial_4">Verify that something is not displayed before executing an action</string>
-
-    <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Multiple events scenario</string>
-    <string name="item_desc_tutorial_5">Learn how to combine multiple events to achieve complex automation</string>
-
+    <!-- Completion dialog for all tutorials -->
     <string name="dialog_title_tutorial_completed">Congratulations</string>
     <string name="message_tutorial_completed">You have completed this tutorial!</string>
     <string name="button_tutorial_completed_keep_playing">Keep toying around</string>
     <string name="button_tutorial_completed_close">Close</string>
 
+    <!-- Click count tutorial game (do not translate text buttons here, they are needed for detection) -->
+    <string name="message_score">Player: %1$d</string>
+    <string name="message_high_score">Best: %1$d</string>
+    <string name="message_time_left">Time left: %1$d</string>
+    <string name="button_text_hello" translatable="false">Hello</string>
+    <string name="button_text_goodbye" translatable="false">Goodbye</string>
+    <string name="button_text_day" translatable="false">Day</string>
+    <string name="button_text_night" translatable="false">Night</string>
+
+    <!-- Timing tutorial game-->
+    <string name="message_click_count">Click count:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Target:\n±%1$dms</string>
+    <string name="message_total_diff">Total:\n%1$sms</string>
+    <string name="message_last_diff">Last:\n%1$sms</string>
 </resources>

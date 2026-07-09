@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
 
 /**
  * Describes the interactive subject that runs alongside a tutorial's step sequence.
@@ -35,11 +35,20 @@ sealed interface TutorialSubject {
      * @property durationSeconds total game duration in seconds.
      * @property rules strategy object that controls target placement, movement, and scoring.
      */
-    data class Game(
+    data class QuickClickGame(
         @field:StringRes val instructionsResId: Int,
         val scoreToReach: Int,
         val durationSeconds: Long,
-        val rules: TutorialGameRules,
+        val rules: QuickClickGameRules,
     ) : TutorialSubject
 
+    /**
+     *
+     */
+    data class TimingGame(
+        @field:StringRes val instructionsResId: Int,
+        val clickCount: Int,
+        val frequencyMs: Int,
+        val targetTotalDiffMs: Long,
+    ) : TutorialSubject
 }

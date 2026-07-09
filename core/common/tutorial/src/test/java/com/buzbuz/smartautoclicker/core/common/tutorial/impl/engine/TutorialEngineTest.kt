@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.T
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
@@ -68,7 +68,7 @@ class TutorialEngineTest {
 
     @Mock private lateinit var mockOverlayManager: OverlayManager
     @Mock private lateinit var mockMonitoredViewsManager: MonitoredViewsManagerImpl
-    @Mock private lateinit var mockGameRules: TutorialGameRules
+    @Mock private lateinit var mockGameRules: QuickClickGameRules
     @Mock private lateinit var mockOverlay: Overlay
     @Mock private lateinit var mockTutorialCompletionStateDataSource: TutorialCompletionStateDataSource
 
@@ -120,8 +120,8 @@ class TutorialEngineTest {
 
     // --- helpers ---
 
-    private fun makeGameSubject(): TutorialSubject.Game =
-        TutorialSubject.Game(
+    private fun makeGameSubject(): TutorialSubject.QuickClickGame =
+        TutorialSubject.QuickClickGame(
             instructionsResId = 0,
             scoreToReach = 3,
             durationSeconds = 10L,

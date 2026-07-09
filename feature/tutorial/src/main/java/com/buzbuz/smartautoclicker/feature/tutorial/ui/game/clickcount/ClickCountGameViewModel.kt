@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.ui.game
+package com.buzbuz.smartautoclicker.feature.tutorial.ui.game.clickcount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
@@ -45,7 +45,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class TutorialGameViewModel @Inject constructor(
+class ClickCountGameViewModel @Inject constructor(
     private val tutorialRepository: TutorialRepository,
     private val smartProcessingRepository: SmartProcessingRepository,
 ) : ViewModel() {
@@ -74,17 +74,17 @@ class TutorialGameViewModel @Inject constructor(
     val shouldDisplayCompletionDialog: Flow<Boolean> = startedState
         .map { state -> state.isCompleted }
 
-    val uiState: StateFlow<TutorialGameUiState?> = tutorialRepository.tutorialSubjectController
+    val uiState: StateFlow<ClickCountGameUiState?> = tutorialRepository.tutorialSubjectController
         .flatMapLatest { controller -> controller?.state ?: emptyFlow() }
-        .filterIsInstance<TutorialSubjectState.Game?>()
+        .filterIsInstance<TutorialSubjectState.QuickClickGame?>()
         .map { game -> game?.toUiState() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
     fun startGame() {
-        getGameController()?.startGame()
+        getGameController()?.start()
     }
 
-    fun onTargetHit(color: TutorialGameTargetType) {
+    fun onTargetHit(color: QuickClickGameTargetType) {
         getGameController()?.onGameTargetHit(color)
     }
 
@@ -96,11 +96,11 @@ class TutorialGameViewModel @Inject constructor(
         tutorialRepository.stopTutorial()
     }
 
-    private fun getGameController(): TutorialSubjectController.Game? =
-        tutorialRepository.tutorialSubjectController.value as? TutorialSubjectController.Game
+    private fun getGameController(): TutorialSubjectController.QuickClickGame? =
+        tutorialRepository.tutorialSubjectController.value as? TutorialSubjectController.QuickClickGame
 
-    private fun TutorialSubjectState.Game.toUiState(): TutorialGameUiState =
-        TutorialGameUiState(
+    private fun TutorialSubjectState.QuickClickGame.toUiState(): ClickCountGameUiState =
+        ClickCountGameUiState(
             instructionsResId = subject.instructionsResId,
             highScore = subject.scoreToReach,
             isGameStarted = !isFinished && timeLeft > 0,

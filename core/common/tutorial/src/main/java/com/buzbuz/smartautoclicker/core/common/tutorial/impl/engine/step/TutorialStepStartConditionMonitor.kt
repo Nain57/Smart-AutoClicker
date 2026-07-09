@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
-import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.TutorialGameEngine
+import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.QuickClickGameEngine
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -73,13 +73,13 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
             }
 
             TutorialStepStartCondition.GameLost ->
-                (subjectController as? TutorialGameEngine)?.monitorNextCompletion { isWon ->
+                (subjectController as? QuickClickGameEngine)?.monitorNextCompletion { isWon ->
                     if (isWon) return@monitorNextCompletion
                     onConditionReached()
                 }
 
             TutorialStepStartCondition.GameWon ->
-                (subjectController as? TutorialGameEngine)?.monitorNextCompletion { isWon ->
+                (subjectController as? QuickClickGameEngine)?.monitorNextCompletion { isWon ->
                     if (!isWon) return@monitorNextCompletion
                     onConditionReached()
                 }
@@ -114,7 +114,7 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
 
             TutorialStepStartCondition.GameLost,
             TutorialStepStartCondition.GameWon -> {
-                (subjectController as? TutorialGameEngine)?.monitorNextCompletion(null)
+                (subjectController as? QuickClickGameEngine)?.monitorNextCompletion(null)
             }
 
             TutorialStepStartCondition.Immediate -> Unit

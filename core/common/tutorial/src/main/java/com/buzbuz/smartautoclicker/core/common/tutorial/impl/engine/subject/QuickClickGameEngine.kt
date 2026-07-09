@@ -22,7 +22,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -37,10 +37,10 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 
-internal class TutorialGameEngine (
+internal class QuickClickGameEngine (
     @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
-    private val game: TutorialSubject.Game,
-) : TutorialSubjectController.Game {
+    private val game: TutorialSubject.QuickClickGame,
+) : TutorialSubjectController.QuickClickGame {
 
     private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
@@ -48,11 +48,11 @@ internal class TutorialGameEngine (
     private var onGameCompleted: ((isWon: Boolean) -> Unit)? = null
 
 
-    private val _state: MutableStateFlow<TutorialSubjectState.Game> = MutableStateFlow(defaultState())
-    override val state: StateFlow<TutorialSubjectState.Game> = _state
+    private val _state: MutableStateFlow<TutorialSubjectState.QuickClickGame> = MutableStateFlow(defaultState())
+    override val state: StateFlow<TutorialSubjectState.QuickClickGame> = _state
 
 
-    override fun startGame() {
+    override fun start() {
         if (gameJob != null) return
 
         gameJob = coroutineScopeIo.launch {
@@ -109,7 +109,7 @@ internal class TutorialGameEngine (
         _state.update { defaultState() }
     }
 
-    override fun onGameTargetHit(target: TutorialGameTargetType) {
+    override fun onGameTargetHit(target: QuickClickGameTargetType) {
         _state.update { old ->
             val newTargets = game.rules.onTargetHit(old.targets, target)
             old.copy(
@@ -123,8 +123,8 @@ internal class TutorialGameEngine (
         onGameCompleted = listener
     }
 
-    private fun defaultState(): TutorialSubjectState.Game =
-        TutorialSubjectState.Game(
+    private fun defaultState(): TutorialSubjectState.QuickClickGame =
+        TutorialSubjectState.QuickClickGame(
             subject = game,
             isFinished = false,
             isWon = null,

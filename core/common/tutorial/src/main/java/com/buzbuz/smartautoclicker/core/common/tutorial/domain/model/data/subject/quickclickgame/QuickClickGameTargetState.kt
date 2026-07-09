@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame
 
 import android.graphics.PointF
 
-sealed interface TutorialGameTargetState {
+sealed interface QuickClickGameTargetState {
 
     val position: PointF
 
     data class StaticContent(
         override val position: PointF,
-    ) : TutorialGameTargetState
+    ) : QuickClickGameTargetState
 
     data class ChangingContent(
         override val position: PointF,
         val content: Int,
-    ) : TutorialGameTargetState
+    ) : QuickClickGameTargetState
 }

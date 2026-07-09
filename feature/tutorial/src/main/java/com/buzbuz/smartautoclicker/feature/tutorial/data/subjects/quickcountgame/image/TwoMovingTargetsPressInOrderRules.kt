@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.game.image
+package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image
 
 import android.graphics.PointF
 import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextPositionIn
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameRules
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.game.TutorialGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 
 import kotlin.random.Random
 
-internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
+internal class TwoMovingTargetsPressInOrderRules : QuickClickGameRules {
 
     private val random: Random = Random(System.currentTimeMillis())
 
@@ -35,20 +35,20 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
     override fun getScore(): Int =
         score
 
-    override fun onStart(): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    override fun onStart(): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
         score = 0
         return getNewTargets()
     }
 
     override fun onTargetHit(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
-        type: TutorialGameTargetType
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
+        type: QuickClickGameTargetType
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> =
         when (type) {
-            TutorialGameTargetType.IMAGE_RED if current.containsKey(TutorialGameTargetType.IMAGE_RED) && current.containsKey(TutorialGameTargetType.IMAGE_BLUE) ->
+            QuickClickGameTargetType.IMAGE_RED if current.containsKey(QuickClickGameTargetType.IMAGE_RED) && current.containsKey(QuickClickGameTargetType.IMAGE_BLUE) ->
                 removeRedTarget(current)
 
-            TutorialGameTargetType.IMAGE_BLUE if !current.containsKey(TutorialGameTargetType.IMAGE_RED) && current.containsKey(TutorialGameTargetType.IMAGE_BLUE) -> {
+            QuickClickGameTargetType.IMAGE_BLUE if !current.containsKey(QuickClickGameTargetType.IMAGE_RED) && current.containsKey(QuickClickGameTargetType.IMAGE_BLUE) -> {
                 score += 2
                 getNewTargets()
             }
@@ -60,11 +60,11 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         }
 
     override fun onTimerTick(
-        current: Map<TutorialGameTargetType, TutorialGameTargetState>,
+        current: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
         timeLeft: Long
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> = current
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> = current
 
-    private fun getNewTargets(): Map<TutorialGameTargetType, TutorialGameTargetState> {
+    private fun getNewTargets(): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
         val area = RectF(TARGET_MARGIN, TARGET_MARGIN, 1f - TARGET_MARGIN, 1f - TARGET_MARGIN)
 
         // Find two positions and ensure the targets do not overlap
@@ -75,15 +75,15 @@ internal class TwoMovingTargetsPressInOrderRules : TutorialGameRules {
         } while (bluePosition.enclosingRectIntersects(redPosition, TARGET_HALF_SIZE))
 
         return mapOf(
-            TutorialGameTargetType.IMAGE_BLUE to TutorialGameTargetState.StaticContent(bluePosition),
-            TutorialGameTargetType.IMAGE_RED to TutorialGameTargetState.StaticContent(redPosition),
+            QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
+            QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
         )
     }
 
     private fun removeRedTarget(
-        targets: Map<TutorialGameTargetType, TutorialGameTargetState>,
-    ): Map<TutorialGameTargetType, TutorialGameTargetState> =
-        targets.toMutableMap().apply { remove(TutorialGameTargetType.IMAGE_RED) }
+        targets: Map<QuickClickGameTargetType, QuickClickGameTargetState>,
+    ): Map<QuickClickGameTargetType, QuickClickGameTargetState> =
+        targets.toMutableMap().apply { remove(QuickClickGameTargetType.IMAGE_RED) }
 }
 
 private fun PointF.enclosingRectIntersects(other: PointF, shapeHalfSize: Float): Boolean =

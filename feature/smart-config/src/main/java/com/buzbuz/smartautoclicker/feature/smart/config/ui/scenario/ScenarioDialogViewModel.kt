@@ -82,10 +82,11 @@ class ScenarioDialogViewModel @Inject constructor(
     fun hasUnsavedModifications(): Boolean =
         editedScenarioHasChanged.value
 
-    fun monitorViews(createEventButton: View, saveButton: View) {
+    fun monitorViews(createEventButton: View, saveButton: View, triggerEventTab: View) {
         monitoredViewsManager.apply {
             attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT, createEventButton)
             attach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE, saveButton)
+            attach(MonitoredViewType.SCENARIO_DIALOG_TRIGGER_EVENT_TAB, triggerEventTab)
         }
     }
 
@@ -93,6 +94,7 @@ class ScenarioDialogViewModel @Inject constructor(
         monitoredViewsManager.apply {
             detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_CREATE_EVENT)
             detach(MonitoredViewType.SCENARIO_DIALOG_BUTTON_SAVE)
+            detach(MonitoredViewType.SCENARIO_DIALOG_TRIGGER_EVENT_TAB)
         }
     }
 }

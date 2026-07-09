@@ -16,8 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.timer
 
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
@@ -45,6 +48,7 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class TimerReachedConditionViewModel@Inject constructor(
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ): ViewModel() {
 
     /** The condition being configured by the user. */
@@ -127,6 +131,17 @@ class TimerReachedConditionViewModel@Inject constructor(
         updateEditedCondition { oldValue ->
             oldValue.copy(restartWhenReached = !oldValue.restartWhenReached)
         }
+    }
+
+    fun monitorViews(afterEditText: View, restartCheckBox: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_AFTER, afterEditText)
+        monitoredViewsManager.attach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_RESTART, restartCheckBox)
+
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_AFTER)
+        monitoredViewsManager.detach(MonitoredViewType.TIMER_REACHED_CONDITION_FIELD_RESTART)
     }
 
     private fun updateEditedCondition(

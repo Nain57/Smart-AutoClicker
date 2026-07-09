@@ -97,6 +97,7 @@ class ScenarioDialog(
         viewModel.monitorViews(
             createEventButton = floatingActionButtons.primary,
             saveButton = topBarBinding.buttonSave,
+            triggerEventTab = navBarView.findViewById(R.id.page_trigger_events),
         )
     }
 
