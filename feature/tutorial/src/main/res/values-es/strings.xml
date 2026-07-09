@@ -49,4 +49,19 @@
     <string name="item_title_tutorial_5">Clicar hasta que desaparezcan</string>
     <string name="item_desc_tutorial_5">Rastrea y haz clic en objetivos móviles hasta que desaparezcan</string>
 
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">Cerrar</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">Felicidades</string>
+    <string name="message_tutorial_completed">¡Has completado este tutorial!</string>
+    <string name="button_tutorial_completed_keep_playing">Seguir explorando</string>
+    <string name="button_tutorial_completed_close">Cerrar</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">Número de clics:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Objetivo:\n±%1$dms</string>
+    <string name="message_total_diff">Total:\n%1$sms</string>
+    <string name="message_last_diff">Último:\n%1$sms</string>
 </resources>

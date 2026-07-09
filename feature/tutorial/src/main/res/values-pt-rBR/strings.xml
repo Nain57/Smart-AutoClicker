@@ -49,4 +49,19 @@
     <string name="item_title_tutorial_5">Cenário de múltiplos eventos</string>
     <string name="item_desc_tutorial_5">Aprenda a combinar múltiplos eventos para alcançar automação complexa</string>
     
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">Fechar</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">Parabéns</string>
+    <string name="message_tutorial_completed">Você completou este tutorial!</string>
+    <string name="button_tutorial_completed_keep_playing">Continuar explorando</string>
+    <string name="button_tutorial_completed_close">Fechar</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">Número de cliques:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Alvo:\n±%1$dms</string>
+    <string name="message_total_diff">Total:\n%1$sms</string>
+    <string name="message_last_diff">Último:\n%1$sms</string>
 </resources>

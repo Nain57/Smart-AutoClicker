@@ -33,4 +33,19 @@
     <string name="item_title_tutorial_5">Scenario con eventi multipli</string>
     <string name="item_desc_tutorial_5">Scopri come combinare eventi multipli per realizzare automazioni complesse</string>
 
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">Chiudi</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">Congratulazioni</string>
+    <string name="message_tutorial_completed">Hai completato questo tutorial!</string>
+    <string name="button_tutorial_completed_keep_playing">Continua a esplorare</string>
+    <string name="button_tutorial_completed_close">Chiudi</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">Numero di clic:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Obiettivo:\n±%1$dms</string>
+    <string name="message_total_diff">Totale:\n%1$sms</string>
+    <string name="message_last_diff">Ultimo:\n%1$sms</string>
 </resources>

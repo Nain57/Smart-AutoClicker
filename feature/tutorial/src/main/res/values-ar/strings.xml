@@ -49,4 +49,19 @@
     <string name="item_title_tutorial_5">سيناريو أحداث متعددة</string>
     <string name="item_desc_tutorial_5">تعرف على كيفية الجمع بين أحداث متعددة لتحقيق أتمتة معقدة</string>
 
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">إغلاق</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">تهانينا</string>
+    <string name="message_tutorial_completed">لقد أكملت هذا الدرس!</string>
+    <string name="button_tutorial_completed_keep_playing">الاستمرار في الاستكشاف</string>
+    <string name="button_tutorial_completed_close">إغلاق</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">عدد النقرات:\n%1$d/%2$d</string>
+    <string name="message_target_diff">الهدف:\n±%1$dms</string>
+    <string name="message_total_diff">الإجمالي:\n%1$sms</string>
+    <string name="message_last_diff">الأخير:\n%1$sms</string>
 </resources>

@@ -49,4 +49,19 @@
     <string name="item_title_tutorial_5">Сценарій з кількома подіями</string>
     <string name="item_desc_tutorial_5">Навчіться комбінувати кілька подій для досягнення складної автоматизації</string>
 
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">Закрити</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">Вітаємо</string>
+    <string name="message_tutorial_completed">Ви завершили цей урок!</string>
+    <string name="button_tutorial_completed_keep_playing">Продовжити дослідження</string>
+    <string name="button_tutorial_completed_close">Закрити</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">Кількість кліків:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Ціль:\n±%1$dms</string>
+    <string name="message_total_diff">Всього:\n%1$sms</string>
+    <string name="message_last_diff">Останній:\n%1$sms</string>
 </resources>

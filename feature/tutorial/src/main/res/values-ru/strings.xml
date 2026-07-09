@@ -49,4 +49,19 @@
     <string name="item_title_tutorial_5">Сценарий с несколькими событиями</string>
     <string name="item_desc_tutorial_5">Научитесь комбинировать несколько событий для достижения сложной автоматизации</string>
 
+
+    <!-- Generic tutorial buttons -->
+    <string name="button_text_tutorial_close">Закрыть</string>
+
+    <!-- Completion dialog -->
+    <string name="dialog_title_tutorial_completed">Поздравляем</string>
+    <string name="message_tutorial_completed">Вы завершили этот урок!</string>
+    <string name="button_tutorial_completed_keep_playing">Продолжить изучение</string>
+    <string name="button_tutorial_completed_close">Закрыть</string>
+
+    <!-- Timing tutorial game -->
+    <string name="message_click_count">Количество кликов:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Цель:\n±%1$dms</string>
+    <string name="message_total_diff">Итого:\n%1$sms</string>
+    <string name="message_last_diff">Последний:\n%1$sms</string>
 </resources>
