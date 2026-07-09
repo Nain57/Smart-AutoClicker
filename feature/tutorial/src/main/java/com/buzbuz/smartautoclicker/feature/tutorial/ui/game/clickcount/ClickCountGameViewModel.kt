@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -52,6 +53,10 @@ class ClickCountGameViewModel @Inject constructor(
 
     private val startedState: Flow<TutorialState.Started> = tutorialRepository.tutorialState
         .filterIsInstance<TutorialState.Started>()
+
+    private val clickCountGameState: Flow<TutorialSubjectState.QuickClickGame> = tutorialRepository.tutorialSubjectController
+        .flatMapLatest { controller -> controller?.state ?: emptyFlow() }
+        .filterIsInstance<TutorialSubjectState.QuickClickGame>()
 
     @OptIn(FlowPreview::class)
     val shouldStopGame: Flow<Boolean> = smartProcessingRepository.scenarioId
@@ -72,12 +77,13 @@ class ClickCountGameViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), true)
 
     val shouldDisplayCompletionDialog: Flow<Boolean> = startedState
-        .map { state -> state.isCompleted }
+        .combine(clickCountGameState) { tutorialState, game ->
+            val endStep = tutorialState.currentStep as? TutorialStep.EndStep ?: return@combine false
+            endStep.completed && game.isWon == true
+        }
 
-    val uiState: StateFlow<ClickCountGameUiState?> = tutorialRepository.tutorialSubjectController
-        .flatMapLatest { controller -> controller?.state ?: emptyFlow() }
-        .filterIsInstance<TutorialSubjectState.QuickClickGame?>()
-        .map { game -> game?.toUiState() }
+    val uiState: StateFlow<ClickCountGameUiState?> = clickCountGameState
+        .map { game -> game.toUiState() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
     fun startGame() {

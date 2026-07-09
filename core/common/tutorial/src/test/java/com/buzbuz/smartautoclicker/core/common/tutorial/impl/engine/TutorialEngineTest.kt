@@ -378,19 +378,19 @@ class TutorialEngineTest {
         assertEquals(step, state.currentStep)
     }
 
-    // --- lastStep ---
+    // --- skipTutorial ---
 
     @Test
-    fun `lastStep jumps to the last step`() {
+    fun `skipTutorial sets EndStep with completed false`() {
         val step0 = makeStep(startCondition = TutorialStepStartCondition.Immediate, textResId = 0)
         val step1 = makeStep(startCondition = TutorialStepStartCondition.Immediate, textResId = 1)
         val step2 = makeStep(startCondition = TutorialStepStartCondition.Immediate, textResId = 2)
         engine.startTutorial(makeTutorial(step0, step1, step2))
 
-        engine.lastStep()
+        engine.skipTutorial()
 
         val state = engine.tutorialState.value as TutorialState.Started
-        assertEquals(step2, state.currentStep)
+        assertEquals(TutorialStep.EndStep(completed = false), state.currentStep)
     }
 
     // --- MonitoredViewClicked start condition ---

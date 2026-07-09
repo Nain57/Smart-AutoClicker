@@ -137,7 +137,7 @@ internal class TutorialRepositoryImpl @Inject constructor(
     }
 
     override fun skipToLastTutorialStep() {
-        tutorialEngine.lastStep()
+        tutorialEngine.skipTutorial()
     }
 
     override fun shouldShowTip(tip: Tip): Flow<Boolean> =

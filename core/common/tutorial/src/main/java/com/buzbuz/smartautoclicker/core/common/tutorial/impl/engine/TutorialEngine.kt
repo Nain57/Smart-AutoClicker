@@ -117,8 +117,21 @@ internal class TutorialEngine @Inject constructor(
         stepsOrchestrator.nextStep()
     }
 
-    fun lastStep() {
-        stepsOrchestrator.lastStep()
+    fun skipTutorial() {
+        Log.d(TAG, "skipTutorial")
+
+        stepStartConditionMonitor.clearMonitoring()
+        stepEndConditionMonitor.clearMonitoring()
+        stepsOrchestrator.clear()
+
+        _tutorialState.update { old ->
+            if (old !is TutorialState.Started) old
+            else old.copy(
+                isCompleted = true,
+                isCurrentStepStarted = true,
+                currentStep = TutorialStep.EndStep(completed = false),
+            )
+        }
     }
 
     fun onNextStepButtonPressed() {
@@ -191,14 +204,18 @@ internal class TutorialEngine @Inject constructor(
     private fun onTutorialCompleted() {
         Log.d(TAG, "onTutorialCompleted")
 
+        _tutorialState.update { old ->
+            if (old !is TutorialState.Started) old
+            else old.copy(
+                isCompleted = true,
+                isCurrentStepStarted = true,
+                currentStep = TutorialStep.EndStep(completed = true),
+            )
+        }
+
         coroutineScopeIo.launch {
-            _tutorialState.update { old ->
-                if (old !is TutorialState.Started) old
-                else {
-                    completionStateDataSource.setTutorialCompleted(old.tutorial)
-                    old.copy(isCompleted = true)
-                }
-            }
+            val tutorial = (_tutorialState.value as? TutorialState.Started)?.tutorial ?: return@launch
+            completionStateDataSource.setTutorialCompleted(tutorial)
         }
     }
 

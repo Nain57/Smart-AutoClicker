@@ -61,4 +61,19 @@ sealed class TutorialStep {
         @field:StringRes val contentTextResId: Int,
         val image: TutorialStepImage? = null,
     ) : TutorialStep()
+
+    /**
+     * Terminal state marker set by the engine once all tutorial steps are done.
+     *
+     * This step is never part of the authored step list and is never displayed by the fullscreen
+     * overlay. It exists solely so that observers (e.g. game fragments) can distinguish between a
+     * natural completion and a user-triggered skip.
+     *
+     * @property completed `true` when the user went through every step normally; `false` when the
+     *   user triggered "skip all" to bypass the remaining steps.
+     */
+    data class EndStep(val completed: Boolean) : TutorialStep() {
+        override val stepStartCondition: TutorialStepStartCondition = TutorialStepStartCondition.Immediate
+        override val stepEndCondition: TutorialStepEndCondition = TutorialStepEndCondition.Immediate
+    }
 }

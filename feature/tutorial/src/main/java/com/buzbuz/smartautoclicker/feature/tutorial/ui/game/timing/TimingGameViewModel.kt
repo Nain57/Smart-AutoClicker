@@ -35,8 +35,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -77,7 +77,8 @@ class TimingGameViewModel @Inject constructor(
 
     val shouldDisplayCompletionDialog: Flow<Boolean> = startedState
         .combine(timingGameState) { tutorialState, game ->
-            tutorialState.isCompleted && game.isWon == true
+            val endStep = tutorialState.currentStep as? TutorialStep.EndStep ?: return@combine false
+            endStep.completed && game.isWon == true
         }
 
     val uiState: StateFlow<TimingGameUiState?> = timingGameState
