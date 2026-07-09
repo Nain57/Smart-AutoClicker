@@ -47,6 +47,7 @@ internal class ImageReaderProxy @Inject constructor(
         get() = imageReader!!.surface
 
     fun resize(size: Point) {
+        lastFrame = null
         copyImageRow = IntArray(size.x)
         imageReader?.close()
         imageReader = ImageReader.newInstance(size.x, size.y, PixelFormat.RGBA_8888, 2)
