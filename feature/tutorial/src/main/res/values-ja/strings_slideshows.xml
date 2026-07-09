@@ -128,4 +128,24 @@
         実行時間も遅くなります。</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">ブロードキャスト受信時</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">他のアプリからのブロードキャストを受け取る</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">Androidでは、アプリが自身の状態を他のアプリと共有したいとき、
+        Broadcast Intentを使用します。\n\n「ブロードキャスト受信時」条件を使うと、それらの状態を監視してKlick\'rのアクションで
+        反応することができます。Androidシステムの状態に関するデフォルト値がいくつか提供されていますが、ブロードキャスト条件は
+        Android開発の知識が必要なため、主に開発者向けであることに注意してください。</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">カウンター到達時</string>
+    <string name="tutorial_slideshow_counter_reached_desc">シナリオのカウンター値に反応する</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">カウンターはシナリオ内で宣言された変数で、実行中に変更、
+        表示、または検証することができます。\n\n「カウンター到達時」条件を使うと、カウンターの現在値を確認してアクションを
+        実行できます。すべての数学的比較演算子が検証のカスタマイズに利用できます。\n\nカウンターはさまざまな方法で使用でき、
+        カウンターに関連する単一の条件やアクションだけでは正しく使いこなすには不十分なことがよくあります。カウンター機能を
+        カバーするインタラクティブなチュートリアルは、専用のセクションで利用できます。</string>
+
 </resources>

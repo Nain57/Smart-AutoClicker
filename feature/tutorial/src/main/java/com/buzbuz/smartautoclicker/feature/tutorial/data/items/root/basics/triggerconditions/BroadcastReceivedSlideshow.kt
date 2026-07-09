@@ -17,20 +17,19 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
-internal fun getTriggerConditionsCategory() =
-    TutorialCategory(
-        type = TutorialCategory.Type.TRIGGER_CONDITIONS,
-        nameRes = R.string.tutorial_category_trigger_condition_name,
-        shortDescriptionRes = R.string.tutorial_category_trigger_condition_desc_short,
-        longDescriptionRes = R.string.tutorial_category_trigger_condition_desc_long,
-        iconRes = R.drawable.ic_trigger_event,
-        content = listOf(
-            TutorialCategory.Content.Tutorial(TutorialItem.Type.TIMER_REACHED_CONDITION),
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.COUNTER_REACHED_CONDITION),
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.BROADCAST_RECEIVED_CONDITION),
+
+internal fun getBroadcastReceivedSlideshow() =
+    TutorialSlideshow(
+        type = TutorialSlideshow.Type.BROADCAST_RECEIVED_CONDITION,
+        nameRes = R.string.tutorial_slideshow_broadcast_received_title,
+        shortDescriptionRes = R.string.tutorial_slideshow_broadcast_received_desc,
+        slideshowItems = listOf(
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_broadcast_received_step_1_text,
+                tutorialImage = R.drawable.ic_broadcast_received,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.ICON,
+            ),
         ),
     )

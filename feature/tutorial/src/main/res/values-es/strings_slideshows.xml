@@ -135,4 +135,26 @@
         con mayor resolución significando mejor detección, pero también mayor tiempo de ejecución.</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">Al recibir un Broadcast</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">Escucha los broadcasts de otras aplicaciones</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">En Android, cuando las aplicaciones quieren compartir su
+        estado con otras apps, usan un Broadcast Intent. \n\nCon la condición \"Al recibir un Broadcast\", puedes
+        monitorear esos estados y reaccionar con una acción en Klick\'r. Se proporcionan algunos valores predeterminados para el
+        estado del sistema Android, pero ten en cuenta que las condiciones de broadcast están más orientadas a desarrolladores,
+        ya que dominarlas requiere conocimientos de desarrollo Android.</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">Al alcanzar un Contador</string>
+    <string name="tutorial_slideshow_counter_reached_desc">Reacciona a los valores de los contadores de tu escenario</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">Los contadores son variables declaradas en tu escenario
+        que pueden modificarse, mostrarse o verificarse durante su ejecución. \n\nCon la condición \"Al alcanzar un Contador\",
+        puedes verificar el valor actual de un contador para desencadenar acciones. Todos los operadores de comparación
+        matemáticos están disponibles para personalizar la verificación. \n\nLos contadores pueden usarse de diversas formas
+        y usar una única condición o acción relacionada con un contador a menudo no es suficiente para usarlos correctamente.
+        Los tutoriales interactivos que cubren la función Contador están disponibles en su sección dedicada.</string>
+
 </resources>

@@ -83,6 +83,7 @@
         conditions for each position than one with a very big area. You can test your timings using the debug report
         if you are into deep optimization of your scenario timings.</string>
 
+
     <!-- Number Condition Detection Area slideshow -->
     <string name="tutorial_slideshow_number_condition_area_title">Number detection area</string>
     <string name="tutorial_slideshow_number_condition_area_desc">Tips about optimal number detection</string>
@@ -93,6 +94,7 @@
         small margin around it. The number should not touch the borders of the area or the detection confidence will drop
         significantly. \n\nNote: for very small numbers, you might need to increase the detection quality of your scenario,
         as higher resolution will help the detection of those. </string>
+
 
     <!--Screen Condition type selection -->
     <string name="tutorial_slideshow_screen_condition_type_title">Screen condition types</string>
@@ -113,6 +115,7 @@
         detection area size and also depends on the alphabet selected. \n\nThis condition is convenient when
         trying to detect a text or a number independently of how it is displayed.</string>
 
+
     <!-- Number Condition Detection Area slideshow -->
     <string name="tutorial_slideshow_screen_condition_threshold_title">Detection confidence</string>
     <string name="tutorial_slideshow_screen_condition_threshold_desc">Tips about detection confidence</string>
@@ -131,5 +134,27 @@
         detection resolution. Available in the Scenario dialog, it allows you to change how much Klick\'r downscales
         your screen content before processing it. \n\nThis can impact the confidence score of all of your screen
         conditions, with higher resolution meaning better detection, but also slower execution time.</string>
+
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">On Broadcast Received</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">Listen to broadcasts from other apps</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">On Android, when applications want to share their
+        state with other apps, they use a Broadcast Intent. \n\nWith the \"On Broadcast Received\" condition, you can
+        monitor those states and react with an action in Klick\'r. Some default values for the Android system state are
+        provided, but keep in mind that broadcast conditions are more for developers, as mastering them requires Android
+        development knowledge.</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">On Counter Reached</string>
+    <string name="tutorial_slideshow_counter_reached_desc">React to your scenario\'s counter values</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">Counters are variables declared in your scenario
+        that can be modified, displayed or verified during its execution. \n\nWith the \"On Counter Reached\" condition,
+        you can verify the current value of a counter to trigger actions. All mathematical comparison
+        operators are available to customize the verification. \n\nCounters can be used in various ways and using a single
+        counter-related condition or action is often not enough to use them correctly. Interactive tutorials covering the
+        Counter feature are available in their dedicated section.</string>
 
 </resources>

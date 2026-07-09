@@ -128,4 +128,24 @@
         لكنها تعني أيضًا وقت تنفيذ أبطأ.</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">عند استقبال Broadcast</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">استمع إلى broadcasts التطبيقات الأخرى</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">على Android، عندما تريد التطبيقات مشاركة حالتها
+        مع تطبيقات أخرى، تستخدم Broadcast Intent. \n\nمع شرط \"عند استقبال Broadcast\"، يمكنك مراقبة هذه الحالات
+        والتفاعل معها بإجراء في Klick\'r. يتم توفير بعض القيم الافتراضية لحالة نظام Android، لكن ضع في اعتبارك أن شروط
+        broadcast موجهة أكثر للمطورين، إذ يتطلب إتقانها معرفة بتطوير Android.</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">عند الوصول إلى عداد</string>
+    <string name="tutorial_slideshow_counter_reached_desc">تفاعل مع قيم عدادات السيناريو الخاص بك</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">العدادات هي متغيرات معلنة في السيناريو الخاص بك
+        يمكن تعديلها أو عرضها أو التحقق منها أثناء تنفيذه. \n\nمع شرط \"عند الوصول إلى عداد\"، يمكنك التحقق من
+        القيمة الحالية لعداد لتشغيل الإجراءات. جميع عوامل المقارنة الرياضية متاحة لتخصيص التحقق. \n\nيمكن استخدام
+        العدادات بطرق مختلفة، واستخدام شرط أو إجراء واحد مرتبط بعداد غالبًا لا يكفي لاستخدامها بشكل صحيح. تتوفر
+        دروس تعليمية تفاعلية تغطي ميزة العداد في قسمها المخصص.</string>
+
 </resources>

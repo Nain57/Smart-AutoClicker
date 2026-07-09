@@ -110,4 +110,23 @@
         但执行时间也越慢。</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">收到广播时</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">监听其他应用的广播</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">在 Android 上，当应用想与其他应用共享状态时，
+        会使用 Broadcast Intent。\n\n通过"收到广播时"条件，您可以监听这些状态并在 Klick\'r 中触发相应动作。
+        系统提供了一些 Android 系统状态的默认值，但请注意，广播条件更适合开发者，因为完全掌握它需要
+        Android 开发知识。</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">计数器达到值时</string>
+    <string name="tutorial_slideshow_counter_reached_desc">对场景计数器的值做出响应</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">计数器是在场景中声明的变量，可在执行过程中
+        修改、显示或验证。\n\n通过"计数器达到值时"条件，您可以检查计数器的当前值以触发动作。所有数学比较
+        运算符均可用于自定义验证。\n\n计数器可以多种方式使用，仅使用单个与计数器相关的条件或动作通常不足以
+        正确使用它们。涵盖计数器功能的互动教程可在其专属章节中找到。</string>
+
 </resources>

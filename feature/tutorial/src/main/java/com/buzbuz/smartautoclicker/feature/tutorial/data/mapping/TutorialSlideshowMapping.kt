@@ -22,11 +22,15 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.getImageConditionsDetectionAreaSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.number.getNumberConditionsDetectionAreaSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.getTextConditionsDetectionAreaSlideshow
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getBroadcastReceivedSlideshow
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getCounterReachedSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 
 internal fun TutorialSlideshow.Type.toTutorialSlideshow(): TutorialSlideshow =
     when (this) {
+        TutorialSlideshow.Type.BROADCAST_RECEIVED_CONDITION -> getBroadcastReceivedSlideshow()
+        TutorialSlideshow.Type.COUNTER_REACHED_CONDITION -> getCounterReachedSlideshow()
         TutorialSlideshow.Type.IMAGE_CONDITION_CAPTURE -> getImageConditionsCaptureSlideshow()
         TutorialSlideshow.Type.IMAGE_CONDITION_DETECTION_AREA -> getImageConditionsDetectionAreaSlideshow()
         TutorialSlideshow.Type.NUMBER_CONDITION_DETECTION_AREA -> getNumberConditionsDetectionAreaSlideshow()

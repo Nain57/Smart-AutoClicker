@@ -136,4 +136,26 @@
         d\'écran, une résolution plus élevée signifiant une meilleure détection, mais aussi un temps d\'exécution plus lent.</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">À la réception d\'un Broadcast</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">Écoutez les broadcasts des autres applications</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">Sur Android, lorsque des applications souhaitent partager leur
+        état avec d\'autres apps, elles utilisent un Broadcast Intent. \n\nAvec la condition \"À la réception d\'un Broadcast\", vous pouvez
+        surveiller ces états et réagir avec une action dans Klick\'r. Des valeurs par défaut pour l\'état du système Android sont
+        fournies, mais gardez à l\'esprit que les conditions de broadcast s\'adressent davantage aux développeurs, car les maîtriser
+        requiert des connaissances en développement Android.</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">Quand un Compteur est atteint</string>
+    <string name="tutorial_slideshow_counter_reached_desc">Réagissez aux valeurs des compteurs de votre scénario</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">Les compteurs sont des variables déclarées dans votre scénario
+        qui peuvent être modifiées, affichées ou vérifiées pendant son exécution. \n\nAvec la condition \"Quand un Compteur est atteint\",
+        vous pouvez vérifier la valeur actuelle d\'un compteur pour déclencher des actions. Tous les opérateurs de comparaison
+        mathématiques sont disponibles pour personnaliser la vérification. \n\nLes compteurs peuvent être utilisés de nombreuses façons
+        et utiliser une seule condition ou action liée à un compteur est souvent insuffisant pour les utiliser correctement. Des tutoriels
+        interactifs couvrant la fonctionnalité Compteur sont disponibles dans leur section dédiée.</string>
+
 </resources>

@@ -40,6 +40,8 @@ data class TutorialSlideshow(
     }
 
     enum class Type {
+        BROADCAST_RECEIVED_CONDITION,
+        COUNTER_REACHED_CONDITION,
         IMAGE_CONDITION_CAPTURE,
         IMAGE_CONDITION_DETECTION_AREA,
         NUMBER_CONDITION_DETECTION_AREA,

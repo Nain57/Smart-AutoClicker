@@ -133,4 +133,26 @@
         краще виявлення, але й повільніший час виконання.</string>
 
 
+
+    <!-- Broadcast received slideshow -->
+    <string name="tutorial_slideshow_broadcast_received_title">При отриманні Broadcast</string>
+    <string name="tutorial_slideshow_broadcast_received_desc">Слухайте broadcasts інших додатків</string>
+
+    <string name="tutorial_slideshow_broadcast_received_step_1_text">На Android, коли додатки хочуть поділитися своїм
+        станом з іншими додатками, вони використовують Broadcast Intent. \n\nЗ умовою \"При отриманні Broadcast\" ви можете
+        відстежувати ці стани та реагувати дією в Klick\'r. Надано деякі значення за замовчуванням для стану системи Android,
+        але майте на увазі, що умови broadcast більше призначені для розробників, оскільки їх освоєння вимагає знань
+        розробки Android.</string>
+
+    <!-- Counter Reached slideshow -->
+    <string name="tutorial_slideshow_counter_reached_title">При досягненні Лічильника</string>
+    <string name="tutorial_slideshow_counter_reached_desc">Реагуйте на значення лічильників вашого сценарію</string>
+
+    <string name="tutorial_slideshow_counter_reached_step_1_text">Лічильники — це змінні, оголошені у вашому сценарії,
+        які можна змінювати, відображати або перевіряти під час його виконання. \n\nЗ умовою \"При досягненні Лічильника\"
+        ви можете перевіряти поточне значення лічильника для запуску дій. Усі математичні оператори порівняння
+        доступні для налаштування перевірки. \n\nЛічильники можна використовувати по-різному, і використання однієї умови
+        або дії, пов\'язаної з лічильником, часто недостатньо для їх правильного застосування. Інтерактивні навчальні
+        матеріали з функції Лічильник доступні у їх спеціальному розділі.</string>
+
 </resources>
