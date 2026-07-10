@@ -35,8 +35,8 @@ fun getOpenWebBrowserPickerIntent(uri: Uri): Intent =
     }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getNotificationSettingsIntent(): Intent =
+fun getNotificationSettingsIntent(appPackageName: String): Intent =
     Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        putExtra(Settings.EXTRA_APP_PACKAGE, "com.buzbuz.smartautoclicker")
+        putExtra(Settings.EXTRA_APP_PACKAGE, appPackageName)
     }

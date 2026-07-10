@@ -22,6 +22,7 @@ import javax.inject.Singleton
 
 
 interface AppComponentsProvider {
+    val currentAppId: String
     val originalAppId: String
 
     val klickrServiceComponentName: ComponentName
@@ -32,6 +33,10 @@ interface AppComponentsProvider {
 
 @Singleton
 class AppComponentsManager @Inject constructor() : AppComponentsProvider {
+
+    private lateinit var _currentAppId: String
+    override val currentAppId: String
+        get() = _currentAppId
 
     private lateinit var _originalAppId: String
     override val originalAppId: String
@@ -47,9 +52,13 @@ class AppComponentsManager @Inject constructor() : AppComponentsProvider {
 
     override val tutorialActivityComponentName: ComponentName
         get() = ComponentName(
-            "com.buzbuz.smartautoclicker",
+            currentAppId,
             "com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity",
         )
+
+    fun registerCurrentAppId(appId: String) {
+        _currentAppId = appId
+    }
 
     fun registerOriginalAppId(appId: String) {
         _originalAppId = appId

@@ -21,17 +21,19 @@ import android.content.Intent
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
+import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.feature.notifications.model.ServiceNotificationAction
 import com.buzbuz.smartautoclicker.feature.notifications.model.getAllActionsBroadcastIntentFilter
 import com.buzbuz.smartautoclicker.feature.notifications.model.toServiceNotificationAction
 
 
 internal class NotificationActionsReceiver(
+    appComponentsProvider: AppComponentsProvider,
     private val onReceived: (ServiceNotificationAction) -> Unit,
-): SafeBroadcastReceiver(getAllActionsBroadcastIntentFilter()) {
+): SafeBroadcastReceiver(getAllActionsBroadcastIntentFilter(appComponentsProvider.currentAppId)) {
 
     override fun onReceive(context: Context, intent: Intent) {
-        intent.toServiceNotificationAction()?.let { action ->
+        intent.toServiceNotificationAction(context.packageName)?.let { action ->
             Log.i(TAG, "Notification action received: ${intent.action}")
             onReceived(action)
         }

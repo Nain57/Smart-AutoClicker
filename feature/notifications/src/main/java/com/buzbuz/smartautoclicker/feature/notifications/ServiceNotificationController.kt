@@ -47,7 +47,7 @@ class ServiceNotificationController(
     private val notificationManager: NotificationManagerCompat =
         NotificationManagerCompat.from(context)
     private val notificationActionReceiver: NotificationActionsReceiver =
-        NotificationActionsReceiver(listener::notifyAction)
+        NotificationActionsReceiver(appComponentsProvider, listener::notifyAction)
     private val nightModeReceiver: NightModeReceiver =
         NightModeReceiver(::updateNotification)
 

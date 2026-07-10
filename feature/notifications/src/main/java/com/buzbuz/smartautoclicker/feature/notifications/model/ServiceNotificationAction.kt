@@ -72,22 +72,22 @@ internal sealed class NotificationActionPendingIntent {
     data class Activity(val componentName: ComponentName) : NotificationActionPendingIntent()
 }
 
-internal fun getAllActionsBroadcastIntentFilter(): IntentFilter =
+internal fun getAllActionsBroadcastIntentFilter(appPackageName: String): IntentFilter =
     IntentFilter().apply {
-        addAction(ServiceNotificationAction.Play.getBroadcastAction())
-        addAction(ServiceNotificationAction.Pause.getBroadcastAction())
-        addAction(ServiceNotificationAction.Show.getBroadcastAction())
-        addAction(ServiceNotificationAction.Hide.getBroadcastAction())
-        addAction(ServiceNotificationAction.Stop.getBroadcastAction())
+        addAction(ServiceNotificationAction.Play.getBroadcastAction(appPackageName))
+        addAction(ServiceNotificationAction.Pause.getBroadcastAction(appPackageName))
+        addAction(ServiceNotificationAction.Show.getBroadcastAction(appPackageName))
+        addAction(ServiceNotificationAction.Hide.getBroadcastAction(appPackageName))
+        addAction(ServiceNotificationAction.Stop.getBroadcastAction(appPackageName))
     }
 
-internal fun Intent.toServiceNotificationAction(): ServiceNotificationAction? =
+internal fun Intent.toServiceNotificationAction(appPackageName: String): ServiceNotificationAction? =
     when (action) {
-        ServiceNotificationAction.Play.getBroadcastAction() -> ServiceNotificationAction.Play
-        ServiceNotificationAction.Pause.getBroadcastAction() -> ServiceNotificationAction.Pause
-        ServiceNotificationAction.Show.getBroadcastAction() -> ServiceNotificationAction.Show
-        ServiceNotificationAction.Hide.getBroadcastAction() -> ServiceNotificationAction.Hide
-        ServiceNotificationAction.Stop.getBroadcastAction() -> ServiceNotificationAction.Stop
+        ServiceNotificationAction.Play.getBroadcastAction(appPackageName) -> ServiceNotificationAction.Play
+        ServiceNotificationAction.Pause.getBroadcastAction(appPackageName) -> ServiceNotificationAction.Pause
+        ServiceNotificationAction.Show.getBroadcastAction(appPackageName) -> ServiceNotificationAction.Show
+        ServiceNotificationAction.Hide.getBroadcastAction(appPackageName) -> ServiceNotificationAction.Hide
+        ServiceNotificationAction.Stop.getBroadcastAction(appPackageName) -> ServiceNotificationAction.Stop
         else -> null
     }
 
@@ -108,20 +108,20 @@ internal fun ServiceNotificationAction.getPendingIntent(context: Context, appCom
 
 private fun ServiceNotificationAction.getIntent(appComponentsProvider: AppComponentsProvider): NotificationActionPendingIntent =
     when (this) {
-        ServiceNotificationAction.Play -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
-        ServiceNotificationAction.Pause -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
-        ServiceNotificationAction.Show -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
-        ServiceNotificationAction.Hide -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
-        ServiceNotificationAction.Stop -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
+        ServiceNotificationAction.Play -> NotificationActionPendingIntent.Broadcast(getBroadcastAction(appComponentsProvider.currentAppId))
+        ServiceNotificationAction.Pause -> NotificationActionPendingIntent.Broadcast(getBroadcastAction(appComponentsProvider.currentAppId))
+        ServiceNotificationAction.Show -> NotificationActionPendingIntent.Broadcast(getBroadcastAction(appComponentsProvider.currentAppId))
+        ServiceNotificationAction.Hide -> NotificationActionPendingIntent.Broadcast(getBroadcastAction(appComponentsProvider.currentAppId))
+        ServiceNotificationAction.Stop -> NotificationActionPendingIntent.Broadcast(getBroadcastAction(appComponentsProvider.currentAppId))
         ServiceNotificationAction.Config -> NotificationActionPendingIntent.Activity(appComponentsProvider.scenarioActivityComponentName)
     }
 
-private fun ServiceNotificationAction.getBroadcastAction(): String =
+private fun ServiceNotificationAction.getBroadcastAction(appPackageName: String): String =
     when (this) {
-        ServiceNotificationAction.Play -> "com.buzbuz.smartautoclicker.PLAY"
-        ServiceNotificationAction.Pause -> "com.buzbuz.smartautoclicker.PAUSE"
-        ServiceNotificationAction.Show -> "com.buzbuz.smartautoclicker.SHOW"
-        ServiceNotificationAction.Hide -> "com.buzbuz.smartautoclicker.HIDE"
-        ServiceNotificationAction.Stop -> "com.buzbuz.smartautoclicker.STOP"
+        ServiceNotificationAction.Play -> "$appPackageName.PLAY"
+        ServiceNotificationAction.Pause -> "$appPackageName.PAUSE"
+        ServiceNotificationAction.Show -> "$appPackageName.SHOW"
+        ServiceNotificationAction.Hide -> "$appPackageName.HIDE"
+        ServiceNotificationAction.Stop -> "$appPackageName.STOP"
         ServiceNotificationAction.Config -> throw IllegalArgumentException("This action doesn't use broadcasts")
     }

@@ -64,7 +64,7 @@ sealed class Permission(internal val isOptional: Boolean) {
         /** The Android permission string value. */
         protected abstract val permissionString: String
 
-        protected open val fallbackSettingsIntent: Intent? = null
+        protected open fun getFallbackSettingsIntent(context: Context): Intent? = null
 
         internal fun initResultLauncher(fragment: Fragment, onResult: (isGranted: Boolean) -> Unit) {
             permissionLauncher = fragment
@@ -87,7 +87,7 @@ sealed class Permission(internal val isOptional: Boolean) {
                 } ?: false
             }
 
-            fallbackSettingsIntent?.let { intent ->
+            getFallbackSettingsIntent(context)?.let { intent ->
                 try {
                     context.startActivity(intent)
                     return true
