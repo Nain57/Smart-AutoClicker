@@ -175,4 +175,20 @@ class ActionMapperTests {
             ActionTestsData.getNewSetTextEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
         )
     }
+
+    @Test
+    fun externalAction_toEntity() {
+        assertEquals(
+            ActionTestsData.getNewExternalActionEntity(eventId = ActionTestsData.ACTION_EVENT_ID).action,
+            ActionTestsData.getNewExternalAction(eventId = ActionTestsData.ACTION_EVENT_ID).toEntity(),
+        )
+    }
+
+    @Test
+    fun externalAction_toDomain() {
+        assertEquals(
+            ActionTestsData.getNewExternalAction(eventId = ActionTestsData.ACTION_EVENT_ID),
+            ActionTestsData.getNewExternalActionEntity(eventId = ActionTestsData.ACTION_EVENT_ID).toDomain(),
+        )
+    }
 }

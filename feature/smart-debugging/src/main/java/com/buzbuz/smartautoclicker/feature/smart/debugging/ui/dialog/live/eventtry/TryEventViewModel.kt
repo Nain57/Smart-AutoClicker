@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -130,6 +131,7 @@ private fun Event.getDebugIcon(): Int =
 private fun Action.getDebugIcon(): Int =
     when (this) {
         is ChangeCounter -> R.drawable.ic_change_counter
+        is ExternalAction -> R.drawable.ic_external_action
         is Click -> R.drawable.ic_click
         is Intent -> R.drawable.ic_intent
         is Notification -> R.drawable.ic_action_notification

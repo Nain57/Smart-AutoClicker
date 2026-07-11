@@ -88,6 +88,8 @@ import kotlinx.serialization.Serializable
  *
  * @param textValue [ActionType.TEXT] only: the text to type in the focused view
  * @param textValidateInput [ActionType.TEXT] only: the type of system action to execute.
+ *
+ * @param externalActionName [ActionType.EXTERNAL_ACTION] only: the global name fired to automation plugins.
  */
 @Entity(
     tableName = ACTION_TABLE,
@@ -162,6 +164,9 @@ data class ActionEntity(
     // ActionType.TEXT
     @ColumnInfo(name = "text_value") val textValue: String? = null,
     @ColumnInfo(name = "text_validate_input") val textValidateInput: Boolean? = null,
+
+    // ActionType.EXTERNAL_ACTION
+    @ColumnInfo(name = "external_action_name") val externalActionName: String? = null,
 ) : EntityWithId
 
 /**

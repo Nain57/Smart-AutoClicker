@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -98,6 +99,7 @@ internal class ActionExecutor(
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
+                is ExternalAction -> executeExternalAction(action)
                 is Notification -> executeNotification(event, action)
                 is SystemAction -> executeSystemAction(action)
                 is SetText -> executeSetText(action)
@@ -253,6 +255,10 @@ internal class ActionExecutor(
                 ChangeCounter.OperationType.SET -> operandValue
             }
         )
+    }
+
+    private fun executeExternalAction(externalAction: ExternalAction) {
+        androidExecutor.fireExternalAction(externalAction.externalActionName)
     }
 
     private fun executeNotification(event: Event, notification: Notification) {

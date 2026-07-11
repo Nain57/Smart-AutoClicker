@@ -36,6 +36,7 @@
     <integer name="default_condition_threshold">4</integer>
 
     <string name="default_change_counter_name">Change counter</string>
+    <string name="default_external_action_name">External Action</string>
 
     <string name="default_notification_name">Notification</string>
 

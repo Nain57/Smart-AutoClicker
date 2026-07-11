@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartAct
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.offset.ClickOffsetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.external.ExternalActionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activities.ActivitySelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionModel
@@ -98,6 +99,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun eventCopyModel(): EventCopyViewModel
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel
+    fun externalActionViewModel(): ExternalActionViewModel
     fun extraConfigViewModel(): ExtraConfigModel
     fun fixEventChildrenCopyViewModel(): FixEventChildrenCopyViewModel
     fun fixEventsCopyViewModel(): FixEventsCopyViewModel

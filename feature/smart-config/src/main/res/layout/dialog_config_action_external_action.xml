@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.Dialog.BackgroundLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_dialog_navigation_top_bar"
+        android:id="@+id/layout_top_bar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:orientation="vertical">
+
+            <include layout="@layout/include_field_text_input"
+                android:id="@+id/field_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:layout_marginBottom="@dimen/margin_vertical_large"/>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/include_field_text_input"
+                        android:id="@+id/field_external_action_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_select_external_action"
+                        style="@style/AppTheme.Widget.TextButtonOutlined"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_default"
+                        android:text="@string/dialog_title_external_action_selection" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/help_text"
+                        style="@style/AppTheme.TextAppearance.FieldSubText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_small"
+                        android:text="@string/field_external_action_help"
+                        tools:text="Use this name in your automation app's Klick'r external action trigger."/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
