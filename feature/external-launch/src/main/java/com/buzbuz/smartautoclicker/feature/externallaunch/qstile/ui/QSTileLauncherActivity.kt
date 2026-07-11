@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.ui
+package com.buzbuz.smartautoclicker.feature.externallaunch.qstile.ui
 
 import android.content.Context
 import android.content.Intent
@@ -26,7 +26,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
 import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
-import com.buzbuz.smartautoclicker.feature.qstile.R
+import com.buzbuz.smartautoclicker.feature.externallaunch.R
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,11 +36,11 @@ class QSTileLauncherActivity : AppCompatActivity() {
     companion object {
 
         private const val EXTRA_SCENARIO_ID =
-            "com.buzbuz.smartautoclicker.feature.qstile.ui.EXTRA_SCENARIO_ID"
+            "com.buzbuz.smartautoclicker.feature.externallaunch.qstile.ui.EXTRA_SCENARIO_ID"
         private const val EXTRA_IS_SMART_SCENARIO =
-            "com.buzbuz.smartautoclicker.feature.qstile.ui.EXTRA_IS_SMART_SCENARIO"
+            "com.buzbuz.smartautoclicker.feature.externallaunch.qstile.ui.EXTRA_IS_SMART_SCENARIO"
 
-        fun getStartIntent(context: Context, scenarioId: Long, isSmartScenario: Boolean): Intent =
+        fun getLaunchIntent(context: Context, scenarioId: Long, isSmartScenario: Boolean): Intent =
             Intent(context, QSTileLauncherActivity::class.java)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(EXTRA_SCENARIO_ID, scenarioId)
@@ -75,7 +75,7 @@ class QSTileLauncherActivity : AppCompatActivity() {
             onMandatoryDenied = ::finish,
             onAllGranted = {
                 Log.i(TAG, "All permissions are granted, start scenario")
-                viewModel.startDumbScenario(scenarioId)
+                viewModel.launchDumbScenario(scenarioId)
                 finish()
             }
         )
@@ -98,14 +98,14 @@ class QSTileLauncherActivity : AppCompatActivity() {
         mediaProjectionRequest.showMediaProjectionWarning(
             context = this,
             forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
-            onSuccess = { resultCode, data -> startScenario(resultCode, data, scenarioId) },
+            onSuccess = { resultCode, data -> launchScenario(resultCode, data, scenarioId) },
             onFailure = { showProjectionDeniedToast() },
             onError = { showUnsupportedDeviceDialog() },
         )
     }
 
-    private fun startScenario(resultCode: Int, data: Intent, scenarioId: Long) {
-        viewModel.startSmartScenario(resultCode, data, scenarioId)
+    private fun launchScenario(resultCode: Int, data: Intent, scenarioId: Long) {
+        viewModel.launchSmartScenario(resultCode, data, scenarioId)
         finish()
     }
 

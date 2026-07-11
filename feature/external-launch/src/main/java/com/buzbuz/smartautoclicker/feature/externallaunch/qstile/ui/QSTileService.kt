@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.ui
+package com.buzbuz.smartautoclicker.feature.externallaunch.qstile.ui
 
 import android.content.ComponentName
 import android.content.Context
@@ -25,8 +25,8 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers
 import com.buzbuz.smartautoclicker.core.base.extensions.startActivityAndCollapseCompat
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileDisplayInfo
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
+import com.buzbuz.smartautoclicker.feature.externallaunch.qstile.domain.QSTileDisplayInfo
+import com.buzbuz.smartautoclicker.feature.externallaunch.domain.ExternalLaunchRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +57,7 @@ class QSTileService : TileService() {
         }
     }
 
-    @Inject internal lateinit var qsTileRepository: QSTileRepository
+    @Inject internal lateinit var qsTileRepository: ExternalLaunchRepository
     @Inject @Dispatcher(HiltCoroutineDispatchers.Main) internal lateinit var mainDispatcher: CoroutineDispatcher
 
     private var mainCoroutineScope: CoroutineScope? = null
@@ -109,7 +109,7 @@ class QSTileService : TileService() {
             Tile.STATE_ACTIVE ->
                 qsTileRepository.stopScenarios()
             Tile.STATE_INACTIVE ->
-                startActivityAndCollapseCompat(QSTileLauncherActivity.getStartIntent(this, scenarioId, isSmart))
+                startActivityAndCollapseCompat(QSTileLauncherActivity.getLaunchIntent(this, scenarioId, isSmart))
         }
     }
 

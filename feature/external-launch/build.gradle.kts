@@ -16,21 +16,26 @@
  */
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
+    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.hilt)
+    alias(libs.plugins.buzbuz.kotlinSerialization)
 }
 
 android {
-    namespace = "com.buzbuz.smartautoclicker.feature.qstile"
+    namespace = "com.buzbuz.smartautoclicker.feature.externallaunch"
     buildFeatures.viewBinding = true
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.appCompat)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.google.material)
 
     implementation(project(":core:common:base"))
@@ -41,4 +46,5 @@ dependencies {
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
     implementation(project(":core:common:permissions"))
+    implementation(project(":core:common:actions"))
 }

@@ -14,15 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.domain
+package com.buzbuz.smartautoclicker.feature.externallaunch.qstile.domain
 
-import android.content.Intent
-import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
-
-interface QSTileActionHandler {
-    fun isRunning() : Boolean
-    fun startDumbScenario(dumbScenario: DumbScenario)
-    fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
-    fun stop()
-}
+internal data class QSTileDisplayInfo(
+    val tileState: Int,
+    val tileTitle: String,
+    val tileSubTitle: String?,
+    val scenarioId: Long? = null,
+    val isSmart: Boolean? = null,
+)

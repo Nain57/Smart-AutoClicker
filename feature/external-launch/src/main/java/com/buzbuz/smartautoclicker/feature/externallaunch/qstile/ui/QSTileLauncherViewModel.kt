@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.qstile.ui
+package com.buzbuz.smartautoclicker.feature.externallaunch.qstile.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +31,7 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionAcces
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionOverlay
 import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostNotification
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
+import com.buzbuz.smartautoclicker.feature.externallaunch.domain.ExternalLaunchRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,7 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class QSTileLauncherViewModel @Inject constructor(
     @param:Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
-    private val qsTileRepository: QSTileRepository,
+    private val qsTileRepository: ExternalLaunchRepository,
     private val permissionController: PermissionsController,
     private val smartRepository: IRepository,
     private val dumbRepository: DumbRepository,
@@ -67,17 +67,17 @@ class QSTileLauncherViewModel @Inject constructor(
         )
     }
 
-    fun startSmartScenario(resultCode: Int, data: Intent, scenarioId: Long) {
+    fun launchSmartScenario(resultCode: Int, data: Intent, scenarioId: Long) {
         viewModelScope.launch(ioDispatcher) {
             val scenario = smartRepository.getScenario(scenarioId) ?: return@launch
-            qsTileRepository.startSmartScenario(resultCode, data, scenario)
+            qsTileRepository.launchSmartScenario(resultCode, data, scenario)
         }
     }
 
-    fun startDumbScenario(scenarioId: Long) {
+    fun launchDumbScenario(scenarioId: Long) {
         viewModelScope.launch(ioDispatcher) {
             val scenario = dumbRepository.getDumbScenario(scenarioId) ?: return@launch
-            qsTileRepository.startDumbScenario(scenario)
+            qsTileRepository.launchDumbScenario(scenario)
         }
     }
 
