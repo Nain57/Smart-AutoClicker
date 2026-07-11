@@ -126,6 +126,17 @@ class CaptureMenu(
         }
     }
 
+    override fun onScreenOverlayVisibilityToggleRequested(isVisible: Boolean): Boolean {
+        if (!isVisible || state != ADJUST) return false
+
+        state = CAPTURE
+        viewModel.takeScreenshot { screenshot ->
+            selectorView.showCapture(screenshot)
+            state = ADJUST
+        }
+        return true
+    }
+
     /**
      * Called when the validity of the selector have changed.
      * Update the buttons to avoid a capture if the selector can't provide the bitmap.

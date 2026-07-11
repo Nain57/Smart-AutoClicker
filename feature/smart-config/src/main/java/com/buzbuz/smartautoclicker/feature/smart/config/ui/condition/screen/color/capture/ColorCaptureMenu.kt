@@ -120,6 +120,14 @@ class ColorCaptureMenu (
         }
     }
 
+    override fun onScreenOverlayVisibilityToggleRequested(isVisible: Boolean): Boolean {
+        val pixelSelectionState = viewModel.uiState.value.pixelSelectionUiState
+        if (!isVisible || pixelSelectionState == null) return false
+
+        viewModel.captureScreen(pixelSelectionState.selectedPosition)
+        return true
+    }
+
     private fun updateUiState(uiState: ColorCaptureUiState) {
        updateMenu(uiState)
 

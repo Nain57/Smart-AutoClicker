@@ -423,6 +423,14 @@ abstract class OverlayMenu(
     protected open fun onScreenOverlayVisibilityChanged(isVisible: Boolean): Unit = Unit
 
     /**
+     * Called when the user presses the button that toggles the screen overlay visibility.
+     * Return true if the menu handled the requested visibility change itself.
+     *
+     * @param isVisible the visibility requested by the user.
+     */
+    protected open fun onScreenOverlayVisibilityToggleRequested(isVisible: Boolean): Boolean = false
+
+    /**
      * Get the maximum size the window can take.
      * @param backgroundView the background view.
      */
@@ -500,7 +508,10 @@ abstract class OverlayMenu(
         if (resizeController.isAnimating) return
 
         screenOverlayView?.let { view ->
-            setOverlayViewVisibility(view.visibility != View.VISIBLE)
+            val isVisible = view.visibility != View.VISIBLE
+            if (!onScreenOverlayVisibilityToggleRequested(isVisible)) {
+                setOverlayViewVisibility(isVisible)
+            }
         }
     }
 
