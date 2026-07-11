@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label_launch_scenario">Klick\'r を起動</string>
+    <string name="tile_label_stop_scenario">Klick\'r を停止</string>
+    <string name="tile_subtext_unavailable">シナリオが定義されていません</string>
+    <string name="locale_plugin_launch_name">Klick\'r シナリオを起動</string>
+    <string name="locale_plugin_stop_name">Klick\'r を停止</string>
+    <string name="locale_plugin_title">Klick\'r シナリオを起動</string>
+    <string name="locale_plugin_description">Klick\'r で準備するシナリオを選択します。準備ができたら Klick\'r で再生を押してください。</string>
+    <string name="locale_plugin_scenario_hint">シナリオ</string>
+    <string name="locale_plugin_no_scenarios">このアクションを設定する前に Klick\'r でシナリオを作成してください。</string>
+    <string name="locale_plugin_deleted_scenario">以前選択したシナリオは存在しません。別のシナリオを選択してください。</string>
+    <string name="locale_plugin_smart_note">スマートシナリオは、Klick\'r に有効なキャプチャセッションがない場合、起動時に画面キャプチャ権限を求めます。</string>
+    <string name="locale_plugin_save">保存</string>
+    <string name="locale_plugin_cancel">キャンセル</string>
+    <string name="locale_plugin_blurb_launch">%1$s を起動（%2$s）</string>
+    <string name="locale_plugin_blurb_stop">Klick\'r を停止</string>
+    <string name="locale_plugin_type_smart">スマート</string>
+    <string name="locale_plugin_type_dumb">シンプル</string>
+    <string name="locale_plugin_scenario_icon">シナリオの種類</string>
+    <string name="locale_plugin_notification_channel">自動化の起動</string>
+    <string name="locale_plugin_notification_launch_title">Klick\'r の起動を完了</string>
+    <string name="locale_plugin_notification_launch_text">タップして %1$s を起動</string>
+    <string name="locale_plugin_notification_error_title">Klick\'r の自動化に対応が必要です</string>
+    <string name="locale_plugin_error_invalid">保存したアクションは無効です。自動化アプリで開いて再度保存してください。</string>
+    <string name="locale_plugin_error_missing_scenario">選択したシナリオは存在しません。自動化アプリでこのアクションを編集してください。</string>
+    <string name="locale_plugin_error_permissions">Klick\'r に必要な権限が許可されていません。</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r を直接開けませんでした。代替手段の通知も無効です。</string>
+    <string name="locale_plugin_error_projection">画面キャプチャ権限が許可されていません。</string>
+    <string name="external_action_event_plugin_name">Klick\'r 外部アクション</string>
+    <string name="external_action_event_title">外部アクションを選択</string>
+    <string name="external_action_event_subtitle">スマートシナリオで選択した外部アクションが実行されたときに、この自動化を実行します。</string>
+    <string name="external_action_event_name_hint">外部アクション</string>
+    <string name="external_action_event_description">名前は Klick\'r のスマートシナリオに保存された外部アクションと一致する必要があります。名前は秘密ではないため、機密性の高い自動化の保護には使用しないでください。</string>
+    <string name="external_action_event_empty">まず Klick\'r のスマートシナリオに外部アクションを作成してから、ここに戻ってください。</string>
+    <string name="external_action_event_missing_name">この保存名は現在 Klick\'r で使われていません。そのまま保存するか、別の名前を選べます。</string>
+    <string name="external_action_event_blurb">外部アクション: %1$s</string>
+</resources>

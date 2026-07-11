@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Запустити Klick\'r</string>
+    <string name="tile_label_stop_scenario">Зупинити Klick\'r</string>
+    <string name="tile_subtext_unavailable">Сценарій не визначено</string>
+    <string name="locale_plugin_launch_name">Запустити сценарій Klick\'r</string>
+    <string name="locale_plugin_stop_name">Зупинити Klick\'r</string>
+    <string name="locale_plugin_title">Запустити сценарій Klick\'r</string>
+    <string name="locale_plugin_description">Виберіть сценарій, який має підготувати Klick\'r. Коли будете готові, натисніть «Відтворити» в Klick\'r.</string>
+    <string name="locale_plugin_scenario_hint">Сценарій</string>
+    <string name="locale_plugin_no_scenarios">Створіть сценарій у Klick\'r перед налаштуванням цієї дії.</string>
+    <string name="locale_plugin_deleted_scenario">Раніше вибраний сценарій більше не існує. Виберіть інший.</string>
+    <string name="locale_plugin_smart_note">Розумні сценарії запитують дозвіл на запис екрана під час запуску, якщо Klick\'r ще не має активного сеансу захоплення.</string>
+    <string name="locale_plugin_save">Зберегти</string>
+    <string name="locale_plugin_cancel">Скасувати</string>
+    <string name="locale_plugin_blurb_launch">Запустити %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Зупинити Klick\'r</string>
+    <string name="locale_plugin_type_smart">Розумний</string>
+    <string name="locale_plugin_type_dumb">Простий</string>
+    <string name="locale_plugin_scenario_icon">Тип сценарію</string>
+    <string name="locale_plugin_notification_channel">Запуски автоматизації</string>
+    <string name="locale_plugin_notification_launch_title">Завершити запуск Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Торкніться, щоб запустити %1$s</string>
+    <string name="locale_plugin_notification_error_title">Автоматизація Klick\'r потребує уваги</string>
+    <string name="locale_plugin_error_invalid">Збережена дія більше недійсна. Відкрийте її та збережіть знову в застосунку автоматизації.</string>
+    <string name="locale_plugin_error_missing_scenario">Вибраний сценарій більше не існує. Відредагуйте цю дію в застосунку автоматизації.</string>
+    <string name="locale_plugin_error_permissions">Не надано необхідні дозволи Klick\'r.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r не вдалося відкрити безпосередньо, а сповіщення для запасного варіанту вимкнено.</string>
+    <string name="locale_plugin_error_projection">Дозвіл на запис екрана не надано.</string>
+    <string name="external_action_event_plugin_name">Зовнішня дія Klick\'r</string>
+    <string name="external_action_event_title">Виберіть зовнішню дію</string>
+    <string name="external_action_event_subtitle">Запускайте цю автоматизацію, коли розумний сценарій виконує вибрану зовнішню дію.</string>
+    <string name="external_action_event_name_hint">Зовнішня дія</string>
+    <string name="external_action_event_description">Назва має збігатися із зовнішньою дією, збереженою в розумному сценарії Klick\'r. Назви не є секретними, тому не використовуйте їх для захисту важливої автоматизації.</string>
+    <string name="external_action_event_empty">Спочатку створіть зовнішню дію в розумному сценарії Klick\'r, а потім поверніться сюди.</string>
+    <string name="external_action_event_missing_name">Ця збережена назва зараз не використовується в Klick\'r. Її можна зберегти або вибрати іншу.</string>
+    <string name="external_action_event_blurb">Зовнішня дія: %1$s</string>
+</resources>

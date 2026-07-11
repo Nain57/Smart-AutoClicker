@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Lancer Klick\'r</string>
+    <string name="tile_label_stop_scenario">Stop Klick\'r</string>
+    <string name="tile_subtext_unavailable">Aucun Scenario défini</string>
+    <string name="locale_plugin_launch_name">Lancer un scénario Klick\'r</string>
+    <string name="locale_plugin_stop_name">Arrêter Klick\'r</string>
+    <string name="locale_plugin_title">Lancer un scénario Klick\'r</string>
+    <string name="locale_plugin_description">Choisissez le scénario que Klick\'r doit préparer. Appuyez sur Lecture dans Klick\'r lorsque vous êtes prêt.</string>
+    <string name="locale_plugin_scenario_hint">Scénario</string>
+    <string name="locale_plugin_no_scenarios">Créez un scénario dans Klick\'r avant de configurer cette action.</string>
+    <string name="locale_plugin_deleted_scenario">Le scénario sélectionné précédemment n\'existe plus. Choisissez-en un autre.</string>
+    <string name="locale_plugin_smart_note">Les scénarios intelligents demandent l\'autorisation de capture d\'écran au lancement, sauf si Klick\'r dispose déjà d\'une session active.</string>
+    <string name="locale_plugin_save">Enregistrer</string>
+    <string name="locale_plugin_cancel">Annuler</string>
+    <string name="locale_plugin_blurb_launch">Lancer %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Arrêter Klick\'r</string>
+    <string name="locale_plugin_type_smart">Intelligent</string>
+    <string name="locale_plugin_type_dumb">Simple</string>
+    <string name="locale_plugin_scenario_icon">Type de scénario</string>
+    <string name="locale_plugin_notification_channel">Lancements d\'automatisation</string>
+    <string name="locale_plugin_notification_launch_title">Terminer le lancement de Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Appuyez pour lancer %1$s</string>
+    <string name="locale_plugin_notification_error_title">L\'automatisation Klick\'r nécessite votre attention</string>
+    <string name="locale_plugin_error_invalid">Cette action enregistrée n\'est plus valide. Ouvrez-la et enregistrez-la à nouveau dans votre application d\'automatisation.</string>
+    <string name="locale_plugin_error_missing_scenario">Le scénario sélectionné n\'existe plus. Modifiez cette action dans votre application d\'automatisation.</string>
+    <string name="locale_plugin_error_permissions">Les autorisations Klick\'r requises n\'ont pas été accordées.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r n\'a pas pu s\'ouvrir directement et les notifications sont désactivées pour le mode de secours.</string>
+    <string name="locale_plugin_error_projection">L\'autorisation de capture d\'écran n\'a pas été accordée.</string>
+    <string name="external_action_event_plugin_name">Action externe Klick\'r</string>
+    <string name="external_action_event_title">Choisir une action externe</string>
+    <string name="external_action_event_subtitle">Exécutez cette automatisation lorsqu\'un scénario intelligent déclenche l\'action externe sélectionnée.</string>
+    <string name="external_action_event_name_hint">Action externe</string>
+    <string name="external_action_event_description">Le nom doit correspondre à une action externe enregistrée dans un scénario intelligent Klick\'r. Les noms ne sont pas secrets : ne les utilisez pas pour protéger des automatisations sensibles.</string>
+    <string name="external_action_event_empty">Créez d\'abord une action externe dans un scénario intelligent Klick\'r, puis revenez ici.</string>
+    <string name="external_action_event_missing_name">Ce nom enregistré n\'est pas utilisé actuellement dans Klick\'r. Vous pouvez l\'enregistrer tel quel ou en choisir un autre.</string>
+    <string name="external_action_event_blurb">Action externe : %1$s</string>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label_launch_scenario">啟動 Klick\'r</string>
+    <string name="tile_label_stop_scenario">停止 Klick\'r</string>
+    <string name="tile_subtext_unavailable">尚未定義情境</string>
+    <string name="locale_plugin_launch_name">啟動 Klick\'r 情境</string>
+    <string name="locale_plugin_stop_name">停止 Klick\'r</string>
+    <string name="locale_plugin_title">啟動 Klick\'r 情境</string>
+    <string name="locale_plugin_description">選擇 Klick\'r 要準備的情境。準備好後，在 Klick\'r 中按下播放。</string>
+    <string name="locale_plugin_scenario_hint">情境</string>
+    <string name="locale_plugin_no_scenarios">請先在 Klick\'r 中建立情境，再設定此動作。</string>
+    <string name="locale_plugin_deleted_scenario">先前選取的情境已不存在。請選擇其他情境。</string>
+    <string name="locale_plugin_smart_note">啟動智慧情境時會要求螢幕擷取權限，除非 Klick\'r 已有作用中的擷取工作階段。</string>
+    <string name="locale_plugin_save">儲存</string>
+    <string name="locale_plugin_cancel">取消</string>
+    <string name="locale_plugin_blurb_launch">啟動 %1$s（%2$s）</string>
+    <string name="locale_plugin_blurb_stop">停止 Klick\'r</string>
+    <string name="locale_plugin_type_smart">智慧</string>
+    <string name="locale_plugin_type_dumb">簡單</string>
+    <string name="locale_plugin_scenario_icon">情境類型</string>
+    <string name="locale_plugin_notification_channel">自動化啟動</string>
+    <string name="locale_plugin_notification_launch_title">完成 Klick\'r 啟動</string>
+    <string name="locale_plugin_notification_launch_text">點按以啟動 %1$s</string>
+    <string name="locale_plugin_notification_error_title">Klick\'r 自動化需要處理</string>
+    <string name="locale_plugin_error_invalid">儲存的動作已無效。請在自動化應用程式中重新開啟並儲存。</string>
+    <string name="locale_plugin_error_missing_scenario">所選情境已不存在。請在自動化應用程式中編輯此動作。</string>
+    <string name="locale_plugin_error_permissions">未授予 Klick\'r 所需的權限。</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r 無法直接開啟，且備用通知已停用。</string>
+    <string name="locale_plugin_error_projection">未授予螢幕擷取權限。</string>
+    <string name="external_action_event_plugin_name">Klick\'r 外部動作</string>
+    <string name="external_action_event_title">選擇外部動作</string>
+    <string name="external_action_event_subtitle">當智慧情境觸發所選外部動作時執行此自動化。</string>
+    <string name="external_action_event_name_hint">外部動作</string>
+    <string name="external_action_event_description">名稱必須與 Klick\'r 智慧情境中儲存的外部動作一致。名稱並非秘密，請勿用它來保護敏感的自動化操作。</string>
+    <string name="external_action_event_empty">請先在 Klick\'r 智慧情境中建立外部動作，然後返回此處。</string>
+    <string name="external_action_event_missing_name">此儲存名稱目前未在 Klick\'r 中使用。可以原樣儲存，也可以選擇其他名稱。</string>
+    <string name="external_action_event_blurb">外部動作：%1$s</string>
+</resources>

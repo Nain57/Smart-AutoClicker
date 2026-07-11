@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Avvia Klick\'r</string>
+    <string name="tile_label_stop_scenario">Fermare Klick\'r</string>
+    <string name="tile_subtext_unavailable">Nessuno scenario definito</string>
+    <string name="locale_plugin_launch_name">Avvia scenario Klick\'r</string>
+    <string name="locale_plugin_stop_name">Arresta Klick\'r</string>
+    <string name="locale_plugin_title">Avvia scenario Klick\'r</string>
+    <string name="locale_plugin_description">Scegli lo scenario che Klick\'r deve preparare. Premi Riproduci in Klick\'r quando sei pronto.</string>
+    <string name="locale_plugin_scenario_hint">Scenario</string>
+    <string name="locale_plugin_no_scenarios">Crea uno scenario in Klick\'r prima di configurare questa azione.</string>
+    <string name="locale_plugin_deleted_scenario">Lo scenario selezionato in precedenza non esiste più. Scegline un altro.</string>
+    <string name="locale_plugin_smart_note">Gli scenari smart richiedono l\'autorizzazione per la cattura dello schermo all\'avvio, a meno che Klick\'r non abbia già una sessione attiva.</string>
+    <string name="locale_plugin_save">Salva</string>
+    <string name="locale_plugin_cancel">Annulla</string>
+    <string name="locale_plugin_blurb_launch">Avvia %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Arresta Klick\'r</string>
+    <string name="locale_plugin_type_smart">Smart</string>
+    <string name="locale_plugin_type_dumb">Semplice</string>
+    <string name="locale_plugin_scenario_icon">Tipo di scenario</string>
+    <string name="locale_plugin_notification_channel">Avvii dell\'automazione</string>
+    <string name="locale_plugin_notification_launch_title">Completa l\'avvio di Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Tocca per avviare %1$s</string>
+    <string name="locale_plugin_notification_error_title">L\'automazione Klick\'r richiede attenzione</string>
+    <string name="locale_plugin_error_invalid">Questa azione salvata non è più valida. Aprila e salvala di nuovo nell\'app di automazione.</string>
+    <string name="locale_plugin_error_missing_scenario">Lo scenario selezionato non esiste più. Modifica questa azione nell\'app di automazione.</string>
+    <string name="locale_plugin_error_permissions">Le autorizzazioni richieste di Klick\'r non sono state concesse.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r non ha potuto aprirsi direttamente e le notifiche sono disattivate per il ripiego.</string>
+    <string name="locale_plugin_error_projection">L\'autorizzazione per la cattura dello schermo non è stata concessa.</string>
+    <string name="external_action_event_plugin_name">Azione esterna di Klick\'r</string>
+    <string name="external_action_event_title">Scegli azione esterna</string>
+    <string name="external_action_event_subtitle">Esegui questa automazione quando uno scenario smart attiva l\'azione esterna selezionata.</string>
+    <string name="external_action_event_name_hint">Azione esterna</string>
+    <string name="external_action_event_description">Il nome deve corrispondere a un\'azione esterna salvata in uno scenario smart di Klick\'r. I nomi non sono segreti, quindi non usarli per proteggere automazioni sensibili.</string>
+    <string name="external_action_event_empty">Crea prima un\'azione esterna in uno scenario smart di Klick\'r, poi torna qui.</string>
+    <string name="external_action_event_missing_name">Questo nome salvato non è attualmente usato in Klick\'r. Puoi salvarlo invariato o sceglierne un altro.</string>
+    <string name="external_action_event_blurb">Azione esterna: %1$s</string>
+</resources>
