@@ -18,8 +18,6 @@ package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Rect
 
-import android.graphics.Rect
-
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType

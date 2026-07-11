@@ -29,6 +29,13 @@
 
 namespace smartautoclicker {
 
+    /** How to interpret the decimal and thousands separators in a detected number string. */
+    enum class NumberFormat {
+        AUTO        = 0,
+        DOT_DECIMAL = 1,
+        COMMA_DECIMAL = 2,
+    };
+
     /**
      * Orchestrates the text matching process by combining text detection and recognition.
      * It locates text areas on the screen, converts them to strings using OCR, and compares
@@ -63,11 +70,13 @@ namespace smartautoclicker {
         static bool isNumber(const std::string& text);
 
         /**
-         * Parses a string into a double, removing spaces and handling commas.
+         * Parses a string into a double according to the given number format.
+         * AUTO infers the format from the structure of the string.
          * @param text The text to parse.
+         * @param format How to interpret decimal and thousands separators.
          * @return The double value, or std::numeric_limits<double>::lowest() on failure.
          */
-        static double stringToDouble(const std::string& text);
+        static double stringToDouble(const std::string& text, NumberFormat format);
 
         /**
          * Runs the text detection and recognition on a specific area of the screen.
@@ -156,7 +165,8 @@ namespace smartautoclicker {
         TextMatchingResult* matchNumber(
                 const ScreenImage& screenImage,
                 const cv::Rect& detectionArea,
-                int threshold);
+                int threshold,
+                NumberFormat numberFormat = NumberFormat::AUTO);
     };
 }
 

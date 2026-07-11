@@ -26,6 +26,7 @@
 #include "matching/template/template_matcher.hpp"
 #include "matching/template/template_matching_result.hpp"
 #include "matching/text/text_matcher.hpp"
+#include "matching/text/text_matching_result.hpp"
 #include "images/condition_image.hpp"
 #include "images/screen_image.hpp"
 
@@ -66,7 +67,7 @@ namespace smartautoclicker {
                 const cv::Rect &roi,
                 int threshold);
 
-        TextMatchingResult* detectNumber(const cv::Rect& roi, int threshold);
+        TextMatchingResult* detectNumber(const cv::Rect& roi, int threshold, NumberFormat numberFormat);
     };
 }
 

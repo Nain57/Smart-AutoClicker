@@ -80,8 +80,9 @@ TextMatchingResult* TextMatcher::matchText(
 TextMatchingResult* TextMatcher::matchNumber(
         const ScreenImage& screenImage,
         const cv::Rect& detectionArea,
-        int threshold)
-{
+        int threshold,
+        NumberFormat numberFormat
+) {
     clearResults();
 
     if (!isInitialized() || !isRoiValidForMatching(screenImage.getRoi(), detectionArea)) {
@@ -103,7 +104,8 @@ TextMatchingResult* TextMatcher::matchNumber(
         if (!isNumber(recognizerResult.text)) continue;
 
         float score = recognizerResult.confidence * 100;
-        LOGD("TextMatcher", "Score=%f; recognized=%s", score, recognizerResult.text.c_str());
+        auto recognizedNumber = stringToDouble(recognizerResult.text, numberFormat);
+        LOGD("TextMatcher", "Score=%f; recognized=%f", score, recognizedNumber);
 
         // Score is below the best confidence, skip
         if (score < currentMatchingResult.getResultConfidence()) continue;
@@ -112,7 +114,7 @@ TextMatchingResult* TextMatcher::matchNumber(
                 detectionArea,
                 recognizerResult.boundingBox,
                 score,
-                stringToDouble(recognizerResult.text));
+                recognizedNumber);
 
         if ((int) score >= threshold) {
             currentMatchingResult.markResultAsDetected();
@@ -266,12 +268,53 @@ bool TextMatcher::isNumber(const std::string& text) {
     return hasDigit;
 }
 
-double TextMatcher::stringToDouble(const std::string& text) {
-    std::string sanitized = text;
+double TextMatcher::stringToDouble(const std::string& text, NumberFormat format) {
+    std::string s = text;
     // Remove spaces
-    sanitized.erase(std::remove(sanitized.begin(), sanitized.end(), ' '), sanitized.end());
-    // Replace comma with dot
-    std::replace(sanitized.begin(), sanitized.end(), ',', '.');
+    s.erase(std::remove(s.begin(), s.end(), ' '), s.end());
+
+    char decimalSep;
+    char thousandsSep;
+
+    if (format == NumberFormat::DOT_DECIMAL) {
+        decimalSep   = '.';
+        thousandsSep = ',';
+    } else if (format == NumberFormat::COMMA_DECIMAL) {
+        decimalSep   = ',';
+        thousandsSep = '.';
+    } else {
+        // AUTO: infer from structure.
+        // If both separators are present, the last one is the decimal separator.
+        size_t lastDot   = s.rfind('.');
+        size_t lastComma = s.rfind(',');
+
+        if (lastDot != std::string::npos && lastComma != std::string::npos) {
+            decimalSep   = (lastDot > lastComma) ? '.' : ',';
+            thousandsSep = (lastDot > lastComma) ? ',' : '.';
+        } else if (lastComma != std::string::npos) {
+            // Only a comma: thousands separator if exactly 3 digits follow it, else decimal.
+            size_t digitsAfterComma = s.size() - lastComma - 1;
+            if (digitsAfterComma == 3 && lastComma > 0) {
+                decimalSep   = '.';
+                thousandsSep = ',';
+            } else {
+                decimalSep   = ',';
+                thousandsSep = '.';
+            }
+        } else {
+            // Only a dot (or none): treat dot as decimal separator.
+            decimalSep   = '.';
+            thousandsSep = ',';
+        }
+    }
+
+    // Strip thousands separators, then normalise decimal separator to '.'.
+    std::string sanitized;
+    sanitized.reserve(s.size());
+    for (char c : s) {
+        if (c == thousandsSep) continue;
+        sanitized += (c == decimalSep) ? '.' : c;
+    }
 
     try {
         return std::stod(sanitized);

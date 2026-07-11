@@ -196,13 +196,17 @@ extern "C" {
             jint y,
             jint width,
             jint height,
-            jint threshold
+            jint threshold,
+            jint numberFormat
     ) {
         auto detector = getDetectorFromJavaRef(env, self);
         if (!detector) return nullptr;
 
         try {
-            return toJniResult(env, detector->detectNumber(cv::Rect(x, y, width, height), threshold));
+            return toJniResult(env, detector->detectNumber(
+                    cv::Rect(x, y, width, height),
+                    threshold,
+                    static_cast<NumberFormat>(numberFormat)));
         } catch (...) {
             throwRuntimeException(env, "Invalid detection arguments for number detection");
         }

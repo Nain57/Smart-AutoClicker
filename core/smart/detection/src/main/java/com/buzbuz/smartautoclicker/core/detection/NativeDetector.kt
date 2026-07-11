@@ -169,7 +169,7 @@ class NativeDetector private constructor() : ImageDetector {
         }
     }
 
-    override fun detectNumber(detectionArea: Rect, threshold: Int): DetectionResult {
+    override fun detectNumber(detectionArea: Rect, threshold: Int, numberFormatType: NumberFormatType): DetectionResult {
         if (isClosed) return DetectionResult()
 
         return try {
@@ -178,7 +178,8 @@ class NativeDetector private constructor() : ImageDetector {
                 y = detectionArea.top,
                 width = detectionArea.width(),
                 height = detectionArea.height(),
-                threshold
+                threshold = threshold,
+                numberFormat = numberFormatType.ordinal,
             ).toDetectionResult()
         } catch (ex: Exception) {
             ex.throwWithKeys(
@@ -305,6 +306,7 @@ class NativeDetector private constructor() : ImageDetector {
         width: Int,
         height: Int,
         threshold: Int,
+        numberFormat: Int,
     ): DoubleArray?
 
     /** Native method for releasing the screen image resources set with [setScreenImage]. */

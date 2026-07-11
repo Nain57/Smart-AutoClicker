@@ -44,6 +44,6 @@ internal fun DoubleArray?.toDetectionResult(): DetectionResult {
         position = Point(this[1].toInt(), this[2].toInt()),
         size = Point(this[3].toInt(), this[4].toInt()),
         confidenceRate = this[5],
-        numberDetected = if(numberDetected == Double.MIN_VALUE) null else numberDetected,
+        numberDetected = if(numberDetected == -Double.MAX_VALUE) null else numberDetected,
     )
 }

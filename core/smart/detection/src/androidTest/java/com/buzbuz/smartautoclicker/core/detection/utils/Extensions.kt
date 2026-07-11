@@ -20,11 +20,41 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.buzbuz.smartautoclicker.core.detection.data.TestImage
+import java.io.File
 
 
 internal fun Context.loadTestBitmap(image: TestImage) : Bitmap {
     return resources.openRawResource(image.fileRes).use { inputStream ->
         BitmapFactory.decodeStream(inputStream)
             ?: throw IllegalArgumentException("Test image file ${image.fileRes} can't be decoded")
+    }
+}
+
+/**
+ * Extracts the bundled OCR model assets to the device filesystem and returns the paths required
+ * by [com.buzbuz.smartautoclicker.core.detection.ImageDetector.loadTextDetectionModels].
+ *
+ * @return Pair of (detectionModelDirPath, recognitionModels map).
+ */
+internal fun Context.extractTestOcrModels(): Pair<String, Map<String, String>> {
+    val modelsRoot = File(cacheDir, "test_ocr_models")
+
+    val detectDir = File(modelsRoot, "detect").also { it.mkdirs() }
+    val latinDir  = File(modelsRoot, "recognize/latin").also { it.mkdirs() }
+
+    copyAssetDir("models/text/detect",          detectDir)
+    copyAssetDir("models/text/recognize/latin", latinDir)
+
+    return detectDir.absolutePath to mapOf("latin" to latinDir.absolutePath)
+}
+
+private fun Context.copyAssetDir(assetDir: String, targetDir: File) {
+    assets.list(assetDir)?.forEach { filename ->
+        val target = File(targetDir, filename)
+        if (!target.exists()) {
+            assets.open("$assetDir/$filename").use { input ->
+                target.outputStream().use { output -> input.copyTo(output) }
+            }
+        }
     }
 }

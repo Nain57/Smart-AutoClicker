@@ -115,6 +115,7 @@ interface ImageDetector : AutoCloseable {
     fun detectNumber(
         detectionArea: Rect,
         threshold: Int,
+        numberFormatType: NumberFormatType = NumberFormatType.AUTO,
     ): DetectionResult
 
     /** Release the resources of the screen image set with [setScreenBitmap]. */

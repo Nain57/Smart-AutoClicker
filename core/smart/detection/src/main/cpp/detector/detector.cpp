@@ -98,6 +98,6 @@ TextMatchingResult* Detector::detectText(const char* textCondition, const char* 
             threshold);
 }
 
-TextMatchingResult* Detector::detectNumber(const cv::Rect& roi, int threshold) {
-    return textMatcher->matchNumber(*screenImage, roi, threshold);
+TextMatchingResult* Detector::detectNumber(const cv::Rect& roi, int threshold, NumberFormat numberFormat) {
+    return textMatcher->matchNumber(*screenImage, roi, threshold, numberFormat);
 }

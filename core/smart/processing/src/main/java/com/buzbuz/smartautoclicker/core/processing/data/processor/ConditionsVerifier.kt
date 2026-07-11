@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 import android.graphics.Bitmap
 
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.detection.NumberFormatType as DetectionNumberFormatType
+import com.buzbuz.smartautoclicker.core.domain.model.condition.NumberFormatType as DomainNumberFormatType
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
@@ -196,6 +198,7 @@ internal class ConditionsVerifier(
         val detectionResult = imageDetector.detectNumber(
             detectionArea = conditionScalingInfo.detectionArea,
             threshold = condition.threshold,
+            numberFormatType = condition.numberFormatType.toDetectionNumberFormatType(),
         )
 
         val numberDetected: Double? = detectionResult.numberDetected
@@ -272,3 +275,10 @@ internal class ConditionsVerifier(
             condition = this,
         )
 }
+
+private fun DomainNumberFormatType.toDetectionNumberFormatType(): DetectionNumberFormatType =
+    when (this) {
+        DomainNumberFormatType.AUTO -> DetectionNumberFormatType.AUTO
+        DomainNumberFormatType.DOT_DECIMAL -> DetectionNumberFormatType.DOT_DECIMAL
+        DomainNumberFormatType.COMMA_DECIMAL -> DetectionNumberFormatType.COMMA_DECIMAL
+    }
