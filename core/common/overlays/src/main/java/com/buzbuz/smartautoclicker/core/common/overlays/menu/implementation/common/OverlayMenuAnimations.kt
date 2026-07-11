@@ -60,13 +60,23 @@ internal class OverlayMenuAnimations : Dumpable {
 
     fun startShowAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         if (showAnimationIsRunning) return
+        showAnimationIsRunning = true
 
         Log.d(TAG, "Start show animation on view ${view} with visibility ${view.visibility}")
 
-        showAnimationIsRunning = true
+        val timeoutCallback = Runnable {
+            Log.w(TAG, "Show animation timeout !")
+            showAnimationIsRunning = false
+            showOverlayMenuAnimation.cancel()
+            showOverlayViewAnimation.cancel()
+            onAnimationEnded()
+        }
+        view.postDelayed(timeoutCallback, 1_000)
+
         showOverlayMenuAnimation.setListener(
             end = {
                 Log.d(TAG, "Show animation ended")
+                view.removeCallbacks(timeoutCallback)
                 showAnimationIsRunning = false
                 onAnimationEnded()
             }
@@ -88,13 +98,23 @@ internal class OverlayMenuAnimations : Dumpable {
 
     fun startHideAnimation(view: View, overlayView: View? = null, onAnimationEnded: () -> Unit) {
         if (hideAnimationIsRunning) return
+        hideAnimationIsRunning = true
 
         Log.d(TAG, "Start hide animation")
 
-        hideAnimationIsRunning = true
+        val timeoutCallback = Runnable {
+            Log.w(TAG, "Hide animation timeout !")
+            hideAnimationIsRunning = false
+            hideOverlayMenuAnimation.cancel()
+            hideOverlayViewAnimation.cancel()
+            onAnimationEnded()
+        }
+
+        view.postDelayed(timeoutCallback, 1_000)
         hideOverlayMenuAnimation.setListener(
             end = {
                 Log.d(TAG, "Hide animation ended")
+                view.removeCallbacks(timeoutCallback)
                 hideAnimationIsRunning = false
                 onAnimationEnded()
             }

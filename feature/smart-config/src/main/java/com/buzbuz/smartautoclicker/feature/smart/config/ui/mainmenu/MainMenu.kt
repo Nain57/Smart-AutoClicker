@@ -22,12 +22,13 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import androidx.core.view.isVisible
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
 import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
@@ -35,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager.Companion.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -51,7 +53,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 /**
  * [OverlayMenu] implementation for displaying the main menu overlay.
@@ -158,6 +159,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onStop() {
         super.onStop()
         viewModel.stopViewMonitoring()
+        viewBinding.btnPlay.tag = null
     }
 
     override fun onDestroy() {
@@ -253,6 +255,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         when (newState) {
             UiState.Idle -> {
                 if (currentState == null) {
+                    viewBinding.btnStop.isVisible = true
+                    viewBinding.btnClickList.isVisible = true
                     playPauseButtonController.toState1(false)
                 } else {
                     animateLayoutChanges {
@@ -265,6 +269,8 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
             UiState.Detecting -> {
                 if (currentState == null) {
+                    viewBinding.btnStop.isVisible = false
+                    viewBinding.btnClickList.isVisible = false
                     playPauseButtonController.toState2(false)
                 } else {
                     animateLayoutChanges {
