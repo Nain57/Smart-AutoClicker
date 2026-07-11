@@ -113,7 +113,7 @@ class ScenarioViewModel @Inject constructor(
             if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
         }
 
-        serviceConnection.getLocalService()?.startSmartScenario(resultCode, data, scenario)
+        serviceConnection.getLocalService()?.launchSmartScenario(resultCode, data, scenario)
         return true
     }
 
@@ -123,7 +123,7 @@ class ScenarioViewModel @Inject constructor(
             if (foregroundPermission != PermissionChecker.PERMISSION_GRANTED) return false
         }
 
-        serviceConnection.getLocalService()?.startDumbScenario(scenario)
+        serviceConnection.getLocalService()?.launchDumbScenario(scenario)
         return true
     }
 

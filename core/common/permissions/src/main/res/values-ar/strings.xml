@@ -49,4 +49,6 @@
     <string name="button_request_permission">طلب إذن</string>
     <string name="button_deny">ينكر</string>
 
+    <string name="dialog_title_permission_launch_fallback_notification">إشعارات بدء التشغيل الاحتياطية</string>
+    <string name="message_permission_desc_launch_fallback_notification">اختياري: يسمح لـ Klick\'r بعرض إشعار لإكمال بدء سيناريو عندما لا يتمكن تطبيق الأتمتة من فتحه مباشرةً، مثلما يكون الهاتف مقفلاً.</string>
 </resources>

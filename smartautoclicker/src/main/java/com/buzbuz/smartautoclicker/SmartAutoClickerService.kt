@@ -42,8 +42,8 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
-import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
+import com.buzbuz.smartautoclicker.feature.externallaunch.domain.ExternalLaunchActionHandler
+import com.buzbuz.smartautoclicker.feature.externallaunch.domain.ExternalLaunchRepository
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
 import com.buzbuz.smartautoclicker.localservice.LocalService
@@ -81,7 +81,7 @@ class SmartAutoClickerService : AccessibilityService() {
     @Inject lateinit var qualityMetricsMonitor: QualityMetricsMonitor
     @Inject lateinit var settingsRepository: SettingsRepository
     @Inject lateinit var revenueRepository: IRevenueRepository
-    @Inject lateinit var tileRepository: QSTileRepository
+    @Inject lateinit var externalLaunchRepository: ExternalLaunchRepository
     @Inject lateinit var reviewRepository: ReviewRepository
     @Inject lateinit var appComponentsProvider: AppComponentsProvider
     @Inject lateinit var actionExecutor: AndroidActionExecutor
@@ -94,14 +94,31 @@ class SmartAutoClickerService : AccessibilityService() {
         qualityMetricsMonitor.onServiceConnected()
         actionExecutor.init(this)
 
-        tileRepository.setTileActionHandler(
-            object : QSTileActionHandler {
+        externalLaunchRepository.setActionHandler(
+            object : ExternalLaunchActionHandler {
                 override fun isRunning(): Boolean = localServiceConnection.isServiceStarted()
-                override fun startDumbScenario(dumbScenario: DumbScenario) {
-                    localServiceConnection.getLocalService()?.startDumbScenario(dumbScenario)
+                override fun isScenarioConfigurationOpen(): Boolean =
+                    overlayManager.hasVisibleOverlayAboveRoot()
+                override fun isSmartScreenRecordActive(): Boolean =
+                    localServiceConnection.getLocalService()?.isSmartScreenRecordActive() ?: false
+                override fun getSmartScenarioId(): Long? =
+                    localServiceConnection.getLocalService()?.getSmartScenarioId()
+                override fun getDumbScenarioId(): Long? =
+                    localServiceConnection.getLocalService()?.getDumbScenarioId()
+                override fun launchDumbScenario(dumbScenario: DumbScenario) {
+                    localServiceConnection.getLocalService()?.launchDumbScenario(dumbScenario)
                 }
-                override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
-                    localServiceConnection.getLocalService()?.startSmartScenario(resultCode, data, scenario)
+                override fun launchSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
+                    localServiceConnection.getLocalService()?.launchSmartScenario(resultCode, data, scenario)
+                }
+                override fun replaceDumbScenario(dumbScenario: DumbScenario) {
+                    localServiceConnection.getLocalService()?.replaceDumbScenario(dumbScenario)
+                }
+                override fun replaceSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
+                    localServiceConnection.getLocalService()?.replaceSmartScenario(resultCode, data, scenario)
+                }
+                override fun replaceSmartScenarioWithCurrentProjection(scenario: Scenario) {
+                    localServiceConnection.getLocalService()?.replaceSmartScenarioWithCurrentProjection(scenario)
                 }
                 override fun stop() {
                     localServiceConnection.getLocalService()?.stopScenario()
@@ -148,7 +165,7 @@ class SmartAutoClickerService : AccessibilityService() {
         requestFilterKeyEvents(true)
 
         displayConfigManager.startMonitoring(this)
-        tileRepository.setTileScenario(scenarioId = scenarioId, isSmart = isSmart)
+        externalLaunchRepository.setTileScenario(scenarioId = scenarioId, isSmart = isSmart)
     }
 
     private fun onLocalServiceStopped() {

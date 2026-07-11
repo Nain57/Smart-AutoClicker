@@ -157,4 +157,6 @@
     <string name="button_import">Импортировать</string>
     <string name="button_export">Экспортировать</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Фоновый запуск заблокирован</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r не удалось автоматически открыть окно записи экрана.\n\nЧтобы завершить запуск сценария, было показано уведомление.\n\nНекоторые телефоны Android сильнее ограничивают фоновые приложения. Обратитесь к этому руководству, чтобы повысить стабильность разрешений.</string>
 </resources>

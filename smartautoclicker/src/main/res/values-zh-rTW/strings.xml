@@ -107,4 +107,6 @@
     <string name="button_import">匯入</string>
     <string name="button_export">匯出</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">背景啟動遭到封鎖</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r 無法自動開啟螢幕擷取提示。\n\n為了完成情境啟動，我們改為顯示通知。\n\n部分 Android 手機對背景應用程式限制更嚴格。請參考此指南以提高權限穩定性。</string>
 </resources>

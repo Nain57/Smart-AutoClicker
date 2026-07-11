@@ -49,4 +49,6 @@
     <string name="button_request_permission">Запросить разрешение</string>
     <string name="button_deny">Отклонить</string>
 
+    <string name="dialog_title_permission_launch_fallback_notification">Уведомления для запасного запуска</string>
+    <string name="message_permission_desc_launch_fallback_notification">Необязательно: позволяет Klick\'r показать уведомление, чтобы завершить запуск сценария, когда приложение автоматизации не может открыть его напрямую, например когда телефон заблокирован.</string>
 </resources>

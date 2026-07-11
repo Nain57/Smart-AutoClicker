@@ -23,19 +23,25 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 
 import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
+import com.buzbuz.smartautoclicker.core.common.quality.ui.BackgroundLaunchTroubleshootingDialog
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
 import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
+import com.buzbuz.smartautoclicker.feature.externallaunch.localeplugin.domain.LocalePluginLaunchFailureStore
+import com.buzbuz.smartautoclicker.feature.externallaunch.localeplugin.notification.LocalePluginNotificationController
 import com.buzbuz.smartautoclicker.scenarios.viewmodel.ScenarioViewModel
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Entry point activity for the application.
@@ -47,6 +53,8 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
 
     /** ViewModel providing the click scenarios data to the UI. */
     private val scenarioViewModel: ScenarioViewModel by viewModels()
+    @Inject lateinit var localePluginLaunchFailureStore: LocalePluginLaunchFailureStore
+    @Inject lateinit var localePluginNotifications: LocalePluginNotificationController
 
     /** The result launcher for the projection permission dialog. */
     private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
@@ -75,7 +83,25 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         scenarioViewModel.refreshPurchaseState()
     }
 
-    override fun startScenario(item: ScenarioListUiState.Item.ScenarioItem) {
+    override fun onPostResume() {
+        super.onPostResume()
+        lifecycleScope.launch {
+            if (localePluginLaunchFailureStore.consumePendingDirectLaunchFailure()) {
+                showLocalePluginBackgroundLaunchHelp()
+            }
+        }
+    }
+
+    private fun showLocalePluginBackgroundLaunchHelp() {
+        if (supportFragmentManager.findFragmentByTag(BackgroundLaunchTroubleshootingDialog.FRAGMENT_TAG) != null) return
+        BackgroundLaunchTroubleshootingDialog.newInstance(
+            getString(R.string.dialog_title_locale_plugin_background_launch),
+            getString(R.string.message_locale_plugin_background_launch),
+            DONT_KILL_MY_APP_URL,
+        ).show(supportFragmentManager, BackgroundLaunchTroubleshootingDialog.FRAGMENT_TAG)
+    }
+
+    override fun launchScenario(item: ScenarioListUiState.Item.ScenarioItem) {
         requestedItem = item
 
         scenarioViewModel.startPermissionFlowIfNeeded(
@@ -87,11 +113,11 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     private fun onMandatoryPermissionsGranted() {
         scenarioViewModel.startTroubleshootingFlowIfNeeded(this) {
             when (val scenario = requestedItem?.scenario) {
-                is DumbScenario -> startDumbScenario(scenario)
+                is DumbScenario -> launchDumbScenario(scenario)
                 is Scenario -> mediaProjectionRequest.showMediaProjectionWarning(
                     context = this,
                     forceEntireScreen = scenarioViewModel.isEntireScreenCaptureForced(),
-                    onSuccess = { resultCode, data -> startSmartScenario(resultCode, data, scenario) },
+                    onSuccess = { resultCode, data -> launchSmartScenario(resultCode, data, scenario) },
                     onFailure = { showProjectionDeniedToast() },
                     onError = { showUnsupportedDeviceDialog() },
                 )
@@ -107,14 +133,14 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         createNoMediaProjectionDialog { finish() }.show()
     }
 
-    private fun startDumbScenario(scenario: DumbScenario) {
+    private fun launchDumbScenario(scenario: DumbScenario) {
         handleScenarioStartResult(scenarioViewModel.loadDumbScenario(
             context = this,
             scenario = scenario,
         ))
     }
 
-    private fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
+    private fun launchSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
         handleScenarioStartResult(scenarioViewModel.loadSmartScenario(
             context = this,
             resultCode = resultCode,
@@ -124,7 +150,10 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
     }
 
     private fun handleScenarioStartResult(result: Boolean) {
-        if (result) finish()
+        if (result) {
+            localePluginNotifications.cancelLaunchFallback()
+            finish()
+        }
         else Toast.makeText(this, R.string.toast_denied_foreground_permission, Toast.LENGTH_SHORT).show()
     }
 
@@ -132,3 +161,5 @@ class ScenarioActivity : AppCompatActivity(), ScenarioListFragment.Listener {
         Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
     }
 }
+
+private const val DONT_KILL_MY_APP_URL = "https://dontkillmyapp.com/?app=Klick%27r"
