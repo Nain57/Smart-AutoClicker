@@ -339,6 +339,9 @@ internal open class CompatDeserializer : Deserializer {
             numberCounterValue = counterOperationValue,
             numberCounterOperationCounterName = counterOperationCounterName,
             numberFormatType = jsonCondition.getEnum<NumberFormatType>("numberFormatType") ?: NumberFormatType.AUTO,
+            threshold = jsonCondition.getInt("threshold")
+                ?.coerceIn(CONDITION_THRESHOLD_LOWER_BOUND, CONDITION_THRESHOLD_UPPER_BOUND)
+                ?: CONDITION_THRESHOLD_DEFAULT_VALUE,
         )
     }
 

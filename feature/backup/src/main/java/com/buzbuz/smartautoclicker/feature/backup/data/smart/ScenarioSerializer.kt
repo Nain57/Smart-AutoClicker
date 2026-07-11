@@ -38,6 +38,8 @@ import java.io.OutputStream
 @OptIn(ExperimentalSerializationApi::class)
 internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     /**
      * Serialize a scenario.
      *
@@ -51,14 +53,14 @@ internal class ScenarioSerializer : ScenarioBackupSerializer<ScenarioBackup> {
      * Deserialize a scenario.
      * Depending of the detected version, either kotlin or compat serialization will be used.
      *
-     * @param json the stream to deserialize from.
+     * @param jsonStream the stream to deserialize from.
      *
      * @return the scenario backup deserialized from the json.
      */
-    override fun deserialize(json: InputStream): ScenarioBackup? {
+    override fun deserialize(jsonStream: InputStream): ScenarioBackup? {
         Log.d(TAG, "Deserializing smart scenario")
 
-        val jsonBackup = Json.parseToJsonElement(json.readBytes().toString(Charsets.UTF_8)).jsonObject
+        val jsonBackup = json.parseToJsonElement(jsonStream.readBytes().toString(Charsets.UTF_8)).jsonObject
         val version = jsonBackup.getInt("version", true) ?: -1
 
         val scenario = jsonBackup.getJsonObject("scenario", true)?.let { scenario ->

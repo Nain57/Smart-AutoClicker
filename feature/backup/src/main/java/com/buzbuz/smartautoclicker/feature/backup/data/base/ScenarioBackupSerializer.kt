@@ -33,9 +33,9 @@ internal interface ScenarioBackupSerializer<T> {
      * Deserialize a scenario.
      * Depending of the detected version, either kotlin or compat serialization will be used.
      *
-     * @param json the stream to deserialize from.
+     * @param jsonStream the stream to deserialize from.
      *
      * @return the scenario backup deserialized from the json.
      */
-    fun deserialize(json: InputStream): T?
+    fun deserialize(jsonStream: InputStream): T?
 }
