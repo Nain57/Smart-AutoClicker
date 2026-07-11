@@ -251,6 +251,14 @@
 
     <!-- Dialog Condition Number ==================================================================================== -->
 
+    <string name="field_number_condition_number_format_label">Detection number format</string>
+    <string name="dropdown_item_number_format_auto">Auto-detect</string>
+    <string name="dropdown_item_number_format_auto_helper">Infers separators from the number structure</string>
+    <string name="dropdown_item_number_format_dot_decimal">Dot decimal</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">Dot is decimal separator (e.g. 1,234.56)</string>
+    <string name="dropdown_item_number_format_comma_decimal">Comma decimal</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">Comma is decimal separator (e.g. 1.234,56)</string>
+
     <string name="field_number_condition_effect_title">Condition effect</string>
     <!--Ex: The detected number must be greater than 10 -->
     <string name="message_number_condition_static_value_desc">The detected number must be %1$s %2$s</string>

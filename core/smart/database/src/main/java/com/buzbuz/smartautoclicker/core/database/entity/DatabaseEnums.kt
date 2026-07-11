@@ -170,6 +170,17 @@ enum class SystemActionType {
 }
 
 
+/** Format used to parse a number detected via OCR. */
+enum class NumberFormatType {
+    /** Automatically detect the format from the number structure. */
+    AUTO,
+    /** Dot is the decimal separator, comma is the thousands separator (e.g. 1,234.56). */
+    DOT_DECIMAL,
+    /** Comma is the decimal separator, dot is the thousands separator (e.g. 1.234,56). */
+    COMMA_DECIMAL,
+}
+
+
 /** DELETED but kept because referenced in migrations/deserialization. */
 enum class NotificationMessageType {
     TEXT,

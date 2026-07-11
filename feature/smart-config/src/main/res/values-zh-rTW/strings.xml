@@ -395,6 +395,14 @@
     <string name="field_text_to_detect_label">要偵測的文字</string>
     <string name="field_text_detection_alphabet_title">字母表</string>
 
+    <string name="field_number_condition_number_format_label">數字格式</string>
+    <string name="dropdown_item_number_format_auto">自動偵測</string>
+    <string name="dropdown_item_number_format_auto_helper">根據數字結構推斷分隔符號</string>
+    <string name="dropdown_item_number_format_dot_decimal">點號小數</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">點號為小數分隔符（例：1,234.56）</string>
+    <string name="dropdown_item_number_format_comma_decimal">逗號小數</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">逗號為小數分隔符（例：1.234,56）</string>
+
     <string name="field_number_condition_effect_title">條件效果</string>
     <string name="message_number_condition_static_value_desc">偵測到的數值必須 %1$s %2$s</string>
     <string name="message_number_condition_counter_value_desc">偵測到的數值必須 %1$s 計數器 \"%2$s\" 的值</string>

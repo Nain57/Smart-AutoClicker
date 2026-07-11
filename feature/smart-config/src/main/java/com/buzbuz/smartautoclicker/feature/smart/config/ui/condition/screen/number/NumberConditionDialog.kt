@@ -47,8 +47,11 @@ import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewMod
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setSelectedOperator
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.allNumberFormatDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterComparisonOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
@@ -124,6 +127,12 @@ class NumberConditionDialog(
                 hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
 
+            fieldNumberFormat.setItems(
+                label = context.getString(R.string.field_number_condition_number_format_label),
+                items = allNumberFormatDropdownItems(),
+                onItemSelected = viewModel::setNumberFormat,
+            )
+
             fieldSelectArea.apply {
                 setTitle(context.getString(R.string.generic_detection_area_title))
                 setOnClickListener { showDetectionAreaSelector() }
@@ -192,6 +201,7 @@ class NumberConditionDialog(
             editValueLayout.setValueInfo(uiState.operandValue)
             effectDesc.text = uiState.conditionEffectDesc
 
+            fieldNumberFormat.setSelectedItem(uiState.numberFormatDropdownItem)
             fieldSelectArea.setDescription(uiState.detectionAreaDescription)
             fieldSelectArea.setError(uiState.detectionAreaError)
             fieldSliderThreshold.setSliderValue(uiState.detectionThreshold.toFloat())

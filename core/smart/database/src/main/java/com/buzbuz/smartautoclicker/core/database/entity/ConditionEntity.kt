@@ -104,6 +104,7 @@ data class ConditionEntity(
     @ColumnInfo(name = "number_counter_operation_value_type") val numberCounterOperationValueType: CounterOperationValueType? = null,
     @ColumnInfo(name = "number_counter_value") val numberCounterValue: Double? = null,
     @ColumnInfo(name = "number_counter_value_counter_name") val numberCounterOperationCounterName: String? = null,
+    @ColumnInfo(name = "number_format_type") val numberFormatType: NumberFormatType? = null,
 
     // ConditionType.ON_TEXT_DETECTED
     @ColumnInfo(name = "text_to_detect") val textToDetect: String? = null,

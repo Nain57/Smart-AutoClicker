@@ -20,6 +20,8 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
+import com.buzbuz.smartautoclicker.core.database.entity.NumberFormatType as DbNumberFormatType
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -91,6 +93,104 @@ class ConditionMapperTests {
         assertEquals(
             ConditionTestsData.getNewTimerReachedCondition(eventId = ConditionTestsData.CONDITION_EVENT_ID),
             ConditionTestsData.getNewTimerReachedConditionEntity(eventId = ConditionTestsData.CONDITION_EVENT_ID).toDomain()
+        )
+    }
+
+    @Test
+    fun numberCondition_toEntity_formatAuto() {
+        assertEquals(
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.AUTO,
+            ),
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.AUTO,
+            ).toEntity()
+        )
+    }
+
+    @Test
+    fun numberCondition_toEntity_formatDotDecimal() {
+        assertEquals(
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.DOT_DECIMAL,
+            ),
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.DOT_DECIMAL,
+            ).toEntity()
+        )
+    }
+
+    @Test
+    fun numberCondition_toEntity_formatCommaDecimal() {
+        assertEquals(
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.COMMA_DECIMAL,
+            ),
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.COMMA_DECIMAL,
+            ).toEntity()
+        )
+    }
+
+    @Test
+    fun numberCondition_toDomain_formatAuto() {
+        assertEquals(
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.AUTO,
+            ),
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.AUTO,
+            ).toDomain()
+        )
+    }
+
+    @Test
+    fun numberCondition_toDomain_formatNullFallsBackToAuto() {
+        assertEquals(
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.AUTO,
+            ),
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = null,
+            ).toDomain()
+        )
+    }
+
+    @Test
+    fun numberCondition_toDomain_formatDotDecimal() {
+        assertEquals(
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.DOT_DECIMAL,
+            ),
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.DOT_DECIMAL,
+            ).toDomain()
+        )
+    }
+
+    @Test
+    fun numberCondition_toDomain_formatCommaDecimal() {
+        assertEquals(
+            ConditionTestsData.getNewNumberCondition(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = NumberFormatType.COMMA_DECIMAL,
+            ),
+            ConditionTestsData.getNewNumberConditionEntity(
+                eventId = ConditionTestsData.CONDITION_EVENT_ID,
+                numberFormatType = DbNumberFormatType.COMMA_DECIMAL,
+            ).toDomain()
         )
     }
 }

@@ -116,6 +116,7 @@ sealed class ScreenCondition : Condition(), Prioritizable {
         val detectionArea: Rect,
         val comparisonOperation: ComparisonOperation,
         val counterValue: CounterOperationValue,
+        val numberFormatType: NumberFormatType = NumberFormatType.AUTO,
     ): ScreenCondition(), Prioritizable {
 
         /** Tells if this condition is complete and valid to be saved. */
@@ -124,7 +125,8 @@ sealed class ScreenCondition : Condition(), Prioritizable {
 
         override fun hashCodeNoIds(): Int =
             name.hashCode() + counterValue.hashCode() + threshold.hashCode() + shouldBeDetected.hashCode() +
-                    detectionArea.hashCode() + priority.hashCode() + comparisonOperation.hashCode()
+                    detectionArea.hashCode() + priority.hashCode() + comparisonOperation.hashCode() +
+                    numberFormatType.hashCode()
 
     }
 

@@ -18,9 +18,12 @@ package com.buzbuz.smartautoclicker.core.domain.model.condition
 
 import android.graphics.Rect
 
+import android.graphics.Rect
+
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
+import com.buzbuz.smartautoclicker.core.database.entity.NumberFormatType as DbNumberFormatType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
@@ -49,6 +52,59 @@ internal object ConditionTestsData {
     const val CONDITION_COUNTER_VALUE = 10.0
 
     const val CONDITION_TIMER_MS = 500L
+
+    val CONDITION_NUMBER_DETECTION_AREA = Rect(10, 20, 110, 120)
+    val CONDITION_NUMBER_COMPARISON_OPERATION = ComparisonOperation.GREATER
+    const val CONDITION_NUMBER_VALUE = 42.0
+    const val CONDITION_NUMBER_THRESHOLD = 10
+
+    fun getNewNumberConditionEntity(
+        id: Long = CONDITION_ID,
+        name: String = CONDITION_NAME,
+        detectionArea: Rect = CONDITION_NUMBER_DETECTION_AREA,
+        comparisonOperation: ComparisonOperation = CONDITION_NUMBER_COMPARISON_OPERATION,
+        numberValue: Double = CONDITION_NUMBER_VALUE,
+        threshold: Int = CONDITION_NUMBER_THRESHOLD,
+        numberFormatType: DbNumberFormatType? = null,
+        eventId: Long,
+    ) = ConditionEntity(
+        id = id,
+        eventId = eventId,
+        name = name,
+        type = ConditionType.ON_NUMBER_DETECTED,
+        priority = 0,
+        threshold = threshold,
+        shouldBeDetected = true,
+        detectionAreaLeft = detectionArea.left,
+        detectionAreaTop = detectionArea.top,
+        detectionAreaRight = detectionArea.right,
+        detectionAreaBottom = detectionArea.bottom,
+        numberCounterComparisonOperation = comparisonOperation.toEntity(),
+        numberCounterOperationValueType = CounterOperationValueType.NUMBER,
+        numberCounterValue = numberValue,
+        numberFormatType = numberFormatType,
+    )
+
+    fun getNewNumberCondition(
+        id: Long = CONDITION_ID,
+        name: String = CONDITION_NAME,
+        detectionArea: Rect = CONDITION_NUMBER_DETECTION_AREA,
+        comparisonOperation: ComparisonOperation = CONDITION_NUMBER_COMPARISON_OPERATION,
+        numberValue: Double = CONDITION_NUMBER_VALUE,
+        threshold: Int = CONDITION_NUMBER_THRESHOLD,
+        numberFormatType: NumberFormatType = NumberFormatType.AUTO,
+        eventId: Long,
+    ) = ScreenCondition.Number(
+        id = id.asIdentifier(),
+        eventId = eventId.asIdentifier(),
+        name = name,
+        priority = 0,
+        threshold = threshold,
+        detectionArea = detectionArea,
+        comparisonOperation = comparisonOperation,
+        counterValue = CounterOperationValue.Number(numberValue),
+        numberFormatType = numberFormatType,
+    )
 
     fun getNewImageConditionEntity(
         id: Long = CONDITION_ID,

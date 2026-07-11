@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
+import com.buzbuz.smartautoclicker.core.database.entity.NumberFormatType as DbNumberFormatType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
@@ -91,6 +92,7 @@ private fun ScreenCondition.Number.toNumberConditionEntity(): ConditionEntity {
         numberCounterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
         numberCounterValue = if (isNumberValue) counterValue.value else null,
         numberCounterOperationCounterName = if (isNumberValue) null else counterValue.value as String,
+        numberFormatType = numberFormatType.toEntity(),
     )
 }
 
@@ -200,6 +202,7 @@ private fun ConditionEntity.toDomainNumberCondition(cleanIds: Boolean = false): 
             numberValue = numberCounterValue,
             counterName = numberCounterOperationCounterName,
         ),
+        numberFormatType = numberFormatType.toDomain(),
     )
 
 private fun ConditionEntity.toDomainTextCondition(cleanIds: Boolean = false): ScreenCondition.Text =
@@ -252,6 +255,20 @@ private fun ConditionEntity.getDetectionArea(): Rect? =
         Rect(detectionAreaLeft!!, detectionAreaTop!!, detectionAreaRight!!, detectionAreaBottom!!)
     else
         null
+
+private fun DbNumberFormatType?.toDomain(): NumberFormatType =
+    when (this) {
+        DbNumberFormatType.DOT_DECIMAL -> NumberFormatType.DOT_DECIMAL
+        DbNumberFormatType.COMMA_DECIMAL -> NumberFormatType.COMMA_DECIMAL
+        DbNumberFormatType.AUTO, null -> NumberFormatType.AUTO
+    }
+
+private fun NumberFormatType.toEntity(): DbNumberFormatType =
+    when (this) {
+        NumberFormatType.AUTO -> DbNumberFormatType.AUTO
+        NumberFormatType.DOT_DECIMAL -> DbNumberFormatType.DOT_DECIMAL
+        NumberFormatType.COMMA_DECIMAL -> DbNumberFormatType.COMMA_DECIMAL
+    }
 
 private fun ConditionEntity.getTextAlphabet(): OCRAlphabet =
     textAlphabet?.let {

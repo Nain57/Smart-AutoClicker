@@ -422,6 +422,14 @@
     <string name="field_text_to_detect_label">Текст для виявлення</string>
     <string name="field_text_detection_alphabet_title">Алфавіт</string>
 
+    <string name="field_number_condition_number_format_label">Формат числа</string>
+    <string name="dropdown_item_number_format_auto">Автовизначення</string>
+    <string name="dropdown_item_number_format_auto_helper">Визначає роздільники за структурою числа</string>
+    <string name="dropdown_item_number_format_dot_decimal">Крапка як десятковий роздільник</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">Крапка — десятковий роздільник (пр. 1 234.56)</string>
+    <string name="dropdown_item_number_format_comma_decimal">Кома як десятковий роздільник</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">Кома — десятковий роздільник (пр. 1.234,56)</string>
+
     <string name="field_number_condition_effect_title">Ефект умови</string>
     <string name="message_number_condition_static_value_desc">Виявлене число повинно бути %1$s %2$s</string>
     <string name="message_number_condition_counter_value_desc">Виявлене число повинно бути %1$s значенням лічильника \"%2$s\"</string>

@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.EventToggleType
 import com.buzbuz.smartautoclicker.core.database.entity.EventType
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
+import com.buzbuz.smartautoclicker.core.database.entity.NumberFormatType
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.database.serialization.Deserializer
@@ -337,6 +338,7 @@ internal open class CompatDeserializer : Deserializer {
             numberCounterOperationValueType = counterOperationValueType,
             numberCounterValue = counterOperationValue,
             numberCounterOperationCounterName = counterOperationCounterName,
+            numberFormatType = jsonCondition.getEnum<NumberFormatType>("numberFormatType") ?: NumberFormatType.AUTO,
         )
     }
 

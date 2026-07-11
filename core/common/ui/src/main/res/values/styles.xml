@@ -73,7 +73,7 @@
         <item name="android:background">?attr/colorOutlineVariant</item>
     </style>
     <!-- Style for the secondary horizontal dividers. -->
-    <style name="AppTheme.Widget.Divider.Horizontal">
+    <style name="AppTheme.Widget.Divider.Horizontal" parent="Widget.MaterialComponents.MaterialDivider">
         <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
         <item name="android:layout_marginBottom">@dimen/margin_vertical_small</item>
         <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>

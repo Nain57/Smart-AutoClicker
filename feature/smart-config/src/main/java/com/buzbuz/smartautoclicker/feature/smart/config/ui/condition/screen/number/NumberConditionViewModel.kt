@@ -28,6 +28,9 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPosi
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiNumberFormatDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toNumberFormatType
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
@@ -123,6 +126,10 @@ class NumberConditionViewModel @Inject constructor(
         }
     }
 
+    fun setNumberFormat(item: UiNumberFormatDropdownItem) {
+        updateEditedCondition { it.copy(numberFormatType = item.toNumberFormatType()) }
+    }
+
     fun monitorSaveButtonView(view: View) {
         monitoredViewsManager.attach(MonitoredViewType.NUMBER_CONDITION_DIALOG_BUTTON_SAVE, view)
     }
@@ -181,6 +188,7 @@ class NumberConditionViewModel @Inject constructor(
             selectorOperatorDropdownItem = comparisonOperation.toCounterOperatorDropdownItem(),
             operandValue = counterValue.toUiStaticOrCounterSelection(),
             conditionEffectDesc = counterValue.toEffectDescription(context, comparisonOperation),
+            numberFormatDropdownItem = numberFormatType.toDropdownItem(),
         )
 
     private fun CounterOperationValue.toUiStaticOrCounterSelection(): UiStaticOrCounterSelection =

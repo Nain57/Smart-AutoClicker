@@ -415,6 +415,14 @@
     <string name="field_text_to_detect_label">Texto a detectar</string>
     <string name="field_text_detection_alphabet_title">Alfabeto</string>
 
+    <string name="field_number_condition_number_format_label">Formato do número</string>
+    <string name="dropdown_item_number_format_auto">Detecção automática</string>
+    <string name="dropdown_item_number_format_auto_helper">Deduz os separadores a partir da estrutura do número</string>
+    <string name="dropdown_item_number_format_dot_decimal">Ponto decimal</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">O ponto é o separador decimal (ex.: 1.234,56)</string>
+    <string name="dropdown_item_number_format_comma_decimal">Vírgula decimal</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">A vírgula é o separador decimal (ex.: 1.234,56)</string>
+
     <string name="field_number_condition_effect_title">Efeito da condição</string>
     <string name="message_number_condition_static_value_desc">O número detectado deve ser %1$s %2$s</string>
     <string name="message_number_condition_counter_value_desc">O número detectado deve ser %1$s o valor do contador \"%2$s\"</string>

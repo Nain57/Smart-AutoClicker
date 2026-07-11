@@ -259,6 +259,14 @@
     <string name="field_text_to_detect_label">検出するテキスト</string>
     <string name="field_text_detection_alphabet_title">アルファベット</string>
 
+    <string name="field_number_condition_number_format_label">数値フォーマット</string>
+    <string name="dropdown_item_number_format_auto">自動検出</string>
+    <string name="dropdown_item_number_format_auto_helper">数値の構造から区切り文字を推測する</string>
+    <string name="dropdown_item_number_format_dot_decimal">ドット小数点</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">ドットが小数点区切り（例：1,234.56）</string>
+    <string name="dropdown_item_number_format_comma_decimal">カンマ小数点</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">カンマが小数点区切り（例：1.234,56）</string>
+
     <string name="field_number_condition_effect_title">条件の効果</string>
     <string name="message_number_condition_static_value_desc">検出された数値は %1$s %2$s である必要があります</string>
     <string name="message_number_condition_counter_value_desc">検出された数値はカウンター \"%2$s\" の値 %1$s である必要があります</string>

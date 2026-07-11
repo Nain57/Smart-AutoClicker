@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number
 
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiNumberFormatDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 
@@ -29,4 +30,5 @@ data class NumberConditionUiState(
     val selectorOperatorDropdownItem: UiCounterOperatorDropdownItem,
     val operandValue: UiStaticOrCounterSelection,
     val conditionEffectDesc: String,
+    val numberFormatDropdownItem: UiNumberFormatDropdownItem,
 )
