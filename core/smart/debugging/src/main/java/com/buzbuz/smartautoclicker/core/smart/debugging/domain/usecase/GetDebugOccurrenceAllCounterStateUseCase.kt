@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugEventOccurrenceCounterState
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 
@@ -34,18 +35,24 @@ import javax.inject.Inject
 class GetDebugOccurrenceAllCounterStateUseCase @Inject constructor(debuggingRepository: DebuggingRepository) {
 
     private val overview: Flow<DebugReportOverview?> = debuggingRepository.getLastReportOverview()
+    private val countersInitialValues: Flow<List<DebugReportCounterInitialValue>?> =
+        debuggingRepository.getLastReportCountersInitialValues()
     private val eventOccurrences: Flow<List<DebugReportEventOccurrence>?> =
         debuggingRepository.getLastReportEventsOccurrences()
 
     operator fun invoke(eventOccurrence: DebugReportEventOccurrence): Flow<List<DebugEventOccurrenceCounterState>> =
-        combine(overview, eventOccurrences) { overview, occurrences ->
+        combine(overview, countersInitialValues, eventOccurrences) { overview, initialValues, occurrences ->
             if (overview == null || occurrences == null) return@combine emptyList()
 
-            // Initialize all counters state
+            val initialValuesByName = initialValues?.associateBy { it.counterName } ?: emptyMap()
+
+            // Initialize all counters state using their actual initial values
             val countersStateMap = mutableMapOf<String, DebugEventOccurrenceCounterState>()
             overview.counterNames.forEach { counterName ->
-                countersStateMap[counterName] =
-                    DebugEventOccurrenceCounterState(counterName = counterName, currentValue = 0.0)
+                countersStateMap[counterName] = DebugEventOccurrenceCounterState(
+                    counterName = counterName,
+                    currentValue = initialValuesByName[counterName]?.initialValue ?: 0.0,
+                )
             }
 
             // Update counters state up to requested event occurrence

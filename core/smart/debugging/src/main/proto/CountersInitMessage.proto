@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,17 @@ option java_multiple_files = true;
 
 package com.buzbuz.smartautoclicker.core.smart.debugging;
 
-import "CountersInitMessage.proto";
-import "ImageEventMessage.proto";
-import "TriggerEventMessage.proto";
+/** Sent once at session start and contains the counters initial values. */
+message CountersInitMessage {
 
-/** Base class for debug report messages abstraction. */
-message DebugReportMessage {
+    /** List of initial values for counters. */
+    repeated CounterInitialValues initialValues = 1;
 
-    /** The time since current detection session start in milliseconds. */
-    int64 relativeTimestampMs = 1;
-
-    /** Declares all types of possible events. */
-    oneof messageType {
-
-        /** A screen frame has been processed. */
-        ImageEventMessage imageEventMessage = 2;
-
-        /** A trigger event has been triggered. */
-        TriggerEventMessage triggerEventMessage = 3;
-
-        /** Initial value for counters. */
-        CountersInitMessage countersInitMessage = 4;
+    /** Counter init values. */
+    message CounterInitialValues {
+        /** Counter unique name. */
+        string name = 1;
+        /** Counter initial value. */
+        double initialValue = 2;
     }
 }

@@ -23,13 +23,15 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Singleton
@@ -60,17 +62,29 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
         }
 
         resultCallback = resultCallback ?: newGestureResultCallback()
-        return suspendCoroutine { continuation ->
-            currentContinuation = continuation
 
-            try {
-                service.dispatchGesture(gesture, resultCallback, null)
-            } catch (rEx: RuntimeException) {
-                Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
-                errorGestures++
-                resumeExecution(gestureError = true)
+        val timeoutMs = gesture.gestureDurationMs() * GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS
+        val result = withTimeoutOrNull(timeoutMs.milliseconds) {
+            suspendCancellableCoroutine { continuation ->
+                currentContinuation = continuation
+
+                try {
+                    service.dispatchGesture(gesture, resultCallback, null)
+                } catch (rEx: RuntimeException) {
+                    Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
+                    errorGestures++
+                    resumeExecution(gestureError = true)
+                }
             }
         }
+
+        if (result == null) {
+            Log.w(TAG, "Gesture timed out after ${timeoutMs}ms, no callback received")
+            errorGestures++
+            currentContinuation = null
+        }
+
+        return result ?: false
     }
 
     private fun resumeExecution(gestureError: Boolean) {
@@ -109,4 +123,14 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
     }
 }
 
+private fun GestureDescription.gestureDurationMs(): Long {
+    var maxEndTime = 0L
+    for (i in 0 until strokeCount) {
+        val stroke = getStroke(i)
+        maxEndTime = maxOf(maxEndTime, stroke.startTime + stroke.duration)
+    }
+    return maxEndTime
+}
+
+private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 1.25
 private const val TAG = "GestureExecutor"

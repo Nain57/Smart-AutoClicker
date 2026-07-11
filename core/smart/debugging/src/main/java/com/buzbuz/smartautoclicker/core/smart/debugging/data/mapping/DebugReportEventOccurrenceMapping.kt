@@ -18,15 +18,35 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping
 
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.smart.debugging.CountersInitMessageKt.counterInitialValues
+import com.buzbuz.smartautoclicker.core.smart.debugging.countersInitMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.debugReportMessage
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.imageEventMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.triggerEventMessage
 
+import com.buzbuz.smartautoclicker.core.smart.debugging.CountersInitMessage as ProtoCountersInitMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.DebugReportMessage as ProtoDebugReportMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.ImageEventMessage as ProtoImageEventMessage
 import com.buzbuz.smartautoclicker.core.smart.debugging.TriggerEventMessage as ProtoTriggerEventMessage
 
+
+internal fun List<Counter>.toCountersInitProtobuf(): ProtoDebugReportMessage =
+    debugReportMessage {
+        relativeTimestampMs = 0L
+        countersInitMessage = countersInitMessage {
+            initialValues.addAll(
+                this@toCountersInitProtobuf.map { counter ->
+                    counterInitialValues {
+                        name = counter.counterName
+                        initialValue = counter.defaultValue
+                    }
+                }
+            )
+        }
+    }
 
 internal fun DebugReportEventOccurrence.toProtobuf(): ProtoDebugReportMessage =
     debugReportMessage {
@@ -58,6 +78,18 @@ private fun DebugReportEventOccurrence.TriggerEvent.toTriggerEventProtobuf(): Pr
         )
     }
 
+internal fun ProtoDebugReportMessage.toCountersInitialValues(): List<DebugReportCounterInitialValue>? =
+    if (messageTypeCase == ProtoDebugReportMessage.MessageTypeCase.COUNTERSINITMESSAGE)
+        countersInitMessage.toDomain()
+    else null
+
+private fun ProtoCountersInitMessage.toDomain(): List<DebugReportCounterInitialValue> =
+    initialValuesList.map { entry ->
+        DebugReportCounterInitialValue(
+            counterName = entry.name,
+            initialValue = entry.initialValue,
+        )
+    }
 
 internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
     when (messageTypeCase) {
@@ -65,6 +97,7 @@ internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
             imageEventMessage.toDomain(relativeTimestampMs)
         ProtoDebugReportMessage.MessageTypeCase.TRIGGEREVENTMESSAGE ->
             triggerEventMessage.toDomain(relativeTimestampMs)
+        ProtoDebugReportMessage.MessageTypeCase.COUNTERSINITMESSAGE -> null
         ProtoDebugReportMessage.MessageTypeCase.MESSAGETYPE_NOT_SET -> {
             Log.e(LOG_TAG, "Can't read DebugReportEventOccurrence from protobuf")
             null

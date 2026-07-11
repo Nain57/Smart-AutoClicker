@@ -87,7 +87,7 @@ object Migration19to20 : Migration(19, 20) {
             val counterReachedValues = buildMap {
                 forEachCounterReachedCondition { id, type, counterValue ->
                     if (id == null || type == null || counterValue == null) return@forEachCounterReachedCondition
-                    if (ConditionType.valueOf(type) == ConditionType.ON_COUNTER_REACHED) put(id, counterValue)
+                    if (ConditionType.valueOf(type.uppercase()) == ConditionType.ON_COUNTER_REACHED) put(id, counterValue)
                 }
             }
 
@@ -108,7 +108,7 @@ object Migration19to20 : Migration(19, 20) {
             val counterValues = buildMap {
                 forEachChangeCounterAction { id, type, counterValue ->
                     if (id == null || type == null || counterValue == null) return@forEachChangeCounterAction
-                    if (ActionType.valueOf(type) == ActionType.CHANGE_COUNTER) put(id, counterValue)
+                    if (ActionType.valueOf(type.uppercase()) == ActionType.CHANGE_COUNTER) put(id, counterValue)
                 }
             }
 

@@ -25,7 +25,9 @@ import com.buzbuz.smartautoclicker.core.base.extensions.safeExists
 import com.buzbuz.smartautoclicker.core.base.extensions.safeInputStream
 import com.buzbuz.smartautoclicker.core.base.extensions.safeRecreate
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toDomain
+import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toCountersInitialValues
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toProtobuf
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import com.google.protobuf.MessageLite
@@ -94,6 +96,18 @@ internal class DebugReportLocalDataSource @Inject constructor(
     }
 
     /**
+     * Write a raw [ProtoDebugReportMessage] to the report.
+     * The writing needs to be started with [startReportWrite] first.
+     *
+     * @param message The proto message to write in the report file.
+     */
+    suspend fun writeMessageToReport(message: ProtoDebugReportMessage) {
+        filesMutex.withLock {
+            messagesOutputStream?.safeWriteDelimited(message)
+        }
+    }
+
+    /**
      * Write an event occurrence to the report.
      * The writing needs to be started with [startReportWrite] first.
      *
@@ -145,6 +159,27 @@ internal class DebugReportLocalDataSource @Inject constructor(
         }
 
     /**
+     * Get the counters initial values from the last detection session report.
+     *
+     * @return the counters initial values, if available. Writing needs to be stopped or this will always be null.
+     */
+    suspend fun readCountersInitialValues(): List<DebugReportCounterInitialValue>? =
+        filesMutex.withLock {
+            if (isWritingReport) return null
+
+            messagesFile.safeInputStream()?.use { inputStream ->
+                var protoMessage: ProtoDebugReportMessage?
+                while (true) {
+                    protoMessage = inputStream.safeParseDebugReportMessage() ?: break
+                    val countersInit = protoMessage.toCountersInitialValues()
+                    if (countersInit != null) return countersInit
+                }
+            }
+
+            return null
+        }
+
+    /**
      * Get the last detection session debug report event occurrences.
      *
      * @return the debug report event occurrences, if available. Writing needs to be stopped or this list will always
@@ -156,10 +191,10 @@ internal class DebugReportLocalDataSource @Inject constructor(
                 if (isWritingReport) return@buildList
 
                 messagesFile.safeInputStream()?.use { inputStream ->
-                    var eventOccurrence: DebugReportEventOccurrence?
+                    var protoMessage: ProtoDebugReportMessage?
                     while (true) {
-                        eventOccurrence = inputStream.safeParseDebugReportMessage()?.toDomain() ?: break
-                        add(eventOccurrence)
+                        protoMessage = inputStream.safeParseDebugReportMessage() ?: break
+                        protoMessage.toDomain()?.let { add(it) }
                         yield() // Allow loop stop upon coroutine cancellation
                     }
                 }

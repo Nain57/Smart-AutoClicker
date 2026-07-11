@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report
 
-plugins {
-    alias(libs.plugins.buzbuz.androidLibrary)
-    alias(libs.plugins.buzbuz.androidUnitTest)
-    alias(libs.plugins.buzbuz.flavour)
-    alias(libs.plugins.buzbuz.hilt)
-    alias(libs.plugins.buzbuz.protobuf)
-}
-
-android {
-    namespace = "com.buzbuz.smartautoclicker.core.smart.debugging"
-}
-
-dependencies {
-    implementation(project(":core:common:base"))
-    implementation(project(":core:smart:domain"))
-    implementation(project(":core:smart:processing"))
-
-    testImplementation(libs.kotlinx.coroutines.test)
-}
+/**
+ * The initial value of a counter at the start of a detection session.
+ *
+ * @param counterName the name of the counter.
+ * @param initialValue the value the counter started at when the session began.
+ */
+data class DebugReportCounterInitialValue(
+    val counterName: String,
+    val initialValue: Double,
+)

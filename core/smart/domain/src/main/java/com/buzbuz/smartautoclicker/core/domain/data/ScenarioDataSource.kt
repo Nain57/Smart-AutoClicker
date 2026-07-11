@@ -169,25 +169,28 @@ internal class ScenarioDataSource @Inject constructor(
             throw IllegalArgumentException("Can't update scenario content, one of the event is not complete")
 
         return try {
+            var scenarioId: Identifier? = null
+            val conditionsRemoved = mutableListOf<String>()
             database.withTransaction {
                 // First insert the scenario to get its database id, and put it in all events
-                val scenarioId = Identifier(
+                scenarioId = Identifier(
                     databaseId = database.scenarioDao().add(scenario.toEntity())
                 )
 
                 updateEvents(
                     scenarioDbId = scenarioId.databaseId,
                     events = events,
-                    onImageConditionsRemoved = onImageConditionsRemoved,
+                    onImageConditionsRemoved = { removed -> conditionsRemoved += removed },
                 )
 
                 updateCounters(
                     scenarioDbId = scenarioId.databaseId,
                     newCounters = counters,
                 )
-
-                scenarioId.databaseId
             }
+
+            onImageConditionsRemoved(conditionsRemoved)
+            scenarioId?.databaseId
         } catch (ex: Exception) {
             Log.e(TAG, "Error while inserting scenario copy", ex)
             null
@@ -203,6 +206,7 @@ internal class ScenarioDataSource @Inject constructor(
         Log.d(TAG, "Update scenario in the database: ${scenario.id}")
 
         return try {
+            val conditionsRemoved = mutableListOf<String>()
             database.withTransaction {
                 // Update scenario entity values
                 database.scenarioDao().update(scenario.toEntity())
@@ -210,7 +214,7 @@ internal class ScenarioDataSource @Inject constructor(
                 updateEvents(
                     scenarioDbId = scenario.id.databaseId,
                     events = events,
-                    onImageConditionsRemoved = onImageConditionsRemoved,
+                    onImageConditionsRemoved = { removed -> conditionsRemoved += removed },
                 )
                 // Update counters
                 updateCounters(
@@ -219,6 +223,7 @@ internal class ScenarioDataSource @Inject constructor(
                 )
             }
 
+            onImageConditionsRemoved(conditionsRemoved)
             true
         } catch (ex: Exception) {
             Log.e(TAG, "Error while updating scenario\n* Scenario=$scenario\n* Events=$events\n", ex)

@@ -60,15 +60,16 @@ internal class EditionState internal constructor(
             editor.editedScenarioState,
             editor.editedScreenEventListState,
             editor.editedTriggerEventListState,
-        ) { scenario, imageEvents, triggerEvents ->
+            editor.editedCountersListState,
+        ) { scenario, imageEvents, triggerEvents, counters ->
 
-            if (scenario.value == null || imageEvents.value == null || triggerEvents.value == null)
+            if (scenario.value == null || imageEvents.value == null || triggerEvents.value == null || counters.value == null)
                 return@combine EditedElementState(value = null, hasChanged = false, canBeSaved = false)
 
             EditedElementState(
                 value = EditedScenarioState(scenario.value, imageEvents.value, triggerEvents.value),
-                hasChanged = scenario.hasChanged || imageEvents.hasChanged || triggerEvents.hasChanged,
-                canBeSaved = scenario.canBeSaved && imageEvents.canBeSaved && triggerEvents.canBeSaved
+                hasChanged = scenario.hasChanged || imageEvents.hasChanged || triggerEvents.hasChanged || counters.hasChanged,
+                canBeSaved = scenario.canBeSaved && imageEvents.canBeSaved && triggerEvents.canBeSaved && counters.canBeSaved
                         && (imageEvents.value.isNotEmpty() || triggerEvents.value.isNotEmpty()),
             )
         }

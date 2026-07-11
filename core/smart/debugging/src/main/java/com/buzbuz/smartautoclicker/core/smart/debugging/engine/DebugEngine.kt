@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterV
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventOccurrencesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventStateRecorder
+import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toCountersInitProtobuf
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ScreenConditionOccurrenceRecorder
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -101,7 +102,9 @@ internal class DebugEngine @Inject constructor(
             if (shouldWriteReport) {
                 overviewRecorder.onSessionStart(scenario)
                 counterValuesRecorder.onSessionStarted(counters)
+
                 debugReportLocalDataSource.startReportWrite()
+                writeCountersInitToReport(counters)
             }
         }
     }
@@ -282,6 +285,10 @@ internal class DebugEngine @Inject constructor(
                 )
             },
         )
+
+    private suspend fun writeCountersInitToReport(counters: List<Counter>) {
+        debugReportLocalDataSource.writeMessageToReport(counters.toCountersInitProtobuf())
+    }
 
     private suspend fun writeImageEventToReport(event: ScreenEvent) {
         debugReportLocalDataSource.writeEventOccurrenceToReport(

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +46,9 @@ interface DebuggingRepository {
 
     /** Read the last detection session report overview, if any. */
     fun getLastReportOverview(): Flow<DebugReportOverview?>
+
+    /** Read the counters initial values from the last detection session report. Null if no report is available. */
+    fun getLastReportCountersInitialValues(): Flow<List<DebugReportCounterInitialValue>?>
 
     /** Read the last detection session events occurrences. List will be empty no rapport is available. */
     fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?>

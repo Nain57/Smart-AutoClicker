@@ -125,8 +125,11 @@ internal open class CompatDeserializer : Deserializer {
 
     open fun deserializeCounters(jsonCounters: JsonArray): List<CountersEntity> =
         jsonCounters.mapNotNull { jsonCounter ->
+            val name = jsonCounter.jsonObject.getString("name")
+            if (name.isNullOrEmpty()) return@mapNotNull null
+
             CountersEntity(
-                name = jsonCounter.jsonObject.getString("name") ?: return@mapNotNull null,
+                name = name,
                 scenarioId = jsonCounter.jsonObject.getLong("scenarioId") ?: return@mapNotNull null,
                 startingValue = jsonCounter.jsonObject.getDouble("startingValue") ?: return@mapNotNull null,
             )

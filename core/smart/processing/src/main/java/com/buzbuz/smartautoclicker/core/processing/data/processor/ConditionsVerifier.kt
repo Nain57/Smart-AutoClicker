@@ -37,6 +37,10 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditi
 
 import kotlinx.coroutines.yield
 
+import kotlin.math.abs
+
+private const val DOUBLE_EQUALS_EPSILON = 1e-9
+
 internal class ConditionsVerifier(
     private val state: ProcessingState,
     private val imageDetector: ImageDetector,
@@ -109,7 +113,7 @@ internal class ConditionsVerifier(
             when (condition.comparisonOperation) {
                 ComparisonOperation.GREATER -> counterValue > operandValue
                 ComparisonOperation.GREATER_OR_EQUALS -> counterValue >= operandValue
-                ComparisonOperation.EQUALS -> counterValue == operandValue
+                ComparisonOperation.EQUALS -> abs(counterValue - operandValue) < DOUBLE_EQUALS_EPSILON
                 ComparisonOperation.LOWER_OR_EQUALS -> counterValue <= operandValue
                 ComparisonOperation.LOWER -> counterValue < operandValue
             }
@@ -213,7 +217,7 @@ internal class ConditionsVerifier(
                 val comparisonResult = when (condition.comparisonOperation) {
                     ComparisonOperation.GREATER -> numberDetected > operandValue
                     ComparisonOperation.GREATER_OR_EQUALS -> numberDetected >= operandValue
-                    ComparisonOperation.EQUALS -> numberDetected == operandValue
+                    ComparisonOperation.EQUALS -> abs(numberDetected - operandValue) < DOUBLE_EQUALS_EPSILON
                     ComparisonOperation.LOWER_OR_EQUALS -> numberDetected <= operandValue
                     ComparisonOperation.LOWER -> numberDetected < operandValue
                 }

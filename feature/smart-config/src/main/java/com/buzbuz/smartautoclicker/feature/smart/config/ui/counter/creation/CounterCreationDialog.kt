@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 
 import kotlin.getValue
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
+import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 
 class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -71,6 +72,7 @@ class CounterCreationDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
             fieldName.textField.doAfterTextChanged { viewModel.setName(it.toString()) }
 
             fieldStartingValue.root.hint = context.getString(R.string.field_new_counter_starting_value)
+            fieldStartingValue.textField.filters = arrayOf(NumberInputFilter(Double::class))
             fieldStartingValue.textField.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             fieldStartingValue.textField.setText("0")
             fieldStartingValue.textField.doAfterTextChanged {

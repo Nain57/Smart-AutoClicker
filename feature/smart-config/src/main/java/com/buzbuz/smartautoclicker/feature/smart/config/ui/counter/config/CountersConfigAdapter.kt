@@ -26,11 +26,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
+import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemCounterConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
 
 import com.google.android.material.textfield.TextInputLayout
+import kotlin.arrayOf
 
 /**
  * Adapter for the list of counters in the configuration.
@@ -108,6 +110,7 @@ class CountersConfigViewHolder(
             replaceByText.setOnClickListener { onCancelReplace() }
 
             layoutStartingValue.textLayout.hint = root.context.getString(R.string.field_label_counter_starting_value)
+            layoutStartingValue.textField.filters = arrayOf(NumberInputFilter(Double::class))
             layoutStartingValue.textLayout.endIconMode = TextInputLayout.END_ICON_NONE
             layoutStartingValue.setOnTextChangedListener { text ->
                 val counter = item ?: return@setOnTextChangedListener

@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
@@ -84,6 +85,11 @@ internal class DebuggingRepositoryImpl @Inject constructor(
             emit(debugReportDataSource.readOverview())
         }.flowOn(ioDispatcher)
 
+
+    override fun getLastReportCountersInitialValues(): Flow<List<DebugReportCounterInitialValue>?> =
+        flow {
+            emit(debugReportDataSource.readCountersInitialValues())
+        }.flowOn(ioDispatcher)
 
     override fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?> =
         flow {
