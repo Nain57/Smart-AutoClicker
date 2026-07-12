@@ -32,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.throwWithKeys
 class NativeDetector private constructor() : ImageDetector {
 
     companion object {
-        fun newInstance(): NativeDetector? = try {
+        fun newInstance(): ImageDetector? = try {
             System.loadLibrary("smartautoclicker")
             NativeDetector()
         } catch (_: UnsatisfiedLinkError) {

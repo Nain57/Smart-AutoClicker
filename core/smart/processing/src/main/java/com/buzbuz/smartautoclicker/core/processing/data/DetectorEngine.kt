@@ -98,6 +98,13 @@ class DetectorEngine @Inject constructor(
     /** Coroutine job for the debounced orientation change handler. */
     private var orientationChangeJob: Job? = null
 
+    /**
+     * When true, [processScreenImages] will exit its loop after the current frame finishes rather
+     * than being canceled mid-execution. Used by orientation-change handling so in-progress action
+     * sequences are not interrupted.
+     */
+    @Volatile private var orientationChangeRequested: Boolean = false
+
     private val screenOrientationListener: (Context) -> Unit = { onScreenOrientationChanged() }
 
     /** Backing property for [state].*/
@@ -182,13 +189,14 @@ class DetectorEngine @Inject constructor(
         counters: List<Counter>,
         liveDebugging: Boolean,
         generateReport: Boolean,
+        imageDetectorFactory: () -> ImageDetector? = NativeDetector::newInstance,
     ) {
         if (_state.value != DetectorState.RECORDING) {
             Log.w(TAG, "startDetection: Screen record is not started.")
             return
         }
 
-        val detector = NativeDetector.newInstance()
+        val detector = imageDetectorFactory()
         if (detector == null) {
             Log.e(TAG, "startDetection: native library not found.")
             _state.value = DetectorState.ERROR_NATIVE_DETECTOR_LIB_NOT_FOUND
@@ -278,7 +286,10 @@ class DetectorEngine @Inject constructor(
             delay(ORIENTATION_CHANGE_DEBOUNCE_MS.milliseconds)
 
             if (_state.value == DetectorState.DETECTING) {
-                processingJob?.cancelAndJoin()
+                // Signal the loop to exit after the current frame so in-progress actions finish cleanly.
+                orientationChangeRequested = true
+                processingJob?.join()
+                orientationChangeRequested = false
                 debuggingListener.onEventsProcessingCancelled()
             }
 
@@ -364,7 +375,7 @@ class DetectorEngine @Inject constructor(
         _state.emit(DetectorState.DETECTING)
 
         var processingDurationNs: Long
-        while (processingJob?.isActive == true) {
+        while (processingJob?.isActive == true && !orientationChangeRequested) {
             displayRecorder.acquireLatestBitmap()?.let { screenFrame ->
                 processingDurationNs = measureNanoTime {
                     scenarioProcessor?.process(screenFrame)
