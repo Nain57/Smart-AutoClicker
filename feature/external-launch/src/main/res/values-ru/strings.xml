@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Запустить Klick\'r</string>
+    <string name="tile_label_stop_scenario">Остановить Klick\'r</string>
+    <string name="tile_subtext_unavailable">Сценарий не был определён</string>
+    <string name="locale_plugin_launch_name">Запустить сценарий Klick\'r</string>
+    <string name="locale_plugin_stop_name">Остановить Klick\'r</string>
+    <string name="locale_plugin_title">Запустить сценарий Klick\'r</string>
+    <string name="locale_plugin_description">Выберите сценарий, который должен подготовить Klick\'r. Когда будете готовы, нажмите «Воспроизвести» в Klick\'r.</string>
+    <string name="locale_plugin_scenario_hint">Сценарий</string>
+    <string name="locale_plugin_no_scenarios">Создайте сценарий в Klick\'r перед настройкой этого действия.</string>
+    <string name="locale_plugin_deleted_scenario">Ранее выбранный сценарий больше не существует. Выберите другой.</string>
+    <string name="locale_plugin_smart_note">При запуске умных сценариев требуется разрешение на запись экрана, если в Klick\'r ещё нет активного сеанса захвата.</string>
+    <string name="locale_plugin_save">Сохранить</string>
+    <string name="locale_plugin_cancel">Отмена</string>
+    <string name="locale_plugin_blurb_launch">Запустить %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Остановить Klick\'r</string>
+    <string name="locale_plugin_type_smart">Умный</string>
+    <string name="locale_plugin_type_dumb">Простой</string>
+    <string name="locale_plugin_scenario_icon">Тип сценария</string>
+    <string name="locale_plugin_notification_channel">Запуск автоматизации</string>
+    <string name="locale_plugin_notification_launch_title">Завершить запуск Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Нажмите, чтобы запустить %1$s</string>
+    <string name="locale_plugin_notification_error_title">Автоматизации Klick\'r требуется внимание</string>
+    <string name="locale_plugin_error_invalid">Сохранённое действие больше недействительно. Откройте и сохраните его заново в приложении автоматизации.</string>
+    <string name="locale_plugin_error_missing_scenario">Выбранный сценарий больше не существует. Измените это действие в приложении автоматизации.</string>
+    <string name="locale_plugin_error_permissions">Не предоставлены необходимые разрешения Klick\'r.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r не удалось открыть напрямую, а уведомления для запасного варианта отключены.</string>
+    <string name="locale_plugin_error_projection">Разрешение на запись экрана не предоставлено.</string>
+    <string name="external_action_event_plugin_name">Внешнее действие Klick\'r</string>
+    <string name="external_action_event_title">Выберите внешнее действие</string>
+    <string name="external_action_event_subtitle">Запускайте эту автоматизацию, когда умный сценарий выполняет выбранное внешнее действие.</string>
+    <string name="external_action_event_name_hint">Внешнее действие</string>
+    <string name="external_action_event_description">Имя должно совпадать с внешним действием, сохранённым в умном сценарии Klick\'r. Имена не являются секретными, поэтому не используйте их для защиты важных автоматизаций.</string>
+    <string name="external_action_event_empty">Сначала создайте внешнее действие в умном сценарии Klick\'r, затем вернитесь сюда.</string>
+    <string name="external_action_event_missing_name">Это сохранённое имя сейчас не используется в Klick\'r. Можно сохранить его или выбрать другое.</string>
+    <string name="external_action_event_blurb">Внешнее действие: %1$s</string>
+</resources>

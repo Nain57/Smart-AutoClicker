@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.Di
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getClickIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getExternalActionIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getPauseIconRes
@@ -82,6 +83,13 @@ sealed class ActionTypeChoice(
         R.string.item_change_counter_title,
         R.string.item_change_counter_desc,
         getChangeCounterIconRes(),
+    )
+
+    /** External Action choice. */
+    data object ExternalAction : ActionTypeChoice(
+        R.string.item_external_action_title,
+        R.string.item_external_action_desc,
+        getExternalActionIconRes(),
     )
 
     /** Notification Action choice. */

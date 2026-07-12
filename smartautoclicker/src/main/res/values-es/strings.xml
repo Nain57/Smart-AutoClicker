@@ -159,4 +159,6 @@
     <string name="button_import">Importar</string>
     <string name="button_export">Exportar</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Inicio en segundo plano bloqueado</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r no pudo abrir automáticamente la ventana de captura de pantalla.\n\nPara terminar de iniciar el escenario, mostró una notificación.\n\nAlgunos teléfonos Android restringen más las aplicaciones en segundo plano. Consulta esta guía para mejorar la estabilidad de los permisos.</string>
 </resources>

@@ -12,4 +12,6 @@
 
     <string name="button_request_permission">権限をリクエスト</string>
     <string name="button_deny">拒否</string>
+    <string name="dialog_title_permission_launch_fallback_notification">起動時の代替通知</string>
+    <string name="message_permission_desc_launch_fallback_notification">任意：端末がロック中など、オートメーションアプリがシナリオを直接開けないときに、Klick\'r が起動を完了するための通知を表示できるようにします。</string>
 </resources>

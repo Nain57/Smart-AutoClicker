@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_label_launch_scenario">启动 Klick\'r</string>
+    <string name="tile_label_stop_scenario">停止 Klick\'r</string>
+    <string name="tile_subtext_unavailable">尚未定义场景</string>
+    <string name="locale_plugin_launch_name">启动 Klick\'r 场景</string>
+    <string name="locale_plugin_stop_name">停止 Klick\'r</string>
+    <string name="locale_plugin_title">启动 Klick\'r 场景</string>
+    <string name="locale_plugin_description">选择 Klick\'r 要准备的场景。准备好后，在 Klick\'r 中点击播放。</string>
+    <string name="locale_plugin_scenario_hint">场景</string>
+    <string name="locale_plugin_no_scenarios">请先在 Klick\'r 中创建场景，再配置此操作。</string>
+    <string name="locale_plugin_deleted_scenario">之前选择的场景已不存在。请选择其他场景。</string>
+    <string name="locale_plugin_smart_note">启动智能场景时会请求屏幕捕获权限，除非 Klick\'r 已有活动的捕获会话。</string>
+    <string name="locale_plugin_save">保存</string>
+    <string name="locale_plugin_cancel">取消</string>
+    <string name="locale_plugin_blurb_launch">启动 %1$s（%2$s）</string>
+    <string name="locale_plugin_blurb_stop">停止 Klick\'r</string>
+    <string name="locale_plugin_type_smart">智能</string>
+    <string name="locale_plugin_type_dumb">简单</string>
+    <string name="locale_plugin_scenario_icon">场景类型</string>
+    <string name="locale_plugin_notification_channel">自动化启动</string>
+    <string name="locale_plugin_notification_launch_title">完成 Klick\'r 启动</string>
+    <string name="locale_plugin_notification_launch_text">点按以启动 %1$s</string>
+    <string name="locale_plugin_notification_error_title">Klick\'r 自动化需要处理</string>
+    <string name="locale_plugin_error_invalid">保存的操作已无效。请在自动化应用中重新打开并保存。</string>
+    <string name="locale_plugin_error_missing_scenario">所选场景已不存在。请在自动化应用中编辑此操作。</string>
+    <string name="locale_plugin_error_permissions">未授予 Klick\'r 所需的权限。</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r 无法直接打开，且备用通知已停用。</string>
+    <string name="locale_plugin_error_projection">未授予屏幕捕获权限。</string>
+    <string name="external_action_event_plugin_name">Klick\'r 外部操作</string>
+    <string name="external_action_event_title">选择外部操作</string>
+    <string name="external_action_event_subtitle">当智能场景触发所选外部操作时运行此自动化。</string>
+    <string name="external_action_event_name_hint">外部操作</string>
+    <string name="external_action_event_description">名称必须与 Klick\'r 智能场景中保存的外部操作一致。名称并非秘密，请勿用它来保护敏感自动化操作。</string>
+    <string name="external_action_event_empty">请先在 Klick\'r 智能场景中创建外部操作，然后返回此处。</string>
+    <string name="external_action_event_missing_name">此保存的名称目前未在 Klick\'r 中使用。可以原样保存，也可以选择其他名称。</string>
+    <string name="external_action_event_blurb">外部操作：%1$s</string>
+</resources>

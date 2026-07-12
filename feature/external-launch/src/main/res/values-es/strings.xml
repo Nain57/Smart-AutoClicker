@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Iniciar Klick\'r</string>
+    <string name="tile_label_stop_scenario">Detener Klick\'r</string>
+    <string name="tile_subtext_unavailable">Ningún escenario definido</string>
+    <string name="locale_plugin_launch_name">Iniciar escenario de Klick\'r</string>
+    <string name="locale_plugin_stop_name">Detener Klick\'r</string>
+    <string name="locale_plugin_title">Iniciar escenario de Klick\'r</string>
+    <string name="locale_plugin_description">Elige el escenario que Klick\'r debe preparar. Pulsa Reproducir en Klick\'r cuando estés listo.</string>
+    <string name="locale_plugin_scenario_hint">Escenario</string>
+    <string name="locale_plugin_no_scenarios">Crea un escenario en Klick\'r antes de configurar esta acción.</string>
+    <string name="locale_plugin_deleted_scenario">El escenario seleccionado anteriormente ya no existe. Elige otro.</string>
+    <string name="locale_plugin_smart_note">Los escenarios inteligentes solicitan permiso para capturar la pantalla al iniciarse, salvo que Klick\'r ya tenga una sesión de captura activa.</string>
+    <string name="locale_plugin_save">Guardar</string>
+    <string name="locale_plugin_cancel">Cancelar</string>
+    <string name="locale_plugin_blurb_launch">Iniciar %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Detener Klick\'r</string>
+    <string name="locale_plugin_type_smart">Inteligente</string>
+    <string name="locale_plugin_type_dumb">Simple</string>
+    <string name="locale_plugin_scenario_icon">Tipo de escenario</string>
+    <string name="locale_plugin_notification_channel">Inicios de automatización</string>
+    <string name="locale_plugin_notification_launch_title">Terminar de iniciar Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Toca para iniciar %1$s</string>
+    <string name="locale_plugin_notification_error_title">La automatización de Klick\'r necesita atención</string>
+    <string name="locale_plugin_error_invalid">Esta acción guardada ya no es válida. Ábrela y guárdala de nuevo en tu aplicación de automatización.</string>
+    <string name="locale_plugin_error_missing_scenario">El escenario seleccionado ya no existe. Edita esta acción en tu aplicación de automatización.</string>
+    <string name="locale_plugin_error_permissions">No se concedieron los permisos necesarios de Klick\'r.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r no pudo abrirse directamente y las notificaciones están desactivadas para el recurso alternativo.</string>
+    <string name="locale_plugin_error_projection">No se concedió el permiso para capturar la pantalla.</string>
+    <string name="external_action_event_plugin_name">Acción externa de Klick\'r</string>
+    <string name="external_action_event_title">Elegir acción externa</string>
+    <string name="external_action_event_subtitle">Ejecuta esta automatización cuando un escenario inteligente active la acción externa seleccionada.</string>
+    <string name="external_action_event_name_hint">Acción externa</string>
+    <string name="external_action_event_description">El nombre debe coincidir con una acción externa guardada en un escenario inteligente de Klick\'r. Los nombres no son secretos, así que no los uses para proteger automatizaciones sensibles.</string>
+    <string name="external_action_event_empty">Crea primero una acción externa dentro de un escenario inteligente de Klick\'r y vuelve aquí.</string>
+    <string name="external_action_event_missing_name">Este nombre guardado no se usa actualmente en Klick\'r. Puedes guardarlo sin cambios o elegir otro.</string>
+    <string name="external_action_event_blurb">Acción externa: %1$s</string>
+</resources>

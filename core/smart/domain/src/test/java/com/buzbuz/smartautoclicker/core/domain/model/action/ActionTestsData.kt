@@ -404,6 +404,35 @@ internal object ActionTestsData {
         eventId: Long,
     ) = SetText(id.asIdentifier(), eventId.asIdentifier(), name, priority, text, validateInput)
 
+    /* ------- External Action Data ------- */
+
+    private const val EXTERNAL_ACTION_ID = 51L
+    private const val EXTERNAL_ACTION_NAME = "External action name"
+    private const val EXTERNAL_ACTION_LINK_NAME = "Open xyz game intent"
+
+    fun getNewExternalActionEntity(
+        id: Long = EXTERNAL_ACTION_ID,
+        name: String = EXTERNAL_ACTION_NAME,
+        priority: Int = 0,
+        externalActionName: String = EXTERNAL_ACTION_LINK_NAME,
+        eventId: Long,
+    ) = CompleteActionEntity(
+        action = ActionEntity(
+            id, eventId, priority, name, ActionType.EXTERNAL_ACTION,
+            externalActionName = externalActionName,
+        ),
+        intentExtras = emptyList(),
+        eventsToggle = emptyList(),
+    )
+
+    fun getNewExternalAction(
+        id: Long = EXTERNAL_ACTION_ID,
+        name: String? = EXTERNAL_ACTION_NAME,
+        priority: Int = 0,
+        externalActionName: String = EXTERNAL_ACTION_LINK_NAME,
+        eventId: Long,
+    ) = ExternalAction(id.asIdentifier(), eventId.asIdentifier(), name, priority, externalActionName)
+
 
     fun getNewEventToggleExtra(
         id: Long = EVENT_TOGGLE_ID,

@@ -107,4 +107,6 @@
     <string name="button_import">导入</string>
     <string name="button_export">导出</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">后台启动被阻止</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r 无法自动打开屏幕捕获提示。\n\n为了完成场景启动，我们改为显示了一条通知。\n\n部分 Android 手机对后台应用限制更严格。请参考此指南以提高权限稳定性。</string>
 </resources>

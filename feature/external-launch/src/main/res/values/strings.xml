@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">Launch Klick\'r</string>
+    <string name="tile_label_stop_scenario">Stop Klick\'r</string>
+    <string name="tile_subtext_unavailable">No Scenario defined</string>
+
+    <string name="locale_plugin_launch_name">Launch Klick\'r scenario</string>
+    <string name="locale_plugin_stop_name">Stop Klick\'r</string>
+    <string name="locale_plugin_title">Launch Klick\'r scenario</string>
+    <string name="locale_plugin_description">Choose the scenario Klick\'r should prepare. Press Play in Klick\'r when ready.</string>
+    <string name="locale_plugin_scenario_hint">Scenario</string>
+    <string name="locale_plugin_no_scenarios">Create a scenario in Klick\'r before configuring this action.</string>
+    <string name="locale_plugin_deleted_scenario">The previously selected scenario no longer exists. Choose another scenario.</string>
+    <string name="locale_plugin_smart_note">Smart scenarios ask for screen-capture permission when launched unless Klick\'r already has an active capture session.</string>
+    <string name="locale_plugin_save">Save</string>
+    <string name="locale_plugin_cancel">Cancel</string>
+    <string name="locale_plugin_blurb_launch">Launch %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">Stop Klick\'r</string>
+    <string name="locale_plugin_type_smart">Smart</string>
+    <string name="locale_plugin_type_dumb">Dumb</string>
+    <string name="locale_plugin_scenario_icon">Scenario type</string>
+    <string name="locale_plugin_notification_channel">Automation launches</string>
+    <string name="locale_plugin_notification_launch_title">Finish launching Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">Tap to launch %1$s</string>
+    <string name="locale_plugin_notification_error_title">Klick\'r automation needs attention</string>
+    <string name="locale_plugin_error_invalid">This saved action is no longer valid. Open and save it again in your automation app.</string>
+    <string name="locale_plugin_error_missing_scenario">The selected scenario no longer exists. Edit this action in your automation app.</string>
+    <string name="locale_plugin_error_permissions">Required Klick\'r permissions were not granted.</string>
+    <string name="locale_plugin_error_fallback_unavailable">Klick\'r could not open directly, and notifications are disabled for fallback.</string>
+    <string name="locale_plugin_error_projection">Screen-capture permission was not granted.</string>
+
+    <string name="external_action_event_plugin_name">Klick\'r external action</string>
+    <string name="external_action_event_title">Choose external action</string>
+    <string name="external_action_event_subtitle">Run this automation when a smart scenario fires the selected External Action.</string>
+    <string name="external_action_event_name_hint">External action</string>
+    <string name="external_action_event_description">The name must match an External Action saved in a Klick\'r smart scenario. Names are not secret, so do not use them to protect sensitive automations.</string>
+    <string name="external_action_event_empty">Create an External Action inside a Klick\'r smart scenario first, then come back here.</string>
+    <string name="external_action_event_missing_name">This saved name is not currently used in Klick\'r. You can save unchanged, or choose another name.</string>
+    <string name="external_action_event_blurb">External action: %1$s</string>
+</resources>

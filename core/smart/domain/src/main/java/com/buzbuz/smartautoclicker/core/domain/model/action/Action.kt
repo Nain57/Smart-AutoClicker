@@ -46,6 +46,7 @@ sealed class Action : Identifiable, Completable, Prioritizable {
         when (this) {
             is Click -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is ChangeCounter -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is ExternalAction -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Intent -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Pause -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Swipe -> copy(id = id, eventId = eventId, name = name, priority = priority)

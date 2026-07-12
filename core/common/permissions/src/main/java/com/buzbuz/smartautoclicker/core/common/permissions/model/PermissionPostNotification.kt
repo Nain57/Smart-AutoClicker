@@ -28,7 +28,14 @@ import com.buzbuz.smartautoclicker.core.base.data.getNotificationSettingsIntent
 @SuppressLint("InlinedApi")
 data class PermissionPostNotification(
     private val optional: Boolean = false,
+    val purpose: Purpose = Purpose.GENERAL,
 ) : Permission.Dangerous(optional), Permission.ForApiRange {
+
+    /** Explains why notifications are requested in the preparation dialog. */
+    enum class Purpose {
+        GENERAL,
+        EXTERNAL_LAUNCH_FALLBACK,
+    }
 
     override val fromApiLvl: Int
         get() = Build.VERSION_CODES.TIRAMISU

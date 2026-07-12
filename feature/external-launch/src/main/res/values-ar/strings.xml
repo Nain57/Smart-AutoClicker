@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="tile_label_launch_scenario">تشغيل Klick\'r</string>
+    <string name="tile_label_stop_scenario">أوقف النقر</string>
+    <string name="tile_subtext_unavailable">لم يتم تحديد أي سيناريو</string>
+    <string name="locale_plugin_launch_name">تشغيل سيناريو Klick\'r</string>
+    <string name="locale_plugin_stop_name">إيقاف Klick\'r</string>
+    <string name="locale_plugin_title">تشغيل سيناريو Klick\'r</string>
+    <string name="locale_plugin_description">اختر السيناريو الذي سيجهزه Klick\'r. اضغط تشغيل في Klick\'r عندما تكون مستعدًا.</string>
+    <string name="locale_plugin_scenario_hint">السيناريو</string>
+    <string name="locale_plugin_no_scenarios">أنشئ سيناريو في Klick\'r قبل إعداد هذا الإجراء.</string>
+    <string name="locale_plugin_deleted_scenario">لم يعد السيناريو المحدد سابقًا موجودًا. اختر سيناريو آخر.</string>
+    <string name="locale_plugin_smart_note">تطلب السيناريوهات الذكية إذن تسجيل الشاشة عند تشغيلها ما لم تكن جلسة الالتقاط نشطة في Klick\'r.</string>
+    <string name="locale_plugin_save">حفظ</string>
+    <string name="locale_plugin_cancel">إلغاء</string>
+    <string name="locale_plugin_blurb_launch">تشغيل %1$s (%2$s)</string>
+    <string name="locale_plugin_blurb_stop">إيقاف Klick\'r</string>
+    <string name="locale_plugin_type_smart">ذكي</string>
+    <string name="locale_plugin_type_dumb">بسيط</string>
+    <string name="locale_plugin_scenario_icon">نوع السيناريو</string>
+    <string name="locale_plugin_notification_channel">تشغيل الأتمتة</string>
+    <string name="locale_plugin_notification_launch_title">إكمال تشغيل Klick\'r</string>
+    <string name="locale_plugin_notification_launch_text">اضغط لتشغيل %1$s</string>
+    <string name="locale_plugin_notification_error_title">تحتاج أتمتة Klick\'r إلى انتباه</string>
+    <string name="locale_plugin_error_invalid">لم يعد هذا الإجراء المحفوظ صالحًا. افتحه واحفظه مجددًا في تطبيق الأتمتة.</string>
+    <string name="locale_plugin_error_missing_scenario">لم يعد السيناريو المحدد موجودًا. عدّل هذا الإجراء في تطبيق الأتمتة.</string>
+    <string name="locale_plugin_error_permissions">لم يتم منح أذونات Klick\'r المطلوبة.</string>
+    <string name="locale_plugin_error_fallback_unavailable">تعذر على Klick\'r الفتح مباشرةً، كما أن الإشعارات معطلة للبديل.</string>
+    <string name="locale_plugin_error_projection">لم يتم منح إذن تسجيل الشاشة.</string>
+    <string name="external_action_event_plugin_name">إجراء Klick\'r خارجي</string>
+    <string name="external_action_event_title">اختر إجراءً خارجيًا</string>
+    <string name="external_action_event_subtitle">شغّل هذه الأتمتة عندما ينفذ سيناريو ذكي إجراءً خارجيًا محددًا.</string>
+    <string name="external_action_event_name_hint">الإجراء الخارجي</string>
+    <string name="external_action_event_description">يجب أن يطابق الاسم إجراءً خارجيًا محفوظًا في سيناريو ذكي في Klick\'r. الأسماء ليست سرية، لذا لا تستخدمها لحماية عمليات الأتمتة الحساسة.</string>
+    <string name="external_action_event_empty">أنشئ إجراءً خارجيًا داخل سيناريو ذكي في Klick\'r أولًا، ثم عد إلى هنا.</string>
+    <string name="external_action_event_missing_name">الاسم المحفوظ غير مستخدم حاليًا في Klick\'r. يمكنك حفظه كما هو أو اختيار اسم آخر.</string>
+    <string name="external_action_event_blurb">إجراء خارجي: %1$s</string>
+</resources>

@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -55,6 +56,7 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
             // Nothing is referenced in those actions
             is Pause,
             is Swipe,
+            is ExternalAction,
             is Intent,
             is SystemAction -> false
         }

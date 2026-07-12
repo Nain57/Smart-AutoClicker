@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <service
+            android:name=".qstile.ui.QSTileService"
+            android:exported="true"
+            android:label="@string/tile_label_launch_scenario"
+            android:icon="@drawable/ic_click"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
+            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+
+        </service>
+
+        <activity
+            android:name=".qstile.ui.QSTileLauncherActivity"
+            android:theme="@style/AppTheme.TranslucentActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"/>
+
+        <activity
+            android:name=".localeplugin.ui.LocalePluginConfigurationActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:icon="@drawable/ic_click"
+            android:label="@string/locale_plugin_launch_name"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".localeplugin.ui.LocalePluginStopConfigurationActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:icon="@drawable/ic_stop"
+            android:label="@string/locale_plugin_stop_name"
+            android:theme="@style/AppTheme.TranslucentActivity">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".localeplugin.ui.LocalePluginExecutionActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.TranslucentActivity" />
+
+        <activity
+            android:name=".localeplugin.ui.ExternalActionEventConfigurationActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:icon="@drawable/ic_external_action"
+            android:label="@string/external_action_event_plugin_name"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="net.dinglisch.android.tasker.ACTION_EDIT_EVENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".localeplugin.receiver.LocalePluginFireReceiver"
+            android:exported="true"
+            android:label="@string/locale_plugin_launch_name">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".localeplugin.receiver.ExternalActionEventQueryReceiver"
+            android:exported="true"
+            android:label="@string/external_action_event_plugin_name">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.QUERY_CONDITION" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+
+</manifest>

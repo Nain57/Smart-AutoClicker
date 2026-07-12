@@ -160,4 +160,6 @@
     <string name="button_import">Імпорт</string>
     <string name="button_export">Експорт</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Фоновий запуск заблоковано</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r не вдалося автоматично відкрити вікно запису екрана.\n\nЩоб завершити запуск сценарію, було показано сповіщення.\n\nДеякі телефони Android сильніше обмежують фонові застосунки. Перегляньте цей посібник, щоб підвищити стабільність дозволів.</string>
 </resources>

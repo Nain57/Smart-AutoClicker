@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click.PositionType
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -379,6 +380,15 @@ class EditedItemsBuilder internal constructor(
             priority = 0,
         )
 
+    fun createNewExternalAction(context: Context): ExternalAction =
+        ExternalAction(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = getEditedEventIdOrThrow(),
+            name = defaultValues.externalActionName(context),
+            externalActionName = "",
+            priority = 0,
+        )
+
     fun createNewNotification(context: Context): Notification =
         Notification(
             id = actionsIdCreator.generateNewIdentifier(),
@@ -415,6 +425,7 @@ class EditedItemsBuilder internal constructor(
         is Intent -> createNewIntentFrom(from, eventId)
         is ToggleEvent -> createNewToggleEventFrom(from, eventId)
         is ChangeCounter -> createNewChangeCounterFrom(from, eventId)
+        is ExternalAction -> createNewExternalActionFrom(from, eventId)
         is Notification -> createNewNotificationFrom(from, eventId)
         is SystemAction -> createNewSystemActionFrom(from, eventId)
         is SetText -> createNewSetTextFrom(from, eventId)
@@ -500,6 +511,14 @@ class EditedItemsBuilder internal constructor(
             counterName = "" + from.counterName,
         )
     }
+
+    private fun createNewExternalActionFrom(from: ExternalAction, eventId: Identifier): ExternalAction =
+        from.copy(
+            id = actionsIdCreator.generateNewIdentifier(),
+            eventId = eventId,
+            name = "" + from.name,
+            externalActionName = "" + from.externalActionName,
+        )
 
     private fun createNewNotificationFrom(from: Notification, eventId: Identifier): Notification {
         val actionId = actionsIdCreator.generateNewIdentifier()

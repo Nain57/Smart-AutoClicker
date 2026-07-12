@@ -49,4 +49,6 @@
     <string name="button_request_permission">Richiesta di permesso</string>
     <string name="button_deny">Negare</string>
 
+    <string name="dialog_title_permission_launch_fallback_notification">Notifiche di avvio di riserva</string>
+    <string name="message_permission_desc_launch_fallback_notification">Facoltativo: consente a Klick\'r di mostrare una notifica per completare l\'avvio di uno scenario quando l\'app di automazione non può aprirlo direttamente, ad esempio mentre il telefono è bloccato.</string>
 </resources>

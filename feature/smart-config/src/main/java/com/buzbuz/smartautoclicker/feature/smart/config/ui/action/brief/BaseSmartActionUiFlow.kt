@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.common.permissions.model.PermissionPostN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -32,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.external.ExternalActionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.notification.NotificationDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.pause.PauseDialog
@@ -102,6 +104,7 @@ internal fun BaseOverlay.showActionConfigDialog(configurator: ActionConfigurator
         is SystemAction -> SystemActionDialog(actionConfigDialogListener)
         is ToggleEvent -> ToggleEventDialog(actionConfigDialogListener)
         is ChangeCounter -> ChangeCounterDialog(actionConfigDialogListener)
+        is ExternalAction -> ExternalActionDialog(actionConfigDialogListener)
         is SetText -> SetTextDialog(actionConfigDialogListener)
         is Notification -> {
             if (PermissionPostNotification().checkIfGranted(context)) NotificationDialog(actionConfigDialogListener)

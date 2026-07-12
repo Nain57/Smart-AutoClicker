@@ -157,4 +157,6 @@
     <string name="button_import">استيراد</string>
     <string name="button_export">تصدير</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">تم حظر التشغيل في الخلفية</string>
+    <string name="message_locale_plugin_background_launch">تعذر على Klick\'r فتح نافذة تسجيل الشاشة تلقائيًا.\n\nلإكمال تشغيل السيناريو، عرض إشعارًا بدلًا من ذلك.\n\nتفرض بعض هواتف Android قيودًا أكبر على التطبيقات في الخلفية. راجع هذا الدليل لتحسين استقرار الأذونات.</string>
 </resources>

@@ -160,4 +160,6 @@
     <string name="button_import">Importer</string>
     <string name="button_export">Exporter</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Lancement en arrière-plan bloqué</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r n\'a pas pu ouvrir automatiquement la fenêtre de capture d\'écran.\n\nPour terminer le lancement du scénario, une notification a été affichée.\n\nCertains téléphones Android restreignent davantage les applications en arrière-plan. Consultez ce guide pour améliorer la stabilité des autorisations.</string>
 </resources>

@@ -22,8 +22,14 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 interface LocalAccessibilityService {
 
-    fun startDumbScenario(dumbScenario: DumbScenario)
-    fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+    fun isSmartScreenRecordActive(): Boolean
+    fun getSmartScenarioId(): Long?
+    fun getDumbScenarioId(): Long?
+    fun launchDumbScenario(dumbScenario: DumbScenario)
+    fun launchSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+    fun replaceDumbScenario(dumbScenario: DumbScenario)
+    fun replaceSmartScenario(resultCode: Int, data: Intent, scenario: Scenario)
+    fun replaceSmartScenarioWithCurrentProjection(scenario: Scenario)
     fun stopScenario()
     fun release()
 
