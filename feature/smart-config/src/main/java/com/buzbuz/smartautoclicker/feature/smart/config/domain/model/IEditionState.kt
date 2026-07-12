@@ -70,7 +70,7 @@ interface IEditionState {
     fun getAllEditedCounters(): List<Counter>
     fun getCounter(name: String): Counter?
     fun getAllEditedEvents(): List<Event>
-    fun <T : Event> getEditedEvent(): T?
+    fun getEditedEvent(): Event?
     fun <T : Action> getEditedEventActions(): List<T>?
     fun <T : Condition> getEditedEventConditions(): List<T>?
     fun <T : Condition> getEditedCondition(): T?

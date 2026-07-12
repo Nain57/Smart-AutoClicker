@@ -194,9 +194,8 @@ internal class EditionState internal constructor(
     override fun getAllEditedEvents(): List<Event> =
         editor.getAllEditedEvents()
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : Event> getEditedEvent(): T? =
-        editor.currentEventEditor.value?.editedItem?.value as? T
+    override fun getEditedEvent(): Event? =
+        editor.currentEventEditor.value?.editedItem?.value
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Action> getEditedEventActions(): List<T>? =
@@ -229,7 +228,7 @@ internal class EditionState internal constructor(
         getAllEditedEvents().find { eventId == it.id } != null
 
     override fun isEditedEventReferencedByAction(): Boolean {
-        val event = getEditedEvent<Event>() ?: return false
+        val event = getEditedEvent() ?: return false
         val scenarioEvents = getAllEditedEvents()
 
         return scenarioEvents.find { scenarioEvent ->
@@ -242,7 +241,7 @@ internal class EditionState internal constructor(
     }
 
     override fun isEditedConditionReferencedByClick(): Boolean {
-        val event = getEditedEvent<Event>() ?: return false
+        val event = getEditedEvent() ?: return false
         if (event.conditionOperator == OR) return false
 
         val condition = getEditedCondition<Condition>() ?: return false

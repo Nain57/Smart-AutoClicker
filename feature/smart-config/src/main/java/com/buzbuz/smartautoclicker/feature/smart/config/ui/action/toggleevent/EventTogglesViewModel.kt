@@ -72,7 +72,7 @@ class EventTogglesViewModel @Inject constructor(
                         }
                     }
 
-                when (editionRepository.editionState.getEditedEvent<Event>()) {
+                when (editionRepository.editionState.getEditedEvent()) {
                     is TriggerEvent -> {
                         if (triggerEvents.size > 1) addAll(triggerEvents)
                         if (imageEvents.size > 1) addAll(imageEvents)

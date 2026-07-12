@@ -70,9 +70,11 @@ class EventDialogViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val userEventCooldownTimeUnit: MutableStateFlow<TimeUnitDropDownItem?> =
-        MutableStateFlow(editionRepository.editionState.getEditedEvent<Event>()?.getInitialCooldownTimeUnit())
+        MutableStateFlow(editionRepository.editionState.getEditedEvent()?.getInitialCooldownTimeUnit())
 
-    private var cachedCooldownMs: Long = editionRepository.editionState.getEditedEvent<ScreenEvent>()?.cooldownMs?.takeIf { it > 0 } ?: 100L
+    private var cachedCooldownMs: Long = (editionRepository.editionState.getEditedEvent() as? ScreenEvent)
+        ?.cooldownMs?.takeIf { it > 0 }
+        ?: 100L
 
     /** Tells if the user is currently editing an event. If that's not the case, dialog should be closed. */
     val isEditingEvent: Flow<Boolean> = editionRepository.isEditingEvent
@@ -91,7 +93,7 @@ class EventDialogViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
     fun isConfiguringScreenEvent(): Boolean =
-        editionRepository.editionState.getEditedEvent<Event>() is ScreenEvent
+        editionRepository.editionState.getEditedEvent() is ScreenEvent
 
     fun hasUnsavedModifications(): Boolean =
         uiState.value?.hasUnsavedModifications == true
@@ -104,7 +106,7 @@ class EventDialogViewModel @Inject constructor(
 
     fun getTryInfo(): Pair<Scenario, ScreenEvent>? {
         val scenario = editionRepository.editionState.getScenario() ?: return null
-        val event = editionRepository.editionState.getEditedEvent<ScreenEvent>() ?: return null
+        val event = (editionRepository.editionState.getEditedEvent() as? ScreenEvent) ?: return null
 
         return scenario to event
     }
@@ -189,7 +191,7 @@ class EventDialogViewModel @Inject constructor(
     }
 
     private fun updateEditedEvent(closure: (oldValue: Event) -> Event?) {
-        editionRepository.editionState.getEditedEvent<Event>()?.let { oldValue ->
+        editionRepository.editionState.getEditedEvent()?.let { oldValue ->
             viewModelScope.launch {
                 closure(oldValue)?.let { newValue ->
                     editionRepository.updateEditedEvent(newValue)

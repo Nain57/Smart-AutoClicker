@@ -147,7 +147,7 @@ class ConditionCopyViewModel @Inject constructor(
     }
 
     fun getFixEventDialogArgument(conditionsToCopy: List<Condition>): FixEventChildrenCopyDialog.Arguments? {
-        val editedEvent = editionRepository.editionState.getEditedEvent<Event>() ?: return null
+        val editedEvent = editionRepository.editionState.getEditedEvent() ?: return null
 
         val allEvents = editionRepository.editionState.getAllEditedEvents()
         val editedEventIndex = allEvents.indexOfFirst { event -> editedEvent.id == event.id }
