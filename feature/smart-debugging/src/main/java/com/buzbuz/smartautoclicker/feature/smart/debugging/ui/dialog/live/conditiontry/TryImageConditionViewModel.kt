@@ -20,8 +20,8 @@ import android.content.Context
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TryImageConditionViewModel @Inject constructor(
@@ -54,7 +55,7 @@ class TryImageConditionViewModel @Inject constructor(
 
     private val userThreshold: MutableStateFlow<Int> = MutableStateFlow(0)
 
-    private val detectionResult: Flow<ScreenConditionResultUiState?> = detectionResultUseCase()
+    private val detectionResult: Flow<ScreenConditionResultUiState?> = detectionResultUseCase(filterNotFulfilled = false)
         .combine(isPlaying) { results, playing -> if (playing) results else null }
         .map { results ->
             if (results == null || results.conditionsResults.isEmpty()) null
@@ -80,7 +81,7 @@ class TryImageConditionViewModel @Inject constructor(
         viewModelScope.launch {
             userThreshold.value = imageCondition.threshold
 
-            delay(500)
+            delay(500.milliseconds)
             smartProcessingRepository.tryScreenCondition(context, scenario, imageCondition)
         }
     }

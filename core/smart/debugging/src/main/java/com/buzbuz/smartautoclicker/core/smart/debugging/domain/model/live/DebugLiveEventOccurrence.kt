@@ -26,6 +26,7 @@ sealed interface DebugLiveEventOccurrence {
     val fulfilled: Boolean
     val fulfilledCount: Int
     val processingDurationMs: Long
+    val timestamp: Long
     val conditionsResults: List<DebugLiveEventConditionResult>
 
     data class Screen(
@@ -33,6 +34,7 @@ sealed interface DebugLiveEventOccurrence {
         override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,
+        override val timestamp: Long,
         override val conditionsResults: List<DebugLiveEventConditionResult.Screen>,
     ) : DebugLiveEventOccurrence
 
@@ -41,6 +43,7 @@ sealed interface DebugLiveEventOccurrence {
         override val fulfilled: Boolean,
         override val fulfilledCount: Int,
         override val processingDurationMs: Long,
+        override val timestamp: Long,
         override val conditionsResults: List<DebugLiveEventConditionResult.Trigger>,
     ) : DebugLiveEventOccurrence
 }

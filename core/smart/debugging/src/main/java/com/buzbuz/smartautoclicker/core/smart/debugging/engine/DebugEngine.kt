@@ -30,7 +30,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
-import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
@@ -260,6 +259,7 @@ internal class DebugEngine @Inject constructor(
             fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
+            timestamp = System.currentTimeMillis(),
             conditionsResults = results.map { result ->
                 DebugLiveEventConditionResult.Screen(
                     condition = result.condition,
@@ -278,6 +278,7 @@ internal class DebugEngine @Inject constructor(
             fulfilled = fulfilled,
             fulfilledCount = eventOccurrencesRecorder.getEventOccurrences(event.id.databaseId),
             processingDurationMs = eventOccurrencesRecorder.getLastEventDurationMs(),
+            timestamp = System.currentTimeMillis(),
             conditionsResults = results.map { result ->
                 DebugLiveEventConditionResult.Trigger(
                     condition = result.condition,
