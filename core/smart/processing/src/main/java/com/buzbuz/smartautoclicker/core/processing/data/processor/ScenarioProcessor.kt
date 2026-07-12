@@ -106,7 +106,7 @@ internal class ScenarioProcessor(
         // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
             progressListener?.onEventsListProcessingStarted(EventType.Trigger)
-            processTriggerEvents(processingState.getEnabledTriggerEvents())
+            processTriggerEvents()
             progressListener?.onEventsProcessingCompleted(EventType.Trigger)
         }
 
@@ -117,7 +117,7 @@ internal class ScenarioProcessor(
         // Handle the image detection
         if (!processingState.areAllScreenEventsDisabled()) {
             progressListener?.onEventsListProcessingStarted(EventType.Screen)
-            processScreenEvents(screenFrame, processingState.getEnabledScreenEvents())
+            processScreenEvents(screenFrame)
             progressListener?.onEventsProcessingCompleted(EventType.Screen)
         }
 
@@ -127,8 +127,8 @@ internal class ScenarioProcessor(
         return
     }
 
-    private suspend fun processTriggerEvents(events: Collection<TriggerEvent>) {
-        for (triggerEvent in events) {
+    private suspend fun processTriggerEvents() {
+        for (triggerEvent in processingState.getTriggerEvents()) {
             // Enabled state of the event might have changed during the loop
             if (!processingState.isEventEnabled(triggerEvent.id.databaseId)) continue
 
@@ -149,13 +149,16 @@ internal class ScenarioProcessor(
         }
     }
 
-    private suspend fun processScreenEvents(screenFrame: Bitmap, events: Collection<ScreenEvent>) {
+    private suspend fun processScreenEvents(screenFrame: Bitmap) {
         // Set the current screen image
         imageDetector.setScreenBitmap(screenFrame, processingTag)
 
         try {
             // Check all events
-            for (screenEvent in events) {
+            for (screenEvent in processingState.getScreenEvents()) {
+                // Enabled state of the event might have changed during the loop
+                if (!processingState.isEventEnabled(screenEvent.id.databaseId)) continue
+
                 // No conditions ? This should not happen, skip this event
                 if (screenEvent.conditions.isEmpty()) continue
 

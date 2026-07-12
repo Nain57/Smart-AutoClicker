@@ -44,7 +44,10 @@ class ScenarioStateTests {
 
         val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", eventList.size, scenarioState.getEnabledScreenEvents().size)
+        Assert.assertFalse("All events should be enabled", scenarioState.areAllScreenEventsDisabled())
+        eventList.forEach { event ->
+            Assert.assertTrue("Event ${event.getDatabaseId()} should be enabled", scenarioState.isEventEnabled(event.getDatabaseId()))
+        }
     }
 
     @Test
@@ -57,20 +60,24 @@ class ScenarioStateTests {
 
         val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", 0, scenarioState.getEnabledScreenEvents().size)
+        Assert.assertTrue("All events should be disabled", scenarioState.areAllScreenEventsDisabled())
     }
 
     @Test
     fun mixed_events_enabled_disabled_on_start() {
+        val enabledEvent = ProcessingData.newEvent(id = 2L, enableOnStart = true)
         val eventList = listOf(
             ProcessingData.newEvent(id = 1L, enableOnStart = false),
-            ProcessingData.newEvent(id = 2L, enableOnStart = true),
+            enabledEvent,
             ProcessingData.newEvent(id = 3L, enableOnStart = false),
         )
 
         val scenarioState = EventsState(eventList, emptyList())
 
-        Assert.assertEquals("Invalid enabled events count", 1, scenarioState.getEnabledScreenEvents().size)
+        Assert.assertFalse("All events should not be disabled", scenarioState.areAllScreenEventsDisabled())
+        Assert.assertTrue("Event ${enabledEvent.getDatabaseId()} should be enabled", scenarioState.isEventEnabled(enabledEvent.getDatabaseId()))
+        Assert.assertFalse("Event 1 should be disabled", scenarioState.isEventEnabled(1L))
+        Assert.assertFalse("Event 3 should be disabled", scenarioState.isEventEnabled(3L))
     }
 
     @Test
@@ -86,7 +93,7 @@ class ScenarioStateTests {
             enableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 
     @Test
@@ -102,7 +109,7 @@ class ScenarioStateTests {
             enableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 
     @Test
@@ -118,7 +125,7 @@ class ScenarioStateTests {
             disableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 
     @Test
@@ -134,7 +141,7 @@ class ScenarioStateTests {
             disableEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 
     @Test
@@ -150,7 +157,7 @@ class ScenarioStateTests {
             toggleEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertFalse("Event should not be enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertFalse("Event should not be enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 
     @Test
@@ -166,6 +173,6 @@ class ScenarioStateTests {
             toggleEvent(changingEvent.getDatabaseId())
         }
 
-        Assert.assertTrue("Event not enabled", scenarioState.getEnabledScreenEvents().contains(changingEvent))
+        Assert.assertTrue("Event not enabled", scenarioState.isEventEnabled(changingEvent.getDatabaseId()))
     }
 }

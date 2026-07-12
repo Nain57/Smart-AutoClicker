@@ -28,8 +28,8 @@ interface IEventsState {
     fun areAllScreenEventsDisabled(): Boolean
     fun areAllTriggerEventsDisabled(): Boolean
 
-    fun getEnabledScreenEvents(): Collection<ScreenEvent>
-    fun getEnabledTriggerEvents(): Collection<TriggerEvent>
+    fun getScreenEvents(): Collection<ScreenEvent>
+    fun getTriggerEvents(): Collection<TriggerEvent>
 
     fun enableAll()
     fun enableEvent(eventId: Long)
@@ -77,14 +77,14 @@ internal class EventsState(
     override fun areAllScreenEventsDisabled(): Boolean =
         screenEventList.areAllEventsDisabled()
 
-    override fun getEnabledScreenEvents(): Collection<ScreenEvent> =
-        screenEventList.getEnabledEvents().sortedByPriority()
+    override fun getScreenEvents(): Collection<ScreenEvent> =
+        screenEventList.getEvents().sortedByPriority()
 
     override fun areAllTriggerEventsDisabled(): Boolean =
         triggerEventList.areAllEventsDisabled()
 
-    override fun getEnabledTriggerEvents(): Collection<TriggerEvent> =
-        triggerEventList.getEnabledEvents().toList()
+    override fun getTriggerEvents(): Collection<TriggerEvent> =
+        triggerEventList.getEvents().toList()
 
     override fun enableEvent(eventId: Long) {
         screenEventList.enableEvent(eventId)
@@ -137,8 +137,8 @@ private class EventList<T : Event>(events: List<T>) {
     fun areAllEventsDisabled(): Boolean =
         enabledEventsMap.isEmpty()
 
-    fun getEnabledEvents(): Collection<T> =
-        enabledEventsMap.values
+    fun getEvents(): Collection<T> =
+        eventsMap.values
 
     fun enableEvent(eventId: Long) {
         if (enabledEventsMap.containsKey(eventId)) return
