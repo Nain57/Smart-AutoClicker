@@ -20,6 +20,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
@@ -41,7 +42,7 @@ import java.io.PrintWriter
  * This class ensure that all dialogs opened from a service will have the same behaviour. It provides basic lifecycle
  * alike methods to ease the view initialization/cleaning.
  */
-abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true, useWindowContext = true) {
+abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, recreateOnRotation = true) {
 
     /** The Android InputMethodManger, for ensuring the keyboard dismiss on dialog dismiss. */
     private lateinit var inputMethodManager: InputMethodManager
@@ -105,7 +106,7 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
 
             window?.apply {
                 setType(OverlayManager.OVERLAY_WINDOW_TYPE)
-                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+                applySoftInputMode(this)
                 decorView.setOnTouchListener(hideSoftInputTouchListener)
             }
 
@@ -118,6 +119,14 @@ abstract class OverlayDialog(@StyleRes theme: Int? = null) : BaseOverlay(theme, 
         }
 
         onDialogCreated(dialog!!)
+    }
+
+    /** Soft keyboard: resize dialog so input fields stay visible (accessibility overlay). */
+    protected open fun applySoftInputMode(window: Window) {
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN,
+        )
     }
 
     @CallSuper
