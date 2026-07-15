@@ -42,12 +42,8 @@
     -->
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">ظروف سلبية</string>
-    <string name="item_desc_tutorial_4">تأكد من عدم عرض شيء ما قبل تنفيذ الإجراء</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">سيناريو أحداث متعددة</string>
-    <string name="item_desc_tutorial_5">تعرف على كيفية الجمع بين أحداث متعددة لتحقيق أتمتة معقدة</string>
 
 
     <!-- Generic tutorial buttons -->

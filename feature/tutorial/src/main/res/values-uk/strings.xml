@@ -42,12 +42,8 @@
     -->
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Негативні умови</string>
-    <string name="item_desc_tutorial_4">Перевірте, що щось не відображається перед виконанням дії</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Сценарій з кількома подіями</string>
-    <string name="item_desc_tutorial_5">Навчіться комбінувати кілька подій для досягнення складної автоматизації</string>
 
 
     <!-- Generic tutorial buttons -->
