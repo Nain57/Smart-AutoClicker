@@ -26,12 +26,8 @@
     <string name="button_text_tutorial_next">Avanti</string>
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Condizioni negative</string>
-    <string name="item_desc_tutorial_4">Verifica che qualcosa non sia visualizzato prima di eseguire un\'azione</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Scenario con eventi multipli</string>
-    <string name="item_desc_tutorial_5">Scopri come combinare eventi multipli per realizzare automazioni complesse</string>
 
 
     <!-- Generic tutorial buttons -->

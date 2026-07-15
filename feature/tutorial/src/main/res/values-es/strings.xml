@@ -42,12 +42,8 @@
     -->
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Rastrear una serie de objetivos móviles</string>
-    <string name="item_desc_tutorial_4">Rastrea y haz clic en una serie de objetivos móviles que se mueven</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Clicar hasta que desaparezcan</string>
-    <string name="item_desc_tutorial_5">Rastrea y haz clic en objetivos móviles hasta que desaparezcan</string>
 
 
     <!-- Generic tutorial buttons -->

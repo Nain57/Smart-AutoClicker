@@ -42,12 +42,8 @@
     -->
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">负条件</string>
-    <string name="item_desc_tutorial_4">在执行操作之前验证某物是否未显示</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">多事件方案</string>
-    <string name="item_desc_tutorial_5">学习如何组合多个事件以实现复杂的自动化</string>
 
     <!-- Generic tutorial buttons -->
     <string name="button_text_tutorial_close">关闭</string>

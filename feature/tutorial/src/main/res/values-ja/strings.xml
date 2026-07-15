@@ -7,10 +7,6 @@
     <string name="message_time_left">残り時間: %1$d</string>
     <string name="button_text_tutorial_start_game">ゲームを開始する</string>
     <string name="button_text_tutorial_next">次</string>
-    <string name="item_title_tutorial_4">マイナス条件</string>
-    <string name="item_desc_tutorial_4">アクションを実行する前に、何かが表示されていないことを確認してください</string>
-    <string name="item_title_tutorial_5">複数のイベントのシナリオ</string>
-    <string name="item_desc_tutorial_5">複数のイベントを組み合わせて複雑な自動化を実現する方法を学びます</string>
 
 
     <!-- Generic tutorial buttons -->
