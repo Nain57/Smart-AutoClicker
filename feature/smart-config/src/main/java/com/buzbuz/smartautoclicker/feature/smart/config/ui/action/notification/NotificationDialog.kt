@@ -102,13 +102,13 @@ class NotificationDialog(
                 }
                 setOnCheckboxClickedListener {
                     showCounterSelectionDialog { selectedCounter ->
-                        setTextValue(
-                            textField.text.toString().appendCounterReference(
-                                counterName = selectedCounter,
-                                atIndex = textField.selectionEnd,
-                            ),
-                            force = true,
+                        val textToWrite = textField.text.toString().appendCounterReference(
+                            counterName = selectedCounter,
+                            atIndex = textField.selectionEnd,
                         )
+
+                        viewModel.setNotificationMessage(textToWrite)
+                        setTextValue(value = textToWrite, force = true)
                     }
                 }
             }

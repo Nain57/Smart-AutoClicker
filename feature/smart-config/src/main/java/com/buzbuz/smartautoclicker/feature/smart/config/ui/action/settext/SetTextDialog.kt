@@ -107,13 +107,13 @@ class SetTextDialog(
                 setOnTextChangedListener { viewModel.setTextToWrite(it.toString()) }
                 setOnCheckboxClickedListener {
                     showCounterSelectionDialog { selectedCounter ->
-                        setTextValue(
-                            textField.text.toString().appendCounterReference(
-                                counterName = selectedCounter,
-                                atIndex = textField.selectionEnd,
-                            ),
-                            force = true,
+                        val textToWrite = textField.text.toString().appendCounterReference(
+                            counterName = selectedCounter,
+                            atIndex = textField.selectionEnd,
                         )
+
+                        viewModel.setTextToWrite(textToWrite)
+                        setTextValue(value = textToWrite, force = true)
                     }
                 }
             }
