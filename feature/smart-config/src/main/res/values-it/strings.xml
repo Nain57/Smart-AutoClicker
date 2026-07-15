@@ -64,7 +64,7 @@
     <string name="item_click_details_on_condition">Durante %1$s su %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Nessuna condizione selezionata</string>
-    <string name="field_condition_selection_desc_or_operator">L\'evento è impostato su Una condizione, non è possibile selezionarne uno specifico</string>
+    <string name="field_condition_selection_desc_or_operator">L\'operatore di condizione dell\'evento è impostato su \"OR\", il clic avverrà sulla prima condizione rilevata</string>
     <string name="field_click_position_desc">Clicca %1$d, %2$d</string>
     <string name="field_select_detection_area_desc">Tra [%1$d, %2$d] [%3$d, %4$d]</string>
     <string name="item_intent_desc">Interagisci con un\'altra applicazione</string>

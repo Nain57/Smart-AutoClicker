@@ -129,4 +129,111 @@
         运算符均可用于自定义验证。\n\n计数器可以多种方式使用，仅使用单个与计数器相关的条件或动作通常不足以
         正确使用它们。涵盖计数器功能的互动教程可在其专属章节中找到。</string>
 
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">暂停动作</string>
+    <string name="tutorial_slideshow_pause_action_desc">了解暂停如何影响动作执行和检测</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">暂停动作会将整个场景暂停设定的时间：在此期间，
+        不会执行任何动作，也不会进行任何屏幕检测。\n\n非常常见的用法是在动作列表末尾添加一个暂停。当您点击
+        某个地方时，被点击的应用程序需要时间来处理点击并显示结果——通常您会希望等待这个时刻，然后再让
+        Klick\'r 重新开始分析屏幕。\n\n在两个动作之间添加暂停也是有效的，但在列表末尾添加暂停通常是更重要的
+        需求。</string>
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">滑动动作</string>
+    <string name="tutorial_slideshow_swipe_action_desc">了解滑动手势的执行方式</string>
+    <string name="tutorial_slideshow_swipe_action_step_1_text">滑动动作沿直线从起始位置到结束位置执行拖动手势。
+        两个坐标都是固定的，在动作配置中设定。\n\n持续时间控制手势从开始到结束所需的时间：较短的持续时间产生
+        更快的滑动，较长的持续时间产生更慢、更受控的滑动。</string>
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">点击偏移</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">了解如何调整对检测到的条件的点击位置</string>
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">点击检测到的条件时，默认情况下点击会应用于
+        检测区域的中心。\n\n点击偏移允许您将该位置相对于条件中心沿 X 轴和 Y 轴移动固定数量的像素。当您想要
+        点击的元素接近但不完全位于检测区域中心时，这非常有用。</string>
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">点击目标</string>
+    <string name="tutorial_slideshow_click_action_target_desc">了解如何配置点击将应用的位置</string>
+    <string name="tutorial_slideshow_click_action_target_step_1_text">点击动作可以针对两种位置：始终相同的静态
+        位置，或检测到的条件的位置。\n\n在动作配置对话框的目标选择器中选择您的瞄准方式。</string>
+    <string name="tutorial_slideshow_click_action_target_step_2_text">使用静态位置时，无论屏幕上显示什么内容，
+        点击都始终发生在相同的精确坐标处。\n\n请注意，这些坐标对旋转敏感：如果设备旋转，点击可能会落在意外
+        位置甚至超出屏幕边界。</string>
+    <string name="tutorial_slideshow_click_action_target_step_3_text">使用条件位置时，点击会应用于检测到的图像
+        条件的中心，无论目标出现在屏幕的哪个位置都会跟踪它。\n\n使用 AND 运算符时，所有条件都必须满足，因此
+        每个图像条件都有一个可用位置。您可以自由选择任意一个并通过偏移量进行微调。</string>
+    <string name="tutorial_slideshow_click_action_target_step_4_text">使用 OR 运算符时，只有第一个满足的条件会被
+        评估，其余条件将被忽略。因此，Klick\'r 无法提前知道哪个条件会被检测到。\n\n因此，使用 OR 运算符时无法
+        选择特定条件作为目标：点击始终会应用于运行时第一个检测到的条件，无论它是哪个。</string>
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">动作列表</string>
+    <string name="tutorial_slideshow_actions_list_desc">了解动作列表的执行方式</string>
+    <string name="tutorial_slideshow_actions_list_step_1_text">动作按顺序依次执行。您可以使用 &lt;&lt; 和 &gt;&gt;
+        按钮更改动作的顺序，或直接点击其索引编号。\n\n请尽量保持动作列表简短。普通自动点击器每个事件只执行一个动作——这就是
+        应该遵循的模式。如果您发现自己在单个事件中添加了很多动作，通常说明应该将工作拆分为多个事件，每个事件响应屏幕上
+        实际显示的内容。这就是 Klick\'r 的"看见即行动"理念：先检测，再行动。</string>
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">输入文字动作</string>
+    <string name="tutorial_slideshow_write_text_action_desc">了解如何向已获焦点的输入框输入文字</string>
+    <string name="tutorial_slideshow_write_text_action_step_1_text">在输入文字动作运行之前，目标输入框必须已获得焦点，
+        就像您点击它以调出键盘一样。\n\n为此，在输入文字动作之前添加一个点击该输入框的点击动作。如果点击后有过渡动画，
+        在两者之间添加一个等待动作可以确保输入框准备就绪。\n\n该动作还有一个"确认"选项：启用后，它会在设置文字后自动按
+        Enter 键，确认或提交输入内容。</string>
+    <string name="tutorial_slideshow_write_text_action_step_2_text">您可以将计数器的值插入要输入的文字中。在动作配置中
+        按"追加计数器"按钮选择一个计数器：它会在文字框当前光标位置插入占位符 <b>{计数器名称}</b>。\n\n在运行时，文字被
+        粘贴到输入框之前，每个 <b>{计数器名称}</b> 占位符都会被替换为计数器的当前值。例如，如果名为 <i>苹果</i> 的计数器
+        的值为 18，文字"我有 {苹果} 个苹果"就会变成"我有 18 个苹果"。</string>
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">系统动作</string>
+    <string name="tutorial_slideshow_system_action_desc">了解如何触发 Android 导航动作</string>
+    <string name="tutorial_slideshow_system_action_step_1_text">系统动作执行 Android 内置导航动作之一：返回、主页或最近
+        应用。\n\n这些与屏幕底部导航按钮的动作相同。它们不需要坐标，无论当前打开哪个应用都能在系统层面运行。</string>
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">修改计数器动作</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">了解如何修改计数器的值</string>
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">修改计数器动作使用预定义的静态值对计数器执行操作。
+        有三种操作可用：将该值加到计数器（+）、从计数器中减去它（−），或将计数器设置为该精确值（=）。\n\n这是更新计数器最
+        常见的方式——例如，每次检测到条件时加 1，或在达到目标时重置为 0。</string>
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">除了静态值，您还可以使用另一个计数器的当前值作为
+        操作数。同样的三种操作（+、−、=）均适用，但操作量在运行时从所选计数器读取，而不是在配置时固定。\n\n这让您可以构建
+        计数器之间相互交互的动态场景。</string>
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">通知动作</string>
+    <string name="tutorial_slideshow_notification_action_desc">了解如何在场景运行时显示通知</string>
+    <string name="tutorial_slideshow_notification_action_step_1_text">通知动作显示带有您自定义标题和消息的 Android 通知。
+        \n\n您可以使用"追加计数器"按钮，或直接输入占位符 <b>{计数器名称}</b>，将计数器的当前值插入通知文字。运行时它会被
+        替换为计数器的值——例如，"我有 {苹果} 个苹果"变为"我有 18 个苹果"。</string>
+    <string name="tutorial_slideshow_notification_action_step_2_text">通知重要性级别控制通知显示的显眼程度。较高的重要性
+        级别可能显示横幅并播放声音，而较低级别则静默地发送到通知抽屉。\n\n确切行为取决于设备，可在 Android 通知设置中针对
+        Klick\'r 进一步自定义。</string>
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">更改事件状态动作</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">了解如何在运行时启用和禁用事件</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">禁用的事件在场景循环中被完全跳过——其条件从不检查，
+        其动作也从不运行。这意味着它完全不消耗处理时间。\n\n禁用当前不使用的事件是提升性能的好方法。例如，在菜单阶段和游戏
+        阶段交替的场景中，在游戏阶段禁用所有菜单事件（反之亦然），可以在任何时刻只保持相关事件处于活动状态。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">配置动作时，您可以选择一次性更改场景中所有事件的
+        状态，或分别为每个事件定义新状态。\n\n每个事件可用三种状态变更：启用它、禁用它，或从其当前值切换——已启用的事件变为
+        禁用，已禁用的事件变为启用。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">如果场景中的所有事件同时被禁用，场景将自动停止，
+        因为没有任何内容可以执行。\n\n这可以有意作为在达到目标后终止场景的干净方式：一个禁用所有事件的最终更改事件状态
+        动作将使场景停止运行。</string>
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">Intent 动作</string>
+    <string name="tutorial_slideshow_intent_action_desc">了解如何与其他应用程序通信</string>
+    <string name="tutorial_slideshow_intent_action_step_1_text">Intent 是 Android 上应用程序之间相互通信的方式。Intent
+        动作让您可以直接从场景中利用这个系统。\n\n提供了一组预定义模板以简化操作。最常用的是"启动应用"，它在您的设备上启动
+        另一个应用，就像您从启动器点击其图标一样。</string>
+    <string name="tutorial_slideshow_intent_action_step_2_text">"高级"选项卡允许您手动定义原始 Intent，让您完全控制动作、
+        类别、数据和 extras。这不建议普通用户使用——面向已了解 Intent 工作原理的 Android 开发者。\n\n未来更新中将添加更多
+        开箱即用的模板，以便在不使用高级选项的情况下更轻松地设置常见用例。</string>
+
 </resources>

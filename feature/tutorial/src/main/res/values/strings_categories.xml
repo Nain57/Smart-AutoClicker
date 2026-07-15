@@ -109,4 +109,59 @@
         Actions range from gestures (Click, Swipe) to flow control (ToggleEvent, ChangeCounter, Pause) and system
         interactions (Intent, Notification, SystemAction, SetText).\n\n Learn here how to use each Action type to
         build your automation scripts.</string>
+
+    <string name="tutorial_category_click_action_name">Click</string>
+    <string name="tutorial_category_click_action_desc_short">Tap at a fixed position or on a matched condition</string>
+    <string name="tutorial_category_click_action_desc_long">A Click Action simulates a tap at a fixed coordinate or
+        at the center of a matched Condition. You can configure the press duration to simulate long presses.
+        \n\n Learn here how to use it to interact with your screen.</string>
+
+    <string name="tutorial_category_swipe_action_name">Swipe</string>
+    <string name="tutorial_category_swipe_action_desc_short">Slide from one point to another on the screen</string>
+    <string name="tutorial_category_swipe_action_desc_long">A Swipe Action simulates a drag gesture from a start
+        coordinate to an end coordinate. You can configure the swipe duration to control the speed of the gesture.
+        \n\n Learn here how to use it to scroll or drag elements on your screen.</string>
+
+    <string name="tutorial_category_pause_action_name">Pause</string>
+    <string name="tutorial_category_pause_action_desc_short">Wait for a duration before executing the next action</string>
+    <string name="tutorial_category_pause_action_desc_long">A Pause Action delays execution for a configured amount
+        of time. It is useful to insert a wait between two actions when the app needs time to react.
+        \n\n Learn here how to use it to pace your automation scripts.</string>
+
+    <string name="tutorial_category_intent_action_name">Intent</string>
+    <string name="tutorial_category_intent_action_desc_short">Send an Android Intent to another app or component</string>
+    <string name="tutorial_category_intent_action_desc_long">An Intent Action sends an Android Intent, either as a
+        broadcast or to start an Activity or Service. You can attach extra key-value pairs to pass data along with
+        the Intent.\n\n Learn here how to use it to trigger actions in other applications.</string>
+
+    <string name="tutorial_category_change_counter_action_name">Change Counter</string>
+    <string name="tutorial_category_change_counter_action_desc_short">Set, add, or subtract a value on a Counter</string>
+    <string name="tutorial_category_change_counter_action_desc_long">A Change Counter Action modifies a named Counter
+        variable by setting it to a fixed value, adding to it, or subtracting from it. Counters can then be read by
+        Conditions or other Actions.\n\n Learn here how to use it to manage state across your Scenario.</string>
+
+    <string name="tutorial_category_change_event_state_action_name">Change Event State</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">Enable, disable, or toggle one or more Events</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">A Change Event State Action enables, disables,
+        or toggles one or more Events at runtime. This lets you build multi-step flows where earlier steps gate later
+        ones.\n\n Learn here how to use it to control the flow of your Scenario.</string>
+
+    <string name="tutorial_category_notification_action_name">Notification</string>
+    <string name="tutorial_category_notification_action_desc_short">Post a system notification</string>
+    <string name="tutorial_category_notification_action_desc_long">A Notification Action posts an Android system
+        notification with a custom title and message. It is useful to alert the user when a specific condition is
+        detected.\n\n Learn here how to use it to surface information while your Scenario runs in the background.</string>
+
+    <string name="tutorial_category_system_action_name">System Action</string>
+    <string name="tutorial_category_system_action_desc_short">Invoke a global Android navigation action</string>
+    <string name="tutorial_category_system_action_desc_long">A System Action invokes a global Android navigation
+        action such as pressing Back, Home or Recent. These actions do not require a
+        coordinate and act at the system level.\n\n Learn here how to use it to navigate the device during automation.</string>
+
+    <string name="tutorial_category_write_text_action_name">Write Text</string>
+    <string name="tutorial_category_write_text_action_desc_short">Paste text into the focused input field</string>
+    <string name="tutorial_category_write_text_action_desc_long">A Write Text Action pastes a configured string into
+        the currently focused input field using the AccessibilityService. It is useful for filling forms or search
+        fields without simulating individual key presses.\n\n Learn here how to use it to enter text during automation.</string>
+
 </resources>

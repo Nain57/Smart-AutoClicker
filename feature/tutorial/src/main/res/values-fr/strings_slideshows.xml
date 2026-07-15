@@ -158,4 +158,149 @@
         et utiliser une seule condition ou action liée à un compteur est souvent insuffisant pour les utiliser correctement. Des tutoriels
         interactifs couvrant la fonctionnalité Compteur sont disponibles dans leur section dédiée.</string>
 
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">Action Pause</string>
+    <string name="tutorial_slideshow_pause_action_desc">Apprenez comment la pause affecte l\'exécution des actions et la détection</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">Une Action Pause suspend l\'intégralité du scénario
+        pendant une durée configurée : pendant ce temps, aucune action ne s\'exécute et aucune détection d\'écran
+        n\'a lieu.\n\nUn cas d\'usage très courant est d\'ajouter une Pause à la fin de votre liste d\'actions.
+        Lorsque vous cliquez quelque part, l\'application cliquée a besoin de temps pour traiter le clic et afficher
+        le résultat — et vous souhaitez généralement attendre ce moment avant que Klick\'r ne recommence à analyser
+        l\'écran.\n\nUne pause entre deux actions est également valide, mais en ajouter une à la fin de la liste est
+        souvent le besoin le plus important.</string>
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">Action Glissement</string>
+    <string name="tutorial_slideshow_swipe_action_desc">Apprenez comment le geste de glissement est effectué</string>
+    <string name="tutorial_slideshow_swipe_action_step_1_text">Une Action Glissement effectue un geste de glisser en
+        ligne droite d\'une position de départ à une position d\'arrivée. Les deux coordonnées sont fixes et définies
+        lors de la configuration de l\'action.\n\nLa durée du glissement contrôle le temps que met le geste pour
+        parcourir le trajet : une durée plus courte produit un glissement plus rapide, tandis qu\'une durée plus
+        longue produit un glissement plus lent et plus contrôlé.</string>
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">Décalage du clic</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">Apprenez à affiner la position du clic sur une condition détectée</string>
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">Lorsque vous cliquez sur une condition
+        détectée, le clic est par défaut appliqué au centre de la zone détectée.\n\nLe décalage du clic vous permet
+        de déplacer cette position d\'un nombre fixe de pixels le long des axes X et Y, par rapport au centre de la
+        condition. Cela est utile lorsque l\'élément sur lequel vous souhaitez appuyer est proche — mais pas
+        exactement — du centre de la zone détectée.</string>
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">Cible du clic</string>
+    <string name="tutorial_slideshow_click_action_target_desc">Apprenez à configurer où le clic sera appliqué</string>
+    <string name="tutorial_slideshow_click_action_target_step_1_text">Une Action Clic peut cibler deux types de
+        positions : une position statique toujours identique, ou la position d\'une condition détectée.\n\nChoisissez
+        votre méthode de ciblage dans le sélecteur de cible du dialogue de configuration de l\'action.</string>
+    <string name="tutorial_slideshow_click_action_target_step_2_text">Avec une position statique, le clic se produit
+        toujours aux mêmes coordonnées exactes, quelle que soit la situation à l\'écran.\n\nGardez à l\'esprit que
+        ces coordonnées sont sensibles à la rotation de l\'écran : si l\'appareil pivote, le clic peut se retrouver
+        à une position inattendue ou même en dehors des limites de l\'écran.</string>
+    <string name="tutorial_slideshow_click_action_target_step_3_text">Avec une position de condition, le clic est
+        appliqué au centre d\'une Condition d\'image détectée. Cela permet au clic de suivre la cible où qu\'elle
+        apparaisse à l\'écran.\n\nLorsque l\'opérateur de l\'événement est ET, toutes les conditions doivent être
+        remplies, donc chaque Condition d\'image possède une position disponible. Vous pouvez choisir librement
+        l\'une d\'elles comme cible, et affiner éventuellement avec un décalage.</string>
+    <string name="tutorial_slideshow_click_action_target_step_4_text">Lorsque l\'opérateur de l\'événement est OU,
+        seule la première condition remplie est évaluée, les autres étant ignorées. De ce fait, Klick\'r ne peut pas
+        savoir à l\'avance quelle condition sera détectée.\n\nEn conséquence, avec l\'opérateur OU, vous ne pouvez
+        pas choisir une condition spécifique comme cible du clic : le clic sera toujours appliqué sur la première
+        condition détectée, quelle qu\'elle soit lors de l\'exécution.</string>
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">Liste d\'actions</string>
+    <string name="tutorial_slideshow_actions_list_desc">Apprenez comment la liste d\'actions est exécutée</string>
+    <string name="tutorial_slideshow_actions_list_step_1_text">Les actions sont exécutées dans l\'ordre, l\'une après
+        l\'autre. Vous pouvez modifier l\'ordre d\'une action à l\'aide des boutons &lt;&lt; et &gt;&gt;, ou en appuyant
+        directement sur son numéro d\'index.\n\nEssayez de garder vos listes d\'actions courtes. Un autoclicker classique
+        n\'effectue qu\'une action par événement — c\'est le modèle à suivre. Si vous vous retrouvez à ajouter beaucoup
+        d\'actions à un seul événement, c\'est généralement le signe que le travail devrait être réparti sur plusieurs
+        événements, chacun réagissant à ce qui est réellement affiché à l\'écran. C\'est la philosophie voir-et-agir
+        de Klick\'r : détecter d\'abord, puis agir.</string>
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">Action Écrire du texte</string>
+    <string name="tutorial_slideshow_write_text_action_desc">Apprenez à saisir du texte dans un champ de saisie actif</string>
+    <string name="tutorial_slideshow_write_text_action_step_1_text">Avant que l\'action Écrire du texte s\'exécute, le
+        champ de saisie cible doit déjà être focalisé, comme si vous l\'aviez appuyé pour faire apparaître le clavier.
+        \n\nPour y parvenir, ajoutez une action Clic sur ce champ avant l\'action Écrire du texte. Si une animation de
+        transition se produit après le clic, une action Attente entre les deux peut aider à s\'assurer que le champ est
+        prêt.\n\nL\'action dispose également d\'une option Valider : lorsqu\'elle est activée, elle appuie automatiquement
+        sur Entrée après la saisie du texte, confirmant ou soumettant la valeur.</string>
+    <string name="tutorial_slideshow_write_text_action_step_2_text">Vous pouvez insérer la valeur d\'un compteur dans
+        le texte à écrire. Appuyez sur le bouton Ajouter un compteur dans la configuration de l\'action pour choisir un
+        compteur : il insérera le marqueur <b>{nomDuCompteur}</b> à la position actuelle du curseur.\n\nÀ l\'exécution,
+        chaque marqueur <b>{nomDuCompteur}</b> est remplacé par la valeur actuelle du compteur avant que le texte ne soit
+        collé dans le champ. Par exemple, si un compteur nommé <i>pommes</i> a la valeur 18, le texte
+        \"J\'ai {pommes} pommes\" devient \"J\'ai 18 pommes\".</string>
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">Action Système</string>
+    <string name="tutorial_slideshow_system_action_desc">Apprenez à déclencher des actions de navigation Android</string>
+    <string name="tutorial_slideshow_system_action_step_1_text">Une Action Système exécute l\'une des actions de
+        navigation intégrées d\'Android : Retour, Accueil ou Applications récentes.\n\nCe sont les mêmes actions que
+        les boutons de navigation en bas de votre écran. Elles ne nécessitent aucune coordonnée et fonctionnent au
+        niveau du système, quelle que soit l\'application actuellement ouverte.</string>
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">Action Modifier le compteur</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">Apprenez à modifier la valeur d\'un compteur</string>
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">Une action Modifier le compteur applique une
+        opération à un compteur à l\'aide d\'une valeur statique prédéfinie. Trois opérations sont disponibles : ajouter
+        la valeur au compteur (+), la soustraire du compteur (−) ou définir le compteur à cette valeur exacte (=).\n\nC\'est
+        la façon la plus courante de mettre à jour un compteur — par exemple, ajouter 1 chaque fois qu\'une condition est
+        détectée, ou le réinitialiser à 0 lorsqu\'un objectif est atteint.</string>
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">Au lieu d\'une valeur statique, vous pouvez
+        utiliser la valeur actuelle d\'un autre compteur comme opérande. Les mêmes trois opérations (+, −, =) s\'appliquent,
+        mais le montant est lu depuis le compteur sélectionné à l\'exécution plutôt qu\'étant fixé lors de la configuration.
+        \n\nCela vous permet de construire des scénarios dynamiques où les compteurs interagissent entre eux.</string>
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">Action Notification</string>
+    <string name="tutorial_slideshow_notification_action_desc">Apprenez à afficher une notification pendant votre scénario</string>
+    <string name="tutorial_slideshow_notification_action_step_1_text">Une action Notification affiche une notification
+        Android avec un titre et un message de votre choix.\n\nVous pouvez insérer la valeur actuelle d\'un compteur dans
+        le texte de la notification à l\'aide du bouton Ajouter un compteur, ou en tapant directement le marqueur
+        <b>{nomDuCompteur}</b>. À l\'exécution, il est remplacé par la valeur du compteur — par exemple,
+        \"J\'ai {pommes} pommes\" devient \"J\'ai 18 pommes\".</string>
+    <string name="tutorial_slideshow_notification_action_step_2_text">Le niveau d\'importance de la notification
+        contrôle le degré d\'intrusion avec lequel elle est présentée. Les niveaux élevés peuvent afficher une bannière
+        et jouer un son, tandis que les niveaux faibles sont livrés silencieusement dans le tiroir des notifications.
+        \n\nLe comportement exact dépend de l\'appareil et peut être personnalisé dans les paramètres de notifications
+        Android de Klick\'r.</string>
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">Action Changer l\'état d\'un événement</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">Apprenez à activer et désactiver des événements à l\'exécution</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">Un événement désactivé est complètement ignoré
+        pendant la boucle du scénario — ses conditions ne sont jamais vérifiées et ses actions ne s\'exécutent jamais.
+        Il ne consomme donc aucun temps de traitement.\n\nDésactiver les événements que vous n\'utilisez pas est un
+        excellent moyen d\'améliorer les performances. Par exemple, dans un scénario qui alterne entre une phase menu et
+        une phase jeu, désactiver tous les événements liés au menu pendant la phase jeu (et vice versa) permet de ne
+        garder actifs que les événements pertinents à chaque instant.</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">Lors de la configuration de l\'action, vous
+        pouvez choisir de modifier l\'état de tous les événements du scénario en une seule fois, ou définir un nouvel
+        état pour chaque événement individuellement.\n\nTrois changements d\'état sont disponibles pour chaque événement :
+        l\'activer, le désactiver, ou basculer depuis sa valeur actuelle — un événement activé devient désactivé et un
+        événement désactivé devient activé.</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">Si tous les événements du scénario se retrouvent
+        désactivés en même temps, le scénario s\'arrête automatiquement, car il ne reste rien à exécuter.\n\nCela peut
+        être utilisé intentionnellement comme moyen propre de terminer un scénario une fois un objectif atteint : une
+        dernière action Changer l\'état d\'un événement qui désactive tous les événements mettra fin au scénario.</string>
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">Action Intent</string>
+    <string name="tutorial_slideshow_intent_action_desc">Apprenez à communiquer avec d\'autres applications</string>
+    <string name="tutorial_slideshow_intent_action_step_1_text">Les Intents sont la façon dont les applications
+        communiquent entre elles sur Android. L\'action Intent vous permet d\'utiliser ce système directement depuis
+        votre scénario.\n\nUn ensemble de modèles prédéfinis est disponible pour faciliter cela. Le plus courant est
+        Démarrer une application, qui lance une autre application sur votre appareil exactement comme si vous aviez
+        appuyé sur son icône depuis le lanceur.</string>
+    <string name="tutorial_slideshow_intent_action_step_2_text">L\'onglet Avancé vous permet de définir un Intent brut
+        manuellement, vous donnant un contrôle total sur l\'action, la catégorie, les données et les extras. Cela n\'est
+        pas recommandé pour les utilisateurs réguliers — c\'est destiné aux développeurs Android qui savent déjà comment
+        fonctionnent les Intents.\n\nDavantage de modèles prêts à l\'emploi seront ajoutés dans les futures mises à jour
+        pour faciliter les cas d\'utilisation courants sans recourir aux options avancées.</string>
+
 </resources>

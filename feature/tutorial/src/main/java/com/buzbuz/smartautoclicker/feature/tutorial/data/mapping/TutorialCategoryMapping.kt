@@ -19,6 +19,15 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.mapping
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory.Type.*
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.getActionsCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.changecounter.getChangeCounterActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.changeeventstate.getChangeEventStateActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.click.getClickActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.intent.getIntentActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.notification.getNotificationActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.pause.getPauseActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.swipe.getSwipeActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.system.getSystemActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.writetext.getWriteTextActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.getBasicsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.color.getColorConditionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.getScreenConditionsCategory
@@ -36,14 +45,23 @@ internal fun TutorialCategory.Type.toTutorialCategory(): TutorialCategory =
     when (this) {
         ACTIONS -> getActionsCategory()
         BASICS -> getBasicsCategory()
+        CHANGE_COUNTER_ACTION -> getChangeCounterActionCategory()
+        TOGGLE_EVENT_ACTION -> getChangeEventStateActionCategory()
+        CLICK_ACTION -> getClickActionCategory()
         COLOR_CONDITION -> getColorConditionsCategory()
         COMBINE_CONDITIONS -> getCombineConditionsCategory()
         COUNTERS -> getCountersCategory()
         EVENT_STATE -> getEventStateCategory()
         IMAGE_CONDITION -> getImageConditionsCategory()
+        INTENT_ACTION -> getIntentActionCategory()
+        NOTIFICATION_ACTION -> getNotificationActionCategory()
         NUMBER_CONDITION -> getNumberConditionsCategory()
+        PAUSE_ACTION -> getPauseActionCategory()
         ROOT -> getRootCategory()
         SCREEN_CONDITIONS -> getScreenConditionsCategory()
+        SWIPE_ACTION -> getSwipeActionCategory()
+        SYSTEM_ACTION -> getSystemActionCategory()
         TEXT_CONDITION -> getTextConditionsCategory()
         TRIGGER_CONDITIONS -> getTriggerConditionsCategory()
+        WRITE_TEXT_ACTION -> getWriteTextActionCategory()
     }

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.acti
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 internal fun getActionsCategory() =
     TutorialCategory(
@@ -26,5 +27,16 @@ internal fun getActionsCategory() =
         shortDescriptionRes = R.string.tutorial_category_action_desc_short,
         longDescriptionRes = R.string.tutorial_category_action_desc_long,
         iconRes = R.drawable.ic_click,
-        content = listOf(),
+        content = listOf(
+            TutorialCategory.Content.Category(TutorialCategory.Type.CLICK_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.SWIPE_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.PAUSE_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.WRITE_TEXT_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.SYSTEM_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.CHANGE_COUNTER_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.TOGGLE_EVENT_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.NOTIFICATION_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.INTENT_ACTION),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.ACTIONS_LIST),
+        ),
     )

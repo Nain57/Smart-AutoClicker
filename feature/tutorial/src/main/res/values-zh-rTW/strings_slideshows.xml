@@ -129,4 +129,111 @@
         運算子均可用於自訂驗證。\n\n計數器可以多種方式使用，僅使用單個與計數器相關的條件或動作通常不足以
         正確使用它們。涵蓋計數器功能的互動教學可在其專屬章節中找到。</string>
 
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">暫停動作</string>
+    <string name="tutorial_slideshow_pause_action_desc">了解暫停如何影響動作執行和偵測</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">暫停動作會將整個情境暫停設定的時間：在此期間，
+        不會執行任何動作，也不會進行任何螢幕偵測。\n\n非常常見的用法是在動作清單末尾新增一個暫停。當您點擊
+        某個地方時，被點擊的應用程式需要時間來處理點擊並顯示結果——通常您會希望等待這個時刻，然後再讓
+        Klick\'r 重新開始分析螢幕。\n\n在兩個動作之間新增暫停也是有效的，但在清單末尾新增暫停通常是更重要的
+        需求。</string>
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">滑動動作</string>
+    <string name="tutorial_slideshow_swipe_action_desc">了解滑動手勢的執行方式</string>
+    <string name="tutorial_slideshow_swipe_action_step_1_text">滑動動作沿直線從起始位置到結束位置執行拖曳手勢。
+        兩個座標都是固定的，在動作設定中指定。\n\n持續時間控制手勢從開始到結束所需的時間：較短的持續時間產生
+        更快的滑動，較長的持續時間產生更慢、更受控的滑動。</string>
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">點擊偏移</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">了解如何調整對偵測到的條件的點擊位置</string>
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">點擊偵測到的條件時，預設情況下點擊會應用於
+        偵測區域的中心。\n\n點擊偏移允許您將該位置相對於條件中心沿 X 軸和 Y 軸移動固定數量的像素。當您想要
+        點擊的元素接近但不完全位於偵測區域中心時，這非常有用。</string>
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">點擊目標</string>
+    <string name="tutorial_slideshow_click_action_target_desc">了解如何設定點擊將應用的位置</string>
+    <string name="tutorial_slideshow_click_action_target_step_1_text">點擊動作可以針對兩種位置：始終相同的靜態
+        位置，或偵測到的條件的位置。\n\n在動作設定對話框的目標選擇器中選擇您的瞄準方式。</string>
+    <string name="tutorial_slideshow_click_action_target_step_2_text">使用靜態位置時，無論螢幕上顯示什麼內容，
+        點擊都始終發生在相同的精確座標處。\n\n請注意，這些座標對旋轉敏感：如果裝置旋轉，點擊可能會落在意外
+        位置甚至超出螢幕邊界。</string>
+    <string name="tutorial_slideshow_click_action_target_step_3_text">使用條件位置時，點擊會應用於偵測到的圖片
+        條件的中心，無論目標出現在螢幕的哪個位置都會跟蹤它。\n\n使用 AND 運算子時，所有條件都必須滿足，因此
+        每個圖片條件都有一個可用位置。您可以自由選擇任意一個並透過偏移量進行微調。</string>
+    <string name="tutorial_slideshow_click_action_target_step_4_text">使用 OR 運算子時，只有第一個滿足的條件會被
+        評估，其餘條件將被忽略。因此，Klick\'r 無法提前知道哪個條件會被偵測到。\n\n因此，使用 OR 運算子時無法
+        選擇特定條件作為目標：點擊始終會應用於執行時第一個偵測到的條件，無論它是哪個。</string>
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">動作清單</string>
+    <string name="tutorial_slideshow_actions_list_desc">了解動作清單的執行方式</string>
+    <string name="tutorial_slideshow_actions_list_step_1_text">動作按順序依次執行。您可以使用 &lt;&lt; 和 &gt;&gt;
+        按鈕更改動作的順序，或直接點擊其索引編號。\n\n請盡量保持動作清單簡短。一般自動點擊器每個事件只執行一個動作——這就是
+        應該遵循的模式。如果您發現自己在單一事件中添加了很多動作，通常表示應該將工作拆分為多個事件，每個事件回應螢幕上
+        實際顯示的內容。這就是 Klick\'r 的「看見即行動」理念：先偵測，再行動。</string>
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">輸入文字動作</string>
+    <string name="tutorial_slideshow_write_text_action_desc">了解如何向已獲焦點的輸入欄位輸入文字</string>
+    <string name="tutorial_slideshow_write_text_action_step_1_text">在輸入文字動作執行之前，目標輸入欄位必須已獲得焦點，
+        就像您點擊它以調出鍵盤一樣。\n\n為此，在輸入文字動作之前新增一個點擊該輸入欄位的點擊動作。如果點擊後有過渡動畫，
+        在兩者之間新增一個等待動作可以確保輸入欄位準備就緒。\n\n該動作還有一個「確認」選項：啟用後，它會在設定文字後自動按
+        Enter 鍵，確認或提交輸入內容。</string>
+    <string name="tutorial_slideshow_write_text_action_step_2_text">您可以將計數器的值插入要輸入的文字中。在動作設定中
+        按「附加計數器」按鈕選擇一個計數器：它會在文字欄位當前游標位置插入佔位符 <b>{計數器名稱}</b>。\n\n在執行時，文字
+        被貼上到輸入欄位之前，每個 <b>{計數器名稱}</b> 佔位符都會被替換為計數器的當前值。例如，如果名為 <i>蘋果</i> 的
+        計數器的值為 18，文字「我有 {蘋果} 個蘋果」就會變成「我有 18 個蘋果」。</string>
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">系統動作</string>
+    <string name="tutorial_slideshow_system_action_desc">了解如何觸發 Android 導覽動作</string>
+    <string name="tutorial_slideshow_system_action_step_1_text">系統動作執行 Android 內建導覽動作之一：返回、主畫面或最近
+        應用程式。\n\n這些與螢幕底部導覽按鈕的動作相同。它們不需要座標，無論目前開啟哪個應用程式都能在系統層面運作。</string>
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">修改計數器動作</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">了解如何修改計數器的值</string>
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">修改計數器動作使用預定義的靜態值對計數器執行操作。
+        有三種操作可用：將該值加到計數器（+）、從計數器中減去它（−），或將計數器設定為該精確值（=）。\n\n這是更新計數器最
+        常見的方式——例如，每次偵測到條件時加 1，或在達到目標時重置為 0。</string>
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">除了靜態值，您還可以使用另一個計數器的當前值作為
+        運算元。同樣的三種操作（+、−、=）均適用，但操作量在執行時從所選計數器讀取，而不是在設定時固定。\n\n這讓您可以建構
+        計數器之間相互互動的動態情境。</string>
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">通知動作</string>
+    <string name="tutorial_slideshow_notification_action_desc">了解如何在情境執行時顯示通知</string>
+    <string name="tutorial_slideshow_notification_action_step_1_text">通知動作顯示帶有您自訂標題和訊息的 Android 通知。
+        \n\n您可以使用「附加計數器」按鈕，或直接輸入佔位符 <b>{計數器名稱}</b>，將計數器的當前值插入通知文字。執行時它會被
+        替換為計數器的值——例如，「我有 {蘋果} 個蘋果」變為「我有 18 個蘋果」。</string>
+    <string name="tutorial_slideshow_notification_action_step_2_text">通知重要性等級控制通知顯示的醒目程度。較高的重要性
+        等級可能顯示橫幅並播放聲音，而較低等級則靜默地傳送到通知抽屜。\n\n確切行為取決於裝置，可在 Android 通知設定中針對
+        Klick\'r 進一步自訂。</string>
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">變更事件狀態動作</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">了解如何在執行時啟用和停用事件</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">停用的事件在情境循環中被完全跳過——其條件從不檢查，
+        其動作也從不執行。這意味著它完全不消耗處理時間。\n\n停用當前不使用的事件是提升效能的好方法。例如，在菜單階段和遊戲
+        階段交替的情境中，在遊戲階段停用所有菜單事件（反之亦然），可以在任何時刻只保持相關事件處於活動狀態。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">設定動作時，您可以選擇一次性變更情境中所有事件的
+        狀態，或分別為每個事件定義新狀態。\n\n每個事件可用三種狀態變更：啟用它、停用它，或從其當前值切換——已啟用的事件變為
+        停用，已停用的事件變為啟用。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">如果情境中的所有事件同時被停用，情境將自動停止，
+        因為沒有任何內容可以執行。\n\n這可以有意作為在達到目標後終止情境的乾淨方式：一個停用所有事件的最終變更事件狀態
+        動作將使情境停止執行。</string>
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">Intent 動作</string>
+    <string name="tutorial_slideshow_intent_action_desc">了解如何與其他應用程式通訊</string>
+    <string name="tutorial_slideshow_intent_action_step_1_text">Intent 是 Android 上應用程式之間相互通訊的方式。Intent
+        動作讓您可以直接從情境中利用這個系統。\n\n提供了一組預定義範本以簡化操作。最常用的是「啟動應用程式」，它在您的
+        裝置上啟動另一個應用程式，就像您從啟動器點擊其圖示一樣。</string>
+    <string name="tutorial_slideshow_intent_action_step_2_text">「進階」選項卡允許您手動定義原始 Intent，讓您完全控制
+        動作、類別、資料和 extras。這不建議一般使用者使用——面向已了解 Intent 運作方式的 Android 開發者。\n\n未來更新中將
+        新增更多開箱即用的範本，以便在不使用進階選項的情況下更輕鬆地設定常見用例。</string>
+
 </resources>

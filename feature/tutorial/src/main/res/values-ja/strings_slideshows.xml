@@ -148,4 +148,132 @@
         カウンターに関連する単一の条件やアクションだけでは正しく使いこなすには不十分なことがよくあります。カウンター機能を
         カバーするインタラクティブなチュートリアルは、専用のセクションで利用できます。</string>
 
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">ポーズアクション</string>
+    <string name="tutorial_slideshow_pause_action_desc">ポーズがアクションの実行と検出に与える影響を学ぶ</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">ポーズアクションはシナリオ全体を設定した時間だけ
+        一時停止します。その間、アクションは実行されず、画面の検出も行われません。\n\nよくある使い方は、アクション
+        リストの末尾にポーズを追加することです。どこかをタップすると、タップされたアプリがそれを処理して結果を表示
+        するまでに時間がかかります。Klick\'r が再び画面を分析し始める前に、その瞬間を待ちたいことが多いでしょう。
+        \n\n2つのアクションの間にポーズを入れることも有効ですが、リストの末尾に追加することの方が重要なケースが
+        多いです。</string>
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">スワイプアクション</string>
+    <string name="tutorial_slideshow_swipe_action_desc">スワイプジェスチャーの実行方法を学ぶ</string>
+    <string name="tutorial_slideshow_swipe_action_step_1_text">スワイプアクションは開始位置から終了位置まで直線的な
+        ドラッグジェスチャーを実行します。両方の座標は固定されており、アクションの設定で指定します。\n\nデュレーション
+        はジェスチャーが開始から終了まで要する時間を制御します。短いデュレーションはより速いスワイプを生み出し、長い
+        デュレーションはよりゆっくりと制御されたスワイプを生み出します。</string>
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">クリックオフセット</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">検出された条件に対するクリック位置の調整方法を学ぶ</string>
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">検出された条件をクリックする場合、デフォルトでは
+        クリックは検出された領域の中心に適用されます。\n\nクリックオフセットを使うと、その位置を条件の中心を基準に
+        X軸とY軸方向にピクセル単位で移動できます。タップしたい要素が検出された領域の中心の近くにあるが、厳密に
+        中心ではない場合に便利です。</string>
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">クリックターゲット</string>
+    <string name="tutorial_slideshow_click_action_target_desc">クリックが適用される場所の設定方法を学ぶ</string>
+    <string name="tutorial_slideshow_click_action_target_step_1_text">クリックアクションは2種類の位置を対象にできます：
+        常に同じ固定位置、または検出された条件の位置です。\n\nアクション設定ダイアログのターゲットセレクターで
+        ターゲット指定の方法を選択してください。</string>
+    <string name="tutorial_slideshow_click_action_target_step_2_text">固定位置の場合、クリックは画面に何が表示されて
+        いるかに関係なく、常に同じ正確な座標で発生します。\n\nこれらの座標は回転に敏感であることに注意してください：
+        デバイスが回転すると、クリックが予期しない位置に当たったり、画面の端を超えてしまうことがあります。</string>
+    <string name="tutorial_slideshow_click_action_target_step_3_text">条件の位置の場合、クリックは検出された画像条件の
+        中心に適用され、画面上のどこに表示されてもターゲットを追跡します。\n\nANDオペレーターでは、すべての条件が
+        満たされる必要があるため、各画像条件には利用可能な位置があります。自由にどれかを選んでオフセットで
+        調整できます。</string>
+    <string name="tutorial_slideshow_click_action_target_step_4_text">ORオペレーターでは、最初に満たされた条件のみが
+        評価され、残りは無視されます。そのため、Klick\'r はどの条件が検出されるかを事前に知ることができません。
+        \n\n結果として、ORオペレーターでは特定の条件をターゲットとして選ぶことができません：クリックは常に実行時に
+        最初に検出された条件に適用されます。</string>
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">アクションリスト</string>
+    <string name="tutorial_slideshow_actions_list_desc">アクションリストの実行方法を学ぶ</string>
+    <string name="tutorial_slideshow_actions_list_step_1_text">アクションは順番に、一つずつ実行されます。&lt;&lt; と
+        &gt;&gt; ボタンを使うか、インデックス番号を直接タップしてアクションの順序を変更できます。\n\nアクションリストは
+        短く保つようにしましょう。通常のオートクリッカーはイベントごとに一か所をタップします——それが従うべきモデルです。一つの
+        イベントに多くのアクションを追加していると感じたら、それは作業を複数のイベントに分割すべきサインです。各イベントが
+        実際に画面に表示されているものに反応するようにしましょう。これが Klick\'r の「見て動く」哲学です：まず検出、それから
+        アクション。</string>
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">テキスト入力アクション</string>
+    <string name="tutorial_slideshow_write_text_action_desc">フォーカスされた入力フィールドへのテキスト入力方法を学ぶ</string>
+    <string name="tutorial_slideshow_write_text_action_step_1_text">テキスト入力アクションが実行される前に、対象の入力
+        フィールドがすでにフォーカスされている必要があります——キーボードを表示するためにタップするのと同じです。\n\nこれを
+        実現するには、テキスト入力アクションの前にそのフィールドへのクリックアクションを追加してください。クリック後に
+        トランジションアニメーションが再生される場合は、間に待機アクションを入れるとフィールドの準備が整うのを確認するのに
+        役立ちます。\n\nアクションには「確定」オプションもあります：有効にすると、テキスト設定後に自動的に Enter が押され、
+        入力が確定または送信されます。</string>
+    <string name="tutorial_slideshow_write_text_action_step_2_text">書き込むテキストにカウンターの値を挿入できます。
+        アクション設定の「カウンターを追加」ボタンを押してカウンターを選択すると、テキストフィールドの現在のカーソル位置に
+        プレースホルダー <b>{カウンター名}</b> が挿入されます。\n\n実行時には、テキストがフィールドに貼り付けられる前に
+        すべての <b>{カウンター名}</b> プレースホルダーがカウンターの現在値に置き換えられます。例えば、<i>りんご</i>
+        という名前のカウンターの値が18の場合、「りんごが{りんご}個あります」は「りんごが18個あります」になります。</string>
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">システムアクション</string>
+    <string name="tutorial_slideshow_system_action_desc">Android のナビゲーションアクションを実行する方法を学ぶ</string>
+    <string name="tutorial_slideshow_system_action_step_1_text">システムアクションは Android の組み込みナビゲーション
+        アクションの一つを実行します：戻る、ホーム、または最近使用したアプリ。\n\nこれらは画面下部のナビゲーションボタンと
+        同じアクションです。座標は不要で、現在開いているアプリに関係なくシステムレベルで動作します。</string>
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">カウンター変更アクション</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">カウンターの値を変更する方法を学ぶ</string>
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">カウンター変更アクションは、事前定義された静的な値
+        を使ってカウンターに操作を適用します。利用可能な操作は3つ：カウンターに値を加算する（+）、カウンターから減算する
+        （−）、またはカウンターをその値に設定する（=）。\n\nこれはカウンターを更新する最も一般的な方法です——例えば、条件が
+        検出されるたびに1を加えたり、目標達成時に0にリセットしたりします。</string>
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">静的な値の代わりに、別のカウンターの現在値を
+        オペランドとして使用できます。同じ3つの操作（+、−、=）が適用されますが、量は設定時に固定されるのではなく、実行時に
+        選択されたカウンターから読み取られます。\n\nこれにより、カウンター同士が相互作用する動的なシナリオを構築できます。</string>
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">通知アクション</string>
+    <string name="tutorial_slideshow_notification_action_desc">シナリオ中に通知を表示する方法を学ぶ</string>
+    <string name="tutorial_slideshow_notification_action_step_1_text">通知アクションは、お好みのタイトルとメッセージで
+        Android 通知を表示します。\n\n「カウンターを追加」ボタンを使うか、プレースホルダー <b>{カウンター名}</b> を直接
+        入力することで、通知テキストにカウンターの現在値を挿入できます。実行時にはカウンターの値に置き換えられます——例えば、
+        「りんごが{りんご}個あります」は「りんごが18個あります」になります。</string>
+    <string name="tutorial_slideshow_notification_action_step_2_text">通知の重要度レベルは、通知がどれほど目立つ形で
+        表示されるかを制御します。高い重要度レベルではヘッドアップバナーが表示されたり音が鳴ったりしますが、低いものは
+        通知トレイに静かに届きます。\n\n正確な動作はデバイスによって異なり、Klick\'r の Android 通知設定でさらに
+        カスタマイズできます。</string>
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">イベント状態変更アクション</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">実行時にイベントを有効・無効にする方法を学ぶ</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">無効化されたイベントはシナリオループ中に完全に
+        スキップされます——その条件は一切チェックされず、アクションも実行されません。つまり、処理時間を全く消費しません。
+        \n\n使用していないイベントを無効化することはパフォーマンス向上に非常に効果的です。例えば、メニューフェーズとゲーム
+        フェーズを交互に行うシナリオでは、ゲームフェーズ中にメニュー関連のイベントをすべて無効化する（逆も同様）ことで、
+        常に関連するイベントだけをアクティブに保てます。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">アクションを設定する際、シナリオ内のすべての
+        イベントの状態を一括変更するか、各イベントの新しい状態を個別に定義するかを選択できます。\n\n各イベントに対して
+        3つの状態変更が利用可能です：有効にする、無効にする、または現在の値からトグルする——有効なイベントは無効になり、
+        無効なイベントは有効になります。</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">シナリオ内のすべてのイベントが同時に無効になった
+        場合、実行するものが何もなくなるため、シナリオは自動的に停止します。\n\nこれを意図的に利用することで、目標達成後に
+        シナリオをクリーンに終了させることができます：すべてのイベントを無効にする最後のイベント状態変更アクションがシナリオ
+        を停止させます。</string>
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">Intent アクション</string>
+    <string name="tutorial_slideshow_intent_action_desc">他のアプリケーションと通信する方法を学ぶ</string>
+    <string name="tutorial_slideshow_intent_action_step_1_text">Intent は Android でアプリが互いに通信する方法です。
+        Intent アクションを使うと、シナリオから直接このシステムを活用できます。\n\n使いやすくするための定義済みテンプレートが
+        用意されています。最も一般的なのは「アプリを起動」で、ランチャーからアイコンをタップしたときと全く同じように、デバイス
+        上の別のアプリを起動します。</string>
+    <string name="tutorial_slideshow_intent_action_step_2_text">「詳細設定」タブでは、生の Intent を手動で定義し、
+        アクション、カテゴリ、データ、extras を完全に制御できます。これは一般ユーザーには推奨されません——Intent の仕組みを
+        すでに知っている Android 開発者向けです。\n\n将来のアップデートでは、詳細設定に頼らずに一般的なユースケースを簡単に
+        設定できるよう、すぐに使えるテンプレートが追加される予定です。</string>
+
 </resources>

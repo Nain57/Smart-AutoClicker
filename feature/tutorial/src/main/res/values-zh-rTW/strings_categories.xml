@@ -77,4 +77,49 @@
     <string name="tutorial_category_action_desc_long">當事件的條件滿足時，動作將被執行。動作涵蓋手勢（Click、Swipe）、流程控制
         （ToggleEvent、ChangeCounter、Pause）和系統互動（Intent、Notification、SystemAction、SetText）。\n\n 在這裡學習如何
         使用每種動作類型來建構自動化腳本。</string>
+
+    <string name="tutorial_category_click_action_name">點擊</string>
+    <string name="tutorial_category_click_action_desc_short">在固定位置或偵測到的條件上點擊</string>
+    <string name="tutorial_category_click_action_desc_long">點擊動作在固定座標或偵測到的圖像條件的中心模擬點擊。可以設定按壓時長以
+        模擬長按。\n\n 在這裡學習如何使用它與螢幕互動。</string>
+
+    <string name="tutorial_category_swipe_action_name">滑動</string>
+    <string name="tutorial_category_swipe_action_desc_short">在螢幕上從一個點滑動到另一個點</string>
+    <string name="tutorial_category_swipe_action_desc_long">滑動動作模擬從起始座標到終止座標的拖曳手勢。可以設定滑動時長來控制手勢
+        速度。\n\n 在這裡學習如何使用它來捲動或拖曳螢幕上的元素。</string>
+
+    <string name="tutorial_category_pause_action_name">暫停</string>
+    <string name="tutorial_category_pause_action_desc_short">在執行下一個動作之前等待一段時間</string>
+    <string name="tutorial_category_pause_action_desc_long">暫停動作在設定的時間內延遲執行。這對於在下次偵測前給應用程式時間做出
+        回應很有用。\n\n 在這裡學習如何使用它來控制自動化腳本的節奏。</string>
+
+    <string name="tutorial_category_intent_action_name">Intent</string>
+    <string name="tutorial_category_intent_action_desc_short">向其他應用程式發送 Android Intent</string>
+    <string name="tutorial_category_intent_action_desc_long">Intent 動作傳送 Android Intent，可作為廣播或用於啟動 Activity 或
+        Service。可以附加鍵值對來傳遞資料。\n\n 在這裡學習如何使用它來觸發其他應用程式中的操作。</string>
+
+    <string name="tutorial_category_change_counter_action_name">修改計數器</string>
+    <string name="tutorial_category_change_counter_action_desc_short">設定、增加或減少計數器的值</string>
+    <string name="tutorial_category_change_counter_action_desc_long">修改計數器動作透過設定固定值、加法或減法來變更計數器變數。計數器
+        之後可以被條件或其他動作讀取。\n\n 在這裡學習如何管理情境的狀態。</string>
+
+    <string name="tutorial_category_change_event_state_action_name">變更事件狀態</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">啟用、停用或切換一個或多個事件</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">變更事件狀態動作在執行時啟用、停用或切換一個或多個事件。這讓
+        你可以建構多步驟流程，前面的步驟控制後面的步驟。\n\n 在這裡學習如何控制情境的流程。</string>
+
+    <string name="tutorial_category_notification_action_name">通知</string>
+    <string name="tutorial_category_notification_action_desc_short">發布系統通知</string>
+    <string name="tutorial_category_notification_action_desc_long">通知動作發布帶有自訂標題和訊息的 Android 系統通知。當偵測到特定條件
+        時，它可用於提醒使用者。\n\n 在這裡學習如何在情境於背景執行時顯示資訊。</string>
+
+    <string name="tutorial_category_system_action_name">系統動作</string>
+    <string name="tutorial_category_system_action_desc_short">呼叫全域 Android 導覽操作</string>
+    <string name="tutorial_category_system_action_desc_long">系統動作呼叫全域 Android 導覽操作，例如按返回、主畫面或最近任務。這些操作
+        不需要座標，直接在系統層面生效。\n\n 在這裡學習如何在自動化過程中導覽裝置。</string>
+
+    <string name="tutorial_category_write_text_action_name">輸入文字</string>
+    <string name="tutorial_category_write_text_action_desc_short">將文字貼上至作用中的輸入欄位</string>
+    <string name="tutorial_category_write_text_action_desc_long">輸入文字動作透過無障礙服務將設定的字串貼上至目前獲得焦點的輸入欄位。
+        它對於填寫表單或搜尋欄位非常有用，無需模擬逐個按鍵。\n\n 在這裡學習如何在自動化過程中輸入文字。</string>
 </resources>

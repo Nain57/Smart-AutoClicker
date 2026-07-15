@@ -64,7 +64,7 @@
     <string name="item_click_details_on_condition">Pendant %1$s sur %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Pas de condition sélectionnée</string>
-    <string name="field_condition_selection_desc_or_operator">L\'évènement est défini sur "Une condition", vous ne pouvez pas en spécifier une</string>
+    <string name="field_condition_selection_desc_or_operator">L\'opérateur de condition de l\'évènement est défini sur \"OR\", le clic se produira sur la première condition détectée</string>
     <string name="field_click_position_desc">Clic simple sur %1$d, %2$d</string>
     <string name="field_select_detection_area_desc">Dans [%1$d, %2$d] [%3$d, %4$d]</string>
     <string name="item_intent_desc">Intéragir avec une autre application</string>

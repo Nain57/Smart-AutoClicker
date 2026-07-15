@@ -343,7 +343,7 @@
     <string name="field_condition_selection_desc_and_operator_not_found">No condition selected</string>
 
     <string name="field_condition_selection_title_or_operator">Click on the first detected condition</string>
-    <string name="field_condition_selection_desc_or_operator">Event is set to "One Condition", you can\'t select a specific one</string>
+    <string name="field_condition_selection_desc_or_operator">Event\'s condition operator is set to \"OR\", click will happen on the first detected condition</string>
 
     <string name="field_click_position_desc">Click on %1$d, %2$d</string>
 

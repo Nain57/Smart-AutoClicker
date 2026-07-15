@@ -141,7 +141,7 @@
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">条件が選択されていません</string>
     <string name="field_condition_selection_title_or_operator">最初に検出された条件をクリックします</string>
-    <string name="field_condition_selection_desc_or_operator">イベントは「1 つの条件」に設定されており、特定の条件を選択することはできません</string>
+    <string name="field_condition_selection_desc_or_operator">イベントの条件演算子が \"OR\" に設定されており、最初に検出された条件でクリックが発生します</string>
     <string name="field_click_position_desc">%1$d、%2$d をクリックします</string>
     <string name="field_click_offset_title">クリックオフセット</string>
     <string name="field_click_offset_desc_none">なし</string>

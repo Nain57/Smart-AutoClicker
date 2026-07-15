@@ -240,7 +240,7 @@
     <string name="field_condition_selection_desc_and_operator_not_found">Ninguna condición seleccionada</string>
 
     <string name="field_condition_selection_title_or_operator">Haga clic en la primera condición detectada</string>
-    <string name="field_condition_selection_desc_or_operator">El evento está configurado en "Una condición", no puedes seleccionar una específica</string>
+    <string name="field_condition_selection_desc_or_operator">El operador de condición del evento está configurado en \"OR\", el clic ocurrirá en la primera condición detectada</string>
 
     <string name="field_click_position_desc">Haga clic en %1$d, %2$d</string>
 

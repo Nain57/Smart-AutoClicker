@@ -240,7 +240,7 @@
     <string name="field_condition_selection_desc_and_operator_not_found">Условие не выбрано</string>
 
     <string name="field_condition_selection_title_or_operator">Нажать на первое обнаруженное условие</string>
-    <string name="field_condition_selection_desc_or_operator">Событие настроено на «Одно условие», нельзя выбрать конкретное</string>
+    <string name="field_condition_selection_desc_or_operator">Оператор условия события установлен на \"OR\", клик произойдёт по первому обнаруженному условию</string>
 
     <string name="field_click_position_desc">Нажать на %1$d, %2$d</string>
 

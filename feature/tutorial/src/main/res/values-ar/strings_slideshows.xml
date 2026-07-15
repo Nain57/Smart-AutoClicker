@@ -148,4 +148,129 @@
         العدادات بطرق مختلفة، واستخدام شرط أو إجراء واحد مرتبط بعداد غالبًا لا يكفي لاستخدامها بشكل صحيح. تتوفر
         دروس تعليمية تفاعلية تغطي ميزة العداد في قسمها المخصص.</string>
 
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">إجراء الإيقاف المؤقت</string>
+    <string name="tutorial_slideshow_pause_action_desc">تعلّم كيف يؤثر الإيقاف المؤقت على تنفيذ الإجراءات والاكتشاف</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">يوقف إجراء الإيقاف المؤقت السيناريو بأكمله للمدة
+        المحددة: خلال هذا الوقت، لا يُنفَّذ أي إجراء ولا يحدث أي اكتشاف للشاشة.\n\nمن أكثر حالات الاستخدام
+        شيوعًا إضافة إيقاف مؤقت في نهاية قائمة الإجراءات. عندما تنقر على مكان ما، يحتاج التطبيق إلى وقت
+        لمعالجة النقرة وعرض النتيجة — وعادةً ما تريد الانتظار حتى هذه اللحظة قبل أن يعود Klick\'r
+        لتحليل الشاشة.\n\nالإيقاف المؤقت بين إجراءين أيضًا صالح، لكن الإضافة في نهاية القائمة غالبًا ما
+        تكون الأهم.</string>
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">إجراء السحب</string>
+    <string name="tutorial_slideshow_swipe_action_desc">تعلّم كيف يُنفَّذ إيماءة السحب</string>
+    <string name="tutorial_slideshow_swipe_action_step_1_text">يُنفِّذ إجراء السحب إيماءة سحب في خط مستقيم
+        من موضع البداية إلى موضع النهاية. كلتا الإحداثيتين ثابتتان ومحددتان في إعداد الإجراء.\n\nتتحكم
+        المدة في الوقت الذي يستغرقه الإيماءة من البداية إلى النهاية: مدة أقصر تُنتج سحبًا أسرع، بينما
+        مدة أطول تُنتج سحبًا أبطأ وأكثر تحكمًا.</string>
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">إزاحة النقر</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">تعلّم كيف تضبط موضع النقر على شرط مكتشف</string>
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">عند النقر على شرط مكتشف، يُطبَّق النقر
+        افتراضيًا على مركز المنطقة المكتشفة.\n\nتتيح لك إزاحة النقر تحريك هذا الموضع بعدد ثابت من البكسلات
+        على المحورين X وY بالنسبة لمركز الشرط. هذا مفيد عندما يكون العنصر الذي تريد لمسه قريبًا من —
+        لكن ليس بالضبط في — مركز المنطقة المكتشفة.</string>
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">هدف النقر</string>
+    <string name="tutorial_slideshow_click_action_target_desc">تعلّم كيف تُعدّ مكان تطبيق النقر</string>
+    <string name="tutorial_slideshow_click_action_target_step_1_text">يمكن لإجراء النقر أن يستهدف نوعين من
+        المواضع: موضع ثابت دائمًا متطابق، أو موضع شرط مكتشف.\n\nاختر طريقة التوجيه من منتقي الهدف في
+        مربع حوار إعداد الإجراء.</string>
+    <string name="tutorial_slideshow_click_action_target_step_2_text">مع الموضع الثابت، يحدث النقر دائمًا
+        عند نفس الإحداثيات الدقيقة بغض النظر عما يُعرض على الشاشة.\n\nتذكّر أن هذه الإحداثيات حساسة
+        للدوران: إذا دار الجهاز، قد ينتهي النقر في موضع غير متوقع أو حتى خارج حدود الشاشة.</string>
+    <string name="tutorial_slideshow_click_action_target_step_3_text">مع موضع الشرط، يُطبَّق النقر على مركز
+        شرط الصورة المكتشف، تتبعًا للهدف أينما ظهر على الشاشة.\n\nمع عامل التشغيل AND، يجب استيفاء جميع
+        الشروط، لذا فإن كل شرط صورة له موضع متاح. يمكنك اختيار أي منها بحرية وتحسينه بإزاحة.</string>
+    <string name="tutorial_slideshow_click_action_target_step_4_text">مع عامل التشغيل OR، يُقيَّم فقط الشرط
+        الأول المستوفى ويُتجاهل الباقي. لذلك لا يمكن لـ Klick\'r معرفة أي شرط سيُكتشف مسبقًا.\n\nبناءً
+        على ذلك، مع عامل التشغيل OR لا يمكنك اختيار شرط محدد كهدف: سيُطبَّق النقر دائمًا على أول شرط
+        مكتشف في وقت التشغيل، أيًّا كان.</string>
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">قائمة الإجراءات</string>
+    <string name="tutorial_slideshow_actions_list_desc">تعلّم كيف يتم تنفيذ قائمة الإجراءات</string>
+    <string name="tutorial_slideshow_actions_list_step_1_text">تُنفَّذ الإجراءات بالترتيب، واحدًا تلو الآخر. يمكنك
+        تغيير ترتيب إجراء باستخدام زرَّي &lt;&lt; و &gt;&gt;، أو بالنقر مباشرة على رقم فهرسه.\n\nحاوِل أن تبقي
+        قوائم الإجراءات قصيرة. يُنفِّذ المُنقِّر التلقائي العادي إجراءً واحدًا لكل حدث — هذا هو النموذج الذي ينبغي
+        اتباعه. إذا وجدت نفسك تُضيف إجراءات كثيرة إلى حدث واحد، فهذا عادةً مؤشر على أن العمل ينبغي توزيعه على
+        أحداث متعددة، يستجيب كل منها لما يُعرض فعلاً على الشاشة. هذه هي فلسفة الرؤية والتصرف في Klick\'r: اكتشف
+        أولاً، ثم تصرف.</string>
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">إجراء كتابة النص</string>
+    <string name="tutorial_slideshow_write_text_action_desc">تعلّم كيفية إدخال نص في حقل إدخال نشط</string>
+    <string name="tutorial_slideshow_write_text_action_step_1_text">قبل تشغيل إجراء كتابة النص، يجب أن يكون حقل
+        الإدخال الهدف في حالة تركيز بالفعل، تمامًا كما لو نقرت عليه لإظهار لوحة المفاتيح.\n\nلتحقيق ذلك، أضف إجراء
+        نقر على ذلك الحقل قبل إجراء كتابة النص. إذا ظهر تأثير انتقالي بعد النقر، فإن إجراء انتظار بينهما يمكن أن
+        يساعد في التأكد من جاهزية الحقل.\n\nيحتوي الإجراء أيضًا على خيار التحقق: عند تفعيله، سيضغط تلقائيًا على
+        Enter بعد تعيين النص، مما يؤكد أو يُرسل القيمة المُدخَلة.</string>
+    <string name="tutorial_slideshow_write_text_action_step_2_text">يمكنك إدراج قيمة عداد في النص المراد كتابته.
+        اضغط على زر إضافة عداد في تكوين الإجراء لاختيار عداد: سيُدرج العنصر النائب <b>{اسمالعداد}</b> في موضع
+        المؤشر الحالي في حقل النص.\n\nعند التشغيل، يُستبدل كل عنصر نائب <b>{اسمالعداد}</b> بالقيمة الحالية للعداد
+        قبل لصق النص في الحقل. على سبيل المثال، إذا كان عداد اسمه <i>تفاح</i> يساوي 18، فإن النص
+        \"عندي {تفاح} تفاحات\" سيصبح \"عندي 18 تفاحة\".</string>
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">إجراء النظام</string>
+    <string name="tutorial_slideshow_system_action_desc">تعلّم كيفية تشغيل إجراءات تنقل Android</string>
+    <string name="tutorial_slideshow_system_action_step_1_text">يُنفِّذ إجراء النظام أحد إجراءات التنقل المدمجة في
+        Android: رجوع أو الرئيسية أو التطبيقات الأخيرة.\n\nهذه هي نفس إجراءات أزرار التنقل في أسفل شاشتك. لا تتطلب
+        إحداثيات وتعمل على مستوى النظام، بغض النظر عن التطبيق المفتوح حاليًا.</string>
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">إجراء تعديل العداد</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">تعلّم كيفية تعديل قيمة عداد</string>
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">يُطبِّق إجراء تعديل العداد عملية على عداد
+        باستخدام قيمة ثابتة محددة مسبقًا. ثلاث عمليات متاحة: جمع القيمة على العداد (+)، أو طرحها منه (−)، أو ضبط
+        العداد على تلك القيمة بالضبط (=).\n\nهذه هي الطريقة الأكثر شيوعًا لتحديث العداد — على سبيل المثال، إضافة 1
+        في كل مرة يُكتشف فيها شرط، أو إعادة ضبطه إلى 0 عند الوصول إلى هدف.</string>
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">بدلاً من قيمة ثابتة، يمكنك استخدام القيمة
+        الحالية لعداد آخر كمعامل. تنطبق العمليات الثلاث ذاتها (+، −، =)، لكن المقدار يُقرأ من العداد المحدد في وقت
+        التشغيل بدلاً من تثبيته أثناء التكوين.\n\nيتيح لك هذا بناء سيناريوهات ديناميكية تتفاعل فيها العدادات مع
+        بعضها.</string>
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">إجراء الإشعار</string>
+    <string name="tutorial_slideshow_notification_action_desc">تعلّم كيفية عرض إشعار أثناء تشغيل السيناريو</string>
+    <string name="tutorial_slideshow_notification_action_step_1_text">يعرض إجراء الإشعار إشعار Android بعنوان
+        ورسالة من اختيارك.\n\nيمكنك إدراج القيمة الحالية لعداد في نص الإشعار باستخدام زر إضافة عداد، أو بكتابة
+        العنصر النائب <b>{اسمالعداد}</b> مباشرةً. عند التشغيل يُستبدل بقيمة العداد — على سبيل المثال،
+        \"عندي {تفاح} تفاحات\" تصبح \"عندي 18 تفاحة\".</string>
+    <string name="tutorial_slideshow_notification_action_step_2_text">يتحكم مستوى أهمية الإشعار في مدى بروز
+        الإشعار عند عرضه. قد تُظهر المستويات الأعلى لافتة منبثقة وتُصدر صوتًا، بينما تصل المستويات الأدنى بصمت إلى
+        درج الإشعارات.\n\nيعتمد السلوك الدقيق على الجهاز ويمكن تخصيصه في إعدادات إشعارات Android الخاصة
+        بـ Klick\'r.</string>
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">إجراء تغيير حالة الحدث</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">تعلّم كيفية تفعيل الأحداث وتعطيلها في وقت التشغيل</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">يُتخطَّى الحدث المُعطَّل كليًّا أثناء دورة
+        السيناريو — لا تُفحص شروطه قط ولا تُنفَّذ إجراءاته. هذا يعني أنه لا يستهلك أي وقت معالجة.\n\nتعطيل الأحداث
+        التي لا تستخدمها حاليًا طريقة رائعة لتحسين الأداء. على سبيل المثال، في سيناريو يتناوب بين مرحلة قائمة ومرحلة
+        لعبة، يُبقي تعطيل جميع أحداث القائمة أثناء مرحلة اللعبة (والعكس) الأحداث ذات الصلة فقط نشطةً في أي وقت.</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">عند تكوين الإجراء، يمكنك اختيار تغيير حالة جميع
+        أحداث السيناريو دفعةً واحدة، أو تحديد حالة جديدة لكل حدث على حدة.\n\nثلاثة تغييرات للحالة متاحة لكل حدث:
+        تفعيله أو تعطيله أو تبديله من قيمته الحالية — يصبح الحدث المُفعَّل مُعطَّلاً والمُعطَّل مُفعَّلاً.</string>
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">إذا انتهى الأمر بتعطيل جميع أحداث السيناريو
+        في الوقت ذاته، يتوقف السيناريو تلقائيًا إذ لم يعد هناك ما يُنفَّذ.\n\nيمكن استخدام هذا عمدًا كطريقة نظيفة
+        لإنهاء السيناريو عند الوصول إلى الهدف: إجراء تغيير حالة الحدث الأخير الذي يُعطِّل جميع الأحداث سيوقف
+        السيناريو.</string>
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">إجراء Intent</string>
+    <string name="tutorial_slideshow_intent_action_desc">تعلّم كيفية التواصل مع التطبيقات الأخرى</string>
+    <string name="tutorial_slideshow_intent_action_step_1_text">Intent هو الطريقة التي تتواصل بها التطبيقات مع بعضها
+        على Android. يتيح لك إجراء Intent توظيف هذا النظام مباشرةً من سيناريوك.\n\nتتوفر مجموعة من القوالب المُعرَّفة
+        مسبقًا لتسهيل ذلك. الأكثر شيوعًا هو تشغيل تطبيق، الذي يُشغِّل تطبيقًا آخر على جهازك تمامًا كما لو نقرت
+        على أيقونته من مُشغِّل التطبيقات.</string>
+    <string name="tutorial_slideshow_intent_action_step_2_text">تتيح لك علامة التبويب المتقدمة تحديد Intent خام
+        يدويًا، مما يمنحك تحكمًا كاملاً في الإجراء والفئة والبيانات والإضافات. لا يُنصح بهذا للمستخدمين العاديين —
+        بل هو موجَّه لمطوري Android الذين يعرفون كيف تعمل Intents.\n\nستُضاف المزيد من القوالب الجاهزة في تحديثات
+        مستقبلية لتسهيل حالات الاستخدام الشائعة دون الحاجة إلى الخيارات المتقدمة.</string>
+
 </resources>

@@ -146,6 +146,7 @@
         provided, but keep in mind that broadcast conditions are more for developers, as mastering them requires Android
         development knowledge.</string>
 
+
     <!-- Counter Reached slideshow -->
     <string name="tutorial_slideshow_counter_reached_title">On Counter Reached</string>
     <string name="tutorial_slideshow_counter_reached_desc">React to your scenario\'s counter values</string>
@@ -156,5 +157,174 @@
         operators are available to customize the verification. \n\nCounters can be used in various ways and using a single
         counter-related condition or action is often not enough to use them correctly. Interactive tutorials covering the
         Counter feature are available in their dedicated section.</string>
+
+
+    <!-- Click Action Offset slideshow -->
+    <string name="tutorial_slideshow_click_action_offset_title">Click offset</string>
+    <string name="tutorial_slideshow_click_action_offset_desc">Learn how to fine-tune the click position on a detected condition</string>
+
+    <string name="tutorial_slideshow_click_action_offset_step_1_text">When clicking on a detected condition, the click
+        is applied at the center of the matched area by default. \n\nThe click offset lets you shift that position by a
+        fixed number of pixels along the X and Y axes, relative to the condition\'s center. This is useful when the
+        element you want to tap is close to — but not exactly at — the center of the detected area.</string>
+
+
+    <!-- Click Action Target slideshow -->
+    <string name="tutorial_slideshow_click_action_target_title">Click target</string>
+    <string name="tutorial_slideshow_click_action_target_desc">Learn how to configure where the click will be applied</string>
+
+    <string name="tutorial_slideshow_click_action_target_step_1_text">A Click Action can target two types of positions:
+        a static position that is always the same, or the position of a detected condition.\n\nChoose your targeting
+        method in the click target selector of the action configuration dialog.</string>
+
+    <string name="tutorial_slideshow_click_action_target_step_2_text">When using a static position, the click will
+        always occur at the exact same coordinates, regardless of what is currently on screen.\n\nKeep in mind that
+        those coordinates are screen-rotation-sensitive: if the device rotates, the click may end up at an unexpected
+        position or even outside the screen boundaries.</string>
+
+    <string name="tutorial_slideshow_click_action_target_step_3_text">When using a condition position, the click is
+        applied at the center of a detected Image Condition. This makes the click follow the target wherever it
+        appears on screen.\n\nWhen the event\'s operator is AND, all conditions must be fulfilled, so every Image
+        Condition has a detected position available. You can freely pick any of them as your click target, and
+        optionally refine it with a click offset.</string>
+
+    <string name="tutorial_slideshow_click_action_target_step_4_text">When the event\'s operator is OR, only one
+        condition will be fulfilled, and the next ones will be skipped. Because of this, Klick\'r cannot know
+        in advance which condition will be detected.\n\nAs a consequence, when using the OR operator, you cannot
+        choose a specific condition as the click target: the click will always be applied on the first detected
+        condition, whichever that turns out to be at runtime.</string>
+
+
+    <!-- Swipe Action slideshow -->
+    <string name="tutorial_slideshow_swipe_action_title">Swipe action</string>
+    <string name="tutorial_slideshow_swipe_action_desc">Learn how the swipe gesture is performed</string>
+
+    <string name="tutorial_slideshow_swipe_action_step_1_text">A Swipe Action performs a straight-line drag gesture
+        from a start position to an end position. Both coordinates are fixed and set when configuring the action.
+        \n\nThe swipe duration controls how long the gesture takes to travel from start to end: a shorter duration
+        produces a faster swipe, while a longer one produces a slower, more controlled drag.</string>
+
+
+    <!-- Pause Action slideshow -->
+    <string name="tutorial_slideshow_pause_action_title">Pause action</string>
+    <string name="tutorial_slideshow_pause_action_desc">Learn how the pause affects action execution and detection</string>
+
+    <string name="tutorial_slideshow_pause_action_step_1_text">A Pause Action suspends the entire scenario for a
+        configured duration: during that time, no action runs and no screen detection occurs.\n\nA very common use
+        case is to add a Pause at the end of your action list. When you click somewhere, the app you clicked on
+        needs time to process the click and display the result, and you usually want to wait during that moment
+        before Klick\'r starts looking at the screen again.\n\nA pause between two actions is also valid, but
+        adding one at the end of the list is often the more common use case.</string>
+
+
+    <!-- Write Text Action slideshow -->
+    <string name="tutorial_slideshow_write_text_action_title">Write text action</string>
+    <string name="tutorial_slideshow_write_text_action_desc">Learn how to set text into a focused input field</string>
+
+    <string name="tutorial_slideshow_write_text_action_step_1_text">Before the Write Text action runs, the target
+        input field must already be focused, just as you would tap it to bring up the keyboard. \n\nTo achieve this,
+        add a Click action on that field before the Write Text action to focus it. If a transition animation plays
+        after the click, a Wait action between the two can help ensure the field is ready. \n\nThe action also has a
+        Validate option: when enabled, it will automatically press Enter after the text is set, confirming or submitting
+        the input.</string>
+
+    <string name="tutorial_slideshow_write_text_action_step_2_text">You can insert the value of a counter into
+        the text to write. Press the Append Counter button in the action configuration to pick a counter: it will
+        insert the placeholder <b>{counterName}</b> at the current cursor position in the text field.\n\nAt
+        runtime, every <b>{counterName}</b> placeholder is replaced by the counter\'s current value before the text
+        is pasted into the field. For example, if a counter named <i>apples</i> has the value 18, the text
+        \"I have {apples} apples\" becomes \"I have 18 apples\".</string>
+
+
+    <!-- System Action slideshow -->
+    <string name="tutorial_slideshow_system_action_title">System action</string>
+    <string name="tutorial_slideshow_system_action_desc">Learn how to trigger Android navigation actions</string>
+
+    <string name="tutorial_slideshow_system_action_step_1_text">A System Action executes one of Android\'s built-in
+        navigation actions: Back, Home, or Recents.\n\nThese are the same actions as the navigation buttons at the
+        bottom of your screen. They require no coordinates and work at the system level, regardless of which app is
+        currently open.</string>
+
+
+    <!-- Change Counter Action slideshow -->
+    <string name="tutorial_slideshow_change_counter_action_title">Change counter action</string>
+    <string name="tutorial_slideshow_change_counter_action_desc">Learn how to modify a counter value</string>
+
+    <string name="tutorial_slideshow_change_counter_action_step_1_text">A Change Counter action applies an operation
+        to a counter using a predefined static value. Three operations are available: add the value to the counter
+        (+), subtract it from the counter (−), or set the counter to that exact value (=).\n\nThis is the most
+        common way to update a counter. For example, adding 1 each time a condition is detected, or resetting it
+        to 0 when a goal is reached.</string>
+
+    <string name="tutorial_slideshow_change_counter_action_step_2_text">Instead of a static value, you can use the
+        current value of another counter as the operand. \n\nThe same three operations (+, −, =) apply, but the amount
+        is read from the selected counter at runtime rather than being fixed at configuration time.\n\nThis lets
+        you build dynamic scenarios where counters interact with each other.</string>
+
+
+    <!-- Notification Action slideshow -->
+    <string name="tutorial_slideshow_notification_action_title">Notification action</string>
+    <string name="tutorial_slideshow_notification_action_desc">Learn how to display a notification during your scenario</string>
+
+    <string name="tutorial_slideshow_notification_action_step_1_text">A Notification action displays an Android
+        notification with a title and a message of your choice.\n\nYou can insert the current value of a counter
+        into the notification text using the Append Counter button, or by typing the <b>{counterName}</b>
+        placeholder directly. At runtime it is replaced by the counter\'s value — for example,
+        \"I have {apples} apples\" becomes \"I have 18 apples\".</string>
+
+    <string name="tutorial_slideshow_notification_action_step_2_text">The notification importance level controls
+        how intrusively the notification is presented. Higher importance levels may show a heads-up banner and play
+        a sound, while lower ones are delivered silently to the notification drawer.\n\nThe exact behaviour depends
+        on the device and can be further customized in the Android notification settings for Klick\'r.</string>
+
+
+    <!-- Toggle Event Action slideshow -->
+    <string name="tutorial_slideshow_toggle_event_action_title">Change event state action</string>
+    <string name="tutorial_slideshow_toggle_event_action_desc">Learn how to enable and disable events at runtime</string>
+
+    <string name="tutorial_slideshow_toggle_event_action_step_1_text">A disabled event is completely skipped during
+        the scenario loop; its conditions are never checked and its actions never run. This means it consumes no
+        processing time at all.\n\nDisabling events you are not currently using is a great way to improve
+        performance. For example, in a scenario that alternates between a menu phase and a game phase, disabling
+        all menu events while you are in the game phase (and vice versa) keeps only the relevant events active at
+        any given time.</string>
+
+    <string name="tutorial_slideshow_toggle_event_action_step_2_text">When configuring the action, you can choose
+        to change the state of all events in the scenario at once, or define a new state for each event
+        individually. \n\nThree state changes are available for each event: enable it, disable it, or toggle it
+        from its current value; so an enabled event becomes disabled and a disabled one becomes enabled.</string>
+
+    <string name="tutorial_slideshow_toggle_event_action_step_3_text">If every event in the scenario ends up
+        disabled at the same time, the scenario stops itself automatically, since there is nothing left to
+        execute.\n\nThis can be used intentionally as a clean way to terminate a scenario once a goal is reached:
+        a final Change Event State action that disables all events will bring the scenario to a halt.</string>
+
+
+    <!-- Intent Action slideshow -->
+    <string name="tutorial_slideshow_intent_action_title">Intent action</string>
+    <string name="tutorial_slideshow_intent_action_desc">Learn how to communicate with other applications</string>
+
+    <string name="tutorial_slideshow_intent_action_step_1_text">Intents are the way applications communicate with
+        each other on Android. The Intent action lets you tap into this system directly from your scenario.\n\nA
+        set of predefined templates is available to make this easy. The most common one is Start Application,
+        which launches another app on your device exactly as if you had tapped its icon from the launcher.</string>
+
+    <string name="tutorial_slideshow_intent_action_step_2_text">The Advanced tab lets you define a raw Intent
+        manually, giving you full control over the action, category, data, and extras. This is not recommended for
+        regular users; it is aimed at Android developers who already know how Intents work.\n\nMore ready-to-use
+        templates will be added in future updates to make common use cases easier to set up without going into the
+        advanced options.</string>
+
+
+    <!-- Actions List slideshow -->
+    <string name="tutorial_slideshow_actions_list_title">Action list</string>
+    <string name="tutorial_slideshow_actions_list_desc">Learn how the action list is executed</string>
+
+    <string name="tutorial_slideshow_actions_list_step_1_text">Actions are executed in order, one after the other.
+        You can change the order of an action using the &lt;&lt; and &gt;&gt; buttons, or by tapping directly on
+        its index box.\n\nTry to keep your action lists short. A regular autoclicker taps one place per event;
+        that\'s the model to follow. If you find yourself adding many actions to a single event, it is usually a
+        sign that the work should be split across several events, each reacting to what is actually on the screen.
+        This is the see-and-act philosophy of Klick\'r: detect first, then act.</string>
 
 </resources>
