@@ -95,4 +95,62 @@
         варьируются от жестов (Click, Swipe) до управления потоком (ToggleEvent, ChangeCounter, Pause) и системных
         взаимодействий (Intent, Notification, SystemAction, SetText).\n\n Узнайте здесь, как использовать каждый тип
         действия для создания скриптов автоматизации.</string>
+
+    <string name="tutorial_category_click_action_name">Нажатие</string>
+    <string name="tutorial_category_click_action_desc_short">Нажмите в фиксированной позиции или на обнаруженное условие</string>
+    <string name="tutorial_category_click_action_desc_long">Действие «Нажатие» имитирует касание в фиксированной
+        координате или в центре обнаруженного условия изображения. Можно настроить длительность нажатия для
+        имитации долгих нажатий.\n\n Узнайте здесь, как использовать его для взаимодействия с экраном.</string>
+
+    <string name="tutorial_category_swipe_action_name">Свайп</string>
+    <string name="tutorial_category_swipe_action_desc_short">Проведите пальцем от одной точки к другой</string>
+    <string name="tutorial_category_swipe_action_desc_long">Действие «Свайп» имитирует жест перетаскивания от
+        начальной координаты до конечной. Можно настроить длительность свайпа для управления скоростью жеста.
+        \n\n Узнайте здесь, как использовать его для прокрутки или перетаскивания элементов на экране.</string>
+
+    <string name="tutorial_category_pause_action_name">Пауза</string>
+    <string name="tutorial_category_pause_action_desc_short">Ожидание перед выполнением следующего действия</string>
+    <string name="tutorial_category_pause_action_desc_long">Действие «Пауза» задерживает выполнение на настроенное
+        время. Это полезно, чтобы дать приложению время отреагировать перед следующим обнаружением.\n\n Узнайте
+        здесь, как использовать его для управления темпом скриптов автоматизации.</string>
+
+    <string name="tutorial_category_intent_action_name">Intent</string>
+    <string name="tutorial_category_intent_action_desc_short">Отправить Android Intent другому приложению</string>
+    <string name="tutorial_category_intent_action_desc_long">Действие «Intent» отправляет Android Intent — в виде
+        broadcast или для запуска Activity или Service. Можно прикрепить пары ключ-значение для передачи данных.
+        \n\n Узнайте здесь, как использовать его для запуска действий в других приложениях.</string>
+
+    <string name="tutorial_category_change_counter_action_name">Изменить счётчик</string>
+    <string name="tutorial_category_change_counter_action_desc_short">Установить, увеличить или уменьшить значение счётчика</string>
+    <string name="tutorial_category_change_counter_action_desc_long">Действие «Изменить счётчик» изменяет переменную
+        счётчика, устанавливая её в фиксированное значение, прибавляя или вычитая значение. Счётчики затем могут
+        читаться условиями или другими действиями.\n\n Узнайте здесь, как управлять состоянием сценария.</string>
+
+    <string name="tutorial_category_change_event_state_action_name">Изменить состояние события</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">Включить, отключить или переключить одно или несколько событий</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">Действие «Изменить состояние события»
+        включает, отключает или переключает одно или несколько событий во время выполнения. Это позволяет создавать
+        многошаговые потоки, где ранние шаги определяют последующие.\n\n Узнайте здесь, как управлять потоком
+        сценария.</string>
+
+    <string name="tutorial_category_notification_action_name">Уведомление</string>
+    <string name="tutorial_category_notification_action_desc_short">Опубликовать системное уведомление</string>
+    <string name="tutorial_category_notification_action_desc_long">Действие «Уведомление» публикует системное
+        уведомление Android с настраиваемым заголовком и сообщением. Полезно для оповещения пользователя при
+        обнаружении конкретного условия.\n\n Узнайте здесь, как использовать его, пока сценарий работает в
+        фоне.</string>
+
+    <string name="tutorial_category_system_action_name">Системное действие</string>
+    <string name="tutorial_category_system_action_desc_short">Вызвать глобальное действие навигации Android</string>
+    <string name="tutorial_category_system_action_desc_long">Действие «Системное» вызывает глобальное действие
+        навигации Android, например нажатие «Назад», «Домой» или «Недавние». Эти действия не требуют координат и
+        работают на системном уровне.\n\n Узнайте здесь, как навигировать по устройству во время
+        автоматизации.</string>
+
+    <string name="tutorial_category_write_text_action_name">Написать текст</string>
+    <string name="tutorial_category_write_text_action_desc_short">Вставить текст в активное поле ввода</string>
+    <string name="tutorial_category_write_text_action_desc_long">Действие «Написать текст» вставляет настроенную
+        строку в активное поле ввода через службу специальных возможностей. Полезно для заполнения форм или полей
+        поиска без симуляции отдельных нажатий клавиш.\n\n Узнайте здесь, как вводить текст во время
+        автоматизации.</string>
 </resources>

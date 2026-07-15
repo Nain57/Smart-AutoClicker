@@ -91,4 +91,60 @@
         cumpridas. As Ações vão desde gestos (Click, Swipe) até controle de fluxo (ToggleEvent, ChangeCounter, Pause)
         e interações do sistema (Intent, Notification, SystemAction, SetText).\n\n Aprenda aqui a usar cada tipo de
         Ação para criar seus scripts de automação.</string>
+
+    <string name="tutorial_category_click_action_name">Clique</string>
+    <string name="tutorial_category_click_action_desc_short">Toque em uma posição fixa ou em uma condição detectada</string>
+    <string name="tutorial_category_click_action_desc_long">Uma Ação Clique simula um toque em uma coordenada fixa ou
+        no centro de uma Condição de imagem detectada. Você pode configurar a duração do toque para simular pressões
+        longas.\n\n Aprenda aqui a usá-la para interagir com sua tela.</string>
+
+    <string name="tutorial_category_swipe_action_name">Deslizar</string>
+    <string name="tutorial_category_swipe_action_desc_short">Deslize de um ponto a outro na tela</string>
+    <string name="tutorial_category_swipe_action_desc_long">Uma Ação Deslizar simula um gesto de arrastar de uma
+        coordenada inicial até uma coordenada final. Você pode configurar a duração do deslizamento para controlar a
+        velocidade do gesto.\n\n Aprenda aqui a usá-la para rolar ou arrastar elementos na sua tela.</string>
+
+    <string name="tutorial_category_pause_action_name">Pausa</string>
+    <string name="tutorial_category_pause_action_desc_short">Aguarde uma duração antes de executar a próxima ação</string>
+    <string name="tutorial_category_pause_action_desc_long">Uma Ação Pausa atrasa a execução por uma duração
+        configurada. É útil para dar tempo ao aplicativo de reagir antes da próxima detecção.\n\n Aprenda aqui a
+        usá-la para controlar o ritmo dos seus scripts de automação.</string>
+
+    <string name="tutorial_category_intent_action_name">Intenção</string>
+    <string name="tutorial_category_intent_action_desc_short">Enviar uma Intenção Android para outro aplicativo</string>
+    <string name="tutorial_category_intent_action_desc_long">Uma Ação Intenção envia uma Intenção Android, seja como
+        broadcast ou para iniciar uma Activity ou Service. Você pode anexar pares chave-valor para transmitir
+        dados.\n\n Aprenda aqui a usá-la para acionar ações em outros aplicativos.</string>
+
+    <string name="tutorial_category_change_counter_action_name">Modificar contador</string>
+    <string name="tutorial_category_change_counter_action_desc_short">Definir, somar ou subtrair um valor de um Contador</string>
+    <string name="tutorial_category_change_counter_action_desc_long">Uma Ação Modificar Contador altera uma variável
+        Contador definindo-a como um valor fixo, adicionando ou subtraindo um valor. Os Contadores podem então ser
+        lidos por Condições ou outras Ações.\n\n Aprenda aqui a usá-la para gerenciar o estado do seu Cenário.</string>
+
+    <string name="tutorial_category_change_event_state_action_name">Alterar estado do evento</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">Ativar, desativar ou alternar um ou mais Eventos</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">Uma Ação Alterar Estado do Evento ativa,
+        desativa ou alterna um ou mais Eventos em tempo de execução. Isso permite criar fluxos de vários passos onde
+        os passos anteriores condicionam os seguintes.\n\n Aprenda aqui a usá-la para controlar o fluxo do seu
+        Cenário.</string>
+
+    <string name="tutorial_category_notification_action_name">Notificação</string>
+    <string name="tutorial_category_notification_action_desc_short">Publicar uma notificação do sistema</string>
+    <string name="tutorial_category_notification_action_desc_long">Uma Ação Notificação publica uma notificação do
+        sistema Android com título e mensagem personalizados. É útil para alertar o usuário quando uma condição
+        específica é detectada.\n\n Aprenda aqui a usá-la para exibir informações enquanto seu Cenário é executado em
+        segundo plano.</string>
+
+    <string name="tutorial_category_system_action_name">Ação do sistema</string>
+    <string name="tutorial_category_system_action_desc_short">Invocar uma ação de navegação Android global</string>
+    <string name="tutorial_category_system_action_desc_long">Uma Ação do Sistema invoca uma ação de navegação Android
+        global, como pressionar Voltar, Início ou Recentes. Essas ações não requerem coordenadas e atuam no nível do
+        sistema.\n\n Aprenda aqui a usá-la para navegar no dispositivo durante a automação.</string>
+
+    <string name="tutorial_category_write_text_action_name">Escrever texto</string>
+    <string name="tutorial_category_write_text_action_desc_short">Colar texto no campo de entrada ativo</string>
+    <string name="tutorial_category_write_text_action_desc_long">Uma Ação Escrever Texto cola uma string configurada
+        no campo de entrada atualmente focado via serviço de acessibilidade. É útil para preencher formulários ou
+        campos de busca sem simular teclas individuais.\n\n Aprenda aqui a inserir texto durante a automação.</string>
 </resources>

@@ -242,7 +242,7 @@
     <string name="field_condition_selection_desc_and_operator_not_found">Жодної умови не обрано</string>
 
     <string name="field_condition_selection_title_or_operator">Клікнути на першій виявленій умові</string>
-    <string name="field_condition_selection_desc_or_operator">Подія встановлена на "Одна умова", ви не можете обрати конкретну</string>
+    <string name="field_condition_selection_desc_or_operator">Оператор умови події встановлено на \"OR\", клік відбудеться на першій виявленій умові</string>
 
     <string name="field_click_position_desc">Клікнути на %1$d, %2$d</string>
 

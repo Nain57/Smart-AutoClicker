@@ -64,7 +64,7 @@
     <string name="item_click_details_on_condition">于 %2$s 持续 %1$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">未选择条件</string>
-    <string name="field_condition_selection_desc_or_operator">事件设置为“一个条件”，您无法选择特定条件</string>
+    <string name="field_condition_selection_desc_or_operator">事件的条件运算符设置为 “OR”，点击将发生在第一个检测到的条件上</string>
     <string name="field_click_position_desc">点击 (%1$d, %2$d)</string>
     <string name="field_select_detection_area_desc">在[%1$d，%2$d] [%3$d，%4$d]中</string>
     <string name="item_intent_desc">调用其他的应用程序</string>

@@ -87,4 +87,58 @@
         الإيماءات (Click, Swipe) والتحكم في التدفق (ToggleEvent, ChangeCounter, Pause) والتفاعلات مع النظام (Intent,
         Notification, SystemAction, SetText).\n\n تعلّم هنا كيفية استخدام كل نوع من الإجراءات لبناء سكريبتات
         الأتمتة الخاصة بك.</string>
+
+    <string name="tutorial_category_click_action_name">النقر</string>
+    <string name="tutorial_category_click_action_desc_short">اضغط على موضع ثابت أو على شرط تم اكتشافه</string>
+    <string name="tutorial_category_click_action_desc_long">يحاكي إجراء النقر لمسة على إحداثية ثابتة أو في مركز شرط
+        صورة تم اكتشافه. يمكنك ضبط مدة الضغط لمحاكاة الضغط المطوّل.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع
+        شاشتك.</string>
+
+    <string name="tutorial_category_swipe_action_name">السحب</string>
+    <string name="tutorial_category_swipe_action_desc_short">اسحب من نقطة إلى أخرى على الشاشة</string>
+    <string name="tutorial_category_swipe_action_desc_long">يحاكي إجراء السحب إيماءة سحب من إحداثية البداية إلى
+        إحداثية النهاية. يمكنك ضبط مدة السحب للتحكم في سرعة الإيماءة.\n\n تعلّم هنا كيفية استخدامه للتمرير أو
+        سحب العناصر على شاشتك.</string>
+
+    <string name="tutorial_category_pause_action_name">الإيقاف المؤقت</string>
+    <string name="tutorial_category_pause_action_desc_short">انتظر مدةً قبل تنفيذ الإجراء التالي</string>
+    <string name="tutorial_category_pause_action_desc_long">يؤخّر إجراء الإيقاف المؤقت التنفيذ لمدة محددة. إنه مفيد
+        لإعطاء التطبيق وقتاً للاستجابة قبل الاكتشاف التالي.\n\n تعلّم هنا كيفية استخدامه للتحكم في وتيرة سكريبتات
+        الأتمتة الخاصة بك.</string>
+
+    <string name="tutorial_category_intent_action_name">Intent</string>
+    <string name="tutorial_category_intent_action_desc_short">إرسال Intent لنظام Android إلى تطبيق آخر</string>
+    <string name="tutorial_category_intent_action_desc_long">يُرسل إجراء Intent رسالة Android Intent إما كبث أو لتشغيل
+        Activity أو Service. يمكنك إرفاق أزواج مفتاح-قيمة لتمرير البيانات.\n\n تعلّم هنا كيفية استخدامه لتشغيل
+        إجراءات في تطبيقات أخرى.</string>
+
+    <string name="tutorial_category_change_counter_action_name">تعديل العداد</string>
+    <string name="tutorial_category_change_counter_action_desc_short">ضبط قيمة العداد أو زيادتها أو إنقاصها</string>
+    <string name="tutorial_category_change_counter_action_desc_long">يُعدّل إجراء تعديل العداد متغيّر العداد بضبطه على
+        قيمة ثابتة أو الجمع إليه أو الطرح منه. يمكن للشروط والإجراءات الأخرى قراءة العدادات لاحقاً.\n\n تعلّم هنا
+        كيفية إدارة حالة السيناريو.</string>
+
+    <string name="tutorial_category_change_event_state_action_name">تغيير حالة الحدث</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">تفعيل أو تعطيل أو تبديل حدث أو أكثر</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">يُفعّل إجراء تغيير حالة الحدث أو يُعطّل أو
+        يُبدّل حدثاً أو أكثر أثناء التشغيل. يتيح ذلك بناء تدفقات متعددة الخطوات حيث تتحكم الخطوات الأولى في
+        التالية.\n\n تعلّم هنا كيفية التحكم في تدفق السيناريو.</string>
+
+    <string name="tutorial_category_notification_action_name">الإشعار</string>
+    <string name="tutorial_category_notification_action_desc_short">نشر إشعار نظام</string>
+    <string name="tutorial_category_notification_action_desc_long">ينشر إجراء الإشعار إشعار نظام Android بعنوان ورسالة
+        مخصصَين. إنه مفيد لتنبيه المستخدم عند اكتشاف شرط معين.\n\n تعلّم هنا كيفية استخدامه لعرض المعلومات أثناء
+        تشغيل السيناريو في الخلفية.</string>
+
+    <string name="tutorial_category_system_action_name">إجراء النظام</string>
+    <string name="tutorial_category_system_action_desc_short">استدعاء إجراء تنقل Android عام</string>
+    <string name="tutorial_category_system_action_desc_long">يستدعي إجراء النظام إجراء تنقل Android عاماً، مثل الضغط
+        على رجوع أو الرئيسية أو التطبيقات الأخيرة. لا تتطلب هذه الإجراءات إحداثيات وتعمل على مستوى النظام.
+        \n\n تعلّم هنا كيفية التنقل في الجهاز أثناء الأتمتة.</string>
+
+    <string name="tutorial_category_write_text_action_name">كتابة نص</string>
+    <string name="tutorial_category_write_text_action_desc_short">لصق نص في حقل الإدخال النشط</string>
+    <string name="tutorial_category_write_text_action_desc_long">يلصق إجراء كتابة النص سلسلة نصية محددة في حقل الإدخال
+        الذي يحمل التركيز حالياً عبر خدمة إمكانية الوصول. إنه مفيد لملء النماذج أو حقول البحث دون محاكاة ضغطات
+        مفاتيح فردية.\n\n تعلّم هنا كيفية إدخال النص أثناء الأتمتة.</string>
 </resources>

@@ -85,4 +85,57 @@
         （Click、Swipe）からフロー制御（ToggleEvent、ChangeCounter、Pause）、システム操作（Intent、Notification、
         SystemAction、SetText）まで多岐にわたります。\n\n ここで各アクションタイプを使って自動化スクリプトを作る方法を
         学びましょう。</string>
+
+    <string name="tutorial_category_click_action_name">タップ</string>
+    <string name="tutorial_category_click_action_desc_short">固定位置または検出された条件をタップする</string>
+    <string name="tutorial_category_click_action_desc_long">タップアクションは、固定座標または検出された画像条件の中心をタップする動作を
+        シミュレートします。長押しをシミュレートするために押下時間を設定することもできます。\n\n ここで画面との操作方法を学び
+        ましょう。</string>
+
+    <string name="tutorial_category_swipe_action_name">スワイプ</string>
+    <string name="tutorial_category_swipe_action_desc_short">画面上で一点から別の点へスワイプする</string>
+    <string name="tutorial_category_swipe_action_desc_long">スワイプアクションは、開始座標から終了座標へのドラッグジェスチャーを
+        シミュレートします。スワイプ時間を設定してジェスチャーの速度を制御できます。\n\n ここで画面上の要素をスクロールまたは
+        ドラッグする方法を学びましょう。</string>
+
+    <string name="tutorial_category_pause_action_name">一時停止</string>
+    <string name="tutorial_category_pause_action_desc_short">次のアクションを実行する前に指定時間待機する</string>
+    <string name="tutorial_category_pause_action_desc_long">一時停止アクションは、設定した時間だけ実行を遅らせます。次の検出の前に
+        アプリが反応する時間を与えるのに役立ちます。\n\n ここで自動化スクリプトのペースを制御する方法を学びましょう。</string>
+
+    <string name="tutorial_category_intent_action_name">インテント</string>
+    <string name="tutorial_category_intent_action_desc_short">Android インテントを別のアプリに送信する</string>
+    <string name="tutorial_category_intent_action_desc_long">インテントアクションは、ブロードキャストとして、またはアクティビティや
+        サービスを起動するために Android インテントを送信します。データを一緒に渡すためにキーと値のペアを付けることができます。
+        \n\n ここで他のアプリのアクションをトリガーする方法を学びましょう。</string>
+
+    <string name="tutorial_category_change_counter_action_name">カウンターを変更</string>
+    <string name="tutorial_category_change_counter_action_desc_short">カウンターの値を設定、加算、または減算する</string>
+    <string name="tutorial_category_change_counter_action_desc_long">カウンター変更アクションは、カウンター変数を固定値に設定したり、
+        値を加算または減算したりして変更します。カウンターは条件や他のアクションで読み取ることができます。\n\n ここでシナリオの
+        状態を管理する方法を学びましょう。</string>
+
+    <string name="tutorial_category_change_event_state_action_name">イベント状態を変更</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">1つまたは複数のイベントを有効化、無効化、または切り替える</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">イベント状態変更アクションは、実行中に1つまたは複数のイベントを
+        有効化、無効化、または切り替えます。これにより、前のステップが後のステップを制御する多段階フローを作成できます。\n\n ここで
+        シナリオのフローを制御する方法を学びましょう。</string>
+
+    <string name="tutorial_category_notification_action_name">通知</string>
+    <string name="tutorial_category_notification_action_desc_short">システム通知を投稿する</string>
+    <string name="tutorial_category_notification_action_desc_long">通知アクションは、カスタムのタイトルとメッセージを含む Android
+        システム通知を投稿します。特定の条件が検出されたときにユーザーに通知するのに便利です。\n\n ここでシナリオがバックグラウンドで
+        実行中に情報を表示する方法を学びましょう。</string>
+
+    <string name="tutorial_category_system_action_name">システムアクション</string>
+    <string name="tutorial_category_system_action_desc_short">グローバルな Android ナビゲーションアクションを呼び出す</string>
+    <string name="tutorial_category_system_action_desc_long">システムアクションは、戻る、ホーム、最近のアプリなど、グローバルな
+        Android ナビゲーションアクションを呼び出します。これらのアクションは座標を必要とせず、システムレベルで動作します。
+        \n\n ここで自動化中にデバイスをナビゲートする方法を学びましょう。</string>
+
+    <string name="tutorial_category_write_text_action_name">テキストを入力</string>
+    <string name="tutorial_category_write_text_action_desc_short">アクティブな入力フィールドにテキストを貼り付ける</string>
+    <string name="tutorial_category_write_text_action_desc_long">テキスト入力アクションは、アクセシビリティサービスを使って、現在フォーカスされて
+        いる入力フィールドに設定した文字列を貼り付けます。個別のキー入力をシミュレートせずにフォームや検索フィールドを入力するのに
+        便利です。\n\n ここで自動化中にテキストを入力する方法を学びましょう。</string>
 </resources>

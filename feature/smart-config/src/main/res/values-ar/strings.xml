@@ -240,7 +240,7 @@
     <string name="field_condition_selection_desc_and_operator_not_found">لم يتم تحديد أي شرط</string>
 
     <string name="field_condition_selection_title_or_operator">انقر على أول حالة تم اكتشافها</string>
-    <string name="field_condition_selection_desc_or_operator">تم ضبط الحدث على "شرط واحد"، ولا يمكنك تحديد شرط محدد</string>
+    <string name="field_condition_selection_desc_or_operator">تم ضبط عامل الشرط للحدث على \"OR\"، سيحدث النقر على أول شرط يتم اكتشافه</string>
 
     <string name="field_click_position_desc">انقر على %1$d، %2$d</string>
 
