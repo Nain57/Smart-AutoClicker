@@ -21,6 +21,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
@@ -47,6 +49,8 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     lateinit var floatingActionButtons: IncludeFloatingActionButtonsBinding
     lateinit var topBarBinding: IncludeDialogNavigationTopBarBinding
 
+    private var imeLiftController: NavBarDialogImeLiftController? = null
+
     abstract fun inflateMenu(navBarView: NavigationBarView)
 
     abstract fun onCreateContent(navItemId: Int): NavBarDialogContent
@@ -54,6 +58,17 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     abstract fun onDialogButtonPressed(buttonType: DialogNavigationButton)
 
     open fun onContentViewChanged(navItemId: Int) = Unit
+
+    /**
+     * Keep window size unchanged while the IME is shown.
+     * Portrait bottom bar sits on the dialog [CoordinatorLayout]; [SOFT_INPUT_ADJUST_RESIZE] parks the sheet mid-screen.
+     */
+    override fun applySoftInputMode(window: Window) {
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING or
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN,
+        )
+    }
 
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
@@ -99,6 +114,15 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
             setupPortraitViews()
         }
 
+        val coordinator = dialogCoordinatorLayout
+        val decor = dialog.window?.decorView
+        if (coordinator != null && decor != null) {
+            imeLiftController = NavBarDialogImeLiftController(
+                liftTarget = coordinator,
+                insetHost = decor,
+            ).also { it.start() }
+        }
+
         updateContentView(
             itemId = navBarView.selectedItemId,
             forceUpdate = true,
@@ -116,6 +140,8 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
     }
 
     override fun onDestroy() {
+        imeLiftController?.stop()
+        imeLiftController = null
         contentMap.values.forEach { content ->
             content.destroy()
         }
