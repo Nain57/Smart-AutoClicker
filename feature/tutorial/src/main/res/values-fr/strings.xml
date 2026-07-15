@@ -42,12 +42,8 @@
     -->
 
     <!-- Two still targets press when only one is visible tutorial -->
-    <string name="item_title_tutorial_4">Conditions négatives</string>
-    <string name="item_desc_tutorial_4">Vérifiez qu\'un élément n\'est pas affiché avant d\'exécuter une action</string>
 
     <!-- Two moving targets press in order tutorial -->
-    <string name="item_title_tutorial_5">Scénario avec plusieurs événements</string>
-    <string name="item_desc_tutorial_5">Apprenez à combiner plusieurs événements pour automatiser des tâches complexes</string>
 
 
     <!-- Generic tutorial buttons -->
