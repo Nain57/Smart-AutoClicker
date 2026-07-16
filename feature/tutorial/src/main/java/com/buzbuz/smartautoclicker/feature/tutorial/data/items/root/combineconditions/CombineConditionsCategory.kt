@@ -29,6 +29,8 @@ internal fun getCombineConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_combine_conditions_desc_long,
         iconRes = R.drawable.ic_screen_event,
         content = listOf(
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_OPERATOR_AND),
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_OPERATOR_OR),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_NOT_VISIBLE),
         ),
     )

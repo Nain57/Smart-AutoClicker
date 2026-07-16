@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">条件运算符 OR</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">使用 OR 运算符点击第一个出现在屏幕上的目标</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">一旦有目标出现在屏幕上就立即点击</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">新挑战！屏幕上可能出现两个目标。红色目标值 2 分，蓝色目标值 1 分，所以要尽快点击出现的那个。
+        \n\n启动游戏，看看你能发挥多好。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">手动操作太难跟上节奏，所以让我们使用 Klick\'r。
+        \n\n打开场景配置菜单，创建一个新的屏幕事件，并开始为游戏目标添加条件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">每个目标需要一个条件。先从蓝色目标开始。
+        \n\n创建一个新的图像条件并捕获蓝色目标。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">此条件应在蓝色目标可见时触发，因此默认设置完全正确。保存此条件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">现在为红色目标添加第二个条件。
+        \n\n再创建一个图像条件并捕获红色目标。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">这里也一样，红色目标应该可见，所以默认设置是正确的。保存此条件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">使用 OR 时，条件按顺序检查，一旦第一个匹配就触发事件，因此条件的顺序很重要。
+        \n\n红色目标得分更高，所以我们希望它被优先检查。使用 « 按钮将其移到蓝色条件之前，然后返回事件对话框。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">现在将条件运算符设置为 OR。只要任一目标出现，事件就会触发。如果两个目标同时可见，红色条件将首先匹配，因为它的优先级更高。
+        \n\n选择 OR。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">OR 运算符已设置好。打开"动作"部分，创建一个新的点击动作。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">我们想点击触发事件的目标。选择位置类型"按条件"。使用 OR 时，每次只有一个条件能被正向检测到，因此无需选择特定条件。Klick\'r 会自动点击匹配条件的位置。
+        \n\n完成后，保存点击动作，然后保存事件和场景，并返回游戏。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">启动你的场景并开始游戏以获胜！
+        \n\n如果无效，请检查你的条件是否正确捕获，以及点击时长是否设置为 1ms。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">恭喜！你已学会使用 OR 运算符，也明白了为什么条件优先级很重要。通过将红色条件排在第一位，当两个目标同时可见时，Klick\'r 始终优先选择得分更高的目标。</string>
+
+</resources>

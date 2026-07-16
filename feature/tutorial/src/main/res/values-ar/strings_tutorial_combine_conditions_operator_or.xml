@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">مشغّل الشروط أو</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">استخدم المشغّل أو للنقر على أول هدف يظهر على
+        الشاشة</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">انقر على أي هدف بمجرد ظهوره على الشاشة</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">تحدٍّ جديد! قد يظهر هدفان على الشاشة.
+        الهدف الأحمر يساوي نقطتين والهدف الأزرق يساوي نقطة واحدة، لذا انقر على أيهما يظهر في أسرع وقت ممكن.
+        \n\nابدأ اللعبة وانظر كيف ستؤدي.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">سريع جدًا للتعامل معه يدويًا، لذا لنستخدم
+        Klick\'r. \n\nافتح قائمة إعداد السيناريو، وأنشئ حدث شاشة جديدًا، وابدأ في إضافة شروط لأهداف اللعبة.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">نحتاج إلى شرط واحد لكل هدف. لنبدأ
+        بالهدف الأزرق. \n\nأنشئ شرط صورة جديدًا والتقط الهدف الأزرق.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">يجب أن يتحقق هذا الشرط عندما يكون الهدف
+        الأزرق مرئيًا، لذا الإعدادات الافتراضية كلها صحيحة. احفظ هذا الشرط.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">الآن لنضف الشرط الثاني للهدف الأحمر.
+        \n\nأنشئ شرط صورة آخر والتقط الهدف الأحمر.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">الأمر نفسه هنا، يجب أن يكون الهدف الأحمر
+        مرئيًا، لذا الإعدادات الافتراضية صحيحة. احفظ هذا الشرط.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">مع أو، تُفحص الشروط بالترتيب وينشّط الحدث
+        بمجرد تحقق أولها، لذا يهم ترتيب شروطك. \n\nالهدف الأحمر يمنح نقاطًا أكثر، لذا نريده أن يُفحص أولاً.
+        استخدم الزر « لتحريكه قبل الهدف الأزرق، ثم ارجع إلى مربع حوار الحدث.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">الآن اضبط مشغّل الشروط على أو. سيُنشَّط
+        الحدث بمجرد ظهور أي من الهدفين. إذا كان كلاهما مرئيًا في الوقت ذاته، سيُكتشف الشرط الأحمر أولاً لأنه
+        ذو أولوية أعلى. \n\nاختر أو.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">تم تعيين المشغّل أو الآن. افتح قسم
+        الإجراءات وأنشئ إجراء نقر جديدًا.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">نريد النقر على الهدف الذي نشّط الحدث.
+        اختر نوع الموضع «على الشرط». مع أو، يمكن اكتشاف شرط واحد فقط بشكل إيجابي في كل مرة، لذا لا داعي لاختيار
+        شرط محدد. سينقر Klick\'r تلقائيًا على موقع الشرط الذي تحقق. \n\nعند الانتهاء، احفظ النقر، ثم الحدث
+        والسيناريو، وارجع إلى اللعبة.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">شغّل السيناريو وابدأ اللعبة للفوز!
+        \n\nإن لم ينجح ذلك، تحقق من أن شروطك تم التقاطها بشكل صحيح وأن مدة النقر مضبوطة على 1 مللي ثانية.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">تهانينا! لقد تعلّمت استخدام المشغّل أو
+        وفهمت لماذا تهم أولوية الشروط. بوضع الشرط الأحمر أولاً، يعطي Klick\'r الأولوية دائمًا للهدف ذي القيمة
+        الأعلى عندما يكون كلاهما مرئيًا في الوقت ذاته.</string>
+
+</resources>

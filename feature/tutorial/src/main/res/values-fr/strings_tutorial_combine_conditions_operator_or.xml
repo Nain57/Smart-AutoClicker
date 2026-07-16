@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">Opérateur de condition OU</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Utilisez l\'opérateur OU pour cliquer sur la
+        première cible qui apparaît à l\'écran</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Cliquez sur n\'importe quelle cible dès
+        qu\'elle apparaît à l\'écran</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Nouveau défi ! Deux cibles peuvent apparaître
+        à l\'écran. La rouge vaut 2 points et la bleue vaut 1 point, alors cliquez sur celle qui s\'affiche le plus
+        vite possible. \n\nLancez le jeu et voyez comment vous vous en sortez.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Trop rapide à gérer manuellement, alors
+        utilisons Klick\'r. \n\nOuvrez le menu de configuration du scénario, créez un nouvel Événement Écran et
+        commencez à ajouter des conditions pour les cibles du jeu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Nous avons besoin d\'une condition par cible.
+        Commençons par la bleue. \n\nCréez une nouvelle condition image et capturez la cible bleue.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Cette condition doit se déclencher quand la
+        cible bleue est visible, donc les paramètres par défaut sont tous corrects. Enregistrez cette condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Ajoutons maintenant la deuxième condition
+        pour la cible rouge. \n\nCréez une autre condition image et capturez la cible rouge.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Pareil ici, la cible rouge doit être visible,
+        donc les paramètres par défaut sont corrects. Enregistrez cette condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">Avec OU, les conditions sont vérifiées dans
+        l\'ordre et l\'événement se déclenche dès que la première correspond, donc l\'ordre de vos conditions est
+        important. \n\nLa cible rouge rapporte plus de points, donc nous voulons qu\'elle soit vérifiée en premier.
+        Utilisez le bouton « pour la déplacer avant la bleue, puis revenez à la boîte de dialogue Événement.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Réglez maintenant l\'opérateur de condition
+        sur OU. L\'événement se déclenchera dès que l\'une ou l\'autre cible apparaît. Si les deux sont visibles en
+        même temps, la condition rouge sera détectée en premier car elle a la priorité la plus haute.
+        \n\nSélectionnez OU.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">L\'opérateur OU est maintenant défini. Ouvrez
+        la section Actions et créez une nouvelle action de clic.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Nous voulons cliquer sur la cible qui a
+        déclenché l\'événement. Sélectionnez le type de position « Sur condition ». Avec OU, une seule condition peut
+        être détectée positivement à la fois, donc aucune condition spécifique n\'a besoin d\'être sélectionnée.
+        Klick\'r cliquera automatiquement à l\'emplacement de la condition qui a correspondu. \n\nUne fois terminé,
+        enregistrez le clic, puis votre événement et votre scénario, et revenez au jeu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Démarrez votre scénario et lancez le jeu
+        pour gagner ! \n\nSi ça ne fonctionne pas, vérifiez que vos conditions sont bien capturées et que la durée
+        du clic est réglée sur 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Félicitations ! Vous avez appris à utiliser
+        l\'opérateur OU et l\'importance de la priorité des conditions. En plaçant la condition rouge en premier,
+        Klick\'r favorise toujours la cible à plus haute valeur quand les deux sont visibles en même temps.</string>
+
+</resources>

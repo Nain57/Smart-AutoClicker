@@ -172,10 +172,11 @@ class EventDialogViewModel @Inject constructor(
         }
     }
 
-    fun monitorViews(conditionsField: View, conditionOperatorAndView: View, actionsField: View, saveButton: View) {
+    fun monitorViews(conditionsField: View, conditionOperatorAndView: View, conditionOperatorOrView: View, actionsField: View, saveButton: View) {
         monitoredViewsManager.apply {
             attach(MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS, conditionsField)
             attach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND, conditionOperatorAndView)
+            attach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_OR, conditionOperatorOrView)
             attach(MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS, actionsField)
             attach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE, saveButton)
         }
@@ -184,6 +185,7 @@ class EventDialogViewModel @Inject constructor(
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
             detach(MonitoredViewType.EVENT_DIALOG_BUTTON_SAVE)
+            detach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_OR)
             detach(MonitoredViewType.EVENT_DIALOG_FIELD_OPERATOR_ITEM_AND)
             detach(MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS)
             detach(MonitoredViewType.EVENT_DIALOG_FIELD_CONDITIONS)

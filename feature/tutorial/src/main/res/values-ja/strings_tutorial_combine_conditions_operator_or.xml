@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">条件演算子 OR</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">OR演算子を使って、最初に現れたターゲットをタップしましょう</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">画面にターゲットが現れたらすぐにタップしてください</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">新しいチャレンジです！2つのターゲットが画面に現れることがあります。赤いターゲットは2ポイント、青いターゲットは1ポイントです。どちらが現れても、できるだけ素早くタップしましょう。
+        \n\nゲームを起動して、自分でどこまでできるか試してみましょう。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">手動で対応するには速すぎるので、Klick\'rを使いましょう。
+        \n\nシナリオ設定メニューを開き、新しいスクリーンイベントを作成して、ゲームのターゲットに対する条件を追加していきます。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">ターゲットごとに1つの条件が必要です。まず青いターゲットから始めましょう。
+        \n\n新しい画像条件を作成し、青いターゲットをキャプチャしてください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">この条件は青いターゲットが表示されているときに満たされるようにしたいので、デフォルト設定のままで問題ありません。この条件を保存してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">次に赤いターゲットの2つ目の条件を追加しましょう。
+        \n\nもう1つ画像条件を作成し、赤いターゲットをキャプチャしてください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">こちらも同じです。赤いターゲットが表示されている必要があるので、デフォルト設定のままで問題ありません。この条件を保存してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">ORでは条件が順番にチェックされ、最初に一致した条件でイベントが発動するため、条件の順序が重要です。
+        \n\n赤いターゲットのほうがポイントが高いので、最初にチェックされるようにしたいです。«ボタンを使って赤い条件を青い条件の前に移動し、イベントダイアログに戻ってください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">次に条件演算子をORに設定します。どちらかのターゲットが現れると即座にイベントが発動します。両方が同時に表示された場合は、優先度が高い赤い条件が先にマッチします。
+        \n\nORを選択してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">OR演算子が設定されました。アクションセクションを開き、新しいタップアクションを作成してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">イベントを発動させたターゲットをタップしたいので、位置タイプ「条件の上」を選択してください。ORでは同時に正に検出できる条件は1つだけなので、特定の条件を選択する必要はありません。Klick\'rが一致した条件の場所に自動的にタップします。
+        \n\n完了したら、タップを保存し、イベントとシナリオも保存してゲームに戻りましょう。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">シナリオを開始してゲームを起動し、勝利を目指しましょう！
+        \n\nうまくいかない場合は、条件が正しくキャプチャされているか、タップ時間が1msに設定されているかを確認してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">おめでとうございます！OR演算子の使い方と条件の優先度がなぜ重要かを学びました。赤い条件を最初に配置することで、両方が同時に表示された場合でも、Klick\'rは常に高ポイントのターゲットを優先します。</string>
+
+</resources>

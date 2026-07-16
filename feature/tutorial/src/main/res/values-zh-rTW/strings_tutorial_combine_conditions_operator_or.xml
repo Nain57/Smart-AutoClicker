@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">條件運算子 OR</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">使用 OR 運算子點擊第一個出現在螢幕上的目標</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">一旦有目標出現在螢幕上就立即點擊</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">新挑戰！螢幕上可能出現兩個目標。紅色目標值 2 分，藍色目標值 1 分，所以要盡快點擊出現的那個。
+        \n\n啟動遊戲，看看你能發揮多好。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">手動操作太難跟上節奏，所以讓我們使用 Klick\'r。
+        \n\n開啟場景設定選單，建立一個新的螢幕事件，並開始為遊戲目標新增條件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">每個目標需要一個條件。先從藍色目標開始。
+        \n\n建立一個新的圖像條件並擷取藍色目標。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">此條件應在藍色目標可見時觸發，因此預設設定完全正確。儲存此條件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">現在為紅色目標新增第二個條件。
+        \n\n再建立一個圖像條件並擷取紅色目標。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">這裡也一樣，紅色目標應該可見，所以預設設定是正確的。儲存此條件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">使用 OR 時，條件按順序檢查，一旦第一個符合就觸發事件，因此條件的順序很重要。
+        \n\n紅色目標得分更高，所以我們希望它被優先檢查。使用 « 按鈕將其移到藍色條件之前，然後返回事件對話框。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">現在將條件運算子設定為 OR。只要任一目標出現，事件就會觸發。如果兩個目標同時可見，紅色條件將首先符合，因為它的優先級更高。
+        \n\n選擇 OR。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">OR 運算子已設定好。開啟「動作」部分，建立一個新的點擊動作。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">我們想點擊觸發事件的目標。選擇位置類型「依條件」。使用 OR 時，每次只有一個條件能被正向偵測到，因此無需選擇特定條件。Klick\'r 會自動點擊符合條件的位置。
+        \n\n完成後，儲存點擊動作，然後儲存事件和場景，並返回遊戲。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">啟動你的場景並開始遊戲以獲勝！
+        \n\n如果無效，請檢查你的條件是否正確擷取，以及點擊時長是否設定為 1ms。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">恭喜！你已學會使用 OR 運算子，也明白了為什麼條件優先級很重要。透過將紅色條件排在第一位，當兩個目標同時可見時，Klick\'r 始終優先選擇得分更高的目標。</string>
+
+</resources>
