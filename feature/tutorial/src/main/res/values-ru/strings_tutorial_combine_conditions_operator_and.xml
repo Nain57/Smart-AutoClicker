@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Оператор условий И</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Используйте оператор И, чтобы выполнять нажатие
+        только когда несколько целей видны одновременно</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Нажимайте синюю кнопку только тогда, когда
+        видны и синяя, и красная цели</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">Новые правила! Теперь в игре две цели.
+        Нажимайте на синюю, но только когда обе цели — синяя и красная — одновременно на экране.
+        \n\nЗапустите игру и посмотрите, справитесь ли самостоятельно.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">Слишком сложно делать это вручную, поэтому
+        воспользуемся Klick\'r. \n\nОткройте меню настройки сценария, создайте новое Экранное событие и начните
+        добавлять условия для целей игры.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Нам нужно по одному условию на каждую
+        цель. Начнём с синей. \n\nСоздайте новое условие изображения и захватите синюю цель.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Мы хотим, чтобы это условие выполнялось
+        когда синяя цель видна, поэтому стандартные настройки полностью подходят. Сохраните это условие.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Теперь добавим второе условие для красной
+        цели. \n\nСоздайте ещё одно условие изображения и захватите красную цель.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Здесь то же самое — красная цель должна
+        быть видна, поэтому стандартные настройки подходят. Сохраните это условие и вернитесь к событию.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">При двух заданных условиях оператор
+        условия определяет, как они объединяются. Выберите оператор с помощью селектора выше.
+        \n\n• И: событие срабатывает только когда ВСЕ условия выполнены.\n• ИЛИ: событие срабатывает как только
+        ОДНО условие выполнено.\n\nДля нашей игры нам нужны обе цели на экране одновременно, поэтому выберите И.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">Селектор оператора условий</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">И уже является оператором по умолчанию,
+        так что всё готово. \n\nТеперь откройте раздел Действия и создайте новое действие нажатия.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Мы хотим нажимать на синюю цель, поэтому
+        выберите тип позиции «По условию» и укажите условие изображения синей цели.
+        \n\nКогда закончите, сохраните нажатие, затем событие и сценарий, и вернитесь к игре.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Запустите сценарий и начните игру, чтобы
+        победить! \n\nЕсли что-то не работает, проверьте, что оба условия захвачены правильно и длительность
+        нажатия установлена на 1 мс.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Поздравляем! Вы научились использовать
+        оператор И. Теперь событие срабатывает только когда все его условия выполнены одновременно.</string>
+
+</resources>

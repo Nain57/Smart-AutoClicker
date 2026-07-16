@@ -20,34 +20,35 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutori
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepImage
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image.TwoStillTargetsPressWhenOneVisibleRules
+import com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgame.image.TwoStillTargetsPressWhenBothVisibleRules
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 
-object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
+object CombineConditionsOperatorAndTutorial : TutorialItem {
 
     override fun getType(): TutorialItem.Type =
-        TutorialItem.Type.COMBINE_CONDITIONS_NOT_VISIBLE
+        TutorialItem.Type.COMBINE_CONDITIONS_OPERATOR_AND
 
     override fun getTutorialInfo(): TutorialInfo =
         TutorialInfo(
             id = getType().toTutorialId(),
-            nameResId = R.string.item_title_tutorial_combine_conditions_not_visible_target,
-            descResId = R.string.item_desc_tutorial_combine_conditions_not_visible_target,
+            nameResId = R.string.item_title_tutorial_combine_conditions_operator_and,
+            descResId = R.string.item_desc_tutorial_combine_conditions_operator_and,
         )
 
     override fun getTutorial(): Tutorial =
         Tutorial(
             info = getTutorialInfo(),
             subject = TutorialSubject.QuickClickGame(
-                instructionsResId = R.string.message_game_tutorial_combine_conditions_not_visible_target,
+                instructionsResId = R.string.message_game_tutorial_combine_conditions_operator_and,
                 scoreToReach = 30,
                 durationSeconds = 10,
-                rules = TwoStillTargetsPressWhenOneVisibleRules(),
+                rules = TwoStillTargetsPressWhenBothVisibleRules(),
             ),
             steps = listOf(
                 // Beginning, hide the overlay for now
@@ -57,7 +58,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 ),
                 // Start screen, before first play.
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_1,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_1,
                     stepStartCondition = TutorialStepStartCondition.Immediate,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
@@ -68,53 +69,25 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 ),
                 // First play lost, open edit scenario and go to screen condition list
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_2,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_2,
                     stepStartCondition = TutorialStepStartCondition.Immediate,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.MAIN_MENU_BUTTON_CONFIG,
                     ),
                 ),
-                // Screen condition list: create first image condition and capture red target
+                // Screen condition list: create first image condition and capture blue target
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_3,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_3,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
-                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU
+                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
                     ),
                 ),
-                // Image condition dialog: toggle "is visible" to no
+                // Screen condition dialog: save blue target condition
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_4,
-                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
-                        MonitoredOverlayType.IMAGE_CONDITION,
-                    ),
-                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.SCREEN_CONDITION_DIALOG_FIELD_VISIBILITY,
-                    ),
-                ),
-                // Screen condition dialog: save condition
-                TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_5,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
-                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
-                    ),
-                ),
-                // Screen condition list: create second image condition adn capture blue target
-                TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_6,
-                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
-                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU
-                    ),
-                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
-                    ),
-                ),
-                // Image condition dialog: Save condition and go back to event dialog
-                TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_7,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_4,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.IMAGE_CONDITION,
                     ),
@@ -122,19 +95,49 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                         MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
                     ),
                 ),
-                // Event dialog: open actions list and create new click
+                // Screen condition list: create second image condition and capture red target
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_8,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_5,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.SCREEN_CONDITIONS_BRIEF_MENU
+                    ),
+                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
+                        MonitoredViewType.CONDITIONS_BRIEF_MENU_BUTTON_CREATE,
+                    ),
+                ),
+                // Image condition dialog: Save red target condition and go back to event dialog
+                TutorialStep.TutorialOverlay(
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_6,
+                    stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
+                        MonitoredOverlayType.IMAGE_CONDITION,
+                    ),
+                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
+                        MonitoredViewType.SCREEN_CONDITION_DIALOG_BUTTON_SAVE,
+                    ),
+                ),
+                // Event dialog: Note about AND or OR
+                TutorialStep.TutorialOverlay(
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_7,
+                    image = TutorialStepImage(
+                        imageResId = R.drawable.tutorial_instructions_condition_operator,
+                        imageDescResId = R.string.message_tutorial_combine_conditions_operator_and_step_secondary_7,
+                    ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.EVENT,
                     ),
+                    stepEndCondition = TutorialStepEndCondition.NextButton,
+                ),
+                // Event dialog: open actions list and create new click
+                TutorialStep.TutorialOverlay(
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_8,
+                    stepStartCondition = TutorialStepStartCondition.Immediate,
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
                         MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                     ),
                 ),
                 // Click Dialog: Select "click on condition"
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_9,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_9,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.CLICK,
                     ),
@@ -144,7 +147,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 ),
                 // Scenario saved, start it and start the game
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_10,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_10,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.MAIN_MENU,
                     ),
@@ -152,7 +155,7 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                 ),
                 // Game won
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_11,
+                    contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_11,
                     stepStartCondition = TutorialStepStartCondition.GameWon,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),

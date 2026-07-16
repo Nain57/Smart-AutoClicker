@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Condition operator AND</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Use the AND operator to click only when
+        multiple targets are visible at the same time</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Click the blue button only when both the
+        blue and red targets are visible</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">New rules! The game now shows two targets.
+        You should click the blue one, but only when both the blue and red targets are on screen at the same time.
+        \n\nStart the game and see if you can keep up on your own.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">The timing is too tight to handle manually,
+        so let\'s use Klick\'r. \n\nOpen the scenario configuration menu, create a new Screen Event, and start adding
+        conditions for the game targets.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">We need one condition per target. Let\'s
+        start with the blue one. \n\nCreate a new image condition and capture the blue target.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">We want this condition to be met when the
+        blue target is visible, so the default settings are all correct. Save this condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Now let\'s add the second condition for the
+        red target. \n\nCreate another image condition and capture the red target.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Same here; the red target should be
+        visible, so the default settings are correct. Save this condition and go back to the Event.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">With two conditions set up, the condition
+        operator decides how they are combined. Select the operator using the selector shown above.
+        \n\n• AND: the event triggers only when ALL conditions are met.\n• OR: the event triggers as soon as the
+        ONE condition is met.\n\nFor our game, we need both targets on screen at the same time, so select
+        AND.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">The condition operator
+        selector</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">AND is already the default operator, so
+        we\'re all set. \n\nNow open the Actions section and create a new click action.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">We want to click on the blue target, so
+        select the \"On Condition\" position type and pick the blue target image condition.
+        \n\nWhen you\'re done, save the click, then your event and scenario, and head back to the game.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Start your scenario and launch the game
+        to win! \n\nIf it doesn\'t work, double-check that both conditions are captured correctly and that the click
+        duration is set to 1ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Congratulations! You\'ve learned how to
+        use the AND operator. The event now triggers only when all of its conditions are satisfied at the same
+        time.</string>
+
+</resources>
