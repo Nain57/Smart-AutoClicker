@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,63 +17,55 @@
 -->
 <resources>
     <!-- Two still targets press when both are visible tutorial -->
-    <string name="item_title_tutorial_combine_conditions_not_visible_target">Комбінування кількох умов</string>
-    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Створіть та скомбінуйте кілька умов для вашої події</string>
-    <string name="message_game_tutorial_combine_conditions_not_visible_target">Клікніть на синю кнопку лише тоді, коли червона кнопка видима</string>
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Видимість умов</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Використовуйте параметр «Видимість», щоб
+        виконувати натискання, коли ціль відсутня на екрані</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Натискайте синю кнопку лише тоді, коли
+        червона кнопка не видима</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Давайте знову змінимо правила гри. Синя ціль перестала рухатися,
-        але тепер на неї слід клікати лише тоді, коли червона ціль видима.\n\nСпочатку запустіть гру та перевірте, чи можете ви виграти
-        самостійно.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Нові правила! Синя ціль більше не
+        рухається, але натискати на неї потрібно лише тоді, коли червона ціль не видима на екрані.
+        \n\nЗапустіть гру і подивіться, чи зможете перемогти самостійно.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Знову ж таки, здається неможливим виграти вручну, тому давайте використаємо Smart
-        AutoClicker.\n\nВаш сценарій з попереднього навчання було збережено та завантажено для цього навчання, але нам
-        потрібно буде змінити кілька параметрів, щоб виграти цю нову гру.\n\nКлікніть на іконку налаштування сценарію, щоб
-        почати оновлення вашого нового сценарію.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_2">Знову здається неможливим перемогти
+        вручну, тому скористаємося Klick\'r. \n\nВідкрийте меню налаштування сценарію, створіть нову Подію екрана
+        та почніть додавати умови для цілей гри.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Ми все ще хочемо клікнути на синю ціль, але лише коли червона видима.\n
-        Тому нам потрібно додати умову для цієї червоної цілі в нашу подію.\n\nКлікніть на вашу попередньо створену подію, щоб редагувати її.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Спочатку нам потрібна умова, яка
+        перевіряє, коли червона ціль НЕ видима на екрані. \n\nСтворіть нову умову зображення та захопіть червону
+        ціль.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Ми будемо комбінувати кілька умов, тому нам потрібно перевірити оператор умови
-        для цієї події.\n\nОператор умови вказує, як кілька умов будуть інтерпретуватися разом.\n
-        \'Одна\' означає, що лише одна з умов для цієї події повинна бути виконана, щоб
-        виконати дії.\n\n\'Всі\' означає, що всі умови для цієї події повинні бути виконані, щоб виконати дії.
-        \n\nОскільки ми хочемо виявити, чи дві речі відображаються разом, ми використаємо \'Всі\'</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Ми хочемо натискати лише тоді, коли
+        червона ціль не видима, тому встановіть параметр «Видимо» у значення Ні. Так умова виконуватиметься лише
+        коли червона ціль відсутня на екрані.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Тепер нам потрібно оновити наші умови.\n\nКлікніть на поле умов, щоб відобразити
-        список умов.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Інші налаштування підходять для
+        нашого випадку — збережіть цю умову.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">Попередня умова виявлення синьої цілі все ще правильна, але нам потрібна
-        нова для червоної цілі.\n\nКлікніть на кнопку створення умови, щоб створити нову умову для неї.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Цієї умови самої по собі достатньо,
+        щоб виграти, але вона також спрацьовуватиме, коли гра не запущена, що небажано.
+        \n\nЩоб уникнути цього, доповнимо її другою умовою, яка перевіряє, чи видима синя ціль.
+        Створіть нову Умову зображення та захопіть синю ціль.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Так само, як для синьої цілі, запустіть гру, щоб показати червону ціль.
-        Коли вона стане видимою, зробіть знімок екрана!</string>
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">Використовуйте кнопку захоплення в плаваючому меню, щоб зробити знімок екрана.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">Для цієї умови нам потрібно
+        переконатися, що синя ціль видима, тому стандартні налаштування повністю підходять. Збережіть умову та
+        поверніться до події, щоб продовжити.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Чи містить ваш знімок екрана червону ціль? Ви можете обрізати його, щоб отримати лише
-        частину, яка цікава для виявлення - червону ціль.</string>
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">Якщо ваш знімок екрана не містить червону ціль, ви можете
-        натиснути цю кнопку, щоб зробити новий.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">За наявності кількох умов оператор
+        умови важливий. Ми хочемо, щоб подія спрацьовувала, коли синя ціль видима І червона не видима, тому нам
+        потрібен оператор І; він вже встановлений за замовчуванням, тому все гаразд.
+        \n\nТепер створіть нову дію натискання, щоб продовжити.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">Зображення вашої умови тепер записано!\n\nОскільки червона ціль не рухається, ми
-        можемо зберегти стандартну конфігурацію.\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку умов.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Ми хочемо натискати на синю ціль,
+        тому виберіть тип позиції «За умовою» та вкажіть Умову зображення синьої цілі.
+        \n\nКоли закінчите, збережіть натискання, потім подію та сценарій, і поверніться до гри.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Закрийте список умов, щоб повернутися до налаштування події.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">Запустіть сценарій і почніть гру,
+        щоб перемогти! \n\nЯкщо щось не працює, перевірте, що умови захоплені правильно і тривалість натискання
+        встановлена на 1 мс.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">Тепер у нас є дві умови, по одній для кожної цілі, і дії будуть виконані
-        лише якщо обидві виявлені.\n\nКлікніть на поле дій, щоб відобразити список дій для нашої події.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Вітаємо! Ви навчилися використовувати
+        умову «Не видимо». Завжди поєднуйте її принаймні з однією іншою умовою, щоб не викликати дії ненавмисно
+        протягом усього сценарію.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">Дія вже встановлена для кліку на синього персонажа, і вона буде виконана лише
-        коли синій та червоний персонажі видимі разом.\n\nЦе саме та поведінка, яка нам потрібна для перемоги в
-        грі, тому немає потреби редагувати нашу дію кліку.\n\nЗакрийте список дій, щоб повернутися до налаштування події.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">Клікніть на кнопку збереження, щоб зберегти вашу подію.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">Всі зміни повинні бути збережені у вашому сценарії, щоб бути зареєстрованими.\n\nКлікніть
-        на кнопку збереження, щоб зберегти ваші зміни.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">Ми готові виграти цю гру!\n\nКлікніть на кнопку початку, щоб почати
-        виявлення, а потім запустіть гру.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">Вітаємо!\n\nТепер ви знаєте, як комбінувати кілька умов для події,
-        але є ще багато чого вивчити!</string>
 </resources>

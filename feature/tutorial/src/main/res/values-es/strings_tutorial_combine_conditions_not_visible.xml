@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-* Copyright (C) 2023 Kevin Buzeau
+* Copyright (C) 2026 Kevin Buzeau
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -17,63 +17,55 @@
 -->
 <resources>
     <!-- Two still targets press when both are visible tutorial -->
-    <string name="item_title_tutorial_combine_conditions_not_visible_target">Combinar múltiples condiciones</string>
-    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Crea y combina múltiples condiciones para tu evento</string>
-    <string name="message_game_tutorial_combine_conditions_not_visible_target">Haz clic en el botón azul solo cuando el botón rojo sea visible</string>
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Visibilidad de condiciones</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Usa la opción Visibilidad para activar un
+        clic cuando un objetivo no está en pantalla</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Pulsa el botón azul solo cuando el botón
+        rojo no sea visible</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Cambiemos las reglas del juego nuevamente. El objetivo azul ha dejado de moverse,
-        pero ahora solo debe hacer clic cuando el objetivo rojo sea visible.\n\nPrimero, inicia el juego y verifica si puedes ganar por ti mismo.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">¡Nuevas reglas! El objetivo azul ha
+        dejado de moverse, pero solo debe pulsarse cuando el objetivo rojo no sea visible.
+        \n\nInicia el juego y comprueba si puedes ganar por ti mismo.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Una vez más, parece imposible ganar manualmente, así que usemos Smart
-        AutoClicker.\n\nTu escenario del tutorial anterior se ha mantenido y se carga para este tutorial, pero necesitaremos cambiar
-        algunos parámetros para ganar este nuevo juego.\n\nHaz clic en el icono de configuración del escenario para comenzar a actualizar
-        tu nuevo escenario.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_2">Una vez más, parece imposible ganar
+        manualmente, así que usemos Klick\'r. \n\nAbre el menú de configuración del escenario, crea un nuevo Evento de
+        Pantalla y empieza a añadir condiciones para los objetivos del juego.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Todavía queremos hacer clic en el objetivo azul, pero solo cuando el rojo esté
-        visible.\nAsí que necesitamos agregar una condición para este objetivo rojo en nuestro evento.\n\nHaz clic en el evento que creaste
-        previamente para editarlo.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Primero necesitamos una condición que
+        compruebe cuándo el objetivo rojo NO está visible en pantalla. \n\nCrea una nueva condición de imagen y captura
+        el objetivo rojo.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Combinaremos varias condiciones, así que necesitamos verificar el operador de condición
-        para este evento.\n\nEl operador de condición indica cómo se interpretarán juntas varias condiciones.\n
-        \'Uno\' significa que solo una de las condiciones de este evento debe cumplirse para ejecutar las acciones.\n\n
-        \'Todos\' significa que todas las condiciones de este evento deben cumplirse para ejecutar las acciones.\n\n
-        Como queremos detectar si dos cosas se muestran juntas, usaremos \'Todos\'.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Queremos pulsar solo cuando el objetivo
+        rojo no sea visible, así que pon la opción «Es visible» en No. De este modo, la condición solo se cumplirá
+        cuando el objetivo rojo no aparezca en pantalla.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Ahora necesitamos actualizar nuestras condiciones.\n\nHaz clic en el campo \"Condiciones\" para mostrar
-        la lista de condiciones.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">El resto de ajustes son correctos para
+        nuestro caso — adelante, guarda esta condición.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">La condición anterior de detectar el objetivo azul sigue siendo correcta, pero necesitamos
-        una nueva para el objetivo rojo.\n\nHaz clic en el botón de crear condición para crear una nueva condición para él.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Esta condición por sí sola es suficiente
+        para ganar el juego, pero también se activaría cuando el juego no está en marcha, lo que no es ideal.
+        \n\nPara evitarlo, combinémosla con una segunda condición que compruebe si el objetivo azul es visible.
+        Crea una nueva Condición de Imagen y captura el objetivo azul.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Al igual que con el objetivo azul, inicia el juego para mostrar el objetivo rojo.
-        Una vez que sea visible, ¡toma una captura de pantalla!</string>
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_8">Utiliza el botón de captura en el menú flotante para tomar la captura de pantalla.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">Para esta condición queremos verificar
+        que el objetivo azul es visible, por lo que los valores predeterminados son todos correctos. Guarda la condición
+        y vuelve al Evento para continuar.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">¿Tu captura de pantalla contiene el objetivo rojo? Puedes recortarla para obtener solo la
-        parte interesante para la detección, el objetivo rojo.</string>
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_secondary_9">Si tu captura de pantalla no contiene el objetivo rojo, puedes
-        pulsar este botón para tomar una nueva.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Con varias condiciones, el operador de
+        condición importa. Queremos que el evento se active cuando el objetivo azul sea visible Y el rojo no lo sea,
+        así que necesitamos el operador Y; y ya es el valor predeterminado, así que todo está bien.
+        \n\nAhora crea una nueva acción de clic para continuar.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">¡Tu imagen de condición ya está registrada!\n\nComo el objetivo rojo no se mueve, podemos
-        mantener la configuración predeterminada.\nHaz clic en el botón de guardar para registrarla y volver a la lista de condiciones.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Queremos pulsar sobre el objetivo azul,
+        así que selecciona el tipo de posición «En condición» y elige la Condición de Imagen del objetivo azul.
+        \n\nCuando hayas terminado, guarda el clic, luego tu evento y escenario, y vuelve al juego.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Cierra la lista de condiciones para volver a la configuración del evento.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">¡Inicia tu escenario y lanza el juego
+        para ganar! \n\nSi no funciona, comprueba que tus condiciones están capturadas correctamente y que la duración
+        del clic está ajustada a 1 ms.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_12">Ahora tenemos dos condiciones, una para cada objetivo, y las acciones se ejecutarán
-        solo si ambas se detectan.\n\nHaz clic en el campo \"Acciones\" para mostrar la lista de acciones de nuestro evento.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">¡Enhorabuena! Has aprendido a usar
+        una condición «No visible». Combínala siempre con al menos otra condición para evitar activar acciones de forma
+        involuntaria durante todo tu escenario.</string>
 
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_13">La acción ya está configurada para hacer clic en el personaje azul, y solo se ejecutará
-        cuando los personajes azul y rojo sean visibles juntos.\n\nEste es exactamente el comportamiento que necesitamos para ganar el
-        juego, así que no hace falta editar nuestra acción de clic.\n\nCierra la lista de acciones para volver a la configuración del evento.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_14">Haz clic en el botón de guardar para guardar tu evento.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_15">Todos los cambios deben guardarse en tu escenario para registrarse.\n\nHaz clic
-        en el botón de guardar para guardar tus cambios.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_16">¡Estamos listos para ganar este juego!\n\nHaz clic en el botón de inicio para iniciar la
-        detección y luego inicia el juego.</string>
-
-    <string name="message_tutorial_combine_conditions_not_visible_target_step_17">¡Felicitaciones!\n\nAhora sabes cómo combinar varias condiciones para un evento.
-        ¡pero hay mucho más que aprender!</string>
 </resources>
