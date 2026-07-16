@@ -23,9 +23,9 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
-
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -63,7 +63,7 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
 
         resultCallback = resultCallback ?: newGestureResultCallback()
 
-        val timeoutMs = gesture.gestureDurationMs() * GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS
+        val timeoutMs = gesture.timeoutDurationMs()
         val result = withTimeoutOrNull(timeoutMs.milliseconds) {
             suspendCancellableCoroutine { continuation ->
                 currentContinuation = continuation
@@ -123,14 +123,22 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
     }
 }
 
-private fun GestureDescription.gestureDurationMs(): Long {
+private fun GestureDescription.durationMs(): Long {
     var maxEndTime = 0L
     for (i in 0 until strokeCount) {
         val stroke = getStroke(i)
         maxEndTime = maxOf(maxEndTime, stroke.startTime + stroke.duration)
     }
+
     return maxEndTime
 }
 
-private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 1.25
+private fun GestureDescription.timeoutDurationMs(): Long =
+    (durationMs() * GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS)
+        .coerceIn(GESTURE_CALLBACK_TIMEOUT_MIN_MS, GESTURE_CALLBACK_TIMEOUT_MAX_MS)
+
+private const val GESTURE_CALLBACK_TIMEOUT_MIN_MS = 100L
+private const val GESTURE_CALLBACK_TIMEOUT_MAX_MS = 65_000L
+private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 2
+
 private const val TAG = "GestureExecutor"
