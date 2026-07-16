@@ -17,10 +17,59 @@
 -->
 <resources>
 
+    <!-- Two still targets, click on whichever appears first tutorial -->
     <string name="item_title_tutorial_combine_conditions_operator_or">Condition operator OR</string>
-    <string name="item_desc_tutorial_combine_conditions_operator_or"></string>
-    <string name="message_game_combine_conditions_operator_or"></string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Use the OR operator to click on the first
+        target that appears on screen</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Click on any target as soon as it appears
+        on screen</string>
 
-    <string name="message_tutorial_combine_conditions_operator_or_step_1"></string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">New challenge! Two targets can appear on
+        screen. The red one is worth 2 points and the blue one is worth 1 point, so click on whichever shows up
+        as fast as possible. \n\nStart the game and see how you do on your own.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Too fast to handle manually, so let\'s use
+        Klick\'r. \n\nOpen the scenario configuration menu, create a new Screen Event, and start adding conditions
+        for the game targets.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">We need one condition per target. Let\'s
+        start with the blue one. \n\nCreate a new image condition and capture the blue target.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">This condition should trigger when the blue
+        target is visible, so the default settings are all correct. Save this condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Now let\'s add the second condition for the
+        red target. \n\nCreate another image condition and capture the red target.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Same here, the red target should be
+        visible, so the default settings are correct. Save this condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">With OR, conditions are checked in order
+        and the event triggers as soon as the first one matches, so the order of your conditions matters.
+        \n\nThe red target grants more points, so we want it to be checked first. Use the « button to move it
+        before the blue one, then return to the Event dialog.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Now set the condition operator to OR. The
+        event will trigger as soon as either target appears. If both are visible at the same time, the red
+        condition will be matched first since it has the higher priority. \n\nSelect OR.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">The OR operator is now set. Open the
+        Actions section and create a new click action.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">We want to click on whichever target
+        triggered the event. Select the \"On Condition\" position type. With OR, only one condition can be
+        positively detected at a time, so no specific condition needs to be selected. Klick\'r will automatically
+        click on the location of whichever condition matched. \n\nWhen you\'re done, save the click, then your
+        event and scenario, and head back to the game.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Start your scenario and launch the game
+        to win! \n\nIf it doesn\'t work, double-check that your conditions are captured correctly and that the
+        click duration is set to 1ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Congratulations! You\'ve learned how to
+        use the OR operator and why condition priority matters. By placing the red condition first, Klick\'r always
+        favours the higher-value target when both are visible at the same time.</string>
+
+
 
 </resources>

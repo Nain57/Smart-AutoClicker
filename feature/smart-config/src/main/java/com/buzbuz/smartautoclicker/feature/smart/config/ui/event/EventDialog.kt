@@ -272,6 +272,7 @@ class EventDialog(
         viewModel.monitorViews(
             conditionsField = viewBinding.layoutConditionSelector,
             conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
+            conditionOperatorOrView = viewBinding.fieldConditionsOperator.dualStateButton.buttonRight,
             actionsField = viewBinding.layoutActionsSelector,
             saveButton = viewBinding.layoutTopBar.buttonSave,
         )

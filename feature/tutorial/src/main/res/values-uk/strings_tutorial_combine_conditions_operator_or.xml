@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">Оператор умов АБО</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Використовуйте оператор АБО, щоб натискати на
+        першу ціль, яка з\'явиться на екрані</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Натискайте на будь-яку ціль щойно вона
+        з\'явиться на екрані</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Новий виклик! На екрані можуть з\'явитися
+        дві цілі. Червона коштує 2 очки, а синя — 1 очко, тому натискайте на ту, що з\'являється, якомога швидше.
+        \n\nЗапустіть гру і подивіться, як впораєтесь.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Занадто швидко для ручного керування, тому
+        скористаємося Klick\'r. \n\nВідкрийте меню налаштування сценарію, створіть нову Подію екрана і почніть
+        додавати умови для цілей гри.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Нам потрібна одна умова на кожну ціль.
+        Почнемо з синьої. \n\nСтворіть нову умову зображення та захопіть синю ціль.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Ця умова має спрацьовувати коли синя ціль
+        видима, тому стандартні налаштування повністю підходять. Збережіть цю умову.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Тепер додамо другу умову для червоної цілі.
+        \n\nСтворіть ще одну умову зображення та захопіть червону ціль.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Тут те саме, червона ціль має бути видимою,
+        тому стандартні налаштування підходять. Збережіть цю умову.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">При АБО умови перевіряються по порядку і
+        подія спрацьовує щойно перша з них збігається, тому порядок умов важливий.
+        \n\nЧервона ціль приносить більше очок, тому ми хочемо, щоб вона перевірялася першою. Використовуйте кнопку
+        «, щоб перемістити її перед синьою, потім поверніться до діалогу Події.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Тепер встановіть оператор умови на АБО.
+        Подія спрацьовуватиме щойно з\'явиться будь-яка з цілей. Якщо обидві видимі одночасно, червона умова буде
+        виявлена першою, оскільки має вищий пріоритет. \n\nВиберіть АБО.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">Оператор АБО тепер встановлено. Відкрийте
+        розділ Дії та створіть нову дію натискання.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Ми хочемо натискати на ціль, яка
+        викликала подію. Виберіть тип позиції «За умовою». При АБО одночасно може бути позитивно виявлена лише одна
+        умова, тому вибирати конкретну умову не потрібно. Klick\'r автоматично натисне в місце розташування умови,
+        яка збіглася. \n\nКоли закінчите, збережіть натискання, потім подію та сценарій, і поверніться до гри.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Запустіть сценарій і почніть гру, щоб
+        перемогти! \n\nЯкщо щось не працює, перевірте, що ваші умови захоплені правильно і тривалість натискання
+        встановлена на 1 мс.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Вітаємо! Ви навчилися використовувати
+        оператор АБО і зрозуміли, чому пріоритет умов важливий. Помістивши червону умову першою, Klick\'r завжди
+        надає перевагу цілі з вищою цінністю, коли обидві видимі одночасно.</string>
+
+</resources>

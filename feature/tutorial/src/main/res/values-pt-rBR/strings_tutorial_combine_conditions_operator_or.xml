@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">Operador de condição OU</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Use o operador OU para clicar no primeiro alvo
+        que aparecer na tela</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Toque em qualquer alvo assim que ele aparecer
+        na tela</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Novo desafio! Dois alvos podem aparecer na
+        tela. O vermelho vale 2 pontos e o azul vale 1 ponto, então toque no que aparecer o mais rápido possível.
+        \n\nInicie o jogo e veja como você se sai.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Rápido demais para gerenciar manualmente,
+        então vamos usar o Klick\'r. \n\nAbra o menu de configuração do cenário, crie um novo Evento de Tela e comece
+        a adicionar condições para os alvos do jogo.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Precisamos de uma condição por alvo. Vamos
+        começar com o azul. \n\nCrie uma nova condição de imagem e capture o alvo azul.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Esta condição deve ser ativada quando o alvo
+        azul estiver visível, então as configurações padrão estão todas corretas. Salve esta condição.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Agora vamos adicionar a segunda condição para
+        o alvo vermelho. \n\nCrie outra condição de imagem e capture o alvo vermelho.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">O mesmo aqui, o alvo vermelho deve estar
+        visível, então as configurações padrão estão corretas. Salve esta condição.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">Com OU, as condições são verificadas em
+        ordem e o evento é ativado assim que a primeira corresponde, então a ordem das suas condições importa.
+        \n\nO alvo vermelho concede mais pontos, então queremos que ele seja verificado primeiro. Use o botão « para
+        movê-lo antes do azul, depois retorne ao diálogo Evento.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Agora defina o operador de condição como OU.
+        O evento será ativado assim que qualquer um dos alvos aparecer. Se ambos estiverem visíveis ao mesmo tempo, a
+        condição vermelha será detectada primeiro, pois tem maior prioridade. \n\nSelecione OU.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">O operador OU está configurado. Abra a seção
+        Ações e crie uma nova ação de clique.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Queremos clicar no alvo que ativou o evento.
+        Selecione o tipo de posição «Na Condição». Com OU, apenas uma condição pode ser detectada positivamente de
+        cada vez, então não é necessário selecionar uma condição específica. O Klick\'r clicará automaticamente na
+        localização da condição que correspondeu. \n\nQuando terminar, salve o clique, depois seu evento e cenário,
+        e volte ao jogo.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Inicie seu cenário e comece o jogo para
+        vencer! \n\nSe não funcionar, verifique se suas condições foram capturadas corretamente e se a duração do
+        clique está definida como 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Parabéns! Você aprendeu a usar o operador
+        OU e por que a prioridade das condições é importante. Ao colocar a condição vermelha primeiro, o Klick\'r
+        sempre favorece o alvo de maior valor quando ambos estão visíveis ao mesmo tempo.</string>
+
+</resources>

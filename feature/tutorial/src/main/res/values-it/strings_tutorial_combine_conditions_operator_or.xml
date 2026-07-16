@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">Operatore di condizione O</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Usa l\'operatore O per toccare il primo obiettivo
+        che appare sullo schermo</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Tocca qualsiasi obiettivo non appena appare
+        sullo schermo</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Nuova sfida! Due obiettivi possono apparire
+        sullo schermo. Quello rosso vale 2 punti e quello blu vale 1 punto, quindi tocca quello che compare il prima
+        possibile. \n\nAvvia il gioco e vedi come te la cavi.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Troppo veloce da gestire manualmente, quindi
+        usiamo Klick\'r. \n\nApri il menu di configurazione dello scenario, crea un nuovo Evento Schermo e inizia ad
+        aggiungere condizioni per gli obiettivi del gioco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Abbiamo bisogno di una condizione per ogni
+        obiettivo. Iniziamo con quello blu. \n\nCrea una nuova condizione immagine e acquisisci l\'obiettivo blu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Questa condizione deve attivarsi quando
+        l\'obiettivo blu è visibile, quindi le impostazioni predefinite sono tutte corrette. Salva questa
+        condizione.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Ora aggiungiamo la seconda condizione per
+        l\'obiettivo rosso. \n\nCrea un\'altra condizione immagine e acquisisci l\'obiettivo rosso.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Stessa cosa qui, l\'obiettivo rosso deve
+        essere visibile, quindi le impostazioni predefinite sono corrette. Salva questa condizione.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">Con O, le condizioni vengono verificate in
+        ordine e l\'evento si attiva non appena la prima corrisponde, quindi l\'ordine delle condizioni è importante.
+        \n\nL\'obiettivo rosso assegna più punti, quindi vogliamo che venga verificato per primo. Usa il pulsante «
+        per spostarlo prima di quello blu, poi torna alla finestra Evento.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Ora imposta l\'operatore di condizione su O.
+        L\'evento si attiverà non appena uno dei due obiettivi apparirà. Se entrambi sono visibili contemporaneamente,
+        la condizione rossa verrà rilevata per prima poiché ha la priorità più alta. \n\nSeleziona O.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">L\'operatore O è ora impostato. Apri la
+        sezione Azioni e crea una nuova azione di tocco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Vogliamo toccare l\'obiettivo che ha
+        attivato l\'evento. Seleziona il tipo di posizione «Su condizione». Con O, solo una condizione può essere
+        rilevata positivamente alla volta, quindi non è necessario selezionare una condizione specifica. Klick\'r
+        toccherà automaticamente la posizione della condizione che ha corrisposto. \n\nQuando hai finito, salva il
+        tocco, poi il tuo evento e scenario, e torna al gioco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Avvia il tuo scenario e lancia il gioco per
+        vincere! \n\nSe non funziona, verifica che le tue condizioni siano acquisite correttamente e che la durata del
+        tocco sia impostata su 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Congratulazioni! Hai imparato a usare
+        l\'operatore O e perché la priorità delle condizioni è importante. Mettendo la condizione rossa per prima,
+        Klick\'r favorisce sempre l\'obiettivo di valore più alto quando entrambi sono visibili allo stesso
+        tempo.</string>
+
+</resources>

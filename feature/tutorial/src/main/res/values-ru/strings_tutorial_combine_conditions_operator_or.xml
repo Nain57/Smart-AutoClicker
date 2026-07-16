@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click on whichever appears first tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_or">Оператор условий ИЛИ</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Используйте оператор ИЛИ, чтобы нажимать на
+        первую цель, которая появится на экране</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Нажимайте на любую цель как только она
+        появится на экране</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Новый вызов! На экране могут появиться две
+        цели. Красная стоит 2 очка, а синяя — 1 очко, поэтому нажимайте на ту, что появится, как можно быстрее.
+        \n\nЗапустите игру и посмотрите, как справитесь.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Слишком быстро для ручного управления,
+        поэтому воспользуемся Klick\'r. \n\nОткройте меню настройки сценария, создайте новое Экранное событие и
+        начните добавлять условия для целей игры.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Нам нужно по одному условию на каждую цель.
+        Начнём с синей. \n\nСоздайте новое условие изображения и захватите синюю цель.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Это условие должно срабатывать когда синяя
+        цель видна, поэтому стандартные настройки полностью подходят. Сохраните это условие.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Теперь добавим второе условие для красной
+        цели. \n\nСоздайте ещё одно условие изображения и захватите красную цель.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Здесь то же самое, красная цель должна быть
+        видна, поэтому стандартные настройки подходят. Сохраните это условие.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">При ИЛИ условия проверяются по порядку и
+        событие срабатывает как только первое из них совпадает, поэтому порядок условий важен.
+        \n\nКрасная цель приносит больше очков, поэтому мы хотим, чтобы она проверялась первой. Используйте кнопку
+        «, чтобы переместить её перед синей, затем вернитесь в диалог События.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Теперь установите оператор условия на ИЛИ.
+        Событие будет срабатывать как только появится любая из целей. Если обе видны одновременно, красное условие
+        будет обнаружено первым, так как имеет более высокий приоритет. \n\nВыберите ИЛИ.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">Оператор ИЛИ теперь установлен. Откройте
+        раздел Действия и создайте новое действие нажатия.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Мы хотим нажимать на цель, которая
+        вызвала событие. Выберите тип позиции «По условию». При ИЛИ одновременно может быть положительно обнаружено
+        только одно условие, поэтому выбирать конкретное условие не нужно. Klick\'r автоматически нажмёт в место
+        расположения совпавшего условия. \n\nКогда закончите, сохраните нажатие, затем событие и сценарий, и
+        вернитесь к игре.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Запустите сценарий и начните игру, чтобы
+        победить! \n\nЕсли что-то не работает, проверьте, что ваши условия захвачены правильно и длительность
+        нажатия установлена на 1 мс.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Поздравляем! Вы научились использовать
+        оператор ИЛИ и поняли, почему приоритет условий важен. Поместив красное условие первым, Klick\'r всегда
+        отдаёт предпочтение цели с более высокой ценностью, когда обе видны одновременно.</string>
+
+</resources>
