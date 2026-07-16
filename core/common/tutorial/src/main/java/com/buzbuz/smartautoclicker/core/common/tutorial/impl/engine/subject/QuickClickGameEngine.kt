@@ -95,7 +95,6 @@ internal class QuickClickGameEngine (
                 )
             }
             onGameCompleted?.invoke(isWon)
-            onGameCompleted = null
             gameJob = null
         }
     }
@@ -103,6 +102,7 @@ internal class QuickClickGameEngine (
     override fun stop() {
         Log.d(TAG, "Stop game")
 
+        onGameCompleted = null
         gameJob?.cancel()
         gameJob = null
 
