@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Оператор умов І</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Використовуйте оператор І, щоб виконувати
+        натискання лише коли кілька цілей видимі одночасно</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Натискайте синю кнопку лише тоді, коли видимі
+        і синя, і червона цілі</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">Нові правила! Тепер у грі дві цілі.
+        Натискайте на синю, але лише коли обидві цілі — синя та червона — одночасно на екрані.
+        \n\nЗапустіть гру і подивіться, чи впораєтесь самостійно.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">Занадто складно робити це вручну, тому
+        скористаємося Klick\'r. \n\nВідкрийте меню налаштування сценарію, створіть нову Подію екрана і почніть
+        додавати умови для цілей гри.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Нам потрібна одна умова на кожну ціль.
+        Почнемо з синьої. \n\nСтворіть нову умову зображення та захопіть синю ціль.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Ми хочемо, щоб ця умова виконувалась
+        коли синя ціль видима, тому стандартні налаштування повністю підходять. Збережіть цю умову.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Тепер додамо другу умову для червоної цілі.
+        \n\nСтворіть ще одну умову зображення та захопіть червону ціль.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Тут те саме — червона ціль має бути
+        видимою, тому стандартні налаштування підходять. Збережіть цю умову і поверніться до події.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">При двох заданих умовах оператор умови
+        визначає, як вони поєднуються. Виберіть оператор за допомогою селектора вище.
+        \n\n• І: подія спрацьовує лише коли ВСІ умови виконані.\n• АБО: подія спрацьовує щойно ОДНА умова
+        виконана.\n\nДля нашої гри нам потрібні обидві цілі на екрані одночасно, тому виберіть І.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">Селектор оператора умов</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">І вже є оператором за замовчуванням, тому
+        все готово. \n\nТепер відкрийте розділ Дії та створіть нову дію натискання.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Ми хочемо натискати на синю ціль, тому
+        виберіть тип позиції «За умовою» та вкажіть умову зображення синьої цілі.
+        \n\nКоли закінчите, збережіть натискання, потім подію та сценарій, і поверніться до гри.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Запустіть сценарій і почніть гру, щоб
+        перемогти! \n\nЯкщо щось не працює, перевірте, що обидві умови захоплені правильно і тривалість натискання
+        встановлена на 1 мс.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Вітаємо! Ви навчилися використовувати
+        оператор І. Тепер подія спрацьовує лише коли всі її умови виконані одночасно.</string>
+
+</resources>

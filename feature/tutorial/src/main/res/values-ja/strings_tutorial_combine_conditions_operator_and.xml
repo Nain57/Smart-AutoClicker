@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">条件演算子 AND</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">AND演算子を使って、複数のターゲットが同時に表示されているときだけタップしましょう</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">青と赤の両方のターゲットが見えているときだけ青いボタンをタップしてください</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">新しいルールです！ゲームに2つのターゲットが登場します。青いターゲットをタップしますが、青と赤の両方が同時に画面に表示されているときだけです。
+        \n\nゲームを起動して、自分でついていけるか試してみましょう。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">手動で対応するには難しすぎるので、Klick\'rを使いましょう。
+        \n\nシナリオ設定メニューを開き、新しいスクリーンイベントを作成して、ゲームのターゲットに対する条件を追加していきます。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">ターゲットごとに1つの条件が必要です。まず青いターゲットから始めましょう。
+        \n\n新しい画像条件を作成し、青いターゲットをキャプチャしてください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">この条件は青いターゲットが表示されているときに満たされるようにしたいので、デフォルト設定のままで問題ありません。この条件を保存してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">次に赤いターゲットの2つ目の条件を追加しましょう。
+        \n\nもう1つ画像条件を作成し、赤いターゲットをキャプチャしてください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">こちらも同じです — 赤いターゲットが表示されている必要があるので、デフォルト設定のままで問題ありません。この条件を保存してイベントに戻りましょう。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">2つの条件が設定された状態で、条件演算子がそれらの組み合わせ方を決定します。上に表示されたセレクターで演算子を選択してください。
+        \n\n• AND: すべての条件が満たされたときだけイベントが発動します。\n• OR: 1つの条件が満たされた時点でイベントが発動します。\n\nこのゲームでは両方のターゲットが同時に画面にある必要があるので、ANDを選択してください。</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">条件演算子セレクター</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">ANDはすでにデフォルトの演算子なので準備完了です。
+        \n\nアクションセクションを開き、新しいタップアクションを作成してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">青いターゲットをタップしたいので、位置タイプ「条件の上」を選択し、青いターゲットの画像条件を指定してください。
+        \n\n完了したら、タップを保存し、イベントとシナリオも保存してゲームに戻りましょう。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">シナリオを開始してゲームを起動し、勝利を目指しましょう！
+        \n\nうまくいかない場合は、両方の条件が正しくキャプチャされているか、タップ時間が1msに設定されているかを確認してください。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">おめでとうございます！AND演算子の使い方を習得しました。これでイベントはすべての条件が同時に満たされたときだけ発動するようになります。</string>
+
+</resources>

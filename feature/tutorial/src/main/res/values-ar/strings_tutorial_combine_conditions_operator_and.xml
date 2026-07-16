@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">مشغّل الشروط و</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">استخدم المشغّل و للنقر فقط عندما تكون عدة
+        أهداف مرئية في الوقت ذاته</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">انقر على الزر الأزرق فقط عندما يكون كل من
+        الهدف الأزرق والهدف الأحمر مرئيين</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">قواعد جديدة! يعرض اللعبة الآن هدفين.
+        انقر على الأزرق، لكن فقط عندما يكون الهدفان الأزرق والأحمر على الشاشة في الوقت ذاته.
+        \n\nابدأ اللعبة وانظر إن كنت تستطيع مواكبة الوتيرة بمفردك.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">التوقيت ضيق جدًا للتعامل معه يدويًا،
+        لذا لنستخدم Klick\'r. \n\nافتح قائمة إعداد السيناريو، وأنشئ حدث شاشة جديدًا، وابدأ في إضافة شروط
+        لأهداف اللعبة.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">نحتاج إلى شرط واحد لكل هدف. لنبدأ
+        بالهدف الأزرق. \n\nأنشئ شرط صورة جديدًا والتقط الهدف الأزرق.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">نريد أن يتحقق هذا الشرط عندما يكون
+        الهدف الأزرق مرئيًا، لذا الإعدادات الافتراضية كلها صحيحة. احفظ هذا الشرط.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">الآن لنضف الشرط الثاني للهدف الأحمر.
+        \n\nأنشئ شرط صورة آخر والتقط الهدف الأحمر.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">الأمر نفسه هنا — يجب أن يكون الهدف
+        الأحمر مرئيًا، لذا الإعدادات الافتراضية صحيحة. احفظ هذا الشرط وارجع إلى الحدث.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">مع تحديد شرطين، يحدد مشغّل الشروط كيفية
+        دمجهما. اختر المشغّل باستخدام المحدد الموضح أعلاه.
+        \n\n• و: يُنشَّط الحدث فقط عندما تتحقق جميع الشروط.\n• أو: يُنشَّط الحدث بمجرد تحقق شرط واحد.
+        \n\nللعبتنا نحتاج إلى كلا الهدفين على الشاشة في الوقت ذاته، لذا اختر و.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">محدد مشغّل الشروط</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">و هو المشغّل الافتراضي بالفعل، لذا نحن
+        جاهزون. \n\nافتح الآن قسم الإجراءات وأنشئ إجراء نقر جديدًا.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">نريد النقر على الهدف الأزرق، لذا اختر
+        نوع الموضع «على الشرط» وحدد شرط الصورة الخاص بالهدف الأزرق.
+        \n\nعند الانتهاء، احفظ النقر، ثم الحدث والسيناريو، وارجع إلى اللعبة.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">شغّل السيناريو وابدأ اللعبة للفوز!
+        \n\nإن لم ينجح ذلك، تحقق من أن كلا الشرطين تم التقاطهما بشكل صحيح وأن مدة النقر مضبوطة على 1 مللي
+        ثانية.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">تهانينا! لقد تعلّمت استخدام المشغّل و.
+        يُنشَّط الحدث الآن فقط عندما تتحقق جميع شروطه في الوقت ذاته.</string>
+
+</resources>

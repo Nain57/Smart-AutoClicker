@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">条件运算符 AND</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">使用 AND 运算符，仅在多个目标同时可见时触发点击</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">仅在蓝色和红色目标同时可见时点击蓝色按钮</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">新规则！游戏现在显示两个目标。你需要点击蓝色目标，但只有在蓝色和红色目标同时出现在屏幕上时才能点击。
+        \n\n启动游戏，看看你能否靠自己跟上节奏。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">手动操作时机太难把握，所以让我们使用 Klick\'r。
+        \n\n打开场景配置菜单，创建一个新的屏幕事件，并开始为游戏目标添加条件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">每个目标需要一个条件。先从蓝色目标开始。
+        \n\n创建一个新的图像条件并捕获蓝色目标。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">我们希望在蓝色目标可见时满足此条件，因此默认设置完全正确。保存此条件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">现在为红色目标添加第二个条件。
+        \n\n再创建一个图像条件并捕获红色目标。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">这里也一样——红色目标应该可见，所以默认设置是正确的。保存此条件并返回事件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">设置好两个条件后，条件运算符决定如何组合它们。使用上方显示的选择器来选择运算符。
+        \n\n• AND：仅当所有条件都满足时，事件才会触发。\n• OR：只要有一个条件满足，事件就会立即触发。
+        \n\n对于我们的游戏，需要两个目标同时在屏幕上，因此请选择 AND。</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">条件运算符选择器</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">AND 已经是默认运算符，所以我们准备好了。
+        \n\n现在打开"动作"部分，创建一个新的点击动作。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">我们要点击蓝色目标，因此选择位置类型"按条件"，并选择蓝色目标的图像条件。
+        \n\n完成后，保存点击动作，然后保存事件和场景，并返回游戏。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">启动你的场景并开始游戏以获胜！
+        \n\n如果无效，请检查两个条件是否均已正确捕获，以及点击时长是否设置为 1ms。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">恭喜！你已学会使用 AND 运算符。事件现在只会在所有条件同时满足时才触发。</string>
+
+</resources>

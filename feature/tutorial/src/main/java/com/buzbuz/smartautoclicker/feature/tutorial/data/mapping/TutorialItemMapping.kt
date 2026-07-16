@@ -24,6 +24,8 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.text.TextConditionsStillTextTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.TimerReachedConditionTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsNotVisibleTargetTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsOperatorAndTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsOperatorOrTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem.Type.*
 
@@ -33,6 +35,8 @@ internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
         COLOR_CONDITION -> ColorConditionsTutorial
 
         COMBINE_CONDITIONS_NOT_VISIBLE -> CombineConditionsNotVisibleTargetTutorial
+        COMBINE_CONDITIONS_OPERATOR_AND -> CombineConditionsOperatorAndTutorial
+        COMBINE_CONDITIONS_OPERATOR_OR -> CombineConditionsOperatorOrTutorial
 
         IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
         IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial
@@ -43,4 +47,5 @@ internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
         TEXT_CONDITION_STILL_TEXT -> TextConditionsStillTextTutorial
 
         TIMER_REACHED_CONDITION -> TimerReachedConditionTutorial
+
     }

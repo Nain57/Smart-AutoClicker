@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">條件運算子 AND</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">使用 AND 運算子，僅在多個目標同時可見時觸發點擊</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">僅在藍色和紅色目標同時可見時點擊藍色按鈕</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">新規則！遊戲現在顯示兩個目標。你需要點擊藍色目標，但只有在藍色和紅色目標同時出現在螢幕上時才能點擊。
+        \n\n啟動遊戲，看看你能否靠自己跟上節奏。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">手動操作時機太難掌握，所以讓我們使用 Klick\'r。
+        \n\n開啟場景設定選單，建立一個新的螢幕事件，並開始為遊戲目標新增條件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">每個目標需要一個條件。先從藍色目標開始。
+        \n\n建立一個新的圖像條件並擷取藍色目標。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">我們希望在藍色目標可見時滿足此條件，因此預設設定完全正確。儲存此條件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">現在為紅色目標新增第二個條件。
+        \n\n再建立一個圖像條件並擷取紅色目標。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">這裡也一樣——紅色目標應該可見，所以預設設定是正確的。儲存此條件並返回事件。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">設定好兩個條件後，條件運算子決定如何組合它們。使用上方顯示的選擇器來選擇運算子。
+        \n\n• AND：僅當所有條件都滿足時，事件才會觸發。\n• OR：只要有一個條件滿足，事件就會立即觸發。
+        \n\n對於我們的遊戲，需要兩個目標同時在螢幕上，因此請選擇 AND。</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">條件運算子選擇器</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">AND 已經是預設運算子，所以我們準備好了。
+        \n\n現在開啟「動作」部分，建立一個新的點擊動作。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">我們要點擊藍色目標，因此選擇位置類型「依條件」，並選擇藍色目標的圖像條件。
+        \n\n完成後，儲存點擊動作，然後儲存事件和場景，並返回遊戲。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">啟動你的場景並開始遊戲以獲勝！
+        \n\n如果無效，請檢查兩個條件是否均已正確擷取，以及點擊時長是否設定為 1ms。</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">恭喜！你已學會使用 AND 運算子。事件現在只會在所有條件同時滿足時才觸發。</string>
+
+</resources>

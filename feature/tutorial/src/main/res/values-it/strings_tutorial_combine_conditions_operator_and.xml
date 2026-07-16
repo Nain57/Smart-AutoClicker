@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Operatore di condizione E</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Usa l\'operatore E per fare clic solo quando
+        più obiettivi sono visibili contemporaneamente</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Tocca il pulsante blu solo quando sia
+        l\'obiettivo blu che quello rosso sono visibili</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">Nuove regole! Il gioco ora mostra due
+        obiettivi. Devi toccare quello blu, ma solo quando entrambi gli obiettivi, blu e rosso, sono sullo schermo
+        contemporaneamente. \n\nAvvia il gioco e vedi se riesci a stare al passo da solo.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">I tempi sono troppo stretti per gestirli
+        manualmente, quindi usiamo Klick\'r. \n\nApri il menu di configurazione dello scenario, crea un nuovo Evento
+        Schermo e inizia ad aggiungere condizioni per gli obiettivi del gioco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Abbiamo bisogno di una condizione per
+        ogni obiettivo. Iniziamo con quello blu. \n\nCrea una nuova condizione immagine e acquisisci l\'obiettivo
+        blu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Vogliamo che questa condizione sia
+        soddisfatta quando l\'obiettivo blu è visibile, quindi le impostazioni predefinite sono tutte corrette.
+        Salva questa condizione.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Ora aggiungiamo la seconda condizione per
+        l\'obiettivo rosso. \n\nCrea un\'altra condizione immagine e acquisisci l\'obiettivo rosso.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Stessa cosa qui — l\'obiettivo rosso deve
+        essere visibile, quindi le impostazioni predefinite sono corrette. Salva questa condizione e torna
+        all\'Evento.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">Con due condizioni definite, l\'operatore
+        di condizione determina come vengono combinate. Seleziona l\'operatore tramite il selettore mostrato sopra.
+        \n\n• E: l\'evento si attiva solo quando TUTTE le condizioni sono soddisfatte.\n• O: l\'evento si attiva
+        appena UNA condizione è soddisfatta.\n\nPer il nostro gioco abbiamo bisogno di entrambi gli obiettivi sullo
+        schermo contemporaneamente, quindi seleziona E.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">Il selettore dell\'operatore di
+        condizione</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">E è già l\'operatore predefinito, quindi
+        siamo a posto. \n\nOra apri la sezione Azioni e crea una nuova azione di tocco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Vogliamo toccare l\'obiettivo blu, quindi
+        seleziona il tipo di posizione «Su condizione» e scegli la condizione immagine dell\'obiettivo blu.
+        \n\nQuando hai finito, salva il tocco, poi il tuo evento e scenario, e torna al gioco.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Avvia il tuo scenario e lancia il gioco
+        per vincere! \n\nSe non funziona, verifica che entrambe le condizioni siano acquisite correttamente e che la
+        durata del tocco sia impostata su 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Congratulazioni! Hai imparato a usare
+        l\'operatore E. L\'evento ora si attiva solo quando tutte le sue condizioni sono soddisfatte allo stesso
+        tempo.</string>
+
+</resources>

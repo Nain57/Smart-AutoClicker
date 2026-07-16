@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Opérateur de condition ET</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Utilisez l\'opérateur ET pour cliquer uniquement
+        quand plusieurs cibles sont visibles en même temps</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Cliquez sur le bouton bleu uniquement quand
+        les cibles bleue et rouge sont toutes les deux visibles</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">Nouvelles règles ! Le jeu affiche maintenant
+        deux cibles. Cliquez sur la bleue, mais seulement quand les deux cibles bleue et rouge sont à l\'écran en même
+        temps. \n\nLancez le jeu et voyez si vous arrivez à suivre le rythme par vous-même.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">Le timing est trop serré pour le gérer
+        manuellement, alors utilisons Klick\'r. \n\nOuvrez le menu de configuration du scénario, créez un nouvel
+        Événement Écran et commencez à ajouter des conditions pour les cibles du jeu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Nous avons besoin d\'une condition par
+        cible. Commençons par la bleue. \n\nCréez une nouvelle condition image et capturez la cible bleue.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Nous voulons que cette condition soit
+        remplie quand la cible bleue est visible, donc les paramètres par défaut sont tous corrects. Enregistrez cette
+        condition.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Ajoutons maintenant la deuxième condition
+        pour la cible rouge. \n\nCréez une autre condition image et capturez la cible rouge.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Pareil ici — la cible rouge doit être
+        visible, donc les paramètres par défaut sont corrects. Enregistrez cette condition et revenez à
+        l\'Événement.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">Avec deux conditions définies, l\'opérateur
+        de condition détermine comment elles sont combinées. Sélectionnez l\'opérateur à l\'aide du sélecteur
+        ci-dessus. \n\n• ET : l\'événement se déclenche uniquement quand TOUTES les conditions sont remplies.\n•
+        OU : l\'événement se déclenche dès qu\'UNE condition est remplie.\n\nPour notre jeu, nous avons besoin des
+        deux cibles à l\'écran en même temps, donc sélectionnez ET.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">Le sélecteur d\'opérateur de
+        condition</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">ET est déjà l\'opérateur par défaut, donc
+        tout est bon. \n\nOuvrez maintenant la section Actions et créez une nouvelle action de clic.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Nous voulons cliquer sur la cible bleue,
+        donc sélectionnez le type de position « Sur condition » et choisissez la condition image de la cible bleue.
+        \n\nUne fois terminé, enregistrez le clic, puis votre événement et votre scénario, et revenez au jeu.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Démarrez votre scénario et lancez le jeu
+        pour gagner ! \n\nSi ça ne fonctionne pas, vérifiez que les deux conditions sont bien capturées et que la
+        durée du clic est réglée sur 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Félicitations ! Vous avez appris à
+        utiliser l\'opérateur ET. L\'événement se déclenche désormais uniquement quand toutes ses conditions sont
+        remplies en même temps.</string>
+
+</resources>

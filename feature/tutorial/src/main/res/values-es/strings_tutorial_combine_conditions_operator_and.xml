@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Two still targets, click when both are visible tutorial -->
+    <string name="item_title_tutorial_combine_conditions_operator_and">Operador de condición Y</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Usa el operador Y para hacer clic solo cuando
+        varios objetivos son visibles al mismo tiempo</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Pulsa el botón azul solo cuando tanto el
+        objetivo azul como el rojo estén visibles</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">¡Nuevas reglas! El juego ahora muestra dos
+        objetivos. Debes pulsar el azul, pero solo cuando ambos objetivos, el azul y el rojo, estén en pantalla al
+        mismo tiempo. \n\nInicia el juego y comprueba si puedes seguir el ritmo por tu cuenta.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">El tiempo es demasiado ajustado para
+        manejarlo manualmente, así que usemos Klick\'r. \n\nAbre el menú de configuración del escenario, crea un
+        nuevo Evento de Pantalla y empieza a añadir condiciones para los objetivos del juego.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Necesitamos una condición por objetivo.
+        Empecemos con el azul. \n\nCrea una nueva condición de imagen y captura el objetivo azul.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Queremos que esta condición se cumpla
+        cuando el objetivo azul sea visible, así que la configuración predeterminada es correcta. Guarda esta
+        condición.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Ahora añadamos la segunda condición para
+        el objetivo rojo. \n\nCrea otra condición de imagen y captura el objetivo rojo.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Lo mismo aquí — el objetivo rojo debe ser
+        visible, así que la configuración predeterminada es correcta. Guarda esta condición y vuelve al Evento.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">Con dos condiciones definidas, el operador
+        de condición determina cómo se combinan. Selecciona el operador usando el selector de arriba.
+        \n\n• Y: el evento se activa solo cuando TODAS las condiciones se cumplen.\n• O: el evento se activa en
+        cuanto UNA condición se cumple.\n\nPara nuestro juego necesitamos los dos objetivos en pantalla al mismo
+        tiempo, así que selecciona Y.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">El selector del operador de
+        condición</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">Y ya es el operador predeterminado, así
+        que estamos listos. \n\nAhora abre la sección Acciones y crea una nueva acción de clic.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Queremos pulsar sobre el objetivo azul,
+        así que selecciona el tipo de posición «En condición» y elige la condición de imagen del objetivo azul.
+        \n\nCuando hayas terminado, guarda el clic, luego tu evento y escenario, y vuelve al juego.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">¡Inicia tu escenario y lanza el juego
+        para ganar! \n\nSi no funciona, comprueba que ambas condiciones estén capturadas correctamente y que la
+        duración del clic esté ajustada a 1 ms.</string>
+
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">¡Enhorabuena! Has aprendido a usar el
+        operador Y. El evento ahora se activa solo cuando todas sus condiciones se cumplen al mismo tiempo.</string>
+
+</resources>
