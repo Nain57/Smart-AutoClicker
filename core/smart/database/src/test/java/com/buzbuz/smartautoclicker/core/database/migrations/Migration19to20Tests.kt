@@ -99,6 +99,33 @@ class Migration19to20Tests {
     }
 
     @Test
+    fun migrate_counters_new_type_acceptsLowercasePersistedEnums() {
+        // Older database writers could persist enum values with a different case.
+        val actionId = 1L
+        val conditionId = 1L
+
+        helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
+            db.insertTestScenario(1L)
+            db.insertTestEvent(1L, 1L)
+            db.insertTestAction(actionId, 1L, type = ActionType.CHANGE_COUNTER, counterOperationValue = 10)
+            db.insertTestCondition(conditionId, 1L, type = ConditionType.ON_COUNTER_REACHED, counterValue = 5)
+            db.execSQL("UPDATE $ACTION_TABLE SET type = 'change_counter' WHERE id = $actionId")
+            db.execSQL("UPDATE $CONDITION_TABLE SET type = 'on_counter_reached' WHERE id = $conditionId")
+        }
+
+        helper.runMigrationsAndValidate(dbPath, NEW_DB_VERSION, true, Migration19to20).use { db ->
+            db.query("SELECT counter_operation_value FROM $ACTION_TABLE WHERE id = $actionId").use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals(10.0, cursor.getDouble(0), 0.0)
+            }
+            db.query("SELECT counter_value FROM $CONDITION_TABLE WHERE id = $conditionId").use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals(5.0, cursor.getDouble(0), 0.0)
+            }
+        }
+    }
+
+    @Test
     fun migrate_counters_creation_no_counters() {
         // Given
         helper.createDatabase(dbPath, OLD_DB_VERSION).use { db ->
