@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -205,12 +205,42 @@
         siempre se aplicará en la primera detectada, sea cual sea en tiempo de ejecución.</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">Orden de condiciones y rendimiento</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Cómo el orden de las condiciones afecta la velocidad de evaluación</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Orden de condiciones y velocidad</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Cómo el orden de tus condiciones afecta la
+        velocidad de comprobación del evento</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">El orden de las condiciones en la lista importa para el rendimiento.\n\nCon el operador Y, la evaluación se detiene en cuanto se encuentra la primera condición NO satisfecha. Colocar primero las condiciones menos probables permite saltarse el resto antes, acelerando la evaluación del evento.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">El orden de las condiciones en la lista
+        afecta la velocidad de comprobación del evento.\n\nCon el operador Y, la comprobación se detiene en cuanto se
+        encuentra la primera condición NO cumplida. Colocar primero las condiciones menos probables permite a la app
+        saltarse el resto antes, haciendo tu evento más rápido.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con el operador O, la evaluación se detiene en cuanto se encuentra la primera condición satisfecha. Colocar primero las condiciones más probables hace que la evaluación tenga éxito antes, sin comprobar el resto.\n\nEn ambos casos, poner la condición más decisiva o menos costosa al principio de la lista es una forma sencilla de mantener tu escenario rápido.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con el operador O, la comprobación se
+        detiene en cuanto se encuentra la primera condición cumplida. Colocar primero las condiciones más probables
+        permite a la app terminar antes, sin comprobar el resto.\n\nEn ambos casos, poner la condición más importante
+        al principio de la lista es una forma sencilla de mantener tu escenario rápido.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">Estado de los eventos</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">Aprende a activar y desactivar eventos mientras un
+        escenario está en marcha</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">Cada evento de tu escenario (Eventos de Pantalla
+        y Eventos Disparador) tiene un estado: está <b>activado</b> o <b>desactivado</b>.\n\nCuando está activado, el
+        evento se ejecuta con normalidad y verifica sus condiciones como de costumbre. Cuando está desactivado, se
+        omite por completo, como si no existiera.\n\nPor defecto, todos los eventos comienzan activados. Puedes cambiar
+        esto con el campo <b>Estado inicial</b> en los ajustes del evento.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">Mientras un escenario está en marcha, puedes
+        cambiar el estado de cualquier evento usando la acción <b>Cambiar estado del evento</b>. Esta acción permite
+        activar, desactivar o alternar el estado de uno o más eventos.\n\nEsto abre muchas posibilidades: eventos que
+        se activan uno tras otro, eventos que se desactivan solos después de ejecutarse una vez, o grupos de eventos
+        donde solo uno está activo a la vez.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">Cuando <b>todos los eventos del escenario están
+        desactivados</b>, el escenario se para solo. No hay nada más que hacer, así que Klick\'r se detiene
+        automáticamente.\n\nEsta es una forma sencilla de terminar un escenario: haz que tu último evento desactive a
+        todos los demás una vez cumplido su objetivo, y todo se para por sí solo.</string>
 
 
     <!-- Actions List slideshow -->

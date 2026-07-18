@@ -14,23 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.state
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 
-internal fun getRootCategory() =
+internal fun getEventsStateCategory() =
     TutorialCategory(
-        type = TutorialCategory.Type.ROOT,
-        nameRes = R.string.tutorial_category_root_name,
-        shortDescriptionRes = R.string.tutorial_category_root_desc_long, // Unused for root
-        longDescriptionRes = R.string.tutorial_category_root_desc_long,
-        iconRes = R.drawable.ic_tutorials,
+        type = TutorialCategory.Type.EVENTS_STATE,
+        nameRes = R.string.tutorial_category_events_state_name,
+        shortDescriptionRes = R.string.tutorial_category_events_state_desc_short,
+        longDescriptionRes = R.string.tutorial_category_events_state_desc_long,
+        iconRes = R.drawable.ic_toggle_event,
         content = listOf(
-            TutorialCategory.Content.Category(TutorialCategory.Type.BASICS),
-            TutorialCategory.Content.Category(TutorialCategory.Type.COMBINE_CONDITIONS),
-            TutorialCategory.Content.Category(TutorialCategory.Type.COMBINE_EVENTS),
-            TutorialCategory.Content.Category(TutorialCategory.Type.COUNTERS),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_STATE_BASICS),
         ),
     )

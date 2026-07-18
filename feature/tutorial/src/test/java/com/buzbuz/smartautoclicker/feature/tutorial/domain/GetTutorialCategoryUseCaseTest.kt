@@ -94,7 +94,7 @@ class GetTutorialCategoryUseCaseTest {
             listOf(
                 TutorialCategory.Type.BASICS,
                 TutorialCategory.Type.COMBINE_CONDITIONS,
-                TutorialCategory.Type.EVENT_STATE,
+                TutorialCategory.Type.COMBINE_EVENTS,
                 TutorialCategory.Type.COUNTERS,
             ),
             state.items.filterIsInstance<TutorialCategoryUiItems.Item.Category>().map { it.type },

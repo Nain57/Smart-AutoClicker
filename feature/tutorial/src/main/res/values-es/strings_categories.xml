@@ -75,9 +75,23 @@
         condiciones y operadores te permite gestionar escenarios complejos.\n\n Aprende aquí a combinar condiciones de
         forma efectiva.</string>
 
-    <string name="tutorial_category_event_state_name">Estado del evento</string>
-    <string name="tutorial_category_event_state_desc_short">Activa o desactiva Eventos dinámicamente</string>
-    <string name="tutorial_category_event_state_desc_long">Los Eventos pueden activarse o desactivarse en tiempo de
+    <string name="tutorial_category_combine_event_name">Combinar Eventos</string>
+    <string name="tutorial_category_combine_event_desc_short">Coordina múltiples Eventos para un control avanzado</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r te permite coordinar múltiples Eventos para crear
+        flujos de automatización avanzados. Controlando el orden de evaluación y activando o desactivando Eventos en
+        tiempo de ejecución, puedes crear Escenarios complejos de varios pasos.\n\n Aprende aquí a combinar Eventos
+        eficazmente para tener el control total de tu automatización.</string>
+
+    <string name="tutorial_category_events_priority_name">Prioridad de los eventos</string>
+    <string name="tutorial_category_events_priority_desc_short">Controla la importancia de tus eventos</string>
+    <string name="tutorial_category_events_priority_desc_long">Los Eventos de Pantalla se evalúan por orden de prioridad
+        en cada ciclo de detección. Un Evento más arriba en la lista se comprueba antes que los Eventos más abajo, lo
+        que permite definir qué Evento tiene precedencia cuando varios podrían activarse al mismo tiempo.\n\n Aprende
+        aquí a establecer prioridades de Evento para ajustar el orden de ejecución de tu Escenario.</string>
+
+    <string name="tutorial_category_events_state_name">Estado de los Eventos</string>
+    <string name="tutorial_category_events_state_desc_short">Activa o desactiva Eventos dinámicamente</string>
+    <string name="tutorial_category_events_state_desc_long">Los Eventos pueden activarse o desactivarse en tiempo de
         ejecución mediante la Acción ToggleEvent. Esto permite crear flujos de automatización de varios pasos donde
         ciertos eventos solo están activos bajo condiciones específicas.\n\n Aprende aquí a controlar el estado de los
         Eventos para crear Escenarios avanzados.</string>

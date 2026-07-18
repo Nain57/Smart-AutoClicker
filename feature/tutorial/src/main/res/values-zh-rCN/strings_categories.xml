@@ -62,9 +62,20 @@
     <string name="tutorial_category_combine_conditions_desc_long">每个事件都有一个条件运算符：AND 要求满足所有条件，而 OR 只需满足
         至少一个。混合使用条件类型和运算符可以应对复杂的现实场景。\n\n 在这里学习如何有效地组合条件。</string>
 
-    <string name="tutorial_category_event_state_name">事件状态</string>
-    <string name="tutorial_category_event_state_desc_short">动态启用或禁用事件</string>
-    <string name="tutorial_category_event_state_desc_long">可以在运行时使用 ToggleEvent 动作启用或禁用事件。这让你能够构建多步骤
+    <string name="tutorial_category_combine_event_name">组合事件</string>
+    <string name="tutorial_category_combine_event_desc_short">协调多个事件以实现复杂的逻辑控制</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r 让你可以协调多个事件来构建高级自动化流程。通过控制事件的评估
+        顺序以及在运行时启用或禁用事件，你可以创建复杂的多步骤场景。\n\n 在这里学习如何有效地组合事件，从而完全掌控你的自动化流程。</string>
+
+    <string name="tutorial_category_events_priority_name">事件优先级</string>
+    <string name="tutorial_category_events_priority_desc_short">控制事件的重要程度</string>
+    <string name="tutorial_category_events_priority_desc_long">屏幕事件在每个检测周期中按优先级顺序进行评估。列表中较高位置的事件
+        会在较低位置的事件之前被检查，让你能够定义当多个事件可能同时触发时哪个事件优先。\n\n 在这里学习如何设置事件优先级，以精细
+        调整场景的执行顺序。</string>
+
+    <string name="tutorial_category_events_state_name">事件状态管理</string>
+    <string name="tutorial_category_events_state_desc_short">动态启用或禁用事件</string>
+    <string name="tutorial_category_events_state_desc_long">可以在运行时使用 ToggleEvent 动作启用或禁用事件。这让你能够构建多步骤
         自动化流程，其中某些事件仅在特定条件下才处于活动状态。\n\n 在这里学习如何控制事件状态来构建高级场景。</string>
 
     <string name="tutorial_category_trigger_condition_name">触发条件</string>

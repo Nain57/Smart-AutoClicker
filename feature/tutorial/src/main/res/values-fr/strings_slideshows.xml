@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -209,12 +209,44 @@
         condition détectée, quelle qu\'elle soit lors de l\'exécution.</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordre des conditions et performances</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Comment l\'ordre des conditions influence la vitesse d\'évaluation</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordre des conditions et vitesse</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Comment l\'ordre de vos conditions influence la
+        vitesse de vérification de l\'événement</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordre des conditions dans la liste a un impact sur les performances.\n\nAvec l\'opérateur ET, l\'évaluation s\'arrête dès que la première condition non satisfaite est trouvée. Placer en premier les conditions les moins susceptibles d\'être vérifiées permet de sauter les suivantes plus tôt, accélérant ainsi l\'évaluation de l\'événement.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordre des conditions dans la liste a
+        un impact sur la vitesse de vérification de l\'événement.\n\nAvec l\'opérateur ET, la vérification s\'arrête
+        dès que la première condition non remplie est trouvée. Mettre en premier les conditions les moins probables
+        permet à l\'application de sauter les suivantes plus tôt, rendant votre événement plus rapide.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Avec l\'opérateur OU, l\'évaluation s\'arrête dès que la première condition satisfaite est trouvée. Placer en premier les conditions les plus susceptibles d\'être vérifiées permet de réussir l\'évaluation plus tôt, sans vérifier le reste.\n\nDans les deux cas, mettre la condition la plus décisive ou la moins coûteuse en haut de la liste est un moyen simple de garder votre scénario rapide.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Avec l\'opérateur OU, la vérification
+        s\'arrête dès que la première condition remplie est trouvée. Mettre en premier les conditions les plus
+        probables permet à l\'application de terminer plus tôt, sans vérifier le reste.\n\nDans les deux cas, mettre la
+        condition la plus importante en haut de la liste est un moyen simple de garder votre scénario rapide.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">État des événements</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">Apprenez à activer et désactiver des événements pendant
+        l\'exécution d\'un scénario</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">Chaque événement de votre scénario (Événements
+        Écran et Événements Déclencheur) possède un état : il est soit <b>activé</b>, soit
+        <b>désactivé</b>.\n\nLorsqu\'il est activé, l\'événement s\'exécute normalement et vérifie ses conditions comme
+        d\'habitude. Lorsqu\'il est désactivé, il est entièrement ignoré, comme s\'il n\'existait pas.\n\nPar défaut,
+        chaque événement démarre activé. Vous pouvez modifier cela avec le champ <b>État initial</b> dans les
+        paramètres de l\'événement.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">Pendant l\'exécution d\'un scénario, vous pouvez
+        modifier l\'état de n\'importe quel événement avec l\'action <b>Changer l\'état d\'un événement</b>. Cette
+        action permet d\'activer, de désactiver ou de basculer l\'état d\'un ou plusieurs événements.\n\nCela ouvre de
+        nombreuses possibilités : des événements qui s\'activent les uns après les autres, des événements qui se
+        désactivent après s\'être déclenchés une fois, ou des groupes d\'événements dont un seul est
+        actif à la fois.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">Lorsque <b>tous les événements du scénario sont
+        désactivés</b>, le scénario s\'arrête tout seul. Il n\'y a plus rien à faire, donc Klick\'r s\'arrête
+        automatiquement.\n\nC\'est une façon simple de terminer un scénario : il suffit que le dernier événement
+        désactive tous les autres une fois son rôle accompli, et tout s\'arrête par lui-même.</string>
 
 
     <!-- Actions List slideshow -->

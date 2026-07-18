@@ -329,19 +329,63 @@
 
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">Condition order &amp; performance</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">How condition ordering affects event evaluation
-        speed</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Condition order and speed</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">How the order of your conditions affects how fast
+        your event is checked</string>
 
     <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">The order of conditions in the list
-        matters for performance.\n\nWith the AND operator, evaluation stops as soon as the first condition that is NOT
-        fulfilled is found. Placing your least likely conditions first will skip the remaining ones sooner, speeding up
-        the evaluation of your event.</string>
+        affects how fast your event is checked.\n\nWith the AND operator, the check stops as soon as the first
+        condition that is NOT met is found. Putting the least likely conditions first lets the app skip the rest
+        sooner, making your event faster.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">With the OR operator, evaluation stops as
-        soon as the first condition that IS fulfilled is found. Placing your most likely conditions first means the
-        evaluation will succeed earlier, without checking the rest.\n\nIn both cases, putting the cheapest or most
-        decisive condition at the top of the list is a simple way to keep your scenario running fast.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">With the OR operator, the check stops as
+        soon as the first condition that IS met is found. Putting the most likely conditions first lets the app
+        finish sooner, without checking the rest.\n\nIn both cases, putting the most important condition at the top
+        of the list is an easy way to keep your scenario running fast.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">Event state</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">Learn how to enable and disable events while a
+        scenario is running</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">Every event in your scenario (Screen Events and
+        Trigger Events) has a state: it is either <b>enabled</b> or <b>disabled</b>.\n\nWhen enabled, the event runs
+        normally and checks its conditions as usual. When disabled, it is completely skipped, as if it did not
+        exist.\n\nBy default, every event starts enabled. You can change this with the <b>Initial State</b> field in
+        the event settings.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">While a scenario is running, you can change the
+        state of any event using the <b>Change Event State</b> action. This action lets you enable, disable, or
+        toggle one or more events in your scenario.\n\nThis opens up many possibilities: events that turn each other
+        on one after another, events that turn themselves off after running once, or groups of events where only one
+        is active at a time.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">When <b>all events in the scenario are
+        disabled</b>, the scenario stops on its own. There is nothing left to do, so Klick\'r stops
+        automatically.\n\nThis is a simple way to end a scenario: have your last event disable all the others once
+        its job is done, and everything stops by itself.</string>
+
+
+    <!-- Events State Priority slideshow -->
+    <string name="tutorial_slideshow_events_priority_title">Event execution order</string>
+    <string name="tutorial_slideshow_events_priority_desc">Learn how the order of events in your list affects
+        which events run</string>
+
+    <string name="tutorial_slideshow_events_priority_step_1_text">Every screen frame captured from your display
+        is processed by checking your events <b>one by one, from top to bottom</b>.\n\nThe position of an event in
+        your event list determines when it gets a chance to run. By default, as soon as an event\'s conditions
+        are met and its actions are executed, <b>the frame is considered done</b>. Processing stops for that frame,
+        and the next frame starts over from the first event in the list.\n\nThis means only one event can run per
+        frame by default.</string>
+
+    <string name="tutorial_slideshow_events_priority_step_2_text">You can change this behavior using the
+        <b>Keep executing</b> field in the event settings. When enabled, after that event runs, processing
+        <b>continues to the next event</b> in the list instead of stopping.\n\nThis lets multiple events run on the
+        same frame.\n\n<b>Example:</b> your list contains Event A followed by Event B. If Event A keeps being detected
+        and does not have <b>Keep executing</b> enabled, it will run every frame and Event B will never get a chance
+        to execute.\n\nEnable <b>Keep executing</b> on Event A, and both events will be checked on every frame. \n\nAn
+        interactive tutorial is also available to practice this concept.</string>
 
 
 </resources>

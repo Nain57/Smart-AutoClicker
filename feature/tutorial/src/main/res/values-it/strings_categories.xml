@@ -77,9 +77,24 @@
         condizioni e operatori ti permette di gestire scenari complessi.\n\n Impara qui a combinare le condizioni in
         modo efficace.</string>
 
-    <string name="tutorial_category_event_state_name">Stato dell\'evento</string>
-    <string name="tutorial_category_event_state_desc_short">Attiva o disattiva gli Eventi dinamicamente</string>
-    <string name="tutorial_category_event_state_desc_long">Gli Eventi possono essere attivati o disattivati in fase di
+    <string name="tutorial_category_combine_event_name">Combinare gli Eventi</string>
+    <string name="tutorial_category_combine_event_desc_short">Coordina più Eventi per un controllo avanzato</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r ti permette di coordinare più Eventi per creare
+        flussi di automazione avanzati. Controllando l\'ordine di valutazione e abilitando o disabilitando gli Eventi in
+        fase di esecuzione, puoi creare Scenari complessi e articolati.\n\n Impara qui come combinare gli Eventi
+        efficacemente per avere il pieno controllo della tua automazione.</string>
+
+    <string name="tutorial_category_events_priority_name">Priorità degli eventi</string>
+    <string name="tutorial_category_events_priority_desc_short">Controlla l\'importanza dei tuoi eventi</string>
+    <string name="tutorial_category_events_priority_desc_long">Gli Screen Event vengono valutati in ordine di priorità ad
+        ogni ciclo di rilevamento. Un Evento più in alto nella lista viene verificato prima di quelli più in basso,
+        consentendo di definire quale Evento ha la precedenza quando più Eventi potrebbero attivarsi contemporaneamente.
+        \n\n Impara qui come impostare le priorità degli Eventi per perfezionare l\'ordine di esecuzione del tuo
+        Scenario.</string>
+
+    <string name="tutorial_category_events_state_name">Stato degli Eventi</string>
+    <string name="tutorial_category_events_state_desc_short">Attiva o disattiva gli Eventi dinamicamente</string>
+    <string name="tutorial_category_events_state_desc_long">Gli Eventi possono essere attivati o disattivati in fase di
         esecuzione tramite l\'Azione ToggleEvent. Questo ti permette di creare flussi di automazione a più fasi in cui
         certi eventi sono attivi solo in condizioni specifiche.\n\n Impara qui a controllare lo stato degli Eventi per
         creare Scenari avanzati.</string>
