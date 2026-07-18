@@ -119,7 +119,7 @@ object CombineConditionsOperatorAndTutorial : TutorialItem {
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_operator_and_step_7,
                     image = TutorialStepImage(
-                        imageResId = R.drawable.tutorial_instructions_condition_operator,
+                        imageResId = R.drawable.tutorial_instructions_condition_operator_and,
                         imageDescResId = R.string.message_tutorial_combine_conditions_operator_and_step_secondary_7,
                     ),
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(

@@ -208,6 +208,15 @@
         pas choisir une condition spécifique comme cible du clic : le clic sera toujours appliqué sur la première
         condition détectée, quelle qu\'elle soit lors de l\'exécution.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordre des conditions et performances</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Comment l\'ordre des conditions influence la vitesse d\'évaluation</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordre des conditions dans la liste a un impact sur les performances.\n\nAvec l\'opérateur ET, l\'évaluation s\'arrête dès que la première condition non satisfaite est trouvée. Placer en premier les conditions les moins susceptibles d\'être vérifiées permet de sauter les suivantes plus tôt, accélérant ainsi l\'évaluation de l\'événement.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Avec l\'opérateur OU, l\'évaluation s\'arrête dès que la première condition satisfaite est trouvée. Placer en premier les conditions les plus susceptibles d\'être vérifiées permet de réussir l\'évaluation plus tôt, sans vérifier le reste.\n\nDans les deux cas, mettre la condition la plus décisive ou la moins coûteuse en haut de la liste est un moyen simple de garder votre scénario rapide.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Liste d\'actions</string>
     <string name="tutorial_slideshow_actions_list_desc">Apprenez comment la liste d\'actions est exécutée</string>

@@ -327,4 +327,21 @@
         sign that the work should be split across several events, each reacting to what is actually on the screen.
         This is the see-and-act philosophy of Klick\'r: detect first, then act.</string>
 
+
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Condition order &amp; performance</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">How condition ordering affects event evaluation
+        speed</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">The order of conditions in the list
+        matters for performance.\n\nWith the AND operator, evaluation stops as soon as the first condition that is NOT
+        fulfilled is found. Placing your least likely conditions first will skip the remaining ones sooner, speeding up
+        the evaluation of your event.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">With the OR operator, evaluation stops as
+        soon as the first condition that IS fulfilled is found. Placing your most likely conditions first means the
+        evaluation will succeed earlier, without checking the rest.\n\nIn both cases, putting the cheapest or most
+        decisive condition at the top of the list is a simple way to keep your scenario running fast.</string>
+
+
 </resources>

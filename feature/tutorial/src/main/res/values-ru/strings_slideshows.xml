@@ -202,6 +202,15 @@
         клик всегда будет применён к первому обнаруженному условию, каким бы оно ни оказалось во время
         выполнения.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Порядок условий и производительность</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Как порядок условий влияет на скорость вычисления</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">Порядок условий в списке влияет на производительность.\n\nПри операторе И вычисление останавливается, как только найдено первое невыполненное условие. Размещение наименее вероятных условий первыми позволяет пропустить остальные раньше, ускоряя оценку события.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">При операторе ИЛИ вычисление останавливается, как только найдено первое выполненное условие. Размещение наиболее вероятных условий первыми позволяет успешно завершить оценку раньше, не проверяя остальные.\n\nВ обоих случаях размещение наиболее значимого или наименее затратного условия в начале списка — простой способ поддерживать высокую скорость сценария.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Список действий</string>
     <string name="tutorial_slideshow_actions_list_desc">Узнайте, как выполняется список действий</string>

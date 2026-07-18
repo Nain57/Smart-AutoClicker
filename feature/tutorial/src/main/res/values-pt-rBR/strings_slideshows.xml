@@ -202,6 +202,15 @@
         como alvo: o clique sempre será aplicado na primeira condição detectada, seja ela qual for em tempo de
         execução.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordem das condições e desempenho</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Como a ordem das condições afeta a velocidade de avaliação</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">A ordem das condições na lista importa para o desempenho.\n\nCom o operador E, a avaliação para assim que a primeira condição NÃO satisfeita é encontrada. Colocar primeiro as condições menos prováveis permite pular as demais mais cedo, acelerando a avaliação do evento.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Com o operador OU, a avaliação para assim que a primeira condição satisfeita é encontrada. Colocar primeiro as condições mais prováveis faz a avaliação ter sucesso mais cedo, sem verificar o restante.\n\nEm ambos os casos, colocar a condição mais decisiva ou menos custosa no topo da lista é uma forma simples de manter seu cenário rápido.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Lista de ações</string>
     <string name="tutorial_slideshow_actions_list_desc">Aprenda como a lista de ações é executada</string>
