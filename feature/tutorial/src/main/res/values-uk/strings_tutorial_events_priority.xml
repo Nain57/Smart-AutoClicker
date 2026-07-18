@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Пріоритет подій</string>
+    <string name="item_desc_tutorial_events_priority">Надати пріоритет одній Події над іншою</string>
+    <string name="message_game_tutorial_events_priority">Натискайте на цілі якомога швидше. Синій = 1 очко;
+        Червоний = 10 очок</string>
+
+    <string name="message_tutorial_events_priority_step_1">Нова гра! Потрібно натискати на цілі якомога швидше, але
+        червона ціль приносить більше очок. Можете спочатку спробувати гру або відкрити меню налаштування сценарію,
+        щоб почати автоматизацію.</string>
+
+    <string name="message_tutorial_events_priority_step_2">Ми хочемо визначати дві різні цілі: синю та червону. У
+        цьому уроці ми створимо дві окремі події: одну для синьої цілі та одну для червоної. \n\nСпочатку створіть
+        Подію для синьої цілі; вона має натискати на неї при виявленні. Не забудьте скористатися функціями
+        тестування, щоб переконатися, що умова визначається правильно. \n\nУрок продовжиться після збереження
+        Події для синьої цілі.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Чудово! Тепер потрібне те саме, але для червоної цілі.
+        Натисніть кнопку «Створити подію» і створіть подію для червоної цілі; вона має натискати на неї при
+        виявленні. \n\nУрок продовжиться після збереження Події для червоної цілі.</string>
+
+    <string name="message_tutorial_events_priority_step_4">У нашому списку тепер дві події, по одній для кожної цілі.
+        Збережіть Сценарій і перевірте його в грі.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Щось пішло не так. Сценарій натискає лише на синю ціль,
+        повністю ігноруючи червону, що не дає нам перемогти. \n\nЧому так відбувається? Тому що синя подія стоїть
+        перед червоною, і оскільки вона завжди спрацьовує, поточний кадр не оцінюється далі, а наступний починається
+        з початку списку Подій. \n\nЄ кілька способів це виправити. Відкрийте діалог налаштування сценарію, щоб
+        дізнатися як.</string>
+
+    <string name="message_tutorial_events_priority_step_6">Проблему можна вирішити двома способами: \n\nМожна змінити
+        параметр «Продовжити виконання» події синьої цілі, щоб продовжити обробку того самого кадру і виконати також
+        червону подію. Це спричинить обидва натискання, коли обидві цілі видимі одночасно. \n\nАбо можна перемістити
+        подію червоної цілі на початок списку, щоб вона перевірялася першою і натискалася при появі, але синя ціль
+        більше не натискатиметься, коли червона теж відображається. \n\nГоловна відмінність між рішеннями — швидкість:
+        розміщення червоної події першою дозволяє реагувати максимально швидко при її появі, будучи трохи повільнішим,
+        коли видима лише синя ціль.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Оскільки гра дає 10 очок за червону ціль, ми хочемо
+        реагувати на неї якомога швидше, перемістивши червону подію на початок списку. \n\nПеремістіть червону подію
+        на перше місце і збережіть сценарій. Тепер ви зможете перемогти в грі.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Ви можете змінити порядок Подій, утримуючи цю
+        іконку і перетягуючи подію на потрібне місце.</string>
+
+    <string name="message_tutorial_events_priority_step_8">Як завжди, спочатку запустіть сценарій, а потім гру.
+        \n\nЯкщо все одно не вдається перемогти, переконайтеся, що кожна подія працює окремо за допомогою функцій
+        тестування.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Чудово! Тепер ви розумієте, як працює пріоритет подій і
+        як поводиться цикл Подій Екрана. Це ключ до створення та управління складними сценаріями.</string>
+
+</resources>

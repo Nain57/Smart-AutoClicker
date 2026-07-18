@@ -1,3 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
+
+    <string name="item_title_tutorial_events_priority">Events priority</string>
+    <string name="item_desc_tutorial_events_priority">Prioritize an Event over another Event</string>
+    <string name="message_game_tutorial_events_priority">Click as fast as possible on the targets. Blue = 1 point;
+        Red = 10 points</string>
+
+    <string name="message_tutorial_events_priority_step_1">New game, we need to click on any targets as fast as
+        possible, but the red one is more rewarding. You can test the game first or open the scenario configuration menu
+        to start automating this game.</string>
+
+    <string name="message_tutorial_events_priority_step_2">We want to detect two different targets, the blue and the red.
+        For this tutorial, we will create two distinct events: a first one for the blue target and a second one
+        for the red target. \n\nFirst, create the Event for the blue target; it must click on it when detected.
+        Don\'t forget to use the test features to make sure your condition is correctly detected. \n\nThe tutorial will
+        proceed once your blue target Event is saved.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Great! Now we need the same thing, but for the red target.
+        Click on the create Event button and create one for the red target; it must click on it when detected.
+        \n\nThe tutorial will proceed once your red target Event is saved.</string>
+
+    <string name="message_tutorial_events_priority_step_4">Our list now has two events, one for each target. Save your
+        Scenario and test it against the game.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Something seems wrong. The scenario only clicks on the blue
+        target, completely ignoring the red one, which prevents us from winning the game. \n\nWhy is this happening?
+        Because the blue event is before the red one, and since it\'s always triggered, the current frame is evaluated
+        no further and the next frame starts from the beginning of the Event list. \n\nThere are multiple ways to fix
+        this. Open the scenario configuration dialog to learn how.</string>
+
+    <string name="message_tutorial_events_priority_step_6">We can fix the problem in two ways: \n\nWe can change the
+        \"Keep executing\" option of the blue target event to continue processing the same frame and also execute the
+        red event. This will trigger both clicks when both targets are visible at the same time. \n\nOr we can move the
+        red target event to the top of the event list, so it is checked first and always clicked when visible, but the
+        blue target won\'t be clicked anymore when the red target is also displayed. \n\nThe key difference between both
+        solutions is speed: putting the red event first means we react as fast as possible when it appears, while being
+        slightly slower when only the blue target is visible.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Since the game gives 10 points for the red target, we want
+        to react as fast as possible when it appears by moving the red event to the top of the event list. \n\nMove the
+        red event first and save the scenario. You should be able to beat the game now.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">You can reorder Events by long pressing on this
+        icon and dragging the event to the correct place.</string>
+
+    <string name="message_tutorial_events_priority_step_8">As usual, start your scenario first, and then start the game.
+        \n\nIf you still can\'t beat it, make sure each event works on its own using the test features.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Great! You now understand how event priority works and how
+        the Screen Event loop behaves. This is key to building and managing complex scenarios.</string>
+
 </resources>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Prioridade dos eventos</string>
+    <string name="item_desc_tutorial_events_priority">Priorizar um Evento em relação a outro Evento</string>
+    <string name="message_game_tutorial_events_priority">Clique o mais rápido possível nos alvos. Azul = 1 ponto;
+        Vermelho = 10 pontos</string>
+
+    <string name="message_tutorial_events_priority_step_1">Novo jogo! Precisamos clicar nos alvos o mais rápido
+        possível, mas o vermelho vale mais pontos. Você pode testar o jogo primeiro ou abrir o menu de configuração
+        do cenário para começar a automatizá-lo.</string>
+
+    <string name="message_tutorial_events_priority_step_2">Queremos detectar dois alvos diferentes, o azul e o
+        vermelho. Neste tutorial, criaremos dois eventos distintos: um para o alvo azul e outro para o alvo vermelho.
+        \n\nPrimeiro, crie o Evento para o alvo azul; ele deve clicar nele quando detectado. Não se esqueça de usar
+        os recursos de teste para garantir que sua condição seja detectada corretamente. \n\nO tutorial avançará
+        quando o seu Evento do alvo azul for salvo.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Ótimo! Agora precisamos da mesma coisa, mas para o alvo
+        vermelho. Clique no botão Criar evento e crie um para o alvo vermelho; ele deve clicar nele quando detectado.
+        \n\nO tutorial avançará quando o seu Evento do alvo vermelho for salvo.</string>
+
+    <string name="message_tutorial_events_priority_step_4">Nossa lista agora tem dois eventos, um para cada alvo.
+        Salve seu Cenário e teste-o no jogo.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Algo parece errado. O cenário só clica no alvo azul,
+        ignorando completamente o vermelho, o que nos impede de ganhar o jogo. \n\nPor que isso acontece? Porque o
+        evento azul está antes do vermelho, e como ele é sempre acionado, o quadro atual não é mais avaliado e o
+        próximo começa do início da lista de Eventos. \n\nHá várias formas de corrigir isso. Abra o diálogo de
+        configuração do cenário para aprender como.</string>
+
+    <string name="message_tutorial_events_priority_step_6">Podemos resolver o problema de duas formas: \n\nPodemos
+        alterar a opção \"Continuar executando\" do evento do alvo azul para continuar processando o mesmo quadro e
+        também executar o evento vermelho. Isso acionará os dois cliques quando ambos os alvos estiverem visíveis ao
+        mesmo tempo. \n\nOu podemos mover o evento do alvo vermelho para o topo da lista, para que seja verificado
+        primeiro e sempre clicado quando visível, mas o alvo azul não será mais clicado quando o vermelho também
+        estiver visível. \n\nA diferença principal entre as duas soluções é a velocidade: colocar o evento vermelho
+        primeiro significa que reagimos o mais rápido possível quando ele aparece, sendo ligeiramente mais lentos
+        quando apenas o alvo azul está visível.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Como o jogo dá 10 pontos pelo alvo vermelho, queremos
+        reagir o mais rápido possível quando ele aparece, movendo o evento vermelho para o topo da lista. \n\nMova o
+        evento vermelho para o primeiro lugar e salve o cenário. Agora você deve conseguir vencer o jogo.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Você pode reordenar os Eventos pressionando
+        longamente neste ícone e arrastando o evento para o lugar correto.</string>
+
+    <string name="message_tutorial_events_priority_step_8">Como de costume, inicie seu cenário primeiro e depois o
+        jogo. \n\nSe ainda não conseguir vencer, certifique-se de que cada evento funciona individualmente usando os
+        recursos de teste.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Ótimo! Agora você entende como funciona a prioridade de
+        eventos e como o loop de Eventos de Tela se comporta. Isso é fundamental para criar e gerenciar cenários
+        complexos.</string>
+
+</resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">事件優先順序</string>
+    <string name="item_desc_tutorial_events_priority">讓一個事件優先於另一個事件</string>
+    <string name="message_game_tutorial_events_priority">盡快點擊目標。藍色 = 1分；紅色 = 10分</string>
+
+    <string name="message_tutorial_events_priority_step_1">新遊戲！我們需要盡快點擊目標，但紅色目標得分更高。您可以先試玩遊戲，
+        或開啟場景設定選單開始自動化。</string>
+
+    <string name="message_tutorial_events_priority_step_2">我們想偵測兩個不同的目標：藍色和紅色。在本教學中，我們將建立兩個獨立的事件：
+        一個用於藍色目標，一個用於紅色目標。\n\n首先，建立藍色目標的事件；偵測到時必須點擊它。別忘了使用測試功能確認您的條件被正確偵測。
+        \n\n儲存藍色目標事件後，教學將繼續。</string>
+
+    <string name="message_tutorial_events_priority_step_3">很好！現在需要對紅色目標做同樣的事。點擊建立事件按鈕，為紅色目標建立一個事件；
+        偵測到時必須點擊它。\n\n儲存紅色目標事件後，教學將繼續。</string>
+
+    <string name="message_tutorial_events_priority_step_4">我們的清單現在有兩個事件，每個目標各一個。儲存您的場景並在遊戲中測試。</string>
+
+    <string name="message_tutorial_events_priority_step_5">似乎有些不對。場景只點擊藍色目標，完全忽視紅色目標，導致我們無法獲勝。\n\n
+        為什麼會這樣？因為藍色事件排在紅色事件之前，由於它總是被觸發，目前影格不再繼續評估，下一個影格從事件清單的開頭重新開始。\n\n
+        有幾種方法可以修正這個問題。開啟場景設定對話框了解如何操作。</string>
+
+    <string name="message_tutorial_events_priority_step_6">我們可以用兩種方式解決這個問題：\n\n可以變更藍色目標事件的「繼續執行」選項，
+        以繼續處理同一影格並執行紅色事件。當兩個目標同時可見時，這將觸發兩次點擊。\n\n或者可以將紅色目標事件移到清單頂端，使其優先檢查，
+        可見時始終點擊，但當紅色目標也顯示時，藍色目標將不再被點擊。\n\n兩種解決方案的關鍵差異在於速度：將紅色事件排在首位意味著紅色目標
+        出現時我們能以最快速度回應，但只有藍色目標可見時會稍慢一些。</string>
+
+    <string name="message_tutorial_events_priority_step_7">由於遊戲中紅色目標得10分，我們希望透過將紅色事件移到清單頂端，在它出現時盡快回應。
+        \n\n將紅色事件移到第一位並儲存場景。現在您應該能夠贏得遊戲了。</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">您可以長按此圖示並將事件拖曳到正確位置來重新排列事件。</string>
+
+    <string name="message_tutorial_events_priority_step_8">和往常一樣，先啟動場景，然後開始遊戲。\n\n如果仍然無法獲勝，請使用測試功能
+        確認每個事件單獨運作正常。</string>
+
+    <string name="message_tutorial_events_priority_step_9">很好！您現在了解了事件優先順序的運作方式以及螢幕事件迴圈的行為。這是建立和管理
+        複雜場景的關鍵。</string>
+
+</resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">事件优先级</string>
+    <string name="item_desc_tutorial_events_priority">让一个事件优先于另一个事件</string>
+    <string name="message_game_tutorial_events_priority">尽快点击目标。蓝色 = 1分；红色 = 10分</string>
+
+    <string name="message_tutorial_events_priority_step_1">新游戏！我们需要尽快点击目标，但红色目标得分更高。您可以先试玩游戏，
+        或打开场景配置菜单开始自动化。</string>
+
+    <string name="message_tutorial_events_priority_step_2">我们想检测两个不同的目标：蓝色和红色。在本教程中，我们将创建两个独立的事件：
+        一个用于蓝色目标，一个用于红色目标。\n\n首先，创建蓝色目标的事件；检测到时必须点击它。不要忘记使用测试功能确保您的条件被正确检测。
+        \n\n保存蓝色目标事件后，教程将继续。</string>
+
+    <string name="message_tutorial_events_priority_step_3">很好！现在需要对红色目标做同样的事情。点击创建事件按钮，为红色目标创建一个事件；
+        检测到时必须点击它。\n\n保存红色目标事件后，教程将继续。</string>
+
+    <string name="message_tutorial_events_priority_step_4">我们的列表现在有两个事件，每个目标各一个。保存您的场景并在游戏中测试。</string>
+
+    <string name="message_tutorial_events_priority_step_5">似乎有些不对。场景只点击蓝色目标，完全忽视红色目标，导致我们无法获胜。\n\n
+        为什么会这样？因为蓝色事件排在红色事件之前，由于它总是被触发，当前帧不再继续评估，下一帧从事件列表的开头重新开始。\n\n
+        有几种方法可以修复这个问题。打开场景配置对话框了解如何操作。</string>
+
+    <string name="message_tutorial_events_priority_step_6">我们可以用两种方式解决这个问题：\n\n可以更改蓝色目标事件的「继续执行」选项，
+        以继续处理同一帧并执行红色事件。当两个目标同时可见时，这将触发两次点击。\n\n或者可以将红色目标事件移到列表顶部，使其优先检查，
+        可见时始终点击，但当红色目标也显示时，蓝色目标将不再被点击。\n\n两种解决方案的关键区别在于速度：将红色事件排在首位意味着红色目标
+        出现时我们能以最快速度响应，但只有蓝色目标可见时会稍慢一些。</string>
+
+    <string name="message_tutorial_events_priority_step_7">由于游戏中红色目标得10分，我们希望通过将红色事件移到列表顶部，在它出现时尽快响应。
+        \n\n将红色事件移到第一位并保存场景。现在您应该能够赢得游戏了。</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">您可以长按此图标并将事件拖动到正确位置来重新排列事件。</string>
+
+    <string name="message_tutorial_events_priority_step_8">像往常一样，先启动场景，然后开始游戏。\n\n如果仍然无法获胜，请使用测试功能
+        确保每个事件单独运行正常。</string>
+
+    <string name="message_tutorial_events_priority_step_9">很好！您现在了解了事件优先级的工作原理以及屏幕事件循环的行为方式。这是构建和管理
+        复杂场景的关键。</string>
+
+</resources>

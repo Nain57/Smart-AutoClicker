@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Priorità degli eventi</string>
+    <string name="item_desc_tutorial_events_priority">Dare priorità a un Evento rispetto a un altro</string>
+    <string name="message_game_tutorial_events_priority">Fai clic il più velocemente possibile sui bersagli.
+        Blu = 1 punto; Rosso = 10 punti</string>
+
+    <string name="message_tutorial_events_priority_step_1">Nuovo gioco! Dobbiamo fare clic sui bersagli il più
+        velocemente possibile, ma quello rosso vale più punti. Puoi prima provare il gioco oppure aprire il menu di
+        configurazione dello scenario per iniziare ad automatizzarlo.</string>
+
+    <string name="message_tutorial_events_priority_step_2">Vogliamo rilevare due bersagli diversi, quello blu e quello
+        rosso. Per questo tutorial, creeremo due eventi distinti: uno per il bersaglio blu e uno per il bersaglio
+        rosso. \n\nInnanzitutto, crea l\'Evento per il bersaglio blu; deve fare clic su di esso quando viene
+        rilevato. Non dimenticare di usare le funzioni di test per assicurarti che la tua condizione venga rilevata
+        correttamente. \n\nIl tutorial procederà una volta salvato il tuo Evento per il bersaglio blu.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Ottimo! Ora abbiamo bisogno della stessa cosa, ma per il
+        bersaglio rosso. Fai clic sul pulsante Crea evento e creane uno per il bersaglio rosso; deve fare clic su di
+        esso quando viene rilevato. \n\nIl tutorial procederà una volta salvato il tuo Evento per il bersaglio
+        rosso.</string>
+
+    <string name="message_tutorial_events_priority_step_4">La nostra lista ora ha due eventi, uno per ogni bersaglio.
+        Salva il tuo Scenario e testalo con il gioco.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Qualcosa sembra sbagliato. Lo scenario fa clic solo sul
+        bersaglio blu, ignorando completamente quello rosso, il che ci impedisce di vincere. \n\nPerché succede questo?
+        Perché l\'evento blu viene prima di quello rosso, e poiché viene sempre attivato, il fotogramma corrente non
+        viene valutato oltre e il successivo riparte dall\'inizio dell\'elenco degli Eventi. \n\nCi sono diversi modi
+        per risolvere questo problema. Apri la finestra di configurazione dello scenario per scoprire come.</string>
+
+    <string name="message_tutorial_events_priority_step_6">Possiamo risolvere il problema in due modi: \n\nPossiamo
+        modificare l\'opzione \"Continua esecuzione\" dell\'evento del bersaglio blu per continuare a elaborare lo
+        stesso fotogramma ed eseguire anche l\'evento rosso. Questo attiverà entrambi i clic quando entrambi i
+        bersagli sono visibili contemporaneamente. \n\nOppure possiamo spostare l\'evento del bersaglio rosso in cima
+        all\'elenco, in modo che venga controllato per primo e sempre cliccato quando visibile, ma il bersaglio blu
+        non verrà più cliccato quando anche quello rosso è visibile. \n\nLa differenza chiave tra le due soluzioni è
+        la velocità: mettere l\'evento rosso per primo significa reagire il più velocemente possibile quando appare,
+        essendo leggermente più lenti quando è visibile solo il bersaglio blu.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Poiché il gioco dà 10 punti per il bersaglio rosso,
+        vogliamo reagire il più velocemente possibile quando appare spostando l\'evento rosso in cima all\'elenco.
+        \n\nSposta l\'evento rosso al primo posto e salva lo scenario. Ora dovresti riuscire a vincere il
+        gioco.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Puoi riordinare gli Eventi tenendo premuta questa
+        icona e trascinando l\'evento nella posizione corretta.</string>
+
+    <string name="message_tutorial_events_priority_step_8">Come al solito, avvia prima il tuo scenario e poi il gioco.
+        \n\nSe non riesci ancora a vincere, assicurati che ogni evento funzioni individualmente usando le funzioni di
+        test.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Ottimo! Ora capisci come funziona la priorità degli eventi
+        e come si comporta il ciclo degli Eventi Schermo. Questo è fondamentale per creare e gestire scenari
+        complessi.</string>
+
+</resources>
