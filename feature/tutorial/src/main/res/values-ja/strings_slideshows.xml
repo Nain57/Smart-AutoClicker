@@ -192,6 +192,15 @@
         \n\n結果として、ORオペレーターでは特定の条件をターゲットとして選ぶことができません：クリックは常に実行時に
         最初に検出された条件に適用されます。</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件の順序とパフォーマンス</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件の順序がイベント評価速度に与える影響</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">リスト内の条件の順序はパフォーマンスに影響します。\n\nAND 演算子を使用する場合、最初に満たされない条件が見つかった時点で評価が停止します。最も満たされにくい条件を先頭に置くことで、残りの条件をより早くスキップでき、イベントの評価が速くなります。</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">OR 演算子を使用する場合、最初に満たされた条件が見つかった時点で評価が停止します。最も満たされやすい条件を先頭に置くことで、残りを確認せずに早く評価を完了できます。\n\nどちらの場合も、最も重要またはコストの低い条件をリストの先頭に置くことが、シナリオを高速に保つシンプルな方法です。</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">アクションリスト</string>
     <string name="tutorial_slideshow_actions_list_desc">アクションリストの実行方法を学ぶ</string>

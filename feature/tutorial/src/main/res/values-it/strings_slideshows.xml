@@ -206,6 +206,15 @@
         condizione sarà rilevata.\n\nDi conseguenza, con l\'operatore OR non puoi scegliere una condizione specifica
         come obiettivo: il clic verrà sempre applicato sulla prima condizione rilevata, qualunque essa sia a runtime.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordine delle condizioni e prestazioni</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Come l\'ordine delle condizioni influenza la velocità di valutazione</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordine delle condizioni nell\'elenco è importante per le prestazioni.\n\nCon l\'operatore E, la valutazione si interrompe non appena viene trovata la prima condizione NON soddisfatta. Mettere prima le condizioni meno probabili permette di saltare le successive prima, velocizzando la valutazione dell\'evento.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con l\'operatore O, la valutazione si interrompe non appena viene trovata la prima condizione soddisfatta. Mettere prima le condizioni più probabili fa sì che la valutazione abbia successo prima, senza controllare il resto.\n\nIn entrambi i casi, mettere la condizione più decisiva o meno costosa in cima alla lista è un modo semplice per mantenere veloce il proprio scenario.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Lista azioni</string>
     <string name="tutorial_slideshow_actions_list_desc">Scopri come viene eseguita la lista delle azioni</string>

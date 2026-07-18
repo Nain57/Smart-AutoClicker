@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combinecond
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 
 internal fun getCombineConditionsCategory() =
@@ -32,5 +33,6 @@ internal fun getCombineConditionsCategory() =
             TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_OPERATOR_AND),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_OPERATOR_OR),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.COMBINE_CONDITIONS_NOT_VISIBLE),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.COMBINE_CONDITIONS_ORDERING),
         ),
     )

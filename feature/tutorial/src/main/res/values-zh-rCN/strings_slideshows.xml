@@ -167,6 +167,15 @@
         评估，其余条件将被忽略。因此，Klick\'r 无法提前知道哪个条件会被检测到。\n\n因此，使用 OR 运算符时无法
         选择特定条件作为目标：点击始终会应用于运行时第一个检测到的条件，无论它是哪个。</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件顺序与性能</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件顺序如何影响事件评估速度</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中条件的顺序会影响性能。\n\n使用 AND 运算符时，一旦找到第一个未满足的条件，评估就会停止。将最不可能满足的条件放在最前面，可以更早跳过后续条件，从而加快事件评估速度。</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR 运算符时，一旦找到第一个满足的条件，评估就会停止。将最可能满足的条件放在最前面，可以更早完成评估，而无需检查其余条件。\n\n在两种情况下，将最关键或开销最小的条件放在列表顶部，都是保持场景高效运行的简单方法。</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">动作列表</string>
     <string name="tutorial_slideshow_actions_list_desc">了解动作列表的执行方式</string>

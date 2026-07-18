@@ -200,6 +200,15 @@
         \n\nОтже, з оператором OR не можна обрати конкретну умову як ціль: клік завжди буде застосований до
         першої виявленої умови, якою б вона не виявилась під час виконання.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Порядок умов і продуктивність</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Як порядок умов впливає на швидкість обчислення</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">Порядок умов у списку важливий для продуктивності.\n\nПри операторі І обчислення зупиняється, щойно знайдено першу невиконану умову. Розміщення найменш імовірних умов першими дозволяє пропустити решту раніше, прискорюючи оцінку події.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">При операторі АБО обчислення зупиняється, щойно знайдено першу виконану умову. Розміщення найбільш імовірних умов першими дозволяє успішно завершити оцінку раніше, не перевіряючи решту.\n\nВ обох випадках розміщення найважливішої або найменш затратної умови на початку списку — простий спосіб підтримувати швидкість сценарію.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Список дій</string>
     <string name="tutorial_slideshow_actions_list_desc">Дізнайтесь, як виконується список дій</string>

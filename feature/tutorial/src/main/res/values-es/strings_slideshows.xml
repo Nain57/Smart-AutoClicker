@@ -204,6 +204,15 @@
         \n\nEn consecuencia, con el operador OR no puedes elegir una condición específica como objetivo: el clic
         siempre se aplicará en la primera detectada, sea cual sea en tiempo de ejecución.</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Orden de condiciones y rendimiento</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Cómo el orden de las condiciones afecta la velocidad de evaluación</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">El orden de las condiciones en la lista importa para el rendimiento.\n\nCon el operador Y, la evaluación se detiene en cuanto se encuentra la primera condición NO satisfecha. Colocar primero las condiciones menos probables permite saltarse el resto antes, acelerando la evaluación del evento.</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con el operador O, la evaluación se detiene en cuanto se encuentra la primera condición satisfecha. Colocar primero las condiciones más probables hace que la evaluación tenga éxito antes, sin comprobar el resto.\n\nEn ambos casos, poner la condición más decisiva o menos costosa al principio de la lista es una forma sencilla de mantener tu escenario rápido.</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">Lista de acciones</string>
     <string name="tutorial_slideshow_actions_list_desc">Aprende cómo se ejecuta la lista de acciones</string>

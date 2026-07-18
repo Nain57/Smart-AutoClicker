@@ -167,6 +167,15 @@
         評估，其餘條件將被忽略。因此，Klick\'r 無法提前知道哪個條件會被偵測到。\n\n因此，使用 OR 運算子時無法
         選擇特定條件作為目標：點擊始終會應用於執行時第一個偵測到的條件，無論它是哪個。</string>
 
+    <!-- Combine Conditions Ordering slideshow -->
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">條件順序與效能</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">條件順序如何影響事件評估速度</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中條件的順序會影響效能。\n\n使用 AND 運算子時，一旦找到第一個未滿足的條件，評估就會停止。將最不可能滿足的條件放在最前面，可以更早跳過後續條件，從而加快事件評估速度。</string>
+
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR 運算子時，一旦找到第一個滿足的條件，評估就會停止。將最可能滿足的條件放在最前面，可以更早完成評估，而無需檢查其餘條件。\n\n在兩種情況下，將最關鍵或開銷最小的條件放在列表頂部，都是保持場景高效運行的簡單方法。</string>
+
+
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">動作清單</string>
     <string name="tutorial_slideshow_actions_list_desc">了解動作清單的執行方式</string>
