@@ -21,7 +21,11 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subjec
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
 
-internal class TwoStillTargetsPressAnyRules : QuickClickGameRules {
+internal class TwoStillTargetsPressAnyRules(
+    private val blueScoreIncrement: Int,
+    private val redScoreIncrement: Int,
+    private val targetsBehaviour: TargetsBehaviour,
+) : QuickClickGameRules {
 
     private val bluePosition = PointF(0.25f, 0.5f)
     private val redPosition = PointF(0.75f, 0.5f)
@@ -39,8 +43,8 @@ internal class TwoStillTargetsPressAnyRules : QuickClickGameRules {
         type: QuickClickGameTargetType
     ): Map<QuickClickGameTargetType, QuickClickGameTargetState> {
         when (type) {
-            QuickClickGameTargetType.IMAGE_RED -> score += 2
-            QuickClickGameTargetType.IMAGE_BLUE -> score += 1
+            QuickClickGameTargetType.IMAGE_RED -> score += redScoreIncrement
+            QuickClickGameTargetType.IMAGE_BLUE -> score += blueScoreIncrement
             else -> Unit
         }
         return current
@@ -53,16 +57,35 @@ internal class TwoStillTargetsPressAnyRules : QuickClickGameRules {
         buildTargetsForTimeLeft(timeLeft)
 
     private fun buildTargetsForTimeLeft(timeLeft: Long): Map<QuickClickGameTargetType, QuickClickGameTargetState> =
-        when (timeLeft % 3) {
-            0L -> mapOf(
-                QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
-                QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
-            )
-            1L -> mapOf(
-                QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
-            )
-            else -> mapOf(
-                QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
-            )
+        when (targetsBehaviour) {
+            TargetsBehaviour.BLUE_BLINK_RED_BLINK ->
+                when (timeLeft % 3) {
+                    0L -> mapOf(
+                        QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
+                        QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
+                    )
+                    1L -> mapOf(
+                        QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
+                    )
+                    else -> mapOf(
+                        QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
+                    )
+                }
+
+            TargetsBehaviour.BLUE_STILL_RED_BLINK ->
+                when (timeLeft % 2) {
+                    0L -> mapOf(
+                        QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
+                        QuickClickGameTargetType.IMAGE_RED to QuickClickGameTargetState.StaticContent(redPosition),
+                    )
+                    else -> mapOf(
+                        QuickClickGameTargetType.IMAGE_BLUE to QuickClickGameTargetState.StaticContent(bluePosition),
+                    )
+                }
         }
+
+    enum class TargetsBehaviour {
+        BLUE_BLINK_RED_BLINK,
+        BLUE_STILL_RED_BLINK,
+    }
 }

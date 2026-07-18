@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">イベントの優先順位</string>
+    <string name="item_desc_tutorial_events_priority">あるイベントを別のイベントより優先させる</string>
+    <string name="message_game_tutorial_events_priority">できるだけ速くターゲットをタップしてください。青 = 1ポイント；
+        赤 = 10ポイント</string>
+
+    <string name="message_tutorial_events_priority_step_1">新しいゲームです！できるだけ速くターゲットをタップする必要がありますが、
+        赤いターゲットの方が高得点です。まずゲームを試したり、シナリオ設定メニューを開いて自動化を始めることができます。</string>
+
+    <string name="message_tutorial_events_priority_step_2">青と赤の2つの異なるターゲットを検出したいと思います。このチュートリアルでは、
+        青いターゲット用と赤いターゲット用の2つの別々のイベントを作成します。\n\nまず、青いターゲット用のイベントを作成してください。
+        検出されたときにタップするものです。テスト機能を使って条件が正しく検出されることを確認することを忘れずに。\n\n青いターゲットの
+        イベントを保存するとチュートリアルが進みます。</string>
+
+    <string name="message_tutorial_events_priority_step_3">素晴らしい！今度は同じことを赤いターゲット用に行います。
+        イベント作成ボタンをタップして、赤いターゲット用のイベントを作成してください。検出されたときにタップするものです。
+        \n\n赤いターゲットのイベントを保存するとチュートリアルが進みます。</string>
+
+    <string name="message_tutorial_events_priority_step_4">リストにそれぞれのターゲット用の2つのイベントが追加されました。
+        シナリオを保存してゲームでテストしてください。</string>
+
+    <string name="message_tutorial_events_priority_step_5">何かがおかしいようです。シナリオは青いターゲットだけをタップして、
+        赤いターゲットを完全に無視しており、ゲームに勝てません。\n\nなぜこうなるのでしょうか？青いイベントが赤いイベントより前にあり、
+        常にトリガーされるため、現在のフレームはそれ以上評価されず、次のフレームはイベントリストの先頭から始まるからです。\n\n
+        これを修正する方法はいくつかあります。シナリオ設定ダイアログを開いて方法を確認してください。</string>
+
+    <string name="message_tutorial_events_priority_step_6">問題を2つの方法で修正できます：\n\n青いターゲットのイベントの
+        「実行を継続」オプションを変更して、同じフレームの処理を続けて赤いイベントも実行できるようにする方法があります。これにより、
+        両方のターゲットが同時に表示されているときに両方のタップが実行されます。\n\nまたは、赤いターゲットのイベントをリストの先頭に
+        移動して、最初にチェックされ表示時に常にタップされるようにする方法があります。ただし、赤いターゲットも表示されているときは
+        青いターゲットはタップされなくなります。\n\n2つの解決策の重要な違いは速度です。赤いイベントを最初に置くことで、表示されたとき
+        にできるだけ速く反応できますが、青いターゲットのみが表示されているときは少し遅くなります。</string>
+
+    <string name="message_tutorial_events_priority_step_7">ゲームは赤いターゲットで10ポイントが得られるため、赤いイベントを
+        リストの先頭に移動して、表示されたときにできるだけ速く反応したいと思います。\n\n赤いイベントを一番上に移動してシナリオを
+        保存してください。これでゲームに勝てるはずです。</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">このアイコンを長押しして正しい位置にドラッグすることで
+        イベントを並べ替えることができます。</string>
+
+    <string name="message_tutorial_events_priority_step_8">いつものように、まずシナリオを開始してからゲームを始めてください。
+        \n\nまだ勝てない場合は、テスト機能を使って各イベントが単独で動作することを確認してください。</string>
+
+    <string name="message_tutorial_events_priority_step_9">素晴らしい！これでイベントの優先順位がどのように機能するか、
+        また画面イベントループがどのように動作するかを理解できました。これは複雑なシナリオを構築・管理するための鍵です。</string>
+
+</resources>

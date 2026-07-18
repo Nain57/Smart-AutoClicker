@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineeven
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 
@@ -30,5 +31,6 @@ internal fun getEventsPriorityCategory() =
         iconRes = R.drawable.ic_priority,
         content = listOf(
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_PRIORITY_BASICS),
+            TutorialCategory.Content.Tutorial(TutorialItem.Type.EVENTS_PRIORITY),
         ),
     )

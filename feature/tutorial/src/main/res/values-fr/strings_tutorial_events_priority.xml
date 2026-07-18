@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Priorité des événements</string>
+    <string name="item_desc_tutorial_events_priority">Prioriser un Événement par rapport à un autre</string>
+    <string name="message_game_tutorial_events_priority">Cliquez le plus vite possible sur les cibles. Bleu = 1 point ;
+        Rouge = 10 points</string>
+
+    <string name="message_tutorial_events_priority_step_1">Nouveau jeu ! Nous devons cliquer sur les cibles le plus vite
+        possible, mais la rouge rapporte plus de points. Vous pouvez tester le jeu d\'abord ou ouvrir le menu de
+        configuration du scénario pour commencer à automatiser ce jeu.</string>
+
+    <string name="message_tutorial_events_priority_step_2">Nous voulons détecter deux cibles différentes, la bleue et la
+        rouge. Pour ce tutoriel, nous allons créer deux événements distincts : un premier pour la cible bleue et un
+        second pour la cible rouge. \n\nCommencez par créer l\'Événement pour la cible bleue ; il doit cliquer dessus
+        quand elle est détectée. N\'oubliez pas d\'utiliser les fonctions de test pour vous assurer que votre condition
+        est bien détectée. \n\nLe tutoriel avancera une fois votre Événement de cible bleue enregistré.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Super ! Maintenant, nous avons besoin de la même chose, mais
+        pour la cible rouge. Cliquez sur le bouton Créer un événement et créez-en un pour la cible rouge ; il doit
+        cliquer dessus quand elle est détectée. \n\nLe tutoriel avancera une fois votre Événement de cible rouge
+        enregistré.</string>
+
+    <string name="message_tutorial_events_priority_step_4">Notre liste contient maintenant deux événements, un pour
+        chaque cible. Enregistrez votre Scénario et testez-le sur le jeu.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Quelque chose ne va pas. Le scénario ne clique que sur la
+        cible bleue, ignorant complètement la rouge, ce qui nous empêche de gagner. \n\nPourquoi ? Parce que
+        l\'événement bleu est avant le rouge, et comme il est toujours déclenché, l\'image courante n\'est pas évaluée
+        plus loin et la suivante repart depuis le début de la liste d\'Événements. \n\nIl existe plusieurs façons de
+        corriger cela. Ouvrez la boîte de dialogue de configuration du scénario pour apprendre comment.</string>
+
+    <string name="message_tutorial_events_priority_step_6">Nous pouvons résoudre le problème de deux façons : \n\nNous
+        pouvons modifier l\'option « Continuer l\'exécution » de l\'événement de la cible bleue pour continuer à
+        traiter la même image et exécuter également l\'événement rouge. Cela déclenchera les deux clics quand les deux
+        cibles sont visibles en même temps. \n\nOu nous pouvons déplacer l\'événement de la cible rouge en haut de la
+        liste, afin qu\'il soit vérifié en premier et toujours cliqué quand il est visible, mais la cible bleue ne sera
+        plus cliquée quand la rouge est aussi affichée. \n\nLa différence clé entre les deux solutions est la vitesse :
+        placer l\'événement rouge en premier signifie que nous réagissons le plus rapidement possible quand il apparaît,
+        tout en étant légèrement plus lent quand seule la cible bleue est visible.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Comme le jeu donne 10 points pour la cible rouge, nous
+        voulons réagir le plus vite possible quand elle apparaît en déplaçant l\'événement rouge en haut de la liste.
+        \n\nDéplacez l\'événement rouge en premier et enregistrez le scénario. Vous devriez pouvoir gagner
+        maintenant.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Vous pouvez réorganiser les Événements en appuyant
+        longuement sur cette icône et en faisant glisser l\'événement à la bonne place.</string>
+
+    <string name="message_tutorial_events_priority_step_8">Comme d\'habitude, démarrez d\'abord votre scénario, puis
+        lancez le jeu. \n\nSi vous ne parvenez toujours pas à gagner, vérifiez que chaque événement fonctionne
+        individuellement à l\'aide des fonctions de test.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Super ! Vous comprenez maintenant comment fonctionne la
+        priorité des événements et comment se comporte la boucle d\'Événements Écran. C\'est la clé pour créer et
+        gérer des scénarios complexes.</string>
+
+</resources>

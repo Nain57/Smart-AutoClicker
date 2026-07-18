@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Приоритет событий</string>
+    <string name="item_desc_tutorial_events_priority">Задать приоритет одного Cобытия над другим</string>
+    <string name="message_game_tutorial_events_priority">Нажимайте на цели как можно быстрее. Синий = 1 очко;
+        Красный = 10 очков</string>
+
+    <string name="message_tutorial_events_priority_step_1">Новая игра! Нужно нажимать на цели как можно быстрее, но
+        красная цель приносит больше очков. Можете сначала попробовать игру или открыть меню настройки сценария,
+        чтобы начать автоматизацию.</string>
+
+    <string name="message_tutorial_events_priority_step_2">Мы хотим обнаруживать две разные цели: синюю и красную.
+        В этом уроке мы создадим два отдельных события: одно для синей цели и одно для красной. \n\nСначала создайте
+        Событие для синей цели; оно должно нажимать на неё при обнаружении. Не забудьте использовать функции
+        тестирования, чтобы убедиться, что условие определяется правильно. \n\nУрок продолжится после сохранения
+        Cобытия для синей цели.</string>
+
+    <string name="message_tutorial_events_priority_step_3">Отлично! Теперь нужно то же самое, но для красной цели.
+        Нажмите кнопку «Создать событие» и создайте событие для красной цели; оно должно нажимать на неё при
+        обнаружении. \n\nУрок продолжится после сохранения Cобытия для красной цели.</string>
+
+    <string name="message_tutorial_events_priority_step_4">В нашем списке теперь два события, по одному для каждой
+        цели. Сохраните Cценарий и проверьте его в игре.</string>
+
+    <string name="message_tutorial_events_priority_step_5">Что-то пошло не так. Сценарий нажимает только на синюю
+        цель, полностью игнорируя красную, что не даёт нам победить. \n\nПочему так происходит? Потому что синее
+        событие стоит перед красным, и поскольку оно всегда срабатывает, текущий кадр не оценивается дальше, а
+        следующий начинается с начала списка Cобытий. \n\nЕсть несколько способов это исправить. Откройте диалог
+        настройки сценария, чтобы узнать как.</string>
+
+    <string name="message_tutorial_events_priority_step_6">Проблему можно решить двумя способами: \n\nМожно изменить
+        параметр «Продолжить выполнение» события синей цели, чтобы продолжить обработку того же кадра и выполнить
+        красное событие тоже. Это вызовет оба нажатия, когда обе цели видны одновременно. \n\nИли можно переместить
+        событие красной цели в начало списка, чтобы оно проверялось первым и нажималось при появлении, но синяя
+        цель больше не будет нажиматься, когда красная тоже отображается. \n\nГлавное различие между решениями —
+        скорость: размещение красного события первым позволяет реагировать максимально быстро при его появлении,
+        будучи немного медленнее, когда видна только синяя цель.</string>
+
+    <string name="message_tutorial_events_priority_step_7">Поскольку игра даёт 10 очков за красную цель, мы хотим
+        реагировать на неё как можно быстрее, переместив красное событие в начало списка. \n\nПереместите красное
+        событие на первое место и сохраните сценарий. Теперь вы должны суметь победить в игре.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Вы можете изменить порядок Cобытий, удерживая
+        нажатой эту иконку и перетаскивая событие на нужное место.</string>
+
+    <string name="message_tutorial_events_priority_step_8">Как обычно, сначала запустите сценарий, а затем игру.
+        \n\nЕсли по-прежнему не удаётся победить, убедитесь, что каждое событие работает по отдельности с помощью
+        функций тестирования.</string>
+
+    <string name="message_tutorial_events_priority_step_9">Отлично! Теперь вы понимаете, как работает приоритет
+        событий и как ведёт себя цикл Cобытий Экрана. Это ключ к созданию и управлению сложными сценариями.</string>
+
+</resources>

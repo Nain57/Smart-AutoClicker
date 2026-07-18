@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">أولوية الأحداث</string>
+    <string name="item_desc_tutorial_events_priority">إعطاء الأولوية لحدث على حدث آخر</string>
+    <string name="message_game_tutorial_events_priority">انقر على الأهداف بأسرع ما يمكن. أزرق = نقطة واحدة؛
+        أحمر = 10 نقاط</string>
+
+    <string name="message_tutorial_events_priority_step_1">لعبة جديدة! نحتاج إلى النقر على الأهداف بأسرع ما يمكن،
+        لكن الهدف الأحمر يمنح نقاطاً أكثر. يمكنك تجربة اللعبة أولاً أو فتح قائمة إعداد السيناريو لبدء
+        الأتمتة.</string>
+
+    <string name="message_tutorial_events_priority_step_2">نريد اكتشاف هدفين مختلفين، الأزرق والأحمر. في هذا
+        الدرس، سننشئ حدثين منفصلين: أحدهما للهدف الأزرق والآخر للهدف الأحمر. \n\nأولاً، أنشئ الحدث للهدف
+        الأزرق؛ يجب أن ينقر عليه عند اكتشافه. لا تنسَ استخدام ميزات الاختبار للتأكد من اكتشاف الشرط بشكل
+        صحيح. \n\nسيتقدم الدرس بعد حفظ حدث الهدف الأزرق.</string>
+
+    <string name="message_tutorial_events_priority_step_3">رائع! الآن نحتاج إلى نفس الشيء، لكن للهدف الأحمر.
+        انقر على زر إنشاء حدث وأنشئ حدثاً للهدف الأحمر؛ يجب أن ينقر عليه عند اكتشافه. \n\nسيتقدم الدرس بعد
+        حفظ حدث الهدف الأحمر.</string>
+
+    <string name="message_tutorial_events_priority_step_4">تحتوي قائمتنا الآن على حدثين، أحدهما لكل هدف. احفظ
+        السيناريو واختبره مع اللعبة.</string>
+
+    <string name="message_tutorial_events_priority_step_5">يبدو أن هناك خطأ ما. السيناريو ينقر فقط على الهدف
+        الأزرق، متجاهلاً الأحمر تماماً، مما يمنعنا من الفوز. \n\nلماذا يحدث هذا؟ لأن الحدث الأزرق يسبق
+        الأحمر، وبما أنه يُفعَّل دائماً، لا يتم تقييم الإطار الحالي أكثر من ذلك ويبدأ الإطار التالي من أول
+        قائمة الأحداث. \n\nهناك عدة طرق لإصلاح ذلك. افتح مربع حوار إعداد السيناريو لمعرفة كيفية ذلك.</string>
+
+    <string name="message_tutorial_events_priority_step_6">يمكننا إصلاح المشكلة بطريقتين: \n\nيمكننا تغيير خيار
+        \"مواصلة التنفيذ\" لحدث الهدف الأزرق لمواصلة معالجة نفس الإطار وتنفيذ الحدث الأحمر أيضاً. سيؤدي ذلك
+        إلى تشغيل كلا النقرتين عندما يكون كلا الهدفين مرئيين في نفس الوقت. \n\nأو يمكننا نقل حدث الهدف الأحمر
+        إلى أعلى القائمة، بحيث يُفحص أولاً وينقر عليه دائماً عند ظهوره، لكن الهدف الأزرق لن يُنقر عليه بعد
+        الآن عند ظهور الأحمر أيضاً. \n\nالفرق الرئيسي بين الحلين هو السرعة: وضع الحدث الأحمر أولاً يعني
+        التفاعل بأسرع ما يمكن عند ظهوره، مع كوننا أبطأ قليلاً عندما يكون الهدف الأزرق فقط مرئياً.</string>
+
+    <string name="message_tutorial_events_priority_step_7">بما أن اللعبة تمنح 10 نقاط للهدف الأحمر، نريد التفاعل
+        معه بأسرع ما يمكن عند ظهوره عن طريق نقل حدثه إلى أعلى القائمة. \n\nانقل الحدث الأحمر إلى المرتبة
+        الأولى واحفظ السيناريو. يجب أن تتمكن من الفوز الآن.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">يمكنك إعادة ترتيب الأحداث بالضغط المطول على
+        هذه الأيقونة وسحب الحدث إلى المكان الصحيح.</string>
+
+    <string name="message_tutorial_events_priority_step_8">كالمعتاد، ابدأ السيناريو أولاً ثم ابدأ اللعبة. \n\nإذا
+        لم تتمكن من الفوز بعد، تأكد من أن كل حدث يعمل بشكل منفرد باستخدام ميزات الاختبار.</string>
+
+    <string name="message_tutorial_events_priority_step_9">رائع! أنت الآن تفهم كيف تعمل أولوية الأحداث وكيف تتصرف
+        حلقة أحداث الشاشة. هذا هو المفتاح لبناء وإدارة السيناريوهات المعقدة.</string>
+
+</resources>

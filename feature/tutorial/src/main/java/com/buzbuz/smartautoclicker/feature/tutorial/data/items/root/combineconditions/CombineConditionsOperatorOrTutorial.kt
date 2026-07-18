@@ -47,7 +47,11 @@ object CombineConditionsOperatorOrTutorial : TutorialItem {
                 instructionsResId = R.string.message_game_tutorial_combine_conditions_operator_or,
                 scoreToReach = 150,
                 durationSeconds = 10,
-                rules = TwoStillTargetsPressAnyRules(),
+                rules = TwoStillTargetsPressAnyRules(
+                    blueScoreIncrement = 1,
+                    redScoreIncrement = 2,
+                    targetsBehaviour = TwoStillTargetsPressAnyRules.TargetsBehaviour.BLUE_BLINK_RED_BLINK,
+                ),
             ),
             steps = listOf(
                 // Beginning, hide the overlay for now
