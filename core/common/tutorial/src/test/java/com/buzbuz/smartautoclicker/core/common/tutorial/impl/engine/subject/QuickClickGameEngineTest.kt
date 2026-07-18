@@ -338,7 +338,7 @@ class QuickClickGameEngineTest {
         engine = createEngine(dispatcher)
 
         var callbackResult: Boolean? = null
-        engine.monitorNextCompletion { isWon -> callbackResult = isWon }
+        engine.monitorNextCompletion { isWon -> callbackResult = isWon; true }
 
         engine.start()
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
@@ -354,7 +354,7 @@ class QuickClickGameEngineTest {
         engine = createEngine(dispatcher)
 
         var callbackResult: Boolean? = null
-        engine.monitorNextCompletion { isWon -> callbackResult = isWon }
+        engine.monitorNextCompletion { isWon -> callbackResult = isWon; true }
 
         engine.start()
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
@@ -368,7 +368,7 @@ class QuickClickGameEngineTest {
         engine = createEngine(dispatcher)
 
         var callbackInvoked = false
-        engine.monitorNextCompletion { callbackInvoked = true }
+        engine.monitorNextCompletion { callbackInvoked = true; true }
         engine.monitorNextCompletion(null)
 
         engine.start()
@@ -378,20 +378,63 @@ class QuickClickGameEngineTest {
     }
 
     @Test
-    fun `monitorNextCompletion callback is cleared after invocation`() = runTest {
+    fun `monitorNextCompletion callback is cleared after invocation when consumed`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         engine = createEngine(dispatcher)
 
         var invokeCount = 0
-        engine.monitorNextCompletion { invokeCount++ }
+        engine.monitorNextCompletion { invokeCount++; true }
 
         engine.start()
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
-        // Start a second game — callback must not fire again
+        // Start a second game — callback was consumed so must not fire again
         engine.start()
         advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
 
         assertEquals(1, invokeCount)
+    }
+
+    @Test
+    fun `monitorNextCompletion callback is kept after invocation when not consumed`() = runTest {
+        whenever(mockRules.getScore()).thenReturn(TEST_SCORE_TO_REACH + 1)
+
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        engine = createEngine(dispatcher)
+
+        var invokeCount = 0
+        // Return false (not consumed) when game is lost, true (consumed) when won
+        engine.monitorNextCompletion { isWon -> invokeCount++; isWon }
+
+        // First game: won — callback fires and is consumed
+        engine.start()
+        advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
+        assertEquals(1, invokeCount)
+
+        // Second game: callback was consumed, must not fire again
+        engine.start()
+        advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
+        assertEquals(1, invokeCount)
+    }
+
+    @Test
+    fun `monitorNextCompletion callback stays registered when returning false`() = runTest {
+        whenever(mockRules.getScore()).thenReturn(TEST_SCORE_TO_REACH - 1)
+
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        engine = createEngine(dispatcher)
+
+        var invokeCount = 0
+        // Always return false — never consumed
+        engine.monitorNextCompletion { invokeCount++; false }
+
+        engine.start()
+        advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
+        assertEquals(1, invokeCount)
+
+        // Callback was not consumed, fires again on second game
+        engine.start()
+        advanceTimeBy(TEST_DURATION_SECONDS * 1_000 + 500)
+        assertEquals(2, invokeCount)
     }
 }

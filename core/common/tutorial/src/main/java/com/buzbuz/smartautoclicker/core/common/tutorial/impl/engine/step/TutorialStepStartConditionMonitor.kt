@@ -44,7 +44,7 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
     fun monitorCondition(
         condition: TutorialStepStartCondition,
         subjectController: TutorialSubjectController,
-        onConditionReached: () -> Unit
+        onConditionReached: () -> Unit,
     ) = when (condition) {
 
             is TutorialStepStartCondition.MonitoredViewClicked -> {
@@ -56,7 +56,15 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
 
             is TutorialStepStartCondition.MonitoredOverlayDisplayed -> {
                 stepConditionMonitoringJob = coroutineScopeIo.launch {
+                    // If we already are on the overlay wanted, we want to user to go away and then go back
+                    val currentTop = overlayManager.getBackStackTop()
+                    var awaitingCurrentLeave = currentTop?.tutorialMonitoringTag() == condition.type.name
+
                     overlayManager.backStackTopFlow.collect { newTop ->
+                        if (awaitingCurrentLeave && condition.type.name == newTop?.tutorialMonitoringTag())
+                            return@collect
+
+                        awaitingCurrentLeave = false
                         if (condition.type.name != newTop?.tutorialMonitoringTag()) return@collect
 
                         onConditionReached()
@@ -74,23 +82,25 @@ internal class TutorialStepStartConditionMonitor @Inject constructor(
 
             TutorialStepStartCondition.GameLost ->
                 (subjectController as? QuickClickGameEngine)?.monitorNextCompletion { isWon ->
-                    if (isWon) return@monitorNextCompletion
+                    if (isWon) return@monitorNextCompletion false
                     onConditionReached()
+                    true
                 }
 
             TutorialStepStartCondition.GameWon ->
                 (subjectController as? QuickClickGameEngine)?.monitorNextCompletion { isWon ->
-                    if (!isWon) return@monitorNextCompletion
+                    if (!isWon) return@monitorNextCompletion false
                     onConditionReached()
+                    true
                 }
 
             TutorialStepStartCondition.Immediate ->
                 onConditionReached()
 
-        is TutorialStepStartCondition.MonitoredNumberInput ->
-            monitoredViewsManager.monitorNumber(condition.type, condition.expectedNumber) {
-                onConditionReached()
-            }
+            is TutorialStepStartCondition.MonitoredNumberInput ->
+                monitoredViewsManager.monitorNumber(condition.type, condition.expectedNumber) {
+                    onConditionReached()
+                }
     }
 
     fun stopMonitoring(condition: TutorialStepStartCondition, subjectController: TutorialSubjectController) {
