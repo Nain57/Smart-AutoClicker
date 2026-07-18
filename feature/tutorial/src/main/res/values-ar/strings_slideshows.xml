@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -192,12 +192,36 @@
         مكتشف في وقت التشغيل، أيًّا كان.</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">ترتيب الشروط والأداء</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">كيف يؤثر ترتيب الشروط على سرعة تقييم الحدث</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">ترتيب الشروط والسرعة</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">كيف يؤثر ترتيب شروطك على سرعة فحص الحدث</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">يؤثر ترتيب الشروط في القائمة على الأداء.\n\nمع عامل التشغيل AND، يتوقف التقييم بمجرد العثور على أول شرط غير مستوفٍ. يتيح وضع الشروط الأقل احتمالاً أولاً تخطي الشروط المتبقية في وقت أبكر، مما يُسرّع تقييم الحدث.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">يؤثر ترتيب الشروط في القائمة على سرعة فحص
+        الحدث.\n\nمع عامل التشغيل AND، يتوقف الفحص بمجرد العثور على أول شرط غير مستوفٍ. وضع الشروط الأقل احتمالاً أولاً
+        يتيح للتطبيق تخطي الباقي في وقت أبكر، مما يجعل حدثك أسرع.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">مع عامل التشغيل OR، يتوقف التقييم بمجرد العثور على أول شرط مستوفٍ. يتيح وضع الشروط الأكثر احتمالاً أولاً إتمام التقييم بنجاح في وقت أبكر دون فحص الباقي.\n\nفي كلتا الحالتين، وضع الشرط الأكثر أهمية أو الأقل تكلفة في أعلى القائمة هو طريقة بسيطة للحفاظ على سرعة السيناريو.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">مع عامل التشغيل OR، يتوقف الفحص بمجرد
+        العثور على أول شرط مستوفٍ. وضع الشروط الأكثر احتمالاً أولاً يتيح للتطبيق الانتهاء في وقت أبكر دون فحص
+        الباقي.\n\nفي كلتا الحالتين، وضع أهم شرط في أعلى القائمة طريقة بسيطة للحفاظ على سرعة السيناريو.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">حالة الأحداث</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">تعلّم كيفية تفعيل الأحداث وتعطيلها
+        أثناء تشغيل السيناريو</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">كل حدث في السيناريو (أحداث الشاشة وأحداث
+        المُشغِّل) له حالة: إما <b>مُفعَّل</b> أو <b>مُعطَّل</b>.\n\nعند التفعيل، يعمل الحدث بشكل طبيعي ويفحص شروطه
+        كالمعتاد. عند التعطيل، يُتخطَّى كليًا كأنه غير موجود.\n\nبشكل افتراضي، يبدأ كل حدث مُفعَّلًا. يمكنك تغيير ذلك
+        من خلال حقل <b>الحالة الابتدائية</b> في إعدادات الحدث.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">أثناء تشغيل السيناريو، يمكنك تغيير حالة أي حدث
+        باستخدام إجراء <b>تغيير حالة الحدث</b>. يتيح هذا الإجراء تفعيل أو تعطيل أو تبديل حالة حدث واحد أو أكثر.\n\nهذا
+        يفتح إمكانيات كثيرة: أحداث تُشغِّل بعضها البعض واحداً تلو الآخر، أحداث تُعطِّل نفسها بعد تشغيلها مرة واحدة، أو
+        مجموعات أحداث لا يكون فيها إلا حدث واحد نشطاً في الوقت نفسه.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">عندما تكون <b>جميع الأحداث في السيناريو
+        مُعطَّلة</b>، يتوقف السيناريو من تلقاء نفسه. لا يوجد ما يجب فعله، فيتوقف Klick\'r تلقائيًا.\n\nهذه طريقة بسيطة
+        لإنهاء سيناريو: اجعل آخر حدث يُعطِّل جميع الأحداث الأخرى بعد إنجاز مهمته، وكل شيء سيتوقف تلقائيًا.</string>
 
 
     <!-- Actions List slideshow -->

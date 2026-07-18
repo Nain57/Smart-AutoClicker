@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -168,12 +168,28 @@
         选择特定条件作为目标：点击始终会应用于运行时第一个检测到的条件，无论它是哪个。</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件顺序与性能</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件顺序如何影响事件评估速度</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件顺序与速度</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件的顺序如何影响事件检查速度</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中条件的顺序会影响性能。\n\n使用 AND 运算符时，一旦找到第一个未满足的条件，评估就会停止。将最不可能满足的条件放在最前面，可以更早跳过后续条件，从而加快事件评估速度。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中条件的顺序会影响事件的检查速度。\n\n使用 AND
+        运算符时，一旦找到第一个未满足的条件，检查就会停止。将最不可能满足的条件放在最前面，可以让应用更早跳过其余条件，使事件更快。</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR 运算符时，一旦找到第一个满足的条件，评估就会停止。将最可能满足的条件放在最前面，可以更早完成评估，而无需检查其余条件。\n\n在两种情况下，将最关键或开销最小的条件放在列表顶部，都是保持场景高效运行的简单方法。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR
+        运算符时，一旦找到第一个满足的条件，检查就会停止。将最可能满足的条件放在最前面，可以让应用更早完成，而无需检查其余条件。\n\n在两种情况下，将最重要的条件放在列表顶部，都是保持场景高效运行的简单方法。</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">事件状态</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">了解如何在场景运行时启用和禁用事件</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">场景中的每个事件（屏幕事件和触发事件）都有一个状态：<b>启用</b>或<b>禁用</b>。\n\
+        n启用时，事件正常运行并检查其条件。禁用时，它会被完全跳过，就像不存在一样。\n\n默认情况下，每个事件都以启用状态开始。你可以通过事件设置中的<b>初始状态</b>字段来更改此设置。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">在场景运行时，可以使用<b>更改事件状态</b>动作来更改任何事件的状态。该动作可以启用、禁用或切
+        换一个或多个事件的状态。\n\n这开启了很多可能性：一个接一个相互开启的事件、运行一次后自动关闭的事件，或者同一时间只有一个处于活动状态的事件组。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">当<b>场景中的所有事件都被禁用</b>时，场景会自动停止。没有更多事情要做，因此
+        Klick\'r 会自动停止。\n\n这是结束场景的简单方法：让最后一个事件在完成任务后禁用所有其他事件，一切都会自动停止。</string>
 
 
     <!-- Actions List slideshow -->

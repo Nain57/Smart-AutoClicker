@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -207,12 +207,42 @@
         come obiettivo: il clic verrà sempre applicato sulla prima condizione rilevata, qualunque essa sia a runtime.</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordine delle condizioni e prestazioni</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Come l\'ordine delle condizioni influenza la velocità di valutazione</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordine delle condizioni e velocità</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Come l\'ordine delle condizioni influenza la
+        velocità di controllo dell\'evento</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordine delle condizioni nell\'elenco è importante per le prestazioni.\n\nCon l\'operatore E, la valutazione si interrompe non appena viene trovata la prima condizione NON soddisfatta. Mettere prima le condizioni meno probabili permette di saltare le successive prima, velocizzando la valutazione dell\'evento.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">L\'ordine delle condizioni nell\'elenco
+        influisce sulla velocità di controllo dell\'evento.\n\nCon l\'operatore E, il controllo si interrompe non
+        appena viene trovata la prima condizione NON soddisfatta. Mettere prima le condizioni meno probabili permette
+        all\'app di saltare le successive prima, rendendo il tuo evento più veloce.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con l\'operatore O, la valutazione si interrompe non appena viene trovata la prima condizione soddisfatta. Mettere prima le condizioni più probabili fa sì che la valutazione abbia successo prima, senza controllare il resto.\n\nIn entrambi i casi, mettere la condizione più decisiva o meno costosa in cima alla lista è un modo semplice per mantenere veloce il proprio scenario.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Con l\'operatore O, il controllo si
+        interrompe non appena viene trovata la prima condizione soddisfatta. Mettere prima le condizioni più probabili
+        permette all\'app di terminare prima, senza controllare il resto.\n\nIn entrambi i casi, mettere la condizione
+        più importante in cima alla lista è un modo semplice per mantenere veloce il tuo scenario.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">Stato degli eventi</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">Impara ad abilitare e disabilitare gli eventi mentre uno
+        scenario è in esecuzione</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">Ogni evento del tuo scenario (Eventi Schermo ed
+        Eventi Trigger) ha uno stato: è <b>abilitato</b> o <b>disabilitato</b>.\n\nQuando è abilitato, l\'evento viene
+        eseguito normalmente e controlla le sue condizioni come al solito. Quando è disabilitato, viene completamente
+        ignorato, come se non esistesse.\n\nPer impostazione predefinita, ogni evento inizia abilitato. Puoi cambiarlo
+        tramite il campo <b>Stato iniziale</b> nelle impostazioni dell\'evento.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">Mentre uno scenario è in esecuzione, puoi
+        modificare lo stato di qualsiasi evento con l\'azione <b>Cambia stato evento</b>. Questa azione ti consente di
+        abilitare, disabilitare o alternare lo stato di uno o più eventi.\n\nQuesto apre molte possibilità: eventi che
+        si attivano uno dopo l\'altro, eventi che si disabilitano da soli dopo essere stati eseguiti una volta, o
+        gruppi di eventi in cui solo uno è attivo alla volta.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">Quando <b>tutti gli eventi dello scenario sono
+        disabilitati</b>, lo scenario si ferma da solo. Non c\'è più nulla da fare, quindi Klick\'r si ferma
+        automaticamente.\n\nÈ un modo semplice per terminare uno scenario: fai in modo che l\'ultimo evento disabiliti
+        tutti gli altri una volta completato il suo compito, e tutto si ferma da solo.</string>
 
 
     <!-- Actions List slideshow -->

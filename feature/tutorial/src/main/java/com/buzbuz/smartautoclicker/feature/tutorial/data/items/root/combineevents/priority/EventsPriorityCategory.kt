@@ -14,20 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.eventstate
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.priority
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
 
-internal fun getEventStateCategory() =
+internal fun getEventsPriorityCategory() =
     TutorialCategory(
-        type = TutorialCategory.Type.EVENT_STATE,
-        nameRes = R.string.tutorial_category_event_state_name,
-        shortDescriptionRes = R.string.tutorial_category_event_state_desc_short,
-        longDescriptionRes = R.string.tutorial_category_event_state_desc_long,
-        iconRes = R.drawable.ic_toggle_event,
+        type = TutorialCategory.Type.EVENTS_PRIORITY,
+        nameRes = R.string.tutorial_category_events_priority_name,
+        shortDescriptionRes = R.string.tutorial_category_events_priority_desc_short,
+        longDescriptionRes = R.string.tutorial_category_events_priority_desc_long,
+        iconRes = R.drawable.ic_priority,
         content = listOf(
-
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_PRIORITY_BASICS),
         ),
     )

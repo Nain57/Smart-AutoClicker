@@ -74,9 +74,23 @@
         всіх умов, тоді як АБО вимагає лише однієї. Поєднання типів умов та операторів дозволяє вирішувати складні
         реальні сценарії.\n\n Дізнайтеся тут, як ефективно об\'єднувати умови.</string>
 
-    <string name="tutorial_category_event_state_name">Стан події</string>
-    <string name="tutorial_category_event_state_desc_short">Вмикайте або вимикайте події динамічно</string>
-    <string name="tutorial_category_event_state_desc_long">Події можна вмикати або вимикати під час виконання за
+    <string name="tutorial_category_combine_event_name">Комбінування подій</string>
+    <string name="tutorial_category_combine_event_desc_short">Координуйте кілька Подій для складної логіки</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r дозволяє координувати кілька Подій для створення
+        складних потоків автоматизації. Контролюючи порядок оцінювання та вмикаючи або вимикаючи Події під час
+        виконання, ви можете створювати комплексні багатоетапні Сценарії.\n\n Дізнайтеся тут, як ефективно
+        комбінувати Події для повного контролю над автоматизацією.</string>
+
+    <string name="tutorial_category_events_priority_name">Пріоритет подій</string>
+    <string name="tutorial_category_events_priority_desc_short">Контролюйте важливість ваших подій</string>
+    <string name="tutorial_category_events_priority_desc_long">Екранні події оцінюються в порядку пріоритету в кожному
+        циклі виявлення. Подія вища у списку перевіряється раніше за події нижче, що дозволяє визначити, яка Подія
+        має перевагу, коли кілька подій можуть спрацювати одночасно.\n\n Дізнайтеся тут, як встановлювати пріоритети
+        подій для точного налаштування порядку виконання вашого Сценарію.</string>
+
+    <string name="tutorial_category_events_state_name">Стан подій</string>
+    <string name="tutorial_category_events_state_desc_short">Вмикайте або вимикайте події динамічно</string>
+    <string name="tutorial_category_events_state_desc_long">Події можна вмикати або вимикати під час виконання за
         допомогою дії ToggleEvent. Це дозволяє створювати багатоетапні потоки автоматизації, де певні події активні
         лише за конкретних умов.\n\n Дізнайтеся тут, як керувати станом подій для створення складних
         сценаріїв.</string>

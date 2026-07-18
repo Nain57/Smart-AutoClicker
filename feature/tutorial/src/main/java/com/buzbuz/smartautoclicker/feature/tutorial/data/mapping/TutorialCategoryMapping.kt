@@ -37,7 +37,9 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getTriggerConditionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.getCombineConditionsCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.counters.getCountersCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.eventstate.getEventStateCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.getCombineEventsCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.priority.getEventsPriorityCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.state.getEventsStateCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.getRootCategory
 
 
@@ -51,7 +53,9 @@ internal fun TutorialCategory.Type.toTutorialCategory(): TutorialCategory =
         COLOR_CONDITION -> getColorConditionsCategory()
         COMBINE_CONDITIONS -> getCombineConditionsCategory()
         COUNTERS -> getCountersCategory()
-        EVENT_STATE -> getEventStateCategory()
+        COMBINE_EVENTS -> getCombineEventsCategory()
+        EVENTS_PRIORITY -> getEventsPriorityCategory()
+        EVENTS_STATE -> getEventsStateCategory()
         IMAGE_CONDITION -> getImageConditionsCategory()
         INTENT_ACTION -> getIntentActionCategory()
         NOTIFICATION_ACTION -> getNotificationActionCategory()

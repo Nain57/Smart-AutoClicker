@@ -67,9 +67,21 @@
         ことを要求し、OR は少なくとも1つを要求します。条件の種類と演算子を組み合わせることで、複雑なシナリオに対応できます。\n\n
         ここで条件を効果的に組み合わせる方法を学びましょう。</string>
 
-    <string name="tutorial_category_event_state_name">イベントの状態</string>
-    <string name="tutorial_category_event_state_desc_short">イベントを動的に有効化・無効化する</string>
-    <string name="tutorial_category_event_state_desc_long">イベントはToggleEventアクションを使って実行中に有効化・無効化できます。
+    <string name="tutorial_category_combine_event_name">イベントの組み合わせ</string>
+    <string name="tutorial_category_combine_event_desc_short">複数のイベントを連携して高度な制御を実現する</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'rでは複数のイベントを連携させて高度な自動化フローを構築できます。
+        イベントの評価順序を制御したり、実行中にイベントを有効化・無効化したりすることで、複雑な多段階シナリオを作成できます。\n\n
+        ここでイベントを効果的に組み合わせて自動化を完全にコントロールする方法を学びましょう。</string>
+
+    <string name="tutorial_category_events_priority_name">イベントの優先度</string>
+    <string name="tutorial_category_events_priority_desc_short">イベントの重要度をコントロールする</string>
+    <string name="tutorial_category_events_priority_desc_long">スクリーンイベントは各検出サイクルで優先度順に評価されます。
+        リストの上位にあるイベントは下位のイベントより先に確認され、複数のイベントが同時にトリガーされる可能性がある場合に、
+        どのイベントを優先するかを定義できます。\n\n ここでイベントの優先度を設定してシナリオの実行順序を細かく調整する方法を学びましょう。</string>
+
+    <string name="tutorial_category_events_state_name">イベントの状態管理</string>
+    <string name="tutorial_category_events_state_desc_short">イベントを動的に有効化・無効化する</string>
+    <string name="tutorial_category_events_state_desc_long">イベントはToggleEventアクションを使って実行中に有効化・無効化できます。
         これにより、特定の条件下でのみ特定のイベントが有効になる多段階の自動化フローを構築できます。\n\n ここでイベントの状態を
         制御して高度なシナリオを作る方法を学びましょう。</string>
 

@@ -89,13 +89,6 @@
         conditions to be fulfilled, while OR requires at least one. Mixing condition types and operators lets you handle
         complex real-world scenarios.\n\n Learn here how to combine conditions effectively.</string>
 
-    <string name="tutorial_category_event_state_name">Event State</string>
-    <string name="tutorial_category_event_state_desc_short">Enable or disable Events dynamically.</string>
-    <string name="tutorial_category_event_state_desc_long">Events can be enabled or disabled at runtime using the
-        ToggleEvent Action. This lets you build multistep automation flows where earlier steps gate later ones, or
-        where certain events are only active under specific conditions.\n\n Learn here how to control Event state to
-        build advanced Scenarios.</string>
-
     <string name="tutorial_category_trigger_condition_name">Trigger Conditions</string>
     <string name="tutorial_category_trigger_condition_desc_short">Verify the state of the Scenario</string>
     <string name="tutorial_category_trigger_condition_desc_long">A Trigger Condition is the \"when\" part of a Trigger
@@ -163,5 +156,26 @@
     <string name="tutorial_category_write_text_action_desc_long">A Write Text Action pastes a configured string into
         the currently focused input field using the AccessibilityService. It is useful for filling forms or search
         fields without simulating individual key presses.\n\n Learn here how to use it to enter text during automation.</string>
+
+    <string name="tutorial_category_combine_event_name">Combine Events</string>
+    <string name="tutorial_category_combine_event_desc_short">Use multiple events for complex logic control</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r lets you coordinate multiple Events to build
+        advanced automation flows. By controlling the order in which Events are evaluated and enabling or disabling
+        them at runtime, you can create complex, multi-step Scenarios.\n\n Learn here how to combine Events effectively
+        to take full control of your automation.</string>
+
+    <string name="tutorial_category_events_priority_name">Events priority</string>
+    <string name="tutorial_category_events_priority_desc_short">Control the importance of your events</string>
+    <string name="tutorial_category_events_priority_desc_long">Screen Events are evaluated in priority order during
+        each detection cycle. An Event higher in the list is checked before lower Events, letting you define which
+        Event take precedence when multiple Events could trigger at the same time.\n\n Learn here how to set Event
+        priorities to fine-tune the execution order of your Scenario.</string>
+
+    <string name="tutorial_category_events_state_name">Events state</string>
+    <string name="tutorial_category_events_state_desc_short">Enable or disable Events dynamically.</string>
+    <string name="tutorial_category_events_state_desc_long">Events can be enabled or disabled at runtime using the
+        ToggleEvent Action. This lets you build multistep automation flows where earlier steps gate later ones, or
+        where certain events are only active under specific conditions.\n\n Learn here how to control Event state to
+        build advanced Scenarios.</string>
 
 </resources>

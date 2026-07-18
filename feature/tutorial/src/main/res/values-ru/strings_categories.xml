@@ -75,9 +75,23 @@
         выполнения всех условий, тогда как ИЛИ требует хотя бы одного. Сочетание типов условий и операторов позволяет
         справляться со сложными сценариями.\n\n Узнайте здесь, как эффективно объединять условия.</string>
 
-    <string name="tutorial_category_event_state_name">Состояние события</string>
-    <string name="tutorial_category_event_state_desc_short">Включайте или отключайте события динамически</string>
-    <string name="tutorial_category_event_state_desc_long">События можно включать или отключать во время выполнения с
+    <string name="tutorial_category_combine_event_name">Объединение событий</string>
+    <string name="tutorial_category_combine_event_desc_short">Координируйте несколько событий для сложной логики</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r позволяет координировать несколько Событий для
+        создания сложных потоков автоматизации. Управляя порядком оценки и включая или отключая События во время
+        выполнения, вы можете создавать комплексные многошаговые Сценарии.\n\n Узнайте здесь, как эффективно
+        объединять События для полного контроля над автоматизацией.</string>
+
+    <string name="tutorial_category_events_priority_name">Приоритет событий</string>
+    <string name="tutorial_category_events_priority_desc_short">Управляйте важностью ваших событий</string>
+    <string name="tutorial_category_events_priority_desc_long">Экранные события оцениваются в порядке приоритета в
+        каждом цикле обнаружения. Событие выше в списке проверяется раньше событий ниже, что позволяет определить,
+        какое Событие имеет приоритет, когда несколько событий могут сработать одновременно.\n\n Узнайте здесь, как
+        устанавливать приоритеты событий для точной настройки порядка выполнения вашего Сценария.</string>
+
+    <string name="tutorial_category_events_state_name">Состояние событий</string>
+    <string name="tutorial_category_events_state_desc_short">Включайте или отключайте события динамически</string>
+    <string name="tutorial_category_events_state_desc_long">События можно включать или отключать во время выполнения с
         помощью действия ToggleEvent. Это позволяет создавать многошаговые потоки автоматизации, где определённые
         события активны только при конкретных условиях.\n\n Узнайте здесь, как управлять состоянием событий для
         создания сложных сценариев.</string>

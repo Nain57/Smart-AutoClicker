@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -203,12 +203,42 @@
         execução.</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordem das condições e desempenho</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Como a ordem das condições afeta a velocidade de avaliação</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordem das condições e velocidade</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">Como a ordem das suas condições afeta a
+        velocidade de verificação do evento</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">A ordem das condições na lista importa para o desempenho.\n\nCom o operador E, a avaliação para assim que a primeira condição NÃO satisfeita é encontrada. Colocar primeiro as condições menos prováveis permite pular as demais mais cedo, acelerando a avaliação do evento.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">A ordem das condições na lista afeta a
+        velocidade de verificação do evento.\n\nCom o operador E, a verificação para assim que a primeira condição NÃO
+        cumprida é encontrada. Colocar primeiro as condições menos prováveis permite ao app pular as demais mais cedo,
+        tornando seu evento mais rápido.</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Com o operador OU, a avaliação para assim que a primeira condição satisfeita é encontrada. Colocar primeiro as condições mais prováveis faz a avaliação ter sucesso mais cedo, sem verificar o restante.\n\nEm ambos os casos, colocar a condição mais decisiva ou menos custosa no topo da lista é uma forma simples de manter seu cenário rápido.</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">Com o operador OU, a verificação para
+        assim que a primeira condição cumprida é encontrada. Colocar primeiro as condições mais prováveis permite ao
+        app terminar mais cedo, sem verificar o restante.\n\nEm ambos os casos, colocar a condição mais importante no
+        topo da lista é uma forma simples de manter seu cenário rápido.</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">Estado dos eventos</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">Aprenda a ativar e desativar eventos enquanto um cenário
+        está em execução</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">Cada evento do seu cenário (Eventos de Tela e
+        Eventos Gatilho) tem um estado: está <b>ativado</b> ou <b>desativado</b>.\n\nQuando ativado, o evento executa
+        normalmente e verifica suas condições como de costume. Quando desativado, é completamente ignorado, como se não
+        existisse.\n\nPor padrão, todos os eventos começam ativados. Você pode mudar isso com o campo <b>Estado
+        inicial</b> nas configurações do evento.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">Enquanto um cenário está em execução, você pode
+        mudar o estado de qualquer evento usando a ação <b>Alterar estado do evento</b>. Esta ação permite ativar,
+        desativar ou alternar o estado de um ou mais eventos.\n\nIsso abre muitas possibilidades: eventos que se ativam
+        um após o outro, eventos que se desativam sozinhos após executar uma vez, ou grupos de eventos onde apenas um
+        está ativo por vez.</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">Quando <b>todos os eventos do cenário estão
+        desativados</b>, o cenário para sozinho. Não há mais nada a fazer, então o Klick\'r para automaticamente.\n\nÉ
+        uma forma simples de encerrar um cenário: faça seu último evento desativar todos os outros ao concluir sua
+        tarefa, e tudo para por conta própria.</string>
 
 
     <!-- Actions List slideshow -->

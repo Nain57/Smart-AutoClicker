@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -168,12 +168,28 @@
         選擇特定條件作為目標：點擊始終會應用於執行時第一個偵測到的條件，無論它是哪個。</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">條件順序與效能</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">條件順序如何影響事件評估速度</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">條件順序與速度</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">條件的順序如何影響事件檢查速度</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中條件的順序會影響效能。\n\n使用 AND 運算子時，一旦找到第一個未滿足的條件，評估就會停止。將最不可能滿足的條件放在最前面，可以更早跳過後續條件，從而加快事件評估速度。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">列表中條件的順序會影響事件的檢查速度。\n\n使用 AND
+        運算子時，一旦找到第一個未滿足的條件，檢查就會停止。將最不可能滿足的條件放在最前面，可以讓應用程式更早跳過其餘條件，使事件更快。</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR 運算子時，一旦找到第一個滿足的條件，評估就會停止。將最可能滿足的條件放在最前面，可以更早完成評估，而無需檢查其餘條件。\n\n在兩種情況下，將最關鍵或開銷最小的條件放在列表頂部，都是保持場景高效運行的簡單方法。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">使用 OR
+        運算子時，一旦找到第一個滿足的條件，檢查就會停止。將最可能滿足的條件放在最前面，可以讓應用程式更早完成，而無需檢查其餘條件。\n\n在兩種情況下，將最重要的條件放在列表頂部，都是保持場景快速運行的簡單方法。</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">事件狀態</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">了解如何在場景執行時啟用和停用事件</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">場景中的每個事件（螢幕事件和觸發事件）都有一個狀態：<b>啟用</b>或<b>停用</b>。\n\
+        n啟用時，事件正常執行並檢查其條件。停用時，它會被完全跳過，就像不存在一樣。\n\n預設情況下，每個事件都以啟用狀態開始。你可以透過事件設定中的<b>初始狀態</b>欄位來變更此設定。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">在場景執行時，可以使用<b>變更事件狀態</b>動作來變更任何事件的狀態。該動作可以啟用、停用或切
+        換一個或多個事件的狀態。\n\n這開啟了很多可能性：一個接一個相互開啟的事件、執行一次後自動關閉的事件，或者同一時間只有一個處於活動狀態的事件組。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text">當<b>場景中的所有事件都被停用</b>時，場景會自動停止。沒有更多事情要做，因此
+        Klick\'r 會自動停止。\n\n這是結束場景的簡單方法：讓最後一個事件在完成任務後停用所有其他事件，一切都會自動停止。</string>
 
 
     <!-- Actions List slideshow -->

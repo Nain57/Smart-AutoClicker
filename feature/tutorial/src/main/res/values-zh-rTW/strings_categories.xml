@@ -62,9 +62,20 @@
     <string name="tutorial_category_combine_conditions_desc_long">每個事件都有一個條件運算子：AND 要求滿足所有條件，而 OR 只需滿足
         至少一個。混合使用條件類型和運算子可以應對複雜的現實場景。\n\n 在這裡學習如何有效地組合條件。</string>
 
-    <string name="tutorial_category_event_state_name">事件狀態</string>
-    <string name="tutorial_category_event_state_desc_short">動態啟用或停用事件</string>
-    <string name="tutorial_category_event_state_desc_long">可以在執行時使用 ToggleEvent 動作啟用或停用事件。這讓您能夠建構多步驟
+    <string name="tutorial_category_combine_event_name">組合事件</string>
+    <string name="tutorial_category_combine_event_desc_short">協調多個事件以實現複雜的邏輯控制</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r 讓您可以協調多個事件來建構進階自動化流程。透過控制事件的評估
+        順序以及在執行時啟用或停用事件，您可以建立複雜的多步驟情境。\n\n 在這裡學習如何有效地組合事件，從而完全掌控您的自動化流程。</string>
+
+    <string name="tutorial_category_events_priority_name">事件優先順序</string>
+    <string name="tutorial_category_events_priority_desc_short">控制您的事件的重要程度</string>
+    <string name="tutorial_category_events_priority_desc_long">螢幕事件在每個偵測週期中按優先順序進行評估。清單中較高位置的事件
+        會在較低位置的事件之前被檢查，讓您能夠定義當多個事件可能同時觸發時哪個事件優先。\n\n 在這裡學習如何設定事件優先順序，
+        以精細調整情境的執行順序。</string>
+
+    <string name="tutorial_category_events_state_name">事件狀態管理</string>
+    <string name="tutorial_category_events_state_desc_short">動態啟用或停用事件</string>
+    <string name="tutorial_category_events_state_desc_long">可以在執行時使用 ToggleEvent 動作啟用或停用事件。這讓您能夠建構多步驟
         自動化流程，其中某些事件僅在特定條件下才處於活動狀態。\n\n 在這裡學習如何控制事件狀態來建構進階情境。</string>
 
     <string name="tutorial_category_trigger_condition_name">觸發條件</string>

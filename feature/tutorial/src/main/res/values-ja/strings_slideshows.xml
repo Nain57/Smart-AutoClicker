@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -193,12 +193,31 @@
         最初に検出された条件に適用されます。</string>
 
     <!-- Combine Conditions Ordering slideshow -->
-    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件の順序とパフォーマンス</string>
-    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件の順序がイベント評価速度に与える影響</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_title">条件の順序と速度</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件の順序がイベントの確認速度に与える影響</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">リスト内の条件の順序はパフォーマンスに影響します。\n\nAND 演算子を使用する場合、最初に満たされない条件が見つかった時点で評価が停止します。最も満たされにくい条件を先頭に置くことで、残りの条件をより早くスキップでき、イベントの評価が速くなります。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_1_text">リスト内の条件の順序はイベントの確認速度に影響します。\n\nAND
+        演算子を使用する場合、最初に満たされない条件が見つかった時点で確認が停止します。最も満たされにくい条件を先頭に置くことで、アプリが残りの条件を早くスキップできるようになり、イベントが速くなります。</string>
 
-    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">OR 演算子を使用する場合、最初に満たされた条件が見つかった時点で評価が停止します。最も満たされやすい条件を先頭に置くことで、残りを確認せずに早く評価を完了できます。\n\nどちらの場合も、最も重要またはコストの低い条件をリストの先頭に置くことが、シナリオを高速に保つシンプルな方法です。</string>
+    <string name="tutorial_slideshow_combine_conditions_ordering_step_2_text">OR
+        演算子を使用する場合、最初に満たされた条件が見つかった時点で確認が停止します。最も満たされやすい条件を先頭に置くことで、アプリが残りを確認せずに早く完了できます。\n\nどちらの場合も、最も重要な条件をリストの先頭に置くこ
+        とが、シナリオを速く保つシンプルな方法です。</string>
+
+
+    <!-- Events State Basics slideshow -->
+    <string name="tutorial_slideshow_events_state_basics_title">イベントの状態</string>
+    <string name="tutorial_slideshow_events_state_basics_desc">シナリオの実行中にイベントを有効・無効にする方法を学ぶ</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_1_text">シナリオ内のすべてのイベント（スクリーンイベントとトリガーイベント）には状態があります：<b>有効
+        </b>または<b>無効</b>です。\n\n有効の場合、イベントは通常どおり実行され、条件を確認します。無効の場合、存在しないかのように完全にスキップされます。\n\nデフォルトでは、すべてのイベントは有効な状態で開始さ
+        れます。イベント設定の<b>初期状態</b>フィールドで変更できます。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_2_text">シナリオの実行中は、<b>イベント状態を変更</b>アクションを使って任意のイベントの状態を変更で
+        きます。このアクションにより、1つ以上のイベントを有効化・無効化、または切り替えることができます。\n\nこれにより多くのことが可能になります：次々とお互いをオンにするイベント、一度実行されたら自分でオフになるイベント、ま
+        たは同時に1つだけがアクティブなイベントのグループ。</string>
+
+    <string name="tutorial_slideshow_events_state_basics_step_3_text"><b>シナリオ内のすべてのイベントが無効になった</b>とき、シナリオは自動的に停止します。やるこ
+        とが何もなくなるため、Klick\'rが自動的に停止します。\n\nこれはシナリオを終了するシンプルな方法です：最後のイベントが役割を果たした後に他のすべてを無効にすれば、すべてが自動的に停止します。</string>
 
 
     <!-- Actions List slideshow -->

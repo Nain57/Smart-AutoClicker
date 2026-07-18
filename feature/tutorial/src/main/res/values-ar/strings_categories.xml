@@ -69,9 +69,21 @@
         الشروط، بينما OR يتطلب استيفاء شرط واحد على الأقل. يتيح لك مزج أنواع الشروط والعوامل التعامل مع سيناريوهات
         معقدة.\n\n تعلّم هنا كيفية دمج الشروط بفاعلية.</string>
 
-    <string name="tutorial_category_event_state_name">حالة الحدث</string>
-    <string name="tutorial_category_event_state_desc_short">فعّل أو عطّل الأحداث بشكل ديناميكي</string>
-    <string name="tutorial_category_event_state_desc_long">يمكن تفعيل الأحداث أو تعطيلها أثناء التشغيل باستخدام
+    <string name="tutorial_category_combine_event_name">دمج الأحداث</string>
+    <string name="tutorial_category_combine_event_desc_short">نسّق أحداثاً متعددة للتحكم في منطق معقد</string>
+    <string name="tutorial_category_combine_event_desc_long">يتيح لك Klick\'r تنسيق أحداث متعددة لبناء تدفقات أتمتة
+        متقدمة. من خلال التحكم في ترتيب تقييم الأحداث وتفعيلها أو تعطيلها أثناء التشغيل، يمكنك إنشاء سيناريوهات
+        معقدة متعددة الخطوات.\n\n تعلّم هنا كيفية دمج الأحداث بفاعلية للتحكم الكامل في عملية الأتمتة.</string>
+
+    <string name="tutorial_category_events_priority_name">أولوية الأحداث</string>
+    <string name="tutorial_category_events_priority_desc_short">تحكّم في أهمية أحداثك</string>
+    <string name="tutorial_category_events_priority_desc_long">يتم تقييم أحداث الشاشة بترتيب الأولوية في كل دورة
+        اكتشاف. الحدث الأعلى في القائمة يُفحص قبل الأحداث الأدنى، مما يتيح تحديد أي حدث له الأسبقية عند إمكانية
+        تشغيل أحداث متعددة في نفس الوقت.\n\n تعلّم هنا كيفية ضبط أولويات الأحداث لضبط ترتيب تنفيذ السيناريو.</string>
+
+    <string name="tutorial_category_events_state_name">حالة الأحداث</string>
+    <string name="tutorial_category_events_state_desc_short">فعّل أو عطّل الأحداث بشكل ديناميكي</string>
+    <string name="tutorial_category_events_state_desc_long">يمكن تفعيل الأحداث أو تعطيلها أثناء التشغيل باستخدام
         إجراء ToggleEvent. يتيح لك ذلك بناء تدفقات أتمتة متعددة الخطوات حيث تكون بعض الأحداث نشطة فقط في ظروف
         محددة.\n\n تعلّم هنا كيفية التحكم في حالة الأحداث لبناء سيناريوهات متقدمة.</string>
 
