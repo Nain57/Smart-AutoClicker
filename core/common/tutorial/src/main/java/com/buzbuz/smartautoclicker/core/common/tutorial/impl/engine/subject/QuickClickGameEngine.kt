@@ -45,7 +45,7 @@ internal class QuickClickGameEngine (
     private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     private var gameJob: Job? = null
-    private var onGameCompleted: ((isWon: Boolean) -> Unit)? = null
+    private var onGameCompleted: ((isWon: Boolean) -> Boolean)? = null
 
 
     private val _state: MutableStateFlow<TutorialSubjectState.QuickClickGame> = MutableStateFlow(defaultState())
@@ -94,7 +94,9 @@ internal class QuickClickGameEngine (
                     targets = emptyMap()
                 )
             }
-            onGameCompleted?.invoke(isWon)
+
+            val consumed = onGameCompleted?.invoke(isWon) ?: true
+            if (consumed) onGameCompleted = null
             gameJob = null
         }
     }
@@ -119,7 +121,7 @@ internal class QuickClickGameEngine (
         }
     }
 
-    fun monitorNextCompletion(listener: ((isWon: Boolean) -> Unit)?) {
+    fun monitorNextCompletion(listener: ((isWon: Boolean) -> Boolean)?) {
         onGameCompleted = listener
     }
 
