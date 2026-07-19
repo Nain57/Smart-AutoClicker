@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">Priorité des événements</string>
+    <string name="item_title_tutorial_events_priority">Prioriser un événement</string>
     <string name="item_desc_tutorial_events_priority">Prioriser un Événement par rapport à un autre</string>
     <string name="message_game_tutorial_events_priority">Cliquez le plus vite possible sur les cibles. Bleu = 1 point ;
         Rouge = 10 points</string>

@@ -332,4 +332,11 @@
         para usar serão adicionados em atualizações futuras para facilitar os casos de uso comuns sem precisar recorrer
         às opções avançadas.</string>
 
+
+    <!-- Event priority slideshow -->
+    <string name="tutorial_slideshow_events_priority_title">Prioridade dos eventos</string>
+    <string name="tutorial_slideshow_events_priority_desc">Aprenda como a ordem dos eventos na sua lista afeta quais eventos são executados</string>
+    <string name="tutorial_slideshow_events_priority_step_1_text">Cada quadro capturado da sua tela é processado verificando seus eventos <b>um a um, de cima para baixo</b>.\n\nA posição de um evento na sua lista determina quando ele tem a chance de ser executado. Por padrão, assim que as condições de um evento são atendidas e suas ações são executadas, <b>o quadro é considerado concluído</b>. O processamento para naquele quadro e o próximo recomeça a partir do primeiro evento da lista.\n\nIsso significa que por padrão apenas um evento pode ser executado por quadro.</string>
+    <string name="tutorial_slideshow_events_priority_step_2_text">Você pode alterar esse comportamento usando o campo <b>Continue executando</b> nas configurações do evento. Quando ativado, após esse evento ser executado, o processamento <b>continua para o próximo evento</b> na lista em vez de parar.\n\nIsso permite que vários eventos sejam executados no mesmo quadro.\n\n<b>Exemplo:</b> sua lista contém o Evento A seguido do Evento B. Se o Evento A continua sendo detectado e não tem <b>Continue executando</b> ativado, ele será executado em cada quadro e o Evento B nunca terá chance de executar.\n\nAtive <b>Continue executando</b> no Evento A e ambos os eventos serão verificados em cada quadro.\n\nUm tutorial interativo também está disponível para praticar esse conceito.</string>
+
 </resources>

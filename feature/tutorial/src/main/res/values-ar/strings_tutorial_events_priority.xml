@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">أولوية الأحداث</string>
+    <string name="item_title_tutorial_events_priority">تحديد أولوية حدث</string>
     <string name="item_desc_tutorial_events_priority">إعطاء الأولوية لحدث على حدث آخر</string>
     <string name="message_game_tutorial_events_priority">انقر على الأهداف بأسرع ما يمكن. أزرق = نقطة واحدة؛
         أحمر = 10 نقاط</string>

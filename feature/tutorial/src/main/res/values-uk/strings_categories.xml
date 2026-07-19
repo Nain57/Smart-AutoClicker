@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -91,7 +91,7 @@
     <string name="tutorial_category_events_state_name">Стан подій</string>
     <string name="tutorial_category_events_state_desc_short">Вмикайте або вимикайте події динамічно</string>
     <string name="tutorial_category_events_state_desc_long">Події можна вмикати або вимикати під час виконання за
-        допомогою дії ToggleEvent. Це дозволяє створювати багатоетапні потоки автоматизації, де певні події активні
+        допомогою дії Змінити стан події. Це дозволяє створювати багатоетапні потоки автоматизації, де певні події активні
         лише за конкретних умов.\n\n Дізнайтеся тут, як керувати станом подій для створення складних
         сценаріїв.</string>
 

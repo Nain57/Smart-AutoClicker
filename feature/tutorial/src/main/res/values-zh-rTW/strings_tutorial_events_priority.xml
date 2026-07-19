@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">事件優先順序</string>
+    <string name="item_title_tutorial_events_priority">設定事件優先順序</string>
     <string name="item_desc_tutorial_events_priority">讓一個事件優先於另一個事件</string>
     <string name="message_game_tutorial_events_priority">盡快點擊目標。藍色 = 1分；紅色 = 10分</string>
 

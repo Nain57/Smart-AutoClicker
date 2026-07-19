@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -75,7 +75,7 @@
 
     <string name="tutorial_category_events_state_name">事件状态管理</string>
     <string name="tutorial_category_events_state_desc_short">动态启用或禁用事件</string>
-    <string name="tutorial_category_events_state_desc_long">可以在运行时使用 ToggleEvent 动作启用或禁用事件。这让你能够构建多步骤
+    <string name="tutorial_category_events_state_desc_long">可以在运行时使用 "更改事件状态"动作启用或禁用事件。这让你能够构建多步骤
         自动化流程，其中某些事件仅在特定条件下才处于活动状态。\n\n 在这里学习如何控制事件状态来构建高级场景。</string>
 
     <string name="tutorial_category_trigger_condition_name">触发条件</string>

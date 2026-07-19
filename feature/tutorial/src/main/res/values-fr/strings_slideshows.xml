@@ -344,4 +344,11 @@
         fonctionnent les Intents.\n\nDavantage de modèles prêts à l\'emploi seront ajoutés dans les futures mises à jour
         pour faciliter les cas d\'utilisation courants sans recourir aux options avancées.</string>
 
+
+    <!-- Event priority slideshow -->
+    <string name="tutorial_slideshow_events_priority_title">Priorité des événements</string>
+    <string name="tutorial_slideshow_events_priority_desc">Apprenez comment l\'ordre des événements dans votre liste influence leur exécution</string>
+    <string name="tutorial_slideshow_events_priority_step_1_text">Chaque image capturée depuis votre écran est traitée en vérifiant vos événements <b>un par un, de haut en bas</b>.\n\nLa position d\'un événement dans votre liste détermine à quel moment il a la chance de s\'exécuter. Par défaut, dès qu\'un événement voit ses conditions remplies et ses actions exécutées, <b>l\'image est considérée comme traitée</b>. Le traitement s\'arrête pour cette image et la suivante repart depuis le premier événement de la liste.\n\nCela signifie qu\'un seul événement peut s\'exécuter par image par défaut.</string>
+    <string name="tutorial_slideshow_events_priority_step_2_text">Vous pouvez modifier ce comportement via le champ <b>Continuer l\'éxécution</b> dans les paramètres de l\'événement. Lorsqu\'il est activé, après l\'exécution de cet événement, le traitement <b>passe à l\'événement suivant</b> dans la liste au lieu de s\'arrêter.\n\nCela permet à plusieurs événements de s\'exécuter sur la même image.\n\n<b>Exemple :</b> votre liste contient l\'Événement A suivi de l\'Événement B. Si l\'Événement A est toujours détecté et que <b>Continuer l\'éxécution</b> n\'est pas activé, il s\'exécutera à chaque image et l\'Événement B n\'aura jamais la chance de s\'exécuter.\n\nActivez <b>Continuer l\'éxécution</b> sur l\'Événement A et les deux événements seront vérifiés à chaque image.\n\nUn tutoriel interactif est également disponible pour pratiquer ce concept.</string>
+
 </resources>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -95,7 +95,7 @@
     <string name="tutorial_category_events_state_name">Stato degli Eventi</string>
     <string name="tutorial_category_events_state_desc_short">Attiva o disattiva gli Eventi dinamicamente</string>
     <string name="tutorial_category_events_state_desc_long">Gli Eventi possono essere attivati o disattivati in fase di
-        esecuzione tramite l\'Azione ToggleEvent. Questo ti permette di creare flussi di automazione a più fasi in cui
+        esecuzione tramite l\'Azione Cambia stato evento. Questo ti permette di creare flussi di automazione a più fasi in cui
         certi eventi sono attivi solo in condizioni specifiche.\n\n Impara qui a controllare lo stato degli Eventi per
         creare Scenari avanzati.</string>
 

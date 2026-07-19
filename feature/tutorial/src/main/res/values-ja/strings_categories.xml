@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -81,7 +81,7 @@
 
     <string name="tutorial_category_events_state_name">イベントの状態管理</string>
     <string name="tutorial_category_events_state_desc_short">イベントを動的に有効化・無効化する</string>
-    <string name="tutorial_category_events_state_desc_long">イベントはToggleEventアクションを使って実行中に有効化・無効化できます。
+    <string name="tutorial_category_events_state_desc_long">イベントはイベントの状態を変更するアクションを使って実行中に有効化・無効化できます。
         これにより、特定の条件下でのみ特定のイベントが有効になる多段階の自動化フローを構築できます。\n\n ここでイベントの状態を
         制御して高度なシナリオを作る方法を学びましょう。</string>
 
