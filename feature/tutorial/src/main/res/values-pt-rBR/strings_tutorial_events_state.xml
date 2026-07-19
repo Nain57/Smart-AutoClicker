@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">Estado dos eventos</string>
+    <string name="item_desc_tutorial_events_state">Altere o estado de vários eventos para otimizar um cenário complexo.</string>
+    <string name="message_game_tutorial_events_state">Clique nos alvos em ordem: azul, vermelho, verde e depois amarelo.</string>
+
+    <string name="message_tutorial_events_state_step_1">Novo jogo! Desta vez você precisa clicar em quatro alvos
+        coloridos em ordem: primeiro azul, depois vermelho, depois verde e finalmente amarelo. \n\nVocê pode experimentar
+        o jogo primeiro para ver como funciona, ou abrir diretamente a configuração do cenário para começar a
+        automatizá-lo.</string>
+
+    <string name="message_tutorial_events_state_step_2">Precisamos detectar quatro alvos diferentes, um para cada cor.
+        Vamos criar um Evento por alvo. \n\nComece com o alvo azul: crie um novo Evento que o detecte dentro da área de
+        jogo e clique nele.</string>
+
+    <string name="message_tutorial_events_state_step_3">Ao usar vários eventos, é importante personalizar o nome de cada
+        um para se organizar. Dê a este Evento um nome claro, como \"Alvo azul\", para identificá-lo facilmente no seu
+        cenário. \n\nQuando terminar, crie uma nova condição de Imagem e capture o alvo azul.</string>
+
+    <string name="message_tutorial_events_state_step_4">Como o alvo está se movendo, precisamos definir o tipo de
+        detecção como \"Área de detecção\" e selecionar a área de jogo. \n\nAssim que a área estiver corretamente
+        configurada, salve-a e volte ao diálogo Evento.</string>
+
+    <string name="message_tutorial_events_state_step_5">Sua condição está definida. Agora precisamos de uma ação Clique
+        para que o Evento clique no alvo detectado. \n\nCrie uma nova ação Clique para continuar.</string>
+
+    <string name="message_tutorial_events_state_step_6">O alvo está se movendo, então não podemos definir uma posição
+        fixa. Defina o campo \"Clique em\" para \"Clique na condição detectada\" e selecione sua condição de alvo azul. Assim, o clique sempre
+        cairá exatamente onde o alvo foi encontrado.\n\nAssim que a condição for selecionada, salve o clique e volte ao
+        diálogo Evento.</string>
+
+    <string name="message_tutorial_events_state_step_7">O Evento do alvo azul está pronto! Agora crie um Evento para o
+        alvo vermelho da mesma forma: detecte-o na área de jogo e clique nele. O tutorial avançará quando seu Evento do
+        alvo vermelho estiver salvo.</string>
+
+    <string name="message_tutorial_events_state_step_8">Ótimo! Agora crie o mesmo Evento para o alvo verde. O tutorial
+        avançará quando seu Evento do alvo verde estiver salvo.</string>
+
+    <string name="message_tutorial_events_state_step_9">Quase lá! Crie um último Evento para o alvo amarelo. O tutorial
+        avançará quando seu Evento do alvo amarelo estiver salvo.</string>
+
+    <string name="message_tutorial_events_state_step_10">Os quatro Eventos estão prontos. Como os definimos na ordem da
+        sequência do jogo, sua prioridade está correta. \n\nSalve seu Cenário e teste-o no jogo para ver como ele se
+        sai.</string>
+
+    <string name="message_tutorial_events_state_step_11">O cenário está detectando e clicando nos alvos, mas
+        provavelmente é lento demais para vencer. \n\nAtualmente, os quatro Eventos estão ativos ao mesmo tempo, então
+        em cada quadro o cenário verifica azul, depois vermelho, depois verde, depois amarelo; independentemente de qual
+        alvo foi clicado por último. Isso desperdiça tempo precioso! \n\nAbra a configuração do cenário para aprender
+        como melhorar isso.</string>
+
+    <string name="message_tutorial_events_state_step_12">Cada Evento tem um estado inicial: pode começar ativado ou
+        desativado. Agora, os quatro Eventos estão ativados, então todos são verificados em cada quadro. \n\nA solução
+        é manter ativo apenas o Evento do alvo atual e desativar os demais. Quando um alvo é clicado, seu Evento
+        ativará o próximo e desativará os outros. \n\nVamos começar editando o Evento do alvo azul.</string>
+
+    <string name="message_tutorial_events_state_step_13">O alvo azul é o primeiro a ser clicado, então seu Evento deve
+        começar ativado; sem mudanças necessárias aqui. \n\nPrecisamos apenas adicionar uma ação \"Alterar estado do evento\"
+        para que, quando o alvo azul for clicado, o Evento do alvo vermelho seja ativado e os outros desativados. Toque
+        na área Ações para adicionar essa ação.</string>
+
+    <string name="message_tutorial_events_state_step_14">Selecione o tipo de ação \"Alterar estado do evento\".</string>
+
+    <string name="message_tutorial_events_state_step_15">Esta ação permite alterar o estado de qualquer Evento do seu
+        cenário quando este Evento for acionado. Toque no campo \"Nenhuma alteração\" para selecionar quais Eventos
+        alterar.</string>
+
+    <string name="message_tutorial_events_state_step_16">Para cada Evento da lista, você pode definir um de três
+        estados: \n• Ativar: o Evento fica ativo e será verificado em cada quadro \n• Desativar: o Evento fica inativo
+        e é completamente ignorado \n• Inverter: alterna entre ativo e inativo a cada vez \n\nComo azul acabou de ser
+        clicado, ative o Evento do alvo vermelho e desative todos os outros. Toque em Próximo quando terminar.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Cada linha de Evento mostra três opções: Ativar,
+        Desativar e Alternar. Toque na que deseja aplicar quando esta ação for executada.</string>
+
+    <string name="message_tutorial_events_state_step_17">Perfeito! Salve o Evento do alvo azul.</string>
+
+    <string name="message_tutorial_events_state_step_18">Agora abra o Evento do alvo vermelho na lista para configurá-lo
+        da mesma forma.</string>
+
+    <string name="message_tutorial_events_state_step_19">Ao contrário do Evento do alvo azul, este Evento não deve estar
+        ativo no início do cenário, pois seu alvo não é o primeiro. Mude seu estado inicial para Desativado.</string>
+
+    <string name="message_tutorial_events_state_step_20">Agora adicione uma ação \"Alterar estado do evento\" para que, quando
+        este alvo for clicado, o Evento do próximo alvo seja ativado e os outros desativados. Toque na área Ações.</string>
+
+    <string name="message_tutorial_events_state_step_21">Defina as alternâncias: ative o alvo verde e desative todos os
+        outros. Toque em Próximo quando terminar.</string>
+
+    <string name="message_tutorial_events_state_step_22">Bom trabalho! Agora abra o Evento do alvo verde para
+        configurá-lo da mesma forma.</string>
+
+    <string name="message_tutorial_events_state_step_23">O alvo verde também não deve estar ativo no início. Mude seu
+        estado inicial para Desativado.</string>
+
+    <string name="message_tutorial_events_state_step_24">Agora adicione uma ação \"Alterar estado do evento\" para que, quando o
+        alvo verde for clicado, o Evento do alvo amarelo seja ativado e os outros desativados. Toque na área Ações.</string>
+
+    <string name="message_tutorial_events_state_step_25">Defina as alternâncias: ative o alvo amarelo e desative todos
+        os outros. Toque em Próximo quando terminar.</string>
+
+    <string name="message_tutorial_events_state_step_26">Quase pronto! Abra o Evento do alvo amarelo para concluir a
+        configuração.</string>
+
+    <string name="message_tutorial_events_state_step_27">O alvo amarelo é o último da sequência, então também deve
+        começar desativado. Mude seu estado inicial para Desativado.</string>
+
+    <string name="message_tutorial_events_state_step_28">Adicione também uma ação \"Alterar estado do evento\" ao Evento do alvo
+        amarelo. Quando amarelo for clicado, queremos voltar ao início: ative o alvo azul e desative todos os outros.
+        Toque na área Ações.</string>
+
+    <string name="message_tutorial_events_state_step_29">Defina as alternâncias: ative o alvo azul e desative todos os
+        outros. Dessa forma, a sequência se repetirá indefinidamente. Toque em Próximo quando terminar.</string>
+
+    <string name="message_tutorial_events_state_step_30">Todos os Eventos estão agora completamente configurados. Salve
+        seu Cenário para aplicar as alterações.</string>
+
+    <string name="message_tutorial_events_state_step_31">Todos os Eventos estão configurados! Salve seu Cenário e então
+        inicie o jogo. Lembre-se de iniciar seu Cenário antes de lançar o jogo. \n\nComo nosso cenário tem um estado
+        interno, você precisa reiniciá-lo toda vez que reiniciar o jogo para garantir que ele não esteja esperando o
+        último alvo da sessão anterior. Isso pode ser facilmente automatizado detectando se o botão de início está
+        visível para redefinir os estados dos eventos.</string>
+
+    <string name="message_tutorial_events_state_step_32">Você venceu! \n\nControlando quais Eventos estão ativos a
+        qualquer momento, o cenário sempre sabe exatamente qual alvo procurar a seguir — sem quadros desperdiçados
+        verificando alvos fora de sequência. \n\nÉ assim que a ação Alternar evento permite criar automações
+        sequenciais e baseadas em estado.</string>
+
+</resources>

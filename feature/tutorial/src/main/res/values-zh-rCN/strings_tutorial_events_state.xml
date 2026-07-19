@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">事件状态</string>
+    <string name="item_desc_tutorial_events_state">更改多个事件的状态以优化复杂场景。</string>
+    <string name="message_game_tutorial_events_state">按顺序点击目标：蓝色、红色、绿色，然后是黄色。</string>
+
+    <string name="message_tutorial_events_state_step_1">新游戏！这次你需要按顺序点击四个彩色目标：先点蓝色，再点红色，
+        再点绿色，最后点黄色。\n\n你可以先试玩游戏了解规则，也可以直接打开场景配置开始自动化。</string>
+
+    <string name="message_tutorial_events_state_step_2">我们需要检测四个不同的目标，每种颜色一个。我们将为每个目标创建
+        一个事件。\n\n从蓝色目标开始：创建一个新事件，在游戏区域内检测蓝色目标并点击它。</string>
+
+    <string name="message_tutorial_events_state_step_3">使用多个事件时，为每个事件起一个清晰的名称非常重要，方便后续管理。
+        给这个事件起一个清晰的名称，例如"蓝色目标"，以便在场景中轻松识别。\n\n完成后，创建一个新的图像条件并捕获蓝色
+        目标。</string>
+
+    <string name="message_tutorial_events_state_step_4">由于目标在移动，我们需要将检测类型设置为"检测区域"，然后选择
+        游戏区域。\n\n区域配置完成后，保存并返回事件对话框。</string>
+
+    <string name="message_tutorial_events_state_step_5">条件已设置完毕。现在我们需要一个点击动作，让事件点击检测到的目标。
+        \n\n创建一个新的点击动作以继续。</string>
+
+    <string name="message_tutorial_events_state_step_6">目标在移动，所以我们无法定义固定位置。将"点击位置"字段设置为"点击条件满足的对应位置坐标"
+        并选择蓝色目标条件。这样点击总会落在目标被找到的确切位置。\n\n选择条件后，保存点击并返回事件对话框。</string>
+
+    <string name="message_tutorial_events_state_step_7">蓝色目标事件完成！现在用同样的方式为红色目标创建一个事件：在游戏
+        区域内检测它并点击。保存红色目标事件后教程将继续。</string>
+
+    <string name="message_tutorial_events_state_step_8">很好！现在为绿色目标创建同样的事件。保存绿色目标事件后教程将
+        继续。</string>
+
+    <string name="message_tutorial_events_state_step_9">快完成了！为黄色目标创建最后一个事件。保存黄色目标事件后教程将
+        继续。</string>
+
+    <string name="message_tutorial_events_state_step_10">四个事件都已准备就绪。因为我们按照游戏顺序定义了它们，优先级
+        是正确的。\n\n保存场景并在游戏中测试，看看效果如何。</string>
+
+    <string name="message_tutorial_events_state_step_11">场景正在检测并点击目标，但可能太慢了无法获胜。\n\n目前四个事件
+        同时处于活动状态，所以每一帧场景都会依次检查蓝色、红色、绿色、黄色，无论刚才点击了哪个目标。这浪费了宝贵的时间！
+        \n\n打开场景配置了解如何改进。</string>
+
+    <string name="message_tutorial_events_state_step_12">每个事件都有一个初始状态：可以从启用或禁用状态开始。目前四个事件
+        都处于启用状态，所以每一帧都会检查所有事件。\n\n解决方案是只保持当前目标的事件处于活动状态，禁用其余事件。当一个
+        目标被点击时，其事件将启用下一个目标并禁用其他事件。\n\n让我们从编辑蓝色目标事件开始。</string>
+
+    <string name="message_tutorial_events_state_step_13">蓝色目标是第一个要点击的，所以它的事件应该从启用状态开始；这里
+        无需更改。\n\n我们只需要添加一个"更改事件状态"动作，使得点击蓝色目标时启用红色目标事件并禁用其他事件。点击动作区域
+        以添加此动作。</string>
+
+    <string name="message_tutorial_events_state_step_14">选择动作类型"更改事件状态"。</string>
+
+    <string name="message_tutorial_events_state_step_15">此动作允许你在该事件被触发时更改场景中任意事件的状态。点击
+        "无变化"字段以选择要更改的事件。</string>
+
+    <string name="message_tutorial_events_state_step_16">对于列表中的每个事件，可以设置以下三种状态之一：\n• 启用：事件
+        变为活动状态，每帧都会被检查 \n• 禁用：事件变为非活动状态，完全跳过 \n• 反转：每次在活动和非活动之间切换
+        \n\n由于蓝色刚刚被点击，启用红色目标事件并禁用所有其他事件。完成后点击"下一步"。</string>
+    <string name="message_tutorial_events_state_step_16_secondary">每个事件行显示三个选项：启用、禁用和切换。点击你希望
+        在执行此动作时应用的选项。</string>
+
+    <string name="message_tutorial_events_state_step_17">完美！保存蓝色目标事件。</string>
+
+    <string name="message_tutorial_events_state_step_18">现在打开列表中的红色目标事件，以同样的方式进行配置。</string>
+
+    <string name="message_tutorial_events_state_step_19">与蓝色目标事件不同，此事件在场景开始时不应处于活动状态，因为
+        它的目标不是第一个。将其初始状态更改为禁用。</string>
+
+    <string name="message_tutorial_events_state_step_20">现在添加"更改事件状态"动作，使得点击此目标时启用下一个目标的事件
+        并禁用其他事件。点击动作区域。</string>
+
+    <string name="message_tutorial_events_state_step_21">设置切换：启用绿色目标并禁用所有其他目标。完成后点击
+        "下一步"。</string>
+
+    <string name="message_tutorial_events_state_step_22">干得好！现在打开绿色目标事件，以同样的方式进行配置。</string>
+
+    <string name="message_tutorial_events_state_step_23">绿色目标在开始时也不应处于活动状态。将其初始状态更改为
+        禁用。</string>
+
+    <string name="message_tutorial_events_state_step_24">现在添加"更改事件状态"动作，使得点击绿色目标时启用黄色目标的事件
+        并禁用其他事件。点击动作区域。</string>
+
+    <string name="message_tutorial_events_state_step_25">设置切换：启用黄色目标并禁用所有其他目标。完成后点击
+        "下一步"。</string>
+
+    <string name="message_tutorial_events_state_step_26">快完成了！打开黄色目标事件以完成配置。</string>
+
+    <string name="message_tutorial_events_state_step_27">黄色目标是序列中的最后一个，所以它也应该从禁用状态开始。将其
+        初始状态更改为禁用。</string>
+
+    <string name="message_tutorial_events_state_step_28">也为黄色目标事件添加"更改事件状态"动作。点击黄色后，我们想回到
+        起点：启用蓝色目标并禁用所有其他目标。点击动作区域。</string>
+
+    <string name="message_tutorial_events_state_step_29">设置切换：启用蓝色目标并禁用所有其他目标。这样序列将无限循环。
+        完成后点击"下一步"。</string>
+
+    <string name="message_tutorial_events_state_step_30">所有事件现在已完全配置完毕。保存场景以应用更改。</string>
+
+    <string name="message_tutorial_events_state_step_31">所有事件已配置完成！保存场景，然后开始游戏。记得在启动游戏前
+        先启动场景。\n\n由于我们的场景有内部状态，每次重新开始游戏时都需要重启场景，以确保它不会等待上一局游戏的最后一个
+        目标。可以通过检测开始按钮是否可见来自动重置事件状态，从而轻松实现自动化。</string>
+
+    <string name="message_tutorial_events_state_step_32">你赢了！\n\n通过控制哪些事件在任何时刻处于活动状态，场景始终
+        准确地知道下一个要寻找哪个目标——不会浪费任何帧来检查顺序之外的目标。\n\n这就是"更改事件状态"动作让你构建顺序化、
+        状态驱动自动化的方式。</string>
+
+</resources>

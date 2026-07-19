@@ -114,10 +114,10 @@ class ImageEventListContent(appContext: Context) : NavBarDialogContent(appContex
     }
 
     private fun onEventItemBound(index: Int, eventItemView: View?) {
-        if (index != 0) return
+        if (index > 3) return
 
-        if (eventItemView != null) viewModel.monitorFirstEventView(eventItemView)
-        else viewModel.stopViewMonitoring()
+        if (eventItemView != null) viewModel.monitorEventView(index, eventItemView)
+        else viewModel.stopEventViewMonitoring(index)
     }
 
     private fun updateEventList(newItems: List<UiImageEvent>?) {

@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combinecondi
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsOperatorAndTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.CombineConditionsOperatorOrTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.priority.EventsPriorityTutorial
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.state.EventsStateTutorial
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialItem.Type.*
 
@@ -40,6 +41,7 @@ internal fun TutorialItem.Type.toTutorialItem(): TutorialItem =
         COMBINE_CONDITIONS_OPERATOR_OR -> CombineConditionsOperatorOrTutorial
 
         EVENTS_PRIORITY -> EventsPriorityTutorial
+        EVENTS_STATE -> EventsStateTutorial
 
         IMAGE_DETECTION_MOVING_TARGET -> ImageConditionsMovingTargetTutorial
         IMAGE_DETECTION_STILL_TARGET -> ImageConditionsStillTargetTutorial

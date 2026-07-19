@@ -25,6 +25,8 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subje
 enum class QuickClickGameTargetType {
     IMAGE_BLUE,
     IMAGE_RED,
+    IMAGE_GREEN,
+    IMAGE_YELLOW,
     NUMBER,
     TEXT_DAY,
     TEXT_GOODBYE,

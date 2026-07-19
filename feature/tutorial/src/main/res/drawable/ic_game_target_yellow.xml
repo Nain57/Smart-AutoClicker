@@ -1,0 +1,11 @@
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp">
+
+  <item
+      android:width="48dp"
+      android:height="48dp"
+      android:drawable="@drawable/ic_target_yellow"/>
+
+</layer-list>

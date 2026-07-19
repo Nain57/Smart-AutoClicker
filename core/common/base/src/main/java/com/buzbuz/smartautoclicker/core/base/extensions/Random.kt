@@ -22,7 +22,7 @@ import android.graphics.RectF
 import kotlin.random.Random
 
 fun Random.nextFloat(from: Float, until: Float): Float =
-    (until - from) * nextFloat()
+    (until - from) * nextFloat() + from
 
 fun Random.nextPositionIn(area: RectF): PointF =
     PointF(nextFloat(area.left, area.right), nextFloat(area.top, area.bottom))

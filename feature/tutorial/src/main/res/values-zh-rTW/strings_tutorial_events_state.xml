@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">事件狀態</string>
+    <string name="item_desc_tutorial_events_state">變更多個事件的狀態以最佳化複雜情景。</string>
+    <string name="message_game_tutorial_events_state">按順序點擊目標：藍色、紅色、綠色，然後是黃色。</string>
+
+    <string name="message_tutorial_events_state_step_1">新遊戲！這次你需要按順序點擊四個彩色目標：先點藍色，再點紅色，
+        再點綠色，最後點黃色。\n\n你可以先試玩遊戲了解規則，也可以直接開啟情景設定開始自動化。</string>
+
+    <string name="message_tutorial_events_state_step_2">我們需要偵測四個不同的目標，每種顏色一個。我們將為每個目標建立
+        一個事件。\n\n從藍色目標開始：建立一個新事件，在遊戲區域內偵測藍色目標並點擊它。</string>
+
+    <string name="message_tutorial_events_state_step_3">使用多個事件時，為每個事件取一個清晰的名稱非常重要，方便後續
+        管理。給這個事件取一個清晰的名稱，例如「藍色目標」，以便在情景中輕鬆識別。\n\n完成後，建立一個新的影像條件並
+        擷取藍色目標。</string>
+
+    <string name="message_tutorial_events_state_step_4">由於目標在移動，我們需要將偵測類型設定為「檢測區域」，然後選擇
+        遊戲區域。\n\n區域設定完成後，儲存並返回事件對話框。</string>
+
+    <string name="message_tutorial_events_state_step_5">條件已設定完畢。現在我們需要一個點擊動作，讓事件點擊偵測到的
+        目標。\n\n建立一個新的點擊動作以繼續。</string>
+
+    <string name="message_tutorial_events_state_step_6">目標在移動，所以我們無法定義固定位置。將「點擊位置」欄位設定為「點擊條件滿足的對應位置坐標」
+        並選擇藍色目標條件。這樣點擊總會落在目標被找到的確切位置。\n\n選擇條件後，儲存點擊並返回事件對話框。</string>
+
+    <string name="message_tutorial_events_state_step_7">藍色目標事件完成！現在用同樣的方式為紅色目標建立一個事件：在
+        遊戲區域內偵測它並點擊。儲存紅色目標事件後教學將繼續。</string>
+
+    <string name="message_tutorial_events_state_step_8">很好！現在為綠色目標建立同樣的事件。儲存綠色目標事件後教學將
+        繼續。</string>
+
+    <string name="message_tutorial_events_state_step_9">快完成了！為黃色目標建立最後一個事件。儲存黃色目標事件後教學將
+        繼續。</string>
+
+    <string name="message_tutorial_events_state_step_10">四個事件都已準備就緒。因為我們按照遊戲順序定義了它們，優先順序
+        是正確的。\n\n儲存情景並在遊戲中測試，看看效果如何。</string>
+
+    <string name="message_tutorial_events_state_step_11">情景正在偵測並點擊目標，但可能太慢了無法獲勝。\n\n目前四個事件
+        同時處於活動狀態，所以每一幀情景都會依序檢查藍色、紅色、綠色、黃色，無論剛才點擊了哪個目標。這浪費了寶貴的時間！
+        \n\n開啟情景設定了解如何改進。</string>
+
+    <string name="message_tutorial_events_state_step_12">每個事件都有一個初始狀態：可以從啟用或停用狀態開始。目前四個
+        事件都處於啟用狀態，所以每一幀都會檢查所有事件。\n\n解決方案是只保持目前目標的事件處於活動狀態，停用其餘事件。
+        當一個目標被點擊時，其事件將啟用下一個目標並停用其他事件。\n\n讓我們從編輯藍色目標事件開始。</string>
+
+    <string name="message_tutorial_events_state_step_13">藍色目標是第一個要點擊的，所以它的事件應該從啟用狀態開始；這
+        裡無需更改。\n\n我們只需要新增一個「變更事件狀態」動作，使得點擊藍色目標時啟用紅色目標事件並停用其他事件。點擊動作
+        區域以新增此動作。</string>
+
+    <string name="message_tutorial_events_state_step_14">選擇動作類型「變更事件狀態」。</string>
+
+    <string name="message_tutorial_events_state_step_15">此動作允許你在該事件被觸發時更改情景中任意事件的狀態。點擊
+        「無變化」欄位以選擇要更改的事件。</string>
+
+    <string name="message_tutorial_events_state_step_16">對於清單中的每個事件，可以設定以下三種狀態之一：\n• 啟用：事件
+        變為活動狀態，每幀都會被檢查 \n• 停用：事件變為非活動狀態，完全跳過 \n• 反轉：每次在活動和非活動之間切換
+        \n\n由於藍色剛剛被點擊，啟用紅色目標事件並停用所有其他事件。完成後點擊「下一步」。</string>
+    <string name="message_tutorial_events_state_step_16_secondary">每個事件列顯示三個選項：啟用、停用和切換。點擊你希望
+        在執行此動作時套用的選項。</string>
+
+    <string name="message_tutorial_events_state_step_17">完美！儲存藍色目標事件。</string>
+
+    <string name="message_tutorial_events_state_step_18">現在開啟清單中的紅色目標事件，以同樣的方式進行設定。</string>
+
+    <string name="message_tutorial_events_state_step_19">與藍色目標事件不同，此事件在情景開始時不應處於活動狀態，因為
+        它的目標不是第一個。將其初始狀態更改為停用。</string>
+
+    <string name="message_tutorial_events_state_step_20">現在新增「變更事件狀態」動作，使得點擊此目標時啟用下一個目標的事件
+        並停用其他事件。點擊動作區域。</string>
+
+    <string name="message_tutorial_events_state_step_21">設定切換：啟用綠色目標並停用所有其他目標。完成後點擊
+        「下一步」。</string>
+
+    <string name="message_tutorial_events_state_step_22">做得好！現在開啟綠色目標事件，以同樣的方式進行設定。</string>
+
+    <string name="message_tutorial_events_state_step_23">綠色目標在開始時也不應處於活動狀態。將其初始狀態更改為
+        停用。</string>
+
+    <string name="message_tutorial_events_state_step_24">現在新增「變更事件狀態」動作，使得點擊綠色目標時啟用黃色目標的事件
+        並停用其他事件。點擊動作區域。</string>
+
+    <string name="message_tutorial_events_state_step_25">設定切換：啟用黃色目標並停用所有其他目標。完成後點擊
+        「下一步」。</string>
+
+    <string name="message_tutorial_events_state_step_26">快完成了！開啟黃色目標事件以完成設定。</string>
+
+    <string name="message_tutorial_events_state_step_27">黃色目標是序列中的最後一個，所以它也應該從停用狀態開始。將其
+        初始狀態更改為停用。</string>
+
+    <string name="message_tutorial_events_state_step_28">也為黃色目標事件新增「變更事件狀態」動作。點擊黃色後，我們想回到
+        起點：啟用藍色目標並停用所有其他目標。點擊動作區域。</string>
+
+    <string name="message_tutorial_events_state_step_29">設定切換：啟用藍色目標並停用所有其他目標。這樣序列將無限循環。
+        完成後點擊「下一步」。</string>
+
+    <string name="message_tutorial_events_state_step_30">所有事件現在已完全設定完畢。儲存情景以套用變更。</string>
+
+    <string name="message_tutorial_events_state_step_31">所有事件已設定完成！儲存情景，然後開始遊戲。記得在啟動遊戲前
+        先啟動情景。\n\n由於我們的情景有內部狀態，每次重新開始遊戲時都需要重啟情景，以確保它不會等待上一局遊戲的最後一個
+        目標。可以透過偵測開始按鈕是否可見來自動重置事件狀態，從而輕鬆實現自動化。</string>
+
+    <string name="message_tutorial_events_state_step_32">你贏了！\n\n透過控制哪些事件在任何時刻處於活動狀態，情景始終
+        準確地知道下一個要尋找哪個目標——不會浪費任何幀來檢查順序之外的目標。\n\n這就是「變更事件狀態」動作讓你建構順序化、
+        狀態驅動自動化的方式。</string>
+
+</resources>

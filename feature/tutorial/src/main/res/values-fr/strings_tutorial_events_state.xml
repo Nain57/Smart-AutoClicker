@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">État des événements</string>
+    <string name="item_desc_tutorial_events_state">Modifiez l\'état de plusieurs événements pour optimiser un scénario complexe.</string>
+    <string name="message_game_tutorial_events_state">Cliquez sur les cibles dans l\'ordre : bleu, rouge, vert puis jaune.</string>
+
+    <string name="message_tutorial_events_state_step_1">Nouveau jeu ! Cette fois, vous devez cliquer sur quatre cibles
+        colorées dans l\'ordre : bleu en premier, puis rouge, puis vert, et enfin jaune. \n\nVous pouvez d\'abord tester
+        le jeu pour voir comment il fonctionne, ou ouvrir directement la configuration du scénario pour commencer à
+        l\'automatiser.</string>
+
+    <string name="message_tutorial_events_state_step_2">Nous devons détecter quatre cibles différentes, une par couleur.
+        Nous allons créer un Événement par cible. \n\nCommencez par la cible bleue : créez un nouvel Événement qui la
+        détecte dans la zone de jeu et clique dessus.</string>
+
+    <string name="message_tutorial_events_state_step_3">Lorsqu\'on utilise plusieurs événements, il est important de
+        personnaliser leur nom pour s\'y retrouver. Donnez à cet Événement un nom clair, comme « Cible bleue », pour
+        l\'identifier facilement dans votre scénario. \n\nUne fois terminé, créez une nouvelle condition Image et
+        capturez la cible bleue.</string>
+
+    <string name="message_tutorial_events_state_step_4">La cible étant en mouvement, nous devons définir le type de
+        détection sur « Zone de détection » puis sélectionner la zone de jeu. \n\nUne fois la zone correctement configurée,
+        enregistrez-la et revenez au dialogue Événement.</string>
+
+    <string name="message_tutorial_events_state_step_5">Votre condition est définie. Nous avons maintenant besoin d\'une
+        action Clic pour que l\'Événement clique sur la cible détectée. \n\nCréez une nouvelle action Clic pour
+        continuer.</string>
+
+    <string name="message_tutorial_events_state_step_6">La cible est en mouvement, nous ne pouvons donc pas définir une
+        position fixe. Définissez le champ « Cliquer sur » sur « Cliquer sur la condition détectée » et sélectionnez votre condition de cible bleue.
+        Ainsi, le clic atterrira toujours exactement là où la cible a été trouvée.\n\nUne fois la condition
+        sélectionnée, enregistrez le clic et revenez au dialogue Événement.</string>
+
+    <string name="message_tutorial_events_state_step_7">L\'Événement pour la cible bleue est prêt ! Créez maintenant un
+        Événement pour la cible rouge de la même façon : détectez-la dans la zone de jeu et cliquez dessus. Le tutoriel
+        avancera une fois votre Événement de cible rouge enregistré.</string>
+
+    <string name="message_tutorial_events_state_step_8">Super ! Créez maintenant le même Événement pour la cible verte.
+        Le tutoriel avancera une fois votre Événement de cible verte enregistré.</string>
+
+    <string name="message_tutorial_events_state_step_9">Presque fini ! Créez un dernier Événement pour la cible jaune.
+        Le tutoriel avancera une fois votre Événement de cible jaune enregistré.</string>
+
+    <string name="message_tutorial_events_state_step_10">Les quatre Événements sont prêts. Comme nous les avons définis
+        dans l\'ordre de la séquence du jeu, leur priorité est correcte. \n\nEnregistrez votre Scénario et testez-le
+        sur le jeu pour voir ses performances.</string>
+
+    <string name="message_tutorial_events_state_step_11">Le scénario détecte et clique sur les cibles, mais c\'est
+        probablement trop lent pour gagner. \n\nActuellement, les quatre Événements sont actifs en même temps, donc à
+        chaque image le scénario vérifie bleu, puis rouge, puis vert, puis jaune ; peu importe quelle cible vient d\'être
+        cliquée. Cela fait perdre un temps précieux ! \n\nOuvrez la configuration du scénario pour apprendre comment
+        améliorer cela.</string>
+
+    <string name="message_tutorial_events_state_step_12">Chaque Événement a un état initial : il peut démarrer activé ou
+        désactivé. Actuellement, les quatre Événements sont activés, donc tous sont vérifiés à chaque image. \n\nLa
+        solution est de ne garder actif que l\'Événement de la cible actuelle et de désactiver les autres. Quand une
+        cible est cliquée, son Événement activera la suivante et désactivera les autres. \n\nCommençons par éditer
+        l\'Événement de la cible bleue.</string>
+
+    <string name="message_tutorial_events_state_step_13">La cible bleue est la première à cliquer, donc son Événement
+        doit démarrer activé ; pas de changement ici. \n\nNous devons simplement ajouter une action « Etat
+        d\'événement » pour que, quand la cible bleue est cliquée, l\'Événement de la cible rouge soit activé et les
+        autres désactivés. Appuyez sur la zone Actions pour ajouter cette action.</string>
+
+    <string name="message_tutorial_events_state_step_14">Sélectionnez le type d\'action « État d\'évènement ».</string>
+
+    <string name="message_tutorial_events_state_step_15">Cette action vous permet de modifier l\'état de n\'importe quel
+        Événement de votre scénario lorsque cet Événement est déclenché. Appuyez sur le champ « Aucun changement » pour
+        choisir quels Événements modifier.</string>
+
+    <string name="message_tutorial_events_state_step_16">Pour chaque Événement de la liste, vous pouvez définir l\'un
+        des trois états : \n• Activer : l\'Événement devient actif et sera vérifié à chaque image \n• Désactiver :
+        l\'Événement devient inactif et est entièrement ignoré \n• Inverser : alterne entre actif et inactif à chaque
+        fois \n\nPuisque bleu vient d\'être cliqué, activez l\'Événement de la cible rouge et désactivez tous les
+        autres. Appuyez sur Suivant quand vous avez terminé.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Chaque ligne d\'Événement affiche trois options :
+        Activer, Désactiver et Basculer. Appuyez sur celle que vous souhaitez appliquer lors de l\'exécution de cette
+        action.</string>
+
+    <string name="message_tutorial_events_state_step_17">Parfait ! Enregistrez l\'Événement de la cible bleue.</string>
+
+    <string name="message_tutorial_events_state_step_18">Ouvrez maintenant l\'Événement de la cible rouge dans la liste
+        pour le configurer de la même façon.</string>
+
+    <string name="message_tutorial_events_state_step_19">Contrairement à l\'Événement de la cible bleue, cet Événement
+        ne doit pas être actif au démarrage du scénario, car sa cible n\'est pas la première. Changez son état initial
+        sur Désactivé.</string>
+
+    <string name="message_tutorial_events_state_step_20">Ajoutez maintenant une action « État d\'évènement » pour
+        que, quand cette cible est cliquée, l\'Événement de la prochaine cible soit activé et les autres désactivés.
+        Appuyez sur la zone Actions.</string>
+
+    <string name="message_tutorial_events_state_step_21">Définissez les changements : activez la cible verte et désactivez
+        toutes les autres. Appuyez sur Suivant quand vous avez terminé.</string>
+
+    <string name="message_tutorial_events_state_step_22">Bien joué ! Ouvrez maintenant l\'Événement de la cible verte
+        pour le configurer de la même façon.</string>
+
+    <string name="message_tutorial_events_state_step_23">La cible verte ne doit pas non plus être active au démarrage.
+        Changez son état initial sur Désactivé.</string>
+
+    <string name="message_tutorial_events_state_step_24">Ajoutez maintenant une action « État d\'évènement » pour
+        que, quand la cible verte est cliquée, l\'Événement de la cible jaune soit activé et les autres désactivés.
+        Appuyez sur la zone Actions.</string>
+
+    <string name="message_tutorial_events_state_step_25">Définissez les changements : activez la cible jaune et désactivez
+        toutes les autres. Appuyez sur Suivant quand vous avez terminé.</string>
+
+    <string name="message_tutorial_events_state_step_26">Presque fini ! Ouvrez l\'Événement de la cible jaune pour
+        terminer la configuration.</string>
+
+    <string name="message_tutorial_events_state_step_27">La cible jaune est la dernière de la séquence, donc elle doit
+        aussi démarrer désactivée. Changez son état initial sur Désactivé.</string>
+
+    <string name="message_tutorial_events_state_step_28">Ajoutez également une action « État d\'évènement » à
+        l\'Événement de la cible jaune. Quand jaune est cliqué, nous voulons revenir au début : activez la cible bleue
+        et désactivez toutes les autres. Appuyez sur la zone Actions.</string>
+
+    <string name="message_tutorial_events_state_step_29">Définissez les changements : activez la cible bleue et désactivez
+        toutes les autres. Ainsi, la séquence bouclera indéfiniment. Appuyez sur Suivant quand vous avez terminé.</string>
+
+    <string name="message_tutorial_events_state_step_30">Tous les Événements sont maintenant entièrement configurés.
+        Enregistrez votre Scénario pour appliquer les modifications.</string>
+
+    <string name="message_tutorial_events_state_step_31">Tous les Événements sont configurés ! Enregistrez votre
+        Scénario puis lancez le jeu. N\'oubliez pas de démarrer votre Scénario avant de lancer le jeu. \n\nComme notre
+        scénario a un état interne, vous devez le redémarrer à chaque fois que vous recommencez le jeu pour éviter
+        qu\'il attende la dernière cible de la session précédente. Cela peut facilement être automatisé en détectant si
+        le bouton de démarrage est visible pour réinitialiser les états des événements.</string>
+
+    <string name="message_tutorial_events_state_step_32">Vous avez gagné ! \n\nEn contrôlant quels Événements sont
+        actifs à tout moment, le scénario sait toujours exactement quelle cible chercher ensuite — aucune image
+        gaspillée à vérifier des cibles hors séquence. \n\nC\'est ainsi que l\'action Etat d\'événement vous permet
+        de créer une automatisation séquentielle et pilotée par état.</string>
+
+</resources>

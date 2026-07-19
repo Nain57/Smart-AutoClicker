@@ -17,11 +17,14 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent
 
 import android.content.Context
+import android.view.View
 import androidx.annotation.StringRes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -47,6 +50,7 @@ import javax.inject.Inject
 class ToggleEventViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The action being configured by the user. */
@@ -153,6 +157,14 @@ class ToggleEventViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun monitorSelectTogglesView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.TOGGLE_EVENT_DIALOG_SELECT_TOGGLES, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.TOGGLE_EVENT_DIALOG_SELECT_TOGGLES)
     }
 
     fun setNewEventToggles(toggles: List<EventToggle>) {

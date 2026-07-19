@@ -140,6 +140,20 @@
             app:srcCompat="@drawable/ic_game_target_secondary"
             android:visibility="invisible" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/green_target"
+            android:layout_width="@dimen/tutorial_game_target_size"
+            android:layout_height="@dimen/tutorial_game_target_size"
+            app:srcCompat="@drawable/ic_game_target_green"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/yellow_target"
+            android:layout_width="@dimen/tutorial_game_target_size"
+            android:layout_height="@dimen/tutorial_game_target_size"
+            app:srcCompat="@drawable/ic_game_target_yellow"
+            android:visibility="invisible" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/hello_target"
             style="@style/AppTheme.Widget.TextButtonOutlined"

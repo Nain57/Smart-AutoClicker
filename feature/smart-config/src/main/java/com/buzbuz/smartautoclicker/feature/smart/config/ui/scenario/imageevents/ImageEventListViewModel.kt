@@ -76,11 +76,32 @@ class ImageEventListViewModel @Inject constructor(
             uiEvents.map { it.event }
         )
 
-    fun monitorFirstEventView(view: View) {
-        monitoredViewsManager.attach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT, view)
+    fun monitorEventView(index: Int, view: View) {
+        val type = when (index) {
+            0 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT
+            1 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_SECOND_EVENT
+            2 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_THIRD_EVENT
+            3 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_FOURTH_EVENT
+            else -> return
+        }
+        monitoredViewsManager.attach(type, view)
+    }
+
+    fun stopEventViewMonitoring(index: Int) {
+        val type = when (index) {
+            0 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT
+            1 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_SECOND_EVENT
+            2 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_THIRD_EVENT
+            3 -> MonitoredViewType.SCENARIO_DIALOG_ITEM_FOURTH_EVENT
+            else -> return
+        }
+        monitoredViewsManager.detach(type)
     }
 
     fun stopViewMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FIRST_EVENT)
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_SECOND_EVENT)
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_THIRD_EVENT)
+        monitoredViewsManager.detach(MonitoredViewType.SCENARIO_DIALOG_ITEM_FOURTH_EVENT)
     }
 }
