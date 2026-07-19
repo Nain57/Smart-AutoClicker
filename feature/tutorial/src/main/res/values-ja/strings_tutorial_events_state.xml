@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_state">イベントの状態</string>
+    <string name="item_title_tutorial_events_state">未使用のイベントを無効化</string>
     <string name="item_desc_tutorial_events_state">複数のイベントの状態を変更して、複雑なシナリオを最適化します。</string>
     <string name="message_game_tutorial_events_state">ターゲットを順番にタップ：青、赤、緑、次に黄色。</string>
 

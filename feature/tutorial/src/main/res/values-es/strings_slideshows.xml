@@ -336,4 +336,11 @@
         los Intents.\n\nMás plantillas listas para usar se añadirán en futuras actualizaciones para facilitar los
         casos de uso comunes sin necesidad de recurrir a las opciones avanzadas.</string>
 
+
+    <!-- Event priority slideshow -->
+    <string name="tutorial_slideshow_events_priority_title">Prioridad de eventos</string>
+    <string name="tutorial_slideshow_events_priority_desc">Aprende cómo el orden de los eventos en tu lista afecta cuáles se ejecutan</string>
+    <string name="tutorial_slideshow_events_priority_step_1_text">Cada fotograma capturado desde tu pantalla se procesa verificando tus eventos <b>uno a uno, de arriba a abajo</b>.\n\nLa posición de un evento en tu lista determina cuándo tiene la oportunidad de ejecutarse. Por defecto, en cuanto se cumplen las condiciones de un evento y se ejecutan sus acciones, <b>el fotograma se considera procesado</b>. El procesamiento se detiene para ese fotograma y el siguiente comienza desde el primer evento de la lista.\n\nEsto significa que por defecto solo un evento puede ejecutarse por fotograma.</string>
+    <string name="tutorial_slideshow_events_priority_step_2_text">Puedes cambiar este comportamiento usando el campo <b>seguir ejecutando</b> en la configuración del evento. Cuando está activado, después de que ese evento se ejecuta, el procesamiento <b>continúa con el siguiente evento</b> en lugar de detenerse.\n\nEsto permite que varios eventos se ejecuten en el mismo fotograma.\n\n<b>Ejemplo:</b> tu lista contiene el Evento A seguido del Evento B. Si el Evento A sigue siendo detectado y no tiene <b>seguir ejecutando</b> activado, se ejecutará en cada fotograma y el Evento B nunca tendrá la oportunidad de ejecutarse.\n\nActiva <b>seguir ejecutando</b> en el Evento A y ambos eventos serán verificados en cada fotograma.\n\nTambién hay un tutorial interactivo disponible para practicar este concepto.</string>
+
 </resources>

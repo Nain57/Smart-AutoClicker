@@ -368,7 +368,7 @@
 
 
     <!-- Events State Priority slideshow -->
-    <string name="tutorial_slideshow_events_priority_title">Event execution order</string>
+    <string name="tutorial_slideshow_events_priority_title">Event priority</string>
     <string name="tutorial_slideshow_events_priority_desc">Learn how the order of events in your list affects
         which events run</string>
 

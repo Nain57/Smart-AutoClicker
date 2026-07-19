@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_state">事件状态</string>
+    <string name="item_title_tutorial_events_state">禁用未使用的事件</string>
     <string name="item_desc_tutorial_events_state">更改多个事件的状态以优化复杂场景。</string>
     <string name="message_game_tutorial_events_state">按顺序点击目标：蓝色、红色、绿色，然后是黄色。</string>
 

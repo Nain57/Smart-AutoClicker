@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -92,7 +92,7 @@
     <string name="tutorial_category_events_state_name">Состояние событий</string>
     <string name="tutorial_category_events_state_desc_short">Включайте или отключайте события динамически</string>
     <string name="tutorial_category_events_state_desc_long">События можно включать или отключать во время выполнения с
-        помощью действия ToggleEvent. Это позволяет создавать многошаговые потоки автоматизации, где определённые
+        помощью действия Изменить состояние события. Это позволяет создавать многошаговые потоки автоматизации, где определённые
         события активны только при конкретных условиях.\n\n Узнайте здесь, как управлять состоянием событий для
         создания сложных сценариев.</string>
 

@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_state">Events state</string>
+    <string name="item_title_tutorial_events_state">Disable unused events</string>
     <string name="item_desc_tutorial_events_state">Change the state of multiple events to optimize a complex scenario.</string>
     <string name="message_game_tutorial_events_state">Click on the targets in order: blue, red, green and then yellow.</string>
 

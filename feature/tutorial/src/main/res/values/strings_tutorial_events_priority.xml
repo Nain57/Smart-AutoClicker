@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">Events priority</string>
+    <string name="item_title_tutorial_events_priority">Prioritizing an Event</string>
     <string name="item_desc_tutorial_events_priority">Prioritize an Event over another Event</string>
     <string name="message_game_tutorial_events_priority">Click as fast as possible on the targets. Blue = 1 point;
         Red = 10 points</string>

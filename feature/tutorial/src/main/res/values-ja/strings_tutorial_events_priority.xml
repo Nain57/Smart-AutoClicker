@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">イベントの優先順位</string>
+    <string name="item_title_tutorial_events_priority">イベントの優先設定</string>
     <string name="item_desc_tutorial_events_priority">あるイベントを別のイベントより優先させる</string>
     <string name="message_game_tutorial_events_priority">できるだけ速くターゲットをタップしてください。青 = 1ポイント；
         赤 = 10ポイント</string>

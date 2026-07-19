@@ -261,4 +261,11 @@
         動作、類別、資料和 extras。這不建議一般使用者使用——面向已了解 Intent 運作方式的 Android 開發者。\n\n未來更新中將
         新增更多開箱即用的範本，以便在不使用進階選項的情況下更輕鬆地設定常見用例。</string>
 
+
+    <!-- Event priority slideshow -->
+    <string name="tutorial_slideshow_events_priority_title">事件優先順序</string>
+    <string name="tutorial_slideshow_events_priority_desc">了解清單中事件的順序如何影響哪些事件執行</string>
+    <string name="tutorial_slideshow_events_priority_step_1_text">從螢幕擷取的每一幀都透過<b>由上到下逐一</b>檢查事件來處理。\n\n事件在清單中的位置決定了它何時有機會執行。預設情況下，一旦事件的條件滿足並執行了其動作，<b>該幀即視為處理完畢</b>。該幀的處理停止，下一幀從清單中的第一個事件重新開始。\n\n這意味著預設情況下每幀只能執行一個事件。</string>
+    <string name="tutorial_slideshow_events_priority_step_2_text">你可以透過事件設定中的<b>繼續執行</b>欄位來改變此行為。啟用後，該事件執行之後，處理會<b>繼續到清單中的下一個事件</b>而不是停止。\n\n這允許多個事件在同一幀中執行。\n\n<b>範例：</b>你的清單包含事件A，後面是事件B。如果事件A持續被偵測到且沒有啟用<b>繼續執行</b>，它將在每幀執行，而事件B永遠沒有機會執行。\n\n在事件A上啟用<b>繼續執行</b>，兩個事件將在每幀都被檢查。\n\n還有一個互動教學可供練習此概念。</string>
+
 </resources>

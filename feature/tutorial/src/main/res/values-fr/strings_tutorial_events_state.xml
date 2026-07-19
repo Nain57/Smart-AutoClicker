@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_state">État des événements</string>
+    <string name="item_title_tutorial_events_state">Désactiver les événements inutilisés</string>
     <string name="item_desc_tutorial_events_state">Modifiez l\'état de plusieurs événements pour optimiser un scénario complexe.</string>
     <string name="message_game_tutorial_events_state">Cliquez sur les cibles dans l\'ordre : bleu, rouge, vert puis jaune.</string>
 

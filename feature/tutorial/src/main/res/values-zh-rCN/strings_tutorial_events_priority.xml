@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_priority">事件优先级</string>
+    <string name="item_title_tutorial_events_priority">设置事件优先级</string>
     <string name="item_desc_tutorial_events_priority">让一个事件优先于另一个事件</string>
     <string name="message_game_tutorial_events_priority">尽快点击目标。蓝色 = 1分；红色 = 10分</string>
 

@@ -174,7 +174,7 @@
     <string name="tutorial_category_events_state_name">Events state</string>
     <string name="tutorial_category_events_state_desc_short">Enable or disable Events dynamically.</string>
     <string name="tutorial_category_events_state_desc_long">Events can be enabled or disabled at runtime using the
-        ToggleEvent Action. This lets you build multistep automation flows where earlier steps gate later ones, or
+        Change Event State Action. This lets you build multistep automation flows where earlier steps gate later ones, or
         where certain events are only active under specific conditions.\n\n Learn here how to control Event state to
         build advanced Scenarios.</string>
 

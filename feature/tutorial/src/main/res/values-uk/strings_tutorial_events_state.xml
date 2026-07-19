@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 * Copyright (C) 2026 Kevin Buzeau
 *
@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="item_title_tutorial_events_state">Стан подій</string>
+    <string name="item_title_tutorial_events_state">Вимкнення невикористовуваних подій</string>
     <string name="item_desc_tutorial_events_state">Змінюйте стан кількох подій для оптимізації складного сценарію.</string>
     <string name="message_game_tutorial_events_state">Натискайте на цілі по порядку: синя, червона, зелена, потім жовта.</string>
 
