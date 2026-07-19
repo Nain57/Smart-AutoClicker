@@ -17,22 +17,18 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
-import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
-
-internal fun getCombineEventsCategory() =
-    TutorialCategory(
-        type = TutorialCategory.Type.COMBINE_EVENTS,
-        nameRes = R.string.tutorial_category_combine_event_name,
-        shortDescriptionRes = R.string.tutorial_category_combine_event_desc_short,
-        longDescriptionRes = R.string.tutorial_category_combine_event_desc_long,
-        iconRes = R.drawable.ic_screen_event,
-        content = listOf(
-            TutorialCategory.Content.Divider,
-            TutorialCategory.Content.Category(TutorialCategory.Type.EVENTS_PRIORITY),
-            TutorialCategory.Content.Category(TutorialCategory.Type.EVENTS_STATE),
-            TutorialCategory.Content.Divider,
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_RELOADING),
+internal fun getEventsReloadingSlideshow() =
+    TutorialSlideshow(
+        type = TutorialSlideshow.Type.EVENTS_RELOADING,
+        nameRes = R.string.tutorial_slideshow_events_reloading_title,
+        shortDescriptionRes = R.string.tutorial_slideshow_events_reloading_desc,
+        slideshowItems = listOf(
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_events_reloading_step_1_text,
+                tutorialImage = R.drawable.tutorial_instructions_event_reloading,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_LARGE,
+            ),
         ),
     )

@@ -268,4 +268,12 @@
     <string name="tutorial_slideshow_events_priority_step_1_text">從螢幕擷取的每一幀都透過<b>由上到下逐一</b>檢查事件來處理。\n\n事件在清單中的位置決定了它何時有機會執行。預設情況下，一旦事件的條件滿足並執行了其動作，<b>該幀即視為處理完畢</b>。該幀的處理停止，下一幀從清單中的第一個事件重新開始。\n\n這意味著預設情況下每幀只能執行一個事件。</string>
     <string name="tutorial_slideshow_events_priority_step_2_text">你可以透過事件設定中的<b>繼續執行</b>欄位來改變此行為。啟用後，該事件執行之後，處理會<b>繼續到清單中的下一個事件</b>而不是停止。\n\n這允許多個事件在同一幀中執行。\n\n<b>範例：</b>你的清單包含事件A，後面是事件B。如果事件A持續被偵測到且沒有啟用<b>繼續執行</b>，它將在每幀執行，而事件B永遠沒有機會執行。\n\n在事件A上啟用<b>繼續執行</b>，兩個事件將在每幀都被檢查。\n\n還有一個互動教學可供練習此概念。</string>
 
+
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">事件重新裝填</string>
+    <string name="tutorial_slideshow_events_reloading_desc">了解情境中事件重新裝填的行為</string>
+    <string name="tutorial_slideshow_events_reloading_step_1_text">事件重新裝填參數允許您在事件觸發後的一段時間內跳過該事件。
+        \n\n處於重新裝填狀態的事件仍被視為啟用：重新裝填與事件狀態相互獨立。 \n\n如果事件在重新裝填狀態下被停用，重新裝填
+        計時器將被清除，因此當事件重新啟用時冷卻不再適用。</string>
+
 </resources>

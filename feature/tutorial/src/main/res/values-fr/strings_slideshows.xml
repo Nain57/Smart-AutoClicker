@@ -351,4 +351,14 @@
     <string name="tutorial_slideshow_events_priority_step_1_text">Chaque image capturée depuis votre écran est traitée en vérifiant vos événements <b>un par un, de haut en bas</b>.\n\nLa position d\'un événement dans votre liste détermine à quel moment il a la chance de s\'exécuter. Par défaut, dès qu\'un événement voit ses conditions remplies et ses actions exécutées, <b>l\'image est considérée comme traitée</b>. Le traitement s\'arrête pour cette image et la suivante repart depuis le premier événement de la liste.\n\nCela signifie qu\'un seul événement peut s\'exécuter par image par défaut.</string>
     <string name="tutorial_slideshow_events_priority_step_2_text">Vous pouvez modifier ce comportement via le champ <b>Continuer l\'éxécution</b> dans les paramètres de l\'événement. Lorsqu\'il est activé, après l\'exécution de cet événement, le traitement <b>passe à l\'événement suivant</b> dans la liste au lieu de s\'arrêter.\n\nCela permet à plusieurs événements de s\'exécuter sur la même image.\n\n<b>Exemple :</b> votre liste contient l\'Événement A suivi de l\'Événement B. Si l\'Événement A est toujours détecté et que <b>Continuer l\'éxécution</b> n\'est pas activé, il s\'exécutera à chaque image et l\'Événement B n\'aura jamais la chance de s\'exécuter.\n\nActivez <b>Continuer l\'éxécution</b> sur l\'Événement A et les deux événements seront vérifiés à chaque image.\n\nUn tutoriel interactif est également disponible pour pratiquer ce concept.</string>
 
+
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">Rechargement d\'un événement</string>
+    <string name="tutorial_slideshow_events_reloading_desc">Apprenez comment le rechargement d\'un événement se comporte dans votre scénario</string>
+    <string name="tutorial_slideshow_events_reloading_step_1_text">Le paramètre de rechargement d\'événement vous permet
+        d\'ignorer un événement pendant une durée donnée une fois qu\'il est déclenché. \n\nUn événement en état de
+        rechargement est toujours considéré comme activé : le rechargement et l\'état de l\'événement sont indépendants.
+        \n\nSi l\'événement est désactivé pendant son rechargement, le minuteur de rechargement sera effacé, ce qui
+        signifie que le délai ne s\'applique plus lorsque l\'événement est réactivé.</string>
+
 </resources>
