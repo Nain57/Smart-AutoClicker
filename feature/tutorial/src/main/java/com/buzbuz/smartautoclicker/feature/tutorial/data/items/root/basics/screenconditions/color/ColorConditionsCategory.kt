@@ -28,6 +28,7 @@ internal fun getColorConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_color_condition_desc_long,
         iconRes = R.drawable.ic_color_condition,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Tutorial(TutorialItem.Type.COLOR_CONDITION),
         ),
     )

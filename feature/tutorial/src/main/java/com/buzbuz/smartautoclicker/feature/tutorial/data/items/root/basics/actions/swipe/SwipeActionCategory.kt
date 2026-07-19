@@ -28,6 +28,7 @@ internal fun getSwipeActionCategory() =
         longDescriptionRes = R.string.tutorial_category_swipe_action_desc_long,
         iconRes = R.drawable.ic_swipe,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SWIPE_ACTION),
         ),
     )

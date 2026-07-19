@@ -28,6 +28,9 @@ internal fun getActionsCategory() =
         longDescriptionRes = R.string.tutorial_category_action_desc_long,
         iconRes = R.drawable.ic_click,
         content = listOf(
+            TutorialCategory.Content.Divider,
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.ACTIONS_LIST),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Category(TutorialCategory.Type.CLICK_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.SWIPE_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.PAUSE_ACTION),
@@ -37,6 +40,5 @@ internal fun getActionsCategory() =
             TutorialCategory.Content.Category(TutorialCategory.Type.TOGGLE_EVENT_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.NOTIFICATION_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.INTENT_ACTION),
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.ACTIONS_LIST),
         ),
     )

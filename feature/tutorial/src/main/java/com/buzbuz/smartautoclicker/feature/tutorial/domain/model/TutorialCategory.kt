@@ -29,6 +29,7 @@ data class TutorialCategory(
 ) {
 
     sealed interface Content {
+        data object Divider : Content
         data class Category(val type: Type) : Content
         data class Tutorial(val type: TutorialItem.Type) : Content
         data class Slideshow(val type: TutorialSlideshow.Type) : Content

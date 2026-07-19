@@ -28,10 +28,12 @@ internal fun getScreenConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_screen_condition_desc_long,
         iconRes = R.drawable.ic_screen_event,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Category(TutorialCategory.Type.IMAGE_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.COLOR_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.TEXT_CONDITION),
             TutorialCategory.Content.Category(TutorialCategory.Type.NUMBER_CONDITION),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_TYPE),
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_DETECTION_THRESHOLD),
         ),

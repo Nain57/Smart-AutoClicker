@@ -28,6 +28,7 @@ internal fun getSystemActionCategory() =
         longDescriptionRes = R.string.tutorial_category_system_action_desc_long,
         iconRes = R.drawable.ic_action_system,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SYSTEM_ACTION),
         ),
     )

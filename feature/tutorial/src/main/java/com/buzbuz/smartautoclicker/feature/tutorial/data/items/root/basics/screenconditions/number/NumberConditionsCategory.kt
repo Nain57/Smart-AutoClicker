@@ -29,7 +29,9 @@ internal fun getNumberConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_number_condition_desc_long,
         iconRes = R.drawable.ic_number_condition,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Tutorial(TutorialItem.Type.NUMBER_CONDITION_STATIC_VALUE),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.NUMBER_CONDITION_DETECTION_AREA),
         ),
     )

@@ -30,6 +30,7 @@ internal fun getEventsStateCategory() =
         longDescriptionRes = R.string.tutorial_category_events_state_desc_long,
         iconRes = R.drawable.ic_toggle_event,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_STATE_BASICS),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.EVENTS_STATE),
         ),

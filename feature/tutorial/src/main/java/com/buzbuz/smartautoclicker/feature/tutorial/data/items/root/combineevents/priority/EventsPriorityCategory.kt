@@ -30,6 +30,7 @@ internal fun getEventsPriorityCategory() =
         longDescriptionRes = R.string.tutorial_category_events_priority_desc_long,
         iconRes = R.drawable.ic_priority,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.EVENTS_PRIORITY_BASICS),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.EVENTS_PRIORITY),
         ),
