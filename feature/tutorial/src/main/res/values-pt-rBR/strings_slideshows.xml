@@ -339,4 +339,14 @@
     <string name="tutorial_slideshow_events_priority_step_1_text">Cada quadro capturado da sua tela é processado verificando seus eventos <b>um a um, de cima para baixo</b>.\n\nA posição de um evento na sua lista determina quando ele tem a chance de ser executado. Por padrão, assim que as condições de um evento são atendidas e suas ações são executadas, <b>o quadro é considerado concluído</b>. O processamento para naquele quadro e o próximo recomeça a partir do primeiro evento da lista.\n\nIsso significa que por padrão apenas um evento pode ser executado por quadro.</string>
     <string name="tutorial_slideshow_events_priority_step_2_text">Você pode alterar esse comportamento usando o campo <b>Continue executando</b> nas configurações do evento. Quando ativado, após esse evento ser executado, o processamento <b>continua para o próximo evento</b> na lista em vez de parar.\n\nIsso permite que vários eventos sejam executados no mesmo quadro.\n\n<b>Exemplo:</b> sua lista contém o Evento A seguido do Evento B. Se o Evento A continua sendo detectado e não tem <b>Continue executando</b> ativado, ele será executado em cada quadro e o Evento B nunca terá chance de executar.\n\nAtive <b>Continue executando</b> no Evento A e ambos os eventos serão verificados em cada quadro.\n\nUm tutorial interativo também está disponível para praticar esse conceito.</string>
 
+
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">Recarga de eventos</string>
+    <string name="tutorial_slideshow_events_reloading_desc">Aprenda como a recarga de um evento se comporta no seu cenário</string>
+    <string name="tutorial_slideshow_events_reloading_step_1_text">O parâmetro de recarga de eventos permite que você
+        ignore um evento por um período de tempo determinado após ser cumprido. \n\nUm evento em estado de recarga ainda
+        é considerado ativado: a recarga e o estado do evento são independentes. \n\nSe o evento for desativado enquanto
+        estiver em recarga, o temporizador de recarga será limpo, de modo que o tempo de espera não se aplica mais
+        quando o evento é reativado.</string>
+
 </resources>

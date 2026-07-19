@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.scree
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getBroadcastReceivedSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.triggerconditions.getCounterReachedSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineconditions.getCombineConditionsOrderingSlideshow
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.getEventsReloadingSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.state.getEventsStateBasicsSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.combineevents.priority.getEventsPrioritySlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
@@ -51,6 +52,7 @@ internal fun TutorialSlideshow.Type.toTutorialSlideshow(): TutorialSlideshow =
         CLICK_ACTION_TARGET -> getClickActionTargetSlideshow()
         COMBINE_CONDITIONS_ORDERING -> getCombineConditionsOrderingSlideshow()
         COUNTER_REACHED_CONDITION -> getCounterReachedSlideshow()
+        EVENTS_RELOADING -> getEventsReloadingSlideshow()
         EVENTS_STATE_BASICS -> getEventsStateBasicsSlideshow()
         EVENTS_PRIORITY_BASICS -> getEventsPrioritySlideshow()
         IMAGE_CONDITION_CAPTURE -> getImageConditionsCaptureSlideshow()

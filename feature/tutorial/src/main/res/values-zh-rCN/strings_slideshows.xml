@@ -268,4 +268,12 @@
     <string name="tutorial_slideshow_events_priority_step_1_text">从屏幕捕获的每一帧都通过<b>从上到下逐一</b>检查事件来处理。\n\n事件在列表中的位置决定了它何时有机会运行。默认情况下，一旦事件的条件满足并执行了其动作，<b>该帧即视为处理完毕</b>。该帧的处理停止，下一帧从列表中的第一个事件重新开始。\n\n这意味着默认情况下每帧只能运行一个事件。</string>
     <string name="tutorial_slideshow_events_priority_step_2_text">你可以通过事件设置中的<b>继续执行</b>字段来改变此行为。启用后，该事件运行之后，处理会<b>继续到列表中的下一个事件</b>而不是停止。\n\n这允许多个事件在同一帧中运行。\n\n<b>示例：</b>你的列表包含事件A，后面是事件B。如果事件A持续被检测到且没有启用<b>继续执行</b>，它将在每帧运行，而事件B永远没有机会执行。\n\n在事件A上启用<b>继续执行</b>，两个事件将在每帧都被检查。\n\n还有一个互动教程可供练习此概念。</string>
 
+
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">事件重新装填</string>
+    <string name="tutorial_slideshow_events_reloading_desc">了解场景中事件重新装填的行为</string>
+    <string name="tutorial_slideshow_events_reloading_step_1_text">事件重新装填参数允许您在事件触发后的一段时间内跳过该事件。
+        \n\n处于重新装填状态的事件仍被视为启用：重新装填与事件状态相互独立。 \n\n如果事件在重新装填状态下被禁用，重新装填
+        计时器将被清除，因此当事件重新启用时冷却不再适用。</string>
+
 </resources>

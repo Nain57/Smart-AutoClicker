@@ -388,4 +388,14 @@
         interactive tutorial is also available to practice this concept.</string>
 
 
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">Event reloading</string>
+    <string name="tutorial_slideshow_events_reloading_desc">Learn how the reloading of an Event behaves in your scenario</string>
+
+    <string name="tutorial_slideshow_events_reloading_step_1_text">The event reloading parameter allows you to skip an
+        event for a given amount of time once it is fulfilled. \n\nEven if skipped, an event in reloading state is
+        still considered enabled: reloading and the event state are independent. \n\nIf the Event is disabled while in
+        reloading state, the reloading timer will be cleared, so the cooldown no longer applies when the event is
+        re-enabled.</string>
+
 </resources>

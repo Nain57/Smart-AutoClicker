@@ -347,4 +347,14 @@
     <string name="tutorial_slideshow_events_priority_step_1_text">Ogni fotogramma catturato dal tuo schermo viene elaborato verificando gli eventi <b>uno per uno, dall\'alto verso il basso</b>.\n\nLa posizione di un evento nella lista determina quando ottiene la possibilità di essere eseguito. Per impostazione predefinita, non appena le condizioni di un evento sono soddisfatte e le sue azioni vengono eseguite, <b>il fotogramma è considerato completo</b>. L\'elaborazione si ferma per quel fotogramma e il successivo riparte dal primo evento della lista.\n\nQuesto significa che per impostazione predefinita un solo evento può essere eseguito per fotogramma.</string>
     <string name="tutorial_slideshow_events_priority_step_2_text">Puoi modificare questo comportamento usando il campo <b>Continuare a eseguire</b> nelle impostazioni dell\'evento. Quando è abilitato, dopo l\'esecuzione di quell\'evento, l\'elaborazione <b>continua con l\'evento successivo</b> nella lista invece di fermarsi.\n\nQuesto permette a più eventi di essere eseguiti sullo stesso fotogramma.\n\n<b>Esempio:</b> la tua lista contiene l\'Evento A seguito dall\'Evento B. Se l\'Evento A continua ad essere rilevato e non ha <b>Continuare a eseguire</b> abilitato, verrà eseguito ogni fotogramma e l\'Evento B non avrà mai la possibilità di eseguirsi.\n\nAbilita <b>Continuare a eseguire</b> sull\'Evento A e entrambi gli eventi verranno controllati ogni fotogramma.\n\nÈ disponibile anche un tutorial interattivo per praticare questo concetto.</string>
 
+
+    <!-- Events reloading slideshow -->
+    <string name="tutorial_slideshow_events_reloading_title">Ricarica dell\'evento</string>
+    <string name="tutorial_slideshow_events_reloading_desc">Scopri come si comporta il ricaricamento di un evento nel tuo scenario</string>
+    <string name="tutorial_slideshow_events_reloading_step_1_text">Il parametro di ricarica dell\'evento ti consente di
+        saltare un evento per un determinato periodo di tempo una volta che è soddisfatto. \n\nUn evento in stato di
+        ricarica è ancora considerato abilitato: il ricaricamento e lo stato dell\'evento sono indipendenti. \n\nSe
+        l\'evento viene disabilitato mentre è in fase di ricarica, il timer di ricarica verrà azzerato, quindi il tempo
+        di attesa non si applica più quando l\'evento viene riabilitato.</string>
+
 </resources>
