@@ -142,6 +142,16 @@ class ToggleEventDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSelectTogglesView(viewBinding.fieldSelectionToggles.root)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
+
     override fun back() {
         if (viewModel.hasUnsavedModifications()) {
             context.showCloseWithoutSavingDialog {

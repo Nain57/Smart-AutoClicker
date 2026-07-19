@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">イベントの状態</string>
+    <string name="item_desc_tutorial_events_state">複数のイベントの状態を変更して、複雑なシナリオを最適化します。</string>
+    <string name="message_game_tutorial_events_state">ターゲットを順番にタップ：青、赤、緑、次に黄色。</string>
+
+    <string name="message_tutorial_events_state_step_1">新しいゲームです！今回は4つの色付きターゲットを順番にクリックする
+        必要があります：まず青、次に赤、次に緑、最後に黄色。\n\nゲームを先に試してみるか、シナリオの設定を開いてすぐに
+        自動化を始めることができます。</string>
+
+    <string name="message_tutorial_events_state_step_2">4つの異なるターゲットを検出する必要があります。各色に1つずつ
+        イベントを作成します。\n\nまず青いターゲットから始めましょう。ゲームエリア内で青いターゲットを検出してクリックする
+        新しいイベントを作成してください。</string>
+
+    <string name="message_tutorial_events_state_step_3">複数のイベントを使う場合、それぞれに分かりやすい名前を付けることが
+        大切です。このイベントに「青いターゲット」などの明確な名前を付けて、シナリオ内で簡単に識別できるようにしましょう。
+        \n\n完了したら、新しい画像条件を作成して青いターゲットをキャプチャしてください。</string>
+
+    <string name="message_tutorial_events_state_step_4">ターゲットが動いているため、検出タイプを「検知エリア」に設定して
+        ゲームエリアを選択する必要があります。\n\nエリアの設定が完了したら保存してイベントダイアログに戻ってください。</string>
+
+    <string name="message_tutorial_events_state_step_5">条件の設定が完了しました。次に、検出したターゲットをクリックする
+        ためのクリックアクションが必要です。\n\n新しいクリックアクションを作成して続けてください。</string>
+
+    <string name="message_tutorial_events_state_step_6">ターゲットが動いているため、固定の位置を指定することができません。
+        「タップ位置」フィールドを「検出された条件をクリックします」に変更し、青いターゲットの条件を選択してください。こうすることで、ターゲットが
+        見つかった場所に正確にクリックが届きます。\n\n条件を選択したらクリックを保存してイベントダイアログに戻って
+        ください。</string>
+
+    <string name="message_tutorial_events_state_step_7">青いターゲットのイベントが完成しました！次は同じ方法で赤いターゲット
+        のイベントを作成してください：ゲームエリアで検出してクリックします。赤いターゲットのイベントが保存されるとチュートリアルが
+        進みます。</string>
+
+    <string name="message_tutorial_events_state_step_8">よくできました！次は緑のターゲットに同じイベントを作成してください。
+        緑のターゲットのイベントが保存されるとチュートリアルが進みます。</string>
+
+    <string name="message_tutorial_events_state_step_9">もう少しです！黄色のターゲットに最後のイベントを作成してください。
+        黄色のターゲットのイベントが保存されるとチュートリアルが進みます。</string>
+
+    <string name="message_tutorial_events_state_step_10">4つのイベントの準備ができました。ゲームの順序で定義したので
+        優先度は正しく設定されています。\n\nシナリオを保存してゲームでテストしてみましょう。</string>
+
+    <string name="message_tutorial_events_state_step_11">シナリオはターゲットを検出してクリックしていますが、おそらく
+        勝つには遅すぎます。\n\n現在4つのイベントが同時にアクティブなので、毎フレームで青、赤、緑、黄色の順に確認します。
+        どのターゲットをクリックしたばかりでも関係ありません。これは貴重な時間を無駄にしています！\n\n改善方法を学ぶには
+        シナリオの設定を開いてください。</string>
+
+    <string name="message_tutorial_events_state_step_12">各イベントには初期状態があります：有効または無効で開始できます。
+        現在4つのイベントはすべて有効なので、毎フレームすべてがチェックされます。\n\n解決策は現在のターゲットのイベントだけを
+        アクティブにして残りを無効にすることです。ターゲットがクリックされると、そのイベントが次のターゲットを有効にして他を
+        無効にします。\n\nまず青いターゲットのイベントを編集しましょう。</string>
+
+    <string name="message_tutorial_events_state_step_13">青いターゲットは最初にクリックするものなので、そのイベントは有効な
+        状態で開始する必要があります。ここでは変更不要です。\n\n青いターゲットをクリックしたときに赤いターゲットのイベントを
+        有効にして他を無効にする「イベントの状態を変更する」アクションを追加するだけです。このアクションを追加するにはアクションエリアを
+        タップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_14">アクションタイプ「イベントの状態を変更する」を選択してください。</string>
+
+    <string name="message_tutorial_events_state_step_15">このアクションを使うと、このイベントが発動したときにシナリオ内の
+        任意のイベントの状態を変更できます。「変更なし」フィールドをタップして変更するイベントを選びましょう。</string>
+
+    <string name="message_tutorial_events_state_step_16">リスト内の各イベントに3つの状態のいずれかを設定できます：
+        \n• 有効化：イベントがアクティブになり毎フレームチェックされます \n• 無効化：イベントが非アクティブになり完全に
+        スキップされます \n• 反転：毎回アクティブと非アクティブを切り替えます \n\n青がクリックされたので、赤いターゲットの
+        イベントを有効にして他をすべて無効にしてください。完了したら「次へ」をタップしてください。</string>
+    <string name="message_tutorial_events_state_step_16_secondary">各イベント行には「有効化」「無効化」「切替」の3つの
+        オプションが表示されます。このアクションが実行されたときに適用したいものをタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_17">完璧です！青いターゲットのイベントを保存してください。</string>
+
+    <string name="message_tutorial_events_state_step_18">次は一覧から赤いターゲットのイベントを開いて、同じように設定
+        してください。</string>
+
+    <string name="message_tutorial_events_state_step_19">青いターゲットのイベントとは異なり、このイベントはシナリオの
+        開始時にアクティブであってはなりません。そのターゲットが最初ではないからです。初期状態を無効に変更してください。</string>
+
+    <string name="message_tutorial_events_state_step_20">このターゲットをクリックしたときに次のターゲットのイベントを有効に
+        して他を無効にする「イベントの状態を変更する」アクションを追加してください。アクションエリアをタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_21">切替を設定してください：緑のターゲットを有効にして他をすべて
+        無効にしてください。完了したら「次へ」をタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_22">よくできました！次は緑のターゲットのイベントを開いて同じように
+        設定してください。</string>
+
+    <string name="message_tutorial_events_state_step_23">緑のターゲットも開始時にアクティブであってはなりません。初期状態を
+        無効に変更してください。</string>
+
+    <string name="message_tutorial_events_state_step_24">緑のターゲットをクリックしたときに黄色のターゲットのイベントを
+        有効にして他を無効にする「イベントの状態を変更する」アクションを追加してください。アクションエリアをタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_25">切替を設定してください：黄色のターゲットを有効にして他をすべて
+        無効にしてください。完了したら「次へ」をタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_26">もう少しです！設定を完了するために黄色のターゲットのイベントを
+        開いてください。</string>
+
+    <string name="message_tutorial_events_state_step_27">黄色のターゲットはシーケンスの最後なので、無効な状態で開始する
+        必要があります。初期状態を無効に変更してください。</string>
+
+    <string name="message_tutorial_events_state_step_28">黄色のターゲットのイベントにも「イベントの状態を変更する」アクションを追加
+        してください。黄色をクリックしたら最初に戻りたいので：青いターゲットを有効にして他をすべて無効にしてください。
+        アクションエリアをタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_29">切替を設定してください：青いターゲットを有効にして他をすべて
+        無効にしてください。これにより、シーケンスが無限に繰り返されます。完了したら「次へ」をタップしてください。</string>
+
+    <string name="message_tutorial_events_state_step_30">すべてのイベントの設定が完了しました。変更を適用するには
+        シナリオを保存してください。</string>
+
+    <string name="message_tutorial_events_state_step_31">すべてのイベントが設定されました！シナリオを保存してからゲームを
+        開始してください。ゲームを起動する前にシナリオを開始することを忘れないでください。\n\nシナリオには内部状態があるため、
+        ゲームを再起動するたびにシナリオも再起動する必要があります。これにより前のゲームセッションの最後のターゲットを
+        待ち続けることがなくなります。スタートボタンが表示されているかどうかを検出してイベントの状態をリセットすることで
+        簡単に自動化できます。</string>
+
+    <string name="message_tutorial_events_state_step_32">勝利しました！\n\nどのイベントが常にアクティブかを制御することで、
+        シナリオは次に探すべきターゲットを常に正確に把握できます。順序外のターゲットを確認するフレームを無駄にすることが
+        ありません。\n\nこれがイベント切替アクションを使って順序的で状態駆動の自動化を構築できる仕組みです。</string>
+
+</resources>

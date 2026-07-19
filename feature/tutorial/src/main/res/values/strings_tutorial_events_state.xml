@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">Events state</string>
+    <string name="item_desc_tutorial_events_state">Change the state of multiple events to optimize a complex scenario.</string>
+    <string name="message_game_tutorial_events_state">Click on the targets in order: blue, red, green and then yellow.</string>
+
+    <string name="message_tutorial_events_state_step_1">New game! This time you need to click on four colored targets
+        in order: blue first, then red, then green, and finally yellow. \n\nYou can try the game first to see how it
+        works, or open the scenario configuration right away to start automating it.</string>
+
+    <string name="message_tutorial_events_state_step_2">We need to detect four different targets, one for each color.
+        We will create one Event per target. \n\nStart with the blue target: create a new Event that detects it within
+        the game area and clicks on it.</string>
+
+    <string name="message_tutorial_events_state_step_3">When using multiple events, it is important to customize the name
+        of your events to keep track of what you are doing. Give this Event a clear name, like \"Blue target\", so you can
+        easily identify it later in your scenario. \n\nOnce you are done, create a new Image condition and capture the
+        blue target.</string>
+
+    <string name="message_tutorial_events_state_step_4">As the target is moving, we need to set the detection type to
+        \"Detection Area\" and then select the game area. \n\nOnce the area is correctly configured, save it and return
+        to the Event dialog.</string>
+
+    <string name="message_tutorial_events_state_step_5">Your condition is set, now we need a Click action so the Event
+        clicks on the detected target. \n\nCreate a new Click action to proceed.</string>
+
+    <string name="message_tutorial_events_state_step_6">The target is moving, so we can\'t define a static position.
+        Set the \"Click on\" field to \"Click on the detected condition\" and select your blue target condition. This way, the click will always
+        land exactly where the target was found on screen.\n\nOnce the condition is selected, save the click and return
+        to the Event dialog.</string>
+
+    <string name="message_tutorial_events_state_step_7">Blue target Event is done! Now create an Event for the red
+        target the same way: detect it in the game area and click on it. The tutorial will proceed once your red target
+        Event is saved.</string>
+
+    <string name="message_tutorial_events_state_step_8">Great! Now create the same Event for the green target. The
+        tutorial will proceed once your green target Event is saved.</string>
+
+    <string name="message_tutorial_events_state_step_9">Almost there! Create one last Event for the yellow target. The
+        tutorial will proceed once your yellow target Event is saved.</string>
+
+    <string name="message_tutorial_events_state_step_10">All four Events are ready. As we defined them in the game
+        sequence order, their priority are OK. \n\nSave your Scenario and test it against the game to see how it
+        performs.</string>
+
+    <string name="message_tutorial_events_state_step_11">The scenario is detecting and clicking on targets, but it\'s
+        probably too slow to win. \n\nCurrently, all four Events are active at the same time, so every frame the scenario
+        checks blue, then red, then green, then yellow; no matter which target was just clicked. This wastes precious
+        time! \n\nOpen the scenario configuration to learn how to improve this.</string>
+
+    <string name="message_tutorial_events_state_step_12">Each Event has an initial state: it can start enabled or
+        disabled. Right now all four Events are enabled, so they are all checked on every frame. \n\nThe solution is to
+        keep only the current target\'s Event active and disable the rest. When a target is clicked, its Event will
+        enable the next target and disable al others. \n\nLet\'s start by editing the blue target Event.</string>
+
+    <string name="message_tutorial_events_state_step_13">The blue target is the first to click, so its Event should
+        start enabled; no change needed here. \n\nWe just need to add a \"Change event state\" action so that when the blue
+        target is clicked, the red target Event is enabled and the others are disabled. Tap on the Actions area to
+        add this action.</string>
+
+    <string name="message_tutorial_events_state_step_14">Select the \"Change event state\" action type.</string>
+
+    <string name="message_tutorial_events_state_step_15">This action lets you change the state of any Event in your
+        scenario when this Event is triggered. Tap the \"No changes\" field to select which Events to change.</string>
+
+    <string name="message_tutorial_events_state_step_16">For each Event in the list, you can set one of three states:
+        \n• Enable: the Event becomes active and will be checked on every frame \n• Disable: the Event becomes inactive
+        and is skipped entirely \n• Invert: switches between active and inactive each time \n\nSince blue was just
+        clicked, enable the red target Event and disable all the others. Tap Next when you are done.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Each Event row shows three options: Enable, Disable,
+        and Toggle. Tap the one you want to apply when this action is executed.</string>
+
+    <string name="message_tutorial_events_state_step_17">Perfect! Save the blue target Event.</string>
+
+    <string name="message_tutorial_events_state_step_18">Now open the red target  Event in the list to configure it the
+        same way.</string>
+
+    <string name="message_tutorial_events_state_step_19">Unlike the blue target Event, this Event should not be active
+        at the start of the scenario, since its target is not the first one. Change its initial state to Disabled.</string>
+
+    <string name="message_tutorial_events_state_step_20">Now add a \"Change event state\" action so that when this target is
+        clicked, the next target\'s Event is enabled and the others are disabled. Tap the Actions area.</string>
+
+    <string name="message_tutorial_events_state_step_21">Set the toggles: enable the green target and disable all the
+        others. Tap Next when you are done.</string>
+
+    <string name="message_tutorial_events_state_step_22">Good job! Now open the green target Event to configure it the
+        same way.</string>
+
+    <string name="message_tutorial_events_state_step_23">The green target should not be active at the start either.
+        Change its initial state to Disabled.</string>
+
+    <string name="message_tutorial_events_state_step_24">Now add a \"Change event state\" action so that when the green target
+        is clicked, the yellow target\'s Event is enabled and the others are disabled. Tap the Actions area.</string>
+
+    <string name="message_tutorial_events_state_step_25">Set the toggles: enable the yellow target and disable all the
+        others. Tap Next when you are done.</string>
+
+    <string name="message_tutorial_events_state_step_26">Almost done! Open the yellow target Event to finish the
+        configuration.</string>
+
+    <string name="message_tutorial_events_state_step_27">The yellow target is the last in the sequence, so it should
+        also start disabled. Change its initial state to Disabled.</string>
+
+    <string name="message_tutorial_events_state_step_28">Add a \"Change event state\" action to the yellow target Event as
+        well. When yellow is clicked, we want to loop back to the beginning: enable the blue target and disable all the
+        others. Tap the Actions area.</string>
+
+    <string name="message_tutorial_events_state_step_29">Set the toggles: enable the blue target and disable all the
+        others. This way, the sequence will loop indefinitely. Tap Next when you are done.</string>
+
+    <string name="message_tutorial_events_state_step_30">All Events are now fully configured. Save your Scenario to
+        apply the changes.</string>
+
+    <string name="message_tutorial_events_state_step_31">All Events are configured! Save your Scenario and then start
+        the game. Remember to start your Scenario before launching the game. \n\nAs our scenario has an internal state,
+        you need to restart it every time you restart the game to ensure it won\'t be waiting for the last target of the
+        previous game session. This can be easily automated by detecting if the start button is visible to reset the
+        events states.</string>
+
+    <string name="message_tutorial_events_state_step_32">You won! \n\nBy controlling which Events are active at any
+        given time, the scenario always knows exactly which target to look for next — no wasted frames checking targets
+        out of sequence. \n\nThis is how the Toggle Event action lets you build sequential and state-driven
+        automation.</string>
+</resources>

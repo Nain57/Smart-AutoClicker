@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">Stato degli eventi</string>
+    <string name="item_desc_tutorial_events_state">Modifica lo stato di più eventi per ottimizzare uno scenario complesso.</string>
+    <string name="message_game_tutorial_events_state">Clicca sui bersagli nell\'ordine: blu, rosso, verde e poi giallo.</string>
+
+    <string name="message_tutorial_events_state_step_1">Nuovo gioco! Questa volta devi cliccare su quattro bersagli
+        colorati nell\'ordine: prima blu, poi rosso, poi verde e infine giallo. \n\nPuoi provare il gioco prima per
+        vedere come funziona, oppure aprire direttamente la configurazione dello scenario per iniziare ad
+        automatizzarlo.</string>
+
+    <string name="message_tutorial_events_state_step_2">Dobbiamo rilevare quattro bersagli diversi, uno per ogni
+        colore. Creeremo un Evento per bersaglio. \n\nInizia con il bersaglio blu: crea un nuovo Evento che lo rilevi
+        nell\'area di gioco e ci clicchi sopra.</string>
+
+    <string name="message_tutorial_events_state_step_3">Quando si usano più eventi, è importante personalizzare il
+        loro nome per tenere traccia di ciò che si sta facendo. Dai a questo Evento un nome chiaro, come \"Bersaglio
+        blu\", per identificarlo facilmente nel tuo scenario. \n\nUna volta terminato, crea una nuova condizione
+        Immagine e acquisisci il bersaglio blu.</string>
+
+    <string name="message_tutorial_events_state_step_4">Poiché il bersaglio si muove, dobbiamo impostare il tipo di
+        rilevamento su \"Area di rilevamento\" e selezionare l\'area di gioco. \n\nOnce l\'area è configurata correttamente,
+        salvala e torna alla finestra Evento.</string>
+
+    <string name="message_tutorial_events_state_step_5">La tua condizione è impostata. Ora abbiamo bisogno di un\'azione
+        Clic affinché l\'Evento clicchi sul bersaglio rilevato. \n\nCrea una nuova azione Clic per continuare.</string>
+
+    <string name="message_tutorial_events_state_step_6">Il bersaglio si muove, quindi non possiamo definire una
+        posizione fissa. Imposta il campo \"Clicca su\" su \"Clicca sulla condizione rilevata\" e seleziona la condizione del bersaglio blu.
+        In questo modo, il clic atterrerà sempre esattamente dove è stato trovato il bersaglio.\n\nOnce selezionata la
+        condizione, salva il clic e torna alla finestra Evento.</string>
+
+    <string name="message_tutorial_events_state_step_7">L\'Evento per il bersaglio blu è pronto! Ora crea un Evento per
+        il bersaglio rosso nello stesso modo: rilevalo nell\'area di gioco e cliccaci sopra. Il tutorial procederà
+        una volta salvato il tuo Evento del bersaglio rosso.</string>
+
+    <string name="message_tutorial_events_state_step_8">Ottimo! Ora crea lo stesso Evento per il bersaglio verde. Il
+        tutorial procederà una volta salvato il tuo Evento del bersaglio verde.</string>
+
+    <string name="message_tutorial_events_state_step_9">Quasi finito! Crea un ultimo Evento per il bersaglio giallo. Il
+        tutorial procederà una volta salvato il tuo Evento del bersaglio giallo.</string>
+
+    <string name="message_tutorial_events_state_step_10">I quattro Eventi sono pronti. Poiché li abbiamo definiti
+        nell\'ordine della sequenza di gioco, la loro priorità è corretta. \n\nSalva il tuo Scenario e testalo nel
+        gioco per vedere come si comporta.</string>
+
+    <string name="message_tutorial_events_state_step_11">Lo scenario rileva e clicca sui bersagli, ma è probabilmente
+        troppo lento per vincere. \n\nAttualmente, tutti e quattro gli Eventi sono attivi contemporaneamente, quindi ad
+        ogni fotogramma lo scenario controlla blu, poi rosso, poi verde, poi giallo; indipendentemente da quale
+        bersaglio è stato appena cliccato. Questo spreca tempo prezioso! \n\nApri la configurazione dello scenario per
+        imparare come migliorare questo aspetto.</string>
+
+    <string name="message_tutorial_events_state_step_12">Ogni Evento ha uno stato iniziale: può partire abilitato o
+        disabilitato. Al momento tutti e quattro gli Eventi sono abilitati, quindi vengono tutti controllati ad ogni
+        fotogramma. \n\nLa soluzione è mantenere attivo solo l\'Evento del bersaglio corrente e disabilitare gli altri.
+        Quando si clicca su un bersaglio, il suo Evento abiliterà il successivo e disabiliterà gli altri. \n\nIniziamo
+        modificando l\'Evento del bersaglio blu.</string>
+
+    <string name="message_tutorial_events_state_step_13">Il bersaglio blu è il primo da cliccare, quindi il suo Evento
+        deve partire abilitato; nessuna modifica necessaria qui. \n\nDobbiamo solo aggiungere un\'azione \"Attiva/
+        disattiva evento\" in modo che quando si clicca sul bersaglio blu, l\'Evento del bersaglio rosso venga abilitato
+        e gli altri disabilitati. Tocca l\'area Azioni per aggiungere questa azione.</string>
+
+    <string name="message_tutorial_events_state_step_14">Seleziona il tipo di azione \"Cambia stato evento\".</string>
+
+    <string name="message_tutorial_events_state_step_15">Questa azione ti permette di cambiare lo stato di qualsiasi
+        Evento nel tuo scenario quando questo Evento viene attivato. Tocca il campo \"Nessuna modifica\" per selezionare
+        quali Eventi modificare.</string>
+
+    <string name="message_tutorial_events_state_step_16">Per ogni Evento nella lista, puoi impostare uno di tre stati:
+        \n• Abilita: l\'Evento diventa attivo e verrà controllato ad ogni fotogramma \n• Disabilita: l\'Evento diventa
+        inattivo e viene saltato completamente \n• Invertire: alterna tra attivo e inattivo ogni volta \n\nPoiché blu è
+        stato appena cliccato, abilita l\'Evento del bersaglio rosso e disabilita tutti gli altri. Tocca Avanti quando
+        hai finito.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Ogni riga Evento mostra tre opzioni: Abilita,
+        Disabilita e Commuta. Tocca quella che vuoi applicare quando questa azione viene eseguita.</string>
+
+    <string name="message_tutorial_events_state_step_17">Perfetto! Salva l\'Evento del bersaglio blu.</string>
+
+    <string name="message_tutorial_events_state_step_18">Ora apri l\'Evento del bersaglio rosso nella lista per
+        configurarlo nello stesso modo.</string>
+
+    <string name="message_tutorial_events_state_step_19">A differenza dell\'Evento del bersaglio blu, questo Evento non
+        deve essere attivo all\'inizio dello scenario, poiché il suo bersaglio non è il primo. Cambia il suo stato
+        iniziale su Disabilitato.</string>
+
+    <string name="message_tutorial_events_state_step_20">Ora aggiungi un\'azione \"Cambia stato evento\" in modo
+        che quando si clicca su questo bersaglio, l\'Evento del bersaglio successivo venga abilitato e gli altri
+        disabilitati. Tocca l\'area Azioni.</string>
+
+    <string name="message_tutorial_events_state_step_21">Imposta le attivazioni: abilita il bersaglio verde e disabilita
+        tutti gli altri. Tocca Avanti quando hai finito.</string>
+
+    <string name="message_tutorial_events_state_step_22">Ottimo lavoro! Ora apri l\'Evento del bersaglio verde per
+        configurarlo nello stesso modo.</string>
+
+    <string name="message_tutorial_events_state_step_23">Anche il bersaglio verde non deve essere attivo all\'inizio.
+        Cambia il suo stato iniziale su Disabilitato.</string>
+
+    <string name="message_tutorial_events_state_step_24">Ora aggiungi un\'azione \"Cambia stato evento\" in modo
+        che quando si clicca sul bersaglio verde, l\'Evento del bersaglio giallo venga abilitato e gli altri
+        disabilitati. Tocca l\'area Azioni.</string>
+
+    <string name="message_tutorial_events_state_step_25">Imposta le attivazioni: abilita il bersaglio giallo e
+        disabilita tutti gli altri. Tocca Avanti quando hai finito.</string>
+
+    <string name="message_tutorial_events_state_step_26">Quasi finito! Apri l\'Evento del bersaglio giallo per
+        completare la configurazione.</string>
+
+    <string name="message_tutorial_events_state_step_27">Il bersaglio giallo è l\'ultimo della sequenza, quindi deve
+        anch\'esso partire disabilitato. Cambia il suo stato iniziale su Disabilitato.</string>
+
+    <string name="message_tutorial_events_state_step_28">Aggiungi anche un\'azione \"Cambia stato evento\"
+        all\'Evento del bersaglio giallo. Quando si clicca su giallo, vogliamo tornare all\'inizio: abilita il bersaglio
+        blu e disabilita tutti gli altri. Tocca l\'area Azioni.</string>
+
+    <string name="message_tutorial_events_state_step_29">Imposta le attivazioni: abilita il bersaglio blu e disabilita
+        tutti gli altri. In questo modo, la sequenza si ripeterà indefinitamente. Tocca Avanti quando hai finito.</string>
+
+    <string name="message_tutorial_events_state_step_30">Tutti gli Eventi sono ora completamente configurati. Salva il
+        tuo Scenario per applicare le modifiche.</string>
+
+    <string name="message_tutorial_events_state_step_31">Tutti gli Eventi sono configurati! Salva il tuo Scenario e poi
+        avvia il gioco. Ricorda di avviare il tuo Scenario prima di lanciare il gioco. \n\nPoiché il nostro scenario ha
+        uno stato interno, devi riavviarlo ogni volta che riavvii il gioco per assicurarti che non stia aspettando
+        l\'ultimo bersaglio della sessione precedente. Questo può essere facilmente automatizzato rilevando se il
+        pulsante di avvio è visibile per reimpostare gli stati degli eventi.</string>
+
+    <string name="message_tutorial_events_state_step_32">Hai vinto! \n\nControllando quali Eventi sono attivi in ogni
+        momento, lo scenario sa sempre esattamente quale bersaglio cercare dopo — nessun fotogramma sprecato a
+        controllare bersagli fuori sequenza. \n\nÈ così che l\'azione Attiva/disattiva evento ti permette di creare
+        un\'automazione sequenziale e guidata dallo stato.</string>
+
+</resources>

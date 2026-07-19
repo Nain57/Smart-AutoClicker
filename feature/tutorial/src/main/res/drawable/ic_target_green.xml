@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+
+  <!-- Green background circle -->
+  <path
+      android:fillColor="@color/tutorial_game_target_green"
+      android:pathData="M20,480 a460,460 0 1,0 920,0 a460,460 0 1,0 -920,0"/>
+
+  <!-- White diamond -->
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M480,180 L780,480 L480,780 L180,480 Z"/>
+
+  <!-- Green inner diamond -->
+  <path
+      android:fillColor="@color/tutorial_game_target_green"
+      android:pathData="M480,310 L650,480 L480,650 L310,480 Z"/>
+
+</vector>

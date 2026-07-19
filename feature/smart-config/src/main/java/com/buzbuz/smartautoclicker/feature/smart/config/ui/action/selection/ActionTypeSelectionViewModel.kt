@@ -32,7 +32,15 @@ class ActionTypeSelectionViewModel @Inject constructor(
         monitoredViewsManager.attach(MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION, view)
     }
 
-    fun stopViewMonitoring() {
+    fun monitorCreateToggleEventView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.ACTION_TYPE_DIALOG_TOGGLE_EVENT_ACTION, view)
+    }
+
+    fun stopViewCreateClickMonitoring() {
         monitoredViewsManager.detach(MonitoredViewType.ACTION_TYPE_DIALOG_CLICK_ACTION)
+    }
+
+    fun stopViewToggleEventMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.ACTION_TYPE_DIALOG_TOGGLE_EVENT_ACTION)
     }
 }

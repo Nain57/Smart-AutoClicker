@@ -274,6 +274,7 @@ class EventDialog(
             conditionOperatorAndView = viewBinding.fieldConditionsOperator.dualStateButton.buttonLeft,
             conditionOperatorOrView = viewBinding.fieldConditionsOperator.dualStateButton.buttonRight,
             actionsField = viewBinding.layoutActionsSelector,
+            initialStateField = viewBinding.fieldIsEnabled.root,
             saveButton = viewBinding.layoutTopBar.buttonSave,
         )
     }

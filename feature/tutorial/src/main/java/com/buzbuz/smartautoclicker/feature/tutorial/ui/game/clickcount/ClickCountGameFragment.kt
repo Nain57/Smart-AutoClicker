@@ -232,6 +232,8 @@ class ClickCountGameFragment : Fragment() {
         when (type) {
             QuickClickGameTargetType.IMAGE_BLUE -> blueTarget
             QuickClickGameTargetType.IMAGE_RED -> redTarget
+            QuickClickGameTargetType.IMAGE_GREEN -> greenTarget
+            QuickClickGameTargetType.IMAGE_YELLOW -> yellowTarget
             QuickClickGameTargetType.TEXT_DAY -> dayTarget
             QuickClickGameTargetType.TEXT_GOODBYE -> goodbyeTarget
             QuickClickGameTargetType.TEXT_HELLO -> helloTarget

@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+
+  <!-- Yellow background circle -->
+  <path
+      android:fillColor="@color/tutorial_game_target_yellow"
+      android:pathData="M20,480 a460,460 0 1,0 920,0 a460,460 0 1,0 -920,0"/>
+
+  <!-- White cross / plus -->
+  <path
+      android:fillColor="#FFFFFF"
+      android:pathData="M200,400 L400,400 L400,200 L560,200 L560,400 L760,400 L760,560 L560,560 L560,760 L400,760 L400,560 L200,560 Z"/>
+
+</vector>

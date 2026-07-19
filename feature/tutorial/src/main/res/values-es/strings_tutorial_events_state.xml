@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">Estado de los eventos</string>
+    <string name="item_desc_tutorial_events_state">Cambia el estado de múltiples eventos para optimizar un escenario complejo.</string>
+    <string name="message_game_tutorial_events_state">Haz clic en los objetivos en orden: azul, rojo, verde y luego amarillo.</string>
+
+    <string name="message_tutorial_events_state_step_1">¡Nuevo juego! Esta vez debes hacer clic en cuatro objetivos de
+        colores en orden: primero azul, luego rojo, luego verde y finalmente amarillo. \n\nPuedes probar el juego
+        primero para ver cómo funciona, o abrir directamente la configuración del escenario para empezar a
+        automatizarlo.</string>
+
+    <string name="message_tutorial_events_state_step_2">Necesitamos detectar cuatro objetivos distintos, uno por color.
+        Crearemos un Evento por objetivo. \n\nEmpieza con el objetivo azul: crea un nuevo Evento que lo detecte dentro
+        del área de juego y haga clic en él.</string>
+
+    <string name="message_tutorial_events_state_step_3">Cuando usas varios eventos, es importante personalizar su nombre
+        para no perderse. Dale a este Evento un nombre claro, como \"Objetivo azul\", para identificarlo fácilmente en
+        tu escenario. \n\nCuando termines, crea una nueva condición de Imagen y captura el objetivo azul.</string>
+
+    <string name="message_tutorial_events_state_step_4">Como el objetivo se mueve, debemos establecer el tipo de
+        detección en \"Área de detección\" y seleccionar el área de juego. \n\nUna vez que el área esté correctamente
+        configurada, guárdala y vuelve al diálogo Evento.</string>
+
+    <string name="message_tutorial_events_state_step_5">Tu condición está lista. Ahora necesitamos una acción Clic para
+        que el Evento haga clic en el objetivo detectado. \n\nCrea una nueva acción Clic para continuar.</string>
+
+    <string name="message_tutorial_events_state_step_6">El objetivo se mueve, así que no podemos definir una posición
+        fija. Establece el campo \"Hacer clic en\" en \"Haga clic en la condición detectada\" y selecciona tu condición de objetivo azul. Así, el clic siempre
+        caerá exactamente donde se encontró el objetivo.\n\nUna vez seleccionada la condición, guarda el clic y vuelve
+        al diálogo Evento.</string>
+
+    <string name="message_tutorial_events_state_step_7">¡El Evento del objetivo azul está listo! Ahora crea un Evento
+        para el objetivo rojo de la misma forma: detéctalo en el área de juego y haz clic en él. El tutorial avanzará
+        cuando tu Evento del objetivo rojo esté guardado.</string>
+
+    <string name="message_tutorial_events_state_step_8">¡Genial! Ahora crea el mismo Evento para el objetivo verde. El
+        tutorial avanzará cuando tu Evento del objetivo verde esté guardado.</string>
+
+    <string name="message_tutorial_events_state_step_9">¡Casi terminado! Crea un último Evento para el objetivo
+        amarillo. El tutorial avanzará cuando tu Evento del objetivo amarillo esté guardado.</string>
+
+    <string name="message_tutorial_events_state_step_10">Los cuatro Eventos están listos. Como los definimos en el orden
+        de la secuencia del juego, su prioridad es correcta. \n\nGuarda tu Escenario y pruébalo en el juego para ver su
+        rendimiento.</string>
+
+    <string name="message_tutorial_events_state_step_11">El escenario detecta y hace clic en los objetivos, pero
+        probablemente es demasiado lento para ganar. \n\nActualmente, los cuatro Eventos están activos al mismo tiempo,
+        así que en cada fotograma el escenario comprueba azul, luego rojo, luego verde, luego amarillo; sin importar en
+        qué objetivo se acaba de hacer clic. ¡Esto desperdicia tiempo valioso! \n\nAbre la configuración del escenario
+        para aprender cómo mejorar esto.</string>
+
+    <string name="message_tutorial_events_state_step_12">Cada Evento tiene un estado inicial: puede empezar activado o
+        desactivado. Ahora mismo los cuatro Eventos están activados, por lo que todos se comprueban en cada fotograma.
+        \n\nLa solución es mantener activo solo el Evento del objetivo actual y desactivar el resto. Cuando se hace clic
+        en un objetivo, su Evento activará el siguiente y desactivará los demás. \n\nEmpecemos editando el Evento del
+        objetivo azul.</string>
+
+    <string name="message_tutorial_events_state_step_13">El objetivo azul es el primero en hacer clic, así que su
+        Evento debe empezar activado; no hay nada que cambiar aquí. \n\nSolo necesitamos añadir una acción \"Alternar
+        evento\" para que cuando se haga clic en el objetivo azul, el Evento del objetivo rojo se active y los demás se
+        desactiven. Pulsa en el área Acciones para añadir esta acción.</string>
+
+    <string name="message_tutorial_events_state_step_14">Selecciona el tipo de acción \"Cambiar el estado del evento\".</string>
+
+    <string name="message_tutorial_events_state_step_15">Esta acción te permite cambiar el estado de cualquier Evento de
+        tu escenario cuando este Evento se activa. Pulsa el campo \"Sin cambios\" para seleccionar qué Eventos cambiar.</string>
+
+    <string name="message_tutorial_events_state_step_16">Para cada Evento de la lista, puedes establecer uno de tres
+        estados: \n• Activar: el Evento se vuelve activo y se comprobará en cada fotograma \n• Desactivar: el Evento se
+        vuelve inactivo y se omite por completo \n• Invertir: cambia entre activo e inactivo cada vez \n\nComo acaba de
+        hacerse clic en azul, activa el Evento del objetivo rojo y desactiva todos los demás. Pulsa Siguiente cuando
+        hayas terminado.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Cada fila de Evento muestra tres opciones: Activar,
+        Desactivar y Alternar. Pulsa la que quieras aplicar cuando se ejecute esta acción.</string>
+
+    <string name="message_tutorial_events_state_step_17">¡Perfecto! Guarda el Evento del objetivo azul.</string>
+
+    <string name="message_tutorial_events_state_step_18">Ahora abre el Evento del objetivo rojo en la lista para
+        configurarlo de la misma forma.</string>
+
+    <string name="message_tutorial_events_state_step_19">A diferencia del Evento del objetivo azul, este Evento no debe
+        estar activo al inicio del escenario, ya que su objetivo no es el primero. Cambia su estado inicial a
+        Desactivado.</string>
+
+    <string name="message_tutorial_events_state_step_20">Ahora añade una acción \"Cambiar el estado del evento\" para que cuando se
+        haga clic en este objetivo, el Evento del siguiente objetivo se active y los demás se desactiven. Pulsa el área
+        Acciones.</string>
+
+    <string name="message_tutorial_events_state_step_21">Establece los conmutadores: activa el objetivo verde y
+        desactiva todos los demás. Pulsa Siguiente cuando hayas terminado.</string>
+
+    <string name="message_tutorial_events_state_step_22">¡Buen trabajo! Ahora abre el Evento del objetivo verde para
+        configurarlo de la misma forma.</string>
+
+    <string name="message_tutorial_events_state_step_23">El objetivo verde tampoco debe estar activo al inicio. Cambia
+        su estado inicial a Desactivado.</string>
+
+    <string name="message_tutorial_events_state_step_24">Ahora añade una acción \"Cambiar el estado del evento\" para que cuando se
+        haga clic en el objetivo verde, el Evento del objetivo amarillo se active y los demás se desactiven. Pulsa el
+        área Acciones.</string>
+
+    <string name="message_tutorial_events_state_step_25">Establece los conmutadores: activa el objetivo amarillo y
+        desactiva todos los demás. Pulsa Siguiente cuando hayas terminado.</string>
+
+    <string name="message_tutorial_events_state_step_26">¡Casi listo! Abre el Evento del objetivo amarillo para
+        terminar la configuración.</string>
+
+    <string name="message_tutorial_events_state_step_27">El objetivo amarillo es el último de la secuencia, así que
+        también debe empezar desactivado. Cambia su estado inicial a Desactivado.</string>
+
+    <string name="message_tutorial_events_state_step_28">Añade también una acción \"Cambiar el estado del evento\" al Evento del
+        objetivo amarillo. Cuando se haga clic en amarillo, queremos volver al principio: activa el objetivo azul y
+        desactiva todos los demás. Pulsa el área Acciones.</string>
+
+    <string name="message_tutorial_events_state_step_29">Establece los conmutadores: activa el objetivo azul y desactiva
+        todos los demás. De esta forma, la secuencia se repetirá indefinidamente. Pulsa Siguiente cuando hayas
+        terminado.</string>
+
+    <string name="message_tutorial_events_state_step_30">Todos los Eventos están ahora completamente configurados.
+        Guarda tu Escenario para aplicar los cambios.</string>
+
+    <string name="message_tutorial_events_state_step_31">¡Todos los Eventos están configurados! Guarda tu Escenario y
+        luego inicia el juego. Recuerda iniciar tu Escenario antes de lanzar el juego. \n\nComo nuestro escenario tiene
+        un estado interno, debes reiniciarlo cada vez que reinicies el juego para asegurarte de que no esté esperando el
+        último objetivo de la sesión anterior. Esto puede automatizarse fácilmente detectando si el botón de inicio es
+        visible para restablecer los estados de los eventos.</string>
+
+    <string name="message_tutorial_events_state_step_32">¡Ganaste! \n\nAl controlar qué Eventos están activos en cada
+        momento, el escenario siempre sabe exactamente qué objetivo buscar a continuación, sin fotogramas desperdiciados
+        comprobando objetivos fuera de secuencia. \n\nAsí es como la acción Alternar evento te permite crear
+        automatizaciones secuenciales y basadas en estado.</string>
+
+</resources>

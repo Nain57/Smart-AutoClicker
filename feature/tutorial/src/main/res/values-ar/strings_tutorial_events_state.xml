@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">حالة الأحداث</string>
+    <string name="item_desc_tutorial_events_state">غيّر حالة أحداث متعددة لتحسين أداء سيناريو معقد.</string>
+    <string name="message_game_tutorial_events_state">انقر على الأهداف بالترتيب: أزرق، أحمر، أخضر ثم أصفر.</string>
+
+    <string name="message_tutorial_events_state_step_1">لعبة جديدة! هذه المرة عليك النقر على أربعة أهداف ملونة
+        بالترتيب: الأزرق أولاً، ثم الأحمر، ثم الأخضر، وأخيراً الأصفر. \n\nيمكنك تجربة اللعبة أولاً لترى كيف
+        تعمل، أو فتح إعدادات السيناريو مباشرةً لبدء الأتمتة.</string>
+
+    <string name="message_tutorial_events_state_step_2">نحتاج إلى اكتشاف أربعة أهداف مختلفة، واحد لكل لون. سننشئ
+        حدثاً واحداً لكل هدف. \n\nابدأ بالهدف الأزرق: أنشئ حدثاً جديداً يكتشفه داخل منطقة اللعبة وينقر عليه.</string>
+
+    <string name="message_tutorial_events_state_step_3">عند استخدام أحداث متعددة، من المهم تخصيص أسمائها لتسهيل
+        التمييز بينها. أعطِ هذا الحدث اسماً واضحاً مثل \"الهدف الأزرق\" حتى تتعرف عليه بسهولة في سيناريوك.
+        \n\nبعد الانتهاء، أنشئ شرط صورة جديداً والتقط الهدف الأزرق.</string>
+
+    <string name="message_tutorial_events_state_step_4">بما أن الهدف يتحرك، يجب ضبط نوع الاكتشاف على \"منطقة الكشف\"
+        ثم تحديد منطقة اللعبة. \n\nبعد ضبط المنطقة بشكل صحيح، احفظها وعُد إلى مربع حوار الحدث.</string>
+
+    <string name="message_tutorial_events_state_step_5">تم ضبط شرطك. نحتاج الآن إلى إجراء نقر حتى ينقر الحدث على
+        الهدف المكتشف. \n\nأنشئ إجراء نقر جديداً للمتابعة.</string>
+
+    <string name="message_tutorial_events_state_step_6">الهدف يتحرك، لذا لا يمكننا تحديد موضع ثابت. غيّر نوع النقر
+        في حقل \"انقر فوق\" إلى \"انقر على الحالة المكتشفة\" وحدد شرط الهدف الأزرق. بهذه الطريقة سيقع النقر دائماً في المكان الذي وُجد فيه الهدف
+        بالضبط.\n\nبعد تحديد الشرط، احفظ النقر وعُد إلى مربع حوار الحدث.</string>
+
+    <string name="message_tutorial_events_state_step_7">حدث الهدف الأزرق جاهز! أنشئ الآن حدثاً للهدف الأحمر بنفس
+        الطريقة: اكتشفه في منطقة اللعبة وانقر عليه. سيتقدم البرنامج التعليمي بمجرد حفظ حدث الهدف الأحمر.</string>
+
+    <string name="message_tutorial_events_state_step_8">رائع! أنشئ الآن نفس الحدث للهدف الأخضر. سيتقدم البرنامج
+        التعليمي بمجرد حفظ حدث الهدف الأخضر.</string>
+
+    <string name="message_tutorial_events_state_step_9">لقد اقتربت من الانتهاء! أنشئ حدثاً أخيراً للهدف الأصفر.
+        سيتقدم البرنامج التعليمي بمجرد حفظ حدث الهدف الأصفر.</string>
+
+    <string name="message_tutorial_events_state_step_10">الأحداث الأربعة جاهزة. بما أننا حددناها بترتيب تسلسل اللعبة،
+        فأولويتها صحيحة. \n\nاحفظ السيناريو واختبره في اللعبة لترى أداءه.</string>
+
+    <string name="message_tutorial_events_state_step_11">السيناريو يكتشف الأهداف وينقر عليها، لكنه على الأرجح بطيء
+        جداً للفوز. \n\nحالياً، الأحداث الأربعة نشطة في آنٍ واحد، لذا في كل إطار يتحقق السيناريو من الأزرق، ثم
+        الأحمر، ثم الأخضر، ثم الأصفر؛ بغض النظر عن الهدف الذي تم النقر عليه للتو. هذا يُضيّع وقتاً ثميناً!
+        \n\nافتح إعدادات السيناريو لتتعلم كيفية تحسين ذلك.</string>
+
+    <string name="message_tutorial_events_state_step_12">كل حدث له حالة أولية: يمكن أن يبدأ ممكّناً أو معطلاً. الآن
+        الأحداث الأربعة ممكّنة، لذا يتم التحقق من جميعها في كل إطار. \n\nالحل هو إبقاء حدث الهدف الحالي فقط نشطاً
+        وتعطيل البقية. عند النقر على هدف، سيمكّن حدثه الهدف التالي ويعطّل الآخرين. \n\nلنبدأ بتعديل حدث الهدف
+        الأزرق.</string>
+
+    <string name="message_tutorial_events_state_step_13">الهدف الأزرق هو الأول للنقر عليه، لذا يجب أن يبدأ حدثه
+        ممكّناً؛ لا داعي لتغيير أي شيء هنا. \n\nنحتاج فقط إلى إضافة إجراء \"تغيير حالة الحدث\" حتى يتم تمكين حدث الهدف
+        الأحمر وتعطيل الآخرين عند النقر على الهدف الأزرق. انقر على منطقة الإجراءات لإضافة هذا الإجراء.</string>
+
+    <string name="message_tutorial_events_state_step_14">حدد نوع الإجراء \"تغيير حالة الحدث\".</string>
+
+    <string name="message_tutorial_events_state_step_15">يتيح لك هذا الإجراء تغيير حالة أي حدث في سيناريوك عند
+        تشغيل هذا الحدث. انقر على حقل \"لا تغييرات\" لاختيار الأحداث التي تريد تغيير حالتها.</string>
+
+    <string name="message_tutorial_events_state_step_16">لكل حدث في القائمة، يمكنك تعيين إحدى الحالات الثلاث:
+        \n• تمكين: يصبح الحدث نشطاً ويتم التحقق منه في كل إطار \n• تعطيل: يصبح الحدث غير نشط ويُتخطى كلياً
+        \n• عكس: ينتقل بين النشط وغير النشط في كل مرة \n\nبما أنه تم النقر على الأزرق للتو، مكّن حدث الهدف
+        الأحمر وعطّل جميع الآخرين. انقر على التالي عند الانتهاء.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">يعرض كل صف من صفوف الحدث ثلاثة خيارات: تمكين،
+        تعطيل، وتبديل. انقر على الخيار الذي تريد تطبيقه عند تنفيذ هذا الإجراء.</string>
+
+    <string name="message_tutorial_events_state_step_17">ممتاز! احفظ حدث الهدف الأزرق.</string>
+
+    <string name="message_tutorial_events_state_step_18">افتح الآن حدث الهدف الأحمر في القائمة لتهيئته بنفس
+        الطريقة.</string>
+
+    <string name="message_tutorial_events_state_step_19">بخلاف حدث الهدف الأزرق، يجب ألا يكون هذا الحدث نشطاً في
+        بداية السيناريو، لأن هدفه ليس الأول. غيّر حالته الأولية إلى معطّل.</string>
+
+    <string name="message_tutorial_events_state_step_20">أضف الآن إجراء \"تغيير حالة الحدث\" حتى يتم تمكين حدث الهدف
+        التالي وتعطيل الآخرين عند النقر على هذا الهدف. انقر على منطقة الإجراءات.</string>
+
+    <string name="message_tutorial_events_state_step_21">اضبط التبديلات: مكّن الهدف الأخضر وعطّل جميع الآخرين.
+        انقر على التالي عند الانتهاء.</string>
+
+    <string name="message_tutorial_events_state_step_22">عمل رائع! افتح الآن حدث الهدف الأخضر لتهيئته بنفس
+        الطريقة.</string>
+
+    <string name="message_tutorial_events_state_step_23">يجب ألا يكون الهدف الأخضر نشطاً في البداية أيضاً. غيّر
+        حالته الأولية إلى معطّل.</string>
+
+    <string name="message_tutorial_events_state_step_24">أضف الآن إجراء \"تغيير حالة الحدث\" حتى يتم تمكين حدث الهدف
+        الأصفر وتعطيل الآخرين عند النقر على الهدف الأخضر. انقر على منطقة الإجراءات.</string>
+
+    <string name="message_tutorial_events_state_step_25">اضبط التبديلات: مكّن الهدف الأصفر وعطّل جميع الآخرين.
+        انقر على التالي عند الانتهاء.</string>
+
+    <string name="message_tutorial_events_state_step_26">لقد اقتربت من الانتهاء! افتح حدث الهدف الأصفر لإنهاء
+        الإعداد.</string>
+
+    <string name="message_tutorial_events_state_step_27">الهدف الأصفر هو الأخير في التسلسل، لذا يجب أن يبدأ معطلاً
+        أيضاً. غيّر حالته الأولية إلى معطّل.</string>
+
+    <string name="message_tutorial_events_state_step_28">أضف إجراء \"تغيير حالة الحدث\" إلى حدث الهدف الأصفر كذلك. عند
+        النقر على الأصفر، نريد العودة إلى البداية: مكّن الهدف الأزرق وعطّل جميع الآخرين. انقر على منطقة
+        الإجراءات.</string>
+
+    <string name="message_tutorial_events_state_step_29">اضبط التبديلات: مكّن الهدف الأزرق وعطّل جميع الآخرين.
+        بهذه الطريقة سيتكرر التسلسل إلى ما لا نهاية. انقر على التالي عند الانتهاء.</string>
+
+    <string name="message_tutorial_events_state_step_30">جميع الأحداث مهيأة بالكامل الآن. احفظ السيناريو لتطبيق
+        التغييرات.</string>
+
+    <string name="message_tutorial_events_state_step_31">جميع الأحداث مهيأة! احفظ السيناريو ثم ابدأ اللعبة. تذكر
+        تشغيل السيناريو قبل بدء اللعبة. \n\nبما أن سيناريونا يحتوي على حالة داخلية، يجب إعادة تشغيله في كل مرة
+        تُعيد فيها بدء اللعبة لضمان عدم انتظاره للهدف الأخير من الجلسة السابقة. يمكن أتمتة ذلك بسهولة عن طريق
+        اكتشاف ما إذا كان زر البدء مرئياً لإعادة ضبط حالات الأحداث.</string>
+
+    <string name="message_tutorial_events_state_step_32">لقد فزت! \n\nبالتحكم في الأحداث النشطة في كل لحظة، يعرف
+        السيناريو دائماً بالضبط أي هدف يبحث عنه التالي — دون إهدار إطارات في فحص أهداف خارج التسلسل. \n\nهكذا
+        يتيح لك إجراء تبديل الحدث إنشاء أتمتة تسلسلية مُوجَّهة بالحالة.</string>
+
+</resources>
