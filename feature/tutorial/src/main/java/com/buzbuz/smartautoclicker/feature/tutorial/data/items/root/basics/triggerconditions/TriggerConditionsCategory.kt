@@ -29,7 +29,9 @@ internal fun getTriggerConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_trigger_condition_desc_long,
         iconRes = R.drawable.ic_trigger_event,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TIMER_REACHED_CONDITION),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.COUNTER_REACHED_CONDITION),
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.BROADCAST_RECEIVED_CONDITION),
         ),

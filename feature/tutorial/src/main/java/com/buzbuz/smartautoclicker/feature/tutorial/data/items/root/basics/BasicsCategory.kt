@@ -28,6 +28,7 @@ internal fun getBasicsCategory() =
         longDescriptionRes = R.string.tutorial_category_basics_desc_long,
         iconRes = R.drawable.ic_category_basics,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Category(TutorialCategory.Type.SCREEN_CONDITIONS),
             TutorialCategory.Content.Category(TutorialCategory.Type.TRIGGER_CONDITIONS),
             TutorialCategory.Content.Category(TutorialCategory.Type.ACTIONS),

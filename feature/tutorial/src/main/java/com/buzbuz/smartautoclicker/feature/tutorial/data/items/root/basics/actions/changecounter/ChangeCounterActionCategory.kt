@@ -28,6 +28,7 @@ internal fun getChangeCounterActionCategory() =
         longDescriptionRes = R.string.tutorial_category_change_counter_action_desc_long,
         iconRes = R.drawable.ic_change_counter,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.CHANGE_COUNTER_ACTION),
         ),
     )

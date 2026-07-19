@@ -28,6 +28,7 @@ internal fun getCombineEventsCategory() =
         longDescriptionRes = R.string.tutorial_category_combine_event_desc_long,
         iconRes = R.drawable.ic_screen_event,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Category(TutorialCategory.Type.EVENTS_PRIORITY),
             TutorialCategory.Content.Category(TutorialCategory.Type.EVENTS_STATE),
         ),

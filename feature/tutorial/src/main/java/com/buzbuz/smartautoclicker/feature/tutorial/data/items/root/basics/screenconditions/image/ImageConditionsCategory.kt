@@ -29,8 +29,10 @@ internal fun getImageConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_image_condition_desc_long,
         iconRes = R.drawable.ic_condition,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_STILL_TARGET),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.IMAGE_DETECTION_MOVING_TARGET),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.IMAGE_CONDITION_CAPTURE),
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.IMAGE_CONDITION_DETECTION_AREA),
         ),

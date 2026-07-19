@@ -29,8 +29,10 @@ internal fun getTextConditionsCategory() =
         longDescriptionRes = R.string.tutorial_category_text_condition_desc_long,
         iconRes = R.drawable.ic_text_condition,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_STILL_TEXT),
             TutorialCategory.Content.Tutorial(TutorialItem.Type.TEXT_CONDITION_MOVING_TEXT),
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.TEXT_CONDITION_DETECTION_AREA),
         ),
     )

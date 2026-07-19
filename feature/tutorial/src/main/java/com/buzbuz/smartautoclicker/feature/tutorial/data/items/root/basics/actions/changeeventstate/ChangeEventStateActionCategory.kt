@@ -28,6 +28,7 @@ internal fun getChangeEventStateActionCategory() =
         longDescriptionRes = R.string.tutorial_category_change_event_state_action_desc_long,
         iconRes = R.drawable.ic_toggle_event,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.TOGGLE_EVENT_ACTION),
         ),
     )

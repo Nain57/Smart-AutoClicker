@@ -28,6 +28,7 @@ internal fun getWriteTextActionCategory() =
         longDescriptionRes = R.string.tutorial_category_write_text_action_desc_long,
         iconRes = R.drawable.ic_action_set_text,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.WRITE_TEXT_ACTION),
         ),
     )

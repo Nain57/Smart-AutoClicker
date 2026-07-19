@@ -28,6 +28,7 @@ internal fun getIntentActionCategory() =
         longDescriptionRes = R.string.tutorial_category_intent_action_desc_long,
         iconRes = R.drawable.ic_intent,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.INTENT_ACTION),
         ),
     )

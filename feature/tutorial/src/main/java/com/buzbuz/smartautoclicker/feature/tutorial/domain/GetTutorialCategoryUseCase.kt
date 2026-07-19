@@ -44,18 +44,7 @@ class GetTutorialCategoryUseCase @Inject constructor(
             categoryNameRes = nameRes,
             items = buildList {
                 add(this@toUiState.toHeaderUiItem())
-
-                val items = content.filter { item -> item !is TutorialCategory.Content.Slideshow }
-                if (items.isNotEmpty()) {
-                    add(TutorialCategoryUiItems.SectionDivider)
-                    addAll(items.map { categoryContent -> categoryContent.toUiItem(completionState)})
-                }
-
-                val slideshows = content.filterIsInstance<TutorialCategory.Content.Slideshow>()
-                if (slideshows.isNotEmpty()) {
-                    add(TutorialCategoryUiItems.SectionDivider)
-                    addAll(slideshows.map { slideshow -> slideshow.toSlideshowUiItem() })
-                }
+                addAll(content.map { it.toUiItem(completionState) })
             }
         )
 
@@ -66,8 +55,9 @@ class GetTutorialCategoryUseCase @Inject constructor(
             iconRes = iconRes,
         )
 
-    private fun TutorialCategory.Content.toUiItem(completionState: Map<String, Boolean>): TutorialCategoryUiItems.Item =
+    private fun TutorialCategory.Content.toUiItem(completionState: Map<String, Boolean>): TutorialCategoryUiItems =
         when (this) {
+            is TutorialCategory.Content.Divider -> TutorialCategoryUiItems.SectionDivider
             is TutorialCategory.Content.Category -> toCategoryUiItem()
             is TutorialCategory.Content.Tutorial -> toTutorialUiItem(completionState)
             is TutorialCategory.Content.Slideshow -> toSlideshowUiItem()

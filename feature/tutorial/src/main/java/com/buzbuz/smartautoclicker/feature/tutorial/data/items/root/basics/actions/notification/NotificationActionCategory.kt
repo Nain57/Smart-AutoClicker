@@ -28,6 +28,7 @@ internal fun getNotificationActionCategory() =
         longDescriptionRes = R.string.tutorial_category_notification_action_desc_long,
         iconRes = R.drawable.ic_action_notification,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.NOTIFICATION_ACTION),
         ),
     )

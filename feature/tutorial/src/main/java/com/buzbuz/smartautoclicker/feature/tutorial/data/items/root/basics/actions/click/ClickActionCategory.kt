@@ -28,6 +28,7 @@ internal fun getClickActionCategory() =
         longDescriptionRes = R.string.tutorial_category_click_action_desc_long,
         iconRes = R.drawable.ic_click,
         content = listOf(
+            TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.CLICK_ACTION_TARGET),
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.CLICK_ACTION_OFFSET),
         ),
