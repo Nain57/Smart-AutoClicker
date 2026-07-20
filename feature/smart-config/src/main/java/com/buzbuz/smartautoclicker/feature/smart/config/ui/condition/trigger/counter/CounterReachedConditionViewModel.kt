@@ -17,8 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
@@ -51,6 +54,7 @@ import javax.inject.Inject
 class CounterReachedConditionViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The condition being configured by the user. */
@@ -105,6 +109,19 @@ class CounterReachedConditionViewModel @Inject constructor(
         updateEditedCondition { old ->
             old.copy(counterValue = value)
         }
+    }
+
+    fun monitorSelectCounterView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.COUNTER_REACHED_DIALOG_FIELD_COUNTER_SELECTION, view)
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.COUNTER_REACHED_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun detachMonitoredViews() {
+        monitoredViewsManager.detach(MonitoredViewType.COUNTER_REACHED_DIALOG_FIELD_COUNTER_SELECTION)
+        monitoredViewsManager.detach(MonitoredViewType.COUNTER_REACHED_DIALOG_BUTTON_SAVE)
     }
 
     private fun updateEditedCondition(

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">Basi dei contatori</string>
+    <string name="item_desc_tutorial_counters_basics">Impara a usare l\'azione Modificare contatore e la condizione
+        Valore del contatore.</string>
+    <string name="message_game_tutorial_counters_basics">Clicca 10 volte sul bersaglio blu, poi clicca una volta sul
+        bersaglio rosso</string>
+
+    <string name="message_tutorial_counters_basics_step_1">Benvenuto nel tutorial sui Contatori!
+        \n\nQui automatizzerai un gioco in cui clicchi sul bersaglio blu 10 volte, poi clicchi sul bersaglio rosso una
+        volta per convalidare il conteggio e guadagnare 10 punti. Puoi prima provare il gioco, oppure passare
+        direttamente alla configurazione dello scenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">Per prima cosa, dobbiamo creare un Evento schermo che rilevi
+        il bersaglio blu e ci clicchi sopra. \n\nFai clic su Crea evento per iniziare.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">Iniziamo aggiungendo una condizione per rilevare il bersaglio
+        blu. Fai clic sul campo Condizioni per aprire l\'elenco delle condizioni e crea questa condizione.
+        \n\nIl tutorial continuerà una volta creata la condizione.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">Bene! Ora fai clic sul campo Azioni per aggiungere le azioni
+        che verranno eseguite quando il bersaglio blu viene rilevato.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">Per prima cosa abbiamo bisogno di un\'azione Clic per toccare
+        il bersaglio blu. Fai clic sul pulsante crea per aggiungere una nuova azione.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">Configura il clic per toccare il bersaglio blu, poi salva
+        l\'azione. \n\nIl tutorial continuerà una volta salvato il clic.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">Dobbiamo anche contare quante volte abbiamo cliccato sul
+        bersaglio blu. Questo si può fare con un\'azione Modificare contatore, aggiungendo uno ogni volta che clicchiamo.
+        \n\nFai clic di nuovo sul pulsante crea per aggiungere una seconda azione.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">Seleziona l\'azione Modificare contatore per incrementare un
+        contatore ogni volta che il bersaglio blu viene cliccato.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">Per prima cosa dobbiamo scegliere quale contatore aggiornare.
+        Fai clic su Seleziona un contatore per aprire l\'elenco dei contatori.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">L\'elenco è vuoto per ora. Fai clic sul pulsante crea per
+        creare un nuovo contatore. Dagli un nome (es. "Clic blu"), mantieni il valore iniziale a 0, poi salvalo e
+        selezionalo.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">Ora configura come cambia il contatore ogni volta che il
+        bersaglio blu viene cliccato. \n\nImposta l\'operatore su + e il valore su 1, in modo che il contatore aumenti
+        di 1 ad ogni clic. \n\nPoi salva l\'azione e torna alla finestra di dialogo dell\'Evento.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">Il valore può essere un numero fisso, o il valore
+        attuale di un altro contatore.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">Ottimo! Questo Evento schermo cliccherà ora il bersaglio blu
+        e incrementerà il contatore ad ogni rilevamento. \n\nSalva l\'evento per tornare allo scenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">Ora abbiamo bisogno di un evento che reagisca quando il
+        contatore raggiunge 10. Questo tipo di evento non è attivato dallo schermo, quindi è un Evento di attivazione.
+        \n\nFai clic sulla scheda Trigger per aprire l\'elenco degli Eventi di attivazione.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">Fai clic sul pulsante crea per aggiungere un nuovo Evento
+        di attivazione.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">Proprio come un Evento schermo, un Evento di attivazione
+        ha bisogno di condizioni. Fai clic sul campo Condizioni per aprire l\'elenco delle condizioni e crea una nuova
+        condizione di attivazione.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">Seleziona il tipo di condizione Valore del contatore per
+        attivare questo evento quando un contatore raggiunge un valore specifico.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">Seleziona il contatore che hai creato in precedenza (quello
+        che conta i clic blu) per usarlo come trigger.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">Ora imposta il confronto in modo che la condizione sia
+        soddisfatta quando il contatore è uguale a 10. Ci sono diversi operatori di confronto, ma qui dobbiamo
+        verificare quando è uguale, quindi seleziona \"=\". Poi inserisci 10 come valore, salva la condizione e torna
+        alla finestra di dialogo dell\'Evento.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">Il valore da confrontare può essere un numero
+        fisso, o il valore attuale di un altro contatore.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">La condizione è impostata! Ora dobbiamo definire cosa
+        succede quando il contatore raggiunge 10. Fai clic sul campo Azioni per aprire l\'elenco delle azioni.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">Per prima cosa, crea un\'azione Clic e posizionala
+        manualmente sul bersaglio rosso per convalidare il conteggio.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">Configura il clic per toccare il bersaglio rosso, poi salva
+        l\'azione. Tieni presente che in un Evento di attivazione la posizione del clic deve essere sempre impostata
+        manualmente. \n\nIl tutorial continuerà una volta salvato il clic.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">Ora crea una seconda azione per azzerare il contatore. Fai
+        clic di nuovo sul pulsante crea e seleziona l\'azione Modificare contatore.</string>
+
+    <string name="message_tutorial_counters_basics_step_23">Vogliamo impostare il contatore dei clic blu a 0, quindi
+        per prima cosa seleziona il contatore dei clic blu.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">Imposta l\'operatore su = e il valore su 0 per azzerare il
+        contatore dopo ogni convalida. Poi salva l\'azione e torna alla finestra di dialogo dell\'Evento per
+        procedere.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">Questo Evento di attivazione cliccherà il bersaglio rosso e
+        azzererà il contatore ogni volta che vengono contati 10 clic blu. L\'elenco degli Eventi di attivazione viene
+        eseguito tra un fotogramma e l\'altro, prima dell\'elenco degli Eventi schermo, quindi non appena il contatore
+        è uguale a 10, questo evento si esegue immediatamente: il bersaglio rosso viene cliccato e il contatore
+        azzerato, pronto a ricominciare. \n\nSalva l\'evento per tornare allo scenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">Lo scenario è completo! Cliccherà il bersaglio blu, conterà
+        ogni clic, poi convaliderà con il bersaglio rosso ogni 10 clic e ricomincia da capo. \n\nSalva lo scenario per
+        applicare la tua configurazione.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">Tutto è pronto! Avvia lo scenario, poi lancia il gioco e
+        guarda Klick\'r gestire il conteggio per te.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">Ben fatto! Hai imparato a usare i Contatori per tracciare
+        valori attraverso più eventi. \n\nCombinati con l\'azione Modificare contatore e la condizione Valore del
+        contatore, puoi ora costruire automazioni che reagiscono a schemi ripetuti.</string>
+
+</resources>

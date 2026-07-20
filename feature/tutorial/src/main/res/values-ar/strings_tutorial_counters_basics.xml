@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">أساسيات العدادات</string>
+    <string name="item_desc_tutorial_counters_basics">تعلم كيفية استخدام إجراء «تغيير العداد» وشرط «على العداد وصلت».</string>
+    <string name="message_game_tutorial_counters_basics">انقر 10 مرات على الهدف الأزرق، ثم انقر مرة واحدة على الهدف الأحمر</string>
+
+    <string name="message_tutorial_counters_basics_step_1">مرحباً بك في درس العدادات!
+        \n\nهنا، ستقوم بأتمتة لعبة تنقر فيها على الهدف الأزرق 10 مرات، ثم تنقر على الهدف الأحمر مرة واحدة للتحقق من العدد وكسب 10 نقاط. يمكنك تجربة اللعبة أولاً، أو الانتقال مباشرة إلى تكوين السيناريو.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">أولاً، نحتاج إلى إنشاء حدث شاشة يكتشف الهدف الأزرق وينقر عليه.
+        \n\nانقر على «إنشاء حدث» للبدء.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">لنبدأ بإضافة شرط للكشف عن الهدف الأزرق. انقر على حقل الشروط لفتح قائمة الشروط وإنشاء هذا الشرط.
+        \n\nسيستمر الدرس بمجرد إنشاء شرطك.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">ممتاز! الآن انقر على حقل الإجراءات لإضافة الإجراءات التي ستُنفَّذ عند اكتشاف الهدف الأزرق.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">نحتاج أولاً إلى إجراء نقر للضغط على الهدف الأزرق. انقر على زر الإنشاء لإضافة إجراء جديد.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">قم بتكوين النقر على الهدف الأزرق، ثم احفظ الإجراء.
+        \n\nسيستمر الدرس بمجرد حفظ النقر.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">نحتاج أيضاً إلى حساب عدد مرات النقر على الهدف الأزرق. يمكن تحقيق ذلك باستخدام إجراء «تغيير العداد»، بإضافة واحد في كل مرة ننقر.
+        \n\nانقر على زر الإنشاء مجدداً لإضافة إجراء ثانٍ.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">اختر إجراء «تغيير العداد» لزيادة عداد في كل مرة يُنقر فيها على الهدف الأزرق.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">أولاً، نحتاج إلى اختيار العداد الذي سيتم تحديثه. انقر على «اختر عداداً» لفتح قائمة العدادات.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">القائمة فارغة حالياً. انقر على زر الإنشاء لإنشاء عداد جديد. أعطه اسماً (مثل «نقرات زرقاء»)، اترك القيمة الابتدائية عند 0، ثم احفظه واخترنه.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">الآن قم بتكوين طريقة تغيير العداد في كل مرة يُنقر فيها على الهدف الأزرق.
+        \n\nاضبط العملية على + والقيمة على 1، لكي يزداد العداد بمقدار 1 في كل نقرة.
+        \n\nثم احفظ الإجراء وعد إلى مربع حوار الحدث.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">يمكن أن تكون القيمة رقماً ثابتاً أو القيمة الحالية لعداد آخر.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">رائع! سيقوم حدث الشاشة هذا بالنقر على الهدف الأزرق وزيادة العداد في كل اكتشاف.
+        \n\nاحفظ الحدث للعودة إلى السيناريو.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">الآن نحتاج إلى حدث يتفاعل عندما يصل العداد إلى 10. هذا النوع من الأحداث لا يُشغَّل بواسطة الشاشة، بل هو حدث زناد (مشغل).
+        \n\nانقر على تبويب «أحداث الزناد» لفتح قائمة أحداث الزناد.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">انقر على زر الإنشاء لإضافة حدث زناد جديد.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">تماماً كحدث الشاشة، يحتاج حدث الزناد إلى شروط. انقر على حقل الشروط لفتح قائمة الشروط وإنشاء شرط زناد جديد.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">اختر نوع شرط «على العداد وصلت» لتشغيل هذا الحدث عندما يبلغ العداد قيمة محددة.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">اختر العداد الذي أنشأته سابقاً (الذي يحسب النقرات الزرقاء) لاستخدامه كمشغل.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">الآن اضبط المقارنة بحيث يتحقق الشرط عندما يساوي العداد 10. توجد عدة عوامل مقارنة، لكننا هنا نحتاج إلى التحقق من المساواة، لذا اختر «=\". ثم أدخل 10 كقيمة، واحفظ الشرط وعد إلى مربع حوار الحدث.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">يمكن أن تكون القيمة المراد المقارنة بها رقماً ثابتاً أو القيمة الحالية لعداد آخر.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">تم ضبط الشرط! الآن نحتاج إلى تحديد ما يحدث عندما يصل العداد إلى 10. انقر على حقل الإجراءات لفتح قائمة الإجراءات.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">أولاً، أنشئ إجراء نقر وضعه يدوياً على الهدف الأحمر للتحقق من العدد.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">قم بتكوين النقر على الهدف الأحمر، ثم احفظ الإجراء. لاحظ أنه في حدث الزناد، يجب دائماً تحديد موضع النقر يدوياً.
+        \n\nسيستمر الدرس بمجرد حفظ النقر.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">الآن أنشئ إجراءً ثانياً لإعادة ضبط العداد. انقر على زر الإنشاء مجدداً واختر إجراء «تغيير العداد».</string>
+
+    <string name="message_tutorial_counters_basics_step_23">نريد ضبط عداد النقرات الزرقاء على 0، لذا اختر أولاً عداد النقرات الزرقاء.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">اضبط العملية على = والقيمة على 0 لإعادة ضبط العداد بعد كل تحقق. ثم احفظ الإجراء وعد إلى مربع حوار الحدث للمتابعة.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">سيقوم حدث الزناد هذا بالنقر على الهدف الأحمر وإعادة ضبط العداد في كل مرة يُحسب فيها 10 نقرات زرقاء. تُنفَّذ قائمة أحداث الزناد بين كل إطار شاشة، قبل قائمة أحداث الشاشة، لذا بمجرد أن يصل العداد إلى 10، يُشغَّل هذا الحدث فوراً: يُنقر على الهدف الأحمر ويُعاد ضبط العداد، ليبدأ من جديد.
+        \n\nاحفظ الحدث للعودة إلى السيناريو.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">اكتمل السيناريو! سينقر على الهدف الأزرق، ويحسب كل نقرة، ثم يتحقق بالهدف الأحمر كل 10 نقرات ويبدأ من جديد.
+        \n\nاحفظ السيناريو لتطبيق تكوينك.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">كل شيء جاهز! ابدأ السيناريو، ثم شغّل اللعبة وشاهد Klick\'r يتولى العد بدلاً عنك.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">أحسنت! لقد تعلمت كيفية استخدام العدادات لتتبع القيم عبر أحداث متعددة.
+        \n\nبدمج إجراء «تغيير العداد» وشرط «على العداد وصلت»، يمكنك الآن بناء أتمتة تتفاعل مع الأنماط المتكررة.</string>
+
+</resources>

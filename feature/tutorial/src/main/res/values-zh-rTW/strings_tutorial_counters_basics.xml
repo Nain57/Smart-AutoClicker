@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">計數器基礎</string>
+    <string name="item_desc_tutorial_counters_basics">學習如何使用「更改計數器」動作與「計數器達到時」條件。</string>
+    <string name="message_game_tutorial_counters_basics">點擊藍色目標10次，再點擊紅色目標一次</string>
+
+    <string name="message_tutorial_counters_basics_step_1">歡迎來到計數器教學！
+        \n\n在這裡，您將自動化一個遊戲：點擊藍色目標10次，再點擊紅色目標一次以驗證計數並獲得10分。您可以先試玩遊戲，或直接進入場景設定。</string>
+
+    <string name="message_tutorial_counters_basics_step_2">首先，我們需要建立一個能偵測藍色目標並點擊它的螢幕事件。\n\n點擊「建立事件」開始。</string>
+
+    <string name="message_tutorial_counters_basics_step_3">我們先新增一個條件來偵測藍色目標。點擊「條件」欄位以開啟條件清單並建立此條件。\n\n建立完成後教學將繼續。</string>
+
+    <string name="message_tutorial_counters_basics_step_4">很好！現在點擊「動作」欄位，新增偵測到藍色目標時要執行的動作。</string>
+
+    <string name="message_tutorial_counters_basics_step_5">我們首先需要一個點擊動作來點擊藍色目標。點擊建立按鈕新增動作。</string>
+
+    <string name="message_tutorial_counters_basics_step_6">設定點擊位置為藍色目標，然後儲存動作。\n\n儲存後教學將繼續。</string>
+
+    <string name="message_tutorial_counters_basics_step_7">我們還需要記錄點擊藍色目標的次數。可以使用「更改計數器」動作，每次點擊時將計數器加一。\n\n再次點擊建立按鈕以新增第二個動作。</string>
+
+    <string name="message_tutorial_counters_basics_step_8">選擇「更改計數器」動作，讓每次點擊藍色目標時計數器遞增。</string>
+
+    <string name="message_tutorial_counters_basics_step_9">首先，我們需要選擇要更新的計數器。點擊「選擇計數器」以開啟計數器清單。</string>
+
+    <string name="message_tutorial_counters_basics_step_10">清單目前是空的。點擊建立按鈕建立新的計數器，為它命名（例如「藍色點擊」），保持初始值為0，然後儲存並選取它。</string>
+
+    <string name="message_tutorial_counters_basics_step_11">現在設定每次點擊藍色目標時計數器的變化方式。\n\n將運算符設為「+」，數值設為「1」，這樣每次點擊計數器就會增加1。\n\n儲存動作後返回事件對話框。</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">數值可以是固定數字，也可以是另一個計數器的當前值。</string>
+
+    <string name="message_tutorial_counters_basics_step_12">太好了！這個螢幕事件現在會在每次偵測到藍色目標時點擊它並遞增計數器。\n\n儲存事件以返回場景。</string>
+
+    <string name="message_tutorial_counters_basics_step_13">現在我們需要一個在計數器達到10時做出反應的事件。這類事件不是由螢幕畫面觸發的，所以它是觸發器事件。
+        \n\n點擊「觸發器事件」分頁以開啟觸發器事件清單。</string>
+
+    <string name="message_tutorial_counters_basics_step_14">點擊建立按鈕新增一個新的觸發器事件。</string>
+
+    <string name="message_tutorial_counters_basics_step_15">就像螢幕事件一樣，觸發器事件也需要條件。點擊「條件」欄位以開啟條件清單並建立新的觸發器條件。</string>
+
+    <string name="message_tutorial_counters_basics_step_16">選擇「計數器達到時」條件類型，讓此事件在計數器達到特定值時觸發。</string>
+
+    <string name="message_tutorial_counters_basics_step_17">選擇您先前建立的計數器（用來計算藍色點擊次數的那個）作為觸發依據。</string>
+
+    <string name="message_tutorial_counters_basics_step_18">現在設定比較條件，使其在計數器等於10時滿足。有多種比較運算符，但這裡我們需要檢查相等，所以選擇「=」。然後輸入10作為數值，儲存條件並返回事件對話框。</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">要比較的數值可以是固定數字，也可以是另一個計數器的當前值。</string>
+
+    <string name="message_tutorial_counters_basics_step_19">條件已設定！現在我們需要定義計數器達到10時要執行的動作。點擊「動作」欄位以開啟動作清單。</string>
+
+    <string name="message_tutorial_counters_basics_step_20">首先，建立一個點擊動作並手動將位置設定在紅色目標上以驗證計數。</string>
+
+    <string name="message_tutorial_counters_basics_step_21">設定點擊位置為紅色目標，然後儲存動作。請注意，在觸發器事件中，點擊位置必須手動設定。\n\n儲存後教學將繼續。</string>
+
+    <string name="message_tutorial_counters_basics_step_22">現在建立第二個動作來重設計數器。再次點擊建立按鈕並選擇「更改計數器」動作。</string>
+
+    <string name="message_tutorial_counters_basics_step_23">我們要將藍色點擊計數器重設為0，所以首先選取藍色點擊計數器。</string>
+
+    <string name="message_tutorial_counters_basics_step_24">將運算符設為「=」，數值設為「0」，以便在每次驗證後重設計數器。然後儲存動作並返回事件對話框繼續。</string>
+
+    <string name="message_tutorial_counters_basics_step_25">這個觸發器事件會在每次計算到10次藍色點擊時點擊紅色目標並重設計數器。觸發器事件清單在每個螢幕幀之間執行，且先於螢幕事件清單，因此一旦計數器等於10，此事件立即執行：點擊紅色目標並重設計數器，準備重新開始。\n\n儲存事件以返回場景。</string>
+
+    <string name="message_tutorial_counters_basics_step_26">場景已完成！它將點擊藍色目標、記錄每次點擊，然後每10次點擊用紅色目標驗證一次並重新開始。\n\n儲存場景以套用您的設定。</string>
+
+    <string name="message_tutorial_counters_basics_step_27">一切準備就緒！啟動場景，然後開啟遊戲，看著Klick\'r替您自動計數。</string>
+
+    <string name="message_tutorial_counters_basics_step_28">做得好！您已學會如何使用計數器來追蹤多個事件之間的數值。\n\n結合「更改計數器」動作與「計數器達到時」條件，您現在可以建立能對重複模式做出反應的自動化場景了。</string>
+
+</resources>

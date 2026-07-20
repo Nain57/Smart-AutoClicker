@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">Основи лічильників</string>
+    <string name="item_desc_tutorial_counters_basics">Дізнайтеся, як використовувати дію «Змінити лічильник» та умову
+        «При досягненні лічильника».</string>
+    <string name="message_game_tutorial_counters_basics">Натисніть 10 разів на синю ціль, потім один раз на червону
+        ціль</string>
+
+    <string name="message_tutorial_counters_basics_step_1">Ласкаво просимо до навчального посібника з лічильників!
+        \n\nТут ви автоматизуєте гру, де потрібно натиснути на синю ціль 10 разів, а потім один раз на червону ціль,
+        щоб підтвердити рахунок і отримати 10 очок. Ви можете спочатку спробувати гру або одразу перейти до
+        налаштування сценарію.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">Спочатку нам потрібно створити подію екрана, яка виявляє
+        синю ціль і натискає на неї. \n\nНатисніть «Створити подію», щоб почати.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">Почнемо з додавання умови для виявлення синьої цілі.
+        Натисніть на поле «Умови», щоб відкрити список умов і створити цю умову. \n\nНавчальний посібник продовжиться,
+        коли умову буде створено.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">Чудово! Тепер натисніть на поле «Дії», щоб додати дії,
+        які виконуватимуться при виявленні синьої цілі.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">Спочатку нам потрібна дія «Клік», щоб натиснути на синю
+        ціль. Натисніть кнопку «Створити», щоб додати нову дію.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">Налаштуйте клік на синю ціль, потім збережіть дію.
+        \n\nНавчальний посібник продовжиться, коли клік буде збережено.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">Нам також потрібно рахувати, скільки разів ми натиснули на
+        синю ціль. Це можна зробити за допомогою дії «Змінити лічильник», додаючи одиницю при кожному натисканні.
+        \n\nНатисніть кнопку «Створити» ще раз, щоб додати другу дію.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">Оберіть дію «Змінити лічильник», щоб збільшувати лічильник
+        кожного разу при натисканні на синю ціль.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">Спочатку нам потрібно вибрати, який лічильник оновлювати.
+        Натисніть «Вибрати лічильник», щоб відкрити список лічильників.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">Список наразі порожній. Натисніть кнопку «Створити», щоб
+        створити новий лічильник. Дайте йому назву (наприклад, «Сині кліки»), залиште початкове значення 0, потім
+        збережіть і виберіть його.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">Тепер налаштуйте, як змінюватиметься лічильник при кожному
+        натисканні на синю ціль. \n\nВстановіть оператор + і значення 1, щоб лічильник збільшувався на 1 при кожному
+        кліку. \n\nПотім збережіть дію та поверніться до діалогу події.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">Значення може бути фіксованим числом або поточним
+        значенням іншого лічильника.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">Чудово! Ця подія екрана тепер натискатиме на синю ціль і
+        збільшуватиме лічильник при кожному виявленні. \n\nЗбережіть подію, щоб повернутися до сценарію.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">Тепер нам потрібна подія, яка реагує, коли лічильник
+        досягає 10. Такий тип події не запускається екраном, тому це тригерна подія.
+        \n\nНатисніть на вкладку «Тригери», щоб відкрити список тригерних подій.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">Натисніть кнопку «Створити», щоб додати нову тригерну
+        подію.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">Як і подія екрана, тригерна подія потребує умов. Натисніть
+        на поле «Умови», щоб відкрити список умов і створити нову умову тригера.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">Оберіть тип умови «При досягненні лічильника», щоб
+        запускати цю подію, коли лічильник досягне певного значення.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">Оберіть лічильник, який ви створили раніше (той, що рахує
+        кліки по синій цілі), щоб використати його як тригер.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">Тепер налаштуйте порівняння так, щоб умова виконувалась,
+        коли лічильник дорівнює 10. Є кілька операторів порівняння, але тут нам потрібно перевірити рівність, тому
+        оберіть «=». Потім введіть 10 як значення, збережіть умову та поверніться до діалогу події.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">Значення для порівняння може бути фіксованим
+        числом або поточним значенням іншого лічильника.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">Умову встановлено! Тепер нам потрібно визначити, що
+        відбувається, коли лічильник досягає 10. Натисніть на поле «Дії», щоб відкрити список дій.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">Спочатку створіть дію «Клік» і вручну розмістіть її на
+        червоній цілі, щоб підтвердити рахунок.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">Налаштуйте клік на червону ціль, потім збережіть дію.
+        Зверніть увагу, що в тригерній події позицію кліка завжди потрібно вказувати вручну. \n\nНавчальний посібник
+        продовжиться, коли клік буде збережено.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">Тепер створіть другу дію для скидання лічильника. Натисніть
+        кнопку «Створити» ще раз і оберіть дію «Змінити лічильник».</string>
+
+    <string name="message_tutorial_counters_basics_step_23">Ми хочемо встановити лічильник синіх кліків на 0, тому
+        спочатку виберіть лічильник синіх кліків.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">Встановіть оператор = і значення 0, щоб скидати лічильник
+        після кожного підтвердження. Потім збережіть дію та поверніться до діалогу події.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">Ця тригерна подія натискатиме на червону ціль і скидатиме
+        лічильник щоразу, коли нараховується 10 синіх кліків. Список тригерних подій виконується між кожним кадром
+        екрана, перед списком подій екрана, тому щойно лічильник досягає 10, ця подія запускається негайно: червона
+        ціль натискається і лічильник скидається, готовий до наступного циклу. \n\nЗбережіть подію, щоб повернутися
+        до сценарію.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">Сценарій готовий! Він натискатиме на синю ціль, рахуватиме
+        кожне натискання, потім підтверджуватиме червоною ціллю кожні 10 кліків і починатиме заново. \n\nЗбережіть
+        сценарій, щоб застосувати конфігурацію.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">Все готово! Запустіть сценарій, потім відкрийте гру і
+        спостерігайте, як Klick\'r виконує підрахунок замість вас.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">Чудово! Ви навчилися використовувати лічильники для
+        відстеження значень між кількома подіями. \n\nУ поєднанні з дією «Змінити лічильник» та умовою «При досягненні
+        лічильника» ви тепер можете створювати автоматизації, які реагують на повторювані дії.</string>
+
+</resources>
