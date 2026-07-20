@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">カウンターの基本</string>
+    <string name="item_desc_tutorial_counters_basics">「カウンターを変更する」アクションと「カウンター到達時」条件の使い方を学びましょう。</string>
+    <string name="message_game_tutorial_counters_basics">青いターゲットを10回クリックし、その後赤いターゲットを1回クリックしてください</string>
+
+    <string name="message_tutorial_counters_basics_step_1">カウンターのチュートリアルへようこそ！
+        \n\nここでは、青いターゲットを10回クリックし、その後赤いターゲットを1回クリックしてカウントを確認し10ポイントを獲得するゲームを自動化します。先にゲームを試してみるか、直接シナリオの設定に進むことができます。</string>
+
+    <string name="message_tutorial_counters_basics_step_2">まず、青いターゲットを検出してクリックする画面イベントを作成する必要があります。\n\n「イベントを作成」をタップして始めましょう。</string>
+
+    <string name="message_tutorial_counters_basics_step_3">まず、青いターゲットを検出する条件を追加しましょう。「条件」フィールドをタップして条件リストを開き、条件を作成してください。\n\n条件が作成されるとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_counters_basics_step_4">よくできました！次に「アクション」フィールドをタップして、青いターゲットが検出されたときに実行するアクションを追加してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_5">まず、青いターゲットをタップするクリックアクションが必要です。「作成」ボタンをタップして新しいアクションを追加してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_6">青いターゲットをタップするようにクリックを設定し、アクションを保存してください。\n\nクリックが保存されるとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_counters_basics_step_7">また、青いターゲットを何回クリックしたかを数える必要があります。これは「カウンターを変更する」アクションを使い、クリックのたびに1ずつ加算することで実現できます。\n\n「作成」ボタンをもう一度タップして2つ目のアクションを追加してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_8">青いターゲットがクリックされるたびにカウンターを増やすため、「カウンターを変更する」アクションを選択してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_9">まず、更新するカウンターを選択します。「カウンターを選択」をタップしてカウンターリストを開いてください。</string>
+
+    <string name="message_tutorial_counters_basics_step_10">リストは今空です。「作成」ボタンをタップして新しいカウンターを作成してください。名前を付け（例：「青のクリック数」）、開始値を0のままにして、保存して選択してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_11">次に、青いターゲットがクリックされるたびにカウンターがどのように変化するかを設定します。\n\n演算子を「+」に、値を「1」に設定して、クリックのたびにカウンターが1増えるようにしてください。\n\nその後、アクションを保存してイベントのダイアログに戻ってください。</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">値には固定の数値か、別のカウンターの現在の値を使用できます。</string>
+
+    <string name="message_tutorial_counters_basics_step_12">すばらしい！この画面イベントは、検出のたびに青いターゲットをクリックしてカウンターを増やします。\n\nイベントを保存してシナリオに戻ってください。</string>
+
+    <string name="message_tutorial_counters_basics_step_13">次に、カウンターが10に達したときに反応するイベントが必要です。このようなイベントは画面によってトリガーされないため、トリガーイベントになります。\n\n「トリガー」タブをタップしてトリガーイベントのリストを開いてください。</string>
+
+    <string name="message_tutorial_counters_basics_step_14">「作成」ボタンをタップして新しいトリガーイベントを追加してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_15">画面イベントと同様に、トリガーイベントにも条件が必要です。「条件」フィールドをタップして条件リストを開き、新しいトリガー条件を作成してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_16">カウンターが特定の値に達したときにこのイベントをトリガーするため、「カウンター到達時」条件タイプを選択してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_17">先ほど作成したカウンター（青いクリック数を数えているもの）を選択してトリガーとして使用してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_18">カウンターが10と等しいときに条件が満たされるように比較を設定してください。いくつかの比較演算子がありますが、ここでは等しいかどうかを確認するため「=」を選択してください。次に値として10を入力し、条件を保存してイベントのダイアログに戻ってください。</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">比較する値には固定の数値か、別のカウンターの現在の値を使用できます。</string>
+
+    <string name="message_tutorial_counters_basics_step_19">条件が設定されました！次に、カウンターが10に達したときに何が起こるかを定義する必要があります。「アクション」フィールドをタップしてアクションリストを開いてください。</string>
+
+    <string name="message_tutorial_counters_basics_step_20">まず、クリックアクションを作成し、カウントを確認するために赤いターゲットの位置に手動で配置してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_21">赤いターゲットをタップするようにクリックを設定し、アクションを保存してください。トリガーイベントでは、クリック位置は常に手動で設定する必要があることに注意してください。\n\nクリックが保存されるとチュートリアルが続きます。</string>
+
+    <string name="message_tutorial_counters_basics_step_22">次に、カウンターをリセットする2つ目のアクションを作成します。「作成」ボタンをもう一度タップして「カウンターを変更する」アクションを選択してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_23">青いクリック数のカウンターを0にリセットするため、まず青いクリック数のカウンターを選択してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_24">演算子を「=」に、値を「0」に設定して、確認のたびにカウンターをリセットしてください。その後、アクションを保存してイベントのダイアログに戻って続けてください。</string>
+
+    <string name="message_tutorial_counters_basics_step_25">このトリガーイベントは、青いクリックが10回カウントされるたびに赤いターゲットをクリックしてカウンターをリセットします。トリガーイベントリストは各画面フレームの間、画面イベントリストの前に実行されるため、カウンターが10になるとすぐにこのイベントが実行されます。赤いターゲットがクリックされてカウンターがリセットされ、また最初から始める準備が整います。\n\nイベントを保存してシナリオに戻ってください。</string>
+
+    <string name="message_tutorial_counters_basics_step_26">シナリオが完成しました！青いターゲットをクリックして各クリックをカウントし、10回クリックするごとに赤いターゲットで確認してまた最初から始めます。\n\nシナリオを保存して設定を適用してください。</string>
+
+    <string name="message_tutorial_counters_basics_step_27">準備完了です！シナリオを開始し、ゲームを起動して、Klick\'rがカウントを代わりに処理するのを見てください。</string>
+
+    <string name="message_tutorial_counters_basics_step_28">よくできました！複数のイベントにまたがって値を追跡するためのカウンターの使い方を学びました。\n\n「カウンターを変更する」アクションと「カウンター到達時」条件を組み合わせることで、繰り返しのパターンに反応する自動化を構築できるようになりました。</string>
+
+</resources>

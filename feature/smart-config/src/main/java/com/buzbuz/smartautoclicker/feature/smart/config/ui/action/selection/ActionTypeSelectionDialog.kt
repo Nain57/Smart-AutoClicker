@@ -48,6 +48,7 @@ class ActionTypeSelectionDialog(
         super.onStop()
         viewModel.stopViewCreateClickMonitoring()
         viewModel.stopViewToggleEventMonitoring()
+        viewModel.stopViewCounterMonitoring()
     }
 
     override fun onChoiceViewBound(choice: ActionTypeChoice, view: View?) {
@@ -60,7 +61,10 @@ class ActionTypeSelectionDialog(
                 if (view != null) viewModel.monitorCreateToggleEventView(view)
                 else viewModel.stopViewToggleEventMonitoring()
 
-            ActionTypeChoice.ChangeCounter,
+            ActionTypeChoice.ChangeCounter ->
+                if (view != null) viewModel.monitorCreateCounterView(view)
+                else viewModel.stopViewCounterMonitoring()
+
             ActionTypeChoice.Copy,
             ActionTypeChoice.Intent,
             ActionTypeChoice.Notification,

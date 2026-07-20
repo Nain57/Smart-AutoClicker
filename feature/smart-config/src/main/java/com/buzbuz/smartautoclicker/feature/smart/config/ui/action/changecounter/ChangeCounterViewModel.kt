@@ -17,8 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
@@ -51,6 +54,7 @@ import kotlinx.coroutines.flow.combine
 class ChangeCounterViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     /** The action being configured by the user. */
@@ -104,6 +108,19 @@ class ChangeCounterViewModel @Inject constructor(
         updateEditedChangeCounter { old ->
             old.copy(operationValue = value)
         }
+    }
+
+    fun monitorSelectCounterView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.COUNTER_ACTION_DIALOG_FIELD_SELECT_COUNTER, view)
+    }
+
+    fun monitorSaveButtonView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.COUNTER_ACTION_DIALOG_BUTTON_SAVE, view)
+    }
+
+    fun detachMonitoredViews() {
+        monitoredViewsManager.detach(MonitoredViewType.COUNTER_ACTION_DIALOG_FIELD_SELECT_COUNTER)
+        monitoredViewsManager.detach(MonitoredViewType.COUNTER_ACTION_DIALOG_BUTTON_SAVE)
     }
 
     private fun updateEditedChangeCounter(closure: (old: ChangeCounter) -> ChangeCounter) {

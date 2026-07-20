@@ -17,7 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -31,6 +34,7 @@ import javax.inject.Inject
 class CounterSelectionViewModel @Inject constructor(
     @ApplicationContext context: Context,
     editionRepository: EditionRepository,
+    private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
 
     val counterNames: Flow<List<CounterSelectionUiItem>> = editionRepository.editionState.allEditedCountersFlow
@@ -45,4 +49,12 @@ class CounterSelectionViewModel @Inject constructor(
                 )
             }.sortedBy { counter -> counter.counterName }
         }
+
+    fun monitorCreateCounterView(view: View) {
+        monitoredViewsManager.attach(MonitoredViewType.COUNTER_SELECTION_DIALOG_BUTTON_CREATE, view)
+    }
+
+    fun stopViewMonitoring() {
+        monitoredViewsManager.detach(MonitoredViewType.COUNTER_SELECTION_DIALOG_BUTTON_CREATE)
+    }
 }

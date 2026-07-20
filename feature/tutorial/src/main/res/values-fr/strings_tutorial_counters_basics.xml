@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">Les bases des compteurs</string>
+    <string name="item_desc_tutorial_counters_basics">Apprenez à utiliser l\'action Modifier compteur et la condition
+        Compteur atteint.</string>
+    <string name="message_game_tutorial_counters_basics">Cliquez 10 fois sur la cible bleue, puis une fois sur la cible
+        rouge</string>
+
+    <string name="message_tutorial_counters_basics_step_1">Bienvenue dans le tutoriel sur les Compteurs !
+        \n\nIci, vous allez automatiser un jeu où vous devez cliquer sur la cible bleue 10 fois, puis sur la cible rouge
+        une fois pour valider votre décompte et gagner 10 points. Vous pouvez d\'abord essayer le jeu, ou passer
+        directement à la configuration du scénario.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">Nous allons d\'abord créer un Événement d\'écran qui détecte la
+        cible bleue et clique dessus. \n\nCliquez sur Créer un événement pour commencer.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">Commençons par ajouter une condition pour détecter la cible
+        bleue. Cliquez sur le champ Conditions pour ouvrir la liste des conditions et créer cette condition.
+        \n\nLe tutoriel avancera une fois votre condition créée.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">Bien ! Cliquez maintenant sur le champ Actions pour ajouter
+        les actions qui s\'exécuteront lorsque la cible bleue est détectée.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">Nous avons d\'abord besoin d\'une action Clic pour appuyer sur
+        la cible bleue. Cliquez sur le bouton créer pour ajouter une nouvelle action.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">Configurez le clic pour appuyer sur la cible bleue, puis
+        enregistrez l\'action. \n\nLe tutoriel avancera une fois le clic enregistré.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">Nous devons aussi compter le nombre de fois où nous avons
+        cliqué sur la cible bleue. Pour cela, nous pouvons utiliser l\'action Modifier compteur, en ajoutant 1 à chaque
+        clic. \n\nCliquez à nouveau sur le bouton créer pour ajouter une deuxième action.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">Sélectionnez l\'action Modifier compteur pour incrémenter un
+        compteur à chaque clic sur la cible bleue.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">Nous devons d\'abord choisir quel compteur mettre à jour.
+        Cliquez sur Sélectionner un compteur pour ouvrir la liste des compteurs.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">La liste est vide pour l\'instant. Cliquez sur le bouton
+        créer pour créer un nouveau compteur. Donnez-lui un nom (ex. « Clics bleus »), laissez la valeur de départ à 0,
+        puis enregistrez-le et sélectionnez-le.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">Configurez maintenant comment le compteur évolue à chaque
+        clic sur la cible bleue. \n\nDéfinissez l\'opérateur sur + et la valeur sur 1, afin que le compteur augmente de
+        1 à chaque clic. \n\nEnregistrez ensuite l\'action et revenez au dialogue Événement.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">La valeur peut être un nombre fixe, ou la valeur
+        actuelle d\'un autre compteur.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">Parfait ! Cet Événement d\'écran va maintenant cliquer sur la
+        cible bleue et incrémenter votre compteur à chaque détection. \n\nEnregistrez l\'événement pour revenir au
+        scénario.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">Nous avons maintenant besoin d\'un événement qui réagit quand
+        le compteur atteint 10. Ce type d\'événement n\'est pas déclenché par l\'écran, c\'est donc un Événement de
+        déclenchement. \n\nCliquez sur l\'onglet Événements de déclenchement pour ouvrir la liste correspondante.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">Cliquez sur le bouton créer pour ajouter un nouvel Événement
+        de déclenchement.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">Tout comme un Événement d\'écran, un Événement de
+        déclenchement a besoin de conditions. Cliquez sur le champ Conditions pour ouvrir la liste des conditions et en
+        créer une nouvelle.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">Sélectionnez le type de condition Compteur atteint pour
+        déclencher cet événement lorsqu\'un compteur atteint une valeur précise.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">Sélectionnez le compteur que vous avez créé précédemment
+        (celui qui compte les clics bleus) pour l\'utiliser comme déclencheur.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">Définissez maintenant la comparaison pour que la condition
+        soit remplie lorsque le compteur est égal à 10. Il existe plusieurs opérateurs de comparaison, mais ici nous
+        devons vérifier l\'égalité, donc sélectionnez « = ». Entrez ensuite 10 comme valeur, enregistrez la condition
+        et revenez au dialogue Événement.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">La valeur à comparer peut être un nombre fixe, ou
+        la valeur actuelle d\'un autre compteur.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">La condition est définie ! Nous devons maintenant préciser
+        ce qui se passe quand le compteur atteint 10. Cliquez sur le champ Actions pour ouvrir la liste des actions.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">Créez d\'abord une action Clic et placez-la manuellement sur
+        la cible rouge pour valider le décompte.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">Configurez le clic pour appuyer sur la cible rouge, puis
+        enregistrez l\'action. Notez que dans un Événement de déclenchement, la position du clic doit toujours être
+        définie manuellement. \n\nLe tutoriel avancera une fois le clic enregistré.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">Créez maintenant une deuxième action pour remettre le
+        compteur à zéro. Cliquez à nouveau sur le bouton créer et sélectionnez l\'action Modifier compteur.</string>
+
+    <string name="message_tutorial_counters_basics_step_23">Nous voulons remettre le compteur de clics bleus à 0, donc
+        commencez par sélectionner ce compteur.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">Définissez l\'opérateur sur = et la valeur sur 0 pour
+        remettre le compteur à zéro après chaque validation. Enregistrez ensuite l\'action et revenez au dialogue
+        Événement pour continuer.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">Cet Événement de déclenchement va cliquer sur la cible rouge
+        et remettre le compteur à zéro chaque fois que 10 clics bleus sont comptés. La liste des Événements de
+        déclenchement est traitée entre chaque image d\'écran, avant la liste des Événements d\'écran ; ainsi, dès que
+        le compteur atteint 10, cet événement s\'exécute immédiatement : la cible rouge est cliquée et le compteur
+        remis à zéro, prêt à repartir. \n\nEnregistrez l\'événement pour revenir au scénario.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">Le scénario est complet ! Il va cliquer sur la cible bleue,
+        compter chaque clic, puis valider sur la cible rouge tous les 10 clics et recommencer. \n\nEnregistrez le
+        scénario pour appliquer votre configuration.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">Tout est prêt ! Démarrez le scénario, puis lancez le jeu et
+        regardez Klick\'r gérer le décompte à votre place.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">Bravo ! Vous avez appris à utiliser les Compteurs pour
+        suivre des valeurs à travers plusieurs événements. \n\nAssociés à l\'action Modifier compteur et à la condition
+        Compteur atteint, vous pouvez désormais créer des automatisations qui réagissent à des schémas répétitifs.</string>
+
+</resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">Conceptos básicos de contadores</string>
+    <string name="item_desc_tutorial_counters_basics">Aprende a usar la acción Contador de cambios y la condición
+        Contador alcanzado.</string>
+    <string name="message_game_tutorial_counters_basics">Haz clic 10 veces en el objetivo azul, luego haz clic una vez
+        en el objetivo rojo</string>
+
+    <string name="message_tutorial_counters_basics_step_1">¡Bienvenido al tutorial de Contadores!
+        \n\nAquí, automatizarás un juego en el que haces clic en el objetivo azul 10 veces y luego haces clic en el
+        objetivo rojo una vez para validar tu cuenta y ganar 10 puntos. Puedes probar el juego primero o ir directamente
+        a la configuración del escenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">Primero, necesitamos crear un Evento de pantalla que detecte
+        el objetivo azul y haga clic en él. \n\nHaz clic en Crear evento para empezar.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">Empecemos añadiendo una condición para detectar el objetivo
+        azul. Haz clic en el campo Condiciones para abrir la lista de condiciones y crear esta condición.
+        \n\nEl tutorial continuará una vez que tu condición esté creada.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">¡Bien! Ahora haz clic en el campo Acciones para añadir las
+        acciones que se ejecutarán cuando se detecte el objetivo azul.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">Primero necesitamos una acción Hacer clic para tocar el
+        objetivo azul. Haz clic en el botón de crear para añadir una nueva acción.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">Configura el clic para tocar el objetivo azul y luego guarda
+        la acción. \n\nEl tutorial continuará una vez que el clic esté guardado.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">También necesitamos contar cuántas veces hemos hecho clic en
+        el objetivo azul. Esto se puede lograr con una acción Contador de cambios, añadiendo uno cada vez que hacemos
+        clic. \n\nHaz clic de nuevo en el botón de crear para añadir una segunda acción.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">Selecciona la acción Contador de cambios para incrementar un
+        contador cada vez que se haga clic en el objetivo azul.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">Primero, necesitamos elegir qué contador actualizar. Haz clic
+        en Seleccionar un contador para abrir la lista de contadores.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">La lista está vacía por ahora. Haz clic en el botón de crear
+        para crear un nuevo contador. Dale un nombre (p. ej., «Clics azules»), deja el valor inicial en 0, luego
+        guárdalo y selecciónalo.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">Ahora configura cómo cambia el contador cada vez que se hace
+        clic en el objetivo azul. \n\nEstablece el operador en + y el valor en 1, para que el contador aumente en 1 con
+        cada clic. \n\nLuego guarda la acción y vuelve al diálogo del evento.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">El valor puede ser un número fijo o el valor
+        actual de otro contador.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">¡Genial! Este Evento de pantalla ahora hará clic en el
+        objetivo azul e incrementará tu contador en cada detección. \n\nGuarda el evento para volver al escenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">Ahora necesitamos un evento que reaccione cuando el contador
+        llegue a 10. Este tipo de evento no se activa por la pantalla, por lo que es un Evento de disparo.
+        \n\nHaz clic en la pestaña Eventos de disparo para abrir la lista de Eventos de disparo.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">Haz clic en el botón de crear para añadir un nuevo Evento
+        de disparo.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">Al igual que un Evento de pantalla, un Evento de disparo
+        necesita condiciones. Haz clic en el campo Condiciones para abrir la lista de condiciones y crear una nueva
+        condición de disparo.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">Selecciona el tipo de condición Contador alcanzado para
+        activar este evento cuando un contador alcance un valor específico.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">Selecciona el contador que creaste antes (el que cuenta los
+        clics azules) para usarlo como disparador.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">Ahora establece la comparación para que la condición se
+        cumpla cuando el contador sea igual a 10. Hay varios operadores de comparación, pero aquí necesitamos comprobar
+        cuándo es igual, así que selecciona «=». Luego introduce 10 como valor, guarda la condición y vuelve al diálogo
+        del evento.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">El valor con el que comparar puede ser un número
+        fijo o el valor actual de otro contador.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">¡Condición establecida! Ahora necesitamos definir qué ocurre
+        cuando el contador llega a 10. Haz clic en el campo Acciones para abrir la lista de acciones.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">Primero, crea una acción Hacer clic y colócala manualmente
+        en el objetivo rojo para validar la cuenta.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">Configura el clic para tocar el objetivo rojo y luego guarda
+        la acción. Ten en cuenta que en un Evento de disparo, la posición del clic debe establecerse siempre manualmente.
+        \n\nEl tutorial continuará una vez que el clic esté guardado.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">Ahora crea una segunda acción para reiniciar el contador.
+        Haz clic de nuevo en el botón de crear y selecciona la acción Contador de cambios.</string>
+
+    <string name="message_tutorial_counters_basics_step_23">Queremos establecer el contador de clics azules en 0, así
+        que primero, selecciona el contador de clics azules.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">Establece el operador en = y el valor en 0 para reiniciar
+        el contador tras cada validación. Luego guarda la acción y vuelve al diálogo del evento para continuar.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">Este Evento de disparo hará clic en el objetivo rojo y
+        reiniciará el contador cada vez que se cuenten 10 clics azules. La lista de Eventos de disparo se ejecuta entre
+        cada fotograma de pantalla, antes que la lista de Eventos de pantalla, por lo que cuando el contador llega a 10,
+        este evento se ejecuta de inmediato: se hace clic en el objetivo rojo y el contador se reinicia, listo para
+        empezar de nuevo. \n\nGuarda el evento para volver al escenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">¡El escenario está completo! Hará clic en el objetivo azul,
+        contará cada clic y luego validará con el objetivo rojo cada 10 clics y empezará de nuevo. \n\nGuarda el
+        escenario para aplicar tu configuración.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">¡Todo está listo! Inicia el escenario, luego lanza el juego
+        y observa cómo Klick\'r gestiona el conteo por ti.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">¡Bien hecho! Has aprendido a usar Contadores para registrar
+        valores a lo largo de múltiples eventos. \n\nCombinado con la acción Contador de cambios y la condición
+        Contador alcanzado, ahora puedes crear automatizaciones que reaccionen a patrones repetidos.</string>
+
+</resources>

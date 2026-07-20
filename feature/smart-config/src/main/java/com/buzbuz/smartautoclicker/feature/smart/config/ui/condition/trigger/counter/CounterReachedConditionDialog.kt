@@ -133,6 +133,17 @@ class CounterReachedConditionDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorSelectCounterView(viewBinding.counterToCheck.root)
+        viewModel.monitorSaveButtonView(viewBinding.layoutTopBar.buttonSave)
+    }
+
+    override fun onStop() {
+        viewModel.detachMonitoredViews()
+        super.onStop()
+    }
+
     override fun back() {
         if (viewModel.hasUnsavedModifications()) {
             context.showCloseWithoutSavingDialog {

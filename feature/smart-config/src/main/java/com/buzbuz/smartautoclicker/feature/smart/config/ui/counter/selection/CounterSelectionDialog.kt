@@ -91,7 +91,15 @@ class CounterSelectionDialog(
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.monitorCreateCounterView(viewBinding.buttonNew)
+    }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopViewMonitoring()
+    }
     private fun updateCounterNames(counterNames: List<CounterSelectionUiItem>) {
         viewBinding.layoutLoadableList.updateState(counterNames)
         counterNameAdapter.submitList(counterNames)

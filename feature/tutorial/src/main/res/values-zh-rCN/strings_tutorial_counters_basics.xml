@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">计数器基础</string>
+    <string name="item_desc_tutorial_counters_basics">学习如何使用"更改计数器"动作和"计数器达到时"条件。</string>
+    <string name="message_game_tutorial_counters_basics">点击蓝色目标10次，然后点击一次红色目标</string>
+
+    <string name="message_tutorial_counters_basics_step_1">欢迎来到计数器教程！
+        \n\n在这里，您将自动化一个游戏：点击蓝色目标10次，然后点击红色目标一次以验证计数并获得10分。您可以先尝试游戏，或直接进入场景配置。</string>
+
+    <string name="message_tutorial_counters_basics_step_2">首先，我们需要创建一个屏幕事件，用于检测蓝色目标并点击它。\n\n点击"创建事件"开始。</string>
+
+    <string name="message_tutorial_counters_basics_step_3">先添加一个条件来检测蓝色目标。点击"条件"字段以打开条件列表并创建该条件。\n\n条件创建完成后教程将继续。</string>
+
+    <string name="message_tutorial_counters_basics_step_4">很好！现在点击"动作"字段，添加检测到蓝色目标时要执行的动作。</string>
+
+    <string name="message_tutorial_counters_basics_step_5">我们首先需要一个"单击"动作来点击蓝色目标。点击创建按钮添加新动作。</string>
+
+    <string name="message_tutorial_counters_basics_step_6">配置单击以点击蓝色目标，然后保存动作。\n\n单击保存后教程将继续。</string>
+
+    <string name="message_tutorial_counters_basics_step_7">我们还需要记录点击蓝色目标的次数。可以使用"更改计数器"动作，每次点击时将计数器加一。\n\n再次点击创建按钮添加第二个动作。</string>
+
+    <string name="message_tutorial_counters_basics_step_8">选择"更改计数器"动作，以便每次点击蓝色目标时递增计数器。</string>
+
+    <string name="message_tutorial_counters_basics_step_9">首先，我们需要选择要更新的计数器。点击"选择计数器"以打开计数器列表。</string>
+
+    <string name="message_tutorial_counters_basics_step_10">列表目前为空。点击创建按钮新建一个计数器。为其命名（例如"蓝色点击次数"），保持初始值为0，然后保存并选择它。</string>
+
+    <string name="message_tutorial_counters_basics_step_11">现在配置每次点击蓝色目标时计数器的变化方式。\n\n将运算符设为 + ，值设为 1，这样每次点击计数器加1。\n\n然后保存动作并返回事件对话框。</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">该值可以是固定数字，也可以是另一个计数器的当前值。</string>
+
+    <string name="message_tutorial_counters_basics_step_12">太好了！这个屏幕事件现在将在每次检测到蓝色目标时点击它并递增计数器。\n\n保存事件以返回场景。</string>
+
+    <string name="message_tutorial_counters_basics_step_13">现在我们需要一个在计数器达到10时做出响应的事件。这类事件不由屏幕触发，因此它是一个触发器事件。
+        \n\n点击"触发器"标签页以打开触发事件列表。</string>
+
+    <string name="message_tutorial_counters_basics_step_14">点击创建按钮添加新的触发器事件。</string>
+
+    <string name="message_tutorial_counters_basics_step_15">与屏幕事件一样，触发器事件也需要条件。点击"条件"字段以打开条件列表并创建新的触发条件。</string>
+
+    <string name="message_tutorial_counters_basics_step_16">选择"计数器达到时"条件类型，以便在计数器达到特定值时触发此事件。</string>
+
+    <string name="message_tutorial_counters_basics_step_17">选择您之前创建的计数器（用于记录蓝色点击次数的那个）作为触发器。</string>
+
+    <string name="message_tutorial_counters_basics_step_18">现在设置比较条件，使其在计数器等于10时满足。比较运算符有多种，但这里我们需要检测是否相等，请选择"="。然后输入10作为值，保存条件并返回事件对话框。</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">用于比较的值可以是固定数字，也可以是另一个计数器的当前值。</string>
+
+    <string name="message_tutorial_counters_basics_step_19">条件已设置！现在我们需要定义计数器达到10时要执行的操作。点击"动作"字段以打开动作列表。</string>
+
+    <string name="message_tutorial_counters_basics_step_20">首先，创建一个"单击"动作并手动将其放置在红色目标上以验证计数。</string>
+
+    <string name="message_tutorial_counters_basics_step_21">配置单击以点击红色目标，然后保存动作。请注意，在触发器事件中，点击位置必须始终手动设置。\n\n单击保存后教程将继续。</string>
+
+    <string name="message_tutorial_counters_basics_step_22">现在创建第二个动作来重置计数器。再次点击创建按钮并选择"更改计数器"动作。</string>
+
+    <string name="message_tutorial_counters_basics_step_23">我们要将蓝色点击计数器重置为0，请先选择该计数器。</string>
+
+    <string name="message_tutorial_counters_basics_step_24">将运算符设为 = ，值设为 0，以便每次验证后重置计数器。然后保存动作并返回事件对话框继续操作。</string>
+
+    <string name="message_tutorial_counters_basics_step_25">这个触发器事件会在每次累计10次蓝色点击时点击红色目标并重置计数器。触发事件列表在每个屏幕帧之间、屏幕事件列表之前执行，因此一旦计数器等于10，该事件会立即运行：点击红色目标，计数器重置，然后重新开始。\n\n保存事件以返回场景。</string>
+
+    <string name="message_tutorial_counters_basics_step_26">场景已完成！它将点击蓝色目标、记录每次点击，然后每10次点击用红色目标验证一次并重新开始。\n\n保存场景以应用您的配置。</string>
+
+    <string name="message_tutorial_counters_basics_step_27">一切准备就绪！启动场景，然后打开游戏，看看 Klick\'r 为您自动完成计数。</string>
+
+    <string name="message_tutorial_counters_basics_step_28">干得好！您已经学会了如何使用计数器跨多个事件追踪数值。\n\n结合"更改计数器"动作和"计数器达到时"条件，您现在可以构建能够响应重复模式的自动化流程。</string>
+
+</resources>

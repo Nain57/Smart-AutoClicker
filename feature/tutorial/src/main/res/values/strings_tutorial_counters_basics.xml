@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="item_title_tutorial_counters_basics">Counters basics</string>
+    <string name="item_desc_tutorial_counters_basics">Learn how to use the Set Counter action and the Counter Reached
+        condition.</string>
+    <string name="message_game_tutorial_counters_basics">Click 10 times on the blue target, then click once on the red
+        target</string>
+
+    <string name="message_tutorial_counters_basics_step_1">Welcome to the Counters tutorial!
+        \n\nHere, you will automate a game where you click the blue target 10 times, then click the red target once to
+        validate your count and earn 10 points. You can try the game first, or jump straight into the scenario
+        configuration.</string>
+
+    <string name="message_tutorial_counters_basics_step_2">First, we need to create a Screen Event that detects the blue
+        target and clicks on it. \n\nClick on Create Event to get started.</string>
+
+    <string name="message_tutorial_counters_basics_step_3">Let\'s start by adding a condition to detect the blue target.
+        Click on the Conditions field to open the condition list and create this condition. \n\nTutorial will proceed
+        once your condition is created.</string>
+
+    <string name="message_tutorial_counters_basics_step_4">Good! Now click on the Actions field to add the actions that
+        will run when the blue target is detected.</string>
+
+    <string name="message_tutorial_counters_basics_step_5">We first need a Click action to tap the blue target. Click
+        on the create button to add a new action.</string>
+
+    <string name="message_tutorial_counters_basics_step_6">Configure the click to tap the blue target, then save the
+        action. \n\nTutorial will proceed once the click is saved.</string>
+
+    <string name="message_tutorial_counters_basics_step_7">We also need to count how many times we have clicked on the
+        blue target. This can be achieved with a Change Counter action, by adding one every time we click. \n\nClick on
+        the create button again to add a second action.</string>
+
+    <string name="message_tutorial_counters_basics_step_8">Select the Change Counter action to increment a counter each
+        time the blue target is clicked.</string>
+
+    <string name="message_tutorial_counters_basics_step_9">First, we need to choose which counter to update. Click on
+        Select a counter to open the counter list.</string>
+
+    <string name="message_tutorial_counters_basics_step_10">The list is empty for now. Click the create button to create
+        a new counter. Give it a name (e.g. "Blue clicks"), keep the starting value at 0, then save and select it.</string>
+
+    <string name="message_tutorial_counters_basics_step_11">Now configure how the counter changes each time the blue
+        target is clicked. \n\nSet the operator to + and the value to 1, so the counter increases by 1 on each click.
+        \n\nThen save the action and return to the Event dialog.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">The value can be a fixed number, or the current
+        value of another counter.</string>
+
+    <string name="message_tutorial_counters_basics_step_12">Great! This Screen Event will now click the blue target and
+        increment your counter on every detection. \n\nSave the event to return to the scenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_13">Now we need an event that reacts when the counter reaches
+        10. That kind of event is not triggered by the screen, so it\'s a Trigger Event.
+        \n\nClick on the Trigger Events tab to open the Trigger Events list.</string>
+
+    <string name="message_tutorial_counters_basics_step_14">Click on the create button to add a new Trigger Event.</string>
+
+    <string name="message_tutorial_counters_basics_step_15">Just like a Screen Event, a Trigger Event needs conditions.
+        Click on the Conditions field to open the condition list and create a new trigger condition.</string>
+
+    <string name="message_tutorial_counters_basics_step_16">Select the Counter Reached condition type to trigger this
+        event when a counter hits a specific value.</string>
+
+    <string name="message_tutorial_counters_basics_step_17">Select the counter you created earlier (the one counting
+        blue clicks) to use it as the trigger.</string>
+
+    <string name="message_tutorial_counters_basics_step_18">Now set the comparison so the condition is fulfilled when
+        the counter equals 10. There are several comparison operators, but here we need to check when it is equal, so
+        select \"=\". Then enter 10 as value, save the condition and return to the Event dialog.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">The value to compare against can be a fixed number,
+        or the current value of another counter.</string>
+
+    <string name="message_tutorial_counters_basics_step_19">Condition is set! Now we need to define what happens when
+        the counter reaches 10. Click on the Actions field to open the action list.</string>
+
+    <string name="message_tutorial_counters_basics_step_20">First, create a Click action and manually place it on the
+        red target to validate the count.</string>
+
+    <string name="message_tutorial_counters_basics_step_21">Configure the click to tap the red target, then save the
+        action. Note that in a Trigger Event, the click position must always be set manually. \n\nTutorial will proceed
+        once the click is saved.</string>
+
+    <string name="message_tutorial_counters_basics_step_22">Now create a second action to reset the counter. Click the
+        create button again and select the Change Counter action.</string>
+
+    <string name="message_tutorial_counters_basics_step_23">We want to set the blue click counter to 0, so first,
+        select the blue click counter.</string>
+
+    <string name="message_tutorial_counters_basics_step_24">Set the operator to = and the value to 0 to reset the
+        counter after each validation. Then save the action and return to the Event dialog to proceed.</string>
+
+    <string name="message_tutorial_counters_basics_step_25">This Trigger Event will click the red target and reset the
+        counter every time 10 blue clicks are counted. The Trigger Event list is executed between each screen frame,
+        before the Screen Event list, so once the counter equals 10, this event runs immediately: the red target is
+        clicked and the counter reset, ready to start over. \n\nSave the event to return to the scenario.</string>
+
+    <string name="message_tutorial_counters_basics_step_26">The scenario is complete! It will click the blue target,
+        count each click, then validate with the red target every 10 clicks and start over. \n\nSave the scenario to
+        apply your configuration.</string>
+
+    <string name="message_tutorial_counters_basics_step_27">Everything is ready! Start the scenario, then launch the
+        game and watch Klick\'r handle the counting for you.</string>
+
+    <string name="message_tutorial_counters_basics_step_28">Well done! You\'ve learned how to use Counters to track
+        values across multiple events. \n\nCombined with the Change Counter action and the Counter Reached condition,
+        you can now build automations that react to repeated patterns.</string>
+
+</resources>
