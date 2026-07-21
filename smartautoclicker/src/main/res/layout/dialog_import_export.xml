@@ -78,7 +78,7 @@
             app:layout_constraintEnd_toStartOf="@id/button_export"
             app:layout_constraintTop_toBottomOf="@id/desc"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:icon="@drawable/ic_load"
+            app:icon="@drawable/ic_backup_load"
             android:text="@string/button_import"/>
 
         <com.google.android.material.button.MaterialButton
