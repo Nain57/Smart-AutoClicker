@@ -349,4 +349,28 @@
         estiver em recarga, o temporizador de recarga será limpo, de modo que o tempo de espera não se aplica mais
         quando o evento é reativado.</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">Usar valores de contador</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">Aprenda as diferentes formas de exibir e usar os valores de contador no seu cenário</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">Você pode mostrar o valor atual de um contador
+        dentro de uma ação Notificação. Isso é útil para monitorar o progresso enquanto o seu cenário está em
+        execução, ou para exibir um resumo no final.\n\nPara inserir um contador, pressione o botão Adicionar
+        contador na configuração da ação. Isso adiciona um marcador como <b>{counterName}</b> no seu texto. Em
+        tempo de execução, o marcador é substituído pelo valor atual do contador. Por exemplo, se um contador
+        chamado <i>score</i> tem o valor 42, o texto \"Pontuação atual: {score}\" se torna
+        \"Pontuação atual: 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">Você também pode inserir o valor de um
+        contador em uma ação Escrever texto, para que o texto digitado inclua o valor atual no momento em que a
+        ação é executada.\n\nO marcador funciona da mesma forma que na ação Notificação: pressione o botão Adicionar
+        contador ou digite <b>{counterName}</b> diretamente. Por exemplo, se um contador chamado <i>score</i> tem
+        o valor 42, o texto \"Minha pontuação é {score}\" se torna \"Minha pontuação é 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">Os valores dos contadores são registrados no
+        relatório de depuração. Se algo não estiver funcionando como esperado no seu cenário, capturar um relatório
+        de depuração mostrará exatamente como seus contadores mudaram ao longo do tempo, facilitando encontrar o
+        problema.</string>
+
 </resources>

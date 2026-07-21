@@ -357,4 +357,29 @@
         l\'evento viene disabilitato mentre è in fase di ricarica, il timer di ricarica verrà azzerato, quindi il tempo
         di attesa non si applica più quando l\'evento viene riabilitato.</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">Usare i valori dei contatori</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">Scopri i diversi modi per visualizzare e usare i valori dei contatori nel tuo scenario</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">Puoi mostrare il valore attuale di un
+        contatore all\'interno di un\'azione Notifica. Questo è utile per monitorare i progressi mentre il tuo
+        scenario è in esecuzione, o per visualizzare un riepilogo alla fine.\n\nPer inserire un contatore, premi
+        il pulsante Aggiungi contatore nella configurazione dell\'azione. Questo aggiunge un segnaposto come
+        <b>{counterName}</b> nel tuo testo. In fase di esecuzione, il segnaposto viene sostituito con il valore
+        attuale del contatore. Ad esempio, se un contatore chiamato <i>score</i> ha il valore 42, il testo
+        \"Punteggio attuale: {score}\" diventa \"Punteggio attuale: 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">Puoi anche inserire il valore di un contatore
+        in un\'azione Scrivi testo, in modo che il testo digitato includa il valore attuale nel momento in cui
+        l\'azione viene eseguita.\n\nIl segnaposto funziona allo stesso modo dell\'azione Notifica: premi il pulsante
+        Aggiungi contatore o digita <b>{counterName}</b> direttamente. Ad esempio, se un contatore chiamato
+        <i>score</i> ha il valore 42, il testo \"Il mio punteggio è {score}\" diventa
+        \"Il mio punteggio è 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">I valori dei contatori vengono registrati nel
+        rapporto di debug. Se qualcosa non funziona come previsto nel tuo scenario, catturare un rapporto di debug
+        ti mostrerà esattamente come sono cambiati i tuoi contatori nel tempo, rendendo più facile trovare il
+        problema.</string>
+
 </resources>

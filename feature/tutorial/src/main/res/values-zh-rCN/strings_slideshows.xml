@@ -276,4 +276,15 @@
         \n\n处于重新装填状态的事件仍被视为启用：重新装填与事件状态相互独立。 \n\n如果事件在重新装填状态下被禁用，重新装填
         计时器将被清除，因此当事件重新启用时冷却不再适用。</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">使用计数器的值</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">了解在场景中显示和使用计数器值的不同方法</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">您可以在通知动作中显示计数器的当前值。这对于在场景运行时监控进度，或在结束时显示摘要非常有用。\n\n要插入计数器，请在动作配置中按下"添加计数器"按钮。这会在您的文本中添加一个类似 <b>{counterName}</b> 的占位符。运行时，该占位符将被计数器的实际值替换。例如，如果名为 <i>score</i> 的计数器值为 42，则文本"当前分数：{score}"将变为"当前分数：42"。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">您也可以在写入文本动作中插入计数器的值，这样输入的文本将在动作执行时包含当前值。\n\n占位符的使用方式与通知动作相同：按下"添加计数器"按钮，或直接输入 <b>{counterName}</b>。例如，如果名为 <i>score</i> 的计数器值为 42，则文本"我的分数是 {score}"将变为"我的分数是 42"。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">计数器的值会被记录在调试报告中。如果您的场景出现了意外情况，生成调试报告将帮助您准确了解计数器的变化过程，从而更容易找到问题所在。</string>
+
 </resources>

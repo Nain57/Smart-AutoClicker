@@ -276,4 +276,15 @@
         \n\n處於重新裝填狀態的事件仍被視為啟用：重新裝填與事件狀態相互獨立。 \n\n如果事件在重新裝填狀態下被停用，重新裝填
         計時器將被清除，因此當事件重新啟用時冷卻不再適用。</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">使用計數器的值</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">了解在情境中顯示和使用計數器值的不同方法</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">您可以在通知動作中顯示計數器的目前值。這對於在情境執行期間追蹤進度，或在結束時顯示摘要非常有用。\n\n要插入計數器，請在動作設定中按下「新增計數器」按鈕。這會在您的文字中加入類似 <b>{counterName}</b> 的占位符。執行時，該占位符將被計數器的實際值取代。例如，如果名為 <i>score</i> 的計數器值為 42，則文字「目前分數：{score}」將變為「目前分數：42」。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">您也可以在寫入文字動作中插入計數器的值，這樣輸入的文字將在動作執行時包含目前值。\n\n占位符的使用方式與通知動作相同：按下「新增計數器」按鈕，或直接輸入 <b>{counterName}</b>。例如，如果名為 <i>score</i> 的計數器值為 42，則文字「我的分數是 {score}」將變為「我的分數是 42」。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">計數器的值會被記錄在除錯報告中。如果您的情境出現了意外情況，擷取除錯報告將幫助您確切了解計數器的變化過程，從而更容易找到問題所在。</string>
+
 </resources>
