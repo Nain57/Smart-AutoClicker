@@ -202,7 +202,7 @@
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
-    <string name="dialog_title_counter_reached">قيمة العداد</string>
+    <string name="dialog_title_counter_reached">قيمة العداد وصلت</string>
 
     <string name="field_counter_name_label">اسم العداد</string>
 

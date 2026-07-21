@@ -54,7 +54,7 @@ internal fun ChangeCounter.OperationType.toNameRes(): Int =
 fun ComparisonOperation.toEffectDescription(context: Context, counterName: String? = null, operand: String) =
     context.getString(
         R.string.field_change_counter_check_effect_desc,
-        counterName ?: "",
+        if (counterName.isNullOrEmpty()) "?" else counterName,
         context.getString(toNameRes()),
         operand,
     )

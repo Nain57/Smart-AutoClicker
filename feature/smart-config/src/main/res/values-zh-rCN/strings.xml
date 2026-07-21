@@ -37,7 +37,7 @@
     <string name="dialog_title_trigger_condition_type">触发器类型</string>
     <string name="dialog_title_timer_reached">计时器达到</string>
     <string name="dialog_title_broadcast_received">收到广播</string>
-    <string name="dialog_title_counter_reached">计数器数值</string>
+    <string name="dialog_title_counter_reached">计数器数值达到</string>
     <string name="dialog_title_image_event">屏幕事件</string>
     <string name="dialog_title_trigger_event">触发器</string>
 

@@ -72,6 +72,7 @@
                         android:layout_marginBottom="@dimen/margin_vertical_small"/>
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/divider_click_type_bottom"
                         style="@style/AppTheme.Widget.Divider.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"/>
