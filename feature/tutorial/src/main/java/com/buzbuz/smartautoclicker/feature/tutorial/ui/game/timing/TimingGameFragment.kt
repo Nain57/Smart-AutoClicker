@@ -64,8 +64,6 @@ class TimingGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lockMenuPosition()
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect(::updateUi) }
@@ -84,6 +82,7 @@ class TimingGameFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        lockMenuPosition()
         if (viewModel.shouldDisplayFloatingUi.value && overlayManager.isOverlayStackHidden()) {
             overlayManager.restoreVisibility()
         }
@@ -97,6 +96,7 @@ class TimingGameFragment : Fragment() {
             overlayManager.hideAll()
         }
         overlayManager.removeTopOverlay()
+        overlayManager.unlockMenuPosition()
     }
 
     override fun onDestroy() {
