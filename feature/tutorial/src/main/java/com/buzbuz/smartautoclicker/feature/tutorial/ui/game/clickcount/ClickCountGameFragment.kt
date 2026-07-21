@@ -78,7 +78,6 @@ class ClickCountGameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.gameArea.forceLayout()
-        lockMenuPosition()
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -98,6 +97,7 @@ class ClickCountGameFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        lockMenuPosition()
         if (viewModel.shouldDisplayFloatingUi.value && overlayManager.isOverlayStackHidden()) {
             overlayManager.restoreVisibility()
         }
@@ -111,6 +111,7 @@ class ClickCountGameFragment : Fragment() {
             overlayManager.hideAll()
         }
         overlayManager.removeTopOverlay()
+        overlayManager.unlockMenuPosition()
     }
 
     override fun onDestroy() {
