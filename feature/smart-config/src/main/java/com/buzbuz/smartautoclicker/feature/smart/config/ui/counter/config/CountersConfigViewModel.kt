@@ -162,7 +162,7 @@ private fun Counter.toUiItem(
         readByButtonText = context.getReadByButtonText(readCount),
         readByButtonIsEmpty = readCount == 0,
         deleteButtonText = context.getDeleteButtonText(totalReferences),
-        deleteButtonEnabled = counterCount > 1,
+        deleteButtonEnabled = (writeCount == 0 && readCount == 0) || counterCount > 1,
         selectedForReplacement = forReplacement
     )
 }

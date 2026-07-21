@@ -200,7 +200,7 @@
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
-    <string name="dialog_title_counter_reached">Valor do contador</string>
+    <string name="dialog_title_counter_reached">Valor do contador alcançado</string>
 
     <string name="field_counter_name_label">Nome do contador</string>
 

@@ -95,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_vertical_small"
-                        android:text="@string/field_change_counter_effect_title"/>
+                        android:text="@string/field_change_counter_check_effect_title"/>
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/effect_desc"

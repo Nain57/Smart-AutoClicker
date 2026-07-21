@@ -304,7 +304,7 @@
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
-    <string name="dialog_title_counter_reached">Counter value</string>
+    <string name="dialog_title_counter_reached">Counter value reached</string>
 
     <string name="field_counter_name_label">Counter name</string>
     <string name="field_counter_comparison_value_label">Value</string>

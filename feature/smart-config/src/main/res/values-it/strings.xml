@@ -37,7 +37,7 @@
     <string name="dialog_title_trigger_condition_type">Tipo di innesco</string>
     <string name="dialog_title_timer_reached">Timer raggiunto</string>
     <string name="dialog_title_broadcast_received">Broadcast ricevuto</string>
-    <string name="dialog_title_counter_reached">Valore del contatore</string>
+    <string name="dialog_title_counter_reached">Valore del contatore raggiunto</string>
     <string name="dialog_title_image_event">Evento schermo</string>
     <string name="dialog_title_trigger_event">Innesco</string>
 

@@ -27,6 +27,7 @@ import android.view.ViewGroup
 
 import androidx.core.graphics.toPoint
 import androidx.core.graphics.toPointF
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -222,7 +223,8 @@ class ClickDialog(
             setChecked(checkIndex)
             setDescription(checkIndex)
 
-            root.visibility = if (state.isTypeFieldVisible) View.VISIBLE else View.GONE
+            root.isVisible = state.isTypeFieldVisible
+            viewBinding.dividerClickTypeBottom.isVisible = state.isTypeFieldVisible
         }
 
         viewBinding.fieldClickSelection.apply {
@@ -248,7 +250,9 @@ class ClickDialog(
         viewBinding.fieldClickOffset.apply {
             setEnabled(state.isClickOffsetEnabled)
             setDescription(state.clickOffsetDescription)
-            root.visibility = if (state.isClickOffsetVisible) View.VISIBLE else View.GONE
+
+            root.isVisible = state.isClickOffsetVisible
+            viewBinding.dividerClickOffset.isVisible = state.isClickOffsetVisible
         }
     }
 

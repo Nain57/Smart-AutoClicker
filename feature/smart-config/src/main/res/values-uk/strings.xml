@@ -203,7 +203,7 @@
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
-    <string name="dialog_title_counter_reached">Значення лічильника</string>
+    <string name="dialog_title_counter_reached">Значення лічильника досягнуто</string>
 
     <string name="field_counter_name_label">Назва лічильника</string>
 

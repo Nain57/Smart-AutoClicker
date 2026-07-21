@@ -37,7 +37,7 @@
     <string name="dialog_title_trigger_condition_type">Type de déclencheur</string>
     <string name="dialog_title_timer_reached">Timer atteint</string>
     <string name="dialog_title_broadcast_received">Broadcast reçu</string>
-    <string name="dialog_title_counter_reached">Valeur du compteur</string>
+    <string name="dialog_title_counter_reached">Valeur du compteur atteinte</string>
     <string name="dialog_title_image_event">Évènement d\'écran</string>
     <string name="dialog_title_trigger_event">Déclencheur</string>
 
