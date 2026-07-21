@@ -45,6 +45,8 @@
     <string name="item_scenario_last_used_never">Ніколи не використовувався</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">%1$d хв. тому</item>
+        <item quantity="few">%1$d хв. тому</item>
+        <item quantity="many">%1$d хв. тому</item>
         <item quantity="other">%1$d хв. тому</item>
     </plurals>
     <plurals name="item_scenario_last_used_hours">
@@ -152,8 +154,6 @@
     <string name="button_condition_migration_running">Міграція</string>
     <string name="button_condition_migration_finished">Добре</string>
 
-    <string name="field_tutorial_title">Навчання</string>
-    <string name="field_tutorial_desc">Навчитися користуватися Klick\'r</string>
 
     <string name="dialog_title_backup">Резервна копія</string>
     <string name="message_backup">Створіть або імпортуйте zip-архів сценаріїв</string>

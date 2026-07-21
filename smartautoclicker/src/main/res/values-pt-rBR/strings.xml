@@ -47,14 +47,17 @@
     <string name="item_scenario_last_used_never">Nunca usado</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">há %1$d min.</item>
+        <item quantity="many">há %1$d min.</item>
         <item quantity="other">há %1$d min.</item>
     </plurals>
     <plurals name="item_scenario_last_used_hours">
         <item quantity="one">há %1$d hora</item>
+        <item quantity="many">há %1$d horas</item>
         <item quantity="other">há %1$d horas</item>
     </plurals>
     <plurals name="item_scenario_last_used_days">
         <item quantity="one">há %1$d dia</item>
+        <item quantity="many">há %1$d dias</item>
         <item quantity="other">há %1$d dias</item>
     </plurals>
 
@@ -150,8 +153,6 @@
     <string name="button_condition_migration_running">Migração</string>
     <string name="button_condition_migration_finished">OK</string>
 
-    <string name="field_tutorial_title">Tutorial</string>
-    <string name="field_tutorial_desc">Aprenda a usar o Klick\'r</string>
 
     <string name="dialog_title_backup">Backup</string>
     <string name="message_backup">Crie ou importe um arquivo zip de cenários</string>

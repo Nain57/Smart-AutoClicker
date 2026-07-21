@@ -99,8 +99,6 @@
     <string name="button_condition_migration_running">移行中</string>
     <string name="button_condition_migration_finished">OK</string>
 
-    <string name="field_tutorial_title">チュートリアル</string>
-    <string name="field_tutorial_desc">Klick\'r の使い方を学ぶ</string>
 
     <string name="dialog_title_backup">バックアップ</string>
     <string name="message_backup">シナリオの zip アーカイブを作成または読み込みます</string>

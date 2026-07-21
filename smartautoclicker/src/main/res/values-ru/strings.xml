@@ -46,6 +46,8 @@
     <string name="item_scenario_last_used_never">Никогда не использовался</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">%1$d мин. назад</item>
+        <item quantity="few">%1$d мин. назад</item>
+        <item quantity="many">%1$d мин. назад</item>
         <item quantity="other">%1$d мин. назад</item>
     </plurals>
     <plurals name="item_scenario_last_used_hours">
@@ -149,8 +151,6 @@
     <string name="button_condition_migration_running">Миграция</string>
     <string name="button_condition_migration_finished">ХОРОШО</string>
 
-    <string name="field_tutorial_title">Учебник</string>
-    <string name="field_tutorial_desc">Узнайте, как использовать Klick\'r</string>
 
     <string name="dialog_title_backup">Резервная копия</string>
     <string name="message_backup">Создайте или импортируйте zip-архив сценариев</string>

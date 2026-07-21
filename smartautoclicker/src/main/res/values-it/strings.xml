@@ -47,14 +47,17 @@
     <string name="item_scenario_last_used_never">Mai utilizzato</string>
     <plurals name="item_scenario_last_used_minutes">
         <item quantity="one">%1$d min. fa</item>
+        <item quantity="many">%1$d min. fa</item>
         <item quantity="other">%1$d min. fa</item>
     </plurals>
     <plurals name="item_scenario_last_used_hours">
         <item quantity="one">%1$d ora fa</item>
+        <item quantity="many">%1$d ore fa</item>
         <item quantity="other">%1$d ore fa</item>
     </plurals>
     <plurals name="item_scenario_last_used_days">
         <item quantity="one">%1$d giorno fa</item>
+        <item quantity="many">%1$d giorni fa</item>
         <item quantity="other">%1$d giorni fa</item>
     </plurals>
 
@@ -150,8 +153,6 @@
     <string name="button_condition_migration_running">Migrazione</string>
     <string name="button_condition_migration_finished">OK</string>
 
-    <string name="field_tutorial_title">Tutorial</string>
-    <string name="field_tutorial_desc">Scopri come utilizzare Klick\'r</string>
 
     <string name="dialog_title_backup">Backup</string>
     <string name="message_backup">Crea o importa un archivio zip di scenari</string>

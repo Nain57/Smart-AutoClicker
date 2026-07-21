@@ -43,15 +43,27 @@
 
     <string name="item_scenario_last_used_never">لم يُستخدم قط</string>
     <plurals name="item_scenario_last_used_minutes">
+        <item quantity="zero">منذ %1$d دقيقة</item>
         <item quantity="one">منذ %1$d دقيقة</item>
+        <item quantity="two">منذ %1$d دقيقتين</item>
+        <item quantity="few">منذ %1$d دقائق</item>
+        <item quantity="many">منذ %1$d دقيقة</item>
         <item quantity="other">منذ %1$d دقائق</item>
     </plurals>
     <plurals name="item_scenario_last_used_hours">
+        <item quantity="zero">منذ %1$d ساعة</item>
         <item quantity="one">منذ %1$d ساعة</item>
+        <item quantity="two">منذ %1$d ساعتين</item>
+        <item quantity="few">منذ %1$d ساعات</item>
+        <item quantity="many">منذ %1$d ساعة</item>
         <item quantity="other">منذ %1$d ساعات</item>
     </plurals>
     <plurals name="item_scenario_last_used_days">
+        <item quantity="zero">منذ %1$d يوم</item>
         <item quantity="one">منذ %1$d يوم</item>
+        <item quantity="two">منذ %1$d يومين</item>
+        <item quantity="few">منذ %1$d أيام</item>
+        <item quantity="many">منذ %1$d يوماً</item>
         <item quantity="other">منذ %1$d أيام</item>
     </plurals>
 
@@ -149,8 +161,6 @@
     <string name="button_condition_migration_running">جارٍ الترحيل</string>
     <string name="button_condition_migration_finished">حسناً</string>
 
-    <string name="field_tutorial_title">درس تعليمي</string>
-    <string name="field_tutorial_desc">تعلم كيفية استخدام Klick\'r</string>
 
     <string name="dialog_title_backup">نسخ احتياطي</string>
     <string name="message_backup">أنشئ أو استورد أرشيف مضغوط من السيناريوهات</string>
