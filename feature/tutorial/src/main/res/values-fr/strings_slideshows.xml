@@ -361,4 +361,29 @@
         \n\nSi l\'événement est désactivé pendant son rechargement, le minuteur de rechargement sera effacé, ce qui
         signifie que le délai ne s\'applique plus lorsque l\'événement est réactivé.</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">Utiliser les valeurs de compteur</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">Découvrez les différentes façons d\'afficher et d\'utiliser les valeurs de compteur dans votre scénario</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">Vous pouvez afficher la valeur actuelle d\'un
+        compteur dans une action Notification. C\'est utile pour surveiller la progression pendant l\'exécution de
+        votre scénario, ou pour afficher un résumé à la fin.\n\nPour insérer un compteur, appuyez sur le bouton
+        Ajouter un compteur dans la configuration de l\'action. Cela ajoute un espace réservé comme
+        <b>{counterName}</b> dans votre texte. À l\'exécution, cet espace réservé est remplacé par la valeur
+        actuelle du compteur. Par exemple, si un compteur nommé <i>score</i> a la valeur 42, le texte
+        \"Score actuel : {score}\" devient \"Score actuel : 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">Vous pouvez également insérer la valeur d\'un
+        compteur dans une action Écrire du texte, afin que le texte saisi inclue la valeur actuelle au moment où
+        l\'action s\'exécute.\n\nL\'espace réservé fonctionne de la même façon que dans l\'action Notification :
+        appuyez sur le bouton Ajouter un compteur ou tapez directement <b>{counterName}</b>. Par exemple, si un
+        compteur nommé <i>score</i> a la valeur 42, le texte \"Mon score est {score}\" devient
+        \"Mon score est 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">Les valeurs des compteurs sont enregistrées
+        dans le rapport de débogage. Si quelque chose ne fonctionne pas comme prévu dans votre scénario, capturer
+        un rapport de débogage vous montrera exactement comment vos compteurs ont évolué, ce qui facilitera la
+        recherche du problème.</string>
+
 </resources>

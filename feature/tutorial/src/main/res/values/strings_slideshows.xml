@@ -398,4 +398,26 @@
         reloading state, the reloading timer will be cleared, so the cooldown no longer applies when the event is
         re-enabled.</string>
 
+
+    <!-- Counters in actions slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">Using counter values</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">Learn the different ways to display and use counter values in your scenario</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">You can show the current value of a counter
+        inside a Notification action. This is useful to monitor progress while your scenario is running, or to
+        display a summary at the end.\n\nTo insert a counter, press the Append Counter button in the action
+        configuration. This adds a placeholder like <b>{counterName}</b> into your text. At runtime, the placeholder
+        is replaced by the counter\'s actual value. \n\nFor example, if a counter named <i>score</i> has the value 42,
+        the text \"Current score: {score}\" becomes \"Current score: 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">You can also insert a counter\'s value into a
+        Write Text action, so the typed text includes the current value at the moment the action runs.\n\nThe
+        placeholder works the same way as in the Notification action: press the Append Counter button or type
+        <b>{counterName}</b> directly. \n\nFor example, if a counter named <i>score</i> has the value 42, the text
+        \"My score is {score}\" becomes \"My score is 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">Counter values are tracked in the debug report.
+        If something is not working as expected in your scenario, capturing a debug report will show you exactly how
+        your counters changed over time, making it easier to find the issue.</string>
+
 </resources>

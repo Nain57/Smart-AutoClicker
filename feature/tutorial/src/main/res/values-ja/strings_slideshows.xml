@@ -320,4 +320,15 @@
         イベントの状態は独立しています。 \n\nリロード中にイベントが無効化された場合、リロードタイマーはクリアされるため、
         イベントが再度有効化されたときにクールダウンは適用されません。</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">カウンター値の使い方</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">シナリオでカウンターの値を表示・使用するさまざまな方法を学びましょう</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">通知アクションの中に、カウンターの現在値を表示できます。これはシナリオの実行中に進行状況を確認したり、終了時にまとめを表示したりするのに便利です。\n\nカウンターを挿入するには、アクション設定の「カウンターを追加」ボタンを押してください。これにより、テキストに <b>{counterName}</b> のようなプレースホルダーが追加されます。実行時には、このプレースホルダーがカウンターの実際の値に置き換えられます。例えば、<i>score</i> という名前のカウンターの値が42の場合、「現在のスコア: {score}」は「現在のスコア: 42」になります。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">テキスト書き込みアクションにもカウンターの値を挿入できます。これにより、アクションが実行された時点の現在値がテキストに含まれます。\n\nプレースホルダーの使い方は通知アクションと同じです。「カウンターを追加」ボタンを押すか、<b>{counterName}</b> を直接入力してください。例えば、<i>score</i> という名前のカウンターの値が42の場合、「私のスコアは {score} です」は「私のスコアは 42 です」になります。</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">カウンターの値はデバッグレポートに記録されます。シナリオで予期しない動作が発生した場合は、デバッグレポートを取得することで、カウンターがどのように変化したかを正確に確認でき、問題の原因を見つけやすくなります。</string>
+
 </resources>

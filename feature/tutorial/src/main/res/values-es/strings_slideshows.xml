@@ -353,4 +353,29 @@
         mientras está en recarga, el temporizador de recarga se borrará, por lo que el tiempo de espera ya no se aplica
         cuando el evento se vuelve a activar.</string>
 
+
+    <!-- Counters value usages slideshow -->
+    <string name="tutorial_slideshow_counters_value_usages_title">Usar valores de contador</string>
+    <string name="tutorial_slideshow_counters_value_usages_desc">Aprende las diferentes formas de mostrar y usar los valores de contador en tu escenario</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_1_text">Puedes mostrar el valor actual de un contador
+        dentro de una acción Notificación. Esto es útil para seguir el progreso mientras tu escenario se ejecuta,
+        o para mostrar un resumen al final.\n\nPara insertar un contador, pulsa el botón Agregar contador en la
+        configuración de la acción. Esto añade un marcador como <b>{counterName}</b> en tu texto. En tiempo de
+        ejecución, el marcador es reemplazado por el valor actual del contador. Por ejemplo, si un contador llamado
+        <i>score</i> tiene el valor 42, el texto \"Puntuación actual: {score}\" se convierte en
+        \"Puntuación actual: 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_2_text">También puedes insertar el valor de un
+        contador en una acción Escribir texto, para que el texto escrito incluya el valor actual en el momento en
+        que se ejecuta la acción.\n\nEl marcador funciona igual que en la acción Notificación: pulsa el botón
+        Agregar contador o escribe <b>{counterName}</b> directamente. Por ejemplo, si un contador llamado
+        <i>score</i> tiene el valor 42, el texto \"Mi puntuación es {score}\" se convierte en
+        \"Mi puntuación es 42\".</string>
+
+    <string name="tutorial_slideshow_counters_value_usages_step_3_text">Los valores de los contadores se registran
+        en el informe de depuración. Si algo no funciona como se espera en tu escenario, capturar un informe de
+        depuración te mostrará exactamente cómo cambiaron tus contadores con el tiempo, lo que facilitará encontrar
+        el problema.</string>
+
 </resources>
