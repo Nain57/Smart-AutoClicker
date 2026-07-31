@@ -27,7 +27,7 @@ internal class DebugOverlayView(context: Context) : View(context) {
     }
 
     /** The margin between the actual condition position and the displayed borders. */
-    private val conditionBordersMargin = 10
+    private val conditionBordersMargin = 20
 
     private val results: MutableList<ScreenConditionResultUiState> = mutableListOf()
     private val displayedResults: MutableList<Pair<Paint, Rect>> = mutableListOf()
@@ -67,16 +67,23 @@ internal class DebugOverlayView(context: Context) : View(context) {
             return
         }
 
-        results.forEach { result -> displayedResults.add(result.toDisplayResult()) }
+        displayedResults.addAll(results.toDisplayResults())
     }
 
-    private fun ScreenConditionResultUiState.toDisplayResult(): Pair<Paint, Rect> = Pair(
-        if (positive) positiveResultPaint else negativeResultPaint,
-        Rect(
-            coordinates.left - conditionBordersMargin,
-            coordinates.top - conditionBordersMargin,
-            coordinates.right + conditionBordersMargin,
-            coordinates.bottom + conditionBordersMargin,
-        )
-    )
+    private fun List<ScreenConditionResultUiState>.toDisplayResults(): List<Pair<Paint, Rect>> =
+        mapNotNull { uiState ->
+            if (!uiState.positive && (uiState.coordinates.width() == 0 || uiState.coordinates.height() == 0))
+                return@mapNotNull null
+
+            Pair(
+                if (uiState.positive) positiveResultPaint else negativeResultPaint,
+                Rect(
+                    uiState.coordinates.left - conditionBordersMargin,
+                    uiState.coordinates.top - conditionBordersMargin,
+                    uiState.coordinates.right + conditionBordersMargin,
+                    uiState.coordinates.bottom + conditionBordersMargin,
+                )
+            )
+        }
+
 }
