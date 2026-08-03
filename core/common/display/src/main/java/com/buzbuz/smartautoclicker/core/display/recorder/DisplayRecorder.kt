@@ -163,9 +163,9 @@ class DisplayRecorder @Inject internal constructor(
 
         do {
             result = imageReaderProxy.getLastFrame()
-            if (result == null) delay(20.milliseconds)
+            if (result == null) delay(40.milliseconds)
 
-        } while (result == null && System.currentTimeMillis() < (startTimeMs + 1000))
+        } while (result == null && System.currentTimeMillis() < (startTimeMs + SCREEN_CAPTURE_SCREENSHOT_TIMEOUT_MS))
 
         return result
     }
@@ -202,7 +202,9 @@ class DisplayRecorder @Inject internal constructor(
 }
 
 /** How long to wait for the first valid frame when validating screen capture support, in milliseconds. */
-private const val SCREEN_CAPTURE_VALIDATION_TIMEOUT_MS = 1000L
+private const val SCREEN_CAPTURE_SCREENSHOT_TIMEOUT_MS = 2000L
+/** How long to wait for the first valid frame when validating screen capture support, in milliseconds. */
+private const val SCREEN_CAPTURE_VALIDATION_TIMEOUT_MS = 2000L
 /** Polling interval between frame acquisition attempts during screen capture validation, in milliseconds. */
 private const val SCREEN_CAPTURE_VALIDATION_RETRY_DELAY_MS = 20L
 

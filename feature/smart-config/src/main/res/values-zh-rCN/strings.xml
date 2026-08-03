@@ -459,6 +459,8 @@
     <string name="item_copy_fix_description_ok">项目有效</string>
     <string name="item_copy_fix_description_missing">缺少引用的项目</string>
 
+    <string name="toast_capture_failed">截图失败，未生成任何帧。</string>
+
     <string name="warning_dialog_message_delete">您即将删除此项目，确定吗？</string>
 
 </resources>

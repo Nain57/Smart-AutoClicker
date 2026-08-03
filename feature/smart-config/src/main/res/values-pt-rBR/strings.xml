@@ -197,6 +197,8 @@
 
     <string name="generic_condition_threshold_title">Diferença tolerada</string>
 
+    <string name="toast_capture_failed">Falha na captura de tela, nenhum quadro foi gerado.</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 

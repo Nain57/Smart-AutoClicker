@@ -459,6 +459,8 @@
     <string name="item_copy_fix_description_ok">項目有效</string>
     <string name="item_copy_fix_description_missing">缺少引用的項目</string>
 
+    <string name="toast_capture_failed">截圖失敗，未生成任何畫面。</string>
+
     <string name="warning_dialog_message_delete">您即將刪除此項目，確定嗎？</string>
 
 </resources>

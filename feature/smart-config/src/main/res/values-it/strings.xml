@@ -462,6 +462,8 @@
     <string name="item_copy_fix_description_ok">L\'elemento è valido</string>
     <string name="item_copy_fix_description_missing">Elemento/i di riferimento mancante/i</string>
 
+    <string name="toast_capture_failed">Screenshot non riuscito, nessun fotogramma generato.</string>
+
     <string name="warning_dialog_message_delete">Stai per eliminare questo elemento, sei sicuro?</string>
 
 </resources>

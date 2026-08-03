@@ -199,6 +199,8 @@
 
     <string name="generic_condition_threshold_title">الفرق المسموح به</string>
 
+    <string name="toast_capture_failed">فشل التقاط الشاشة، لم يتم إنشاء أي إطارات.</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 

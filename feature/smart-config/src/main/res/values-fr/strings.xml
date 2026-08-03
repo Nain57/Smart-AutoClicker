@@ -462,6 +462,8 @@
     <string name="item_copy_fix_description_ok">L\'élément est valide</string>
     <string name="item_copy_fix_description_missing">Élément(s) référencé(s) manquant(s)</string>
 
+    <string name="toast_capture_failed">Échec de la capture d\'écran, aucune image n\'a été générée.</string>
+
     <string name="warning_dialog_message_delete">Vous êtes sur le point de supprimer cet élément, êtes-vous sûr ?</string>
 
 

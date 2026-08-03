@@ -200,6 +200,8 @@
 
     <string name="generic_condition_threshold_title">Допустима різниця</string>
 
+    <string name="toast_capture_failed">Не вдалося зробити знімок екрана, кадри не були створені.</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
