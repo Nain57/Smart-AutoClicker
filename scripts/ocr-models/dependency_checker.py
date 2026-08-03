@@ -57,10 +57,14 @@ PACKAGE_TO_MODULE = {
     "scikit-learn": "sklearn",
     "opencv-python": "cv2",
     "opencv-python-headless": "cv2",
+    "onnxsim-prebuilt": "onnxsim",
 }
 
 # Packages that are CLI tools only — verified via PATH rather than import.
 CLI_ONLY_PACKAGES = {"paddle2onnx", "pnnx"}
+
+# CLI tools installed outside requirements.txt (e.g. with --no-deps) that must still be present.
+ALWAYS_CHECK_CLI = {"paddle2onnx"}
 
 
 def check_dependencies(requirements_path: str = REQ_PATH):
@@ -92,6 +96,13 @@ def check_dependencies(requirements_path: str = REQ_PATH):
         except ImportError:
             missing.append(pkg)
             print(f"[MISSING] {pkg}")
+
+    # Check always-required CLI tools not listed in requirements.txt.
+    for cli in ALWAYS_CHECK_CLI:
+        if cli.lower() not in [r.lower() for r in required]:
+            if shutil.which(cli) is None:
+                missing.append(cli)
+                print(f"[MISSING] {cli}")
 
     if missing:
         print("\n[ERROR] Missing dependencies detected:\n")

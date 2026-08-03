@@ -29,7 +29,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.12'
+
+      - name: Install paddle2onnx (no-deps, bypasses onnx<=1.17 constraint)
+        run: pip install --no-deps paddle2onnx==2.1.0
 
       - name: Install Python dependencies
         run: pip install -r scripts/ocr-models/requirements.txt
