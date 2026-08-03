@@ -22,9 +22,11 @@ import android.content.Intent
 import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager.Companion.showAsOverlay
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
+import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.TutorialActivity
 import com.buzbuz.smartautoclicker.feature.tutorial.ui.dialogs.createStopWithVolumeDownTutorialDialog
+import com.buzbuz.smartautoclicker.feature.tutorial.ui.slideshow.createTutorialSlideshowDialog
 
 import javax.inject.Inject
 
@@ -42,7 +44,27 @@ internal class TutorialNavigatorImpl @Inject constructor(
                 tutorialRepository = tutorialRepository,
                 onDismissed = onDismissed,
             ).showAsOverlay()
+
+            Tip.IMAGE_CAPTURE -> context.createTutorialSlideshowDialog(
+                slideshowType = TutorialSlideshow.Type.IMAGE_CONDITION_CAPTURE,
+                onDismissed = onDismissed,
+            )?.showAsOverlay()
+
+            Tip.IMAGE_DETECTION_AREA -> context.createTutorialSlideshowDialog(
+                slideshowType = TutorialSlideshow.Type.IMAGE_CONDITION_DETECTION_AREA,
+                pageIndex = 1,
+                onDismissed = onDismissed,
+            )?.showAsOverlay()
+
+            Tip.NUMBER_DETECTION_AREA -> context.createTutorialSlideshowDialog(
+                slideshowType = TutorialSlideshow.Type.NUMBER_CONDITION_DETECTION_AREA,
+                onDismissed = onDismissed,
+            )?.showAsOverlay()
+
+            Tip.TEXT_DETECTION_AREA -> context.createTutorialSlideshowDialog(
+                slideshowType = TutorialSlideshow.Type.TEXT_CONDITION_DETECTION_AREA,
+                onDismissed = onDismissed,
+            )?.showAsOverlay()
         }
     }
-
 }

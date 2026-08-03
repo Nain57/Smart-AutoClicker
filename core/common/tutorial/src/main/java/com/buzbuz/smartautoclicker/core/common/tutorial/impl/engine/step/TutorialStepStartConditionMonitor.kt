@@ -20,7 +20,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.QuickClickGameEngine
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 

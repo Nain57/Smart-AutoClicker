@@ -20,13 +20,13 @@ import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.TutorialInfo
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepStartCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameRules
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType

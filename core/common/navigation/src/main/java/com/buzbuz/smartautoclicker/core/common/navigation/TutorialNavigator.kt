@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.navigation
 
 import android.content.Context
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import dagger.hilt.EntryPoints
 
 interface TutorialNavigator {

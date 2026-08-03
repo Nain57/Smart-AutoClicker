@@ -22,7 +22,7 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 
 import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.feature.tutorial.data.subjects.quickcountgam
 import android.graphics.RectF
 
 import com.buzbuz.smartautoclicker.core.base.extensions.nextPositionIn
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameTargetType
 
 import kotlin.random.Random
 

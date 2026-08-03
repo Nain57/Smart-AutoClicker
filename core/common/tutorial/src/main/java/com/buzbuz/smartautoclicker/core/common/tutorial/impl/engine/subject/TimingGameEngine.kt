@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject
 
 import android.util.Log
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.TutorialSubject
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

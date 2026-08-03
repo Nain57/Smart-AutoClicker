@@ -14,8 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step
 
-enum class Tip {
-    STOP_WITH_VOLUME_DOWN,
-}
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
+/**
+ * An optional image shown inside a [TutorialStep.TutorialOverlay].
+ *
+ * @property imageResId drawable resource for the image itself.
+ * @property imageDescResId string resource for the image's content description (accessibility).
+ */
+data class TutorialStepImage(
+    @field:DrawableRes val imageResId: Int,
+    @field:StringRes val imageDescResId: Int,
+)

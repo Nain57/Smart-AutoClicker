@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameRules
 
 /**
  * Describes the interactive subject that runs alongside a tutorial's step sequence.

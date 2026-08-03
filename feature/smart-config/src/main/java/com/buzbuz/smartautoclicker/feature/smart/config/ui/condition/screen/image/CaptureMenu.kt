@@ -22,9 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.IntDef
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.imageselector.ImageSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -83,6 +85,12 @@ class CaptureMenu(
                 SELECTION -> {
                     viewBinding.btnConfirm.setImageResource(R.drawable.ic_capture)
                     setMenuVisibility(View.VISIBLE)
+                    setMenuItemsVisibility(
+                        mapOf(
+                            viewBinding.btnHelp to false,
+                            viewBinding.btnHideOverlay to false,
+                        )
+                    )
                     setOverlayViewVisibility(false)
                     selectorView.hide = true
                 }
@@ -94,11 +102,19 @@ class CaptureMenu(
                 ADJUST -> {
                     viewBinding.btnConfirm.setImageResource(R.drawable.ic_confirm)
                     setMenuVisibility(View.VISIBLE)
+                    setMenuItemsVisibility(
+                        mapOf(
+                            viewBinding.btnHelp to true,
+                            viewBinding.btnHideOverlay to true,
+                        )
+                    )
                     selectorView.hide = false
                 }
                 SAVE -> {
                     setMenuItemViewEnabled(viewBinding.btnConfirm, false)
                     setMenuItemViewEnabled(viewBinding.btnCancel, false)
+                    setMenuItemViewEnabled(viewBinding.btnHelp, false)
+                    setMenuItemViewEnabled(viewBinding.btnHideOverlay, false)
                     selectorView.hide = false
                 }
             }
@@ -123,6 +139,7 @@ class CaptureMenu(
         when (viewId) {
             R.id.btn_confirm -> onConfirm()
             R.id.btn_cancel -> onCancel()
+            R.id.btn_help -> onHelp()
         }
     }
 
@@ -175,5 +192,12 @@ class CaptureMenu(
             SELECTION -> back()
             ADJUST -> state = SELECTION
         }
+    }
+
+    private fun onHelp() {
+        context.getTutorialNavigator().showTipDialog(
+            context = context,
+            tip = Tip.IMAGE_CAPTURE,
+        )
     }
 }

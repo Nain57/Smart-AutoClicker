@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.databinding.OverlayDumbMainMenuBinding

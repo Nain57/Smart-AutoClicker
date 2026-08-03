@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
 
 /**
  * Lifecycle state of the tutorial engine, emitted on [TutorialRepository.tutorialState].

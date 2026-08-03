@@ -21,7 +21,7 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.subject.QuickClickGameEngine
@@ -45,7 +45,6 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify as mockitoVerify
 import org.mockito.kotlin.whenever

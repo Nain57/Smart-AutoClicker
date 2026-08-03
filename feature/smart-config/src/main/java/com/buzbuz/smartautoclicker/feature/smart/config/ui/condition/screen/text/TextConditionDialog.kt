@@ -24,9 +24,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
@@ -225,6 +227,7 @@ class TextConditionDialog(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionAreaSelectorMenu(
+                onHelpClicked = { context.getTutorialNavigator().showTipDialog(context, Tip.TEXT_DETECTION_AREA) },
                 onAreaSelected = viewModel::setDetectionArea,
             ),
             hideCurrent = true,

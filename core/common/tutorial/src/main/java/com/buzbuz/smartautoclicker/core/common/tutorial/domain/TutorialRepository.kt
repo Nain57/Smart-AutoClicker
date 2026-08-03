@@ -17,9 +17,8 @@
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain
 
 import android.content.Intent
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 
 import kotlinx.coroutines.flow.Flow

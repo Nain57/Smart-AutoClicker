@@ -18,9 +18,9 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine
 
 import android.os.Build
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepStartCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepStartCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step.TutorialStepsOrchestrator
 
 import org.junit.Assert.assertEquals
