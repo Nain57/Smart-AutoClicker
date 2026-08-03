@@ -125,11 +125,15 @@ internal class OverlayMenuResizeController(
     }
 
     fun measureMenuSize(): Size {
-        resizedContainer.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY)
+        resizedContainer.measure(
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+        )
 
-        // Get the height of all children + the padding
+        // Get the height of all children + the padding.
+        // Use measuredHeight as fallback for views that are now visible but not yet laid out (height == 0).
         val height = resizedContainer.children.fold(0) { acc, child ->
-            acc + (if (child.isGone) 0 else child.height)
+            acc + (if (child.isGone) 0 else maxOf(child.height, child.measuredHeight))
         } + resizedContainer.paddingTop + resizedContainer.paddingBottom
 
         val firstChild = (backgroundViewGroup.getChildAt(0) as? ViewGroup)

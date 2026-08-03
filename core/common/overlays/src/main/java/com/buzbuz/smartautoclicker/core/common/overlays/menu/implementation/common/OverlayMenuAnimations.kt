@@ -69,6 +69,10 @@ internal class OverlayMenuAnimations : Dumpable {
             showAnimationIsRunning = false
             showOverlayMenuAnimation.cancel()
             showOverlayViewAnimation.cancel()
+
+            view.alpha = 1f
+            if (overlayView is ViewGroup && overlayView.childCount == 1) overlayView.children.first().alpha = 1f
+
             onAnimationEnded()
         }
         view.postDelayed(timeoutCallback, 1_000)
@@ -107,6 +111,10 @@ internal class OverlayMenuAnimations : Dumpable {
             hideAnimationIsRunning = false
             hideOverlayMenuAnimation.cancel()
             hideOverlayViewAnimation.cancel()
+
+            view.alpha = 0f
+            if (overlayView is ViewGroup && overlayView.childCount == 1) overlayView.children.first().alpha = 0f
+
             onAnimationEnded()
         }
 
