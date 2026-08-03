@@ -157,5 +157,5 @@ internal class DirectDownloadModelRemoteDataSource @Inject constructor(
 private fun OCRAlphabet.getRecognitionModelUrl(): String =
     "${GITHUB_BASE_URL}${name.lowercase()}.zip"
 
-private const val GITHUB_BASE_URL = "https://github.com/Nain57/Smart-AutoClicker/releases/download/test-recognition-models/"
+private const val GITHUB_BASE_URL = "https://github.com/Nain57/Smart-AutoClicker/releases/download/recognition-models-1.0.0/"
 private const val TAG = "DirectDownloadModelRemoteDataSource"
