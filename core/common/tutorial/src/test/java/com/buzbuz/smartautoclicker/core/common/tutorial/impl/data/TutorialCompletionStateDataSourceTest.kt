@@ -22,9 +22,9 @@ import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 
 import com.buzbuz.smartautoclicker.core.base.PreferencesDataStore
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.TutorialInfo
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.TutorialSubject
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -49,7 +49,7 @@ import java.util.UUID
 @Config(sdk = [Build.VERSION_CODES.Q])
 class TutorialCompletionStateDataSourceTest {
 
-    @Mock private lateinit var mockGameRules: com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameRules
+    @Mock private lateinit var mockGameRules: com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameRules
 
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val testDispatcher = UnconfinedTestDispatcher()

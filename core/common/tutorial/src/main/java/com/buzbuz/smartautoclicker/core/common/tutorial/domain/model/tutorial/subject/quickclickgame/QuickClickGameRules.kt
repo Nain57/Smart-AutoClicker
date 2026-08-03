@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame
 
 import android.graphics.PointF
 

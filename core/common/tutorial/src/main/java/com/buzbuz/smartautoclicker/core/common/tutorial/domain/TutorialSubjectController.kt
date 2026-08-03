@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.core.common.tutorial.domain
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameTargetType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import kotlinx.coroutines.flow.StateFlow
 

@@ -25,7 +25,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_background"
         style="@style/AppTheme.Overlay.FloatingMenu.CardView"
-        tools:viewBindingIgnore="true">
+        tools:viewBindingIgnore="true"
+        tools:background="#99000000">
 
         <LinearLayout
             android:id="@+id/menu_items"
@@ -46,7 +47,12 @@
             <ImageButton
                 android:id="@+id/btn_hide_overlay"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
-                android:src="@drawable/ic_visible_on" />
+                android:src="@drawable/ic_visible_on"/>
+
+            <ImageButton
+                android:id="@+id/btn_help"
+                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                android:src="@drawable/ic_help"/>
 
             <ImageButton
                 android:id="@+id/btn_move"

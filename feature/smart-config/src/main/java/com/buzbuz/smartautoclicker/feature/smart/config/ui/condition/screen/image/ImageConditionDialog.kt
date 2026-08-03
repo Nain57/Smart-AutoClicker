@@ -28,9 +28,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
@@ -267,6 +269,7 @@ class ImageConditionDialog(
         overlayManager.navigateTo(
             context = context,
             newOverlay = ConditionAreaSelectorMenu(
+                onHelpClicked = { context.getTutorialNavigator().showTipDialog(context, Tip.IMAGE_DETECTION_AREA) },
                 onAreaSelected = viewModel::setDetectionArea,
             ),
             hideCurrent = true,

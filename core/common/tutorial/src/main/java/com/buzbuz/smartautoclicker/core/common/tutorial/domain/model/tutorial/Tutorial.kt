@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.TutorialSubject
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.TutorialSubject
 
 /**
  * Root definition of a single tutorial.

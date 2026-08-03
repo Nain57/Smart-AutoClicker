@@ -29,8 +29,8 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tip
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TipsStateDataSource
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.data.TutorialCompletionStateDataSource

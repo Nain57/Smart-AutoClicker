@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepEndCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 

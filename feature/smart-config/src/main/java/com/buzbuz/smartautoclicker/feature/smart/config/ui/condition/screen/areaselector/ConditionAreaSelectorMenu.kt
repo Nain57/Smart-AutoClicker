@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 class ConditionAreaSelectorMenu(
+    private val onHelpClicked: (() -> Unit)? = null,
     private val onAreaSelected: (Rect) -> Unit
 ) : OverlayMenu() {
 
@@ -55,6 +56,11 @@ class ConditionAreaSelectorMenu(
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         selectorView = AreaSelectorView(context, displayConfigManager)
         viewBinding = OverlayValidationMenuBinding.inflate(layoutInflater)
+
+        if (onHelpClicked == null) {
+            viewBinding.btnHelp.visibility = View.GONE
+        }
+
         return viewBinding.root
     }
 
@@ -76,6 +82,7 @@ class ConditionAreaSelectorMenu(
         when (viewId) {
             R.id.btn_confirm -> onConfirm()
             R.id.btn_cancel -> onCancel()
+            R.id.btn_help -> onHelpClicked?.invoke()
         }
     }
 

@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.core.common.tutorial.impl.engine.step
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStepEndCondition
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStepEndCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.MonitoredViewsManagerImpl
 
 import kotlinx.coroutines.CoroutineDispatcher

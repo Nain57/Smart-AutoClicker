@@ -17,8 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.game.clickcount
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetState
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.subject.quickclickgame.QuickClickGameTargetType
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameTargetState
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame.QuickClickGameTargetType
 
 data class ClickCountGameUiState(
     @field:StringRes val instructionsResId: Int,

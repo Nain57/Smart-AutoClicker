@@ -1,31 +1,35 @@
 ﻿/*
  * Copyright (C) 2026 Kevin Buzeau
- *
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step
-
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+package com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.subject.quickclickgame
 
 /**
- * An optional image shown inside a [TutorialStep.TutorialOverlay].
+ * Distinguishes the target types that can appear in a [TutorialSubject.Game].
  *
- * @property imageResId drawable resource for the image itself.
- * @property imageDescResId string resource for the image's content description (accessibility).
+ * [QuickClickGameRules] returns a map keyed by this enum to specify which targets are active and
+ * where they are positioned. The feature layer uses it to render and colour the targets correctly.
  */
-data class TutorialStepImage(
-    @field:DrawableRes val imageResId: Int,
-    @field:StringRes val imageDescResId: Int,
-)
+enum class QuickClickGameTargetType {
+    IMAGE_BLUE,
+    IMAGE_RED,
+    IMAGE_GREEN,
+    IMAGE_YELLOW,
+    NUMBER,
+    TEXT_DAY,
+    TEXT_GOODBYE,
+    TEXT_HELLO,
+    TEXT_NIGHT,
+}

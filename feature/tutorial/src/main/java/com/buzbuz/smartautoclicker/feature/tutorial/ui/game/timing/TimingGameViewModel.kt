@@ -21,7 +21,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialSubjectController
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.step.TutorialStep
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.step.TutorialStep
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialSubjectState
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository

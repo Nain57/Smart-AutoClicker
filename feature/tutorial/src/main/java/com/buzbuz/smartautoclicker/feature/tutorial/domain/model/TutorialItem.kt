@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.tutorial.domain.model
 
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.Tutorial
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.data.TutorialInfo
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.Tutorial
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.tutorial.TutorialInfo
 
 interface TutorialItem {
 
