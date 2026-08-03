@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import androidx.annotation.IntDef
 import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
@@ -159,13 +160,7 @@ class CaptureMenu(
      */
     private fun onConfirm() {
         when (state) {
-            SELECTION -> {
-                state = CAPTURE
-                viewModel.takeScreenshot { screenshot ->
-                    selectorView.showCapture(screenshot)
-                    state = ADJUST
-                }
-            }
+            SELECTION -> onTakeScreenshotClicked()
 
             ADJUST -> {
                 state = SAVE
@@ -199,5 +194,19 @@ class CaptureMenu(
             context = context,
             tip = Tip.IMAGE_CAPTURE,
         )
+    }
+
+    private fun onTakeScreenshotClicked() {
+        state = CAPTURE
+        viewModel.takeScreenshot { screenshot ->
+            if (screenshot == null) {
+                Toast.makeText(context, R.string.toast_capture_failed, Toast.LENGTH_LONG).show()
+                state = SELECTION
+                return@takeScreenshot
+            }
+
+            selectorView.showCapture(screenshot)
+            state = ADJUST
+        }
     }
 }

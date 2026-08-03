@@ -199,6 +199,8 @@
 
     <string name="generic_condition_threshold_title">Допустимое отличие</string>
 
+    <string name="toast_capture_failed">Не удалось сделать снимок экрана, кадры не были созданы.</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 

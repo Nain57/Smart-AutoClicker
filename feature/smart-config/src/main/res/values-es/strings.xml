@@ -199,6 +199,8 @@
 
     <string name="generic_condition_threshold_title">diferencia tolerada</string>
 
+    <string name="toast_capture_failed">Error al capturar pantalla, no se generaron fotogramas.</string>
+
 
     <!-- Dialog Condition Counter Reached ========================================================================== -->
 
