@@ -48,6 +48,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
-          tag_name: 'test-recognition-models'
+          tag_name: 'recognition-models-1.0.0'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
