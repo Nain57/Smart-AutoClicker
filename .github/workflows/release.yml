@@ -2,8 +2,6 @@ name: Release
 
 on:
   workflow_dispatch:
-  release:
-    types: [created]
 
 jobs:
   build:
@@ -42,9 +40,9 @@ jobs:
       env:
         JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
 
-    - name: Upload APKs to GitHub Release
+    - name: Create draft release with APKs
       uses: softprops/action-gh-release@v2
-      if: github.event_name == 'release'
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        draft: false
+        draft: true
         files: smartautoclicker/build/outputs/apk/fDroid/release/*.apk
