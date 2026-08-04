@@ -42,8 +42,9 @@ jobs:
       env:
         JAVA_TOOL_OPTIONS: "-Djava.net.preferIPv4Stack=true"
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
+    - name: Upload APKs to GitHub Release
+      uses: softprops/action-gh-release@v2
+      if: github.event_name == 'release'
       with:
-        name: smartautoclicker-release
-        path: smartautoclicker/build/outputs/
+        draft: false
+        files: smartautoclicker/build/outputs/apk/fDroid/release/*.apk
