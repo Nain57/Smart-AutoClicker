@@ -30,6 +30,13 @@ jobs:
         echo "${{ secrets.RELEASE_KEYSTORE }}" > smartautoclicker.jks.asc
         gpg -d --passphrase "${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}" --batch smartautoclicker.jks.asc > smartautoclicker/smartautoclicker.jks
 
+    - name: Write google-services.json
+      env:
+        GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      run: |
+        mkdir -p smartautoclicker/src/playStore
+        echo "$GOOGLE_SERVICES_JSON" > smartautoclicker/src/playStore/google-services.json
+
     - name: Build with Gradle
       run: |
         ./gradlew \
