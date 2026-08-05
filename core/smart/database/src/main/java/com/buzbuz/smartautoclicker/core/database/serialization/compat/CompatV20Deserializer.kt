@@ -97,6 +97,7 @@ internal open class CompatV20Deserializer : CompatDeserializer() {
         )
 
     private fun MutableMap<String, CountersEntity>.putIfValidCounter(scenarioId: Long, name: String?) {
-        if (name != null) put(name, CountersEntity(name = name, scenarioId = scenarioId, startingValue = 0.0))
+        if (!name.isNullOrEmpty())
+            put(name, CountersEntity(name = name, scenarioId = scenarioId, startingValue = 0.0))
     }
 }
