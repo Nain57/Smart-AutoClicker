@@ -56,8 +56,12 @@ internal class PlayAssetsModelRemoteDataSource @Inject constructor(
         _currentlyDownloading.update { old -> old + (alphabet to 0) }
 
         val packName = alphabet.recognitionModelAssetPackName()
-        val listener = AssetPackStateUpdateListener { state ->
+        var listener: AssetPackStateUpdateListener? = null
+        listener = AssetPackStateUpdateListener { state ->
             when (state.status()) {
+                AssetPackStatus.PENDING ->
+                    Log.i(TAG, "Asset pack $packName is pending")
+
                 AssetPackStatus.DOWNLOADING -> {
                     val progress = (state.bytesDownloaded() * 100 / state.totalBytesToDownload()).toInt()
                     _currentlyDownloading.update { old -> old + (alphabet to progress) }
@@ -67,6 +71,8 @@ internal class PlayAssetsModelRemoteDataSource @Inject constructor(
                     _currentlyDownloading.update { old -> old + (alphabet to 100) }
 
                 AssetPackStatus.COMPLETED -> {
+                    assetPackManager.unregisterListener(listener!!)
+
                     // Copy from asset pack location to data model folder
                     val packPath = assetPackManager.getPackLocation(packName)?.assetsPath()
                     if (packPath == null || !syncPackToFilesDir(alphabet, packPath)) {
@@ -80,19 +86,27 @@ internal class PlayAssetsModelRemoteDataSource @Inject constructor(
                 }
 
                 AssetPackStatus.CANCELED -> {
-                    Log.w(TAG, "Asset pack download canceled")
-                    _currentlyDownloading.update { old -> old - alphabet }
-
-                }
-
-                else -> {
-                    Log.w(TAG, "Asset pack download failed: ${state.errorCode()}")
+                    Log.w(TAG, "Asset pack $packName download canceled")
+                    assetPackManager.unregisterListener(listener!!)
                     _currentlyDownloading.update { old -> old - alphabet }
                 }
 
+                // Should not happen, as this is supposed to be triggered when assets > 150Mb
+                AssetPackStatus.WAITING_FOR_WIFI ->
+                    Log.w(TAG, "Asset pack $packName is waiting for Wi-Fi")
+
+                AssetPackStatus.FAILED -> {
+                    Log.e(TAG, "Asset pack $packName download failed: error ${state.errorCode()}")
+                    assetPackManager.unregisterListener(listener!!)
+                    _currentlyDownloading.update { old -> old - alphabet }
+                }
+
+                else ->
+                    Log.w(TAG, "Unexpected asset pack status for $packName: ${state.status()}")
             }
         }
 
+        Log.i(TAG, "Downloading $alphabet recognition model asset $packName")
         assetPackManager.registerListener(listener)
         assetPackManager.fetch(listOf(packName))
     }
