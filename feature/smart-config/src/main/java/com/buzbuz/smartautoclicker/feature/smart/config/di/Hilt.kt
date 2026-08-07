@@ -46,8 +46,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.numb
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionTypeSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetViewModel
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.broadcast.BroadcastReceivedConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.selection.TriggerConditionTypeSelectionViewModel
@@ -80,7 +78,6 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun actionCopyViewModel(): ActionCopyViewModel
     fun actionTypeSelectionViewModel(): ActionTypeSelectionViewModel
     fun activitySelectionViewModel(): ActivitySelectionModel
-    fun alphabetSelectionViewModel(): AlphabetSelectionViewModel
     fun broadcastReceivedConditionViewModel(): BroadcastReceivedConditionViewModel
     fun captureViewModel(): CaptureViewModel
     fun colorCaptureViewModel(): ColorCaptureViewModel
@@ -114,7 +111,6 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun numberConditionViewModel(): NumberConditionViewModel
     fun notificationViewModel(): NotificationViewModel
     fun pauseViewModel(): PauseViewModel
-    fun requiredAlphabetViewModel(): RequiredAlphabetViewModel
     fun scenarioConfigViewModel(): ScenarioConfigViewModel
     fun scenarioDialogViewModel(): ScenarioDialogViewModel
     fun screenConditionSelectionViewModel(): ScreenConditionSelectionViewModel

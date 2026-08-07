@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.toUiState
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -39,6 +40,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AlphabetSelectionViewModel @Inject constructor (
     private val editionRepository: EditionRepository,
     private val ocrModelsRepository: OCRModelsRepository,

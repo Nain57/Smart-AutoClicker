@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.toUiState
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class RequiredAlphabetViewModel @Inject constructor (
     smartEngine: SmartProcessingRepository,

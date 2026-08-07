@@ -43,7 +43,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRestartMediaProjectionStarterOverlay
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetActivity
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetFragment
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingActionsAdapter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
@@ -225,7 +226,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
     private fun onPlayPauseClicked() {
         if (viewModel.shouldDownloadModels()) {
-            showRequiredAlphabetDownloadDialog()
+            context.startActivity(AlphabetActivity.getStartIntent(context, RequiredAlphabetFragment.FRAGMENT_TAG))
             return
         }
 
@@ -412,13 +413,4 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         )
     }
 
-    private fun showRequiredAlphabetDownloadDialog() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = RequiredAlphabetDialog(
-                onModelsReady = { onPlayPauseClicked() }
-            ),
-            hideCurrent = false,
-        )
-    }
 }

@@ -52,7 +52,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetActivity
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection.AlphabetSelectionFragment
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
@@ -235,10 +236,8 @@ class TextConditionDialog(
     }
 
     private fun showAlphabetSelectionDialog() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = AlphabetSelectionDialog(),
-            hideCurrent = true,
+        context.startActivity(
+            AlphabetActivity.getStartIntent(context, AlphabetSelectionFragment.FRAGMENT_TAG)
         )
     }
 }

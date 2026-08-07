@@ -14,102 +14,111 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.selection
 
+import android.content.DialogInterface
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 
-import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
-import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
-import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetDownloadUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetModelItemAdapter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetSelectionItem
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.getValue
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
+@AndroidEntryPoint
+class AlphabetSelectionFragment : BottomSheetDialogFragment() {
 
-class RequiredAlphabetDialog(
-    private val onModelsReady: () -> Unit,
-) : OverlayDialog(R.style.ScenarioConfigTheme) {
+    companion object {
+        const val FRAGMENT_TAG = "AlphabetSelectionFragment"
+    }
 
-    override fun tutorialMonitoringTag(): String = MonitoredOverlayType.REQUIRED_ALPHABET.name
-
-    private val viewModel: RequiredAlphabetViewModel by viewModels(
-        entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { requiredAlphabetViewModel() },
-    )
-
+    private val viewModel: AlphabetSelectionViewModel by viewModels()
     private val alphabetAdapter: AlphabetModelItemAdapter = AlphabetModelItemAdapter(::onItemClicked)
 
     private lateinit var viewBinding: DialogBaseListBinding
 
-
-    override fun onCreateView(): ViewGroup {
-        viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        viewBinding = DialogBaseListBinding.inflate(inflater, container, false).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_selection)
-                buttonSave.visibility = View.VISIBLE
+                buttonSave.visibility = View.GONE
                 buttonDelete.visibility = View.GONE
-
-                buttonSave.setDebouncedOnClickListener {
-                    back()
-                    onModelsReady()
-                }
-                buttonDismiss.setDebouncedOnClickListener { back() }
+                buttonDismiss.setOnClickListener { dismiss() }
             }
-
             layoutLoadableList.apply {
                 list.adapter = alphabetAdapter
-                list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                list.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             }
         }
-
         return viewBinding.root
     }
 
-    override fun onDialogCreated(dialog: BottomSheetDialog) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (dialog as? BottomSheetDialog)?.behavior?.apply {
+            state = BottomSheetBehavior.STATE_EXPANDED
+            isDraggable = false
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch { viewModel.isEditingCondition.collect(::onConditionEditingStateChanged) }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canContinue.collect(::onContinueButtonStateUpdated) }
                 launch { viewModel.items.collect(::onItemsUpdated) }
             }
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        activity?.finish()
     }
 
     private fun onItemClicked(item: AlphabetSelectionItem) {
         if (item !is AlphabetSelectionItem.Alphabet) return
 
         when (item.downloadState) {
+            AlphabetDownloadUiState.Downloaded -> viewModel.selectModel(item.alphabet)
             AlphabetDownloadUiState.NotDownloaded -> viewModel.downloadModel(item.alphabet)
-
-            AlphabetDownloadUiState.Downloaded,
             is AlphabetDownloadUiState.Downloading,
             AlphabetDownloadUiState.Error -> Unit
         }
     }
 
     private fun onItemsUpdated(items: List<AlphabetSelectionItem>) {
-        viewBinding.apply {
-            viewBinding.layoutLoadableList.updateState(items)
-            alphabetAdapter.submitList(items)
-        }
+        viewBinding.layoutLoadableList.updateState(items)
+        alphabetAdapter.submitList(items)
     }
 
-    private fun onContinueButtonStateUpdated(isEnabled: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isEnabled)
+    private fun onConditionEditingStateChanged(isEditing: Boolean) {
+        if (!isEditing) {
+            Log.e(TAG, "Closing AlphabetSelectionFragment because there is no condition edited")
+            dismiss()
+        }
     }
 }
+
+private const val TAG = "AlphabetSelectionFragment"
