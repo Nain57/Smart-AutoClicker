@@ -70,30 +70,32 @@
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:layout_marginTop="@dimen/margin_vertical_extra_large"
             android:layout_marginBottom="@dimen/margin_vertical_default"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_export"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/desc"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_export"
             app:icon="@drawable/ic_backup_load"
-            android:text="@string/button_import"/>
+            android:text="@string/button_import"
+            android:maxLines="1"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_export"
             style="@style/AppTheme.Widget.TextButtonOutlined"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_horizontal_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:layout_marginBottom="@dimen/margin_vertical_large"
-            app:layout_constraintStart_toEndOf="@id/button_import"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_import"
+            app:layout_constraintTop_toBottomOf="@id/button_import"
             app:layout_constraintBottom_toBottomOf="parent"
             app:icon="@drawable/ic_menu_save"
-            android:text="@string/button_export"/>
+            android:text="@string/button_export"
+            android:maxLines="1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
