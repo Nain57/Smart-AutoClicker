@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.safeRecreate
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toDomain
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toCountersInitialValues
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toProtobuf
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.ConditionProfile
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
@@ -199,6 +200,22 @@ internal class DebugReportLocalDataSource @Inject constructor(
                     }
                 }
             }
+        }
+
+    /** Read aggregate condition timings from the last completed report, if the report contains them. */
+    suspend fun readConditionProfile(): List<ConditionProfile> =
+        filesMutex.withLock {
+            if (isWritingReport) return@withLock emptyList()
+
+            messagesFile.safeInputStream()?.use { inputStream ->
+                while (true) {
+                    val protoMessage = inputStream.safeParseDebugReportMessage() ?: break
+                    if (protoMessage.hasConditionProfileMessage()) {
+                        return@withLock protoMessage.conditionProfileMessage.toDomain()
+                    }
+                }
+            }
+            emptyList()
         }
 
     /** Delete the current report files, if any. */

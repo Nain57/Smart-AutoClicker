@@ -98,6 +98,7 @@ internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
         ProtoDebugReportMessage.MessageTypeCase.TRIGGEREVENTMESSAGE ->
             triggerEventMessage.toDomain(relativeTimestampMs)
         ProtoDebugReportMessage.MessageTypeCase.COUNTERSINITMESSAGE -> null
+        ProtoDebugReportMessage.MessageTypeCase.CONDITIONPROFILEMESSAGE -> null
         ProtoDebugReportMessage.MessageTypeCase.MESSAGETYPE_NOT_SET -> {
             Log.e(LOG_TAG, "Can't read DebugReportEventOccurrence from protobuf")
             null

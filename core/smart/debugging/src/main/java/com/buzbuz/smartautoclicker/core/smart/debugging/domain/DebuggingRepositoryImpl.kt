@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.ConditionProfile
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.DebugEngine
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -94,5 +95,10 @@ internal class DebuggingRepositoryImpl @Inject constructor(
     override fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?> =
         flow {
             emit(debugReportDataSource.readMessages())
+        }.flowOn(ioDispatcher)
+
+    override fun getLastReportConditionProfiles(): Flow<List<ConditionProfile>?> =
+        flow {
+            emit(debugReportDataSource.readConditionProfile())
         }.flowOn(ioDispatcher)
 }

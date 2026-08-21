@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.ConditionProfile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -52,4 +53,7 @@ interface DebuggingRepository {
 
     /** Read the last detection session events occurrences. List will be empty no rapport is available. */
     fun getLastReportEventsOccurrences(): Flow<List<DebugReportEventOccurrence>?>
+
+    /** Read aggregate condition timings from the last detection session report. */
+    fun getLastReportConditionProfiles(): Flow<List<ConditionProfile>?>
 }

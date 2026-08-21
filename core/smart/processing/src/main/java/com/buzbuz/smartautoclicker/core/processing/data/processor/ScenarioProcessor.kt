@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.state.Processi
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.DebugReportTimingListener
 
 import kotlinx.coroutines.yield
 
@@ -56,6 +57,7 @@ internal class ScenarioProcessor(
     unblockWorkaroundEnabled: Boolean = false,
     private val onStopRequested: () -> Unit,
     private val progressListener: SmartProcessingListener?,
+    private val debugReportTimingListener: DebugReportTimingListener? = null,
 ) {
 
     /** Handle the processing state of the scenario. */
@@ -72,6 +74,7 @@ internal class ScenarioProcessor(
         scalingManager = scalingManager,
         bitmapSupplier = bitmapSupplier,
         progressListener = progressListener,
+        debugReportTimingListener = debugReportTimingListener,
     )
     /** Execute the detected event actions. */
     private val actionExecutor = ActionExecutor(

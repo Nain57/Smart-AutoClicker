@@ -1,0 +1,19 @@
+/* Copyright (C) 2026 Kevin Buzeau */
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.buzbuz.smartautoclicker.core.smart.debugging;
+
+/** Aggregate condition timings collected during one detection session. */
+message ConditionProfileMessage {
+    repeated ConditionProfileEntry entries = 1;
+
+    message ConditionProfileEntry {
+        int64 conditionId = 1;
+        int64 checkCount = 2;
+        int64 fulfilledCount = 3;
+        int64 totalDurationNs = 4;
+        int64 minDurationNs = 5;
+        int64 maxDurationNs = 6;
+    }
+}
