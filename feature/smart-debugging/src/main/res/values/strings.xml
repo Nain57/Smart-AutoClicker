@@ -33,6 +33,11 @@
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">No events</string>
     <string name="desc_event_occurrence_empty">No events were executed during the last scenario session.</string>
+    <string name="title_event_occurrence_filtered_empty">No matching events</string>
+    <string name="desc_event_occurrence_filtered_empty">No Timeline events match the current filters.</string>
+    <string name="button_clear_timeline_filters">Clear filters</string>
+    <string name="content_desc_timeline_filters_active">%1$d Timeline filter categories active</string>
+    <string name="content_desc_timeline_fast_scroller">Timeline fast scroller</string>
     <string name="item_event_occurrence_frame_number">Frame #%1$d</string>
     <string name="item_event_occurrence_trigger">Trigger</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Fulfilled: %1$s</string>

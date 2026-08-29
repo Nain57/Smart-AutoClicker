@@ -54,3 +54,21 @@ internal fun Long.formatDebugTimelineTimestamp(): String {
 
     return value.trim()
 }
+
+/** Compact timestamp used for manually selecting a Timeline filter range. */
+internal fun Long.formatDebugTimelineFilterTimestamp(): String {
+    val duration = coerceAtLeast(0L).milliseconds
+
+    return when {
+        duration.inWholeMinutes < 1 -> {
+            val tenths = duration.inWholeMilliseconds / 100L
+            val wholeSeconds = tenths / 10L
+            val decimal = tenths % 10L
+            if (decimal == 0L) "${wholeSeconds}s" else "${wholeSeconds}.${decimal}s"
+        }
+        duration.inWholeHours < 1 ->
+            "${duration.inWholeMinutes}m ${duration.inWholeSeconds % 60}s"
+        else ->
+            "${duration.inWholeHours}h ${duration.inWholeMinutes % 60}m"
+    }
+}

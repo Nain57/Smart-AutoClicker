@@ -25,9 +25,14 @@ sealed interface DebugReportTimelineUiState {
     data object Loading : DebugReportTimelineUiState
     data object NotAvailable : DebugReportTimelineUiState
     data object Empty: DebugReportTimelineUiState
+    data class FilteredEmpty(
+        val durationMs: Long,
+        val activeFilterCount: Int,
+    ) : DebugReportTimelineUiState
     data class Available(
         val eventsOccurrences: List<DebugReportTimelineEventOccurrenceItem>,
         val durationMs: Long,
+        val activeFilterCount: Int,
     ) : DebugReportTimelineUiState
 
 }

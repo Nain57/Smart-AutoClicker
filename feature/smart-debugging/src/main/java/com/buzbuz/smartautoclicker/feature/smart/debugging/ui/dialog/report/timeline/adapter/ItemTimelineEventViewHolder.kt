@@ -37,6 +37,7 @@ class ItemTimelineEventViewHolder private constructor(
 
     init {
         viewBinding.actions.adapter = actionsAdapter
+        viewBinding.actions.itemAnimator = null
     }
 
     fun bind(
@@ -51,6 +52,6 @@ class ItemTimelineEventViewHolder private constructor(
             conditionsText.text = item.conditionsText
         }
 
-        actionsAdapter.submitList(item.actions)
+        actionsAdapter.setItems(item.actions)
     }
 }

@@ -105,6 +105,10 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     fun getFilters(): List<DebugReportTimelineFilter> = filters.value
 
+    fun clearFilters() {
+        filters.value = emptyList()
+    }
+
     private fun List<DebugReportEventOccurrence>?.toUiState(
         context: Context,
         screenEvents: List<ScreenEvent>?,
@@ -115,12 +119,31 @@ class DebugReportTimelineViewModel @Inject constructor(
 
         val items = toUiStateItems(context, screenEvents, trigEvents, filters)
 
-        return if (isEmpty()) DebugReportTimelineUiState.Empty
-        else DebugReportTimelineUiState.Available(
-            eventsOccurrences = items,
-            durationMs = last().relativeTimestampMs,
-        )
+        val activeFilterCount = filters.getActiveCategoryCount(durationMs = lastOrNull()?.relativeTimestampMs ?: 0L)
+
+        return when {
+            isEmpty() -> DebugReportTimelineUiState.Empty
+            items.isEmpty() -> DebugReportTimelineUiState.FilteredEmpty(
+                durationMs = last().relativeTimestampMs,
+                activeFilterCount = activeFilterCount,
+            )
+            else -> DebugReportTimelineUiState.Available(
+                eventsOccurrences = items,
+                durationMs = last().relativeTimestampMs,
+                activeFilterCount = activeFilterCount,
+            )
+        }
     }
+
+    private fun List<DebugReportTimelineFilter>.getActiveCategoryCount(durationMs: Long): Int =
+        count { filter ->
+            when (filter) {
+                is DebugReportTimelineFilter.Time ->
+                    filter.lowerBoundMs > 0L || filter.upperBoundMs < durationMs
+                is DebugReportTimelineFilter.Events ->
+                    filter.filterAll || filter.filteredIds.isNotEmpty()
+            }
+        }
 
     private fun List<DebugReportEventOccurrence>.toUiStateItems(
         context: Context,
