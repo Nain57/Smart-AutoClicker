@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_horizontal_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/margin_horizontal_default"
+        android:paddingVertical="@dimen/margin_vertical_default">
+
+        <ImageView
+            android:id="@+id/condition_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="?attr/colorSurfaceVariant"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_number_condition" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/condition_name_text"
+            style="@style/AppTheme.TextAppearance.ListItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/percentage_text"
+            app:layout_constraintStart_toEndOf="@id/condition_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Drop Whatever" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/event_name_text"
+            style="@style/AppTheme.TextAppearance.BodySmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            app:layout_constraintEnd_toStartOf="@id/percentage_text"
+            app:layout_constraintStart_toEndOf="@id/condition_image"
+            app:layout_constraintTop_toBottomOf="@id/condition_name_text"
+            tools:text="Builder Attack" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/total_time_text"
+            style="@style/AppTheme.TextAppearance.BodySmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            app:layout_constraintEnd_toStartOf="@id/percentage_text"
+            app:layout_constraintStart_toEndOf="@id/condition_image"
+            app:layout_constraintTop_toBottomOf="@id/event_name_text"
+            tools:text="Total time: 62.810 s" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/fulfilled_text"
+            style="@style/AppTheme.TextAppearance.BodySmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            app:layout_constraintEnd_toStartOf="@id/percentage_text"
+            app:layout_constraintStart_toEndOf="@id/condition_image"
+            app:layout_constraintTop_toBottomOf="@id/total_time_text"
+            tools:text="Fulfilled: 0 times out of 23,210 checks" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/average_text"
+            style="@style/AppTheme.TextAppearance.BodySmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/percentage_text"
+            app:layout_constraintStart_toEndOf="@id/condition_image"
+            app:layout_constraintTop_toBottomOf="@id/fulfilled_text"
+            tools:text="Average: 2.706 ms per check" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/percentage_text"
+            android:layout_width="76dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="18.04%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
