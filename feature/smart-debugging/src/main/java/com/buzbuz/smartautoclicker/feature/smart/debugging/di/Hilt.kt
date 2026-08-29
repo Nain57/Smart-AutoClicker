@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryElementViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportViewModel
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.activity.EventActivityViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.overview.DebugReportOverviewViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.DebugReportEventOccurrenceDetailsViewModel
@@ -35,6 +36,7 @@ import dagger.hilt.InstallIn
 @EntryPoint
 @InstallIn(OverlayComponent::class)
 interface DebuggingViewModelsEntryPoint {
+    fun eventActivityViewModel(): EventActivityViewModel
     fun debugConditionContentViewModel(): DebugConditionContentViewModel
     fun debugCounterStateContentViewModel(): DebugCounterStateContentViewModel
     fun debugEventStateContentViewModel(): DebugEventsStateContentViewModel

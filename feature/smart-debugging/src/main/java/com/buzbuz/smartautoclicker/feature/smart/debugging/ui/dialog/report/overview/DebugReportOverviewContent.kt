@@ -29,8 +29,10 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.na
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldDataDisplayBinding
+import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ContentDebugReportOverviewBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.activity.EventActivityDialog
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -47,7 +49,9 @@ class DebugReportOverviewContent(appContext: Context) : NavBarDialogContent(appC
     private lateinit var viewBinding: ContentDebugReportOverviewBinding
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewBinding = ContentDebugReportOverviewBinding.inflate(LayoutInflater.from(context), container, false)
+        viewBinding = ContentDebugReportOverviewBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            eventActivity.root.setOnClickListener { openEventActivity() }
+        }
         return viewBinding.root
     }
 
@@ -89,7 +93,36 @@ class DebugReportOverviewContent(appContext: Context) : NavBarDialogContent(appC
             fieldAvgImgProcDur.bindEntry(state.averageFrameProcessingDuration)
             fieldImgEvtFulfilledCount.bindEntry(state.imageEventFulfilledCount)
             fieldTriggerEvtFulfilledCount.bindEntry(state.triggerEventFulfilledCount)
+            eventActivity.summaryData.apply {
+                setTitle(context.getString(R.string.item_title_report_event_activity))
+                setDescription(state.eventActivity.formatDescription())
+            }
         }
+    }
+
+    private fun EventActivitySummary.formatDescription(): String {
+        if (reachedEventCount == 0) return context.getString(R.string.item_desc_report_event_activity_empty)
+
+        val counts = context.resources.getQuantityString(
+            R.plurals.item_desc_report_event_activity_reached,
+            reachedEventCount,
+            reachedEventCount,
+            totalOccurrenceCount,
+        )
+        val mostFrequent = context.getString(
+            R.string.item_desc_report_event_activity_most_frequent,
+            mostFrequentEventName,
+            mostFrequentEventCount,
+        )
+        return "$counts\n$mostFrequent"
+    }
+
+    private fun openEventActivity() {
+        dialogController.overlayManager.navigateTo(
+            context = context,
+            newOverlay = EventActivityDialog(),
+            hideCurrent = false,
+        )
     }
 
     private fun IncludeFieldDataDisplayBinding.bindEntry(entry: OverviewEntry) {

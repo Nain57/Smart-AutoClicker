@@ -30,10 +30,18 @@ sealed interface DebugReportOverviewUiState {
         val averageFrameProcessingDuration: OverviewEntry,
         val imageEventFulfilledCount: OverviewEntry,
         val triggerEventFulfilledCount: OverviewEntry,
+        val eventActivity: EventActivitySummary,
     ) : DebugReportOverviewUiState
 }
 
 data class OverviewEntry(
     @field:StringRes val titleRes: Int,
     val value: String,
+)
+
+data class EventActivitySummary(
+    val reachedEventCount: Int,
+    val totalOccurrenceCount: Int,
+    val mostFrequentEventName: String?,
+    val mostFrequentEventCount: Int?,
 )

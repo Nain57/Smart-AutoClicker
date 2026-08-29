@@ -108,6 +108,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <com.google.android.material.divider.MaterialDivider
+                style="@style/AppTheme.Widget.Divider.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <!-- Event activity -->
+            <include
+                android:id="@+id/event_activity"
+                layout="@layout/include_event_activity_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
