@@ -86,8 +86,16 @@ private fun Permission.toPermissionDialogUiState(): PermissionDialogUiState =
 
         is PermissionPostNotification -> PermissionDialogUiState(
             permission = this,
-            titleRes = R.string.dialog_title_permission_notification,
-            descriptionRes = R.string.message_permission_desc_notification,
+            titleRes = when (purpose) {
+                PermissionPostNotification.Purpose.GENERAL -> R.string.dialog_title_permission_notification
+                PermissionPostNotification.Purpose.EXTERNAL_LAUNCH_FALLBACK ->
+                    R.string.dialog_title_permission_launch_fallback_notification
+            },
+            descriptionRes = when (purpose) {
+                PermissionPostNotification.Purpose.GENERAL -> R.string.message_permission_desc_notification
+                PermissionPostNotification.Purpose.EXTERNAL_LAUNCH_FALLBACK ->
+                    R.string.message_permission_desc_launch_fallback_notification
+            },
         )
 
         is PermissionAccessibilityService -> PermissionDialogUiState(

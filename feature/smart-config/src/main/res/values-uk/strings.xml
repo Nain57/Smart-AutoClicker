@@ -490,4 +490,32 @@
 
     <string name="warning_dialog_message_delete">Ви збираєтесь видалити цей елемент, ви впевнені?</string>
 
+    <string name="scenario_switcher_dismiss">Закрити перемикач сценаріїв</string>
+    <string name="dialog_title_scenario_switcher">Перемкнути сценарій</string>
+    <string name="scenario_switcher_current">Поточний: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Невідомо</string>
+    <string name="scenario_switcher_empty">Немає інших доступних розумних сценаріїв</string>
+    <string name="scenario_switcher_error_service">Служба сценаріїв більше недоступна.</string>
+    <string name="scenario_switcher_error_paused">Призупиніть сценарій перед перемиканням.</string>
+    <string name="scenario_switcher_error_projection">Запис екрана недоступний. Перезапустіть його перед перемиканням.</string>
+    <string name="scenario_switcher_error_current">Цей сценарій уже завантажено.</string>
+    <string name="scenario_switcher_error_unavailable">Цей сценарій більше недоступний.</string>
+    <string name="scenario_switcher_error_persistence">Не вдалося зберегти сценарій. Спробуйте ще раз.</string>
+    <string name="scenario_switcher_error_unknown">Не вдалося перемкнути сценарій. Спробуйте ще раз.</string>
+    <string name="scenario_switcher_retry">Спробувати ще раз</string>
+    <string name="scenario_switcher_switching">Перемикання на %1$s</string>
+
+    <string name="item_external_action_title">Зовнішня дія</string>
+    <string name="item_external_action_desc">Запустити зовнішній застосунок автоматизації</string>
+    <string name="item_external_action_details">Викликати \"%1$s\"</string>
+    <string name="item_external_action_details_error">Неприпустима назва зовнішньої дії</string>
+    <string name="dialog_title_external_action">Зовнішня дія</string>
+    <string name="field_external_action_name_label">Назва зовнішньої дії</string>
+    <string name="field_external_action_help">Використовуйте цю назву в тригері зовнішньої дії Klick\'r у застосунку автоматизації.</string>
+    <string name="field_external_action_selection_title_empty">Зовнішню дію не вибрано</string>
+    <string name="field_external_action_selection_desc_empty">Торкніться тут, щоб повторно використати назву зовнішньої дії</string>
+    <string name="field_external_action_selection_desc">Багаторазова назва тригера автоматизації</string>
+    <string name="dialog_title_external_action_selection">Зовнішні дії</string>
+    <string name="message_empty_external_action_list_title">Зовнішніх дій не знайдено</string>
+    <string name="message_empty_external_action_list_desc">Спочатку введіть нову назву зовнішньої дії в розумному сценарії.</string>
 </resources>

@@ -101,7 +101,7 @@ internal class TutorialRepositoryImpl @Inject constructor(
             val insertedScenario = scenario.copy(id = scenarioId)
 
             // Load the scenario
-            localService.startSmartScenario(
+            localService.launchSmartScenario(
                 scenario = insertedScenario,
                 resultCode = mpResultCode,
                 data = mpData,

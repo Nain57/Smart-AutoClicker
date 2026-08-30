@@ -13,6 +13,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationVal
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -31,6 +32,7 @@ internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = 
     ActionType.INTENT -> toDomainIntent(cleanIds)
     ActionType.TOGGLE_EVENT -> toDomainToggleEvent(cleanIds)
     ActionType.CHANGE_COUNTER -> toDomainChangeCounter(cleanIds)
+    ActionType.EXTERNAL_ACTION -> toDomainExternalAction(cleanIds)
     ActionType.NOTIFICATION -> toDomainNotification(cleanIds)
     ActionType.SYSTEM -> toDomainSystem(cleanIds)
     ActionType.TEXT -> toDomainSetText(cleanIds)
@@ -103,6 +105,14 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
         numberValue = action.counterOperationValue,
         counterName = action.counterOperationCounterName,
     ),
+)
+
+private fun CompleteActionEntity.toDomainExternalAction(cleanIds: Boolean = false) = ExternalAction(
+    id = Identifier(id = action.id, asTemporary = cleanIds),
+    eventId = Identifier(id = action.eventId, asTemporary = cleanIds),
+    name = action.name,
+    priority = action.priority,
+    externalActionName = action.externalActionName ?: "",
 )
 
 private fun CompleteActionEntity.toDomainNotification(cleanIds: Boolean = false) = Notification(

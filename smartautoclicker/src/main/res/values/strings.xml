@@ -86,6 +86,10 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_delete_scenario">This will delete %1$s. Are you sure ?</string>
+    <string name="dialog_title_locale_plugin_background_launch">Background launch blocked</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r could not open the screen-capture prompt automatically.\n\n
+    To finish launching the scenario, it showed a notification instead.\n\n
+    Some Android phones restrict background apps more than standard Android. Refer to this guide to improve the permission stability.</string>
 
     <!--
       - Toast messages.
@@ -117,6 +121,9 @@
 
     <string name="field_show_scenario_filters_ui_title">Show Scenarios filters</string>
     <string name="field_show_scenario_filters_ui_desc">Display or hide the filters in the scenario list screen.</string>
+
+    <string name="field_scenario_switcher_title">Show scenario switcher</string>
+    <string name="field_scenario_switcher_desc">Shows the scenario switcher in the floating toolbar for quick swaps.</string>
 
     <string name="field_legacy_action_ui_title">Legacy Action UI</string>
     <string name="field_legacy_action_ui_desc">Change the action display by a list. Useful for complex scenarios.</string>
@@ -152,5 +159,8 @@
     <string name="message_backup">Create or import a zip archive of scenarios</string>
     <string name="button_import">Import</string>
     <string name="button_export">Export</string>
+
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Learn how to use Klick\'r</string>
 
 </resources>

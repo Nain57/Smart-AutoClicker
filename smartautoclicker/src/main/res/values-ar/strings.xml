@@ -132,6 +132,9 @@
     <string name="field_show_scenario_filters_ui_title">عرض فلاتر السيناريو</string>
     <string name="field_show_scenario_filters_ui_desc">عرض أو إخفاء الفلاتر في شاشة قائمة السيناريوهات.</string>
 
+    <string name="field_scenario_switcher_title">عرض مبدّل السيناريو</string>
+    <string name="field_scenario_switcher_desc">يظهر مبدّل السيناريو في شريط الأدوات العائم للتبديل السريع.</string>
+
     <string name="field_legacy_action_ui_title">واجهة الإجراءات القديمة</string>
     <string name="field_legacy_action_ui_desc">تغيير عرض الإجراءات إلى قائمة. مفيد للسيناريوهات المعقدة.</string>
 
@@ -167,4 +170,8 @@
     <string name="button_import">استيراد</string>
     <string name="button_export">تصدير</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">تم حظر التشغيل في الخلفية</string>
+    <string name="message_locale_plugin_background_launch">تعذر على Klick\'r فتح نافذة تسجيل الشاشة تلقائيًا.\n\nلإكمال تشغيل السيناريو، أظهر إشعارًا بدلًا من ذلك.\n\nتفرض بعض هواتف Android قيودًا أكبر على التطبيقات في الخلفية. راجع هذا الدليل لتحسين استقرار الأذونات.</string>
+    <string name="field_tutorial_title">البرنامج التعليمي</string>
+    <string name="field_tutorial_desc">تعرّف على كيفية استخدام Klick\'r</string>
 </resources>

@@ -72,6 +72,9 @@
     <string name="field_show_scenario_filters_ui_title">顯示情境篩選</string>
     <string name="field_show_scenario_filters_ui_desc">於情境清單畫面顯示或隱藏篩選器。</string>
 
+    <string name="field_scenario_switcher_title">顯示情境切換器</string>
+    <string name="field_scenario_switcher_desc">於浮動工具列顯示情境切換器，方便快速切換。</string>
+
     <string name="field_legacy_action_ui_title">經典操作介面</string>
     <string name="field_legacy_action_ui_desc">以清單方式顯示操作，適用於複雜情境。</string>
 
@@ -105,4 +108,8 @@
     <string name="button_import">匯入</string>
     <string name="button_export">匯出</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">背景啟動遭到封鎖</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r 無法自動開啟螢幕擷取提示。\n\n為了完成情境啟動，Klick\'r 改為顯示通知。\n\n部分 Android 手機對背景應用程式限制更嚴格。請參考此指南以提高權限穩定性。</string>
+    <string name="field_tutorial_title">教學</string>
+    <string name="field_tutorial_desc">瞭解如何使用 Klick\'r</string>
 </resources>

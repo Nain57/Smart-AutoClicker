@@ -49,4 +49,6 @@
     <string name="button_request_permission">Solicitar permiso</string>
     <string name="button_deny">Denegar</string>
 
+    <string name="dialog_title_permission_launch_fallback_notification">Notificaciones de inicio alternativo</string>
+    <string name="message_permission_desc_launch_fallback_notification">Opcional: permite que Klick\'r muestre una notificación para terminar de iniciar un escenario cuando la aplicación de automatización no puede abrirlo directamente, por ejemplo, mientras el teléfono está bloqueado.</string>
 </resources>

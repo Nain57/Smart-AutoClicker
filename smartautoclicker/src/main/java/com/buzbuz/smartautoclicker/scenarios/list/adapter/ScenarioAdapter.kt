@@ -37,13 +37,13 @@ import kotlinx.coroutines.Job
 /**
  * Adapter for the display of the click scenarios created by the user into a RecyclerView.
  *
- * @param startScenarioListener listener upon the click on a scenario.
+ * @param launchScenarioListener listener upon the click on a scenario.
  * @param exportClickListener listener upon the export button of a scenario.
  * @param deleteScenarioListener listener upon the delete button of a scenario.
  */
 class ScenarioAdapter(
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
+    private val launchScenarioListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
     private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
     private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem) -> Unit),
     private val copyClickedListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
@@ -66,13 +66,13 @@ class ScenarioAdapter(
         when (viewType) {
             R.layout.item_empty_scenario -> EmptyScenarioHolder(
                 viewBinding = ItemEmptyScenarioBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                startScenarioListener = startScenarioListener,
+                launchScenarioListener = launchScenarioListener,
                 deleteScenarioListener = deleteScenarioListener,
             )
 
             R.layout.item_dumb_scenario -> DumbScenarioViewHolder(
                 viewBinding = ItemDumbScenarioBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                startScenarioListener = startScenarioListener,
+                launchScenarioListener = launchScenarioListener,
                 expandCollapseListener = expandCollapseListener,
                 exportClickListener = exportClickListener,
                 copyClickedListener = copyClickedListener,
@@ -82,7 +82,7 @@ class ScenarioAdapter(
             R.layout.item_smart_scenario -> SmartScenarioViewHolder(
                 viewBinding = ItemSmartScenarioBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 bitmapProvider= bitmapProvider,
-                startScenarioListener = startScenarioListener,
+                launchScenarioListener = launchScenarioListener,
                 expandCollapseListener = expandCollapseListener,
                 exportClickListener = exportClickListener,
                 copyClickedListener = copyClickedListener,

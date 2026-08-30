@@ -46,6 +46,7 @@ internal class LegacyNotificationBuilder(
     }
 
     override fun updateState(context: Context, state: ServiceNotificationState) {
+        setContentTitle(context.getString(R.string.notification_title, state.scenarioName))
         clearActions()
 
         addServiceNotificationAction(

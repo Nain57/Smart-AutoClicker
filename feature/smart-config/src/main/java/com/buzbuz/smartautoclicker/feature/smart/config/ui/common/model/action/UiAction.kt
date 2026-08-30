@@ -21,6 +21,7 @@ import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -56,6 +57,7 @@ internal fun Action.getIconRes(): Int = when (this) {
     is Intent -> getIntentIconRes()
     is ToggleEvent -> getToggleEventIconRes()
     is ChangeCounter -> getChangeCounterIconRes()
+    is ExternalAction -> getExternalActionIconRes()
     is Notification -> getNotificationIconRes()
     is SystemAction -> getSystemActionIconRes()
     is SetText -> getSetTextIconRes()
@@ -68,6 +70,7 @@ internal fun Action.getActionDescription(context: Context, parent: Event?, inErr
     is Intent -> getDescription(context, inError)
     is ToggleEvent -> getDescription(context, inError)
     is ChangeCounter -> getDescription(context, inError)
+    is ExternalAction -> getDescription(context, inError)
     is Notification -> getDescription(context, inError)
     is SystemAction -> getDescription(context, inError)
     is SetText -> getDescription(context, inError)

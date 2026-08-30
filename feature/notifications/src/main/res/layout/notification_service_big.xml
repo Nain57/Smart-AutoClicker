@@ -76,12 +76,13 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/button_config"
+                android:id="@+id/button_switch"
                 style="@style/AppTheme.Notification.Button.Outlined"
                 android:layout_width="@dimen/notification_buttons_size"
                 android:layout_height="@dimen/notification_buttons_size"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_notification_settings_filled"/>
+                android:src="@drawable/ic_notification_swap_horiz"
+                android:contentDescription="@string/notification_button_switch"/>
 
         </FrameLayout>
 

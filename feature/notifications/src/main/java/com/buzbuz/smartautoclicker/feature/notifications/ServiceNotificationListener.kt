@@ -24,6 +24,7 @@ interface ServiceNotificationListener {
     fun onShow(): Unit?
     fun onHide(): Unit?
     fun onStop(): Unit?
+    fun onSwitch(): Unit?
 }
 
 internal fun ServiceNotificationListener.notifyAction(action: ServiceNotificationAction) =
@@ -32,6 +33,7 @@ internal fun ServiceNotificationListener.notifyAction(action: ServiceNotificatio
         ServiceNotificationAction.Pause -> onPause()
         ServiceNotificationAction.Show -> onShow()
         ServiceNotificationAction.Hide -> onHide()
+        ServiceNotificationAction.Switch -> onSwitch()
         ServiceNotificationAction.Stop -> onStop()
         ServiceNotificationAction.Config -> Unit
     }

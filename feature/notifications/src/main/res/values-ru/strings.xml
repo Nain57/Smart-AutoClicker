@@ -25,5 +25,6 @@
     <string name="notification_button_hide">Скрывать</string>
     <string name="notification_button_stop">Останавливаться</string>
     <string name="notification_button_config">Конфигурация</string>
+    <string name="notification_button_switch">Переключить сценарий</string>
 
 </resources>

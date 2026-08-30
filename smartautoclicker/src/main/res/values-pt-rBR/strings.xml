@@ -124,6 +124,9 @@
     <string name="field_show_scenario_filters_ui_title">Mostrar filtros de cenários</string>
     <string name="field_show_scenario_filters_ui_desc">Exibir ou ocultar os filtros na tela da lista de cenários.</string>
 
+    <string name="field_scenario_switcher_title">Mostrar seletor de cenários</string>
+    <string name="field_scenario_switcher_desc">Exibe o seletor de cenários na barra de ferramentas flutuante para trocas rápidas.</string>
+
     <string name="field_legacy_action_ui_title">IU de ação herdada</string>
     <string name="field_legacy_action_ui_desc">Altere a exibição da ação por uma lista. Útil para cenários complexos.</string>
 
@@ -159,4 +162,8 @@
     <string name="button_import">Importar</string>
     <string name="button_export">Exportar</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Inicialização em segundo plano bloqueada</string>
+    <string name="message_locale_plugin_background_launch">O Klick\'r não pôde abrir automaticamente a janela de captura de tela.\n\nPara concluir a inicialização do cenário, uma notificação foi exibida.\n\nAlguns telefones Android restringem mais os apps em segundo plano. Consulte este guia para melhorar a estabilidade das permissões.</string>
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Aprenda a usar o Klick\'r</string>
 </resources>

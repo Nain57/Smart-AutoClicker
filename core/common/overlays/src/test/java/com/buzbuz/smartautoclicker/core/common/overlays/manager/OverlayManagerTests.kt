@@ -105,6 +105,15 @@ class OverlayManagerTests {
     }
 
     @Test
+    fun hasVisibleOverlayAboveRoot_returnsTrueOnlyForChildOverlays() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        Assert.assertFalse(overlayManager.hasVisibleOverlayAboveRoot())
+
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+        Assert.assertTrue(overlayManager.hasVisibleOverlayAboveRoot())
+    }
+
+    @Test
     fun stackTop_navigateUp_initial() {
         overlayManager.navigateUp(mockContext)
 

@@ -8,4 +8,5 @@
     <string name="notification_button_hide">非表示</string>
     <string name="notification_button_stop">停止</string>
     <string name="notification_button_config">設定</string>
+    <string name="notification_button_switch">シナリオを切り替え</string>
 </resources>

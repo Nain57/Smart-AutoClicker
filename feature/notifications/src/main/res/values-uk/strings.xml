@@ -25,5 +25,6 @@
     <string name="notification_button_hide">Сховати</string>
     <string name="notification_button_stop">Стоп</string>
     <string name="notification_button_config">Налаштування</string>
+    <string name="notification_button_switch">Перемкнути сценарій</string>
 
 </resources>

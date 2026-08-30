@@ -89,6 +89,11 @@
     <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Counter is invalid</string>
 
+    <string name="item_external_action_title">External Action</string>
+    <string name="item_external_action_desc">Trigger an external automation app</string>
+    <string name="item_external_action_details">Fire \"%1$s\"</string>
+    <string name="item_external_action_details_error">External action name is invalid</string>
+
     <string name="item_toggle_event_title">Change event state</string>
     <string name="item_toggle_event_desc">Change the enabled state of an event</string>
     <string name="item_toggle_event_details_enable_all">Enable all</string>
@@ -432,6 +437,19 @@
     <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string> <!-- Toto = Toto + Tata -->
 
 
+    <!-- Dialog Action External Action ============================================================================= -->
+
+    <string name="dialog_title_external_action">External Action</string>
+    <string name="field_external_action_name_label">External action name</string>
+    <string name="field_external_action_help">Use this name in your automation app\'s Klick\'r external action trigger.</string>
+    <string name="field_external_action_selection_title_empty">No external action selected</string>
+    <string name="field_external_action_selection_desc_empty">Click here to reuse an external action name</string>
+    <string name="field_external_action_selection_desc">Reusable automation trigger name</string>
+    <string name="dialog_title_external_action_selection">External actions</string>
+    <string name="message_empty_external_action_list_title">No external action found</string>
+    <string name="message_empty_external_action_list_desc">Type a new external action name in a smart scenario first.</string>
+
+
     <!-- Dialogs Action ToggleEvent ================================================================================ -->
 
     <string name="dialog_title_toggle_event">Event state</string>
@@ -564,5 +582,21 @@
     <string name="content_desc_image_condition">The image to be detected</string>
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
+
+    <string name="content_desc_switch_scenario">Switch scenario</string>
+    <string name="scenario_switcher_dismiss">Close scenario switcher</string>
+    <string name="dialog_title_scenario_switcher">Switch scenario</string>
+    <string name="scenario_switcher_current">Current: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Unknown</string>
+    <string name="scenario_switcher_empty">No other Smart scenarios available</string>
+    <string name="scenario_switcher_error_service">The scenario service is no longer available.</string>
+    <string name="scenario_switcher_error_paused">Pause the scenario before switching.</string>
+    <string name="scenario_switcher_error_projection">Screen recording is unavailable. Restart it before switching.</string>
+    <string name="scenario_switcher_error_current">This scenario is already loaded.</string>
+    <string name="scenario_switcher_error_unavailable">That scenario is no longer available.</string>
+    <string name="scenario_switcher_error_persistence">The scenario could not be saved. Try again.</string>
+    <string name="scenario_switcher_error_unknown">The scenario could not be switched. Try again.</string>
+    <string name="scenario_switcher_retry">Retry</string>
+    <string name="scenario_switcher_switching">Switching to %1$s</string>
 
 </resources>

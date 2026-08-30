@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepositor
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
@@ -57,6 +58,7 @@ import javax.inject.Inject
 /** View model for the [MainMenu]. */
 class MainMenuModel @Inject constructor(
     private val smartProcessingRepository: SmartProcessingRepository,
+    settingsRepository: SettingsRepository,
     private val editionRepository: EditionRepository,
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
@@ -96,6 +98,14 @@ class MainMenuModel @Inject constructor(
     val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
+
+    val isSwitchButtonVisible: StateFlow<Boolean> = combine(
+        detectionState,
+        isMediaProjectionStarted,
+        settingsRepository.isScenarioSwitcherEnabledFlow,
+    ) { state, isProjectionStarted, isEnabled ->
+        state == UiState.Idle && isProjectionStarted && isEnabled
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     /** The condition being configured by the user. */
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -487,4 +487,32 @@
 
     <string name="warning_dialog_message_delete">Estás a punto de eliminar este elemento, ¿estás seguro?</string>
 
+    <string name="scenario_switcher_dismiss">Cerrar el selector de escenarios</string>
+    <string name="dialog_title_scenario_switcher">Cambiar escenario</string>
+    <string name="scenario_switcher_current">Actual: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Desconocido</string>
+    <string name="scenario_switcher_empty">No hay otros escenarios inteligentes disponibles</string>
+    <string name="scenario_switcher_error_service">El servicio de escenarios ya no está disponible.</string>
+    <string name="scenario_switcher_error_paused">Pausa el escenario antes de cambiar.</string>
+    <string name="scenario_switcher_error_projection">La grabación de pantalla no está disponible. Reiníciala antes de cambiar.</string>
+    <string name="scenario_switcher_error_current">Este escenario ya está cargado.</string>
+    <string name="scenario_switcher_error_unavailable">Ese escenario ya no está disponible.</string>
+    <string name="scenario_switcher_error_persistence">No se pudo guardar el escenario. Inténtalo de nuevo.</string>
+    <string name="scenario_switcher_error_unknown">No se pudo cambiar el escenario. Inténtalo de nuevo.</string>
+    <string name="scenario_switcher_retry">Reintentar</string>
+    <string name="scenario_switcher_switching">Cambiando a %1$s</string>
+
+    <string name="item_external_action_title">Acción externa</string>
+    <string name="item_external_action_desc">Activar una aplicación de automatización externa</string>
+    <string name="item_external_action_details">Ejecutar \"%1$s\"</string>
+    <string name="item_external_action_details_error">El nombre de la acción externa no es válido</string>
+    <string name="dialog_title_external_action">Acción externa</string>
+    <string name="field_external_action_name_label">Nombre de la acción externa</string>
+    <string name="field_external_action_help">Usa este nombre en el disparador de acción externa de Klick\'r de tu aplicación de automatización.</string>
+    <string name="field_external_action_selection_title_empty">Ninguna acción externa seleccionada</string>
+    <string name="field_external_action_selection_desc_empty">Pulsa aquí para reutilizar el nombre de una acción externa</string>
+    <string name="field_external_action_selection_desc">Nombre reutilizable del disparador de automatización</string>
+    <string name="dialog_title_external_action_selection">Acciones externas</string>
+    <string name="message_empty_external_action_list_title">No se encontró ninguna acción externa</string>
+    <string name="message_empty_external_action_list_desc">Escribe primero un nombre de acción externa nuevo en un escenario inteligente.</string>
 </resources>

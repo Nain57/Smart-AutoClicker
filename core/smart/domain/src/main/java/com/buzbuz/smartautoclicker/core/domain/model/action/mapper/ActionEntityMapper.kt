@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationVal
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -42,6 +43,7 @@ internal fun Action.toEntity(): ActionEntity {
         is Intent -> toIntentEntity()
         is ToggleEvent -> toToggleEventEntity()
         is ChangeCounter -> toChangeCounterEntity()
+        is ExternalAction -> toExternalActionEntity()
         is Notification -> toNotificationEntity()
         is SystemAction -> toSystemActionEntity()
         is SetText -> toSetTextEntity()
@@ -129,6 +131,16 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity {
         counterOperationCounterName = if (isNumberValue) null else operationValue.value as String,
     )
 }
+
+private fun ExternalAction.toExternalActionEntity(): ActionEntity =
+    ActionEntity(
+        id = id.databaseId,
+        eventId = eventId.databaseId,
+        priority = priority,
+        name = name!!,
+        type = ActionType.EXTERNAL_ACTION,
+        externalActionName = externalActionName.trim(),
+    )
 
 private fun Notification.toNotificationEntity(): ActionEntity =
     ActionEntity(

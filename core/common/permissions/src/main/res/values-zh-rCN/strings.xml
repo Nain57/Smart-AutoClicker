@@ -12,4 +12,6 @@
 
     <string name="button_request_permission">请求权限</string>
     <string name="button_deny">拒绝</string>
+    <string name="dialog_title_permission_launch_fallback_notification">备用启动通知</string>
+    <string name="message_permission_desc_launch_fallback_notification">可选：当自动化应用无法直接打开场景（例如手机已锁定）时，允许 Klick\'r 显示通知以完成启动。</string>
 </resources>

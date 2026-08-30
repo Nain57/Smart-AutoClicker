@@ -326,4 +326,32 @@
 
     <string name="warning_dialog_message_delete">このアイテムを削除しようとしています。よろしいですか？</string>
 
+    <string name="scenario_switcher_dismiss">シナリオ切り替えを閉じる</string>
+    <string name="dialog_title_scenario_switcher">シナリオを切り替え</string>
+    <string name="scenario_switcher_current">現在：%1$s</string>
+    <string name="scenario_switcher_current_unknown">不明</string>
+    <string name="scenario_switcher_empty">他に利用可能なスマートシナリオはありません</string>
+    <string name="scenario_switcher_error_service">シナリオサービスは利用できなくなりました。</string>
+    <string name="scenario_switcher_error_paused">切り替える前にシナリオを一時停止してください。</string>
+    <string name="scenario_switcher_error_projection">画面録画を利用できません。切り替える前に再起動してください。</string>
+    <string name="scenario_switcher_error_current">このシナリオはすでに読み込まれています。</string>
+    <string name="scenario_switcher_error_unavailable">そのシナリオは利用できなくなりました。</string>
+    <string name="scenario_switcher_error_persistence">シナリオを保存できませんでした。もう一度お試しください。</string>
+    <string name="scenario_switcher_error_unknown">シナリオを切り替えられませんでした。もう一度お試しください。</string>
+    <string name="scenario_switcher_retry">再試行</string>
+    <string name="scenario_switcher_switching">%1$s に切り替え中</string>
+
+    <string name="item_external_action_title">外部アクション</string>
+    <string name="item_external_action_desc">外部のオートメーションアプリを起動します</string>
+    <string name="item_external_action_details">「%1$s」を実行</string>
+    <string name="item_external_action_details_error">外部アクション名が無効です</string>
+    <string name="dialog_title_external_action">外部アクション</string>
+    <string name="field_external_action_name_label">外部アクション名</string>
+    <string name="field_external_action_help">オートメーションアプリの Klick\'r 外部アクショントリガーでこの名前を使用します。</string>
+    <string name="field_external_action_selection_title_empty">外部アクションが選択されていません</string>
+    <string name="field_external_action_selection_desc_empty">タップして外部アクション名を再利用</string>
+    <string name="field_external_action_selection_desc">再利用できるオートメーショントリガー名</string>
+    <string name="dialog_title_external_action_selection">外部アクション</string>
+    <string name="message_empty_external_action_list_title">外部アクションがありません</string>
+    <string name="message_empty_external_action_list_desc">先にスマートシナリオで新しい外部アクション名を入力してください。</string>
 </resources>

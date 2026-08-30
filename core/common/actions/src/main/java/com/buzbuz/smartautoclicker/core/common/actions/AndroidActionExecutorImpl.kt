@@ -24,6 +24,7 @@ import android.util.AndroidRuntimeException
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.external.ExternalActionEventContract
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.notification.NotificationRequestExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.text.TextExecutor
@@ -127,6 +128,16 @@ internal class AndroidActionExecutorImpl @Inject constructor(
     override fun postNotification(notificationRequest: ActionNotificationRequest) {
         accessibilityService ?: return // No need for service here, but init state is bound to it
         notificationRequestExecutor.postNotification(notificationRequest)
+    }
+
+    override fun fireExternalAction(externalActionName: String) {
+        val service = accessibilityService ?: return
+
+        try {
+            service.sendBroadcast(ExternalActionEventContract.createRequestQueryIntent(externalActionName))
+        } catch (iaex: IllegalArgumentException) {
+            Log.w(TAG, "Can't fire external action, Intent is invalid.", iaex)
+        }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {

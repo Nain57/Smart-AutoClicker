@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartAct
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.offset.ClickOffsetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.external.ExternalActionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activities.ActivitySelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionModel
@@ -63,6 +64,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.Cou
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.switcher.ScenarioSwitchViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.imageevents.ImageEventListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more.MoreViewModel
@@ -95,6 +97,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun eventCopyModel(): EventCopyViewModel
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel
+    fun externalActionViewModel(): ExternalActionViewModel
     fun extraConfigViewModel(): ExtraConfigModel
     fun fixEventChildrenCopyViewModel(): FixEventChildrenCopyViewModel
     fun fixEventsCopyViewModel(): FixEventsCopyViewModel
@@ -113,6 +116,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun pauseViewModel(): PauseViewModel
     fun scenarioConfigViewModel(): ScenarioConfigViewModel
     fun scenarioDialogViewModel(): ScenarioDialogViewModel
+    fun scenarioSwitchViewModel(): ScenarioSwitchViewModel
     fun screenConditionSelectionViewModel(): ScreenConditionSelectionViewModel
     fun screenConditionTypeSelectionViewModel(): ScreenConditionTypeSelectionViewModel
     fun setTextViewModel(): SetTextViewModel

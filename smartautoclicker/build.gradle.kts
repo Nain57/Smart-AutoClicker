@@ -176,7 +176,7 @@ dependencies {
 
     implementation(project(":feature:backup"))
     implementation(project(":feature:notifications"))
-    implementation(project(":feature:quick-settings-tile"))
+    implementation(project(":feature:external-launch"))
     implementation(project(":feature:revenue"))
     implementation(project(":feature:review"))
     implementation(project(":feature:smart-config"))

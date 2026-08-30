@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -89,6 +90,8 @@ class ActionExecutorTests {
             ))
         fun getNewDefaultPause(id: Long) =
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
+        fun getNewDefaultExternalAction(id: Long, externalActionName: String) =
+            ExternalAction(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 4, externalActionName)
 
         fun getNewDefaultCondition(id: Long) =
             ScreenCondition.Image(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, true, 10, "path", Rect(), EXACT, null)
@@ -237,6 +240,19 @@ class ActionExecutorTests {
         )
 
         // Only a pause, there should be no gestures
+        verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
+    }
+
+    @Test
+    fun execute_oneExternalAction() = runTest {
+        val externalAction = getNewDefaultExternalAction(1, "Open xyz game intent")
+
+        actionExecutor.executeActions(
+            event = getNewDefaultEvent(actions = listOf(externalAction)),
+            results = ConditionsResults(),
+        )
+
+        verify(mockAndroidExecutor).fireExternalAction("Open xyz game intent")
         verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
     }
 

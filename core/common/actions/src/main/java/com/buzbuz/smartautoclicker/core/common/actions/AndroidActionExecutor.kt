@@ -110,6 +110,9 @@ interface AndroidActionExecutor: Dumpable {
      * due to the queuing system).
      */
     fun postNotification(notificationRequest: ActionNotificationRequest)
+
+    /** Fire a named external automation event. */
+    fun fireExternalAction(externalActionName: String)
 }
 
 /** The maximum supported duration for a gesture. This limitation comes from Android GestureStroke API.  */

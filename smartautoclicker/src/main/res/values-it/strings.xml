@@ -123,6 +123,9 @@
     <string name="field_show_scenario_filters_ui_title">Mostra i filtri degli scenari</string>
     <string name="field_show_scenario_filters_ui_desc">Visualizza o nasconde i filtri nella schermata dell\'elenco degli scenari.</string>
 
+    <string name="field_scenario_switcher_title">Mostra il selettore di scenario</string>
+    <string name="field_scenario_switcher_desc">Mostra il selettore di scenario nella barra degli strumenti flottante per cambi rapidi.</string>
+
     <string name="field_legacy_action_ui_title">Interfaccia utente dell\'azione legacy</string>
     <string name="field_legacy_action_ui_desc">Modifica la visualizzazione delle azioni tramite un elenco. Utile per scenari complessi.</string>
 
@@ -159,4 +162,8 @@
     <string name="button_import">Importa</string>
     <string name="button_export">Esporta</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Avvio in background bloccato</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r non ha potuto aprire automaticamente la finestra di cattura dello schermo.\n\nPer completare l\'avvio dello scenario, è stata mostrata una notifica.\n\nAlcuni telefoni Android impongono restrizioni maggiori alle app in background. Consulta questa guida per migliorare la stabilità delle autorizzazioni.</string>
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Scopri come usare Klick\'r</string>
 </resources>

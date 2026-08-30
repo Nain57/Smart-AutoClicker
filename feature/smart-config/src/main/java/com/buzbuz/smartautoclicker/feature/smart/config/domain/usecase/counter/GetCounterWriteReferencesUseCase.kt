@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.ExternalAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -62,6 +63,7 @@ class GetCounterWriteReferencesUseCase @Inject constructor(
                     is Notification,
                     is SetText,
                     is Click,
+                    is ExternalAction,
                     is Intent,
                     is Pause,
                     is SystemAction,

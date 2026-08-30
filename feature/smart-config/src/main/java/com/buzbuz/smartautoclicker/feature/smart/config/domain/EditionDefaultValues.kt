@@ -77,6 +77,9 @@ internal class EditionDefaultValues {
     fun changeCounterName(context: Context): String =
         context.getString(R.string.default_change_counter_name)
 
+    fun externalActionName(context: Context): String =
+        context.getString(R.string.default_external_action_name)
+
     fun notificationName(context: Context): String =
         context.getString(R.string.default_notification_name)
 

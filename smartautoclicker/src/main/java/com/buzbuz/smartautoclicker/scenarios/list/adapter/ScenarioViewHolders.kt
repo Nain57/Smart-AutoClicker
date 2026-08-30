@@ -35,7 +35,7 @@ import java.util.Locale
 
 class EmptyScenarioHolder(
     private val viewBinding: ItemEmptyScenarioBinding,
-    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
+    private val launchScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
     private val deleteScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Empty) -> Unit),
 ): RecyclerView.ViewHolder(viewBinding.root) {
 
@@ -46,7 +46,7 @@ class EmptyScenarioHolder(
             else R.drawable.ic_smart
         )
 
-        buttonStart.setOnClickListener { startScenarioListener(scenarioItem) }
+        buttonStart.setOnClickListener { launchScenarioListener(scenarioItem) }
         buttonDelete.setOnClickListener { deleteScenarioListener(scenarioItem) }
     }
 }
@@ -54,7 +54,7 @@ class EmptyScenarioHolder(
 /** ViewHolder for the [ScenarioAdapter]. */
 class DumbScenarioViewHolder(
     private val viewBinding: ItemDumbScenarioBinding,
-    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val launchScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val copyClickedListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
@@ -79,7 +79,7 @@ class DumbScenarioViewHolder(
             buttonExpandCollapse.isEnabled = true
             buttonExport.visibility = View.GONE
             topDivider.visibility = View.VISIBLE
-            root.setOnClickListener { startScenarioListener(scenarioItem) }
+            root.setOnClickListener { launchScenarioListener(scenarioItem) }
         }
 
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {
@@ -110,7 +110,7 @@ class DumbScenarioViewHolder(
 class SmartScenarioViewHolder(
     private val viewBinding: ItemSmartScenarioBinding,
     bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
-    private val startScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
+    private val launchScenarioListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val expandCollapseListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val exportClickListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
     private val copyClickedListener: ((ScenarioListUiState.Item.ScenarioItem.Valid) -> Unit),
@@ -140,7 +140,7 @@ class SmartScenarioViewHolder(
             buttonExpandCollapse.isEnabled = true
             buttonExport.visibility = View.GONE
             topDivider.visibility = View.VISIBLE
-            root.setOnClickListener { startScenarioListener(scenarioItem) }
+            root.setOnClickListener { launchScenarioListener(scenarioItem) }
         }
 
         if (!scenarioItem.showExportCheckbox && scenarioItem.expanded) {

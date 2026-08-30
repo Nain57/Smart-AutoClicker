@@ -72,6 +72,9 @@
     <string name="field_show_scenario_filters_ui_title">シナリオのフィルターを表示</string>
     <string name="field_show_scenario_filters_ui_desc">シナリオ一覧画面でフィルターの表示／非表示を切り替えます。</string>
 
+    <string name="field_scenario_switcher_title">シナリオ切り替えを表示</string>
+    <string name="field_scenario_switcher_desc">フローティングツールバーにシナリオ切り替えを表示し、すばやく切り替えられるようにします。</string>
+
     <string name="field_legacy_action_ui_title">従来の操作 UI</string>
     <string name="field_legacy_action_ui_desc">操作を一覧で表示します。複雑なシナリオに適しています。</string>
 
@@ -105,4 +108,8 @@
     <string name="button_import">インポート</string>
     <string name="button_export">エクスポート</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">バックグラウンド起動がブロックされました</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r は画面キャプチャの確認画面を自動で開けませんでした。\n\nシナリオの起動を完了するため、代わりに通知を表示しました。\n\n一部の Android 端末では、バックグラウンドアプリにより厳しい制限があります。このガイドを確認して権限の安定性を改善してください。</string>
+    <string name="field_tutorial_title">チュートリアル</string>
+    <string name="field_tutorial_desc">Klick\'r の使い方を確認します</string>
 </resources>

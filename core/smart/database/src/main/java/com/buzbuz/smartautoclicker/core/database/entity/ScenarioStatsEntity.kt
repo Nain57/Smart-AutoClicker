@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.database.SCENARIO_USAGE_TABLE
  */
 @Entity(
     tableName = SCENARIO_USAGE_TABLE,
-    indices = [Index("scenario_id")],
+    indices = [Index(value = ["scenario_id"], unique = true)],
     foreignKeys = [ForeignKey(
         entity = ScenarioEntity::class,
         parentColumns = ["id"],

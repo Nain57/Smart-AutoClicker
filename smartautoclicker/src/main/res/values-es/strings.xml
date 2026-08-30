@@ -125,6 +125,9 @@
     <string name="field_show_scenario_filters_ui_title">Mostrar filtros de escenarios</string>
     <string name="field_show_scenario_filters_ui_desc">Muestra u oculta los filtros en la pantalla de lista de escenarios.</string>
 
+    <string name="field_scenario_switcher_title">Mostrar selector de escenarios</string>
+    <string name="field_scenario_switcher_desc">Muestra el selector de escenarios en la barra de herramientas flotante para cambios rápidos.</string>
+
     <string name="field_legacy_action_ui_title">IU de acción heredada</string>
     <string name="field_legacy_action_ui_desc">Cambie la visualización de acciones por una lista. Útil para escenarios complejos.</string>
 
@@ -160,4 +163,8 @@
     <string name="button_import">Importar</string>
     <string name="button_export">Exportar</string>
 
+    <string name="dialog_title_locale_plugin_background_launch">Inicio en segundo plano bloqueado</string>
+    <string name="message_locale_plugin_background_launch">Klick\'r no pudo abrir automáticamente la ventana de captura de pantalla.\n\nPara terminar de iniciar el escenario, mostró una notificación.\n\nAlgunos teléfonos Android restringen más las aplicaciones en segundo plano. Consulta esta guía para mejorar la estabilidad de los permisos.</string>
+    <string name="field_tutorial_title">Tutorial</string>
+    <string name="field_tutorial_desc">Aprende a usar Klick\'r</string>
 </resources>

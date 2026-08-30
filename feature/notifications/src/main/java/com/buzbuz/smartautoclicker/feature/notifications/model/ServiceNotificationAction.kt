@@ -60,6 +60,11 @@ internal sealed class ServiceNotificationAction {
 
     }
 
+    data object Switch : ServiceNotificationAction() {
+        override val textRes: Int = R.string.notification_button_switch
+        override val iconRes: Int = R.drawable.ic_notification_swap_horiz
+    }
+
     data object Stop : ServiceNotificationAction() {
         override val textRes: Int = R.string.notification_button_stop
         override val iconRes: Int = R.drawable.ic_notification_cancel
@@ -78,6 +83,7 @@ internal fun getAllActionsBroadcastIntentFilter(): IntentFilter =
         addAction(ServiceNotificationAction.Pause.getBroadcastAction())
         addAction(ServiceNotificationAction.Show.getBroadcastAction())
         addAction(ServiceNotificationAction.Hide.getBroadcastAction())
+        addAction(ServiceNotificationAction.Switch.getBroadcastAction())
         addAction(ServiceNotificationAction.Stop.getBroadcastAction())
     }
 
@@ -87,6 +93,7 @@ internal fun Intent.toServiceNotificationAction(): ServiceNotificationAction? =
         ServiceNotificationAction.Pause.getBroadcastAction() -> ServiceNotificationAction.Pause
         ServiceNotificationAction.Show.getBroadcastAction() -> ServiceNotificationAction.Show
         ServiceNotificationAction.Hide.getBroadcastAction() -> ServiceNotificationAction.Hide
+        ServiceNotificationAction.Switch.getBroadcastAction() -> ServiceNotificationAction.Switch
         ServiceNotificationAction.Stop.getBroadcastAction() -> ServiceNotificationAction.Stop
         else -> null
     }
@@ -113,6 +120,7 @@ private fun ServiceNotificationAction.getIntent(appComponentsProvider: AppCompon
         ServiceNotificationAction.Show -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
         ServiceNotificationAction.Hide -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
         ServiceNotificationAction.Stop -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
+        ServiceNotificationAction.Switch -> NotificationActionPendingIntent.Broadcast(getBroadcastAction())
         ServiceNotificationAction.Config -> NotificationActionPendingIntent.Activity(appComponentsProvider.scenarioActivityComponentName)
     }
 
@@ -122,6 +130,7 @@ private fun ServiceNotificationAction.getBroadcastAction(): String =
         ServiceNotificationAction.Pause -> "com.buzbuz.smartautoclicker.PAUSE"
         ServiceNotificationAction.Show -> "com.buzbuz.smartautoclicker.SHOW"
         ServiceNotificationAction.Hide -> "com.buzbuz.smartautoclicker.HIDE"
+        ServiceNotificationAction.Switch -> "com.buzbuz.smartautoclicker.SWITCH"
         ServiceNotificationAction.Stop -> "com.buzbuz.smartautoclicker.STOP"
         ServiceNotificationAction.Config -> throw IllegalArgumentException("This action doesn't use broadcasts")
     }

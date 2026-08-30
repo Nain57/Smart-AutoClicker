@@ -51,6 +51,9 @@ interface SmartProcessingRepository : Dumpable {
     /** @return true if the processing is currently running ([DetectionState.DETECTING]), false if not. */
     fun isRunning(): Boolean
 
+    /** @return true if screen capture is currently active, whether detection is running or only loaded. */
+    fun isScreenRecordActive(): Boolean
+
     /**
      * Set the scenario to be processed.
      *
@@ -59,6 +62,14 @@ interface SmartProcessingRepository : Dumpable {
      * other temp scenario use cases.
      */
     fun setScenarioId(identifier: Identifier, markAsUsed: Boolean = false)
+
+    /**
+     * Persist usage and set the current scenario as one operation.
+     *
+     * This is used for scenario changes where reporting success before the usage count has been saved would be
+     * misleading to the user.
+     */
+    suspend fun setScenarioIdAndMarkAsUsed(identifier: Identifier)
 
     /**
      * Set the callback upon Android Media Projection errors.

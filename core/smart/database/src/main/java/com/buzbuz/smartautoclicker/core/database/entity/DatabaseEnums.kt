@@ -53,6 +53,8 @@ enum class ActionType {
     SYSTEM,
     /** Set the text of a focused view on the screen. */
     TEXT,
+    /** Fire a named external automation plugin event. */
+    EXTERNAL_ACTION,
 }
 
 

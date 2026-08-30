@@ -58,6 +58,6 @@ class AccessibilityTroubleshootingDialog : DialogFragment() {
     }
 
     private fun showDontKillMyApp() {
-        context?.safeStartWebBrowserActivity("https://dontkillmyapp.com?app=Klick%27r")
+        context?.safeStartWebBrowserActivity("https://dontkillmyapp.com/?app=Klick%27r")
     }
 }

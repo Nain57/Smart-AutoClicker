@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.ui.utils.AnimatedStatesImageButtonController
 import com.buzbuz.smartautoclicker.core.ui.utils.getDynamicColorsContext
+import com.buzbuz.smartautoclicker.core.ui.R as CoreUiR
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
@@ -65,7 +66,11 @@ import kotlinx.coroutines.launch
  * There is no overlay views attached to this overlay menu, meaning that the user will always be able to clicks on the
  * Activities displayed below it.
  */
-class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
+class MainMenu(
+    private val onStopClicked: () -> Unit,
+    private val onSwitchScenarioClicked: () -> Unit,
+    private val isSwitchButtonInitiallyVisible: Boolean,
+) : OverlayMenu() {
 
     override fun tutorialMonitoringTag(): String = MonitoredOverlayType.MAIN_MENU.name
 
@@ -86,6 +91,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     }
 
     private var isHiddenForPaywall: Boolean = false
+    private var hasReceivedSwitchVisibility = false
 
     /** View binding for the content of the overlay. */
     private lateinit var viewBinding: OverlayMenuBinding
@@ -112,6 +118,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             state2to1AnimationRes = R.drawable.anim_pause_play,
         )
         viewBinding = OverlayMenuBinding.inflate(layoutInflater)
+        viewBinding.btnSwitchScenario.isVisible = isSwitchButtonInitiallyVisible
         playPauseButtonController.attachView(viewBinding.btnPlay)
 
         return viewBinding.root
@@ -136,6 +143,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.isStartButtonEnabled.collect(::updatePlayPauseButtonEnabledState) }
+                launch { viewModel.isSwitchButtonVisible.collect(::updateSwitchButtonVisibility) }
                 launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
                 launch { viewModel.detectionState.collect(::updateDetectionState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
@@ -194,14 +202,20 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         when (viewId) {
             R.id.btn_play -> onPlayPauseClicked()
             R.id.btn_click_list -> onConfigureClicked()
+            R.id.btn_switch_scenario -> onSwitchScenarioClicked()
             R.id.btn_stop -> onStopClicked()
         }
     }
 
     override fun getWindowMaximumSize(backgroundView: ViewGroup): Size {
         val bgSize = super.getWindowMaximumSize(backgroundView)
+        val switchButtonWidth = if (viewBinding.btnSwitchScenario.isVisible) {
+            0
+        } else {
+            context.resources.getDimensionPixelSize(CoreUiR.dimen.overlay_menu_btn_size)
+        }
         return Size(
-            bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_width),
+            bgSize.width + switchButtonWidth + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_width),
             bgSize.height,
         )
     }
@@ -247,6 +261,23 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     private fun updatePlayPauseButtonEnabledState(canStartDetection: Boolean) =
         setMenuItemViewEnabled(viewBinding.btnPlay, canStartDetection)
 
+    private fun updateSwitchButtonVisibility(isVisible: Boolean) {
+        if (!hasReceivedSwitchVisibility) {
+            hasReceivedSwitchVisibility = true
+            if (isVisible != isSwitchButtonInitiallyVisible) return
+        }
+        if (viewBinding.btnSwitchScenario.isVisible == isVisible) return
+
+        if (viewBinding.btnPlay.tag == null) {
+            viewBinding.btnSwitchScenario.visibility = if (isVisible) View.VISIBLE else View.GONE
+            return
+        }
+
+        animateLayoutChanges {
+            setMenuItemVisibility(viewBinding.btnSwitchScenario, isVisible)
+        }
+    }
+
     /** Refresh the menu layout according to the detection state. */
     private fun updateDetectionState(newState: UiState) {
         val currentState = viewBinding.btnPlay.tag
@@ -258,11 +289,13 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 if (currentState == null) {
                     viewBinding.btnStop.isVisible = true
                     viewBinding.btnClickList.isVisible = true
+                    viewBinding.btnSwitchScenario.isVisible = isSwitchButtonInitiallyVisible
                     playPauseButtonController.toState1(false)
                 } else {
                     animateLayoutChanges {
                         setMenuItemVisibility(viewBinding.btnStop, true)
                         setMenuItemVisibility(viewBinding.btnClickList, true)
+                        setMenuItemVisibility(viewBinding.btnSwitchScenario, viewModel.isSwitchButtonVisible.value)
                         playPauseButtonController.toState1(true)
                     }
                 }
@@ -272,11 +305,13 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
                 if (currentState == null) {
                     viewBinding.btnStop.isVisible = false
                     viewBinding.btnClickList.isVisible = false
+                    viewBinding.btnSwitchScenario.isVisible = false
                     playPauseButtonController.toState2(false)
                 } else {
                     animateLayoutChanges {
                         setMenuItemVisibility(viewBinding.btnStop, false)
                         setMenuItemVisibility(viewBinding.btnClickList, false)
+                        setMenuItemVisibility(viewBinding.btnSwitchScenario, false)
                         playPauseButtonController.toState2(true)
                     }
                 }

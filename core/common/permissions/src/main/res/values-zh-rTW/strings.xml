@@ -12,4 +12,6 @@
 
     <string name="button_request_permission">請求權限</string>
     <string name="button_deny">拒絕</string>
+    <string name="dialog_title_permission_launch_fallback_notification">備用啟動通知</string>
+    <string name="message_permission_desc_launch_fallback_notification">選用：當自動化應用程式無法直接開啟情境（例如手機已鎖定）時，允許 Klick\'r 顯示通知以完成啟動。</string>
 </resources>

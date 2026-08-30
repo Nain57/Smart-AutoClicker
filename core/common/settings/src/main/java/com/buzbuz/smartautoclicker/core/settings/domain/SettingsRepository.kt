@@ -37,6 +37,10 @@ interface SettingsRepository {
     val isFilterScenarioUiEnabledFlow: Flow<Boolean>
     fun toggleFilterScenarioUi()
 
+    val isScenarioSwitcherEnabledFlow: Flow<Boolean>
+    suspend fun isScenarioSwitcherEnabled(): Boolean
+    fun toggleScenarioSwitcher()
+
     val isInputBlockWorkaroundEnabledFlow: Flow<Boolean>
     fun isInputBlockWorkaroundEnabled(): Boolean
     fun toggleInputBlockWorkaround()

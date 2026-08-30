@@ -463,4 +463,32 @@
 
     <string name="warning_dialog_message_delete">您即將刪除此項目，確定嗎？</string>
 
+    <string name="scenario_switcher_dismiss">關閉情境切換器</string>
+    <string name="dialog_title_scenario_switcher">切換情境</string>
+    <string name="scenario_switcher_current">目前：%1$s</string>
+    <string name="scenario_switcher_current_unknown">未知</string>
+    <string name="scenario_switcher_empty">沒有其他可用的智慧情境</string>
+    <string name="scenario_switcher_error_service">情境服務已無法使用。</string>
+    <string name="scenario_switcher_error_paused">切換前請暫停情境。</string>
+    <string name="scenario_switcher_error_projection">螢幕錄製無法使用。請先重新啟動螢幕錄製，再切換情境。</string>
+    <string name="scenario_switcher_error_current">此情境已載入。</string>
+    <string name="scenario_switcher_error_unavailable">該情境已無法使用。</string>
+    <string name="scenario_switcher_error_persistence">無法儲存情境。請重試。</string>
+    <string name="scenario_switcher_error_unknown">無法切換情境。請重試。</string>
+    <string name="scenario_switcher_retry">重試</string>
+    <string name="scenario_switcher_switching">正在切換至 %1$s</string>
+
+    <string name="item_external_action_title">外部動作</string>
+    <string name="item_external_action_desc">觸發外部自動化應用程式</string>
+    <string name="item_external_action_details">觸發「%1$s」</string>
+    <string name="item_external_action_details_error">外部動作名稱無效</string>
+    <string name="dialog_title_external_action">外部動作</string>
+    <string name="field_external_action_name_label">外部動作名稱</string>
+    <string name="field_external_action_help">請在自動化應用程式的 Klick\'r 外部動作觸發器中使用此名稱。</string>
+    <string name="field_external_action_selection_title_empty">未選取外部動作</string>
+    <string name="field_external_action_selection_desc_empty">點按此處以重複使用外部動作名稱</string>
+    <string name="field_external_action_selection_desc">可重複使用的自動化觸發器名稱</string>
+    <string name="dialog_title_external_action_selection">外部動作</string>
+    <string name="message_empty_external_action_list_title">找不到外部動作</string>
+    <string name="message_empty_external_action_list_desc">請先在智慧情境中輸入新的外部動作名稱。</string>
 </resources>

@@ -94,6 +94,15 @@ class ServiceNotificationController(
         )
     }
 
+    fun updateScenarioName(context: Context, scenarioName: String) {
+        val state = notificationState ?: return
+
+        updateNotificationState(
+            context,
+            state.copy(scenarioName = scenarioName),
+        )
+    }
+
     private fun updateNotification(context: Context, isNightModeEnabled: Boolean) {
         val state = notificationState ?: return
 
@@ -105,12 +114,14 @@ class ServiceNotificationController(
 
     @SuppressLint("MissingPermission")
     private fun updateNotificationState(context: Context, state: ServiceNotificationState) {
+        // Keep the model current even when Android currently suppresses notification delivery. If permission is later
+        // restored, the next regular update must use the scenario name and state that were last selected.
+        notificationState = state
         val builder = notificationBuilder ?: return
         if (!PermissionPostNotification().checkIfGranted(context)) return
 
         Log.i(TAG, "Updating notification: $state")
 
-        notificationState = state
         builder.updateState(context, state)
         notificationManager.notify(NotificationIds.FOREGROUND_SERVICE_NOTIFICATION_ID, builder.build())
     }
