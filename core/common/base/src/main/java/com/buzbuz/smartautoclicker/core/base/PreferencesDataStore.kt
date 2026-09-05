@@ -34,11 +34,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+
+import java.io.IOException
 
 class PreferencesDataStore(
     context: Context,
     dispatcher: CoroutineDispatcher,
-    fileName: String,
+    private val fileName: String,
     migrations: List<DataMigration<Preferences>> = emptyList(),
     onFileCorrupted: (ex: CorruptionException) -> Preferences = { emptyPreferences() },
 ) {
@@ -56,10 +59,20 @@ class PreferencesDataStore(
     )
 
     val data: Flow<Preferences> =
-        dataStore.data
+        dataStore.data.catch { throwable ->
+            if (throwable !is IOException) throw throwable
+
+            Log.e(TAG, "Can't read preferences file $fileName", throwable)
+            emit(emptyPreferences())
+        }
 
     suspend fun edit(transform: suspend (MutablePreferences) -> Unit): Preferences =
-        dataStore.edit(transform)
+        try {
+            dataStore.edit(transform)
+        } catch (ioEx: IOException) {
+            Log.e(TAG, "Can't write preferences file $fileName", ioEx)
+            emptyPreferences()
+        }
 }
 
 inline fun <reified T : Enum<T>> Preferences.getEnum(key: Preferences.Key<String>): T? =
