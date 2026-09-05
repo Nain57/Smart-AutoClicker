@@ -69,6 +69,9 @@ class TriggerConditionListDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 dialogTitle.setText(R.string.dialog_title_trigger_event)
 
+                setButtonVisibility(DialogNavigationButton.DISMISS, View.VISIBLE)
+                buttonDismiss.setIconResource(R.drawable.ic_back)
+
                 buttonDismiss.setDebouncedOnClickListener { back() }
             }
 
