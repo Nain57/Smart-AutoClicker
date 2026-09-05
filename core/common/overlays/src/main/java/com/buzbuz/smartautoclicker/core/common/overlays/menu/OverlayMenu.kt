@@ -42,6 +42,7 @@ import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
 import com.buzbuz.smartautoclicker.core.base.extensions.disableMoveAnimations
 import com.buzbuz.smartautoclicker.core.base.extensions.doWhenMeasured
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
+import com.buzbuz.smartautoclicker.core.base.extensions.safeRemoveView
 import com.buzbuz.smartautoclicker.core.base.extensions.safeUpdateViewLayout
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
@@ -336,8 +337,8 @@ abstract class OverlayMenu(
         positionDataSource.removeOnLockedPositionChangedListener(onLockedPositionChangedListener)
         saveMenuPosition(displayConfigManager.displayConfig.orientation)
 
-        windowManager.removeView(menuLayout)
-        screenOverlayView?.let { windowManager.removeView(it) }
+        windowManager.safeRemoveView(menuLayout)
+        screenOverlayView?.let { windowManager.safeRemoveView(it) }
         screenOverlayView = null
 
         resizeController.release()
@@ -390,8 +391,8 @@ abstract class OverlayMenu(
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
 
         windowManager.apply {
-            removeView(oldOverlayView)
-            removeView(menuLayout)
+            safeRemoveView(oldOverlayView)
+            safeRemoveView(menuLayout)
             screenOverlayView?.let { overlayView ->
                 if (!safeAddView(overlayView, overlayLayoutParams)) {
                     finish()

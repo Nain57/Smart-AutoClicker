@@ -28,6 +28,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StyleRes
 
 import com.buzbuz.smartautoclicker.core.base.extensions.safeAddView
+import com.buzbuz.smartautoclicker.core.base.extensions.safeRemoveView
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 
@@ -84,6 +85,6 @@ abstract class FullscreenOverlay(@StyleRes theme: Int? = null) : BaseOverlay(the
 
     @CallSuper
     override fun onStop() {
-        windowManager.removeView(view)
+        windowManager.safeRemoveView(view)
     }
 }

@@ -30,7 +30,7 @@ fun WindowManager.safeAddView(view: View?, params: WindowManager.LayoutParams?):
     return try {
         addView(view, params)
         true
-    } catch (ex: WindowManager.BadTokenException) {
+    } catch (_: WindowManager.BadTokenException) {
         Log.e(TAG, "Can't add view to window manager, permission is denied !")
         false
     }
@@ -40,9 +40,15 @@ fun WindowManager.safeUpdateViewLayout(view: View, params: WindowManager.LayoutP
     return try {
         updateViewLayout(view, params)
         true
-    } catch (ex: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         false
     }
+}
+
+fun WindowManager.safeRemoveView(view: View) {
+    try {
+        removeView(view)
+    } catch (_: IllegalArgumentException) {}
 }
 
 fun WindowManager.LayoutParams.disableMoveAnimations() {
