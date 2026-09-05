@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
@@ -56,6 +57,9 @@ class ClickCountGameFragment : Fragment() {
     private lateinit var viewBinding: FragmentClickCountGameBinding
     /** Tells if the time blinking animation is started or not. */
     private var isTimeAnimationStarted: Boolean = false
+
+    /** Dialog shown once the game is won.*/
+    private var completionDialog: AlertDialog? = null
 
     @Inject lateinit var overlayManager: OverlayManager
 
@@ -112,6 +116,12 @@ class ClickCountGameFragment : Fragment() {
         }
         overlayManager.removeTopOverlay()
         overlayManager.unlockMenuPosition()
+    }
+
+    override fun onDestroyView() {
+        completionDialog?.dismiss()
+        completionDialog = null
+        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -172,7 +182,11 @@ class ClickCountGameFragment : Fragment() {
     }
 
     private fun showCompletionDialog(show: Boolean) {
-        if (!show) return
+        if (!show) {
+            completionDialog?.dismiss()
+            return
+        }
+        if (completionDialog != null) return
 
         val dialogContext = requireContext().getDynamicColorsContext(R.style.AppTheme)
         val dialogViewBinding = DialogTutorialSuccessBinding.inflate(LayoutInflater.from(dialogContext))
@@ -184,10 +198,12 @@ class ClickCountGameFragment : Fragment() {
             buttonKeepPlaying.setOnClickListener { dialog.dismiss() }
             buttonClose.setOnClickListener {
                 dialog.dismiss()
-                findNavController().navigateUp()
+                if (isAdded) findNavController().navigateUp()
             }
         }
 
+        dialog.setOnDismissListener { completionDialog = null }
+        completionDialog = dialog
         dialog.show()
     }
 
