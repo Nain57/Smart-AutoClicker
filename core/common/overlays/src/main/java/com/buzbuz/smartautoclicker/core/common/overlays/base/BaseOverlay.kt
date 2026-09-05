@@ -309,13 +309,11 @@ abstract class BaseOverlay internal constructor(
      * @param appContext the Android application context.
      */
     private fun newOverlayContext(appContext: Context): Context {
+        val displayContext = appContext.createDefaultDisplayContext()
         val baseContext = if (useWindowContext && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val display = appContext.getSystemService(DisplayManager::class.java)
-                .getDisplay(Display.DEFAULT_DISPLAY)
-            appContext.createDisplayContext(display)
-                .createWindowContext(WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, null)
+            displayContext.createWindowContext(WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, null)
         } else {
-            appContext
+            displayContext
         }
 
         return if (theme == null) baseContext
@@ -328,6 +326,21 @@ abstract class BaseOverlay internal constructor(
                 )
             }
         )
+    }
+
+    /**
+     * Get a context associated with the default display.
+     *
+     * The views of an overlay can request the display of their context (the text selection floating toolbar does, for
+     * instance). As the application context is not associated with any display, such request throws and crashes the
+     * application, so the base context of all overlays must be associated with the default display.
+     */
+    private fun Context.createDefaultDisplayContext(): Context {
+        val display = getSystemService(DisplayManager::class.java)
+            ?.getDisplay(Display.DEFAULT_DISPLAY)
+            ?: return this
+
+        return createDisplayContext(display) ?: this
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
