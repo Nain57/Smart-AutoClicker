@@ -40,6 +40,7 @@
         <activity
             android:name=".ui.QSTileLauncherActivity"
             android:theme="@style/AppTheme.TranslucentActivity"
+            android:taskAffinity=""
             android:exported="false"
             android:excludeFromRecents="true"/>
 
