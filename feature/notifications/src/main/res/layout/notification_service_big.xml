@@ -15,6 +15,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+<!--
+  Sizes are literal values on purpose: this layout is inflated by the system UI process, and some
+  devices (Huawei on Android 12) fail to resolve @dimen references for the layout params there,
+  making the notification inflation crash the app with a RemoteServiceException.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,7 +33,7 @@
         style="@style/AppTheme.TextAppearance.BodyLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:textColor="@color/notification_text_color"
         android:maxLines="1"
@@ -36,7 +41,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/notification_buttons_size"
+        android:layout_height="36dp"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
@@ -48,8 +53,8 @@
             <ImageButton
                 android:id="@+id/button_play_pause"
                 style="@style/AppTheme.Notification.Button.Filled"
-                android:layout_width="@dimen/notification_buttons_size"
-                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_notification_play_arrow" />
 
@@ -63,8 +68,8 @@
             <ImageButton
                 android:id="@+id/button_show_hide"
                 style="@style/AppTheme.Notification.Button.Outlined"
-                android:layout_width="@dimen/notification_buttons_size"
-                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_notification_visible_on"/>
 
@@ -78,8 +83,8 @@
             <ImageButton
                 android:id="@+id/button_config"
                 style="@style/AppTheme.Notification.Button.Outlined"
-                android:layout_width="@dimen/notification_buttons_size"
-                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_notification_settings_filled"/>
 
@@ -93,8 +98,8 @@
             <ImageButton
                 android:id="@+id/button_exit"
                 style="@style/AppTheme.Notification.Button.Outlined"
-                android:layout_width="@dimen/notification_buttons_size"
-                android:layout_height="@dimen/notification_buttons_size"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_notification_cancel"/>
 

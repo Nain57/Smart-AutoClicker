@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.notifications.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.feature.notifications.model.ServiceNotificationState
@@ -40,9 +41,13 @@ internal fun Context.newServiceNotificationBuilder(
 
     return try {
         CustomLayoutNotificationBuilder(this, channelId, initialState, appComponentsProvider)
+            .apply { checkCustomViewsInflation(this@newServiceNotificationBuilder) }
     } catch (ex: Exception) {
         // Some devices doesn't support custom views in notification, use the regular format instead
+        Log.w(TAG, "Can't create the custom views notification, fallback to the legacy one", ex)
         LegacyNotificationBuilder(this, channelId, initialState, appComponentsProvider)
     }
 }
+
+private const val TAG = "ServiceNotificationBuilder"
 

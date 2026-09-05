@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.notifications.ui
 
 import android.app.Notification
 import android.content.Context
+import android.widget.FrameLayout
 import android.widget.RemoteViews
 import androidx.annotation.IdRes
 import androidx.core.app.NotificationCompat
@@ -43,6 +44,19 @@ internal class CustomLayoutNotificationBuilder(
         setStyle(NotificationCompat.DecoratedCustomViewStyle())
 
         updateState(context, initialState)
+    }
+
+    /**
+     * Inflate the custom views in our own process.
+     *
+     * The system UI inflates them in its own process once the notification is posted, and any failure
+     * there is reported back as an asynchronous RemoteServiceException that kills the app. Inflating
+     * here first lets [newServiceNotificationBuilder] fall back to the legacy notification instead.
+     */
+    fun checkCustomViewsInflation(context: Context) {
+        val parent = FrameLayout(context)
+        contentView?.apply(context, parent)
+        bigContentView?.apply(context, parent)
     }
 
     override fun updateState(context: Context, state: ServiceNotificationState) {

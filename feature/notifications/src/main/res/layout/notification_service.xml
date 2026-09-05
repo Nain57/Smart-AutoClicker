@@ -15,11 +15,16 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+<!--
+  Sizes are literal values on purpose: this layout is inflated by the system UI process, and some
+  devices (Huawei on Android 12) fail to resolve @dimen references for the layout params there,
+  making the notification inflation crash the app with a RemoteServiceException.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/notification_size"
+    android:layout_height="48dp"
     android:orientation="horizontal">
 
     <TextView
@@ -29,8 +34,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="@dimen/margin_horizontal_default"
-        android:layout_marginVertical="@dimen/margin_vertical_small"
+        android:layout_marginEnd="16dp"
+        android:layout_marginVertical="4dp"
         android:textColor="@color/notification_text_color"
         android:maxLines="2"
         android:gravity="center_vertical"
@@ -39,17 +44,17 @@
     <ImageButton
         android:id="@+id/button_play_pause"
         style="@style/AppTheme.Notification.Button.Filled"
-        android:layout_width="@dimen/notification_buttons_size"
-        android:layout_height="@dimen/notification_buttons_size"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_small"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="8dp"
         android:src="@drawable/ic_notification_play_arrow"/>
 
     <ImageButton
         android:id="@+id/button_show_hide"
         style="@style/AppTheme.Notification.Button.Outlined"
-        android:layout_width="@dimen/notification_buttons_size"
-        android:layout_height="@dimen/notification_buttons_size"
-        android:layout_marginStart="@dimen/margin_horizontal_small"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/ic_notification_visible_on"/>
 
 </LinearLayout>
