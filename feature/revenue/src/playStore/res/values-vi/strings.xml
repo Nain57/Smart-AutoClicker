@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="header_starting_detection">Đang bắt đầu phát hiện</string>
+    <string name="message_billing">Ứng dụng này là mã nguồn mở và được tạo ra bằng tình yêu bởi những người làm việc trong thời gian rảnh của họ.\n\nHãy hỗ trợ quá trình phát triển bằng cách xem một quảng cáo, hoặc mua Klick\'r Pro để xóa quảng cáo vĩnh viễn!</string>
+    <string name="message_billing_success">Cảm ơn bạn đã mua\nKlick\'r Pro !</string>
+    <string name="button_text_watch_ad_loading">Đang tải quảng cáo</string>
+    <string name="button_text_watch_ad">Xem một quảng cáo</string>
+    <string name="button_text_watch_ad_error">Lỗi quảng cáo</string>
+    <string name="button_text_buy_pro_loading">Mua Pro</string>
+    <string name="button_text_buy_pro">Mua Pro (%1$s)</string>
+    <string name="button_text_understood">Đã hiểu</string>
+    <string name="button_text_buy_pro_error">Không thể mua</string>
+    <string name="button_text_visit_github">Truy cập GitHub của chúng tôi</string>
+    <string name="button_text_trial">Dùng thử %1$d phút</string>
+    <string name="button_text_buy_pro_pending">Giao dịch đang chờ xử lý</string>
+
+</resources>
