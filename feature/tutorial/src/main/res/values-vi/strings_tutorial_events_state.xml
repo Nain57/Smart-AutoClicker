@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_state">Vô hiệu hóa các Sự kiện không sử dụng</string>
+    <string name="item_desc_tutorial_events_state">Thay đổi trạng thái Bật/Tắt của Sự kiện của nhiều Sự kiện để tối ưu hóa một kịch bản phức tạp.</string>
+    <string name="message_game_tutorial_events_state">Bấm vào các mục tiêu theo thứ tự: xanh dương, đỏ, xanh lá cây và sau đó là vàng.</string>
+    <string name="message_tutorial_events_state_step_1">Trò chơi mới! Lần này bạn cần nhấp vào bốn mục tiêu có màu theo thứ tự: đầu tiên là màu xanh lam, sau đó là màu đỏ, sau đó là màu xanh lá cây và cuối cùng là màu vàng.\n\nBạn có thể thử trò chơi trước để xem nó hoạt động như thế nào hoặc mở cấu hình kịch bản ngay lập tức để bắt đầu tự động hóa nó.</string>
+    <string name="message_tutorial_events_state_step_2">Chúng ta cần phát hiện bốn mục tiêu khác nhau, mỗi mục tiêu có một màu. Chúng tôi sẽ tạo một Sự kiện cho mỗi mục tiêu.\n\nBắt đầu với mục tiêu màu xanh lam: tạo Sự kiện mới phát hiện mục tiêu đó trong khu vực trò chơi và nhấp vào mục tiêu đó.</string>
+    <string name="message_tutorial_events_state_step_3">Khi sử dụng nhiều Sự kiện, điều quan trọng là phải tùy chỉnh tên Sự kiện để theo dõi những gì bạn đang làm. Đặt tên rõ ràng cho Sự kiện này, chẳng hạn như \"Mục tiêu xanh\" để bạn có thể dễ dàng xác định nó sau này trong kịch bản của mình.\n\nKhi bạn đã hoàn tất, hãy tạo điều kiện Hình ảnh mới và chụp mục tiêu màu xanh lam.</string>
+    <string name="message_tutorial_events_state_step_4">Khi mục tiêu đang di chuyển, chúng ta cần đặt loại phát hiện thành \"Khu vực phát hiện\" rồi chọn khu vực trò chơi.\n\nKhi khu vực được định cấu hình chính xác, hãy lưu nó và quay lại hộp thoại Sự kiện.</string>
+    <string name="message_tutorial_events_state_step_5">Điều kiện của bạn đã được đặt, bây giờ chúng tôi cần hành động Nhấp chuột để Sự kiện nhấp vào mục tiêu được phát hiện.\n\nTạo một hành động Nhấp chuột mới để tiếp tục.</string>
+    <string name="message_tutorial_events_state_step_6">Mục tiêu đang chuyển động nên chúng ta không thể xác định được vị trí cố định. Đặt trường \"Nhấp vào\" thành \"Nhấp vào điều kiện được phát hiện\" và chọn điều kiện mục tiêu màu xanh lam của bạn. Bằng cách này, cú nhấp chuột sẽ luôn hạ cánh chính xác ở vị trí mục tiêu được tìm thấy trên màn hình.\n\nSau khi điều kiện được chọn, hãy lưu lần nhấp và quay lại hộp thoại Sự kiện.</string>
+    <string name="message_tutorial_events_state_step_7">Sự kiện mục tiêu xanh đã kết thúc! Bây giờ, hãy tạo Sự kiện cho mục tiêu màu đỏ theo cách tương tự: phát hiện nó trong khu vực trò chơi và nhấp vào nó. Hướng dẫn sẽ tiếp tục sau khi Sự kiện mục tiêu màu đỏ của bạn được lưu.</string>
+    <string name="message_tutorial_events_state_step_8">Tuyệt vời! Bây giờ hãy tạo Sự kiện tương tự cho mục tiêu xanh. Hướng dẫn sẽ tiếp tục sau khi Sự kiện mục tiêu màu xanh lá cây của bạn được lưu.</string>
+    <string name="message_tutorial_events_state_step_9">Hầu như ở đó! Tạo một Sự kiện cuối cùng cho mục tiêu màu vàng. Hướng dẫn sẽ tiếp tục sau khi Sự kiện mục tiêu màu vàng của bạn được lưu.</string>
+    <string name="message_tutorial_events_state_step_10">Tất cả bốn Sự kiện đã sẵn sàng. Như chúng tôi đã xác định theo thứ tự trình tự trò chơi, mức độ ưu tiên của chúng là ổn.\n\nLưu Kịch bản của bạn và thử nghiệm nó với trò chơi để xem nó hoạt động như thế nào.</string>
+    <string name="message_tutorial_events_state_step_11">Kịch bản là phát hiện và click vào mục tiêu nhưng chắc là quá chậm để giành chiến thắng.\n\nHiện tại, cả bốn Sự kiện đều hoạt động cùng lúc, do đó, mỗi khung hình của kịch bản sẽ kiểm tra màu xanh lam, rồi đỏ, rồi xanh lục, rồi vàng; bất kể mục tiêu nào vừa được nhấp vào. Điều này lãng phí thời gian quý báu!\n\nMở cấu hình kịch bản để tìm hiểu cách cải thiện điều này.</string>
+    <string name="message_tutorial_events_state_step_12">Mỗi Sự kiện có trạng thái ban đầu: nó có thể bắt đầu được bật hoặc tắt. Hiện tại, cả bốn Sự kiện đều đã được bật nên tất cả chúng đều được kiểm tra trên mọi khung hình.\n\nGiải pháp là chỉ giữ cho Sự kiện của mục tiêu hiện tại hoạt động và vô hiệu hóa phần còn lại. Khi một mục tiêu được nhấp vào, Sự kiện của nó sẽ kích hoạt mục tiêu tiếp theo và vô hiệu hóa tất cả các mục tiêu khác.\n\nHãy bắt đầu bằng cách chỉnh sửa Sự kiện mục tiêu màu xanh lam.</string>
+    <string name="message_tutorial_events_state_step_13">Mục tiêu màu xanh lam là mục tiêu được nhấp chuột đầu tiên, vì vậy Sự kiện của mục tiêu đó sẽ bắt đầu được bật; không cần thay đổi ở đây.\n\nChúng ta chỉ cần thêm hành động \"Thay đổi trạng thái Bật/Tắt của Sự kiện\" để khi nhấp vào mục tiêu màu xanh, Sự kiện mục tiêu màu đỏ được bật và các Sự kiện khác bị tắt. Nhấn vào khu vực Hành động để thêm hành động này.</string>
+    <string name="message_tutorial_events_state_step_14">Chọn loại hành động \"Thay đổi trạng thái Bật/Tắt của Sự kiện\".</string>
+    <string name="message_tutorial_events_state_step_15">Hành động này cho phép bạn Thay đổi trạng thái Bật/Tắt của Sự kiện của bất kỳ Sự kiện nào trong kịch bản của bạn khi Sự kiện này được kích hoạt. Nhấn vào trường \"Không thay đổi\" để chọn Sự kiện cần thay đổi.</string>
+    <string name="message_tutorial_events_state_step_16">Đối với mỗi Sự kiện trong danh sách, bạn có thể đặt một trong ba trạng thái:\n• Kích hoạt: Sự kiện bắt đầu hoạt động và sẽ được kiểm tra trên mọi khung hình\n• Tắt: Sự kiện trở nên không hoạt động và bị bỏ qua hoàn toàn\n• Đảo ngược: chuyển đổi giữa hoạt động và không hoạt động mỗi lần\n\nVì màu xanh lam vừa được nhấp vào, hãy bật Sự kiện mục tiêu màu đỏ và tắt tất cả các Sự kiện khác. Nhấn vào Tiếp theo khi bạn hoàn tất.</string>
+    <string name="message_tutorial_events_state_step_16_secondary">Mỗi hàng Sự kiện hiển thị ba tùy chọn: Bật, Tắt và Chuyển đổi. Nhấn vào cái bạn muốn áp dụng khi hành động này được thực hiện.</string>
+    <string name="message_tutorial_events_state_step_17">Hoàn hảo! Lưu Sự kiện mục tiêu màu xanh.</string>
+    <string name="message_tutorial_events_state_step_18">Bây giờ hãy mở Sự kiện mục tiêu màu đỏ trong danh sách để định cấu hình theo cách tương tự.</string>
+    <string name="message_tutorial_events_state_step_19">Không giống như Sự kiện mục tiêu màu xanh lam, Sự kiện này không nên hoạt động khi bắt đầu kịch bản vì mục tiêu của nó không phải là Sự kiện đầu tiên. Thay đổi trạng thái Bật/Tắt của Sự kiện ban đầu thành Tắt.</string>
+    <string name="message_tutorial_events_state_step_20">Bây giờ, hãy thêm hành động \"Thay đổi trạng thái Bật/Tắt của Sự kiện\" để khi mục tiêu này được nhấp vào, Sự kiện của mục tiêu tiếp theo sẽ được bật và các mục tiêu khác sẽ bị tắt. Nhấn vào khu vực Hành động.</string>
+    <string name="message_tutorial_events_state_step_21">Đặt các nút chuyển đổi: bật mục tiêu màu xanh lá cây và tắt tất cả các mục tiêu khác. Nhấn vào Tiếp theo khi bạn hoàn tất.</string>
+    <string name="message_tutorial_events_state_step_22">Làm tốt lắm! Bây giờ hãy mở Sự kiện mục tiêu màu xanh lá cây để định cấu hình theo cách tương tự.</string>
+    <string name="message_tutorial_events_state_step_23">Mục tiêu màu xanh lá cây cũng không nên hoạt động khi bắt đầu. Thay đổi trạng thái Bật/Tắt của Sự kiện ban đầu thành Tắt.</string>
+    <string name="message_tutorial_events_state_step_24">Bây giờ, hãy thêm hành động \"Thay đổi trạng thái Bật/Tắt của Sự kiện\" để khi nhấp vào mục tiêu màu xanh lá cây, Sự kiện của mục tiêu màu vàng sẽ được bật và các mục tiêu khác sẽ bị tắt. Nhấn vào khu vực Hành động.</string>
+    <string name="message_tutorial_events_state_step_25">Đặt các nút chuyển đổi: bật mục tiêu màu vàng và tắt tất cả các mục tiêu khác. Nhấn vào Tiếp theo khi bạn hoàn tất.</string>
+    <string name="message_tutorial_events_state_step_26">Gần xong rồi! Mở Sự kiện mục tiêu màu vàng để hoàn tất cấu hình.</string>
+    <string name="message_tutorial_events_state_step_27">Mục tiêu màu vàng là mục tiêu cuối cùng trong chuỗi, vì vậy nó cũng sẽ bắt đầu bị vô hiệu hóa. Thay đổi trạng thái Bật/Tắt của Sự kiện ban đầu thành Tắt.</string>
+    <string name="message_tutorial_events_state_step_28">Thêm hành động \"Thay đổi trạng thái Bật/Tắt của Sự kiện\" vào Sự kiện mục tiêu màu vàng. Khi nhấp vào màu vàng, chúng tôi muốn quay lại từ đầu: bật mục tiêu màu xanh lam và tắt tất cả các mục tiêu khác. Nhấn vào khu vực Hành động.</string>
+    <string name="message_tutorial_events_state_step_29">Đặt các nút chuyển đổi: bật mục tiêu màu xanh lam và tắt tất cả các mục tiêu khác. Bằng cách này, chuỗi sẽ lặp vô thời hạn. Nhấn vào Tiếp theo khi bạn hoàn tất.</string>
+    <string name="message_tutorial_events_state_step_30">Tất cả các Sự kiện hiện đã được định cấu hình đầy đủ. Lưu Kịch bản của bạn để áp dụng các thay đổi.</string>
+    <string name="message_tutorial_events_state_step_31">Tất cả các Sự kiện được cấu hình! Lưu Kịch bản của bạn và sau đó bắt đầu trò chơi. Hãy nhớ bắt đầu Kịch bản của bạn trước khi khởi chạy trò chơi.\n\nVì kịch bản của chúng tôi có trạng thái nội bộ nên bạn cần khởi động lại nó mỗi khi khởi động lại trò chơi để đảm bảo nó không phải chờ mục tiêu cuối cùng của phiên trò chơi trước đó. Điều này có thể được tự động hóa dễ dàng bằng cách phát hiện xem nút bắt đầu có hiển thị hay không để đặt lại trạng thái Sự kiện.</string>
+    <string name="message_tutorial_events_state_step_32">Bạn đã thắng!\n\nBằng cách kiểm soát Sự kiện nào đang hoạt động tại bất kỳ thời điểm nhất định nào, kịch bản luôn biết chính xác mục tiêu nào cần tìm tiếp theo — không lãng phí khung hình khi kiểm tra mục tiêu không theo trình tự.\n\nĐây là cách hành động Chuyển đổi Sự kiện cho phép bạn xây dựng tính năng tự động hóa theo trình tự và theo trạng thái.</string>
+
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_events_priority">Ưu tiên một Sự kiện</string>
+    <string name="item_desc_tutorial_events_priority">Ưu tiên một Sự kiện hơn một Sự kiện khác</string>
+    <string name="message_game_tutorial_events_priority">Nhấp chuột càng nhanh càng tốt vào các mục tiêu. Màu xanh = 1 điểm; Đỏ = 10 điểm</string>
+    <string name="message_tutorial_events_priority_step_1">Trò chơi mới, chúng ta cần nhấp vào mục tiêu nào nhanh nhất có thể, nhưng mục tiêu màu đỏ sẽ bổ ích hơn. Bạn có thể thử nghiệm trò chơi trước hoặc mở menu cấu hình kịch bản để bắt đầu tự động hóa trò chơi này.</string>
+    <string name="message_tutorial_events_priority_step_2">Chúng tôi muốn phát hiện hai mục tiêu khác nhau, xanh và đỏ. Đối với hướng dẫn này, chúng ta sẽ tạo hai Sự kiện riêng biệt: Sự kiện đầu tiên dành cho mục tiêu màu xanh và Sự kiện thứ hai dành cho mục tiêu màu đỏ.\n\nĐầu tiên, tạo Sự kiện cho mục tiêu màu xanh lam; nó phải bấm vào nó khi phát hiện. Đừng quên sử dụng các tính năng kiểm tra để đảm bảo tình trạng của bạn được phát hiện chính xác.\n\nHướng dẫn sẽ tiếp tục sau khi Sự kiện mục tiêu màu xanh lam của bạn được lưu.</string>
+    <string name="message_tutorial_events_priority_step_3">Tuyệt vời! Bây giờ chúng ta cần điều tương tự, nhưng đối với mục tiêu màu đỏ. Nhấp vào nút tạo Sự kiện và tạo một Sự kiện cho mục tiêu màu đỏ; nó phải bấm vào nó khi phát hiện.\n\nHướng dẫn sẽ tiếp tục sau khi Sự kiện mục tiêu màu đỏ của bạn được lưu.</string>
+    <string name="message_tutorial_events_priority_step_4">Danh sách của chúng tôi hiện có hai Sự kiện, một Sự kiện cho mỗi mục tiêu. Lưu Kịch bản của bạn và thử nghiệm nó với trò chơi.</string>
+    <string name="message_tutorial_events_priority_step_5">Có điều gì đó có vẻ không ổn. Kịch bản chỉ nhấp vào mục tiêu màu xanh, hoàn toàn bỏ qua mục tiêu màu đỏ, điều này khiến chúng ta không thể giành chiến thắng trong trò chơi.\n\nTại sao điều này lại xảy ra? Vì Sự kiện màu xanh lam diễn ra trước Sự kiện màu đỏ và vì nó luôn được kích hoạt nên khung hiện tại không được đánh giá thêm nữa và khung tiếp theo bắt đầu từ đầu danh sách Sự kiện.\n\nCó nhiều cách để khắc phục điều này. Mở hộp thoại cấu hình kịch bản để tìm hiểu cách thực hiện.</string>
+    <string name="message_tutorial_events_priority_step_6">Chúng ta có thể khắc phục sự cố theo hai cách:\n\nChúng ta có thể thay đổi tùy chọn \"Tiếp tục thực thi\" của Sự kiện mục tiêu màu xanh để tiếp tục xử lý cùng một khung và cũng thực hiện Sự kiện màu đỏ. Điều này sẽ kích hoạt cả hai lần nhấp chuột khi cả hai mục tiêu đều hiển thị cùng một lúc.\n\nHoặc chúng ta có thể di chuyển Sự kiện mục tiêu màu đỏ lên đầu danh sách Sự kiện, để nó được kiểm tra trước và luôn nhấp vào khi hiển thị, nhưng mục tiêu màu xanh sẽ không được nhấp nữa khi mục tiêu màu đỏ cũng được hiển thị.\n\nSự khác biệt chính giữa cả hai giải pháp là tốc độ: đặt Sự kiện màu đỏ lên hàng đầu có nghĩa là chúng ta phản ứng nhanh nhất có thể khi nó xuất hiện, đồng thời chậm hơn một chút khi chỉ nhìn thấy mục tiêu màu xanh.</string>
+    <string name="message_tutorial_events_priority_step_7">Vì trò chơi cho 10 điểm cho mục tiêu màu đỏ nên chúng tôi muốn phản ứng nhanh nhất có thể khi nó xuất hiện bằng cách di chuyển Sự kiện màu đỏ lên đầu danh sách Sự kiện.\n\nDi chuyển Sự kiện màu đỏ trước và lưu kịch bản. Bạn sẽ có thể đánh bại trò chơi bây giờ.</string>
+    <string name="message_tutorial_events_priority_step_7_secondary">Bạn có thể sắp xếp lại Sự kiện bằng cách nhấn và giữ biểu tượng này và kéo Sự kiện đến đúng vị trí.</string>
+    <string name="message_tutorial_events_priority_step_8">Như thường lệ, hãy bắt đầu kịch bản của bạn trước, sau đó bắt đầu trò chơi.\n\nNếu bạn vẫn không thể vượt qua, hãy đảm bảo rằng mỗi Sự kiện đều tự hoạt động bằng cách sử dụng các tính năng thử nghiệm.</string>
+    <string name="message_tutorial_events_priority_step_9">Tuyệt vời! Bây giờ bạn đã hiểu mức độ ưu tiên của Sự kiện hoạt động như thế nào và vòng lặp Sự kiện màn hình hoạt động như thế nào. Đây là chìa khóa để xây dựng và quản lý các kịch bản phức tạp.</string>
+
+</resources>

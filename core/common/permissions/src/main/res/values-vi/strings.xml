@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_title_permission_accessibility">Dịch vụ tiếp cận</string>
+    <string name="dialog_title_permission_notification">Thông báo</string>
+    <string name="dialog_title_permission_mandatory_denied">Quyền bị từ chối</string>
+    <string name="dialog_title_permission_overlay">Lớp phủ</string>
+    <string name="message_permission_desc_overlay">Cần có quyền lớp phủ để hiển thị giao diện Klick\'r trên các ứng dụng bạn muốn tự động hóa, cho phép bạn định cấu hình kịch bản của mình mà không cần dừng ứng dụng khác.</string>
+    <string name="message_permission_desc_accessibility">Quyền dịch vụ trợ năng cho phép Klick\'r thực hiện cử chỉ trên màn hình thiết bị của bạn. Quyền này là bắt buộc để thực hiện các thao tác nhấp và vuốt mà bạn sẽ tạo trong các kịch bản tự động hóa của mình.\n\nKhông có dữ liệu nào được Klick\'r thu thập\n\nĐể cấp quyền cho dịch vụ Trợ năng, hãy nhấp vào nút bên dưới.</string>
+    <string name="message_permission_desc_notification">Tùy chọn: Hiển thị thông báo khi ứng dụng đang chạy để dễ dàng quay lại màn hình chọn kịch bản.</string>
+    <string name="message_permission_mandatory_denied">Sự cho phép này là bắt buộc đối với Klick\'r. Nó sẽ không thể hoạt động chính xác nếu không có nó.</string>
+    <string name="button_request_permission">Cấp quyền</string>
+    <string name="button_deny">Từ chối</string>
+
+</resources>

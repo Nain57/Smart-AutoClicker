@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_title_create_backup">Tạo bản sao lưu</string>
+    <string name="dialog_title_delete_scenario">Xóa kịch bản</string>
+    <string name="dialog_title_import_backup">Nhập bản sao lưu</string>
+    <string name="item_title_backup_create_select_file">Chọn tập tin đầu ra</string>
+    <string name="item_title_backup_import_select_file">Chọn tập tin sao lưu</string>
+    <string name="message_backup_create_progress">Đang tạo bản sao lưu: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">Sao lưu hoàn tất</string>
+    <string name="message_backup_create_error">Đã xảy ra lỗi và quá trình xuất bản sao lưu đã bị hủy</string>
+    <string name="message_backup_import_progress">Đang nhập bản sao lưu: %1$d</string>
+    <string name="message_backup_import_verification">Xác minh dữ liệu</string>
+    <string name="message_backup_import_completed">Đã nhập xong\nĐã nhập %1$d kịch bản</string>
+    <string name="message_backup_import_completed_with_error">Đã nhập xong\nĐã nhập %1$d kịch bản\n%2$d lỗi</string>
+    <string name="message_backup_import_error">Đã xảy ra lỗi và quá trình nhập bản sao lưu đã bị hủy</string>
+    <string name="message_backup_import_compatibility">Một số kịch bản được nhập vào đã được tạo từ thiết bị có kích thước màn hình khác, điều này có thể gây ra lỗi nhận diện và lệch tọa độ hành động.\n\nĐể khắc phục, bạn cần chụp lại ảnh màn hình mới cho các điều kiện và cập nhật lại vị trí nhấp/vuốt của mình.</string>
+    <string name="message_backup_error_no_zip_app">Không tìm thấy ứng dụng nào trên thiết bị để xử lý việc lưu/tải tệp zip.</string>
+    <string name="content_desc_backup_state">Trạng thái sao lưu</string>
+
+</resources>

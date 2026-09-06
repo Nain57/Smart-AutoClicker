@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="activity_tutorial_name">Hướng dẫn</string>
+    <string name="button_text_tutorial_start_game">Bắt đầu trò chơi</string>
+    <string name="button_text_tutorial_next">Kế tiếp</string>
+    <string name="button_text_tutorial_close">Đóng</string>
+    <string name="dialog_title_tutorial_completed">Chúc mừng</string>
+    <string name="message_tutorial_completed">Bạn đã hoàn thành bài hướng dẫn này!</string>
+    <string name="button_tutorial_completed_keep_playing">Tiếp tục khám phá</string>
+    <string name="button_tutorial_completed_close">Đóng</string>
+    <string name="message_score">Người chơi: %1$d</string>
+    <string name="message_high_score">Tốt nhất: %1$d</string>
+    <string name="message_time_left">Thời gian còn lại: %1$d</string>
+    <string name="message_click_count">Số lần nhấp chuột:\n%1$d/%2$d</string>
+    <string name="message_target_diff">Mục tiêu:\n±%1$dms</string>
+    <string name="message_total_diff">Tổng số:\n%1$sms</string>
+    <string name="message_last_diff">Cuối cùng:\n%1$sms</string>
+
+</resources>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="tutorial_category_root_name">Hướng dẫn</string>
+    <string name="tutorial_category_root_desc_long">Tự động hóa Klick\'r dựa trên những gì được hiển thị trên màn hình của bạn, điều này khá khác so với trình nhấp chuột tự động thông thường dựa trên thời gian của bạn.\n\nTìm hiểu ở đây làm thế nào để sử dụng nó.</string>
+    <string name="tutorial_category_basics_name">Kịch bản cơ bản</string>
+    <string name="tutorial_category_basics_desc_short">Tìm hiểu cách sử dụng từng phần tử Kịch bản</string>
+    <string name="tutorial_category_basics_desc_long">Kịch bản là thành phần gốc của tập lệnh tự động hóa của bạn. Nó chứa danh sách ScreenEvents và danh sách TriggerEvents.\nSự kiện là danh sách các Sự kiện màn hình/Sự kiện kích hoạt cần thực hiện để thực thi danh sách Hành động.\n\nTìm hiểu ở đây cách sử dụng từng thành phần của Kịch bản.</string>
+    <string name="tutorial_category_screen_condition_name">Sự kiện màn hình</string>
+    <string name="tutorial_category_screen_condition_desc_short">Xác minh những gì hiển thị trên màn hình của bạn</string>
+    <string name="tutorial_category_screen_condition_desc_long">Sự kiện màn hình là phần \"khi\" của Sự kiện màn hình của bạn: Khi Sự kiện màn hình của Sự kiện được đáp ứng thì Hành động của Sự kiện này sẽ được thực thi.\nĐể đáp ứng Sự kiện màn hình, nội dung trên màn hình thiết bị của bạn phải khớp với màu sắc, hình ảnh, văn bản hoặc số nhất định.\n\nTìm hiểu ở đây cách sử dụng chúng với các trường hợp sử dụng tương tác đơn giản.</string>
+    <string name="tutorial_category_color_condition_name">Sự kiện màu sắc</string>
+    <string name="tutorial_category_color_condition_desc_short">Xác minh xem một màu cụ thể có được hiển thị hay không</string>
+    <string name="tutorial_category_color_condition_desc_long">Sự kiện màu sẽ kiểm tra màu của một pixel cụ thể trên màn hình của bạn và so sánh nó với màu mục tiêu. Đây là loại Sự kiện nhẹ nhất, không liên quan đến xử lý hình ảnh.\n\nTìm hiểu ở đây cách sử dụng nó để phản ứng với những thay đổi màu sắc trên màn hình của bạn.</string>
+    <string name="tutorial_category_image_condition_name">Sự kiện hình ảnh</string>
+    <string name="tutorial_category_image_condition_desc_short">Xác minh nếu một hình ảnh cụ thể được hiển thị</string>
+    <string name="tutorial_category_image_condition_desc_long">Sự kiện Hình ảnh chụp ảnh chụp màn hình của một phần màn hình của bạn và tìm kiếm nó sau, ở một vị trí chính xác, ở bất kỳ đâu trên màn hình hoặc trong một khu vực xác định. Một ngưỡng kiểm soát mức độ nghiêm ngặt của trận đấu.\n\nTìm hiểu ở đây cách sử dụng nó để phản ứng với hình ảnh xuất hiện trên màn hình của bạn.</string>
+    <string name="tutorial_category_number_condition_name">Sự kiện số</string>
+    <string name="tutorial_category_number_condition_desc_short">Xác minh nếu một số cụ thể được hiển thị</string>
+    <string name="tutorial_category_number_condition_desc_long">Sự kiện Số đọc một số được hiển thị trong một vùng xác định trên màn hình của bạn và so sánh nó với một giá trị cố định hoặc Bộ đếm bằng cách sử dụng các điều kiện như bằng, lớn hơn hoặc nhỏ hơn.\n\nTìm hiểu ở đây cách sử dụng nó để phản ứng với các giá trị số được hiển thị trên màn hình của bạn.</string>
+    <string name="tutorial_category_text_condition_name">Sự kiện văn bản</string>
+    <string name="tutorial_category_text_condition_desc_short">Xác minh nếu văn bản cụ thể được hiển thị</string>
+    <string name="tutorial_category_text_condition_desc_long">Sự kiện văn bản đọc văn bản được hiển thị trong một khu vực xác định trên màn hình của bạn và kiểm tra xem nó có khớp với một giá trị nhất định hay không.\n\nTìm hiểu ở đây cách sử dụng nó để phản ứng với văn bản xuất hiện trên màn hình của bạn.</string>
+    <string name="tutorial_category_counters_name">Bộ đếm</string>
+    <string name="tutorial_category_counters_desc_short">Theo dõi và sử dụng các giá trị số trong Kịch bản của bạn.</string>
+    <string name="tutorial_category_counters_desc_long">Bộ đếm là một biến số được đặt tên trong phạm vi Kịch bản của bạn. Nó bắt đầu ở một giá trị mặc định và có thể được đọc theo Sự kiện hoặc Hành động và được ghi bởi Hành động phản đối thay đổi.\n\nTìm hiểu ở đây cách sử dụng Bộ đếm để xây dựng các tập lệnh tự động hóa thông minh hơn.</string>
+    <string name="tutorial_category_combine_conditions_name">Sự kiện kết hợp</string>
+    <string name="tutorial_category_combine_conditions_desc_short">Kích hoạt các Sự kiện sử dụng nhiều Sự kiện cùng nhau.</string>
+    <string name="tutorial_category_combine_conditions_desc_long">Mỗi Sự kiện có một điều kiện Sự kiện:AND yêu cầu phải đáp ứng tất cả các Sự kiện, trong khi OR yêu cầu ít nhất một Sự kiện. Việc kết hợp các loại Sự kiện và điều kiện cho phép bạn xử lý các tình huống phức tạp trong thế giới thực.\n\nTìm hiểu ở đây cách kết hợp các Sự kiện một cách hiệu quả.</string>
+    <string name="tutorial_category_trigger_condition_name">Sự kiện kích hoạt</string>
+    <string name="tutorial_category_trigger_condition_desc_short">Xác minh trạng thái của Kịch bản</string>
+    <string name="tutorial_category_trigger_condition_desc_long">Sự kiện kích hoạt là phần \"khi\" của Sự kiện kích hoạt: nó kích hoạt dựa trên các tín hiệu không trực quan như hết giờ, Bộ đếm đạt đến giá trị hoặc chương trình phát sóng Android được nhận.\n\nTìm hiểu ở đây cách sử dụng chúng để xây dựng các luồng tự động hóa dựa trên thời gian hoặc theo trạng thái.</string>
+    <string name="tutorial_category_action_name">Hành động</string>
+    <string name="tutorial_category_action_desc_short">Thực hiện điều gì đó khi Sự kiện của bạn được đáp ứng</string>
+    <string name="tutorial_category_action_desc_long">Một Hành động được thực thi khi Sự kiện của Sự kiện được đáp ứng. Các hành động bao gồm từ cử chỉ (Nhấp, Vuốt) đến điều khiển luồng (ToggleEvent, ChangeCounter, Tạm dừng) và tương tác hệ thống (Ý định, Thông báo, SystemAction, SetText).\n\nTìm hiểu ở đây cách sử dụng từng loại Hành động để xây dựng tập lệnh tự động hóa của bạn.</string>
+    <string name="tutorial_category_click_action_name">Nhấp chuột</string>
+    <string name="tutorial_category_click_action_desc_short">Nhấn vào một vị trí cố định hoặc vào một điều kiện phù hợp</string>
+    <string name="tutorial_category_click_action_desc_long">Hành động nhấp chuột mô phỏng một lần nhấn tại tọa độ cố định hoặc ở giữa Điều kiện phù hợp. Bạn có thể định cấu hình thời lượng nhấn để mô phỏng các lần nhấn dài.\n\nTìm hiểu ở đây cách sử dụng nó để tương tác với màn hình của bạn.</string>
+    <string name="tutorial_category_swipe_action_name">Vuốt</string>
+    <string name="tutorial_category_swipe_action_desc_short">Trượt từ điểm này sang điểm khác trên màn hình</string>
+    <string name="tutorial_category_swipe_action_desc_long">Hành động vuốt mô phỏng cử chỉ kéo từ tọa độ bắt đầu đến tọa độ kết thúc. Bạn có thể định cấu hình thời lượng vuốt để kiểm soát tốc độ của cử chỉ.\n\nTìm hiểu ở đây cách sử dụng nó để cuộn hoặc kéo các phần tử trên màn hình của bạn.</string>
+    <string name="tutorial_category_pause_action_name">Tắt</string>
+    <string name="tutorial_category_pause_action_desc_short">Đợi một lúc trước khi thực hiện hành động tiếp theo</string>
+    <string name="tutorial_category_pause_action_desc_long">Hành động tạm dừng sẽ trì hoãn việc thực thi trong một khoảng thời gian được định cấu hình. Sẽ rất hữu ích khi chèn khoảng thời gian chờ giữa hai hành động khi ứng dụng cần thời gian để phản ứng.\n\nTìm hiểu ở đây cách sử dụng nó để tăng tốc các tập lệnh tự động hóa của bạn.</string>
+    <string name="tutorial_category_intent_action_name">Ý định</string>
+    <string name="tutorial_category_intent_action_desc_short">Gửi Ý định Android đến một ứng dụng hoặc thành phần khác</string>
+    <string name="tutorial_category_intent_action_desc_long">Một Hành động có ý định sẽ gửi một Ý định của Android, dưới dạng phát sóng hoặc để bắt đầu một Hoạt động hoặc Dịch vụ. Bạn có thể đính kèm các cặp khóa-giá trị bổ sung để truyền dữ liệu cùng với Ý định.\n\nTìm hiểu ở đây cách sử dụng nó để kích hoạt các hành động trong các ứng dụng khác.</string>
+    <string name="tutorial_category_change_counter_action_name">Bộ đếm thay đổi</string>
+    <string name="tutorial_category_change_counter_action_desc_short">Đặt, cộng hoặc trừ một giá trị trên Bộ đếm</string>
+    <string name="tutorial_category_change_counter_action_desc_long">Hành động phản đối thay đổi sửa đổi một biến Bộ đếm được đặt tên bằng cách đặt biến đó thành một giá trị cố định, thêm vào hoặc trừ đi. Sau đó, bộ đếm có thể được đọc theo Điều kiện hoặc Hành động khác.\n\nTìm hiểu ở đây cách sử dụng nó để quản lý trạng thái trong Kịch bản của bạn.</string>
+    <string name="tutorial_category_change_event_state_action_name">Thay đổi trạng thái Bật/Tắt của Sự kiện</string>
+    <string name="tutorial_category_change_event_state_action_desc_short">Bật, tắt hoặc chuyển đổi một hoặc nhiều Sự kiện</string>
+    <string name="tutorial_category_change_event_state_action_desc_long">Hành động trạng thái Sự kiện thay đổi sẽ bật, tắt hoặc chuyển đổi một hoặc nhiều Sự kiện trong thời gian chạy. Điều này cho phép bạn xây dựng các quy trình gồm nhiều bước trong đó các bước trước sẽ kiểm soát các bước sau.\n\nTìm hiểu ở đây cách sử dụng nó để kiểm soát luồng Kịch bản của bạn.</string>
+    <string name="tutorial_category_notification_action_name">Thông báo</string>
+    <string name="tutorial_category_notification_action_desc_short">Đăng thông báo hệ thống</string>
+    <string name="tutorial_category_notification_action_desc_long">Hành động thông báo đăng thông báo hệ thống Android với tiêu đề và thông báo tùy chỉnh. Sẽ rất hữu ích khi cảnh báo người dùng khi phát hiện một tình trạng cụ thể.\n\nTìm hiểu ở đây cách sử dụng nó để hiển thị thông tin trong khi Kịch bản của bạn chạy ở chế độ nền.</string>
+    <string name="tutorial_category_system_action_name">Hành động hệ thống</string>
+    <string name="tutorial_category_system_action_desc_short">Gọi một hành động điều hướng Android toàn cầu</string>
+    <string name="tutorial_category_system_action_desc_long">Hành động hệ thống gọi ra hành động điều hướng chung của Android chẳng hạn như nhấn Quay lại, Trang chủ hoặc Gần đây. Những hành động này không yêu cầu phối hợp và hành động ở cấp hệ thống.\n\nTìm hiểu ở đây cách sử dụng nó để điều hướng thiết bị trong quá trình tự động hóa.</string>
+    <string name="tutorial_category_write_text_action_name">Viết văn bản</string>
+    <string name="tutorial_category_write_text_action_desc_short">Dán văn bản vào trường nhập tập trung</string>
+    <string name="tutorial_category_write_text_action_desc_long">Hành động Viết văn bản sẽ dán một chuỗi đã định cấu hình vào trường nhập hiện được tập trung bằng AccessibilityService. Nó rất hữu ích để điền vào biểu mẫu hoặc trường tìm kiếm mà không cần mô phỏng các lần nhấn phím riêng lẻ.\n\nTìm hiểu ở đây cách sử dụng nó để nhập văn bản trong quá trình tự động hóa.</string>
+    <string name="tutorial_category_combine_event_name">Kết hợp Sự kiện</string>
+    <string name="tutorial_category_combine_event_desc_short">Sử dụng nhiều Sự kiện để điều khiển logic phức tạp</string>
+    <string name="tutorial_category_combine_event_desc_long">Klick\'r cho phép bạn điều phối nhiều Sự kiện để xây dựng các luồng tự động hóa nâng cao. Bằng cách kiểm soát thứ tự đánh giá Sự kiện và bật hoặc tắt chúng trong thời gian chạy, bạn có thể tạo các Kịch bản phức tạp gồm nhiều bước.\n\nTìm hiểu ở đây cách kết hợp Sự kiện hiệu quả để kiểm soát hoàn toàn quá trình tự động hóa của bạn.</string>
+    <string name="tutorial_category_events_priority_name">Ưu tiên Sự kiện</string>
+    <string name="tutorial_category_events_priority_desc_short">Kiểm soát tầm quan trọng của Sự kiện của bạn</string>
+    <string name="tutorial_category_events_priority_desc_long">Sự kiện màn hình được đánh giá theo thứ tự ưu tiên trong mỗi chu kỳ phát hiện. Sự kiện cao hơn trong danh sách được kiểm tra trước Sự kiện thấp hơn, cho phép bạn xác định Sự kiện nào được ưu tiên khi nhiều Sự kiện có thể kích hoạt cùng một lúc.\n\nTìm hiểu ở đây cách đặt mức độ ưu tiên của Sự kiện để tinh chỉnh thứ tự thực hiện Kịch bản của bạn.</string>
+    <string name="tutorial_category_events_state_name">Trạng thái Sự kiện</string>
+    <string name="tutorial_category_events_state_desc_short">Bật hoặc tắt Sự kiện một cách linh hoạt.</string>
+    <string name="tutorial_category_events_state_desc_long">Sự kiện có thể được bật hoặc tắt trong thời gian chạy bằng cách sử dụng Hành động Thay đổi trạng thái Bật/Tắt của Sự kiện. Điều này cho phép bạn xây dựng các quy trình tự động hóa nhiều bước trong đó các bước trước sẽ kiểm soát các bước sau hoặc khi một số Sự kiện nhất định chỉ hoạt động trong các điều kiện cụ thể.\n\nTìm hiểu ở đây cách kiểm soát trạng thái Sự kiện để xây dựng các Kịch bản nâng cao.</string>
+
+</resources>

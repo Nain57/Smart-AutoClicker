@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_combine_conditions_not_visible_target">Độ hiển thị điều kiện</string>
+    <string name="item_desc_tutorial_combine_conditions_not_visible_target">Sử dụng tùy chọn Hiển thị để kích hoạt nhấp chuột khi mục tiêu không có trên màn hình</string>
+    <string name="message_game_tutorial_combine_conditions_not_visible_target">Chỉ nhấp vào nút màu xanh khi không nhìn thấy nút màu đỏ</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_1">Quy tắc mới! Mục tiêu màu xanh đã ngừng di chuyển nhưng chỉ nên nhấp vào khi không nhìn thấy mục tiêu màu đỏ.\n\nBắt đầu trò chơi và xem liệu bạn có thể tự mình giành chiến thắng hay không.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_2">Một lần nữa, điều này dường như không thể giành được bằng tay, vì vậy hãy sử dụng Klick\'r.\n\nMở menu cấu hình kịch bản, tạo Sự kiện màn hình mới và bắt đầu thêm điều kiện cho mục tiêu trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_3">Đầu tiên, chúng ta cần một điều kiện để kiểm tra khi mục tiêu màu đỏ KHÔNG hiển thị trên màn hình.\n\nTạo điều kiện hình ảnh mới và chụp mục tiêu màu đỏ.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_4">Chúng tôi chỉ muốn nhấp khi mục tiêu màu đỏ không hiển thị, vì vậy hãy đặt tùy chọn Hiển thị thành Không. Bằng cách này, điều kiện sẽ chỉ được đáp ứng khi mục tiêu màu đỏ không xuất hiện trên màn hình.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_5">Các cài đặt khác có vẻ phù hợp với nhu cầu của chúng tôi - hãy tiếp tục và lưu điều kiện này.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_6">Chỉ riêng điều kiện này là đủ để giành chiến thắng trong trò chơi, nhưng nó cũng sẽ kích hoạt khi trò chơi thậm chí không chạy, điều này không lý tưởng.\n\nĐể ngăn chặn điều đó, hãy ghép nối nó với điều kiện thứ hai để kiểm tra xem mục tiêu màu xanh có hiển thị hay không. Tạo Điều kiện hình ảnh mới và chụp mục tiêu màu xanh.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_7">Đối với điều kiện này, chúng tôi muốn kiểm tra xem mục tiêu màu xanh có hiển thị hay không, vì vậy tất cả các cài đặt mặc định đều chính xác. Lưu điều kiện và quay lại Sự kiện để tiếp tục.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_8">Với nhiều điều kiện, điều kiện rất quan trọng. Chúng tôi muốn Sự kiện được kích hoạt khi mục tiêu màu xanh hiển thị VÀ mục tiêu màu đỏ không hiển thị, vì vậy điều kiện AND là thứ chúng tôi cần; và nó đã là mặc định rồi nên chúng ta ổn.\n\nBây giờ hãy tạo một hành động nhấp chuột mới để tiếp tục.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_9">Chúng tôi muốn nhấp vào mục tiêu màu xanh lam, vì vậy hãy chọn loại vị trí \"Có điều kiện\" và chọn Điều kiện hình ảnh mục tiêu màu xanh lam.\n\nKhi bạn hoàn tất, hãy lưu lần nhấp, sau đó lưu Sự kiện và kịch bản của bạn rồi quay lại trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_10">Bắt đầu kịch bản của bạn và khởi động trò chơi để giành chiến thắng!\n\nNếu nó không hoạt động, hãy kiểm tra kỹ xem các điều kiện của bạn có được ghi lại chính xác không và thời lượng nhấp chuột có được đặt thành 1 mili giây hay không.</string>
+    <string name="message_tutorial_combine_conditions_not_visible_target_step_11">Chúc mừng! Bạn đã học cách sử dụng điều kiện \"Không hiển thị\". Luôn kết hợp nó với ít nhất một điều kiện khác để tránh vô tình kích hoạt các hành động trong toàn bộ kịch bản của bạn.</string>
+
+</resources>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_number_conditions_static_value">Phát hiện một số trên màn hình</string>
+    <string name="item_desc_tutorial_number_conditions_static_value">So sánh một số được hiển thị trên màn hình của bạn với một giá trị được xác định trước</string>
+    <string name="message_game_tutorial_number_conditions_static_value">Chỉ nhấp khi giá trị trên 9000!</string>
+    <string name="message_tutorial_number_conditions_static_value_step_1">Chào mừng bạn đến với bài hướng dẫn điều kiện số lượng!\n\nTại đây, bạn sẽ thử phá kỷ lục điểm cao của một trò chơi với sự trợ giúp từ Klick\'r.\n\nTrước tiên, bạn có thể chơi thử bằng cách nhấn Bắt đầu trò chơi, hoặc chuyển thẳng đến phần cấu hình Kịch bản..</string>
+    <string name="message_tutorial_number_conditions_static_value_step_2">Cũng giống như bất kỳ Sự kiện màn hình nào khác, trước tiên chúng ta cần tạo Sự kiện màn hình.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_3">Bây giờ, hãy nhấp vào trường Sự kiện để mở danh sách Sự kiện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_4">Chúng ta cần tạo Điều kiện. Bấm vào Tạo.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_5">Trong bài hướng dẫn này, chúng ta muốn tìm hiểu cách nhận diện một con số trên màn hình, vì vậy hãy chọn Điều kiện Số.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_6">Điều kiện Số được xác định bởi con số cần nhận diện và một phép so sánh áp dụng cho con số đó.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_6">Trong bài hướng dẫn này, chúng ta sẽ chỉ so sánh con số được nhận diện với một giá trị tĩnh, nhưng bạn hoàn toàn có thể so sánh nó với giá trị của một bộ đếm. Hãy tham khảo các bài hướng dẫn riêng về bộ đếm nếu bạn cần thêm thông tin về tính năng này.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_7">Chúng ta muốn phát hiện xem giá trị hiển thị có lớn hơn 9000 hay không. Do đó, trước tiên hãy nhấp vào toán tử để thay đổi toán tử so sánh.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_8">Chọn điều kiện >.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_9">Bây giờ, bạn cần nhập giá trị để so sánh. Chỉ cần nhập \"9000\" vào trường giá trị để chuyển sang bước hướng dẫn tiếp theo.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_10">Bây giờ, chúng ta cần chỉ định cho Klick\'r vị trí cần tìm số.\n\nHãy nhấn vào bộ chọn vùng nhận diện để thiết lập.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_11">Hãy căn chỉnh vị trí và thay đổi kích thước khung nhận diện sao cho bao trọn chữ số hiển thị. Bạn có thể bắt đầu trò chơi để xem vị trí số xuất hiện. Sau khi vùng chọn đã chính xác, hãy nhấn nút xác nhận để lưu lại.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_11">Hãy cố gắng sử dụng khung nhỏ nhất có thể nhưng vẫn phải đảm bảo có một khoảng lề xung quanh con số cần nhận diện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_12">Điều kiện của bạn hiện đã được cấu hình!\n\nCó nhiều tùy chỉnh khác có thể áp dụng, nhưng cài đặt mặc định đã phù hợp với nhu cầu cơ bản của chúng ta.\n\nHãy nhấn vào nút lưu để ghi nhận và quay trở lại danh sách Điều kiện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_13">Đóng danh sách Sự kiện để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_14">Với Điều kiện này, kịch bản sẽ biết khi nào cần kích hoạt các Hành động.\n\nBây giờ bạn cần định nghĩa những Hành động nào cần kích hoạt, cụ thể cho trò chơi này là một cú nhấp vào nút.\n\nHãy nhấn vào trường Hành động để hiển thị danh sách Hành động.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_15">Hành động là hành động được thực hiện sau khi các Sự kiện của Sự kiện của nó được đáp ứng.\n\nĐó có thể là một lần nhấp, vuốt, tạm dừng, Ý định (tương tác với ứng dụng khác) hoặc thay đổi trong quá trình thực thi Kịch bản và nhiều Hành động có thể được xác định cho cùng một Sự kiện.\n\nNhấp vào nút tạo Hành động để tạo Hành động đầu tiên của bạn.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_16">Đầu tiên, chúng ta cần chọn loại cho Hành động của bạn.\n\nĐối với trò chơi này, chúng ta chỉ cần nhấp vào nút, vì vậy hãy chọn Nhấp để tạo một Hành động Nhấp mới.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_17">Hành động nhấp chuột được xác định bởi vị trí và thời lượng nhấn.\n\nVì muốn nhấp chuột nhanh nhất có thể nên chúng ta có thể giữ thời lượng nhấn mặc định là 1ms, đây là giá trị thấp nhất có thể. Vì vậy, chúng ta chỉ cần xác định một vị trí.\n\nBấm vào nút chọn vị trí để chọn vị trí Hành động Bấm.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_18">Bạn cần chọn chính xác vị trí cần nhấp, vì vậy bạn cần mở lại trò chơi để hiển thị nút, sau đó chọn vị trí của nó.\n\nSau khi vị trí đã chính xác, hãy nhấp vào nút xác nhận để lưu lại.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_secondary_18">Bạn không thể tương tác với trò chơi khi bộ chọn vị trí đang hiển thị, nhưng bạn có thể dùng nút này để ẩn hoặc hiện nó, cho phép bạn gỡ bỏ giới hạn đó bất cứ lúc nào.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_19">Nhấp chuột hiện đã được cấu hình chính xác!\n\nNhấp vào nút lưu để đăng ký và quay lại danh sách Hành động.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_20">Đóng danh sách Hành động để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_21">Sự kiện của bạn hiện có Sự kiện và Hành động, có nghĩa là Sự kiện biết phải thực hiện điều gì và khi nào thực hiện.\n\nNhấp vào nút lưu để đăng ký và quay lại hộp thoại Kịch bản.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_22">Yêu cầu duy nhất đối với Kịch bản là phải có ít nhất một Sự kiện.\nVì Sự kiện của chúng tôi đã đề cập đến cách giành chiến thắng trong trò chơi nên chúng tôi không cần bất cứ điều gì khác.\n\nNhấp vào nút lưu để lưu Kịch bản trong cơ sở dữ liệu và đóng hộp thoại cấu hình.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_23">Như bạn có thể thấy, nút phát hiện có sẵn, nghĩa là Kịch bản của bạn hợp lệ và có thể được sử dụng để phát hiện.\n\nClick vào nó để bắt đầu phát hiện.</string>
+    <string name="message_tutorial_number_conditions_static_value_step_24">Đang chạy nhưng không có chuyện gì xảy ra ư?\n\nĐiều đó hoàn toàn bình thường, nó sẽ chỉ nhấp khi nút hiển thị số lớn hơn 9000, bạn nhớ chứ? Trong lúc vẫn giữ kịch bản chạy, hãy nhấn nút bắt đầu trò chơi và cứ ngồi xem Klick\'r phá đảo hộ bạn nhé!</string>
+    <string name="message_tutorial_number_conditions_static_value_step_25">Chúc mừng bạn!\n\nGiờ đây bạn đã biết cách nhận diện một con số hiển thị trên màn hình.\nHãy xem qua các bài hướng dẫn khác để khám phá thêm nhiều trường hợp sử dụng nhé.</string>
+
+</resources>

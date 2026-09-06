@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_combine_conditions_operator_and">Điều kiện AND</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_and">Sử dụng điều kiện AND để chỉ nhấp khi có nhiều mục tiêu hiển thị cùng lúc</string>
+    <string name="message_game_tutorial_combine_conditions_operator_and">Chỉ nhấp vào nút màu xanh khi cả hai mục tiêu màu xanh và đỏ đều hiển thị</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_1">Quy tắc mới! Trò chơi bây giờ hiển thị hai mục tiêu. Bạn nên nhấp vào mục tiêu màu xanh lam, nhưng chỉ khi cả hai mục tiêu màu xanh lam và đỏ đều xuất hiện trên màn hình cùng một lúc.\n\nBắt đầu trò chơi và xem liệu bạn có thể tự mình theo kịp không.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_2">Thời gian quá chặt để xử lý thủ công, vì vậy hãy sử dụng Klick\'r.\n\nMở menu cấu hình kịch bản, tạo Sự kiện màn hình mới và bắt đầu thêm điều kiện cho mục tiêu trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_3">Chúng ta cần một điều kiện cho mỗi mục tiêu. Hãy bắt đầu với màu xanh.\n\nTạo điều kiện hình ảnh mới và chụp mục tiêu màu xanh.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_4">Chúng tôi muốn đáp ứng điều kiện này khi mục tiêu màu xanh lam hiển thị, vì vậy tất cả các cài đặt mặc định đều chính xác. Lưu điều kiện này.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_5">Bây giờ hãy thêm điều kiện thứ hai cho mục tiêu màu đỏ.\n\nTạo một điều kiện hình ảnh khác và chụp mục tiêu màu đỏ.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_6">Tương tự ở đây; mục tiêu màu đỏ sẽ hiển thị, do đó cài đặt mặc định là chính xác. Lưu điều kiện này và quay lại Sự kiện.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_7">Với hai điều kiện được thiết lập, điều kiện sẽ quyết định cách kết hợp chúng. Chọn điều kiện bằng cách sử dụng bộ chọn được hiển thị ở trên.\n\n• VÀ: Sự kiện chỉ kích hoạt khi TẤT CẢ các điều kiện được đáp ứng.\n• HOẶC: Sự kiện kích hoạt ngay khi đáp ứng MỘT điều kiện.\n\nĐối với trò chơi của chúng tôi, chúng tôi cần cả hai mục tiêu trên màn hình cùng một lúc, vì vậy hãy chọn VÀ.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_secondary_7">Bộ chọn điều kiện</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_8">AND đã là điều kiện mặc định nên chúng ta đã sẵn sàng.\n\nBây giờ hãy mở phần Hành động và tạo hành động nhấp chuột mới.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_9">Chúng tôi muốn nhấp vào mục tiêu màu xanh lam, vì vậy hãy chọn loại vị trí \"Có điều kiện\" và chọn điều kiện hình ảnh mục tiêu màu xanh lam.\n\nKhi bạn hoàn tất, hãy lưu lần nhấp, sau đó là Sự kiện và kịch bản của bạn, rồi quay lại trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_10">Bắt đầu kịch bản của bạn và khởi động trò chơi để giành chiến thắng!\n\nNếu nó không hoạt động, hãy kiểm tra kỹ xem cả hai điều kiện có được nắm bắt chính xác không và thời lượng nhấp chuột có được đặt thành 1 mili giây hay không.</string>
+    <string name="message_tutorial_combine_conditions_operator_and_step_11">Chúc mừng! Bạn đã học cách sử dụng điều kiện AND. Sự kiện bây giờ chỉ kích hoạt khi tất cả các điều kiện của nó được thỏa mãn cùng một lúc.</string>
+
+</resources>

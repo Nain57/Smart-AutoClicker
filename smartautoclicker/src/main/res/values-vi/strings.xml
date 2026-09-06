@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="activity_scenario_title">Kịch bản</string>
+    <string name="accessibility_service_description">Ứng dụng này cần dịch vụ này để đưa các nhấp chuột bạn đã tạo vào các ứng dụng khác sau khi phát hiện được các Sự kiện.\n\nKhông có dữ liệu sẽ được thu thập từ ứng dụng này. Vui lòng truy cập github của chúng tôi, mã là nguồn mở!</string>
+    <string name="dialog_title_add_scenario">Kịch bản mới</string>
+    <string name="menu_item_title_export">Xuất</string>
+    <string name="menu_item_title_import">Nhập</string>
+    <string name="menu_item_title_select_all">Chọn tất cả</string>
+    <string name="menu_item_title_cancel">Hủy bỏ</string>
+    <string name="menu_item_title_search">Tìm kiếm</string>
+    <string name="menu_item_title_settings">Cài đặt</string>
+    <string name="item_scenario_filter_by_name">Tên</string>
+    <string name="item_scenario_filter_by_recent">Gần đây</string>
+    <string name="item_scenario_filter_by_most_used">Công dụng</string>
+    <string name="item_scenario_last_used_never">Chưa bao giờ sử dụng</string>
+    <string name="item_desc_dumb_scenario">Trải nghiệm clicker tự động thông thường.\nChỉ cần nhấp chuột và vuốt trên màn hình.</string>
+    <string name="item_desc_dumb_scenario_max_duration">Dừng sau %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">Không có thời lượng tối đa</string>
+    <string name="item_desc_dumb_scenario_repeat_count">Lặp lại %1$d lần</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">Lặp lại vô hạn</string>
+    <string name="item_desc_smart_scenario">Sử dụng tính năng phát hiện hình ảnh để tạo các trường hợp sử dụng phức tạp.</string>
+    <string name="item_desc_smart_scenario_pro_mode">Yêu cầu xem quảng cáo hoặc mua chế độ chuyên nghiệp</string>
+    <string name="item_title_dumb_scenario">Đơn giản</string>
+    <string name="item_title_smart_scenario">Thông minh</string>
+    <string name="message_empty_scenario_list">Tạo kịch bản đầu tiên của bạn và bắt đầu tự động hóa các tác vụ trên điện thoại của bạn</string>
+    <string name="message_delete_scenario">Thao tác này sẽ xóa %1$s. Bạn có chắc không?</string>
+    <string name="toast_denied_foreground_permission">Người dùng bị từ chối quyền sử dụng dịch vụ trên nền trước</string>
+    <string name="button_text_create_scenario">Tạo một kịch bản</string>
+    <string name="content_desc_add_scenario">Tạo một kịch bản mới</string>
+    <string name="default_scenario_name">Chưa đặt tên</string>
+    <string name="message_empty_image_events_scenario_list">Không có Sự kiện hình ảnh</string>
+    <string name="activity_settings_title">Cài đặt</string>
+    <string name="field_show_scenario_filters_ui_title">Hiển thị bộ lọc kịch bản</string>
+    <string name="field_show_scenario_filters_ui_desc">Hiển thị hoặc ẩn các bộ lọc trong màn hình danh sách kịch bản.</string>
+    <string name="field_legacy_action_ui_title">Giao diện người dùng hành động kế thừa</string>
+    <string name="field_legacy_action_ui_desc">Thay đổi hiển thị hành động theo danh sách. Hữu ích cho các tình huống phức tạp.</string>
+    <string name="field_legacy_notification_ui_title">Giao diện người dùng thông báo kế thừa</string>
+    <string name="field_legacy_notification_ui_desc">Sử dụng các nút hệ thống thay vì các nút biểu tượng trong thông báo.</string>
+    <string name="field_force_entire_screen_title">Buộc toàn bộ màn hình</string>
+    <string name="field_force_entire_screen_desc">Buộc bộ chọn chụp màn hình thành \"Toàn bộ màn hình\". Có thể không hoạt động tùy thuộc vào thiết bị của bạn</string>
+    <string name="field_input_block_workaround_title">Bỏ chặn màn hình cảm ứng</string>
+    <string name="field_input_block_workaround_desc">Trên thiết bị Pixel chạy Android 15, việc sử dụng trình nhấp chuột tự động có thể chặn màn hình cảm ứng.\nĐể bỏ chặn, bạn cần chạm vào màn hình bằng nhiều ngón tay cùng lúc. Cài đặt này cố gắng mô phỏng điều này cứ sau 10 giây.</string>
+    <string name="field_privacy">Cài đặt quyền riêng tư</string>
+    <string name="field_remove_ads">Xóa quảng cáo</string>
+    <string name="field_troubleshooting">Khắc phục sự cố</string>
+    <string name="dialog_condition_migration_title">Di chuyển</string>
+    <string name="message_condition_migration_desc">Định dạng hình ảnh của Klick\'r đã thay đổi và kịch bản của bạn cần được cập nhật. Quá trình này có thể mất vài phút tùy thuộc vào số lượng điều kiện cần chuyển đổi dữ liệu.</string>
+    <string name="message_condition_migration_count">%1$d Các điều kiện hình ảnh cần chuyển đổi dữ liệu.</string>
+    <string name="message_condition_migration_success">Đã chuyển đổi dữ liệu tất cả điều kiện hình ảnh.</string>
+    <string name="message_condition_migration_error">Một số điều kiện không thể chuyển đổi dữ liệu. Vui lòng kiểm tra lại các kịch bản của bạn.</string>
+    <string name="button_condition_migration_start">Di chuyển</string>
+    <string name="button_condition_migration_running">Đang di chuyển</string>
+    <string name="button_condition_migration_finished">OK</string>
+    <string name="dialog_title_backup">Sao lưu</string>
+    <string name="message_backup">Tạo hoặc nhập kho lưu trữ zip của các kịch bản</string>
+    <string name="button_import">Nhập</string>
+    <string name="button_export">Xuất</string>
+
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="other">%1$d phút trước</item>
+    </plurals>
+
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="other">%1$d giờ trước</item>
+    </plurals>
+
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="other">%1$d ngày trước</item>
+    </plurals>
+
+</resources>

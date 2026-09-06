@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_text_conditions_still_text">Phát hiện văn bản trên màn hình</string>
+    <string name="item_desc_tutorial_text_conditions_still_text">Tìm hiểu cách phát hiện một văn bản cụ thể trên màn hình và nhấp vào khi nó xuất hiện</string>
+    <string name="message_game_tutorial_text_conditions_still_text">Bấm vào nút khi nó hiển thị \"Hello\", càng nhanh càng tốt</string>
+    <string name="message_tutorial_text_conditions_still_text_step_1">Chào mừng bạn đến với hướng dẫn điều kiện văn bản!\n\nTại đây, bạn sẽ thử phá kỷ lục điểm số của một trò chơi với sự trợ giúp của Klick\'r.\n\nBạn có thể thử trước bằng cách nhấn bắt đầu trò chơi, hoặc tiến hành cấu hình Kịch bản trực tiếp.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_2">Cũng giống như bất kỳ Sự kiện màn hình nào khác, trước tiên chúng ta cần tạo Sự kiện màn hình.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_3">Bây giờ, hãy nhấp vào trường Sự kiện để mở danh sách Sự kiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_4">Chúng ta cần tạo Điều kiện. Bấm vào Tạo.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_5">Trong hướng dẫn này, chúng ta muốn tìm hiểu cách phát hiện văn bản trên màn hình, vì vậy hãy chọn Điều kiện Văn bản</string>
+    <string name="message_tutorial_text_conditions_still_text_step_6">Điều kiện Văn bản được định nghĩa bằng văn bản cần phát hiện và vùng màn hình để tìm kiếm.\n\nVì chúng ta muốn nhấp vào nút trò chơi khi nó hiển thị \"Hello\", hãy nhập Hello vào trường văn bản cần phát hiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_6">Trường Bảng chữ cái xác định hệ thống chữ viết của văn bản cần phát hiện. \"Hello\" sử dụng bảng chữ cái Latinh, vì vậy bạn có thể giữ nguyên giá trị mặc định ở đây, nhưng đừng quên thay đổi nó khi phát hiện các văn bản không phải chữ Latinh.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_7">Bây giờ, chúng ta cần cho Klick\'r biết vị trí cần tìm kiếm văn bản.\n\nNhấp vào trình chọn vùng phát hiện để xác định vùng đó.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_8">Đặt vị trí và thay đổi kích thước hình chữ nhật phát hiện sao cho nó bao phủ nút trò chơi, vì đó là nơi ..Hello... sẽ được hiển thị. Khi khu vực đã chính xác, hãy nhấn nút xác nhận để lưu lại.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_8">Hãy cố gắng sử dụng khung nhỏ nhất có thể trong khi vẫn giữ một khoảng lề xung quanh văn bản cần phát hiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_9">Điều kiện của bạn hiện đã được cấu hình!\n\nCó nhiều tùy chỉnh khác có thể áp dụng, nhưng cài đặt mặc định đã phù hợp với nhu cầu cơ bản của chúng ta.\n\nHãy nhấn vào nút lưu để ghi nhận và quay trở lại danh sách Điều kiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_10">Đóng danh sách Sự kiện để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_11">Với Điều kiện này, kịch bản sẽ biết khi nào cần kích hoạt các Hành động.\n\nBây giờ bạn cần định nghĩa những Hành động nào cần kích hoạt, cụ thể cho trò chơi này là một cú nhấp vào nút.\n\nHãy nhấn vào trường Hành động để hiển thị danh sách Hành động.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_12">Hành động là hành động được thực hiện sau khi các Sự kiện của Sự kiện của nó được đáp ứng.\n\nĐó có thể là một lần nhấp, vuốt, tạm dừng, Ý định (tương tác với ứng dụng khác) hoặc thay đổi trong quá trình thực thi Kịch bản và nhiều Hành động có thể được xác định cho cùng một Sự kiện.\n\nNhấp vào nút tạo Hành động để tạo Hành động đầu tiên của bạn.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_13">Đầu tiên, chúng ta cần chọn loại cho Hành động của bạn.\n\nĐối với trò chơi này, chúng ta chỉ cần nhấp vào nút, vì vậy hãy chọn Nhấp để tạo một Hành động Nhấp mới.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_14">Hành động nhấp chuột được xác định bởi vị trí và thời lượng nhấn.\n\nVì muốn nhấp chuột nhanh nhất có thể nên chúng ta có thể giữ thời lượng nhấn mặc định là 1ms, đây là giá trị thấp nhất có thể. Vì vậy, chúng ta chỉ cần xác định một vị trí.\n\nBấm vào nút chọn vị trí để chọn vị trí Hành động Bấm.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_15">Bạn cần chọn chính xác vị trí cần nhấp, vì vậy bạn cần mở lại trò chơi để hiển thị nút, sau đó chọn vị trí của nó.\n\nSau khi vị trí đã chính xác, hãy nhấp vào nút xác nhận để lưu lại.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_secondary_15">Bạn không thể tương tác với trò chơi khi bộ chọn vị trí đang hiển thị, nhưng bạn có thể dùng nút này để ẩn hoặc hiện nó, cho phép bạn gỡ bỏ giới hạn đó bất cứ lúc nào.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_16">Nhấp chuột hiện đã được cấu hình chính xác!\n\nNhấp vào nút lưu để đăng ký và quay lại danh sách Hành động.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_17">Đóng danh sách Hành động để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_18">Sự kiện của bạn hiện có Sự kiện và Hành động, có nghĩa là Sự kiện biết phải thực hiện điều gì và khi nào thực hiện.\n\nNhấp vào nút lưu để đăng ký và quay lại hộp thoại Kịch bản.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_19">Yêu cầu duy nhất đối với Kịch bản là phải có ít nhất một Sự kiện.\nVì Sự kiện của chúng tôi đã đề cập đến cách giành chiến thắng trong trò chơi nên chúng tôi không cần bất cứ điều gì khác.\n\nNhấp vào nút lưu để lưu Kịch bản trong cơ sở dữ liệu và đóng hộp thoại cấu hình.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_20">Như bạn có thể thấy, nút phát hiện có sẵn, nghĩa là Kịch bản của bạn hợp lệ và có thể được sử dụng để phát hiện.\n\nClick vào nó để bắt đầu phát hiện.</string>
+    <string name="message_tutorial_text_conditions_still_text_step_21">Trò chơi đang chạy nhưng không có chuyện gì xảy ra?\n\nĐó là điều bình thường, nó sẽ chỉ nhấp khi nút hiển thị \"Hello\", bạn nhớ chứ? Trong khi vẫn giữ cho kịch bản chạy, hãy nhấn nút bắt đầu trò chơi và chỉ cần ngồi xem Klick\'r chơi thay bạn nhé!</string>
+    <string name="message_tutorial_text_conditions_still_text_step_22">Chúc mừng bạn!\n\nBây giờ bạn đã biết cách phát hiện văn bản hiển thị trên màn hình.\nHãy xem các hướng dẫn khác để khám phá thêm nhiều trường hợp sử dụng.</string>
+
+</resources>

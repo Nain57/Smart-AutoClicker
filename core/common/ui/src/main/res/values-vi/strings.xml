@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="dialog_overlay_title_warning">Cảnh báo</string>
+    <string name="dialog_overlay_title_copy_from">Sao chép từ</string>
+    <string name="dialog_title_tutorial">Hướng dẫn</string>
+    <string name="field_click_position_title">Vị trí nhấn</string>
+    <string name="field_swipe_positions_title">Vuốt vị trí</string>
+    <string name="item_title_try_element">Kiểm tra %1$s</string>
+    <string name="item_error_action_invalid_generic">Hành động này không hợp lệ</string>
+    <string name="message_empty_copy">Không có gì để sao chép</string>
+    <string name="message_tutorial_volume_down_stop">Nếu kịch bản của bạn nhấp quá nhanh, nó có thể chặn bạn sử dụng menu Klick\'r để dừng nó.\n\nTrong trường hợp đó, bạn có thể nhấn nút \"Giảm âm lượng\" vật lý trên thiết bị của mình để dừng kịch bản đang chạy.</string>
+    <string name="message_dont_show_again">Không hiển thị lại thông báo này</string>
+    <string name="message_error_screen_capture_permission_dialog_not_found">Thiết bị của bạn không cung cấp hộp thoại cấp phép chụp màn hình Android tiêu chuẩn. Klick\'r sẽ không thể chạy trên đó.</string>
+    <string name="button_understood">Đã hiểu</string>
+    <string name="input_field_label_anti_detection">Chống phát hiện</string>
+    <string name="input_field_label_click_press_duration">Thời lượng nhấn (ms)</string>
+    <string name="input_field_label_name">Tên</string>
+    <string name="input_field_label_pause_duration">Thời gian tạm dừng</string>
+    <string name="input_field_label_scenario_name">Tên kịch bản</string>
+    <string name="input_field_label_swipe_duration">Thời lượng vuốt (ms)</string>
+    <string name="input_field_error_required">Yêu cầu</string>
+    <string name="dropdown_item_title_anti_detection_enabled">Bật</string>
+    <string name="dropdown_item_title_anti_detection_disabled">Tắt</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Chọn ngẫu nhiên các vị trí và thời lượng nhấp chuột vuốt và tạm dừng bằng một khoảng bù ngẫu nhiên nhỏ</string>
+    <string name="dropdown_helper_text_anti_detection_disabled">Thực hiện tất cả các hành động như đã khai báo</string>
+    <string name="dropdown_label_time_unit_ms">ms</string>
+    <string name="dropdown_label_time_unit_s">giây</string>
+    <string name="dropdown_label_time_unit_min">phút</string>
+    <string name="dropdown_label_time_unit_h">giờ</string>
+    <string name="dropdown_label_time_unit">Đơn vị thời gian</string>
+    <string name="toast_denied_screen_sharing_permission">Người dùng bị từ chối quyền chia sẻ màn hình</string>
+    <string name="toast_configure_single_click">Chạm vào vị trí để nhấp vào</string>
+    <string name="toast_configure_swipe_from">Chạm vào vị trí để bắt đầu vuốt từ</string>
+    <string name="toast_configure_swipe_to">Chạm vào vị trí để kết thúc thao tác vuốt tới</string>
+    <string name="content_desc_action_icon">Biểu tượng hiển thị loại hành động</string>
+    <string name="content_desc_add_button">Nút tạo một phần tử</string>
+    <string name="content_desc_copy_button">Nút tạo bản sao từ phần tử hiện có</string>
+    <string name="content_desc_drag_and_drop">Kéo và thả để sắp xếp lại các phần tử</string>
+    <string name="content_desc_move_menu">Di chuyển menu nổi</string>
+    <string name="content_desc_play_pause_scenario">Phát hoặc tạm dừng kịch bản</string>
+    <string name="content_desc_stop_clicker">Dừng Klick\'r</string>
+    <string name="content_desc_confirm">Xác nhận</string>
+    <string name="content_desc_go_back">Quay lại hộp thoại</string>
+
+</resources>

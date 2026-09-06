@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_overlay_title_dumb_action_type">Loại hành động</string>
+    <string name="dialog_overlay_title_dumb_scenario_config">Kịch bản</string>
+    <string name="menu_item_title_dumb_actions">Hành động</string>
+    <string name="menu_item_title_dumb_config">Cấu hình</string>
+    <string name="item_desc_dumb_action_duration">Trong %1$s</string>
+    <string name="item_desc_dumb_click">Bấm vào đâu đó trên màn hình</string>
+    <string name="item_desc_dumb_click_details">Trong %1$s lúc [%2$d, %3$d]</string>
+    <string name="item_desc_dumb_click_on_position">Nhấp vào %1$d, %2$d</string>
+    <string name="item_desc_dumb_pause">Tạm dừng thực hiện</string>
+    <string name="item_desc_dumb_pause_details">Trong %1$s</string>
+    <string name="item_desc_dumb_repeat_count">Lặp lại %1$d lần</string>
+    <string name="item_desc_dumb_repeat_infinite">Lặp lại vô hạn</string>
+    <string name="item_desc_dumb_swipe">Vuốt từ vị trí trên màn hình sang vị trí khác</string>
+    <string name="item_desc_dumb_swipe_details">Trong %1$s từ [%2$d, %3$d] đến [%4$d, %5$d]</string>
+    <string name="item_desc_dumb_swipe_positions">Vuốt từ %1$d, %2$d sang %3$d, %4$d</string>
+    <string name="item_title_dumb_click">Nhấp chuột</string>
+    <string name="item_title_dumb_pause">Chờ đợi</string>
+    <string name="item_title_dumb_swipe">Vuốt</string>
+    <string name="item_title_no_dumb_actions">Không có hành động</string>
+    <string name="item_title_dumb_action_copy">Sao chép</string>
+    <string name="item_desc_dumb_action_copy">Sao chép Hành động hiện có từ bất kỳ Kịch bản nào</string>
+    <string name="message_empty_dumb_action_list">Không có hành động nào được tạo!</string>
+    <string name="message_empty_secondary_dumb_action_list">Bạn cần ít nhất một hành động để chạy kịch bản</string>
+    <string name="message_dumb_brief_empty_action_list">Bạn cần ít nhất một hành động để thực hiện một kịch bản</string>
+    <string name="list_header_copy_dumb_action_this">Hành động từ kịch bản này</string>
+    <string name="list_header_copy_dumb_action_all">Hành động từ tất cả các kịch bản</string>
+    <string name="search_view_hint_dumb_action_copy">Tìm kiếm theo tên hành động</string>
+    <string name="input_field_label_maximum_duration">Thời lượng tối đa (phút)</string>
+    <string name="input_field_label_repeat_count">Số lần lặp lại</string>
+    <string name="input_field_label_repeat_delay">Độ trễ lặp lại (ms)</string>
+    <string name="content_desc_add_action">Thêm một hành động mới vào kịch bản</string>
+    <string name="content_desc_show_actions">Hiển thị hoặc ẩn các hành động đã tạo</string>
+    <string name="content_desc_open_action_list">Mở danh sách hành động</string>
+
+</resources>

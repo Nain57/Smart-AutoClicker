@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_counters_basics">Thông tin cơ bản về bộ đếm</string>
+    <string name="item_desc_tutorial_counters_basics">Tìm hiểu cách sử dụng hành động Đặt bộ đếm và điều kiện Đã đạt bộ đếm.</string>
+    <string name="message_game_tutorial_counters_basics">Nhấp 10 lần vào mục tiêu màu xanh, sau đó nhấp một lần vào mục tiêu màu đỏ</string>
+    <string name="message_tutorial_counters_basics_step_1">Chào mừng bạn đến với hướng dẫn về Bộ đếm!\n\nTại đây, bạn sẽ tự động hóa một trò chơi trong đó bạn nhấp vào mục tiêu màu xanh 10 lần, sau đó nhấp vào mục tiêu màu đỏ một lần để xác thực số điểm của bạn và kiếm được 10 điểm. Bạn có thể thử trò chơi trước hoặc chuyển thẳng vào cấu hình kịch bản.</string>
+    <string name="message_tutorial_counters_basics_step_2">Đầu tiên, chúng ta cần tạo Sự kiện màn hình để phát hiện mục tiêu màu xanh và nhấp vào mục tiêu đó.\n\nNhấp vào Tạo Sự kiện để bắt đầu.</string>
+    <string name="message_tutorial_counters_basics_step_3">Hãy bắt đầu bằng cách thêm một điều kiện để phát hiện mục tiêu màu xanh. Bấm vào trường Điều kiện để mở danh sách điều kiện và tạo điều kiện này.\n\nHướng dẫn sẽ tiếp tục sau khi điều kiện của bạn được tạo.</string>
+    <string name="message_tutorial_counters_basics_step_4">Tốt! Bây giờ hãy nhấp vào trường Hành động để thêm các hành động sẽ chạy khi phát hiện mục tiêu màu xanh.</string>
+    <string name="message_tutorial_counters_basics_step_5">Trước tiên chúng ta cần hành động Nhấp chuột để chạm vào mục tiêu màu xanh lam. Bấm vào nút tạo để thêm một hành động mới.</string>
+    <string name="message_tutorial_counters_basics_step_6">Định cấu hình nhấp chuột để chạm vào mục tiêu màu xanh lam, sau đó lưu hành động.\n\nHướng dẫn sẽ tiếp tục sau khi lưu lần nhấp.</string>
+    <string name="message_tutorial_counters_basics_step_7">Chúng ta cũng cần đếm xem mình đã click vào mục tiêu màu xanh bao nhiêu lần. Điều này có thể đạt được bằng hành động Bộ đếm thay đổi, bằng cách thêm một hành động mỗi lần chúng ta nhấp vào.\n\nNhấp lại vào nút tạo để thêm hành động thứ hai.</string>
+    <string name="message_tutorial_counters_basics_step_8">Chọn hành động Thay đổi bộ đếm để tăng bộ đếm mỗi lần nhấp vào mục tiêu màu xanh.</string>
+    <string name="message_tutorial_counters_basics_step_9">Đầu tiên chúng ta cần chọn bộ đếm cần cập nhật. Bấm vào Chọn bộ đếm để mở danh sách bộ đếm.</string>
+    <string name="message_tutorial_counters_basics_step_10">Hiện tại danh sách này đang trống. Nhấp vào nút tạo để tạo bộ đếm mới. Đặt tên cho nó (ví dụ: Nhấp chuột màu xanh lam), giữ giá trị bắt đầu bằng 0, sau đó lưu và chọn nó.</string>
+    <string name="message_tutorial_counters_basics_step_11">Bây giờ hãy định cấu hình cách bộ đếm thay đổi mỗi lần nhấp vào mục tiêu màu xanh.\n\nĐặt điều kiện thành + và giá trị thành 1, để bộ đếm tăng thêm 1 sau mỗi lần nhấp.\n\nSau đó lưu hành động và quay lại hộp thoại Sự kiện.</string>
+    <string name="message_tutorial_counters_basics_step_11_secondary">Giá trị có thể là một số cố định hoặc giá trị hiện tại của bộ đếm khác.</string>
+    <string name="message_tutorial_counters_basics_step_12">Tuyệt vời! Sự kiện màn hình này bây giờ sẽ nhấp vào mục tiêu màu xanh lam và tăng bộ đếm của bạn sau mỗi lần phát hiện.\n\nLưu Sự kiện để quay lại kịch bản.</string>
+    <string name="message_tutorial_counters_basics_step_13">Bây giờ chúng ta cần một Sự kiện phản ứng khi bộ đếm đạt đến 10. Loại Sự kiện đó không được kích hoạt bởi màn hình nên nó là Sự kiện kích hoạt.\n\nNhấp vào tab Sự kiện kích hoạt để mở danh sách Sự kiện kích hoạt.</string>
+    <string name="message_tutorial_counters_basics_step_14">Nhấp vào nút tạo để thêm Sự kiện kích hoạt mới.</string>
+    <string name="message_tutorial_counters_basics_step_15">Cũng giống như Sự kiện màn hình, Sự kiện kích hoạt cần có điều kiện. Nhấp vào trường Điều kiện để mở danh sách điều kiện và tạo điều kiện kích hoạt mới.</string>
+    <string name="message_tutorial_counters_basics_step_16">Chọn loại điều kiện Đã đạt đến bộ đếm để kích hoạt Sự kiện này khi bộ đếm đạt đến một giá trị cụ thể.</string>
+    <string name="message_tutorial_counters_basics_step_17">Chọn bộ đếm bạn đã tạo trước đó (bộ đếm số lần nhấp chuột màu xanh lam) để sử dụng nó làm bộ kích hoạt.</string>
+    <string name="message_tutorial_counters_basics_step_18">Bây giờ hãy đặt phép so sánh sao cho điều kiện được đáp ứng khi bộ đếm bằng 10. Có một số điều kiện so sánh, nhưng ở đây chúng ta cần kiểm tra xem khi nào nó bằng, vì vậy hãy chọn \"=\". Sau đó nhập giá trị 10, lưu điều kiện và quay lại hộp thoại Sự kiện.</string>
+    <string name="message_tutorial_counters_basics_step_18_secondary">Giá trị để so sánh có thể là một số cố định hoặc giá trị hiện tại của bộ đếm khác.</string>
+    <string name="message_tutorial_counters_basics_step_19">Điều kiện đã được thiết lập! Bây giờ chúng ta cần xác định điều gì sẽ xảy ra khi bộ đếm đạt đến 10. Nhấp vào trường Hành động để mở danh sách hành động.</string>
+    <string name="message_tutorial_counters_basics_step_20">Trước tiên, hãy tạo hành động Nhấp chuột và đặt hành động đó vào mục tiêu màu đỏ theo cách thủ công để xác thực số lượng.</string>
+    <string name="message_tutorial_counters_basics_step_21">Định cấu hình nhấp chuột để chạm vào mục tiêu màu đỏ, sau đó lưu hành động. Lưu ý rằng trong Sự kiện kích hoạt, vị trí nhấp chuột phải luôn được đặt theo cách thủ công.\n\nHướng dẫn sẽ tiếp tục sau khi lưu lần nhấp.</string>
+    <string name="message_tutorial_counters_basics_step_22">Bây giờ hãy tạo hành động thứ hai để đặt lại bộ đếm. Nhấp lại vào nút tạo và chọn hành động Thay đổi bộ đếm.</string>
+    <string name="message_tutorial_counters_basics_step_23">Chúng tôi muốn đặt bộ đếm nhấp chuột màu xanh lam thành 0, vì vậy trước tiên hãy chọn bộ đếm nhấp chuột màu xanh lam.</string>
+    <string name="message_tutorial_counters_basics_step_24">Đặt điều kiện thành = và giá trị thành 0 để đặt lại bộ đếm sau mỗi lần xác thực. Sau đó lưu hành động và quay lại hộp thoại Sự kiện để tiếp tục.</string>
+    <string name="message_tutorial_counters_basics_step_25">Sự kiện kích hoạt này sẽ nhấp vào mục tiêu màu đỏ và đặt lại bộ đếm mỗi khi đếm được 10 lần nhấp màu xanh. Danh sách Sự kiện kích hoạt được thực thi giữa mỗi khung màn hình, trước danh sách Sự kiện màn hình, do đó, khi bộ đếm bằng 10, Sự kiện này sẽ chạy ngay lập tức: mục tiêu màu đỏ được nhấp vào và bộ đếm được đặt lại, sẵn sàng bắt đầu lại.\n\nLưu Sự kiện để quay lại kịch bản.</string>
+    <string name="message_tutorial_counters_basics_step_26">Kịch bản đã hoàn tất! Nó sẽ nhấp vào mục tiêu màu xanh, đếm từng lần nhấp, sau đó xác thực bằng mục tiêu màu đỏ sau mỗi 10 lần nhấp và bắt đầu lại.\n\nLưu kịch bản để áp dụng cấu hình của bạn.</string>
+    <string name="message_tutorial_counters_basics_step_27">Mọi thứ đã sẵn sàng! Bắt đầu kịch bản, sau đó khởi chạy trò chơi và xem Klick\'r xử lý việc đếm cho bạn.</string>
+    <string name="message_tutorial_counters_basics_step_28">Làm tốt! Bạn đã học cách sử dụng Bộ đếm để theo dõi giá trị trên nhiều Sự kiện.\n\nKết hợp với hành động Thay đổi bộ đếm và điều kiện Đã đạt đến bộ đếm, giờ đây bạn có thể xây dựng các quy trình tự động hóa phản ứng với các mẫu lặp lại.</string>
+
+</resources>

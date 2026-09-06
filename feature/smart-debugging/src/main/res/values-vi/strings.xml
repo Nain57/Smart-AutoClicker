@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_overlay_title_debug_report">Báo cáo gỡ lỗi</string>
+    <string name="menu_item_debug_report_overview">Tổng quan</string>
+    <string name="menu_item_debug_report_timeline">Dòng thời gian</string>
+    <string name="item_title_report_total_duration">Tổng thời lượng</string>
+    <string name="item_title_report_frame_processed">Khung đã được xử lý</string>
+    <string name="item_title_report_avg_image_processing_duration">Thời gian xử lý trung bình</string>
+    <string name="item_title_report_image_event_fulfilled">Sự kiện màn hình đã hoàn thành</string>
+    <string name="item_title_report_trigger_event_fulfilled">Sự kiện kích hoạt đã được thực hiện</string>
+    <string name="title_event_occurrence_empty">Không có Sự kiện</string>
+    <string name="desc_event_occurrence_empty">Không có Sự kiện nào được thực hiện trong phiên kịch bản cuối cùng.</string>
+    <string name="item_event_occurrence_frame_number">Khung #%1$d</string>
+    <string name="item_event_occurrence_trigger">Bộ kích hoạt</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">Đã hoàn thành: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d Điều kiện đã xử lý</string>
+    <string name="dialog_overlay_title_timeline_filters">Bộ lọc dòng thời gian</string>
+    <string name="field_debug_filter_image_events_title">Sự kiện hình ảnh</string>
+    <string name="field_debug_filter_image_events_show_desc_on">Hiển thị các lần xuất hiện Sự kiện Hình ảnh trong dòng thời gian</string>
+    <string name="field_debug_filter_image_events_show_desc_off">Ẩn tất cả các lần xuất hiện Sự kiện Hình ảnh trong dòng thời gian</string>
+    <string name="field_debug_filter_trigger_events_title">Sự kiện kích hoạt</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">Hiển thị các lần xuất hiện Sự kiện kích hoạt trong dòng thời gian</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">Ẩn tất cả các lần xuất hiện Sự kiện kích hoạt trong dòng thời gian</string>
+    <string name="field_debug_filter_events_show_title">Bộ lọc</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d Sự kiện</string>
+    <string name="field_debug_filter_events_show_select_desc_none">Không có Sự kiện</string>
+    <string name="menu_item_debug_event_occurrence_conditions">Các điều kiện</string>
+    <string name="menu_item_debug_event_occurrence_counters">Bộ đếm</string>
+    <string name="menu_item_debug_event_occurrence_events_state">Trạng thái</string>
+    <string name="item_event_occurrence_details_header_title">Toán tử điều kiện</string>
+    <string name="item_event_occurrence_details_image_confidence">Độ tin cậy: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">Có nên phát hiện?</string>
+    <string name="item_event_occurrence_details_image_fulfilled">Đã hoàn thành chưa?</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">Đã nhận được chương trình phát sóng: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">Đã đạt đến bộ hẹn giờ: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">Đã đạt đến bộ đếm: %1$s %2$s %3$s</string>
+    <string name="title_event_occurrence_counters_empty">Không có bộ đếm</string>
+    <string name="desc_event_occurrence_counters_empty">Không có bộ đếm nào được xác định cho kịch bản này.</string>
+    <string name="item_event_state_header_image">Sự kiện hình ảnh</string>
+    <string name="item_event_state_header_trigger">Sự kiện kích hoạt</string>
+    <string name="overlay_title_results">Kết quả</string>
+    <string name="overlay_title_threshold">Ngưỡng</string>
+
+</resources>

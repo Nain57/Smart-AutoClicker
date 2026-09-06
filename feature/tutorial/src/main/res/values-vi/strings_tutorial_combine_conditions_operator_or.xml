@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_combine_conditions_operator_or">Điều kiện OR</string>
+    <string name="item_desc_tutorial_combine_conditions_operator_or">Sử dụng điều kiện OR để nhấp vào mục tiêu đầu tiên xuất hiện trên màn hình</string>
+    <string name="message_game_tutorial_combine_conditions_operator_or">Nhấp vào bất kỳ mục tiêu nào ngay khi nó xuất hiện trên màn hình</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_1">Thử thách mới! Hai mục tiêu có thể xuất hiện trên màn hình. Cái màu đỏ có giá trị 2 điểm và cái màu xanh có giá trị 1 điểm, vì vậy hãy nhấp vào cái nào hiển thị càng nhanh càng tốt.\n\nBắt đầu trò chơi và xem bạn tự làm như thế nào.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_2">Quá nhanh để xử lý thủ công nên hãy sử dụng Klick\'r.\n\nMở menu cấu hình kịch bản, tạo Sự kiện màn hình mới và bắt đầu thêm điều kiện cho mục tiêu trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_3">Chúng ta cần một điều kiện cho mỗi mục tiêu. Hãy bắt đầu với màu xanh.\n\nTạo điều kiện hình ảnh mới và chụp mục tiêu màu xanh.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_4">Tình trạng này sẽ kích hoạt khi mục tiêu màu xanh hiển thị, do đó tất cả các cài đặt mặc định đều chính xác. Lưu điều kiện này.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_5">Bây giờ hãy thêm điều kiện thứ hai cho mục tiêu màu đỏ.\n\nTạo một điều kiện hình ảnh khác và chụp mục tiêu màu đỏ.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_6">Tương tự ở đây, mục tiêu màu đỏ sẽ hiển thị, do đó cài đặt mặc định là chính xác. Lưu điều kiện này.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_7">Với OR, các điều kiện được kiểm tra theo thứ tự và Sự kiện sẽ kích hoạt ngay khi Sự kiện đầu tiên khớp, do đó thứ tự các điều kiện của bạn rất quan trọng.\n\nMục tiêu màu đỏ mang lại nhiều điểm hơn nên chúng tôi muốn nó được kiểm tra trước. Sử dụng nút « để di chuyển nó trước nút màu xanh lam, sau đó quay lại hộp thoại Sự kiện.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_8">Bây giờ đặt điều kiện thành OR. Sự kiện sẽ kích hoạt ngay khi một trong hai mục tiêu xuất hiện. Nếu cả hai đều hiển thị cùng lúc, điều kiện màu đỏ sẽ được khớp trước vì nó có mức độ ưu tiên cao hơn.\n\nChọn HOẶC.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_9">Điều kiện OR hiện đã được đặt. Mở phần Hành động và tạo hành động nhấp chuột mới.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_10">Chúng tôi muốn nhấp vào bất kỳ mục tiêu nào đã kích hoạt Sự kiện. Chọn loại vị trí \"Có điều kiện\". Với OR, mỗi lần chỉ có thể phát hiện một điều kiện tích cực, do đó không cần phải chọn điều kiện cụ thể. Klick\'r sẽ tự động nhấp vào vị trí có điều kiện phù hợp.\n\nKhi bạn hoàn tất, hãy lưu lần nhấp, sau đó là Sự kiện và kịch bản của bạn, rồi quay lại trò chơi.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_11">Bắt đầu kịch bản của bạn và khởi động trò chơi để giành chiến thắng!\n\nNếu nó không hoạt động, hãy kiểm tra kỹ xem các điều kiện của bạn có được ghi lại chính xác không và thời lượng nhấp chuột có được đặt thành 1 mili giây hay không.</string>
+    <string name="message_tutorial_combine_conditions_operator_or_step_12">Chúc mừng! Bạn đã học cách sử dụng điều kiện OR và tại sao mức độ ưu tiên của điều kiện lại quan trọng. Bằng cách đặt điều kiện màu đỏ lên hàng đầu, Klick\'r luôn ưu tiên mục tiêu có giá trị cao hơn khi cả hai đều hiển thị cùng lúc.</string>
+
+</resources>

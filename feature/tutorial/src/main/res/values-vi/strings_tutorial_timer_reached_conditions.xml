@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_timer_reached_conditions">Đã đạt đến thời gian bật</string>
+    <string name="item_desc_tutorial_timer_reached_conditions">Tìm hiểu cách kích hoạt một hành động ở một chu kỳ nhất định.</string>
+    <string name="message_game_tutorial_timer_reached_conditions">Nhấp vào nút mỗi giây trong 5 giây. Hãy cố gắng duy trì sự nhất quán để đạt điểm cao hơn!</string>
+    <string name="message_tutorial_timer_reached_conditions_step_1">Chào mừng bạn đến với hướng dẫn điều kiện đạt đến Bộ đếm thời gian!\n\nTại đây, bạn sẽ thử kích hoạt một hành động ở một chu kỳ nhất định. Bạn có thể thử chơi trò chơi trước, hoặc bỏ qua để chuyển thẳng đến phần cấu hình kịch bản nhằm bắt đầu tự động hóa.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_2">Sự kiện kích hoạt nằm trong danh sách riêng biệt với Sự kiện trên màn hình, hãy nhấp vào biểu tượng Sự kiện kích hoạt để mở.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_3">Bây giờ, hãy nhấp vào tạo để tạo Sự kiện kích hoạt mới.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_4">Như bạn có thể thấy, cấu trúc Sự kiện kích hoạt gần giống với Sự kiện màn hình. Trước tiên chúng ta cần khai báo khi nào chúng ta muốn thực hiện hành động của mình.\n\nBấm vào trường Sự kiện kích hoạt để mở danh sách Sự kiện.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_5">Hiện tại, danh sách này trống. Nhấp vào nút tạo để tạo Sự kiện kích hoạt mới.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_6">Để đánh bại trò chơi, chúng ta cần nhấp chuột vào một thời điểm nhất định, vì vậy hãy chọn loại Sự kiện Đã đạt đến bộ đếm thời gian.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_7">Sự kiện đạt được của bộ đếm thời gian được coi là đã hoàn thành sau một khoảng thời gian nhất định. Chúng tôi muốn nhấp chuột mỗi giây, vì vậy hãy sử dụng 1000 mili giây.\n\nHướng dẫn sẽ tiếp tục khi bạn nhập 1000 vào hộp \"Sau\".</string>
+    <string name="message_tutorial_timer_reached_conditions_step_8">Theo mặc định, Sự kiện đạt đến bộ hẹn giờ chỉ được kích hoạt một lần, nhưng ở đây chúng tôi muốn nhấp vào mỗi giây chứ không chỉ một giây sau khi bắt đầu.\n\nNhấp vào hộp kiểm để khởi động lại bộ đếm thời gian Sự kiện khi đã đạt đến mức đó.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_9">Sự kiện của chúng tôi hiện được cấu hình để được đáp ứng mỗi giây. Hãy nhớ rằng các thành phần kịch bản khác của bạn vẫn cần được xử lý, do đó, một kịch bản có nhiều Sự kiện được bật có thể trì hoãn Sự kiện này.\n\nBấm vào lưu để đóng hộp thoại và quay lại danh sách Sự kiện kích hoạt.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_10">Đó là tất cả các điều kiện chúng ta cần. Đóng hộp thoại để quay lại phần cấu hình Sự kiện Kích hoạt.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_11">Bây giờ Sự kiện đã biết khi nào nên kích hoạt các hành động của nó, nhưng chúng ta vẫn cần xác định những gì cần kích hoạt. Bấm vào trường Hành động để hiển thị danh sách hành động.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_12">Khi Sự kiện được đáp ứng (mỗi giây), chúng ta cần nhấp vào nút trò chơi. Chỉ cần tạo hành động Nhấp chuột mới và đặt vị trí của nó trên nút trò chơi.\n\nHướng dẫn sẽ tiếp tục khi bạn quay lại danh sách Sự kiện với Sự kiện đã tạo của mình.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_13">Sự kiện kích hoạt của chúng tôi biết khi nào nên hành động và phải làm gì, giờ đây chúng tôi có thể lưu kịch bản của mình và cố gắng đánh bại trò chơi.\n\nHướng dẫn sẽ tiếp tục sau khi bạn lưu kịch bản.</string>
+    <string name="message_tutorial_timer_reached_conditions_step_14">Bây giờ hãy khởi động lại trò chơi, bắt đầu kịch bản của bạn và xem Klick\'r đánh bại trò chơi giúp bạn!</string>
+
+</resources>

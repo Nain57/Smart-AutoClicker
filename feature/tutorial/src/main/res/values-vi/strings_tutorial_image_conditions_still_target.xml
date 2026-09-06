@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="item_title_tutorial_screen_condition_still_target">Nhấn một mục tiêu tĩnh</string>
+    <string name="item_desc_tutorial_screen_condition_still_target">Tìm hiểu cách tạo Sự kiện đầu tiên của bạn để nhấp vào mục tiêu tĩnh</string>
+    <string name="message_game_tutorial_screen_condition_still_target">Bấm vào nút màu xanh càng nhanh càng tốt</string>
+    <string name="message_tutorial_screen_condition_still_target_step_1">Chào mừng bạn đến với hướng dẫn đầu tiên!\n\nTại đây, bạn sẽ thử phá kỷ lục điểm số cao của một trò chơi với sự trợ giúp của Klick\'r.\n\nĐầu tiên, hãy khởi động trò chơi và cố gắng tự mình giành chiến thắng.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_3">Khó phải không?\nHãy sử dụng Klick\'r để vượt qua nó!\n\nNhấp vào biểu tượng cấu hình kịch bản để bắt đầu chỉnh sửa kịch bản mới của bạn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_4">Kịch bản là cấu trúc gốc của tự động hóa Klick\'r.\n\nNó chứa các cài đặt phát hiện chung và danh sách các Sự kiện mô tả những gì sẽ được thực thi khi chạy Kịch bản của bạn.\n\nNhấp vào nút tạo Sự kiện để tạo Sự kiện đầu tiên của bạn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_5">Một Sự kiện mô tả những Hành động nào (nhấp, vuốt…) sẽ được thực thi khi đáp ứng các Điều kiện nhất định.\n\nBạn phải tạo ít nhất một Điều kiện và một Hành động để tạo một Sự kiện hợp lệ và sử dụng nó trong kịch bản của mình\n\nNhấp vào trường Điều kiện để hiển thị danh sách Điều kiện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_6">Điều kiện là một phần của ảnh chụp màn hình sẽ được so sánh với từng khung hình trên thiết bị của bạn.\n\nĐể vượt qua trò chơi, chúng ta muốn nhấp vào nhân vật màu xanh lam khi nó hiển thị, vì vậy chúng ta cần một Điều kiện được thỏa mãn khi nhân vật xuất hiện trên màn hình thiết bị.\n\nNhấp vào nút tạo Điều kiện để tạo Điều kiện đầu tiên của bạn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_7">Trong hướng dẫn này, chúng ta muốn học cách nhận diện một hình ảnh trên màn hình, vì vậy hãy chọn Điều kiện hình ảnh</string>
+    <string name="message_tutorial_screen_condition_still_target_step_8">Bước đầu tiên trong việc tạo Điều kiện là chụp ảnh màn hình cho nó.\n\nVì chúng ta muốn nhấp khi nhân vật màu xanh lam hiển thị, ảnh chụp màn hình phải chứa nhân vật đó. Hãy khởi động lại trò chơi để hiển thị nhân vật, sau đó chụp ảnh màn hình.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_8">Sử dụng nút chụp trên menu nổi để chụp ảnh màn hình.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_9">Sau khi chụp ảnh màn hình, bạn có thể cắt ảnh để chỉ giữ lại phần cần thiết cho quá trình nhận diện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_9">Nếu ảnh chụp màn hình của bạn không chứa nhân vật màu xanh lam, bạn có thể nhấn nút này để chụp ảnh mới.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_10">Đối với trò chơi này, điểm thú vị là nhân vật màu xanh dương, vì vậy hãy cắt ảnh chụp màn hình của bạn để chỉ lấy nhân vật này.\n\nBạn có thể chụm hai ngón tay trên ảnh chụp màn hình để phóng to và thao tác chọn vùng cắt chính xác hơn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_10">Đảm bảo nhân vật hiển thị đầy đủ trong vùng chọn. Hãy cố gắng cắt sát nhân vật nhất có thể để giúp quá trình nhận diện hình ảnh diễn ra dễ dàng hơn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_11">Hình ảnh Điều kiện của bạn đã được ghi lại!\n\nBây giờ có một số điều chỉnh có thể được thực hiện đối với nó, nhưng các cài đặt mặc định phù hợp với trường hợp sử dụng cơ bản của chúng ta. Vì mục tiêu của chúng ta không di chuyển, nó sẽ chỉ phát hiện ở vị trí chụp, nhanh hơn so với việc phát hiện trên toàn màn hình.\n\nNhấn vào nút lưu để ghi lại và quay lại danh sách Điều kiện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_12">Đóng danh sách Sự kiện để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_13">Với Điều kiện này, kịch bản biết khi nào cần kích hoạt các Hành động.\n\nBây giờ bạn cần xác định những Hành động nào sẽ được kích hoạt, đối với trò chơi này là một cú nhấp vào nhân vật màu xanh lam.\n\nNhấp vào trường Hành động để hiển thị danh sách Hành động.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_14">Hành động là hành động được thực hiện sau khi các Sự kiện của Sự kiện của nó được đáp ứng.\n\nĐó có thể là một lần nhấp, vuốt, tạm dừng, Ý định (tương tác với ứng dụng khác) hoặc thay đổi trong quá trình thực thi Kịch bản và nhiều Hành động có thể được xác định cho cùng một Sự kiện.\n\nNhấp vào nút tạo Hành động để tạo Hành động đầu tiên của bạn.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_15">Đầu tiên, chúng ta cần chọn một loại cho Hành động của bạn.\n\nĐối với trò chơi này, chúng ta chỉ cần nhấp vào nhân vật màu xanh lam, vì vậy hãy chọn Click để tạo một Hành động Click mới.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_16">Hành động nhấp chuột được xác định bởi vị trí và thời lượng nhấn.\n\nVì muốn nhấp chuột nhanh nhất có thể nên chúng ta có thể giữ thời lượng nhấn mặc định là 1ms, đây là giá trị thấp nhất có thể. Vì vậy, chúng ta chỉ cần xác định một vị trí.\n\nBấm vào nút chọn vị trí để chọn vị trí Hành động Bấm.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_17">Bạn cần chọn chính xác vị trí cần nhấp, vì vậy bạn cần khởi động lại trò chơi để hiển thị nhân vật màu xanh lam, sau đó chọn vị trí của nó.\n\nKhi vị trí đã chính xác, hãy nhấp vào nút xác nhận để lưu.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_secondary_17">Bạn không thể tương tác với trò chơi khi bộ chọn vị trí đang hiển thị, nhưng bạn có thể dùng nút này để ẩn hoặc hiện nó, cho phép bạn gỡ bỏ giới hạn đó bất cứ lúc nào.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_18">Nhấp chuột hiện đã được cấu hình chính xác!\n\nNhấp vào nút lưu để đăng ký và quay lại danh sách Hành động.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_19">Đóng danh sách Hành động để quay lại cấu hình Sự kiện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_20">Sự kiện của bạn giờ đây đã có Điều kiện và Hành động, có nghĩa là nó biết phải thực thi cái gì và thực thi khi nào.\n\nNhấp vào nút lưu để ghi lại và quay lại hộp thoại Kịch bản.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_21">Yêu cầu duy nhất cho một Kịch bản là phải có ít nhất một Sự kiện.\nVì Sự kiện của chúng ta đã bao gồm cách để chiến thắng trò chơi, chúng ta không cần thêm gì nữa.\n\nNhấp vào nút lưu để lưu Kịch bản vào cơ sở dữ liệu và đóng các hộp thoại cấu hình.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_22">Như bạn có thể thấy, nút phát hiện nay đã khả dụng, có nghĩa là Kịch bản của bạn hợp lệ và có thể được sử dụng để phát hiện.\n\nNhấp vào nó để bắt đầu quá trình phát hiện.</string>
+    <string name="message_tutorial_screen_condition_still_target_step_23">Trò chơi đang chạy nhưng không có chuyện gì xảy ra?\n\nĐó là điều bình thường, nó sẽ chỉ nhấp khi nhân vật màu xanh lam hiển thị, bạn nhớ chứ? Trong khi vẫn giữ cho kịch bản chạy, hãy nhấn nút bắt đầu trò chơi và chỉ cần ngồi xem Klick\'r chơi thay bạn nhé!</string>
+    <string name="message_tutorial_screen_condition_still_target_step_24">Chúc mừng bạn!\n\nBây giờ bạn đã biết những điều cơ bản về Klick\'r, nhưng không phải mọi trường hợp sử dụng đều đơn giản như trò chơi này.\nHãy xem hướng dẫn tiếp theo để tìm hiểu cách theo dõi một mục tiêu đang di chuyển</string>
+
+</resources>
