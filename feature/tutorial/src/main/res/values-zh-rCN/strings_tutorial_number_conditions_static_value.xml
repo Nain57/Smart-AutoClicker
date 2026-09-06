@@ -67,7 +67,7 @@
         显示操作列表。</string>
 
     <string name="message_tutorial_number_conditions_static_value_step_15">操作是在其事件的条件满足时执行的内容。\n\n
-        可以是点击、滑动、暂停、Intent（与其他应用的交互）或
+        可以是点击、滑动、等待、Intent（与其他应用的交互）或
         场景执行中的变化，同一个事件可以定义多个操作。\n\n点击创建操作按钮以创建你的第一个操作。</string>
 
     <string name="message_tutorial_number_conditions_static_value_step_16">首先，我们需要为你的操作选择一个类型。\n\n对于这个游戏，我们只需

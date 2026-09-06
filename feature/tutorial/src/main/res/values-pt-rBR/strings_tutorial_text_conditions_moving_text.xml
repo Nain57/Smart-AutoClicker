@@ -62,7 +62,7 @@
         campo Ações para exibir a lista de Ações.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_12">Uma Ação é algo que é executado uma vez que as Condições de seu Evento são
-        cumpridas.\n\nPode ser um clique, um deslize, uma pausa, um Intent (uma interação com outro aplicativo) ou uma
+        cumpridas.\n\nPode ser um clique, um deslize, uma espera, um Intent (uma interação com outro aplicativo) ou uma
         mudança na execução do Cenário, e várias Ações podem ser definidas para o mesmo Evento.\n\nClique no botão criar
         Ação para criar sua primeira Ação.</string>
 

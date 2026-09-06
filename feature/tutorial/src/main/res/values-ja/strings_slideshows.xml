@@ -149,13 +149,13 @@
         カバーするインタラクティブなチュートリアルは、専用のセクションで利用できます。</string>
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">ポーズアクション</string>
-    <string name="tutorial_slideshow_pause_action_desc">ポーズがアクションの実行と検出に与える影響を学ぶ</string>
-    <string name="tutorial_slideshow_pause_action_step_1_text">ポーズアクションはシナリオ全体を設定した時間だけ
+    <string name="tutorial_slideshow_pause_action_title">待機アクション</string>
+    <string name="tutorial_slideshow_pause_action_desc">待機がアクションの実行と検出に与える影響を学ぶ</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">待機アクションはシナリオ全体を設定した時間だけ
         一時停止します。その間、アクションは実行されず、画面の検出も行われません。\n\nよくある使い方は、アクション
-        リストの末尾にポーズを追加することです。どこかをタップすると、タップされたアプリがそれを処理して結果を表示
+        リストの末尾に待機を追加することです。どこかをタップすると、タップされたアプリがそれを処理して結果を表示
         するまでに時間がかかります。Klick\'r が再び画面を分析し始める前に、その瞬間を待ちたいことが多いでしょう。
-        \n\n2つのアクションの間にポーズを入れることも有効ですが、リストの末尾に追加することの方が重要なケースが
+        \n\n2つのアクションの間に待機を入れることも有効ですが、リストの末尾に追加することの方が重要なケースが
         多いです。</string>
 
     <!-- Swipe Action slideshow -->

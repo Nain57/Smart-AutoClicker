@@ -52,7 +52,7 @@
     <string name="message_tutorial_screen_condition_still_target_step_13">有了這個條件，場景就知道何時觸發操作了。\n\n
     現在你需要定義要觸發的操作，所以對於這個遊戲，是對藍色角色進行點擊。\n\n單擊 操作欄位，顯示操作列表。</string>
 
-    <string name="message_tutorial_screen_condition_still_target_step_14">操作是在其事件的條件滿足時執行的操作。\n\n它可以是點擊、滑動、暫停、意圖（與另一個應用程式的交互）或場景執行的更改，可以為同一個事件定義多個操作。\n\n點擊創建操作按鈕以創建你的第一個操作。</string>
+    <string name="message_tutorial_screen_condition_still_target_step_14">操作是在其事件的條件滿足時執行的操作。\n\n它可以是點擊、滑動、等待、意圖（與另一個應用程式的交互）或場景執行的更改，可以為同一個事件定義多個操作。\n\n點擊創建操作按鈕以創建你的第一個操作。</string>
 
     <string name="message_tutorial_screen_condition_still_target_step_15">首先，需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們只需要點擊藍色角色，所以選擇點擊來創建新的點擊操作。</string>
 

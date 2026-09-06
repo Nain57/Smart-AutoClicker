@@ -86,7 +86,7 @@
     <string name="tutorial_category_action_name">動作</string>
     <string name="tutorial_category_action_desc_short">在條件滿足時執行某些操作</string>
     <string name="tutorial_category_action_desc_long">當事件的條件滿足時，動作將被執行。動作涵蓋手勢（Click、Swipe）、流程控制
-        （ToggleEvent、ChangeCounter、Pause）和系統互動（Intent、Notification、SystemAction、SetText）。\n\n 在這裡學習如何
+        （ToggleEvent、ChangeCounter、Wait）和系統互動（Intent、Notification、SystemAction、SetText）。\n\n 在這裡學習如何
         使用每種動作類型來建構自動化腳本。</string>
 
     <string name="tutorial_category_click_action_name">點擊</string>
@@ -99,9 +99,9 @@
     <string name="tutorial_category_swipe_action_desc_long">滑動動作模擬從起始座標到終止座標的拖曳手勢。可以設定滑動時長來控制手勢
         速度。\n\n 在這裡學習如何使用它來捲動或拖曳螢幕上的元素。</string>
 
-    <string name="tutorial_category_pause_action_name">暫停</string>
+    <string name="tutorial_category_pause_action_name">等待</string>
     <string name="tutorial_category_pause_action_desc_short">在執行下一個動作之前等待一段時間</string>
-    <string name="tutorial_category_pause_action_desc_long">暫停動作在設定的時間內延遲執行。這對於在下次偵測前給應用程式時間做出
+    <string name="tutorial_category_pause_action_desc_long">等待動作在設定的時間內延遲執行。這對於在下次偵測前給應用程式時間做出
         回應很有用。\n\n 在這裡學習如何使用它來控制自動化腳本的節奏。</string>
 
     <string name="tutorial_category_intent_action_name">Intent</string>

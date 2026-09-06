@@ -68,7 +68,7 @@
     attivare, quindi per questo gioco, un clic sul personaggio blu.\n\nClicca sulla campo Azioni per visualizzare l\'elenco delle Azioni.</string>
 
     <string name="message_tutorial_screen_condition_still_target_step_14">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento sono soddisfatte.\n\n
-    Può essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra applicazione) o una modifica nell\'esecuzione dello Scenario,
+    Può essere un clic, uno swipe, un\'attesa, un Intent (un\'interazione con un\'altra applicazione) o una modifica nell\'esecuzione dello Scenario,
     e possono essere definite più Azioni per lo stesso Evento.\n\nClicca sul pulsante crea Azione per creare la tua prima Azione.</string>
 
     <string name="message_tutorial_screen_condition_still_target_step_15">Innanzitutto, dobbiamo scegliere un tipo per la tua Azione.\n\nPer questo gioco, abbiamo solo bisogno

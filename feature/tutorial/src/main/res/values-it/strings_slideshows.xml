@@ -159,14 +159,14 @@
         interattivi che coprono la funzione Contatore sono disponibili nella loro sezione dedicata.</string>
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">Azione Pausa</string>
-    <string name="tutorial_slideshow_pause_action_desc">Scopri come la pausa influisce sull\'esecuzione delle azioni e sul rilevamento</string>
-    <string name="tutorial_slideshow_pause_action_step_1_text">Un\'Azione Pausa sospende l\'intero scenario per una
+    <string name="tutorial_slideshow_pause_action_title">Azione Attendi</string>
+    <string name="tutorial_slideshow_pause_action_desc">Scopri come l\'attesa influisce sull\'esecuzione delle azioni e sul rilevamento</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">Un\'Azione Attendi sospende l\'intero scenario per una
         durata configurata: durante quel tempo non viene eseguita nessuna azione e non avviene nessun rilevamento
-        dello schermo.\n\nUn caso d\'uso molto comune è aggiungere una Pausa alla fine della lista delle azioni.
+        dello schermo.\n\nUn caso d\'uso molto comune è aggiungere un\'Attesa alla fine della lista delle azioni.
         Quando si tocca qualcosa, l\'app toccata ha bisogno di tempo per elaborare il tocco e mostrare il risultato
-        — e di solito si vuole aspettare quel momento prima che Klick\'r riprenda ad analizzare lo schermo.\n\nUna
-        pausa tra due azioni è ugualmente valida, ma aggiungerne una alla fine della lista è spesso la necessità più
+        — e di solito si vuole aspettare quel momento prima che Klick\'r riprenda ad analizzare lo schermo.\n\nUn\'attesa
+        tra due azioni è ugualmente valida, ma aggiungerne una alla fine della lista è spesso la necessità più
         importante.</string>
 
     <!-- Swipe Action slideshow -->

@@ -157,13 +157,13 @@
         interativos cobrindo o recurso Contador estão disponíveis em sua seção dedicada.</string>
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">Ação Pausa</string>
-    <string name="tutorial_slideshow_pause_action_desc">Aprenda como a pausa afeta a execução de ações e a detecção</string>
-    <string name="tutorial_slideshow_pause_action_step_1_text">Uma Ação Pausa suspende o cenário inteiro por uma
+    <string name="tutorial_slideshow_pause_action_title">Ação Aguardar</string>
+    <string name="tutorial_slideshow_pause_action_desc">Aprenda como a espera afeta a execução de ações e a detecção</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">Uma Ação Aguardar suspende o cenário inteiro por uma
         duração configurada: durante esse tempo, nenhuma ação é executada e nenhuma detecção de tela ocorre.\n\nUm
-        caso de uso muito comum é adicionar uma Pausa no final da sua lista de ações. Quando você toca em algum
+        caso de uso muito comum é adicionar uma ação Aguardar no final da sua lista de ações. Quando você toca em algum
         lugar, o aplicativo precisa de tempo para processar o toque e exibir o resultado — e você geralmente quer
-        aguardar esse momento antes que o Klick\'r volte a analisar a tela.\n\nUma pausa entre duas ações também é
+        aguardar esse momento antes que o Klick\'r volte a analisar a tela.\n\nUma espera entre duas ações também é
         válida, mas adicionar uma ao final da lista costuma ser a necessidade mais importante.</string>
 
     <!-- Swipe Action slideshow -->

@@ -158,13 +158,13 @@
         Los tutoriales interactivos que cubren la función Contador están disponibles en su sección dedicada.</string>
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">Acción Pausa</string>
-    <string name="tutorial_slideshow_pause_action_desc">Aprende cómo la pausa afecta la ejecución de acciones y la detección</string>
-    <string name="tutorial_slideshow_pause_action_step_1_text">Una Acción Pausa suspende el escenario completo durante
+    <string name="tutorial_slideshow_pause_action_title">Acción Esperar</string>
+    <string name="tutorial_slideshow_pause_action_desc">Aprende cómo la espera afecta la ejecución de acciones y la detección</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">Una Acción Esperar suspende el escenario completo durante
         una duración configurada: durante ese tiempo, no se ejecuta ninguna acción y no se realiza ninguna detección
-        de pantalla.\n\nUn caso de uso muy habitual es añadir una Pausa al final de tu lista de acciones. Cuando
+        de pantalla.\n\nUn caso de uso muy habitual es añadir una Espera al final de tu lista de acciones. Cuando
         pulsas en algún lugar, la aplicación necesita tiempo para procesar el clic y mostrar el resultado — y
-        normalmente querrás esperar ese momento antes de que Klick\'r vuelva a analizar la pantalla.\n\nUna pausa
+        normalmente querrás esperar ese momento antes de que Klick\'r vuelva a analizar la pantalla.\n\nUna espera
         entre dos acciones también es válida, pero añadir una al final de la lista suele ser la necesidad más
         importante.</string>
 

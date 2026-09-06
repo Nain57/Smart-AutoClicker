@@ -105,7 +105,7 @@
     <string name="tutorial_category_action_name">Дії</string>
     <string name="tutorial_category_action_desc_short">Виконайте щось, коли умови виконані</string>
     <string name="tutorial_category_action_desc_long">Дія виконується, коли умови події виконані. Дії охоплюють жести
-        (Click, Swipe), керування потоком (ToggleEvent, ChangeCounter, Pause) та системні взаємодії (Intent,
+        (Click, Swipe), керування потоком (ToggleEvent, ChangeCounter, Wait) та системні взаємодії (Intent,
         Notification, SystemAction, SetText).\n\n Дізнайтеся тут, як використовувати кожен тип дії для створення своїх
         скриптів автоматизації.</string>
 
@@ -121,9 +121,9 @@
         координати до кінцевої. Можна налаштувати тривалість свайпу для керування швидкістю жесту.\n\n Дізнайтеся
         тут, як використовувати його для прокрутки або перетягування елементів на екрані.</string>
 
-    <string name="tutorial_category_pause_action_name">Пауза</string>
+    <string name="tutorial_category_pause_action_name">Чекати</string>
     <string name="tutorial_category_pause_action_desc_short">Очікування перед виконанням наступної дії</string>
-    <string name="tutorial_category_pause_action_desc_long">Дія «Пауза» затримує виконання на налаштований час. Це
+    <string name="tutorial_category_pause_action_desc_long">Дія «Чекати» затримує виконання на налаштований час. Це
         корисно, щоб дати застосунку час відреагувати перед наступним виявленням.\n\n Дізнайтеся тут, як
         використовувати її для керування темпом скриптів автоматизації.</string>
 

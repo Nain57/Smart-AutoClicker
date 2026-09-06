@@ -94,7 +94,7 @@
     <string name="tutorial_category_action_name">アクション</string>
     <string name="tutorial_category_action_desc_short">条件が満たされたときに何かを実行する</string>
     <string name="tutorial_category_action_desc_long">アクションはイベントの条件が満たされると実行されます。アクションはジェスチャー
-        （Click、Swipe）からフロー制御（ToggleEvent、ChangeCounter、Pause）、システム操作（Intent、Notification、
+        （Click、Swipe）からフロー制御（ToggleEvent、ChangeCounter、Wait）、システム操作（Intent、Notification、
         SystemAction、SetText）まで多岐にわたります。\n\n ここで各アクションタイプを使って自動化スクリプトを作る方法を
         学びましょう。</string>
 
@@ -110,9 +110,9 @@
         シミュレートします。スワイプ時間を設定してジェスチャーの速度を制御できます。\n\n ここで画面上の要素をスクロールまたは
         ドラッグする方法を学びましょう。</string>
 
-    <string name="tutorial_category_pause_action_name">一時停止</string>
+    <string name="tutorial_category_pause_action_name">待機</string>
     <string name="tutorial_category_pause_action_desc_short">次のアクションを実行する前に指定時間待機する</string>
-    <string name="tutorial_category_pause_action_desc_long">一時停止アクションは、設定した時間だけ実行を遅らせます。次の検出の前に
+    <string name="tutorial_category_pause_action_desc_long">待機アクションは、設定した時間だけ実行を遅らせます。次の検出の前に
         アプリが反応する時間を与えるのに役立ちます。\n\n ここで自動化スクリプトのペースを制御する方法を学びましょう。</string>
 
     <string name="tutorial_category_intent_action_name">インテント</string>

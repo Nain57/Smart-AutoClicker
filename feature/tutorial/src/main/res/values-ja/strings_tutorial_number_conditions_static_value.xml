@@ -67,7 +67,7 @@
         アクションフィールドをクリックしてアクションリストを表示してください。</string>
 
     <string name="message_tutorial_number_conditions_static_value_step_15">アクションとは、イベントの条件が満たされると実行されるものです。\n\n
-        クリック、スワイプ、一時停止、Intent（他のアプリとのやり取り）、またはシナリオ実行の変更などがあり、
+        クリック、スワイプ、待機、Intent（他のアプリとのやり取り）、またはシナリオ実行の変更などがあり、
         同じイベントに複数のアクションを定義できます。\n\nアクション作成ボタンをクリックして最初のアクションを作成してください。</string>
 
     <string name="message_tutorial_number_conditions_static_value_step_16">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは単純に

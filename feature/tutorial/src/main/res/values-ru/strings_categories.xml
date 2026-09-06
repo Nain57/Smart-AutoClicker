@@ -106,7 +106,7 @@
     <string name="tutorial_category_action_name">Действия</string>
     <string name="tutorial_category_action_desc_short">Выполняйте что-то, когда условия выполнены</string>
     <string name="tutorial_category_action_desc_long">Действие выполняется, когда условия события выполнены. Действия
-        варьируются от жестов (Click, Swipe) до управления потоком (ToggleEvent, ChangeCounter, Pause) и системных
+        варьируются от жестов (Click, Swipe) до управления потоком (ToggleEvent, ChangeCounter, Wait) и системных
         взаимодействий (Intent, Notification, SystemAction, SetText).\n\n Узнайте здесь, как использовать каждый тип
         действия для создания скриптов автоматизации.</string>
 

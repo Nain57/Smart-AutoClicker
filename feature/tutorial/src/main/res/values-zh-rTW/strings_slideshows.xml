@@ -130,12 +130,12 @@
         正確使用它們。涵蓋計數器功能的互動教學可在其專屬章節中找到。</string>
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">暫停動作</string>
-    <string name="tutorial_slideshow_pause_action_desc">了解暫停如何影響動作執行和偵測</string>
-    <string name="tutorial_slideshow_pause_action_step_1_text">暫停動作會將整個情境暫停設定的時間：在此期間，
-        不會執行任何動作，也不會進行任何螢幕偵測。\n\n非常常見的用法是在動作清單末尾新增一個暫停。當您點擊
+    <string name="tutorial_slideshow_pause_action_title">等待動作</string>
+    <string name="tutorial_slideshow_pause_action_desc">了解等待如何影響動作執行和偵測</string>
+    <string name="tutorial_slideshow_pause_action_step_1_text">等待動作會將整個情境暫停設定的時間：在此期間，
+        不會執行任何動作，也不會進行任何螢幕偵測。\n\n非常常見的用法是在動作清單末尾新增一個等待。當您點擊
         某個地方時，被點擊的應用程式需要時間來處理點擊並顯示結果——通常您會希望等待這個時刻，然後再讓
-        Klick\'r 重新開始分析螢幕。\n\n在兩個動作之間新增暫停也是有效的，但在清單末尾新增暫停通常是更重要的
+        Klick\'r 重新開始分析螢幕。\n\n在兩個動作之間新增等待也是有效的，但在清單末尾新增等待通常是更重要的
         需求。</string>
 
     <!-- Swipe Action slideshow -->

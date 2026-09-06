@@ -110,7 +110,7 @@
     <string name="tutorial_category_action_desc_short">Esegui qualcosa quando le condizioni sono soddisfatte</string>
     <string name="tutorial_category_action_desc_long">Un\'Azione viene eseguita quando le Condizioni di un Evento sono
         soddisfatte. Le Azioni spaziano dai gesti (Click, Swipe) al controllo del flusso (ToggleEvent, ChangeCounter,
-        Pause) e alle interazioni di sistema (Intent, Notification, SystemAction, SetText).\n\n Impara qui a usare ogni
+        Wait) e alle interazioni di sistema (Intent, Notification, SystemAction, SetText).\n\n Impara qui a usare ogni
         tipo di Azione per creare i tuoi script di automazione.</string>
 
     <string name="tutorial_category_click_action_name">Clic</string>
@@ -125,9 +125,9 @@
         una coordinata di partenza a una di arrivo. Puoi configurare la durata dello scorrimento per controllare la
         velocità del gesto.\n\n Impara qui a usarla per scorrere o trascinare elementi sullo schermo.</string>
 
-    <string name="tutorial_category_pause_action_name">Pausa</string>
+    <string name="tutorial_category_pause_action_name">Attendi</string>
     <string name="tutorial_category_pause_action_desc_short">Attendi una durata prima di eseguire l\'azione successiva</string>
-    <string name="tutorial_category_pause_action_desc_long">Un\'Azione Pausa ritarda l\'esecuzione per una durata
+    <string name="tutorial_category_pause_action_desc_long">Un\'Azione Attendi ritarda l\'esecuzione per una durata
         configurata. È utile per dare tempo all\'applicazione di reagire prima del prossimo rilevamento.\n\n Impara
         qui a usarla per cadenzare i tuoi script di automazione.</string>
 

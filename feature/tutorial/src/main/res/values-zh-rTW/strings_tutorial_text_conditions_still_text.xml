@@ -54,7 +54,7 @@
     <string name="message_tutorial_text_conditions_still_text_step_11">有了這個條件，情境就知道何時觸發動作了。\n\n現在您需要定義觸發哪些
         動作；對於這個遊戲，就是點擊按鈕。\n\n點擊「動作」欄位以顯示動作清單。</string>
 
-    <string name="message_tutorial_text_conditions_still_text_step_12">動作是在其事件的條件滿足後執行的操作。\n\n它可以是點擊、滑動、暫停、
+    <string name="message_tutorial_text_conditions_still_text_step_12">動作是在其事件的條件滿足後執行的操作。\n\n它可以是點擊、滑動、等待、
         Intent（與另一個應用程式的互動）或情境執行中的更改，同一事件可以定義多個動作。\n\n點擊「建立動作」按鈕以建立您的
         第一個動作。</string>
 

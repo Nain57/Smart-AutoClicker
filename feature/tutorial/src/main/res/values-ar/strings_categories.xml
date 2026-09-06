@@ -96,7 +96,7 @@
     <string name="tutorial_category_action_name">الإجراءات</string>
     <string name="tutorial_category_action_desc_short">نفّذ شيئاً عند استيفاء شروطك</string>
     <string name="tutorial_category_action_desc_long">يتم تنفيذ الإجراء عند استيفاء شروط الحدث. تتراوح الإجراءات بين
-        الإيماءات (Click, Swipe) والتحكم في التدفق (ToggleEvent, ChangeCounter, Pause) والتفاعلات مع النظام (Intent,
+        الإيماءات (Click, Swipe) والتحكم في التدفق (ToggleEvent, ChangeCounter, Wait) والتفاعلات مع النظام (Intent,
         Notification, SystemAction, SetText).\n\n تعلّم هنا كيفية استخدام كل نوع من الإجراءات لبناء سكريبتات
         الأتمتة الخاصة بك.</string>
 
@@ -112,9 +112,9 @@
         إحداثية النهاية. يمكنك ضبط مدة السحب للتحكم في سرعة الإيماءة.\n\n تعلّم هنا كيفية استخدامه للتمرير أو
         سحب العناصر على شاشتك.</string>
 
-    <string name="tutorial_category_pause_action_name">الإيقاف المؤقت</string>
+    <string name="tutorial_category_pause_action_name">انتظر</string>
     <string name="tutorial_category_pause_action_desc_short">انتظر مدةً قبل تنفيذ الإجراء التالي</string>
-    <string name="tutorial_category_pause_action_desc_long">يؤخّر إجراء الإيقاف المؤقت التنفيذ لمدة محددة. إنه مفيد
+    <string name="tutorial_category_pause_action_desc_long">يؤخّر إجراء الانتظار التنفيذ لمدة محددة. إنه مفيد
         لإعطاء التطبيق وقتاً للاستجابة قبل الاكتشاف التالي.\n\n تعلّم هنا كيفية استخدامه للتحكم في وتيرة سكريبتات
         الأتمتة الخاصة بك.</string>
 

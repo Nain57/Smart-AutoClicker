@@ -54,7 +54,7 @@
     <string name="message_tutorial_text_conditions_still_text_step_11">有了这个条件，场景就知道何时触发动作了。\n\n现在您需要定义触发哪些
         动作；对于这个游戏，就是点击按钮。\n\n点击"动作"字段以显示动作列表。</string>
 
-    <string name="message_tutorial_text_conditions_still_text_step_12">动作是在其事件的条件满足后执行的操作。\n\n它可以是点击、滑动、暂停、
+    <string name="message_tutorial_text_conditions_still_text_step_12">动作是在其事件的条件满足后执行的操作。\n\n它可以是点击、滑动、等待、
         Intent（与另一个应用的交互）或场景执行中的更改，同一事件可以定义多个动作。\n\n点击"创建动作"按钮以创建您的
         第一个动作。</string>
 

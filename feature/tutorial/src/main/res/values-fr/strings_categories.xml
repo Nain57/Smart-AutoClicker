@@ -109,7 +109,7 @@
     <string name="tutorial_category_action_desc_short">Exécutez quelque chose une fois vos conditions remplies</string>
     <string name="tutorial_category_action_desc_long">Une Action est exécutée lorsque les Conditions d\'un Événement
         sont remplies. Les Actions vont des gestes (Click, Swipe) au contrôle de flux (ToggleEvent, ChangeCounter,
-        Pause) et aux interactions système (Intent, Notification, SystemAction, SetText).\n\n Apprenez ici à utiliser
+        Wait) et aux interactions système (Intent, Notification, SystemAction, SetText).\n\n Apprenez ici à utiliser
         chaque type d\'Action pour créer vos scripts d\'automatisation.</string>
 
     <string name="tutorial_category_click_action_name">Clic</string>

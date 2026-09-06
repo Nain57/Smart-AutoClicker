@@ -62,7 +62,7 @@
         campo Azioni per visualizzare la lista delle Azioni.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_12">Un\'Azione è qualcosa che viene eseguita una volta che le Condizioni del suo Evento
-        sono soddisfatte.\n\nPuò essere un clic, uno swipe, una pausa, un Intent (un\'interazione con un\'altra applicazione) o un
+        sono soddisfatte.\n\nPuò essere un clic, uno swipe, un\'attesa, un Intent (un\'interazione con un\'altra applicazione) o un
         cambiamento nell\'esecuzione dello Scenario, e più Azioni possono essere definite per lo stesso Evento.\n\nClicca sul pulsante crea
         Azione per creare la tua prima Azione.</string>
 

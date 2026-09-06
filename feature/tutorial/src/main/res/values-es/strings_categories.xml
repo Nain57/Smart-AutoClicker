@@ -106,7 +106,7 @@
     <string name="tutorial_category_action_name">Acciones</string>
     <string name="tutorial_category_action_desc_short">Ejecuta algo una vez que se cumplan tus condiciones</string>
     <string name="tutorial_category_action_desc_long">Una Acción se ejecuta cuando se cumplen las Condiciones de un
-        Evento. Las Acciones van desde gestos (Click, Swipe) hasta control de flujo (ToggleEvent, ChangeCounter, Pause)
+        Evento. Las Acciones van desde gestos (Click, Swipe) hasta control de flujo (ToggleEvent, ChangeCounter, Wait)
         e interacciones del sistema (Intent, Notification, SystemAction, SetText).\n\n Aprende aquí a usar cada tipo de
         Acción para crear tus scripts de automatización.</string>
 
@@ -123,9 +123,9 @@
         controlar la velocidad del gesto.\n\n Aprende aquí a usarla para desplazar o arrastrar elementos en tu
         pantalla.</string>
 
-    <string name="tutorial_category_pause_action_name">Pausa</string>
+    <string name="tutorial_category_pause_action_name">Esperar</string>
     <string name="tutorial_category_pause_action_desc_short">Espera una duración antes de ejecutar la siguiente acción</string>
-    <string name="tutorial_category_pause_action_desc_long">Una Acción Pausa retrasa la ejecución durante una duración
+    <string name="tutorial_category_pause_action_desc_long">Una Acción Esperar retrasa la ejecución durante una duración
         configurada. Es útil para dar tiempo a la aplicación a reaccionar antes de la siguiente detección.\n\n Aprende
         aquí a usarla para controlar el ritmo de tus scripts de automatización.</string>
 

@@ -86,7 +86,7 @@
     <string name="tutorial_category_action_name">动作</string>
     <string name="tutorial_category_action_desc_short">在条件满足时执行某些操作</string>
     <string name="tutorial_category_action_desc_long">当事件的条件满足时，动作将被执行。动作涵盖手势（Click、Swipe）、流程控制
-        （ToggleEvent、ChangeCounter、Pause）和系统交互（Intent、Notification、SystemAction、SetText）。\n\n 在这里学习如何
+        （ToggleEvent、ChangeCounter、Wait）和系统交互（Intent、Notification、SystemAction、SetText）。\n\n 在这里学习如何
         使用每种动作类型来构建自动化脚本。</string>
 
     <string name="tutorial_category_click_action_name">点击</string>
@@ -99,9 +99,9 @@
     <string name="tutorial_category_swipe_action_desc_long">滑动动作模拟从起始坐标到终止坐标的拖拽手势。可以配置滑动时长来控制手势
         速度。\n\n 在这里学习如何使用它来滚动或拖拽屏幕上的元素。</string>
 
-    <string name="tutorial_category_pause_action_name">暂停</string>
+    <string name="tutorial_category_pause_action_name">等待</string>
     <string name="tutorial_category_pause_action_desc_short">在执行下一个动作之前等待一段时间</string>
-    <string name="tutorial_category_pause_action_desc_long">暂停动作在配置的时间内延迟执行。这对于在下次检测前给应用时间做出反应
+    <string name="tutorial_category_pause_action_desc_long">等待动作在配置的时间内延迟执行。这对于在下次检测前给应用时间做出反应
         很有用。\n\n 在这里学习如何使用它来控制自动化脚本的节奏。</string>
 
     <string name="tutorial_category_intent_action_name">Intent</string>
