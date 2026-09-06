@@ -62,7 +62,7 @@
         Actions field to display the Actions list.</string>
 
     <string name="message_tutorial_color_conditions_step_12">An Action is something that is executed once the Conditions of its Event
-        are fulfilled.\n\nIt can be a click, a swipe, a pause, an Intent (an interaction with another application) or a
+        are fulfilled.\n\nIt can be a click, a swipe, a wait, an Intent (an interaction with another application) or a
         change in the Scenario execution, and multiple Actions can be defined for the same Event.\n\nClick on the create
         Action button to create your first Action.</string>
 

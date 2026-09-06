@@ -206,14 +206,14 @@
 
 
     <!-- Pause Action slideshow -->
-    <string name="tutorial_slideshow_pause_action_title">Pause action</string>
-    <string name="tutorial_slideshow_pause_action_desc">Learn how the pause affects action execution and detection</string>
+    <string name="tutorial_slideshow_pause_action_title">Wait action</string>
+    <string name="tutorial_slideshow_pause_action_desc">Learn how the wait affects action execution and detection</string>
 
-    <string name="tutorial_slideshow_pause_action_step_1_text">A Pause Action suspends the entire scenario for a
+    <string name="tutorial_slideshow_pause_action_step_1_text">A Wait Action suspends the entire scenario for a
         configured duration: during that time, no action runs and no screen detection occurs.\n\nA very common use
-        case is to add a Pause at the end of your action list. When you click somewhere, the app you clicked on
+        case is to add a Wait at the end of your action list. When you click somewhere, the app you clicked on
         needs time to process the click and display the result, and you usually want to wait during that moment
-        before Klick\'r starts looking at the screen again.\n\nA pause between two actions is also valid, but
+        before Klick\'r starts looking at the screen again.\n\nA Wait between two actions is also valid, but
         adding one at the end of the list is often the more common use case.</string>
 
 

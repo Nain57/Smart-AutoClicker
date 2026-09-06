@@ -26,7 +26,7 @@ internal fun getPauseActionCategory() =
         nameRes = R.string.tutorial_category_pause_action_name,
         shortDescriptionRes = R.string.tutorial_category_pause_action_desc_short,
         longDescriptionRes = R.string.tutorial_category_pause_action_desc_long,
-        iconRes = R.drawable.ic_pause,
+        iconRes = R.drawable.ic_wait,
         content = listOf(
             TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.PAUSE_ACTION),
