@@ -339,8 +339,10 @@ abstract class BaseOverlay internal constructor(
         val display = getSystemService(DisplayManager::class.java)
             ?.getDisplay(Display.DEFAULT_DISPLAY)
             ?: return this
+        val displayContext = createDisplayContext(display) ?: return this
 
-        return createDisplayContext(display) ?: this
+        displayContext.theme.setTo(theme)
+        return displayContext
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
