@@ -28,6 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
+import com.buzbuz.smartautoclicker.core.common.overlays.testutils.mockSystemService
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.anyNotNull
 
 import org.junit.Assert
@@ -89,9 +90,9 @@ class FullscreenOverlayTests {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        Mockito.`when`(mockContext.getSystemService(WindowManager::class.java)).thenReturn(mockWindowManager)
-        Mockito.`when`(mockContext.getSystemService(DisplayManager::class.java)).thenReturn(mockDisplayManager)
-        Mockito.`when`(mockContext.getSystemService(LayoutInflater::class.java)).thenReturn(mockLayoutInflater)
+        mockContext.mockSystemService(WindowManager::class.java, Context.WINDOW_SERVICE, mockWindowManager)
+        mockContext.mockSystemService(DisplayManager::class.java, Context.DISPLAY_SERVICE, mockDisplayManager)
+        mockContext.mockSystemService(LayoutInflater::class.java, Context.LAYOUT_INFLATER_SERVICE, mockLayoutInflater)
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
         Mockito.`when`(overlayControllerImpl.onCreateView(mockLayoutInflater)).thenReturn(mockView)
 

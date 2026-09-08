@@ -20,9 +20,12 @@ import android.content.Context
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Display
+import android.view.WindowManager
 
 import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import com.buzbuz.smartautoclicker.core.common.overlays.testutils.mockSystemService
 
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -32,9 +35,11 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.clearInvocations
 import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
 /** Test the [BaseOverlay] class. */
@@ -240,5 +245,28 @@ class BaseOverlayTests {
         verify(overlayControllerImpl).onDismissed()
         verify(dismissListener).onDismissed(mockContext, overlay)
         assertEquals(Lifecycle.State.DESTROYED, overlay.lifecycle.currentState)
+    }
+
+    @Test
+    fun overlayContextServesCreationContextWindowManager() {
+        // The display context the overlay is based on provides its own WindowManager, without the accessibility
+        // overlay window token: the one of the context the overlay is created from must be served instead.
+        val mockDisplayContext = mock(Context::class.java)
+        Mockito.`when`(mockContext.createDisplayContext(mockDisplay)).thenReturn(mockDisplayContext)
+        val theme = RuntimeEnvironment.getApplication().theme
+        Mockito.`when`(mockContext.theme).thenReturn(theme)
+        Mockito.`when`(mockDisplayContext.theme).thenReturn(theme)
+
+        val mockWindowManager = mock(WindowManager::class.java)
+        mockContext.mockSystemService(WindowManager::class.java, Context.WINDOW_SERVICE, mockWindowManager)
+        mockDisplayContext.mockSystemService(
+            WindowManager::class.java,
+            Context.WINDOW_SERVICE,
+            mock(WindowManager::class.java),
+        )
+
+        overlay.create(mockContext)
+
+        assertEquals(mockWindowManager, overlay.context.getSystemService(WindowManager::class.java))
     }
 }
