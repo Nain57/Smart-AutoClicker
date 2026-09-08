@@ -120,7 +120,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_immediatelyTransitionsToCapturingStep() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
 
         assertEquals(ColorCaptureMenuStep.CAPTURING, viewModel.uiState.value.captureStep)
     }
@@ -129,7 +129,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_hidesMenuDuringCapture() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
 
         assertEquals(false, viewModel.uiState.value.menuVisibility)
     }
@@ -138,7 +138,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withSuccessfulScreenshot_transitionsToPixelSelectionStep() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         assertEquals(ColorCaptureMenuStep.PIXEL_SELECTION, viewModel.uiState.value.captureStep)
@@ -148,7 +148,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withSuccessfulScreenshot_showsMenu() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         assertEquals(true, viewModel.uiState.value.menuVisibility)
@@ -158,7 +158,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withSuccessfulScreenshot_enablesShowHideButton() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         assertEquals(true, viewModel.uiState.value.showHideButtonEnabled)
@@ -168,7 +168,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withSuccessfulScreenshot_populatesPixelSelectionUiState() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         assertNotNull(viewModel.uiState.value.pixelSelectionUiState)
@@ -178,22 +178,12 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withNullScreenshot_staysInCapturingStep() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns null
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         assertEquals(ColorCaptureMenuStep.CAPTURING, viewModel.uiState.value.captureStep)
     }
 
-    @Test
-    fun captureScreen_withInitialFocusPosition_usesItAsSelectedPosition() = runTest(testDispatcher) {
-        val initialPosition = PointF(100f, 200f)
-        coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-
-        viewModel.captureScreen(initialPosition)
-        advanceTimeBy(201)
-
-        assertEquals(initialPosition, viewModel.uiState.value.pixelSelectionUiState?.selectedPosition)
-    }
 
     @Test
     fun captureScreen_withNullInitialPosition_usesCenterOfDisplay() = runTest(testDispatcher) {
@@ -201,7 +191,7 @@ class ColorCaptureViewModelTest {
         every { mockDisplayConfigManager.displayConfig } returns displayConfig(displaySize.x, displaySize.y)
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         val expected = PointF(displaySize.x / 2f, displaySize.y / 2f)
@@ -212,7 +202,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withSuccessfulScreenshot_notifiesMonitoredViewsManager() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         verify { mockMonitoredViewsManager.notifyClick(MonitoredViewType.SCREEN_CONDITION_CAPTURE_MENU_BUTTON_CAPTURE) }
@@ -222,7 +212,7 @@ class ColorCaptureViewModelTest {
     fun captureScreen_withNullScreenshot_doesNotNotifyMonitoredViewsManager() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns null
 
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         verify(exactly = 0) { mockMonitoredViewsManager.notifyClick(any()) }
@@ -235,7 +225,7 @@ class ColorCaptureViewModelTest {
     @Test
     fun cancelCapture_resetsToScreenshotSelectionStep() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns null
-        viewModel.captureScreen(null) // Go to CAPTURING
+        viewModel.captureScreen() // Go to CAPTURING
 
         viewModel.cancelCapture()
 
@@ -245,7 +235,7 @@ class ColorCaptureViewModelTest {
     @Test
     fun cancelCapture_clearsPixelSelectionUiState() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201) // Reach PIXEL_SELECTION
 
         viewModel.cancelCapture()
@@ -265,24 +255,9 @@ class ColorCaptureViewModelTest {
     @Test
     fun getPixelSelection_returnsNull_inCapturingState() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns null
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
 
         assertNull(viewModel.getPixelSelection())
-    }
-
-    @Test
-    fun getPixelSelection_returnsPositionAndColor_inPixelSelectionState() = runTest(testDispatcher) {
-        val pixelColor = Color.RED
-        val initialPosition = PointF(100f, 200f)
-        coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap(pixelColor)
-
-        viewModel.captureScreen(initialPosition)
-        advanceTimeBy(201)
-
-        val result = viewModel.getPixelSelection()
-        assertNotNull(result)
-        assertEquals(initialPosition, result!!.first)
-        assertEquals(pixelColor, result.second)
     }
 
     // endregion
@@ -292,7 +267,7 @@ class ColorCaptureViewModelTest {
     @Test
     fun updateSelectedPosition_updatesPositionInPixelSelectionUiState() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         val newPosition = PointF(300f, 400f)
@@ -302,22 +277,9 @@ class ColorCaptureViewModelTest {
     }
 
     @Test
-    fun updateSelectedPosition_updatesColorFromBitmapPixel() = runTest(testDispatcher) {
-        val pixelColor = Color.BLUE
-        coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap(pixelColor)
-        viewModel.captureScreen(PointF(0f, 0f))
-        advanceTimeBy(201)
-
-        val newPosition = PointF(50f, 50f)
-        viewModel.updateSelectedPosition(newPosition)
-
-        assertEquals(pixelColor, viewModel.uiState.value.pixelSelectionUiState?.selectedColor)
-    }
-
-    @Test
     fun updateSelectedPosition_withNonNullPosition_enablesTopButton() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         viewModel.updateSelectedPosition(PointF(100f, 100f))
@@ -328,7 +290,7 @@ class ColorCaptureViewModelTest {
     @Test
     fun updateSelectedPosition_withNull_disablesTopButton() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         viewModel.updateSelectedPosition(null)
@@ -339,7 +301,7 @@ class ColorCaptureViewModelTest {
     @Test
     fun updateSelectedPosition_withNull_setsSelectedPositionToNull() = runTest(testDispatcher) {
         coEvery { mockDisplayRecorder.takeScreenshot() } returns mockBitmap()
-        viewModel.captureScreen(null)
+        viewModel.captureScreen()
         advanceTimeBy(201)
 
         viewModel.updateSelectedPosition(null)
