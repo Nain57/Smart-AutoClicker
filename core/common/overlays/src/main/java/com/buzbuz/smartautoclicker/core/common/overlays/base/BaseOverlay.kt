@@ -18,14 +18,13 @@ package com.buzbuz.smartautoclicker.core.common.overlays.base
 
 import android.app.Application
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.hardware.display.DisplayManager
-import android.os.Build
 import android.util.Log
 import android.view.Display
 import android.view.KeyEvent
 import android.view.View
-import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
@@ -70,7 +69,6 @@ import java.io.PrintWriter
 abstract class BaseOverlay internal constructor(
     private val theme: Int? = null,
     private val recreateOnRotation: Boolean = false,
-    private val useWindowContext: Boolean = false,
 ) : Overlay(), Dumpable {
 
     /** The context for this overlay. */
@@ -309,12 +307,10 @@ abstract class BaseOverlay internal constructor(
      * @param appContext the Android application context.
      */
     private fun newOverlayContext(appContext: Context): Context {
-        val displayContext = appContext.createDefaultDisplayContext()
-        val baseContext = if (useWindowContext && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            displayContext.createWindowContext(WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, null)
-        } else {
-            displayContext
-        }
+        val baseContext = OverlayWindowManagerContext(
+            displayContext = appContext.createDefaultDisplayContext(),
+            windowManagerContext = appContext,
+        )
 
         return if (theme == null) baseContext
         else DynamicColors.wrapContextIfAvailable(
@@ -372,6 +368,28 @@ inline fun <reified VM : ViewModel, EP : Any> BaseOverlay.viewModels(
         { hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
+
+/**
+ * Context serving the WindowManager of another context.
+ *
+ * An overlay context is based on a display context, and such context provides its own WindowManager instance, without
+ * the accessibility overlay window token AccessibilityService.getSystemService sets on its own one. Adding a
+ * TYPE_ACCESSIBILITY_OVERLAY window without that token is rejected with a BadTokenException.
+ *
+ * AccessibilityService.createDisplayContext only restores that token from Android 11, and only on the context it
+ * returns until Android 13, where it started returning a wrapper restoring it for the derived contexts as well. As
+ * every overlay derives its context from the one of its parent, the WindowManager of the accessibility service must
+ * be kept for the whole overlay stack.
+ */
+private class OverlayWindowManagerContext(
+    displayContext: Context,
+    private val windowManagerContext: Context,
+) : ContextWrapper(displayContext) {
+
+    override fun getSystemService(name: String): Any? =
+        if (name == WINDOW_SERVICE) windowManagerContext.getSystemService(name)
+        else super.getSystemService(name)
+}
 
 /** Tag for logs. */
 private const val TAG = "BaseOverlay"
