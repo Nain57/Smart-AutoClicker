@@ -27,20 +27,19 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
+import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
 import com.buzbuz.smartautoclicker.core.ui.views.pixelselector.PixelSelectorView
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayColorCaptureMenuBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.core.ui.utils.updateColorIndicatorDrawableColor
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCardZoomedViewBinding
+import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 
 import kotlinx.coroutines.launch
 import kotlin.getValue
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class ColorCaptureMenu (
-    private val defaultPosition: PointF? = null,
     private val onColorSelected: (position: PointF, colorInt: Int) -> Unit,
 ) : OverlayMenu(theme = R.style.AppTheme, recreateOverlayViewOnRotation = true) {
 
@@ -62,6 +61,8 @@ class ColorCaptureMenu (
     /** Orientation of the device. */
     private var orientation: Int = Configuration.ORIENTATION_PORTRAIT
 
+
+    override fun animateOverlayView(): Boolean = false
 
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         viewBinding = OverlayColorCaptureMenuBinding.inflate(layoutInflater)
@@ -102,7 +103,7 @@ class ColorCaptureMenu (
 
         when (viewId) {
             R.id.btn_confirm -> when (captureStep) {
-                ColorCaptureMenuStep.SCREENSHOT_SELECTION -> viewModel.captureScreen(defaultPosition)
+                ColorCaptureMenuStep.SCREENSHOT_SELECTION -> viewModel.captureScreen()
                 ColorCaptureMenuStep.PIXEL_SELECTION -> {
                     viewModel.getPixelSelection()?.let { (position, color) ->
                         back()

@@ -259,17 +259,12 @@ class ColorConditionDialog(
     }
 
     private fun showPixelColorPickerOverlay() {
-        val uiState = viewModel.uiState.value ?: return
-
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ColorCaptureMenu(
-                defaultPosition = uiState.conditionPosition,
-                onColorSelected = { position, selectedColor ->
-                    viewModel.setColor(selectedColor)
-                    viewModel.setPosition(position)
-                }
-            ) ,
+            newOverlay = ColorCaptureMenu { position, selectedColor ->
+                viewModel.setColor(selectedColor)
+                viewModel.setPosition(position)
+            },
             hideCurrent = true,
         )
     }
