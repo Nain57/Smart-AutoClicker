@@ -41,7 +41,7 @@ import kotlin.getValue
 
 class ColorCaptureMenu (
     private val onColorSelected: (position: PointF, colorInt: Int) -> Unit,
-) : OverlayMenu(theme = R.style.AppTheme, recreateOverlayViewOnRotation = true) {
+) : OverlayMenu(theme = R.style.ScenarioConfigTheme, recreateOverlayViewOnRotation = true) {
 
     override fun tutorialMonitoringTag(): String = MonitoredOverlayType.COLOR_CAPTURE_MENU.name
 

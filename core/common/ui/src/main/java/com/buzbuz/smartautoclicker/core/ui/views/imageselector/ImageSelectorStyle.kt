@@ -128,7 +128,7 @@ internal fun TypedArray.getHintsStyle(displayConfigManager: DisplayConfigManager
         downIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeDownIcon, 0),
         leftIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeLeftIcon, 0),
         rightIcon = getResourceId(R.styleable.ImageSelectorView_hintResizeRightIcon, 0),
-        pinchIcon = getResourceId(R.styleable.ImageSelectorView_hintPinchIcon, 0),
+        pinchIcon = getResourceId(R.styleable.ImageSelectorView_hintPinchIcon, 0).takeIf { it != 0 },
         pinchIconMargin = getDimensionPixelSize(
             R.styleable.ImageSelectorView_hintsPinchIconMargin,
             DEFAULT_HINTS_PINCH_ICON_MARGIN,

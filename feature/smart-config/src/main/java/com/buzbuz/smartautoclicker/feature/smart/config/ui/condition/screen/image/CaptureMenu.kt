@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.
  */
 class CaptureMenu(
     private val onConditionSelected: (ScreenCondition.Image) -> Unit
-) : OverlayMenu() {
+) : OverlayMenu(theme = R.style.ScenarioConfigTheme) {
 
     override fun tutorialMonitoringTag(): String = MonitoredOverlayType.CAPTURE_MENU.name
 

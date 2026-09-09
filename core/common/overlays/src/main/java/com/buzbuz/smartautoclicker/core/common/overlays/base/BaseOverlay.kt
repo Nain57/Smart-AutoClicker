@@ -18,16 +18,11 @@ package com.buzbuz.smartautoclicker.core.common.overlays.base
 
 import android.app.Application
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.res.Configuration
-import android.hardware.display.DisplayManager
 import android.util.Log
-import android.view.Display
 import android.view.KeyEvent
 import android.view.View
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
@@ -47,8 +42,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.di.DisplayEntryPoint
 
-import com.google.android.material.color.DynamicColors
-
 import dagger.hilt.EntryPoints
 
 import kotlinx.coroutines.CoroutineScope
@@ -59,6 +52,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 import java.io.PrintWriter
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Base class for an overlay based ui providing lifecycle management.
@@ -149,7 +143,7 @@ abstract class BaseOverlay internal constructor(
 
         Log.d(TAG, "create overlay ${hashCode()}")
         if (!this::context.isInitialized) context = appContext
-        context = newOverlayContext(appContext)
+        context = newOverlayContext(appContext, theme) { displayConfigManager.displayConfig.orientation }
 
         dismissListener?.let { listener -> onDestroyListener = { listener(appContext, this@BaseOverlay) } }
         onCreate()
@@ -227,7 +221,7 @@ abstract class BaseOverlay internal constructor(
             onDestroyListener = null
 
             CoroutineScope(Dispatchers.Main).launch {
-                delay(5000)
+                delay(5000.milliseconds)
                 modelStore.clear()
                 cancel()
             }
@@ -238,7 +232,7 @@ abstract class BaseOverlay internal constructor(
         if (debounceUserInteractionJob == null && lifecycleRegistry.currentState == State.RESUMED) {
             debounceUserInteractionJob = lifecycleScope.launch {
                 userInteraction()
-                delay(500)
+                delay(500.milliseconds)
                 debounceUserInteractionJob = null
             }
         }
@@ -298,49 +292,6 @@ abstract class BaseOverlay internal constructor(
     override fun handleKeyEvent(keyEvent: KeyEvent): Boolean =
         onKeyEvent(keyEvent)
 
-    /**
-     * Get a new context wrapper from the provided theme. If the theme is null, the application theme is used.
-     *
-     * This is required because an overlay can be attached to a context without UI configuration changes notification,
-     * which can leads to an invalid theming for the dialog, an invalid rotation ...
-     *
-     * @param appContext the Android application context.
-     */
-    private fun newOverlayContext(appContext: Context): Context {
-        val baseContext = OverlayWindowManagerContext(
-            displayContext = appContext.createDefaultDisplayContext(),
-            windowManagerContext = appContext,
-        )
-
-        return if (theme == null) baseContext
-        else DynamicColors.wrapContextIfAvailable(
-            ContextThemeWrapper(baseContext, theme).apply {
-                applyOverrideConfiguration(
-                    Configuration(applicationContext.resources.configuration).apply {
-                        orientation = displayConfigManager.displayConfig.orientation
-                    }
-                )
-            }
-        )
-    }
-
-    /**
-     * Get a context associated with the default display.
-     *
-     * The views of an overlay can request the display of their context (the text selection floating toolbar does, for
-     * instance). As the application context is not associated with any display, such request throws and crashes the
-     * application, so the base context of all overlays must be associated with the default display.
-     */
-    private fun Context.createDefaultDisplayContext(): Context {
-        val display = getSystemService(DisplayManager::class.java)
-            ?.getDisplay(Display.DEFAULT_DISPLAY)
-            ?: return this
-        val displayContext = createDisplayContext(display) ?: return this
-
-        displayContext.theme.setTo(theme)
-        return displayContext
-    }
-
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()
 
@@ -368,28 +319,6 @@ inline fun <reified VM : ViewModel, EP : Any> BaseOverlay.viewModels(
         { hiltComponent.createHiltViewModelFactory(entryPoint, creator) },
         { defaultViewModelCreationExtras },
     )
-
-/**
- * Context serving the WindowManager of another context.
- *
- * An overlay context is based on a display context, and such context provides its own WindowManager instance, without
- * the accessibility overlay window token AccessibilityService.getSystemService sets on its own one. Adding a
- * TYPE_ACCESSIBILITY_OVERLAY window without that token is rejected with a BadTokenException.
- *
- * AccessibilityService.createDisplayContext only restores that token from Android 11, and only on the context it
- * returns until Android 13, where it started returning a wrapper restoring it for the derived contexts as well. As
- * every overlay derives its context from the one of its parent, the WindowManager of the accessibility service must
- * be kept for the whole overlay stack.
- */
-private class OverlayWindowManagerContext(
-    displayContext: Context,
-    private val windowManagerContext: Context,
-) : ContextWrapper(displayContext) {
-
-    override fun getSystemService(name: String): Any? =
-        if (name == WINDOW_SERVICE) windowManagerContext.getSystemService(name)
-        else super.getSystemService(name)
-}
 
 /** Tag for logs. */
 private const val TAG = "BaseOverlay"
