@@ -21,22 +21,75 @@
 
     <string name="dialog_overlay_title_debug_report">Rapport de debug</string>
     <string name="menu_item_debug_report_overview">Overview</string>
+    <string name="menu_item_debug_report_conditions">Conditions</string>
     <string name="menu_item_debug_report_timeline">Chronologie</string>
 
     <!-- Debug Report Overview Tab-->
     <string name="item_title_report_total_duration">Durée totale</string>
     <string name="item_title_report_frame_processed">Images analysées</string>
     <string name="item_title_report_avg_image_processing_duration">Temps moyen d\'analyse</string>
+    <string name="item_title_report_execution_limiter_idle_time">Temps d\'inactivité du limiteur d\'exécution</string>
+    <string name="item_value_report_unavailable">N/D</string>
     <string name="item_title_report_image_event_fulfilled">Screen Events déclenchés</string>
     <string name="item_title_report_trigger_event_fulfilled">Trigger Events déclenchés</string>
+    <string name="item_title_report_event_activity">Activité des événements</string>
+    <string name="item_desc_report_event_activity_empty">Aucun événement atteint</string>
+    <plurals name="item_desc_report_event_activity_reached">
+        <item quantity="one">%1$d événement atteint · %2$d occurrences au total</item>
+        <item quantity="other">%1$d événements atteints · %2$d occurrences au total</item>
+    </plurals>
+    <string name="item_desc_report_event_activity_most_frequent">Le plus fréquent : %1$s · %2$d×</string>
+
+    <!-- Debug Report Event Activity dialog -->
+    <string name="dialog_overlay_title_event_activity">Activité des événements</string>
+    <string name="item_event_activity_screen_events">Screen Events</string>
+    <string name="item_event_activity_trigger_events">Trigger Events</string>
+    <string name="title_event_activity_empty">Aucun événement disponible</string>
+    <string name="desc_event_activity_empty">Ce scénario ne contient actuellement aucun événement.</string>
+    <string name="content_desc_event_activity_sort">Trier l\'activité des événements</string>
+    <string name="content_desc_event_activity_fast_scroller">Défilement rapide de l\'activité des événements</string>
+    <string name="event_activity_sort_scenario_order">Ordre du scénario</string>
+    <string name="event_activity_sort_most_frequent">Le plus fréquent</string>
+    <string name="event_activity_sort_first_execution">Première exécution</string>
+
+    <!-- Debug Report Conditions Tab -->
+    <string name="title_condition_performance_unavailable">Les performances des conditions ne sont pas disponibles pour ce rapport.</string>
+    <string name="content_desc_condition_performance_sort">Trier les conditions</string>
+    <string name="content_desc_condition_performance_fast_scroller">Défilement rapide des performances des conditions</string>
+    <string name="item_condition_performance_total_time">Temps total : %1$s s</string>
+    <string name="item_condition_performance_fulfilled">Remplie : %1$s %2$s sur %3$s %4$s</string>
+    <plurals name="item_condition_performance_time">
+        <item quantity="one">fois</item>
+        <item quantity="other">fois</item>
+    </plurals>
+    <plurals name="item_condition_performance_check">
+        <item quantity="one">vérification</item>
+        <item quantity="other">vérifications</item>
+    </plurals>
+    <string name="item_condition_performance_average">Moyenne : %1$s ms par vérification</string>
+    <string name="item_condition_performance_average_unavailable">Moyenne : N/D</string>
+    <string name="desc_condition_performance_footer">Les pourcentages indiquent la part de chaque condition dans le temps total consacré à la vérification des conditions dans ce rapport. Ils ne représentent ni la durée totale du scénario ni l\'utilisation de la batterie.</string>
+    <string name="condition_performance_sort_total_time">Temps total</string>
+    <string name="condition_performance_sort_average">Moyenne par vérification</string>
+    <string name="condition_performance_sort_checks">Vérifications</string>
+    <string name="condition_performance_sort_scenario_order">Ordre du scénario</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">Aucun évènement</string>
     <string name="desc_event_occurrence_empty">Aucun évènement n\'a été executé durant la dernière session</string>
+    <string name="title_event_occurrence_filtered_empty">Aucun événement correspondant</string>
+    <string name="desc_event_occurrence_filtered_empty">Aucun événement de la chronologie ne correspond aux filtres actuels.</string>
+    <string name="button_clear_timeline_filters">Effacer les filtres</string>
+    <string name="content_desc_timeline_filters_active">%1$d catégories de filtres de chronologie actives</string>
+    <string name="content_desc_timeline_fast_scroller">Défilement rapide de la chronologie</string>
     <string name="item_event_occurrence_frame_number">Écran #%1$d</string>
     <string name="item_event_occurrence_trigger">Déclencheur</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Remplie: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d conditions traitées</string>
+    <string name="item_event_occurrence_detecting_label">détection</string>
+    <string name="item_event_occurrence_actions_label">actions</string>
+    <string name="item_event_occurrence_detected_at">Détecté à %1$s</string>
+    <string name="item_event_occurrence_recorded_at">Enregistré à %1$s</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -59,6 +112,8 @@
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->
 
     <string name="menu_item_debug_event_occurrence_conditions">Conditions</string>
+    <string name="content_desc_event_occurrence_fast_scroller">Défilement rapide des détails de l\'occurrence d\'événement</string>
+    <string name="content_desc_filtered_events_fast_scroller">Défilement rapide des événements filtrés</string>
     <string name="menu_item_debug_event_occurrence_counters">Compteurs</string>
     <string name="menu_item_debug_event_occurrence_events_state">États</string>
 

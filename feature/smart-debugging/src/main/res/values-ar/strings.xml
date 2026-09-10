@@ -21,22 +21,75 @@
 
     <string name="dialog_overlay_title_debug_report">تقرير التصحيح</string>
     <string name="menu_item_debug_report_overview">ملخص</string>
+    <string name="menu_item_debug_report_conditions">الشروط</string>
     <string name="menu_item_debug_report_timeline">الجدول الزمني</string>
 
     <!-- Debug Report Overview Tab-->
     <string name="item_title_report_total_duration">المدة الإجمالية</string>
     <string name="item_title_report_frame_processed">تمت معالجة الإطارات</string>
     <string name="item_title_report_avg_image_processing_duration">متوسط ​​مدة المعالجة</string>
+    <string name="item_title_report_execution_limiter_idle_time">وقت خمول محدد التنفيذ</string>
+    <string name="item_value_report_unavailable">غير متاح</string>
     <string name="item_title_report_image_event_fulfilled">أحداث الشاشة المتحققة</string>
     <string name="item_title_report_trigger_event_fulfilled">أحداث التشغيل المتحققة</string>
+    <string name="item_title_report_event_activity">نشاط الأحداث</string>
+    <string name="item_desc_report_event_activity_empty">لم يتم الوصول إلى أي أحداث</string>
+    <plurals name="item_desc_report_event_activity_reached">
+        <item quantity="one">تم الوصول إلى %1$d حدث · إجمالي التكرارات %2$d</item>
+        <item quantity="other">تم الوصول إلى %1$d أحداث · إجمالي التكرارات %2$d</item>
+    </plurals>
+    <string name="item_desc_report_event_activity_most_frequent">الأكثر تكرارًا: %1$s · %2$d×</string>
+
+    <!-- Debug Report Event Activity dialog -->
+    <string name="dialog_overlay_title_event_activity">نشاط الأحداث</string>
+    <string name="item_event_activity_screen_events">أحداث الشاشة</string>
+    <string name="item_event_activity_trigger_events">أحداث التشغيل</string>
+    <string name="title_event_activity_empty">لا توجد أحداث متاحة</string>
+    <string name="desc_event_activity_empty">لا يحتوي هذا السيناريو حاليًا على أي أحداث.</string>
+    <string name="content_desc_event_activity_sort">ترتيب نشاط الأحداث</string>
+    <string name="content_desc_event_activity_fast_scroller">شريط التمرير السريع لنشاط الأحداث</string>
+    <string name="event_activity_sort_scenario_order">ترتيب السيناريو</string>
+    <string name="event_activity_sort_most_frequent">الأكثر تكرارًا</string>
+    <string name="event_activity_sort_first_execution">التنفيذ الأول</string>
+
+    <!-- Debug Report Conditions Tab -->
+    <string name="title_condition_performance_unavailable">أداء الشروط غير متاح لهذا التقرير.</string>
+    <string name="content_desc_condition_performance_sort">ترتيب الشروط</string>
+    <string name="content_desc_condition_performance_fast_scroller">شريط التمرير السريع لأداء الشروط</string>
+    <string name="item_condition_performance_total_time">الوقت الإجمالي: %1$s ث</string>
+    <string name="item_condition_performance_fulfilled">مستوفاة: %1$s %2$s من أصل %3$s %4$s</string>
+    <plurals name="item_condition_performance_time">
+        <item quantity="one">مرة</item>
+        <item quantity="other">مرات</item>
+    </plurals>
+    <plurals name="item_condition_performance_check">
+        <item quantity="one">فحص</item>
+        <item quantity="other">فحوصات</item>
+    </plurals>
+    <string name="item_condition_performance_average">المتوسط: %1$s مللي ثانية لكل فحص</string>
+    <string name="item_condition_performance_average_unavailable">المتوسط: غير متاح</string>
+    <string name="desc_condition_performance_footer">تعرض النسب المئوية حصة كل شرط من إجمالي الوقت المستغرق في فحص الشروط في هذا التقرير. وهي لا تمثل إجمالي وقت السيناريو أو استهلاك البطارية.</string>
+    <string name="condition_performance_sort_total_time">الوقت الإجمالي</string>
+    <string name="condition_performance_sort_average">متوسط كل فحص</string>
+    <string name="condition_performance_sort_checks">الفحوصات</string>
+    <string name="condition_performance_sort_scenario_order">ترتيب السيناريو</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">لا توجد أحداث</string>
     <string name="desc_event_occurrence_empty">لم يتم تنفيذ أي أحداث أثناء جلسة السيناريو الأخيرة.</string>
+    <string name="title_event_occurrence_filtered_empty">لا توجد أحداث مطابقة</string>
+    <string name="desc_event_occurrence_filtered_empty">لا توجد أحداث في الجدول الزمني تطابق عوامل التصفية الحالية.</string>
+    <string name="button_clear_timeline_filters">مسح عوامل التصفية</string>
+    <string name="content_desc_timeline_filters_active">فئات عوامل تصفية الجدول الزمني النشطة: %1$d</string>
+    <string name="content_desc_timeline_fast_scroller">شريط التمرير السريع للجدول الزمني</string>
     <string name="item_event_occurrence_frame_number">الإطار #%1$d</string>
     <string name="item_event_occurrence_trigger">مشغل</string>
     <string name="item_event_occurrence_one_condition_fulfilled">مستوفاة: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">تمت معالجة الشروط %1$d</string>
+    <string name="item_event_occurrence_detecting_label">اكتشاف</string>
+    <string name="item_event_occurrence_actions_label">إجراءات</string>
+    <string name="item_event_occurrence_detected_at">تم الاكتشاف عند %1$s</string>
+    <string name="item_event_occurrence_recorded_at">تم التسجيل عند %1$s</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -59,6 +112,8 @@
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->
 
     <string name="menu_item_debug_event_occurrence_conditions">شروط</string>
+    <string name="content_desc_event_occurrence_fast_scroller">شريط التمرير السريع لتفاصيل تكرار الحدث</string>
+    <string name="content_desc_filtered_events_fast_scroller">شريط التمرير السريع للأحداث المصفاة</string>
     <string name="menu_item_debug_event_occurrence_counters">عدادات</string>
     <string name="menu_item_debug_event_occurrence_events_state">الدول</string>
 

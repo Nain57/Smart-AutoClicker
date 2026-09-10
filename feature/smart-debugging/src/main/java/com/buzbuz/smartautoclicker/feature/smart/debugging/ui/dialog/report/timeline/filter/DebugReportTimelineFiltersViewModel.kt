@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.tim
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
-import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
+import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineFilterTimestamp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -67,7 +67,7 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
         _timeUiState.update { previous ->
             previous?.copy(
                 lowerValueMs = value,
-                lowerValueText = value.formatDebugTimelineTimestamp(),
+                lowerValueText = value.formatDebugTimelineFilterTimestamp(),
             )
         }
     }
@@ -80,7 +80,7 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
         _timeUiState.update { previous ->
             previous?.copy(
                 upperValueMs = value,
-                upperValueText = value.formatDebugTimelineTimestamp(),
+                upperValueText = value.formatDebugTimelineFilterTimestamp(),
             )
         }
     }
@@ -173,8 +173,8 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
             upperBoundMs = durationMs,
             lowerValueMs = lowerValue,
             upperValueMs = upperValue,
-            lowerValueText = lowerValue.formatDebugTimelineTimestamp(),
-            upperValueText = upperValue.formatDebugTimelineTimestamp(),
+            lowerValueText = lowerValue.formatDebugTimelineFilterTimestamp(),
+            upperValueText = upperValue.formatDebugTimelineFilterTimestamp(),
         )
     }
 

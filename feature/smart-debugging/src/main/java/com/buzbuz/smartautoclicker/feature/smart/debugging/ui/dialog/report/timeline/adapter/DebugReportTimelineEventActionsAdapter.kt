@@ -17,30 +17,26 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineEventActionItem
 
 
-class DebugReportTimelineEventActionsAdapter()
-    : ListAdapter<DebugReportTimelineEventActionItem, ItemTimelineEventActionsViewHolder>(EventActionsItemDiffUtilCallback) {
+class DebugReportTimelineEventActionsAdapter
+    : RecyclerView.Adapter<ItemTimelineEventActionsViewHolder>() {
+
+    private var items: List<DebugReportTimelineEventActionItem> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemTimelineEventActionsViewHolder =
         ItemTimelineEventActionsViewHolder(parent)
 
     override fun onBindViewHolder(holder: ItemTimelineEventActionsViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(items[position])
     }
-}
 
-private object EventActionsItemDiffUtilCallback: DiffUtil.ItemCallback<DebugReportTimelineEventActionItem>() {
-    override fun areItemsTheSame(
-        oldItem: DebugReportTimelineEventActionItem,
-        newItem: DebugReportTimelineEventActionItem,
-    ): Boolean = oldItem.id == newItem.id
+    override fun getItemCount(): Int = items.size
 
-    override fun areContentsTheSame(
-        oldItem: DebugReportTimelineEventActionItem,
-        newItem: DebugReportTimelineEventActionItem,
-    ): Boolean = oldItem == newItem
+    fun setItems(newItems: List<DebugReportTimelineEventActionItem>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }

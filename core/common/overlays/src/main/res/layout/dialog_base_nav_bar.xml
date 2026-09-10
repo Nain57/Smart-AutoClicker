@@ -30,6 +30,12 @@
         android:layout_weight="0"/>
 
     <FrameLayout
+        android:id="@+id/dialog_persistent_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <FrameLayout
         android:id="@+id/dialog_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"

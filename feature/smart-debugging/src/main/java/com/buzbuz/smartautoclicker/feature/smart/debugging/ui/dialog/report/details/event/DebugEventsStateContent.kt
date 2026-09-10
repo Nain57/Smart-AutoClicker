@@ -26,9 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
-import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ContentDebugReportLoadableListBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.updateState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.event.adapter.EventStateAdapter
 
 import kotlinx.coroutines.launch
@@ -46,11 +46,13 @@ class DebugEventsStateContent(
     )
 
     private val eventsStateAdapter: EventStateAdapter = EventStateAdapter()
-    private lateinit var viewBinding: IncludeLoadableListBinding
+    private lateinit var viewBinding: ContentDebugReportLoadableListBinding
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false)
-        viewBinding.list.adapter = eventsStateAdapter
+        viewBinding = ContentDebugReportLoadableListBinding.inflate(LayoutInflater.from(context), container, false).apply {
+            list.adapter = eventsStateAdapter
+            fastScroller.attachToRecyclerView(list)
+        }
 
         viewModel.setOccurrence(scenarioId, eventOccurrence)
 
@@ -71,7 +73,9 @@ class DebugEventsStateContent(
             DebugEventsStateContentUiState.Empty -> viewBinding.updateState(emptyList())
             is DebugEventsStateContentUiState.Available -> {
                 viewBinding.updateState(state.eventsState)
-                eventsStateAdapter.submitList(state.eventsState)
+                eventsStateAdapter.submitList(state.eventsState) {
+                    viewBinding.fastScroller.refresh()
+                }
             }
         }
     }

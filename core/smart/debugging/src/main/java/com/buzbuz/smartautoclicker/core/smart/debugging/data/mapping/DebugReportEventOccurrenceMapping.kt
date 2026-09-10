@@ -51,6 +51,8 @@ internal fun List<Counter>.toCountersInitProtobuf(): ProtoDebugReportMessage =
 internal fun DebugReportEventOccurrence.toProtobuf(): ProtoDebugReportMessage =
     debugReportMessage {
         relativeTimestampMs = this@toProtobuf.relativeTimestampMs
+        this@toProtobuf.detectedAtNs?.let { detectedAtNs = it }
+        this@toProtobuf.actionsCompletedAtNs?.let { actionsCompletedAtNs = it }
         when (this@toProtobuf) {
             is DebugReportEventOccurrence.ScreenEvent -> imageEventMessage = this@toProtobuf.toImageEventProtobuf()
             is DebugReportEventOccurrence.TriggerEvent -> triggerEventMessage = this@toProtobuf.toTriggerEventProtobuf()
@@ -94,30 +96,51 @@ private fun ProtoCountersInitMessage.toDomain(): List<DebugReportCounterInitialV
 internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
     when (messageTypeCase) {
         ProtoDebugReportMessage.MessageTypeCase.IMAGEEVENTMESSAGE ->
-            imageEventMessage.toDomain(relativeTimestampMs)
+            imageEventMessage.toDomain(
+                relativeTimestamp = relativeTimestampMs,
+                detectedAtNs = detectedAtNs.takeIf { hasDetectedAtNs() },
+                actionsCompletedAtNs = actionsCompletedAtNs.takeIf { hasActionsCompletedAtNs() },
+            )
         ProtoDebugReportMessage.MessageTypeCase.TRIGGEREVENTMESSAGE ->
-            triggerEventMessage.toDomain(relativeTimestampMs)
+            triggerEventMessage.toDomain(
+                relativeTimestamp = relativeTimestampMs,
+                detectedAtNs = detectedAtNs.takeIf { hasDetectedAtNs() },
+                actionsCompletedAtNs = actionsCompletedAtNs.takeIf { hasActionsCompletedAtNs() },
+            )
         ProtoDebugReportMessage.MessageTypeCase.COUNTERSINITMESSAGE -> null
+        ProtoDebugReportMessage.MessageTypeCase.CONDITIONPROFILEMESSAGE -> null
         ProtoDebugReportMessage.MessageTypeCase.MESSAGETYPE_NOT_SET -> {
             Log.e(LOG_TAG, "Can't read DebugReportEventOccurrence from protobuf")
             null
         }
     }
 
-private fun ProtoImageEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.ScreenEvent =
+private fun ProtoImageEventMessage.toDomain(
+    relativeTimestamp: Long,
+    detectedAtNs: Long?,
+    actionsCompletedAtNs: Long?,
+): DebugReportEventOccurrence.ScreenEvent =
     DebugReportEventOccurrence.ScreenEvent(
         eventId = eventId,
         frameNumber = frameNumber,
         relativeTimestampMs = relativeTimestamp,
+        detectedAtNs = detectedAtNs,
+        actionsCompletedAtNs = actionsCompletedAtNs,
         counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
         eventStateChanges = eventStateChangesList.map { stateChange -> stateChange.toDomain() },
         conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },
     )
 
-private fun ProtoTriggerEventMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.TriggerEvent =
+private fun ProtoTriggerEventMessage.toDomain(
+    relativeTimestamp: Long,
+    detectedAtNs: Long?,
+    actionsCompletedAtNs: Long?,
+): DebugReportEventOccurrence.TriggerEvent =
     DebugReportEventOccurrence.TriggerEvent(
         eventId = eventId,
         relativeTimestampMs = relativeTimestamp,
+        detectedAtNs = detectedAtNs,
+        actionsCompletedAtNs = actionsCompletedAtNs,
         counterChanges = counterStateChangesList.map { counterResult -> counterResult.toDomain() },
         eventStateChanges = eventStateChangesList.map { stateChange -> stateChange.toDomain() },
         conditionsResults = resultsList.map { conditionResult -> conditionResult.toDomain() },

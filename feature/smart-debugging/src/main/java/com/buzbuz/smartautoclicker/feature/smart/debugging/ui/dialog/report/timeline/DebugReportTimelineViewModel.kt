@@ -39,11 +39,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.getDurationsNs
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.DebugReportTimelineFilter
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.shouldFilter
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.findWithId
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
+import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelinePhaseDurationValue
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -105,6 +107,10 @@ class DebugReportTimelineViewModel @Inject constructor(
 
     fun getFilters(): List<DebugReportTimelineFilter> = filters.value
 
+    fun clearFilters() {
+        filters.value = emptyList()
+    }
+
     private fun List<DebugReportEventOccurrence>?.toUiState(
         context: Context,
         screenEvents: List<ScreenEvent>?,
@@ -115,12 +121,31 @@ class DebugReportTimelineViewModel @Inject constructor(
 
         val items = toUiStateItems(context, screenEvents, trigEvents, filters)
 
-        return if (isEmpty()) DebugReportTimelineUiState.Empty
-        else DebugReportTimelineUiState.Available(
-            eventsOccurrences = items,
-            durationMs = last().relativeTimestampMs,
-        )
+        val activeFilterCount = filters.getActiveCategoryCount(durationMs = lastOrNull()?.relativeTimestampMs ?: 0L)
+
+        return when {
+            isEmpty() -> DebugReportTimelineUiState.Empty
+            items.isEmpty() -> DebugReportTimelineUiState.FilteredEmpty(
+                durationMs = last().relativeTimestampMs,
+                activeFilterCount = activeFilterCount,
+            )
+            else -> DebugReportTimelineUiState.Available(
+                eventsOccurrences = items,
+                durationMs = last().relativeTimestampMs,
+                activeFilterCount = activeFilterCount,
+            )
+        }
     }
+
+    private fun List<DebugReportTimelineFilter>.getActiveCategoryCount(durationMs: Long): Int =
+        count { filter ->
+            when (filter) {
+                is DebugReportTimelineFilter.Time ->
+                    filter.lowerBoundMs > 0L || filter.upperBoundMs < durationMs
+                is DebugReportTimelineFilter.Events ->
+                    filter.filterAll || filter.filteredIds.isNotEmpty()
+            }
+        }
 
     private fun List<DebugReportEventOccurrence>.toUiStateItems(
         context: Context,
@@ -136,15 +161,23 @@ class DebugReportTimelineViewModel @Inject constructor(
                 is DebugReportEventOccurrence.ScreenEvent -> screenEvents.findWithId(occurrence.eventId)
                 is DebugReportEventOccurrence.TriggerEvent -> trigEvents.findWithId(occurrence.eventId)
             } ?: return@mapIndexedNotNull null
+            val actions = event.actions.toUiStateItems()
+            val durations = occurrence.getDurationsNs(getOrNull(index - 1)?.actionsCompletedAtNs)
 
             DebugReportTimelineEventOccurrenceItem(
                 id = index,
                 scenarioId = event.scenarioId.databaseId,
                 eventName = event.name,
-                timeText = occurrence.relativeTimestampMs.formatDebugTimelineTimestamp(),
+                legacyTimeText = if (durations == null)
+                    occurrence.relativeTimestampMs.formatDebugTimelineTimestamp()
+                else null,
+                detectingDurationValue = durations?.detectingDurationNs?.formatDebugTimelinePhaseDurationValue(),
+                actionsDurationValue = durations?.actionsDurationNs
+                    ?.takeIf { actions.isNotEmpty() }
+                    ?.formatDebugTimelinePhaseDurationValue(),
                 occurrenceText = occurrence.getOccurrenceText(context),
                 conditionsText = occurrence.conditionsResults.getConditionFulfilledText(context, event.conditions),
-                actions = event.actions.toUiStateItems(),
+                actions = actions,
                 occurrence = occurrence,
             )
         }

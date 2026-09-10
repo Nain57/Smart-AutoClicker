@@ -42,4 +42,10 @@ message DebugReportOverview {
 
     /** The list of counter name for this scenario. */
     repeated string countersName = 7;
+
+    /** Time spent actively processing scenario loops, excluding the post-loop Execution Limiter delay. */
+    int64 activeDetectionDurationNs = 8;
+
+    /** Elapsed suspension caused specifically by the user-configured Execution Limiter. */
+    int64 executionLimiterWaitDurationNs = 9;
 }

@@ -21,6 +21,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="vertical"
     android:translationZ="100dp">
 
@@ -32,11 +34,41 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/primary"
-        style="@style/AppTheme.Widget.Fab"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dialog_create_copy_buttons_bottom_margin"
-        app:srcCompat="@drawable/ic_add"
-        android:contentDescription="@string/content_desc_add_button"/>
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/primary"
+            style="@style/AppTheme.Widget.Fab"
+            app:srcCompat="@drawable/ic_add"
+            android:contentDescription="@string/content_desc_add_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/primary_badge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/fab_badge_background"
+            android:elevation="12dp"
+            android:gravity="center"
+            android:textColor="?attr/colorOnTertiaryContainer"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/primary"
+            app:layout_constraintTop_toTopOf="@id/primary"
+            tools:text="3"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

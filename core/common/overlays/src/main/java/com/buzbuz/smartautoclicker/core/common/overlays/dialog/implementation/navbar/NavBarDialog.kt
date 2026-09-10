@@ -147,6 +147,15 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
         navBarView.getOrCreateBadge(navItemId).isVisible = haveMissingInput
     }
 
+    /** Adds content that remains visible above every navigation page. */
+    protected fun setPersistentHeader(view: View) {
+        baseViewBinding.dialogPersistentHeader.apply {
+            removeAllViews()
+            addView(view)
+            visibility = View.VISIBLE
+        }
+    }
+
     private fun setupPortraitViews() {
         dialogCoordinatorLayout?.apply {
             // Add the navigation bar.

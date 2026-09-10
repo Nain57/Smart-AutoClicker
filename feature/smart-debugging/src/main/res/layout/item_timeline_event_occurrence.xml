@@ -40,21 +40,110 @@
             android:layout_marginEnd="@dimen/margin_horizontal_large"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/time_text"
+            app:layout_constraintEnd_toStartOf="@id/timing_container"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="My cool event"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/time_text"
-            style="@style/AppTheme.TextAppearance.Body"
+        <FrameLayout
+            android:id="@+id/timing_container"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/event_name_text"
-            app:layout_constraintBottom_toBottomOf="@id/event_name_text"
             app:layout_constraintStart_toEndOf="@id/event_name_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="10m 25s"/>
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/legacy_time_text"
+                style="@style/AppTheme.TextAppearance.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:singleLine="true"
+                tools:text="00:00:26.804" />
+
+            <TableLayout
+                android:id="@+id/timing_table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_vertical_mini"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/detecting_timing_value"
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:gravity="end"
+                        android:singleLine="true"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="+23.4" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_horizontal_mini"
+                        android:singleLine="true"
+                        android:text="@string/item_event_occurrence_milliseconds"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_horizontal_mini"
+                        android:singleLine="true"
+                        android:text="@string/item_event_occurrence_detecting_label"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/actions_timing_row"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_mini">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/actions_timing_value"
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:gravity="end"
+                        android:singleLine="true"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="+10.91" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_horizontal_mini"
+                        android:singleLine="true"
+                        android:text="@string/item_event_occurrence_milliseconds"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/AppTheme.TextAppearance.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_horizontal_mini"
+                        android:singleLine="true"
+                        android:text="@string/item_event_occurrence_actions_label"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                </TableRow>
+
+            </TableLayout>
+
+        </FrameLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/occurrence_text"
@@ -86,7 +175,7 @@
             android:id="@+id/chevron"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/time_text"
+            app:layout_constraintTop_toBottomOf="@id/timing_container"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:scaleType="fitCenter"

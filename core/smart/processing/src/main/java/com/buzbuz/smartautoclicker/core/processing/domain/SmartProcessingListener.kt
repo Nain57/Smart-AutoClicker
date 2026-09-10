@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.domain
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -34,12 +35,14 @@ interface SmartProcessingListener {
      * @param counters the list of [Counter] to be processed for this scenario.
      * @param generateLiveEvents tells if the live debugging events should be generated.
      * @param generateReport tells if the debug report should be generated.
+     * @param conditions all conditions in this session, used to allocate fixed report storage before processing.
      */
     fun onSessionStarted(
         scenario: Scenario,
         counters: List<Counter>,
         generateLiveEvents: Boolean,
         generateReport: Boolean,
+        conditions: List<Condition>,
     ) = Unit
 
 
@@ -64,7 +67,11 @@ interface SmartProcessingListener {
      * @param event the event fulfilled
      * @param results the results for each Condition processed for the event?
      */
-    fun onEventActionsExecuted(event: Event, results: List<ProcessedConditionResult>) = Unit
+    fun onEventActionsExecuted(
+        event: Event,
+        results: List<ProcessedConditionResult>,
+        timing: EventOccurrenceTiming? = null,
+    ) = Unit
 
     /** The processing of the [Event] list on a new screen frame is complete. */
     fun onEventsProcessingCompleted(eventType: EventType) = Unit
@@ -106,6 +113,12 @@ interface SmartProcessingListener {
     /** The processing session have ended.*/
     fun onSessionEnded() = Unit
 }
+
+/** Monotonic, session-relative boundaries for one fulfilled event occurrence. */
+data class EventOccurrenceTiming(
+    val detectedAtNs: Long,
+    val actionsCompletedAtNs: Long,
+)
 
 enum class EventType {
     Screen,

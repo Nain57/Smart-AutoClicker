@@ -26,11 +26,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
-import com.buzbuz.smartautoclicker.core.ui.bindings.lists.setEmptyText
-import com.buzbuz.smartautoclicker.core.ui.bindings.lists.updateState
-import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeLoadableListBinding
+import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ContentDebugReportLoadableListBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.setEmptyText
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.updateState
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.adapter.CounterStateAdapter
 
 import kotlinx.coroutines.launch
@@ -49,13 +49,14 @@ class DebugCounterStateContent(
     )
 
     private val countersStateAdapter: CounterStateAdapter = CounterStateAdapter()
-    private lateinit var viewBinding: IncludeLoadableListBinding
+    private lateinit var viewBinding: ContentDebugReportLoadableListBinding
 
 
     override fun onCreateView(container: ViewGroup): ViewGroup {
-        viewBinding = IncludeLoadableListBinding.inflate(LayoutInflater.from(context), container, false)
+        viewBinding = ContentDebugReportLoadableListBinding.inflate(LayoutInflater.from(context), container, false)
             .apply {
                 list.adapter = countersStateAdapter
+                fastScroller.attachToRecyclerView(list)
                 setEmptyText(
                     id = R.string.title_event_occurrence_counters_empty,
                     secondaryId = R.string.desc_event_occurrence_counters_empty,
@@ -81,7 +82,9 @@ class DebugCounterStateContent(
             DebugCounterStateContentUiState.Empty -> viewBinding.updateState(emptyList())
             is DebugCounterStateContentUiState.Available -> {
                 viewBinding.updateState(uiState.countersState)
-                countersStateAdapter.submitList(uiState.countersState)
+                countersStateAdapter.submitList(uiState.countersState) {
+                    viewBinding.fastScroller.refresh()
+                }
             }
         }
     }

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.tim
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemTimelineEventOccurrenceBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineEventOccurrenceItem
@@ -37,6 +38,7 @@ class ItemTimelineEventViewHolder private constructor(
 
     init {
         viewBinding.actions.adapter = actionsAdapter
+        viewBinding.actions.itemAnimator = null
     }
 
     fun bind(
@@ -46,11 +48,16 @@ class ItemTimelineEventViewHolder private constructor(
         viewBinding.apply {
             root.setOnClickListener { onItemClicked(item) }
             eventNameText.text = item.eventName
-            timeText.text = item.timeText
+            legacyTimeText.isVisible = item.legacyTimeText != null
+            legacyTimeText.text = item.legacyTimeText
+            timingTable.isVisible = item.detectingDurationValue != null
+            detectingTimingValue.text = item.detectingDurationValue
+            actionsTimingRow.isVisible = item.actionsDurationValue != null
+            actionsTimingValue.text = item.actionsDurationValue
             occurrenceText.text = item.occurrenceText
             conditionsText.text = item.conditionsText
         }
 
-        actionsAdapter.submitList(item.actions)
+        actionsAdapter.setItems(item.actions)
     }
 }

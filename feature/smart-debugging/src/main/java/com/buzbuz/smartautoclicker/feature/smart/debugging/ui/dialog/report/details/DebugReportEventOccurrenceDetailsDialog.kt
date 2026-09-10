@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.det
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.LayoutInflater
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,9 +31,11 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButt
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
+import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ViewDebugEventOccurrenceMetadataBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.condition.DebugConditionContent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.counter.DebugCounterStateContent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.event.DebugEventsStateContent
+import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationBarView
@@ -58,6 +61,23 @@ class DebugReportEventOccurrenceDetailsDialog(
                 setButtonVisibility(DialogNavigationButton.DELETE, View.GONE)
                 setButtonVisibility(DialogNavigationButton.SAVE, View.GONE)
             }
+
+            val metadataBinding = ViewDebugEventOccurrenceMetadataBinding.inflate(LayoutInflater.from(context))
+            metadataBinding.timestampText.text = context.getString(
+                if (eventOccurrence.detectedAtNs != null) R.string.item_event_occurrence_detected_at
+                else R.string.item_event_occurrence_recorded_at,
+                (eventOccurrence.detectedAtNs?.div(NANOSECONDS_PER_MILLISECOND)
+                    ?: eventOccurrence.relativeTimestampMs).formatDebugTimelineTimestamp(),
+            )
+            metadataBinding.occurrenceText.text = when (eventOccurrence) {
+                is DebugReportEventOccurrence.ScreenEvent -> context.getString(
+                    R.string.item_event_occurrence_frame_number,
+                    eventOccurrence.frameNumber,
+                )
+                is DebugReportEventOccurrence.TriggerEvent ->
+                    context.getString(R.string.item_event_occurrence_trigger)
+            }
+            setPersistentHeader(metadataBinding.root)
 
             viewModel.setOccurrence(scenarioId, eventOccurrence)
         }
@@ -117,3 +137,5 @@ class DebugReportEventOccurrenceDetailsDialog(
         topBarBinding.dialogTitle.text = uiState.dialogTitle
     }
 }
+
+private const val NANOSECONDS_PER_MILLISECOND = 1_000_000L

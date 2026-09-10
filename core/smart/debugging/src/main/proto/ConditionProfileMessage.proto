@@ -1,0 +1,34 @@
+/*
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.buzbuz.smartautoclicker.core.smart.debugging;
+
+/** Aggregate condition timings collected during one detection session. */
+message ConditionProfileMessage {
+    repeated ConditionProfileEntry entries = 1;
+
+    message ConditionProfileEntry {
+        int64 conditionId = 1;
+        int64 checkCount = 2;
+        int64 fulfilledCount = 3;
+        int64 totalDurationNs = 4;
+        int64 minDurationNs = 5;
+        int64 maxDurationNs = 6;
+    }
+}

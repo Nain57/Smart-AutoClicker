@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.DebugReportTimingListener
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import io.mockk.MockKAnnotations
@@ -107,6 +108,7 @@ class DetectorEngineDetectionOrientationTests {
     @RelaxedMockK private lateinit var mockSettingsRepository: SettingsRepository
     @RelaxedMockK private lateinit var mockAppComponentsProvider: AppComponentsProvider
     @RelaxedMockK private lateinit var mockDebuggingListener: SmartProcessingListener
+    @RelaxedMockK private lateinit var mockDebugReportTimingListener: DebugReportTimingListener
     @RelaxedMockK private lateinit var mockOcrModelsRepository: OCRModelsRepository
     @RelaxedMockK private lateinit var mockImageDetector: ImageDetector
     @RelaxedMockK private lateinit var mockContext: Context
@@ -245,6 +247,7 @@ class DetectorEngineDetectionOrientationTests {
             settingsRepository = mockSettingsRepository,
             appComponentsProvider = mockAppComponentsProvider,
             debuggingListener = mockDebuggingListener,
+            debugReportTimingListener = mockDebugReportTimingListener,
             ocrModelsRepository = mockOcrModelsRepository,
         )
 

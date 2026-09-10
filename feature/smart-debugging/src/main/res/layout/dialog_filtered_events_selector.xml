@@ -27,13 +27,26 @@
     <include layout="@layout/include_dialog_navigation_top_bar"
         android:id="@+id/layout_top_bar" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/item_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_event_filtered_state" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_event_filtered_state" />
+
+        <com.buzbuz.smartautoclicker.core.ui.views.fastscroll.VerticalFastScrollerView
+            android:id="@+id/fast_scroller"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:contentDescription="@string/content_desc_filtered_events_fast_scroller"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>

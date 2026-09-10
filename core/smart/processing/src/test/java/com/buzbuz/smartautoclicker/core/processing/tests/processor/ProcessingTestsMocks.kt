@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListene
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -96,7 +97,7 @@ internal fun SmartProcessingListener.monitorImageEventProcessing(
     val results = mutableMapOf<Long, Boolean>()
     events.forEach { event ->
         results.put(event.id.databaseId, false)
-        `when`(onEventActionsExecuted(eq(event), anyNotNull())).doAnswer { invocationOnMock ->
+        `when`(onEventActionsExecuted(eq(event), anyNotNull(), anyOrNull())).doAnswer {
             results.put(event.id.databaseId, true)
             Unit
         }

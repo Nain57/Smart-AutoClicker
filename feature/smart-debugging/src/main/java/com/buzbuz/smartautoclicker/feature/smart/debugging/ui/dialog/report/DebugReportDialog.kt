@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonVisibility
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.overview.DebugReportOverviewContent
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.conditions.ConditionPerformanceContent
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineContent
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -62,6 +63,7 @@ class DebugReportDialog : NavBarDialog(R.style.AppTheme) {
 
     override fun onCreateContent(navItemId: Int): NavBarDialogContent = when (navItemId) {
         R.id.page_overview -> DebugReportOverviewContent(context.applicationContext)
+        R.id.page_conditions -> ConditionPerformanceContent(context.applicationContext)
         R.id.page_timeline -> DebugReportTimelineContent(context.applicationContext)
         else -> throw IllegalArgumentException("Unknown menu id $navItemId")
     }

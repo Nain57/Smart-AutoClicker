@@ -34,9 +34,10 @@
         tools:visibility="visible">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/empty_title"
             style="@style/AppTheme.TextAppearance.EmptyText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             android:layout_gravity="center"
             android:gravity="center"
@@ -44,9 +45,10 @@
 
         <LinearLayout
             android:id="@+id/empty_secondary"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_extra_large"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
@@ -62,12 +64,22 @@
                 android:id="@+id/empty_secondary_text"
                 style="@style/AppTheme.TextAppearance.EmptyTextSecondary"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_vertical_small"
                 android:layout_marginHorizontal="@dimen/margin_horizontal_large"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/desc_event_occurrence_empty"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_clear_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_vertical_default"
+                android:text="@string/button_clear_timeline_filters"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 
@@ -85,7 +97,6 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
-        style="@style/AppTheme.RecyclerViewFastScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -94,5 +105,14 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_dropdown"
         tools:visibility="gone"/>
+
+    <com.buzbuz.smartautoclicker.core.ui.views.fastscroll.VerticalFastScrollerView
+        android:id="@+id/fast_scroller"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:contentDescription="@string/content_desc_timeline_fast_scroller"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </FrameLayout>

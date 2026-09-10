@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:minHeight="@dimen/field_min_height">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/event_name_text"
+        style="@style/AppTheme.TextAppearance.ListItemTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        android:maxLines="2"
+        app:layout_constraintBottom_toTopOf="@id/separator"
+        app:layout_constraintEnd_toStartOf="@id/occurrence_count_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Not Found Match" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/occurrence_count_text"
+        style="@style/AppTheme.TextAppearance.BodyLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="@id/event_name_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/event_name_text"
+        tools:text="247×" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/separator"
+        style="@style/AppTheme.Widget.Divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

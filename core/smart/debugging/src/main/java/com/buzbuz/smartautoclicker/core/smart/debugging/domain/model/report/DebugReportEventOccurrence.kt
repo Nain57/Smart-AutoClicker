@@ -23,6 +23,10 @@ sealed class DebugReportEventOccurrence {
     abstract val eventId: Long
     /** Time since session start at which this event has occurred in milliseconds. */
     abstract val relativeTimestampMs: Long
+    /** Precise detection boundary for reports using the occurrence timing model. */
+    abstract val detectedAtNs: Long?
+    /** Precise action-completion boundary for reports using the occurrence timing model. */
+    abstract val actionsCompletedAtNs: Long?
     /** The results for all conditions interpreted for this event occurrence.*/
     abstract val conditionsResults: List<DebugReportConditionResult>
     /** The list of value changes for the counters. Empty if none have changed. */
@@ -34,6 +38,8 @@ sealed class DebugReportEventOccurrence {
     data class TriggerEvent(
         override val eventId: Long,
         override val relativeTimestampMs: Long,
+        override val detectedAtNs: Long? = null,
+        override val actionsCompletedAtNs: Long? = null,
         override val conditionsResults: List<DebugReportConditionResult.TriggerCondition>,
         override val counterChanges: List<DebugReportActionResult.CounterChange>,
         override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
@@ -47,9 +53,34 @@ sealed class DebugReportEventOccurrence {
     data class ScreenEvent(
         override val eventId: Long,
         override val relativeTimestampMs: Long,
+        override val detectedAtNs: Long? = null,
+        override val actionsCompletedAtNs: Long? = null,
         override val conditionsResults: List<DebugReportConditionResult.ScreenCondition>,
         override val counterChanges: List<DebugReportActionResult.CounterChange>,
         override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
         val frameNumber: Long,
     ) : DebugReportEventOccurrence()
+}
+
+/** The two contiguous elapsed-time segments represented by one modern report occurrence. */
+data class DebugReportOccurrenceDurations(
+    val detectingDurationNs: Long,
+    val actionsDurationNs: Long,
+)
+
+/**
+ * Derive safe durations from stored monotonic boundaries. Returns null for legacy or malformed data rather than
+ * presenting invented or negative values.
+ */
+fun DebugReportEventOccurrence.getDurationsNs(previousActionsCompletedAtNs: Long?): DebugReportOccurrenceDurations? {
+    val detected = detectedAtNs ?: return null
+    val completed = actionsCompletedAtNs ?: return null
+    val previousCompleted = previousActionsCompletedAtNs ?: 0L
+
+    if (previousCompleted < 0L || detected < previousCompleted || completed < detected) return null
+
+    return DebugReportOccurrenceDurations(
+        detectingDurationNs = detected - previousCompleted,
+        actionsDurationNs = completed - detected,
+    )
 }

@@ -22,6 +22,11 @@
         android:icon="@drawable/ic_debug_overview"
         android:title="@string/menu_item_debug_report_overview"/>
     <item
+        android:id="@+id/page_conditions"
+        android:enabled="true"
+        android:icon="@drawable/ic_debug_conditions"
+        android:title="@string/menu_item_debug_report_conditions"/>
+    <item
         android:id="@+id/page_timeline"
         android:enabled="true"
         android:icon="@drawable/ic_debug_timeline"

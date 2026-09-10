@@ -21,22 +21,81 @@
 
     <string name="dialog_overlay_title_debug_report">Звіт про налагодження</string>
     <string name="menu_item_debug_report_overview">Огляд</string>
+    <string name="menu_item_debug_report_conditions">Умови</string>
     <string name="menu_item_debug_report_timeline">Хронологія</string>
 
     <!-- Debug Report Overview Tab-->
     <string name="item_title_report_total_duration">Загальна тривалість</string>
     <string name="item_title_report_frame_processed">Оброблені зображення</string>
     <string name="item_title_report_avg_image_processing_duration">Середня тривалість обробки</string>
+    <string name="item_title_report_execution_limiter_idle_time">Час простою обмежувача виконання</string>
+    <string name="item_value_report_unavailable">Н/Д</string>
     <string name="item_title_report_image_event_fulfilled">Екранні події виконано</string>
     <string name="item_title_report_trigger_event_fulfilled">Тригерні події виконано</string>
+    <string name="item_title_report_event_activity">Активність подій</string>
+    <string name="item_desc_report_event_activity_empty">Немає досягнутих подій</string>
+    <plurals name="item_desc_report_event_activity_reached">
+        <item quantity="one">Досягнуто %1$d подію · усього %2$d спрацювань</item>
+        <item quantity="few">Досягнуто %1$d події · усього %2$d спрацювань</item>
+        <item quantity="many">Досягнуто %1$d подій · усього %2$d спрацювань</item>
+        <item quantity="other">Досягнуто %1$d події · усього %2$d спрацювань</item>
+    </plurals>
+    <string name="item_desc_report_event_activity_most_frequent">Найчастіша: %1$s · %2$d×</string>
+
+    <!-- Debug Report Event Activity dialog -->
+    <string name="dialog_overlay_title_event_activity">Активність подій</string>
+    <string name="item_event_activity_screen_events">Екранні події</string>
+    <string name="item_event_activity_trigger_events">Тригерні події</string>
+    <string name="title_event_activity_empty">Немає доступних подій</string>
+    <string name="desc_event_activity_empty">Цей сценарій наразі не містить подій.</string>
+    <string name="content_desc_event_activity_sort">Сортувати активність подій</string>
+    <string name="content_desc_event_activity_fast_scroller">Швидке прокручування активності подій</string>
+    <string name="event_activity_sort_scenario_order">Порядок сценарію</string>
+    <string name="event_activity_sort_most_frequent">За частотою</string>
+    <string name="event_activity_sort_first_execution">За першим виконанням</string>
+
+    <!-- Debug Report Conditions Tab -->
+    <string name="title_condition_performance_unavailable">Дані про продуктивність умов недоступні для цього звіту.</string>
+    <string name="content_desc_condition_performance_sort">Сортувати умови</string>
+    <string name="content_desc_condition_performance_fast_scroller">Швидке прокручування продуктивності умов</string>
+    <string name="item_condition_performance_total_time">Загальний час: %1$s с</string>
+    <string name="item_condition_performance_fulfilled">Виконано: %1$s %2$s із %3$s %4$s</string>
+    <plurals name="item_condition_performance_time">
+        <item quantity="one">раз</item>
+        <item quantity="few">рази</item>
+        <item quantity="many">разів</item>
+        <item quantity="other">разу</item>
+    </plurals>
+    <plurals name="item_condition_performance_check">
+        <item quantity="one">перевірки</item>
+        <item quantity="few">перевірок</item>
+        <item quantity="many">перевірок</item>
+        <item quantity="other">перевірки</item>
+    </plurals>
+    <string name="item_condition_performance_average">Середнє: %1$s мс на перевірку</string>
+    <string name="item_condition_performance_average_unavailable">Середнє: Н/Д</string>
+    <string name="desc_condition_performance_footer">Відсотки показують частку кожної умови в загальному часі перевірки умов у цьому звіті. Вони не відображають загальну тривалість сценарію або використання заряду батареї.</string>
+    <string name="condition_performance_sort_total_time">Загальний час</string>
+    <string name="condition_performance_sort_average">Середнє на перевірку</string>
+    <string name="condition_performance_sort_checks">Перевірки</string>
+    <string name="condition_performance_sort_scenario_order">Порядок сценарію</string>
 
     <!-- Debug Report Timeline Tab -->
     <string name="title_event_occurrence_empty">Немає подій</string>
     <string name="desc_event_occurrence_empty">Під час останньої сесії сценарію не було виконано жодних подій.</string>
+    <string name="title_event_occurrence_filtered_empty">Немає відповідних подій</string>
+    <string name="desc_event_occurrence_filtered_empty">Немає подій хронології, що відповідають поточним фільтрам.</string>
+    <string name="button_clear_timeline_filters">Очистити фільтри</string>
+    <string name="content_desc_timeline_filters_active">Активних категорій фільтрів хронології: %1$d</string>
+    <string name="content_desc_timeline_fast_scroller">Швидке прокручування хронології</string>
     <string name="item_event_occurrence_frame_number">Кадр № %1$d</string>
     <string name="item_event_occurrence_trigger">Тригер</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Виконано: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d умов оброблено</string>
+    <string name="item_event_occurrence_detecting_label">виявлення</string>
+    <string name="item_event_occurrence_actions_label">дії</string>
+    <string name="item_event_occurrence_detected_at">Виявлено о %1$s</string>
+    <string name="item_event_occurrence_recorded_at">Записано о %1$s</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -58,6 +117,8 @@
     <!-- Debug Report Event Occurrence dialog ====================================================================== -->
 
     <string name="menu_item_debug_event_occurrence_conditions">Умови</string>
+    <string name="content_desc_event_occurrence_fast_scroller">Швидке прокручування відомостей про спрацювання події</string>
+    <string name="content_desc_filtered_events_fast_scroller">Швидке прокручування відфільтрованих подій</string>
     <string name="menu_item_debug_event_occurrence_counters">Лічильники</string>
     <string name="menu_item_debug_event_occurrence_events_state">Штати</string>
 

@@ -69,6 +69,7 @@ class FilteredEventsSelectorDialog(
                 }
             )
             itemList.adapter = adapter
+            fastScroller.attachToRecyclerView(itemList)
         }
 
         viewModel.setEventFilter(eventsFilter)
@@ -84,6 +85,9 @@ class FilteredEventsSelectorDialog(
     }
 
     private fun updateItems(items: List<FilteredEventsSelectorItem>) {
-        adapter.submitList(items)
+        viewBinding.fastScroller.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        adapter.submitList(items) {
+            viewBinding.fastScroller.refresh()
+        }
     }
 }

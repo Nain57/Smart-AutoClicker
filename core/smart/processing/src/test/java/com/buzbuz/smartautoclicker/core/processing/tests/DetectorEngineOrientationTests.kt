@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.processing.data.DetectorEngine
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.DebugReportTimingListener
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -82,6 +83,7 @@ class DetectorEngineOrientationTests {
     @Mock private lateinit var mockSettingsRepository: SettingsRepository
     @Mock private lateinit var mockAppComponentsProvider: AppComponentsProvider
     @Mock private lateinit var mockDebuggingListener: SmartProcessingListener
+    @Mock private lateinit var mockDebugReportTimingListener: DebugReportTimingListener
     @Mock private lateinit var mockOcrModelsRepository: OCRModelsRepository
 
     private val mockContext: Context = mock(Context::class.java)
@@ -161,6 +163,7 @@ class DetectorEngineOrientationTests {
             settingsRepository = mockSettingsRepository,
             appComponentsProvider = mockAppComponentsProvider,
             debuggingListener = mockDebuggingListener,
+            debugReportTimingListener = mockDebugReportTimingListener,
             ocrModelsRepository = mockOcrModelsRepository,
         )
 

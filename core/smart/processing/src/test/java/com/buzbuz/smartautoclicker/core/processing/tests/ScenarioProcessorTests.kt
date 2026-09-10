@@ -41,6 +41,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProces
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
+import com.buzbuz.smartautoclicker.core.processing.domain.DebugReportTimingListener
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
@@ -64,6 +65,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.argumentCaptor
@@ -121,6 +123,7 @@ class ScenarioProcessorTests {
     @Mock private lateinit var mockAndroidExecutor: AndroidActionExecutor
     @Mock private lateinit var mockEndListener: StopRequestListener
     @Mock private lateinit var mockProgressListener: SmartProcessingListener
+    @Mock private lateinit var mockDebugReportTimingListener: DebugReportTimingListener
 
     @Mock private lateinit var mockScreenBitmap: Bitmap
 
@@ -166,6 +169,7 @@ class ScenarioProcessorTests {
     private fun createNewScenarioProcessor(
         events: List<ScreenEvent>,
         triggerEvent: List<TriggerEvent>,
+        timingEnabled: Boolean = true,
     ) : ScenarioProcessor {
         val processor = ScenarioProcessor(
             processingTag = "",
@@ -179,6 +183,7 @@ class ScenarioProcessorTests {
             androidExecutor = mockAndroidExecutor,
             onStopRequested = mockEndListener::onStopRequested,
             progressListener = mockProgressListener,
+            debugReportTimingListener = mockDebugReportTimingListener.takeIf { timingEnabled },
         )
 
         Mockito.clearInvocations(mockAndroidExecutor)
@@ -245,11 +250,11 @@ class ScenarioProcessorTests {
             actions = listOf(newDefaultClickAction()),
         )
 
-        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList(), timingEnabled = false)
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        verifyNoInteractions(mockDebugReportTimingListener, mockAndroidExecutor, mockEndListener)
     }
 
     @Test
@@ -576,6 +581,7 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
+        verify(mockDebugReportTimingListener, times(2)).onConditionChecked(eq(1L), org.mockito.kotlin.any(), org.mockito.kotlin.any())
         verifyNoInteractions(mockAndroidExecutor, mockEndListener)
     }
 
@@ -866,6 +872,7 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
+        verify(mockDebugReportTimingListener, times(1)).onConditionChecked(eq(1L), org.mockito.kotlin.any(), org.mockito.kotlin.any())
         assertActionGesture(expectedDuration)
         verifyNoInteractions(mockEndListener)
     }
