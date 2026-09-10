@@ -125,6 +125,9 @@
     <string name="field_show_scenario_filters_ui_title">Mostrar filtros de escenarios</string>
     <string name="field_show_scenario_filters_ui_desc">Muestra u oculta los filtros en la pantalla de lista de escenarios.</string>
 
+    <string name="field_scenario_switcher_title">Mostrar selector de escenarios</string>
+    <string name="field_scenario_switcher_desc">Muestra el selector de escenarios en la barra de herramientas flotante para cambios rápidos.</string>
+
     <string name="field_legacy_action_ui_title">IU de acción heredada</string>
     <string name="field_legacy_action_ui_desc">Cambie la visualización de acciones por una lista. Útil para escenarios complejos.</string>
 

@@ -487,4 +487,19 @@
 
     <string name="warning_dialog_message_delete">أنت على وشك حذف هذا العنصر، هل أنت متأكد؟</string>
 
+    <string name="scenario_switcher_dismiss">إغلاق مبدّل السيناريو</string>
+    <string name="dialog_title_scenario_switcher">تبديل السيناريو</string>
+    <string name="scenario_switcher_current">الحالي: %1$s</string>
+    <string name="scenario_switcher_current_unknown">غير معروف</string>
+    <string name="scenario_switcher_empty">لا توجد سيناريوهات ذكية أخرى متاحة</string>
+    <string name="scenario_switcher_error_service">لم تعد خدمة السيناريو متاحة.</string>
+    <string name="scenario_switcher_error_paused">أوقف السيناريو مؤقتًا قبل التبديل.</string>
+    <string name="scenario_switcher_error_projection">تسجيل الشاشة غير متاح. أعد تشغيله قبل التبديل.</string>
+    <string name="scenario_switcher_error_current">هذا السيناريو محمّل بالفعل.</string>
+    <string name="scenario_switcher_error_unavailable">لم يعد هذا السيناريو متاحًا.</string>
+    <string name="scenario_switcher_error_persistence">تعذّر حفظ السيناريو. حاول مرة أخرى.</string>
+    <string name="scenario_switcher_error_unknown">تعذّر تبديل السيناريو. حاول مرة أخرى.</string>
+    <string name="scenario_switcher_retry">إعادة المحاولة</string>
+    <string name="scenario_switcher_switching">جارٍ التبديل إلى %1$s</string>
+
 </resources>

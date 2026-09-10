@@ -125,6 +125,9 @@
     <string name="field_show_scenario_filters_ui_title">Показувати фільтри сценаріїв</string>
     <string name="field_show_scenario_filters_ui_desc">Відображати або приховувати фільтри на екрані списку сценаріїв.</string>
 
+    <string name="field_scenario_switcher_title">Показувати перемикач сценаріїв</string>
+    <string name="field_scenario_switcher_desc">Показує перемикач сценаріїв на плаваючій панелі інструментів для швидкої зміни.</string>
+
     <string name="field_legacy_action_ui_title">Застарілий інтерфейс дій</string>
     <string name="field_legacy_action_ui_desc">Змінити відображення дії списком. Корисно для складних сценаріїв.</string>
 

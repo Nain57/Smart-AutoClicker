@@ -466,4 +466,19 @@
 
     <string name="warning_dialog_message_delete">Stai per eliminare questo elemento, sei sicuro?</string>
 
+    <string name="scenario_switcher_dismiss">Chiudi il selettore di scenario</string>
+    <string name="dialog_title_scenario_switcher">Cambia scenario</string>
+    <string name="scenario_switcher_current">Attuale: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Sconosciuto</string>
+    <string name="scenario_switcher_empty">Nessun altro scenario intelligente disponibile</string>
+    <string name="scenario_switcher_error_service">Il servizio degli scenari non è più disponibile.</string>
+    <string name="scenario_switcher_error_paused">Metti in pausa lo scenario prima di cambiarlo.</string>
+    <string name="scenario_switcher_error_projection">La registrazione dello schermo non è disponibile. Riavviala prima di cambiare scenario.</string>
+    <string name="scenario_switcher_error_current">Questo scenario è già caricato.</string>
+    <string name="scenario_switcher_error_unavailable">Quello scenario non è più disponibile.</string>
+    <string name="scenario_switcher_error_persistence">Non è stato possibile salvare lo scenario. Riprova.</string>
+    <string name="scenario_switcher_error_unknown">Non è stato possibile cambiare scenario. Riprova.</string>
+    <string name="scenario_switcher_retry">Riprova</string>
+    <string name="scenario_switcher_switching">Passaggio a %1$s</string>
+
 </resources>

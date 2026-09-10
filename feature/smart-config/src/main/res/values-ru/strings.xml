@@ -487,4 +487,19 @@
 
     <string name="warning_dialog_message_delete">Вы собираетесь удалить этот элемент, вы уверены?</string>
 
+    <string name="scenario_switcher_dismiss">Закрыть переключатель сценариев</string>
+    <string name="dialog_title_scenario_switcher">Переключить сценарий</string>
+    <string name="scenario_switcher_current">Текущий: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Неизвестно</string>
+    <string name="scenario_switcher_empty">Нет других доступных умных сценариев</string>
+    <string name="scenario_switcher_error_service">Служба сценариев больше недоступна.</string>
+    <string name="scenario_switcher_error_paused">Приостановите сценарий перед переключением.</string>
+    <string name="scenario_switcher_error_projection">Запись экрана недоступна. Перезапустите её перед переключением.</string>
+    <string name="scenario_switcher_error_current">Этот сценарий уже загружен.</string>
+    <string name="scenario_switcher_error_unavailable">Этот сценарий больше недоступен.</string>
+    <string name="scenario_switcher_error_persistence">Не удалось сохранить сценарий. Повторите попытку.</string>
+    <string name="scenario_switcher_error_unknown">Не удалось переключить сценарий. Повторите попытку.</string>
+    <string name="scenario_switcher_retry">Повторить</string>
+    <string name="scenario_switcher_switching">Переключение на %1$s</string>
+
 </resources>

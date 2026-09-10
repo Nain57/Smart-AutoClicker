@@ -72,6 +72,9 @@
     <string name="field_show_scenario_filters_ui_title">顯示情境篩選</string>
     <string name="field_show_scenario_filters_ui_desc">於情境清單畫面顯示或隱藏篩選器。</string>
 
+    <string name="field_scenario_switcher_title">顯示情境切換器</string>
+    <string name="field_scenario_switcher_desc">於浮動工具列顯示情境切換器，方便快速切換。</string>
+
     <string name="field_legacy_action_ui_title">經典操作介面</string>
     <string name="field_legacy_action_ui_desc">以清單方式顯示操作，適用於複雜情境。</string>
 

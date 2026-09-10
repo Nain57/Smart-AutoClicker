@@ -43,6 +43,9 @@ class SettingsViewModel @Inject constructor(
     val isScenarioFiltersUiEnabled: Flow<Boolean> =
         settingsRepository.isFilterScenarioUiEnabledFlow
 
+    val isScenarioSwitcherEnabled: Flow<Boolean> =
+        settingsRepository.isScenarioSwitcherEnabledFlow
+
     val isLegacyActionUiEnabled: Flow<Boolean> =
         settingsRepository.isLegacyActionUiEnabledFlow
 
@@ -72,6 +75,10 @@ class SettingsViewModel @Inject constructor(
 
     fun toggleScenarioFiltersUi() {
         settingsRepository.toggleFilterScenarioUi()
+    }
+
+    fun toggleScenarioSwitcher() {
+        settingsRepository.toggleScenarioSwitcher()
     }
 
     fun toggleLegacyActionUi() {

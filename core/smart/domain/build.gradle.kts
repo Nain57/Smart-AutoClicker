@@ -38,4 +38,5 @@ dependencies {
     implementation(project(":core:smart:detection-models"))
 
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.room.testing)
 }

@@ -490,4 +490,19 @@
 
     <string name="warning_dialog_message_delete">Ви збираєтесь видалити цей елемент, ви впевнені?</string>
 
+    <string name="scenario_switcher_dismiss">Закрити перемикач сценаріїв</string>
+    <string name="dialog_title_scenario_switcher">Перемкнути сценарій</string>
+    <string name="scenario_switcher_current">Поточний: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Невідомо</string>
+    <string name="scenario_switcher_empty">Немає інших доступних розумних сценаріїв</string>
+    <string name="scenario_switcher_error_service">Служба сценаріїв більше недоступна.</string>
+    <string name="scenario_switcher_error_paused">Призупиніть сценарій перед перемиканням.</string>
+    <string name="scenario_switcher_error_projection">Запис екрана недоступний. Перезапустіть його перед перемиканням.</string>
+    <string name="scenario_switcher_error_current">Цей сценарій уже завантажено.</string>
+    <string name="scenario_switcher_error_unavailable">Цей сценарій більше недоступний.</string>
+    <string name="scenario_switcher_error_persistence">Не вдалося зберегти сценарій. Спробуйте ще раз.</string>
+    <string name="scenario_switcher_error_unknown">Не вдалося перемкнути сценарій. Спробуйте ще раз.</string>
+    <string name="scenario_switcher_retry">Спробувати ще раз</string>
+    <string name="scenario_switcher_switching">Перемикання на %1$s</string>
+
 </resources>

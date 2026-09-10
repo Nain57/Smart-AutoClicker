@@ -42,6 +42,7 @@ internal class CustomLayoutNotificationBuilder(
         setOngoing(true)
         setLocalOnly(true)
         setStyle(NotificationCompat.DecoratedCustomViewStyle())
+        setContentIntent(ServiceNotificationAction.Config.getPendingIntent(context, appComponentsProvider))
 
         updateState(context, initialState)
     }
@@ -97,7 +98,7 @@ internal class CustomLayoutNotificationBuilder(
                 R.id.button_show_hide,
                 if (state.isMenuVisible) ServiceNotificationAction.Hide else ServiceNotificationAction.Show
             )
-            addAction(context, R.id.button_config, ServiceNotificationAction.Config)
+            addAction(context, R.id.button_switch, ServiceNotificationAction.Switch)
             addAction(context, R.id.button_exit, ServiceNotificationAction.Stop)
         }
 

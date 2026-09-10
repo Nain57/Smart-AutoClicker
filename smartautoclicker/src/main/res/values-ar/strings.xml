@@ -132,6 +132,9 @@
     <string name="field_show_scenario_filters_ui_title">عرض فلاتر السيناريو</string>
     <string name="field_show_scenario_filters_ui_desc">عرض أو إخفاء الفلاتر في شاشة قائمة السيناريوهات.</string>
 
+    <string name="field_scenario_switcher_title">عرض مبدّل السيناريو</string>
+    <string name="field_scenario_switcher_desc">يظهر مبدّل السيناريو في شريط الأدوات العائم للتبديل السريع.</string>
+
     <string name="field_legacy_action_ui_title">واجهة الإجراءات القديمة</string>
     <string name="field_legacy_action_ui_desc">تغيير عرض الإجراءات إلى قائمة. مفيد للسيناريوهات المعقدة.</string>
 

@@ -45,6 +45,8 @@ internal class SettingsDataSource @Inject constructor(
 
         val KEY_IS_FILTER_SCENARIO_UI_ENABLED: Preferences.Key<Boolean> =
             booleanPreferencesKey("isFilterScenarioUiEnabled")
+        val KEY_IS_SCENARIO_SWITCHER_ENABLED: Preferences.Key<Boolean> =
+            booleanPreferencesKey("isScenarioSwitcherEnabled")
         val KEY_IS_LEGACY_ACTION_UI: Preferences.Key<Boolean> =
             booleanPreferencesKey("isLegacyActionUiEnabled")
         val KEY_IS_LEGACY_NOTIFICATION_UI: Preferences.Key<Boolean> =
@@ -69,6 +71,14 @@ internal class SettingsDataSource @Inject constructor(
     internal suspend fun toggleFilterScenarioUi() =
         dataStore.edit { preferences ->
             preferences[KEY_IS_FILTER_SCENARIO_UI_ENABLED] = !(preferences[KEY_IS_FILTER_SCENARIO_UI_ENABLED] ?: true)
+        }
+
+    internal fun isScenarioSwitcherEnabled(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_IS_SCENARIO_SWITCHER_ENABLED] ?: false }
+
+    internal suspend fun toggleScenarioSwitcher() =
+        dataStore.edit { preferences ->
+            preferences[KEY_IS_SCENARIO_SWITCHER_ENABLED] = !(preferences[KEY_IS_SCENARIO_SWITCHER_ENABLED] ?: false)
         }
 
     internal fun isLegacyActionUiEnabled(): Flow<Boolean> =

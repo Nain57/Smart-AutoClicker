@@ -50,6 +50,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -63,6 +64,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -136,6 +138,15 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         if (markAsUsed) {
             coroutineScopeIo.launch { scenarioRepository.markAsUsed(identifier) }
         }
+    }
+
+    override suspend fun setScenarioIdAndMarkAsUsed(identifier: Identifier): Unit = withContext(NonCancellable) {
+        // Persist before exposing the new scenario as loaded. This makes a successful switch mean that its usage
+        // count and last-used timestamp have already been accepted by the database. Once that transaction begins,
+        // complete the in-memory part too: cancelling between the two would otherwise record a use for a scenario
+        // that was never made current.
+        scenarioRepository.markAsUsed(identifier)
+        _scenarioId.value = identifier
     }
 
     override fun setProjectionErrorHandler(handler: () -> Unit) {

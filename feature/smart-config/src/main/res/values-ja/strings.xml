@@ -326,4 +326,19 @@
 
     <string name="warning_dialog_message_delete">このアイテムを削除しようとしています。よろしいですか？</string>
 
+    <string name="scenario_switcher_dismiss">シナリオ切り替えを閉じる</string>
+    <string name="dialog_title_scenario_switcher">シナリオを切り替え</string>
+    <string name="scenario_switcher_current">現在：%1$s</string>
+    <string name="scenario_switcher_current_unknown">不明</string>
+    <string name="scenario_switcher_empty">他に利用可能なスマートシナリオはありません</string>
+    <string name="scenario_switcher_error_service">シナリオサービスは利用できなくなりました。</string>
+    <string name="scenario_switcher_error_paused">切り替える前にシナリオを一時停止してください。</string>
+    <string name="scenario_switcher_error_projection">画面録画を利用できません。切り替える前に再起動してください。</string>
+    <string name="scenario_switcher_error_current">このシナリオはすでに読み込まれています。</string>
+    <string name="scenario_switcher_error_unavailable">そのシナリオは利用できなくなりました。</string>
+    <string name="scenario_switcher_error_persistence">シナリオを保存できませんでした。もう一度お試しください。</string>
+    <string name="scenario_switcher_error_unknown">シナリオを切り替えられませんでした。もう一度お試しください。</string>
+    <string name="scenario_switcher_retry">再試行</string>
+    <string name="scenario_switcher_switching">%1$s に切り替え中</string>
+
 </resources>

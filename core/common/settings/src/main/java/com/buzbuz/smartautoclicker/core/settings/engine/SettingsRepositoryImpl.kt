@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -62,6 +63,13 @@ internal class SettingsRepositoryImpl @Inject constructor(
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isFilterScenarioUiEnabledFlow: Flow<Boolean> = _isFilterScenarioUiEnabled
 
+    private val _isScenarioSwitcherEnabled: StateFlow<Boolean> = dataSource.isScenarioSwitcherEnabled()
+        .stateIn(coroutineScope, SharingStarted.Eagerly, false)
+    override val isScenarioSwitcherEnabledFlow: Flow<Boolean> = _isScenarioSwitcherEnabled
+
+    override suspend fun isScenarioSwitcherEnabled(): Boolean =
+        dataSource.isScenarioSwitcherEnabled().first()
+
     private val _isInputBlockWorkaroundEnabledFlow: StateFlow<Boolean> = dataSource.isInputBlockWorkaroundEnabled()
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isInputBlockWorkaroundEnabledFlow: Flow<Boolean> = _isInputBlockWorkaroundEnabledFlow
@@ -73,6 +81,12 @@ internal class SettingsRepositoryImpl @Inject constructor(
     override fun toggleFilterScenarioUi() {
         coroutineScope.launch {
             dataSource.toggleFilterScenarioUi()
+        }
+    }
+
+    override fun toggleScenarioSwitcher() {
+        coroutineScope.launch {
+            dataSource.toggleScenarioSwitcher()
         }
     }
 

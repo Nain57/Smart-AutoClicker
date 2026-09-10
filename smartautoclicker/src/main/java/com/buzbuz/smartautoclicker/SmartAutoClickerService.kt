@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMoni
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -75,6 +76,7 @@ class SmartAutoClickerService : AccessibilityService() {
     @Inject lateinit var overlayManager: OverlayManager
     @Inject lateinit var displayConfigManager: DisplayConfigManager
     @Inject lateinit var smartProcessingRepository: SmartProcessingRepository
+    @Inject lateinit var smartRepository: IRepository
     @Inject lateinit var dumbEngine: DumbEngine
     @Inject lateinit var bitmapManager: BitmapRepository
     @Inject lateinit var qualityRepository: QualityRepository
@@ -115,12 +117,14 @@ class SmartAutoClickerService : AccessibilityService() {
                 overlayManager = overlayManager,
                 appComponentsProvider = appComponentsProvider,
                 smartProcessingRepository = smartProcessingRepository,
+                smartRepository = smartRepository,
                 dumbEngine = dumbEngine,
                 revenueRepository = revenueRepository,
                 settingsRepository = settingsRepository,
                 debuggingRepository = debuggingRepository,
                 tutorialRepository = tutorialRepository,
                 onStart = ::onLocalServiceStarted,
+                onScenarioChanged = ::onLocalScenarioChanged,
                 onStop = ::onLocalServiceStopped,
             )
         )
@@ -170,6 +174,10 @@ class SmartAutoClickerService : AccessibilityService() {
 
         displayConfigManager.stopMonitoring()
         bitmapManager.clearCache()
+    }
+
+    private fun onLocalScenarioChanged(scenarioId: Long, isSmart: Boolean) {
+        tileRepository.setTileScenario(scenarioId = scenarioId, isSmart = isSmart)
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean =

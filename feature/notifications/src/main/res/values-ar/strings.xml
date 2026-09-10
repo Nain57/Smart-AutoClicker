@@ -25,5 +25,6 @@
     <string name="notification_button_hide">يخفي</string>
     <string name="notification_button_stop">قف</string>
     <string name="notification_button_config">التكوين</string>
+    <string name="notification_button_switch">تبديل السيناريو</string>
 
 </resources>

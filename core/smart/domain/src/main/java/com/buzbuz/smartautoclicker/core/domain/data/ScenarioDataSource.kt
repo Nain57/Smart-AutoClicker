@@ -232,24 +232,32 @@ internal class ScenarioDataSource @Inject constructor(
     }
 
     suspend fun markAsUsed(scenarioDbId: Long) {
-        database.scenarioDao().let { scenarioDao ->
-            val previousStats = scenarioDao.getScenarioStats(scenarioDbId)
-            if (previousStats != null) {
-                scenarioDao.updateScenarioStats(
-                    previousStats.copy(
-                        lastStartTimestampMs = System.currentTimeMillis(),
-                        startCount = previousStats.startCount + 1,
-                    )
-                )
-            } else {
+        val timestampMs = System.currentTimeMillis()
+        database.withTransaction {
+            val scenarioDao = database.scenarioDao()
+            val statistics = scenarioDao.getScenarioStats(scenarioDbId)
+            if (statistics.isEmpty()) {
                 scenarioDao.addScenarioStats(
                     ScenarioStatsEntity(
                         id = DATABASE_ID_INSERTION,
                         scenarioId = scenarioDbId,
-                        lastStartTimestampMs = System.currentTimeMillis(),
+                        lastStartTimestampMs = timestampMs,
                         startCount = 1,
                     )
                 )
+            } else if (statistics.size > 1) {
+                val primary = statistics.first()
+                scenarioDao.updateScenarioStats(
+                    primary.copy(
+                        lastStartTimestampMs = timestampMs,
+                        startCount = statistics.sumOf { it.startCount } + 1,
+                    )
+                )
+                scenarioDao.deleteScenarioStats(statistics.drop(1).map { it.id })
+            } else {
+                check(scenarioDao.incrementScenarioStats(scenarioDbId, timestampMs) == 1) {
+                    "Scenario $scenarioDbId was deleted before its usage could be recorded"
+                }
             }
         }
     }

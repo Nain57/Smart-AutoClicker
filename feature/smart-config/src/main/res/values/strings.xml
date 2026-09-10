@@ -565,4 +565,20 @@
     <string name="content_desc_open_event_list">Open the event list</string>
     <string name="content_desc_application_icon">The icon of the application to start.</string>
 
+    <string name="content_desc_switch_scenario">Switch scenario</string>
+    <string name="scenario_switcher_dismiss">Close scenario switcher</string>
+    <string name="dialog_title_scenario_switcher">Switch scenario</string>
+    <string name="scenario_switcher_current">Current: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Unknown</string>
+    <string name="scenario_switcher_empty">No other Smart scenarios available</string>
+    <string name="scenario_switcher_error_service">The scenario service is no longer available.</string>
+    <string name="scenario_switcher_error_paused">Pause the scenario before switching.</string>
+    <string name="scenario_switcher_error_projection">Screen recording is unavailable. Restart it before switching.</string>
+    <string name="scenario_switcher_error_current">This scenario is already loaded.</string>
+    <string name="scenario_switcher_error_unavailable">That scenario is no longer available.</string>
+    <string name="scenario_switcher_error_persistence">The scenario could not be saved. Try again.</string>
+    <string name="scenario_switcher_error_unknown">The scenario could not be switched. Try again.</string>
+    <string name="scenario_switcher_retry">Retry</string>
+    <string name="scenario_switcher_switching">Switching to %1$s</string>
+
 </resources>

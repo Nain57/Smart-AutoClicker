@@ -463,4 +463,19 @@
 
     <string name="warning_dialog_message_delete">您即将删除此项目，确定吗？</string>
 
+    <string name="scenario_switcher_dismiss">关闭场景切换器</string>
+    <string name="dialog_title_scenario_switcher">切换场景</string>
+    <string name="scenario_switcher_current">当前：%1$s</string>
+    <string name="scenario_switcher_current_unknown">未知</string>
+    <string name="scenario_switcher_empty">没有其他可用的智能场景</string>
+    <string name="scenario_switcher_error_service">场景服务已不可用。</string>
+    <string name="scenario_switcher_error_paused">切换前请暂停场景。</string>
+    <string name="scenario_switcher_error_projection">屏幕录制不可用。请先重新启动屏幕录制，再切换场景。</string>
+    <string name="scenario_switcher_error_current">此场景已加载。</string>
+    <string name="scenario_switcher_error_unavailable">该场景已不可用。</string>
+    <string name="scenario_switcher_error_persistence">无法保存场景。请重试。</string>
+    <string name="scenario_switcher_error_unknown">无法切换场景。请重试。</string>
+    <string name="scenario_switcher_retry">重试</string>
+    <string name="scenario_switcher_switching">正在切换到 %1$s</string>
+
 </resources>

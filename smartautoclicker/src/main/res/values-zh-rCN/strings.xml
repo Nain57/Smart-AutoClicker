@@ -72,6 +72,9 @@
     <string name="field_show_scenario_filters_ui_title">显示场景筛选</string>
     <string name="field_show_scenario_filters_ui_desc">在场景列表界面显示或隐藏筛选器。</string>
 
+    <string name="field_scenario_switcher_title">显示场景切换器</string>
+    <string name="field_scenario_switcher_desc">在悬浮工具栏中显示场景切换器，方便快速切换。</string>
+
     <string name="field_legacy_action_ui_title">经典操作界面</string>
     <string name="field_legacy_action_ui_desc">以列表方式显示操作，适用于复杂场景。</string>
 

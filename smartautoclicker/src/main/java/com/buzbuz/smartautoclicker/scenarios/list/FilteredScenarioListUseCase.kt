@@ -25,8 +25,9 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortItem
 import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortSettings
-import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
+import com.buzbuz.smartautoclicker.core.settings.domain.model.sortedByScenarioSortSettings
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 
@@ -151,17 +152,16 @@ private fun Collection<ScenarioListUiState.Item.ScenarioItem>.sortAndFilter(
                 (sortConfig.showDumbScenario && item.scenario is DumbScenario)
     }
 
-    return when (sortConfig.type) {
-        ScenarioSortType.NAME ->
-            if (sortConfig.inverted) filteredList.sortedByDescending { it.displayName }
-            else filteredList.sortedBy { it.displayName }
-
-        ScenarioSortType.RECENT ->
-            if (sortConfig.inverted) filteredList.sortedBy { it.lastStartTimestamp }
-            else filteredList.sortedByDescending { it.lastStartTimestamp }
-
-        ScenarioSortType.MOST_USED ->
-            if (sortConfig.inverted) filteredList.sortedBy { it.startCount }
-            else filteredList.sortedByDescending { it.startCount }
+    return filteredList.sortedByScenarioSortSettings(sortConfig) { scenario ->
+        ScenarioSortItem(
+            id = when (val sourceScenario = scenario.scenario) {
+                is Scenario -> sourceScenario.id.databaseId
+                is DumbScenario -> sourceScenario.id.databaseId
+                else -> error("Unsupported scenario type: ${sourceScenario::class}")
+            },
+            name = scenario.displayName,
+            lastStartTimestamp = scenario.lastStartTimestamp,
+            startCount = scenario.startCount,
+        )
     }
 }

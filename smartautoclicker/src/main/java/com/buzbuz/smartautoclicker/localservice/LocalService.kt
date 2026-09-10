@@ -20,12 +20,14 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
+import android.util.Log
 import android.view.KeyEvent
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
+import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
@@ -39,6 +41,7 @@ import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationCont
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationListener
 import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
 import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.switcher.ScenarioSwitchDialog
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,21 +50,26 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.withTimeoutOrNull
 
 class LocalService(
     private val context: Context,
     private val overlayManager: OverlayManager,
     private val appComponentsProvider: AppComponentsProvider,
     private val settingsRepository: SettingsRepository,
+    private val smartRepository: IRepository,
     private val smartProcessingRepository: SmartProcessingRepository,
     private val dumbEngine: DumbEngine,
     private val tutorialRepository: TutorialRepository,
     private val revenueRepository: IRevenueRepository,
     private val debuggingRepository: DebuggingRepository,
     private val onStart: (scenarioId: Long, isSmart: Boolean, foregroundNotification: Notification?) -> Unit,
+    private val onScenarioChanged: (scenarioId: Long, isSmart: Boolean) -> Unit,
     private val onStop: () -> Unit,
 ) : LocalAccessibilityService {
 
@@ -71,6 +79,23 @@ class LocalService(
     private var startJob: Job? = null
     /** Coroutine job for the paywall result upon start from notification. */
     private var paywallResultJob: Job? = null
+    /** Prevents repeated notification taps from opening multiple switcher pickers during pause settling. */
+    private var scenarioSwitcherOpeningJob: Job? = null
+    /** Serializes a scenario switch against starting detection for the same Smart service session. */
+    private val smartScenarioTransitionMutex = Mutex()
+    /** Changes for every service start so stale picker work cannot affect a later session. */
+    private var nextServiceSessionId: Long = 0L
+
+    private val smartScenarioSwitcher: SmartScenarioSwitcher by lazy {
+        SmartScenarioSwitcher(
+            smartProcessingRepository = smartProcessingRepository,
+            smartRepository = smartRepository,
+            isServiceAvailable = { state.isStarted && state.isSmartLoaded },
+            serviceSessionId = { state.takeIf { it.isStarted && it.isSmartLoaded }?.sessionId },
+            scenarioTransitionMutex = smartScenarioTransitionMutex,
+            onScenarioChanged = ::synchronizeScenarioChanged,
+        )
+    }
 
     /** Controls the notifications for the foreground service. */
     private val notificationController: ServiceNotificationController by lazy {
@@ -84,12 +109,13 @@ class LocalService(
                 override fun onShow() = showMenu()
                 override fun onHide() = hideMenu()
                 override fun onStop() = stopScenario()
+                override fun onSwitch() = openScenarioSwitcherAfterPause()
             }
         )
     }
 
     /** State of this LocalService. */
-    private var state: LocalServiceState = LocalServiceState(isStarted = false, isSmartLoaded = false)
+    private var state: LocalServiceState = LocalServiceState(isStarted = false, isSmartLoaded = false, sessionId = 0L)
     /** True if the overlay is started, false if not. */
     internal val isStarted: Boolean
         get() = state.isStarted
@@ -114,7 +140,7 @@ class LocalService(
 
     override fun startDumbScenario(dumbScenario: DumbScenario) {
         if (state.isStarted) return
-        state = LocalServiceState(isStarted = true, isSmartLoaded = false)
+        state = LocalServiceState(isStarted = true, isSmartLoaded = false, sessionId = ++nextServiceSessionId)
         onStart(dumbScenario.id.databaseId, false, null)
 
         startJob = serviceScope.launch {
@@ -145,7 +171,7 @@ class LocalService(
      */
     override fun startSmartScenario(resultCode: Int, data: Intent, scenario: Scenario) {
         if (isStarted) return
-        state = LocalServiceState(isStarted = true, isSmartLoaded = true)
+        state = LocalServiceState(isStarted = true, isSmartLoaded = true, sessionId = ++nextServiceSessionId)
 
         onStart(
             scenario.id.databaseId,
@@ -159,7 +185,12 @@ class LocalService(
         )
 
         startJob = serviceScope.launch {
-            val mainMenu = MainMenu { stopScenario() }
+            val isScenarioSwitcherEnabled = settingsRepository.isScenarioSwitcherEnabled()
+            val mainMenu = MainMenu(
+                onStopClicked = { stopScenario() },
+                onSwitchScenarioClicked = ::openScenarioSwitcher,
+                isSwitchButtonInitiallyVisible = isScenarioSwitcherEnabled,
+            )
 
             smartProcessingRepository.apply {
                 setScenarioId(scenario.id, markAsUsed = true)
@@ -180,7 +211,9 @@ class LocalService(
 
     override fun stopScenario() {
         if (!isStarted) return
-        state = LocalServiceState(isStarted = false, isSmartLoaded = false)
+        state = state.copy(isStarted = false, isSmartLoaded = false)
+        scenarioSwitcherOpeningJob?.cancel()
+        scenarioSwitcherOpeningJob = null
 
         serviceScope.launch {
             startJob?.join()
@@ -242,12 +275,34 @@ class LocalService(
 
     private fun startSmartScenario() {
         serviceScope.launch {
-            smartProcessingRepository.startDetection(
-                context = context,
-                autoStopDuration = revenueRepository.consumeTrial(),
-                liveDebugging = debuggingRepository.isDebugViewEnabled(),
-                generateReport = debuggingRepository.isDebugReportEnabled(),
-            )
+            // Ignore Play while a switch owns this transition. Starting afterward could silently start detection on a
+            // scenario different from the one the user saw when they pressed Play.
+            if (!smartScenarioTransitionMutex.tryLock()) return@launch
+            try {
+                if (!state.isSmartLoaded || smartProcessingRepository.isRunning()) return@launch
+
+                smartProcessingRepository.startDetection(
+                    context = context,
+                    autoStopDuration = revenueRepository.consumeTrial(),
+                    liveDebugging = debuggingRepository.isDebugViewEnabled(),
+                    generateReport = debuggingRepository.isDebugReportEnabled(),
+                )
+            } finally {
+                smartScenarioTransitionMutex.unlock()
+            }
+        }
+    }
+
+    private fun synchronizeScenarioChanged(scenario: Scenario) {
+        try {
+            notificationController.updateScenarioName(context, scenario.name)
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to update the notification after switching scenario", error)
+        }
+        try {
+            onScenarioChanged(scenario.id.databaseId, true)
+        } catch (error: Exception) {
+            Log.w(TAG, "Unable to update the quick-settings tile after switching scenario", error)
         }
     }
 
@@ -258,9 +313,56 @@ class LocalService(
     private fun showMenu() {
         overlayManager.restoreVisibility()
     }
+
+    private fun openScenarioSwitcherAfterPause() {
+        if (scenarioSwitcherOpeningJob?.isActive == true) return
+
+        scenarioSwitcherOpeningJob = serviceScope.launch {
+            startJob?.join()
+            if (!state.isStarted || !state.isSmartLoaded) return@launch
+
+            if (smartProcessingRepository.detectionState.first() == DetectionState.DETECTING) {
+                smartProcessingRepository.stopDetection()
+            }
+
+            val pausedState = withTimeoutOrNull(SCENARIO_SWITCHER_PAUSE_TIMEOUT_MS) {
+                smartProcessingRepository.detectionState.first { detectionState ->
+                    detectionState == DetectionState.RECORDING || detectionState != DetectionState.DETECTING
+                }
+            }
+            if (pausedState != DetectionState.RECORDING) return@launch
+            if (!state.isStarted || !state.isSmartLoaded || smartProcessingRepository.getScenarioId() == null) return@launch
+
+            openScenarioSwitcher()
+        }.also { openingJob ->
+            openingJob.invokeOnCompletion {
+                if (scenarioSwitcherOpeningJob === openingJob) {
+                    scenarioSwitcherOpeningJob = null
+                }
+            }
+        }
+    }
+
+    private fun openScenarioSwitcher() {
+        if (!state.isStarted || !state.isSmartLoaded) return
+        if (smartProcessingRepository.getScenarioId() == null) return
+        if (overlayManager.getBackStackTop() is ScenarioSwitchDialog) return
+
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ScenarioSwitchDialog(
+                onScenarioSelected = smartScenarioSwitcher::switchTo,
+            ),
+            hideCurrent = false,
+        )
+    }
 }
+
+private const val SCENARIO_SWITCHER_PAUSE_TIMEOUT_MS = 5_000L
+private const val TAG = "LocalService"
 
 private data class LocalServiceState(
     val isStarted: Boolean,
-    val isSmartLoaded: Boolean
+    val isSmartLoaded: Boolean,
+    val sessionId: Long,
 )

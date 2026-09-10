@@ -467,4 +467,19 @@
     <string name="warning_dialog_message_delete">Vous êtes sur le point de supprimer cet élément, êtes-vous sûr ?</string>
 
 
+    <string name="scenario_switcher_dismiss">Fermer le sélecteur de scénario</string>
+    <string name="dialog_title_scenario_switcher">Changer de scénario</string>
+    <string name="scenario_switcher_current">Actuel : %1$s</string>
+    <string name="scenario_switcher_current_unknown">Inconnu</string>
+    <string name="scenario_switcher_empty">Aucun autre scénario intelligent disponible</string>
+    <string name="scenario_switcher_error_service">Le service de scénarios n\'est plus disponible.</string>
+    <string name="scenario_switcher_error_paused">Mettez le scénario en pause avant d\'en changer.</string>
+    <string name="scenario_switcher_error_projection">L\'enregistrement de l\'écran n\'est pas disponible. Redémarrez-le avant de changer de scénario.</string>
+    <string name="scenario_switcher_error_current">Ce scénario est déjà chargé.</string>
+    <string name="scenario_switcher_error_unavailable">Ce scénario n\'est plus disponible.</string>
+    <string name="scenario_switcher_error_persistence">Impossible d\'enregistrer le scénario. Réessayez.</string>
+    <string name="scenario_switcher_error_unknown">Impossible de changer de scénario. Réessayez.</string>
+    <string name="scenario_switcher_retry">Réessayer</string>
+    <string name="scenario_switcher_switching">Passage à %1$s</string>
+
 </resources>

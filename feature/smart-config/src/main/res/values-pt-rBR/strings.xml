@@ -483,4 +483,19 @@
 
     <string name="warning_dialog_message_delete">Você está prestes a excluir este item, tem certeza?</string>
 
+    <string name="scenario_switcher_dismiss">Fechar o seletor de cenários</string>
+    <string name="dialog_title_scenario_switcher">Mudar de cenário</string>
+    <string name="scenario_switcher_current">Atual: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Desconhecido</string>
+    <string name="scenario_switcher_empty">Nenhum outro cenário inteligente disponível</string>
+    <string name="scenario_switcher_error_service">O serviço de cenários não está mais disponível.</string>
+    <string name="scenario_switcher_error_paused">Pause o cenário antes de trocar.</string>
+    <string name="scenario_switcher_error_projection">A gravação da tela não está disponível. Reinicie-a antes de trocar.</string>
+    <string name="scenario_switcher_error_current">Este cenário já está carregado.</string>
+    <string name="scenario_switcher_error_unavailable">Esse cenário não está mais disponível.</string>
+    <string name="scenario_switcher_error_persistence">Não foi possível salvar o cenário. Tente novamente.</string>
+    <string name="scenario_switcher_error_unknown">Não foi possível trocar de cenário. Tente novamente.</string>
+    <string name="scenario_switcher_retry">Tentar novamente</string>
+    <string name="scenario_switcher_switching">Mudando para %1$s</string>
+
 </resources>

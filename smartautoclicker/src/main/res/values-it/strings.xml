@@ -123,6 +123,9 @@
     <string name="field_show_scenario_filters_ui_title">Mostra i filtri degli scenari</string>
     <string name="field_show_scenario_filters_ui_desc">Visualizza o nasconde i filtri nella schermata dell\'elenco degli scenari.</string>
 
+    <string name="field_scenario_switcher_title">Mostra il selettore di scenario</string>
+    <string name="field_scenario_switcher_desc">Mostra il selettore di scenario nella barra degli strumenti flottante per cambi rapidi.</string>
+
     <string name="field_legacy_action_ui_title">Interfaccia utente dell\'azione legacy</string>
     <string name="field_legacy_action_ui_desc">Modifica la visualizzazione delle azioni tramite un elenco. Utile per scenari complessi.</string>
 

@@ -487,4 +487,19 @@
 
     <string name="warning_dialog_message_delete">Estás a punto de eliminar este elemento, ¿estás seguro?</string>
 
+    <string name="scenario_switcher_dismiss">Cerrar el selector de escenarios</string>
+    <string name="dialog_title_scenario_switcher">Cambiar escenario</string>
+    <string name="scenario_switcher_current">Actual: %1$s</string>
+    <string name="scenario_switcher_current_unknown">Desconocido</string>
+    <string name="scenario_switcher_empty">No hay otros escenarios inteligentes disponibles</string>
+    <string name="scenario_switcher_error_service">El servicio de escenarios ya no está disponible.</string>
+    <string name="scenario_switcher_error_paused">Pausa el escenario antes de cambiar.</string>
+    <string name="scenario_switcher_error_projection">La grabación de pantalla no está disponible. Reiníciala antes de cambiar.</string>
+    <string name="scenario_switcher_error_current">Este escenario ya está cargado.</string>
+    <string name="scenario_switcher_error_unavailable">Ese escenario ya no está disponible.</string>
+    <string name="scenario_switcher_error_persistence">No se pudo guardar el escenario. Inténtalo de nuevo.</string>
+    <string name="scenario_switcher_error_unknown">No se pudo cambiar el escenario. Inténtalo de nuevo.</string>
+    <string name="scenario_switcher_retry">Reintentar</string>
+    <string name="scenario_switcher_switching">Cambiando a %1$s</string>
+
 </resources>

@@ -31,4 +31,6 @@ dependencies {
     implementation(libs.androidx.datastore)
 
     implementation(project(":core:common:base"))
+
+    testImplementation(libs.junit)
 }

@@ -25,5 +25,6 @@
     <string name="notification_button_hide">Masquer</string>
     <string name="notification_button_stop">Stop</string>
     <string name="notification_button_config">Config</string>
+    <string name="notification_button_switch">Changer de scénario</string>
 
 </resources>
