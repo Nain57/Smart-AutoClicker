@@ -36,8 +36,8 @@ data class PermissionPostNotification(
     override val permissionString: String
         get() = Manifest.permission.POST_NOTIFICATIONS
 
-    override val fallbackSettingsIntent: Intent
-        get() = getNotificationSettingsIntent()
+    override fun getFallbackSettingsIntent(context: Context): Intent =
+        getNotificationSettingsIntent(context.packageName)
 
     override fun isGranted(context: Context): Boolean =
         context.getSystemService(NotificationManager::class.java).areNotificationsEnabled()

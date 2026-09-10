@@ -33,6 +33,7 @@ class SmartAutoClickerApplication : Application() {
 
         val componentConfig = ComponentConfig
         appComponentsManager.apply {
+            registerCurrentAppId(packageName)
             registerOriginalAppId(componentConfig.ORIGINAL_APP_ID)
             registerSmartAutoClickerService(componentConfig.smartAutoClickerService)
             registerScenarioActivity(componentConfig.scenarioActivity)
