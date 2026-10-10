@@ -109,17 +109,19 @@ internal class ActionExecutor(
     }
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
-        val clickPath = when (val position = click.position) {
-            is GesturePosition.Coordinates ->
-                getUserSelectedClickPosition(position)?.let { point ->
-                    Path().apply { moveTo(point, random) }
-                }
-
-            is GesturePosition.Condition ->
-                getOnConditionClickPath(event, position, click.offset, results)
-
+        val basePosition = when (val position = click.position) {
+            is GesturePosition.Coordinates -> getUserSelectedClickPosition(position)
+            is GesturePosition.Condition -> getDetectedConditionClickPosition(event, position, results)
             null -> null
         } ?: return
+
+        val offset = getClickOffset(click.offset)
+        val clickPath = Path().apply {
+            moveTo(
+                position = Point(basePosition.x + offset.x, basePosition.y + offset.y),
+                random = random,
+            )
+        }
 
         val clickGesture = GestureDescription.Builder().buildSingleStroke(
             path = clickPath,
@@ -146,12 +148,11 @@ internal class ActionExecutor(
                 processingState.getCounterValue(coordinatesValue.counterName)?.toInt()
         }
 
-    private fun getOnConditionClickPath(
+    private fun getDetectedConditionClickPosition(
         event: Event,
         position: GesturePosition.Condition,
-        clickOffset: GesturePosition?,
         results: ConditionsResults?,
-    ): Path? {
+    ): Point? {
         if (event !is ScreenEvent) return null
 
         val conditionId = position.conditionId
@@ -166,16 +167,16 @@ internal class ActionExecutor(
             return null
         }
 
-        val offset = clickOffset as? GesturePosition.Coordinates
-        return Path().apply {
-            moveTo(
-                position = Point(
-                    (result.position?.x ?: 0) + (offset?.x?.let(::resolveCoordinateValue) ?: 0),
-                    (result.position?.y ?: 0) + (offset?.y?.let(::resolveCoordinateValue) ?: 0),
-                ),
-                random = random,
-            )
-        }
+        return Point(result.position?.x ?: 0, result.position?.y ?: 0)
+    }
+
+    /** An unresolvable offset axis (no offset, or a counter that doesn't exist) falls back to 0. */
+    private fun getClickOffset(clickOffset: GesturePosition?): Point {
+        val offset = clickOffset as? GesturePosition.Coordinates ?: return Point(0, 0)
+        return Point(
+            resolveCoordinateValue(offset.x) ?: 0,
+            resolveCoordinateValue(offset.y) ?: 0,
+        )
     }
 
     private suspend fun executeGesture(event: Event, gesture: Gesture, results: ConditionsResults?) {

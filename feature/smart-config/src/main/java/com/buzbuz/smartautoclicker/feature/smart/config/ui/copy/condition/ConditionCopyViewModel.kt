@@ -23,20 +23,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetScreenConditionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetTriggerConditionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ConditionsForCopy
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsConditionRelatedToUnreachableItemUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiTriggerCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,9 +57,9 @@ class ConditionCopyViewModel @Inject constructor(
     @ApplicationContext context: Context,
     getScreenConditionsForCopyUseCase: GetScreenConditionsForCopyUseCase,
     getTriggerConditionsForCopyUseCase: GetTriggerConditionsForCopyUseCase,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val isConditionRelatedToUnreachableItemUseCase: IsConditionRelatedToUnreachableItemUseCase,
     private val editionRepository: EditionRepository,
-    private val bitmapRepository: BitmapRepository,
 ) : ViewModel() {
 
     private val requestTriggerConditions: MutableStateFlow<Boolean?> = MutableStateFlow(null)
@@ -128,7 +126,7 @@ class ConditionCopyViewModel @Inject constructor(
     }
 
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     fun getConditionsCopy(): List<Condition> =
         uiState.value?.items?.mapNotNull { item ->
@@ -143,27 +141,6 @@ class ConditionCopyViewModel @Inject constructor(
         }
 
         return false
-    }
-
-    fun getFixEventDialogArgument(conditionsToCopy: List<Condition>): FixEventChildrenCopyDialog.Arguments? {
-        val editedEvent = editionRepository.editionState.getEditedEvent() ?: return null
-
-        val allEvents = editionRepository.editionState.getAllEditedEvents()
-        val editedEventIndex = allEvents.indexOfFirst { event -> editedEvent.id == event.id }
-        if (editedEventIndex !in allEvents.indices) return null
-
-        val newEvent = editedEvent.copyBase(
-            conditions = editedEvent.conditions + conditionsToCopy
-        )
-        val resultingEventList = allEvents.toMutableList().apply {
-            set(editedEventIndex, newEvent)
-        }
-
-        return FixEventChildrenCopyDialog.Arguments(
-            resultingEventList = resultingEventList,
-            parent = newEvent,
-            showHelpMessage = true,
-        )
     }
 
     fun saveCopyConditions(conditionCopies: List<Condition>) {

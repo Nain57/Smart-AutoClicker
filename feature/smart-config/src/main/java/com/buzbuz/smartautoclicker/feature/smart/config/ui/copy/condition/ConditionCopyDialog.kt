@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.CopyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.condition.FixConditionsCopyDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -104,13 +104,12 @@ class ConditionCopyDialog(
     }
 
     private fun showCopyFixDialog(conditionsToCopy: List<Condition>) {
-        val dialogArg = viewModel.getFixEventDialogArgument(conditionsToCopy) ?: return
         overlayManager.navigateTo(
             context = context,
             hideCurrent = false,
-            newOverlay = FixEventChildrenCopyDialog(
-                dialogArguments = dialogArg,
-                onFixConfirmed = { event -> notifySelectionAndDestroy(event.conditions) }
+            newOverlay = FixConditionsCopyDialog(
+                conditionsToCopy = conditionsToCopy,
+                onFixConfirmed = ::notifySelectionAndDestroy,
             )
         )
     }

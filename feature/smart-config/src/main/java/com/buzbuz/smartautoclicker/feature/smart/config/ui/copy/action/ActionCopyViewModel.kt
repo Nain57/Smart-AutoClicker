@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetA
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ActionsForCopy
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsActionRelatedToUnreachableItemUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -123,27 +122,6 @@ class ActionCopyViewModel @Inject constructor(
         }
 
         return false
-    }
-
-    fun getFixEventDialogArgument(actionsToCopy: List<Action>): FixEventChildrenCopyDialog.Arguments? {
-        val editedEvent = editionRepository.editionState.getEditedEvent() ?: return null
-
-        val allEvents = editionRepository.editionState.getAllEditedEvents()
-        val editedEventIndex = allEvents.indexOfFirst { event -> editedEvent.id == event.id }
-        if (editedEventIndex !in allEvents.indices) return null
-
-        val newEvent = editedEvent.copyBase(
-            actions = editedEvent.actions + actionsToCopy
-        )
-        val resultingEventList = allEvents.toMutableList().apply {
-            set(editedEventIndex, newEvent)
-        }
-
-        return FixEventChildrenCopyDialog.Arguments(
-            resultingEventList = resultingEventList,
-            parent = newEvent,
-            showHelpMessage = true,
-        )
     }
 
     fun saveCopyActions(actionCopies: List<Action>) {

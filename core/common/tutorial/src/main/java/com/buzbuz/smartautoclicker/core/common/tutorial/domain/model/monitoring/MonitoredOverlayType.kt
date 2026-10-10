@@ -72,6 +72,8 @@ enum class MonitoredOverlayType {
     ACTION_COPY,
     CONDITION_COPY,
     EVENT_COPY,
+    FIX_ACTIONS_COPY,
+    FIX_CONDITIONS_COPY,
     FIX_EVENTS_COPY,
     FIX_EVENT_CHILDREN_COPY,
 

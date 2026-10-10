@@ -162,15 +162,15 @@ internal class ScenarioEditor {
     }
 
     fun getAllEditedEvents(): List<Event> = buildList {
-        imageEventsEditor.editedList.value?.let { addAll(it) }
-        triggerEventsEditor.editedList.value?.let { addAll(it) }
+        addAll(imageEventsEditor.getAllEditedItems())
+        addAll(triggerEventsEditor.getAllEditedItems())
     }
 
     fun getAllEditedCounters(): List<Counter> =
         counterListEditor.editedList.value ?: emptyList()
 
     fun getEditedImageEventsCount(): Int =
-        imageEventsEditor.editedList.value?.size ?: 0
+        imageEventsEditor.getAllEditedItems().size
 
     private fun deleteAllReferencesToEvent(event: Event) {
         imageEventsEditor.deleteAllEventToggleReferencing(event)

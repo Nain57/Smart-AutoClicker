@@ -166,6 +166,72 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         assertFalse(useCase(gesture, eventsToCopy = listOf(copyEvent)))
     }
 
+    @Test
+    fun `gesture with unreachable counter in press offset is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val gesture = gesture(finger(pressMotion(
+            position = literalPosition(),
+            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(COUNTER_NAME)),
+        )))
+        assertTrue(useCase(gesture))
+    }
+
+    @Test
+    fun `gesture with unreachable condition in press offset is related to unreachable item`() {
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        val gesture = gesture(finger(pressMotion(
+            position = literalPosition(),
+            offset = GesturePosition.Condition(Identifier(databaseId = 100L)),
+        )))
+        assertTrue(useCase(gesture))
+    }
+
+    @Test
+    fun `gesture with unreachable counter in move position is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val gesture = gesture(finger(
+            pressMotion(literalPosition()),
+            moveMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0))),
+            releaseMotion(),
+        ))
+        assertTrue(useCase(gesture))
+    }
+
+    @Test
+    fun `gesture with unreachable condition in move offset is related to unreachable item`() {
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        val gesture = gesture(finger(
+            pressMotion(literalPosition()),
+            moveMotion(
+                position = literalPosition(),
+                offset = GesturePosition.Condition(Identifier(databaseId = 100L)),
+            ),
+            releaseMotion(),
+        ))
+        assertTrue(useCase(gesture))
+    }
+
+    @Test
+    fun `gesture with wait and release motions only checks positioned motions`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+        val gesture = gesture(finger(
+            pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0))),
+            waitMotion(),
+            releaseMotion(),
+        ))
+        assertFalse(useCase(gesture))
+    }
+
+    @Test
+    fun `gesture with unreachable counter in second finger is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val gesture = gesture(
+            finger(pressMotion(literalPosition())),
+            finger(pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)))),
+        )
+        assertTrue(useCase(gesture))
+    }
+
     // endregion
 
     // region ChangeCounter
@@ -202,21 +268,108 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
 
     @Test
     fun `click user selected position is not related to unreachable item`() {
-        val click = mockk<Click>(relaxed = true) {
-            every { position } returns GesturePosition.Coordinates(
-                x = GestureCoordinatesValue.Literal(100),
-                y = GestureCoordinatesValue.Literal(200),
-            )
-        }
+        assertFalse(useCase(click(position = literalPosition())))
+    }
+
+    @Test
+    fun `click with null position is not related to unreachable item`() {
+        assertFalse(useCase(click(position = null)))
+    }
+
+    @Test
+    fun `click with reachable counter coordinate is not related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+        val click = click(position = GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(200),
+        ))
         assertFalse(useCase(click))
     }
 
     @Test
-    fun `click on detected condition with null conditionId is not related to unreachable item`() {
-        val click = mockk<Click>(relaxed = true) {
-            every { position } returns GesturePosition.Condition(null)
-        }
+    fun `click with unreachable counter x coordinate is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val click = click(position = GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(200),
+        ))
+        assertTrue(useCase(click))
+    }
+
+    @Test
+    fun `click with unreachable counter y coordinate is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val click = click(position = GesturePosition.Coordinates(
+            GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Counter(COUNTER_NAME),
+        ))
+        assertTrue(useCase(click))
+    }
+
+    @Test
+    fun `click user selected position with reachable counter offset is not related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+        val click = click(
+            position = literalPosition(),
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+            ),
+        )
         assertFalse(useCase(click))
+    }
+
+    @Test
+    fun `click user selected position with unreachable counter offset is related to unreachable item`() {
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        val click = click(
+            position = literalPosition(),
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+            ),
+        )
+        assertTrue(useCase(click))
+    }
+
+    @Test
+    fun `click on detected condition with null conditionId is not related to unreachable item`() {
+        assertFalse(useCase(click(position = GesturePosition.Condition(null))))
+    }
+
+    @Test
+    fun `click on detected condition with reachable counter offset is not related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val event = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event)
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+
+        val click = click(
+            position = GesturePosition.Condition(conditionId),
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+            ),
+        )
+        assertFalse(useCase(click))
+    }
+
+    @Test
+    fun `click on detected condition with unreachable counter offset is related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val event = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event)
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+
+        val click = click(
+            position = GesturePosition.Condition(conditionId),
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(COUNTER_NAME),
+            ),
+        )
+        assertTrue(useCase(click))
     }
 
     @Test
@@ -229,11 +382,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns listOf(event)
 
-        val click = mockk<Click>(relaxed = true) {
-            every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
-        }
-        assertFalse(useCase(click))
+        assertFalse(useCase(click(position = GesturePosition.Condition(conditionId))))
     }
 
     @Test
@@ -246,11 +395,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns listOf(otherEvent)
 
-        val click = mockk<Click>(relaxed = true) {
-            every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
-        }
-        assertTrue(useCase(click))
+        assertTrue(useCase(click(position = GesturePosition.Condition(conditionId))))
     }
 
     @Test
@@ -258,11 +403,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         val conditionId = Identifier(databaseId = 100L)
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
-        val click = mockk<Click>(relaxed = true) {
-            every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
-        }
-        assertTrue(useCase(click))
+        assertTrue(useCase(click(position = GesturePosition.Condition(conditionId))))
     }
 
     @Test
@@ -275,10 +416,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
-        val click = mockk<Click>(relaxed = true) {
-            every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
-        }
+        val click = click(position = GesturePosition.Condition(conditionId))
         assertFalse(useCase(click, eventsToCopy = listOf(copyEvent)))
     }
 
@@ -292,10 +430,7 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
-        val click = mockk<Click>(relaxed = true) {
-            every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
-        }
+        val click = click(position = GesturePosition.Condition(conditionId))
         assertTrue(useCase(click, eventsToCopy = listOf(copyEvent)))
     }
 
@@ -430,10 +565,39 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         motions = motions.toList(),
     )
 
-    private fun pressMotion(position: GesturePosition) = GestureFingerMotion.Press(
+    private fun literalPosition() = GesturePosition.Coordinates(
+        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    )
+
+    private fun pressMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Press(
         id = Identifier(databaseId = 51L),
         position = position,
-        offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+        offset = offset,
+    )
+
+    private fun moveMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Move(
+        id = Identifier(databaseId = 52L),
+        position = position,
+        offset = offset,
+        durationMs = 100L,
+    )
+
+    private fun waitMotion() = GestureFingerMotion.Wait(
+        id = Identifier(databaseId = 53L),
+        durationMs = 100L,
+    )
+
+    private fun releaseMotion() = GestureFingerMotion.Release(
+        id = Identifier(databaseId = 54L),
+    )
+
+    private fun click(position: GesturePosition?, offset: GesturePosition? = null) = Click(
+        id = ACTION_ID,
+        eventId = EVENT_ID,
+        priority = 0,
+        pressDuration = 100L,
+        position = position,
+        offset = offset,
     )
 
     private fun changeCounter(counterName: String, operationValue: CounterOperationValue) = ChangeCounter(
@@ -467,5 +631,6 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         val OTHER_EVENT_ID = Identifier(databaseId = 11L)
         const val COUNTER_NAME = "myCounter"
         const val COUNTER_VALUE_NAME = "otherCounter"
+        val NO_OFFSET = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0))
     }
 }

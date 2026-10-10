@@ -20,7 +20,6 @@ import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioBackupSelection
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.scenarios.list.model.isEmpty
@@ -33,7 +32,7 @@ import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -54,8 +53,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ScenarioListViewModel @Inject constructor(
     filteredScenarioListUseCase: FilteredScenarioListUseCase,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val settingsRepository: SettingsRepository,
-    private val bitmapRepository: BitmapRepository,
     private val smartRepository: IRepository,
     private val dumbRepository: IDumbRepository,
 ) : ViewModel() {
@@ -208,7 +207,7 @@ class ScenarioListViewModel @Inject constructor(
      * @param onBitmapLoaded the callback notified upon completion.
      */
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     private fun ScenarioListUiState.Type.toMenuUiState(
         scenarioItems: List<ScenarioListUiState.Item>,

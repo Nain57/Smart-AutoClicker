@@ -21,8 +21,8 @@ import android.graphics.Point
 import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
@@ -33,8 +33,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.toPositionUiState
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -55,7 +55,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 class GestureDialogViewModel @Inject constructor(
-    private val bitmapRepository: BitmapRepository,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val displayConfigManager: DisplayConfigManager,
     private val editionRepository: EditionRepository,
 ) : ViewModel() {
@@ -104,7 +104,7 @@ class GestureDialogViewModel @Inject constructor(
         editionRepository.editionState.getEditedEvent()?.conditions?.filterIsInstance<ScreenCondition>() ?: emptyList()
 
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     fun getCurrentGesture(): Gesture? =
         editionRepository.editionState.getEditedAction<Gesture>()

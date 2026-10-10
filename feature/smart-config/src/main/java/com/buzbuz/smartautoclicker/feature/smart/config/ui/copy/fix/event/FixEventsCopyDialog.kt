@@ -125,7 +125,6 @@ class FixEventsCopyDialog(
                 dialogArguments = FixEventChildrenCopyDialog.Arguments(
                     resultingEventList = viewModel.getResultingEventList(),
                     parent = event,
-                    showHelpMessage = false,
                 ),
                 onFixConfirmed = viewModel::updateEvent,
             ),

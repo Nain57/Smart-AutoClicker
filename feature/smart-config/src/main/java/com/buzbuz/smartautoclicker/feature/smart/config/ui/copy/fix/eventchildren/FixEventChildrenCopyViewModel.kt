@@ -22,11 +22,9 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.GetActionMissingReferencesUseCase
@@ -34,10 +32,10 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.refe
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingCounterReferenceUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingEventToggleReferenceUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingScreenConditionReferenceUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsChildrenCopyUiState
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.toFixCopyUiItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.toFixCopyUiState
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,7 +61,7 @@ class FixEventChildrenCopyViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<FixEventsChildrenCopyUiState?> = itemsToCopy
-        .mapLatest { args -> args.toUiState(context) }
+        .mapLatest { args -> args.toUiItems(context).toFixCopyUiState() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(3_000), null)
 
 
@@ -71,7 +69,6 @@ class FixEventChildrenCopyViewModel @Inject constructor(
         itemsToCopy.update { arguments }
     }
 
-    /** Get the list of possible replacements for a */
     fun getScreenConditionReplacementCandidates(): List<ScreenCondition> {
         val event = itemsToCopy.value?.parent
         if (event == null || event !is ScreenEvent) return emptyList()
@@ -79,10 +76,10 @@ class FixEventChildrenCopyViewModel @Inject constructor(
         return event.conditions
     }
 
+    /** The copied event is not the edited one, an edition must be started for it to create correct sub elements. */
     fun startActionEdition(action: Action) {
         val event = itemsToCopy.value?.parent ?: return
 
-        // Required to create correct sub elements
         editionRepository.startEventEdition(event)
         editionRepository.startActionEdition(action)
     }
@@ -144,46 +141,16 @@ class FixEventChildrenCopyViewModel @Inject constructor(
     fun getFixedEventToCopy(): Event? =
         itemsToCopy.value?.parent
 
-    private suspend fun FixEventChildrenCopyDialog.Arguments?.toUiState(context: Context): FixEventsChildrenCopyUiState {
-        val items = this?.let { (_, event, showHelpMessage) ->
-            buildList {
-                if (showHelpMessage) add(FixCopyUiItem.Header(R.string.item_header_event_copy_fix))
-                addAll(event.conditions.toUiState(context) + event.actions.toUiState(context))
+    private suspend fun FixEventChildrenCopyDialog.Arguments?.toUiItems(context: Context): List<FixCopyUiItem> {
+        val (resultingEvents, event) = this ?: return emptyList()
+
+        return buildList {
+            event.conditions.forEach { condition ->
+                add(getConditionMissingReferencesUseCase(condition, resultingEvents).toFixCopyUiItem(context))
             }
-        } ?: emptyList()
-
-        val canBeCopied = items
-            .filterIsInstance<FixCopyUiItem.Item.EventChildren>()
-            .all { it.isValidForCopy }
-
-        return FixEventsChildrenCopyUiState(canBeCopied = canBeCopied, items = items)
+            event.actions.forEach { action ->
+                add(getActionMissingReferencesUseCase(action, resultingEvents).toFixCopyUiItem(context))
+            }
+        }
     }
-
-    private fun List<Condition>.toUiState(context: Context): List<FixCopyUiItem.Item.EventChildren.ConditionItem> =
-        map { condition ->
-            val result = getConditionMissingReferencesUseCase(condition)
-            val isValid = result.missingReferences.isEmpty()
-            FixCopyUiItem.Item.EventChildren.ConditionItem(
-                uiCondition = condition.toUiCondition(context, inError = false),
-                stateText = context.getStateText(isValid),
-                isValidForCopy = isValid,
-                itemWithMissingReferences = result,
-            )
-        }
-
-    private suspend fun List<Action>.toUiState(context: Context): List<FixCopyUiItem.Item.EventChildren.ActionItem> =
-        map { action ->
-            val result = getActionMissingReferencesUseCase(action, itemsToCopy.value?.resultingEventList ?: emptyList())
-            val isValid = result.missingReferences.isEmpty()
-            FixCopyUiItem.Item.EventChildren.ActionItem(
-                uiAction = action.toUiAction(context, inError = false),
-                stateText = context.getStateText(isValid),
-                isValidForCopy = isValid,
-                itemWithMissingReferences = result,
-            )
-        }
-
-    private fun Context.getStateText(isValid: Boolean): String =
-        if (isValid) getString(R.string.item_copy_fix_description_ok)
-        else getString(R.string.item_copy_fix_description_missing)
 }

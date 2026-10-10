@@ -58,6 +58,7 @@ import org.mockito.Mockito.`when` as mockWhen
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.*
 
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
 /** Test the [ActionExecutor] class. */
@@ -72,6 +73,9 @@ class ActionExecutorTests {
         private const val TEST_DURATION = 25L
         private const val TEST_X1 = 12
         private const val TEST_Y1 = 88
+        private const val TEST_OFFSET_X = 5
+        private const val TEST_OFFSET_Y = -3
+        private const val TEST_COUNTER_NAME = "counter"
 
         fun getNewDefaultEvent(operator: Int = OR, conditions: List<ScreenCondition.Image> = emptyList(), actions: List<Action> = emptyList()) =
             ScreenEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0, cooldownMs = 0, keepDetecting = false)
@@ -105,6 +109,12 @@ class ActionExecutorTests {
         }
     }
 
+    private fun assertClickPosition(gesture: GestureDescription, expectedX: Int, expectedY: Int) {
+        val point = shadowOf(gesture.getStroke(0).path).points.first()
+        assertEquals("Click x position is invalid", expectedX.toFloat(), point.x)
+        assertEquals("Click y position is invalid", expectedY.toFloat(), point.y)
+    }
+
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -135,6 +145,74 @@ class ActionExecutorTests {
         val gestureCaptor = argumentCaptor<GestureDescription>()
         verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
+    }
+
+    @Test
+    fun execute_oneClick_notOnCondition_withOffset() = runTest {
+        val clickAction = getNewDefaultClickUserPos(1).copy(
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Literal(TEST_OFFSET_X),
+                GestureCoordinatesValue.Counter(TEST_COUNTER_NAME),
+            ),
+        )
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(TEST_OFFSET_Y.toDouble())
+        val event = getNewDefaultEvent(actions = listOf(clickAction))
+
+        actionExecutor.executeActions(event, ConditionsResults())
+
+        val gestureCaptor = argumentCaptor<GestureDescription>()
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        assertActionGesture(gestureCaptor.lastValue)
+        assertClickPosition(gestureCaptor.lastValue, TEST_X1 + TEST_OFFSET_X, TEST_Y1 + TEST_OFFSET_Y)
+    }
+
+    @Test
+    fun execute_oneClick_notOnCondition_withUnresolvableOffset() = runTest {
+        val clickAction = getNewDefaultClickUserPos(1).copy(
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Counter(TEST_COUNTER_NAME),
+                GestureCoordinatesValue.Literal(TEST_OFFSET_Y),
+            ),
+        )
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(null)
+        val event = getNewDefaultEvent(actions = listOf(clickAction))
+
+        actionExecutor.executeActions(event, ConditionsResults())
+
+        val gestureCaptor = argumentCaptor<GestureDescription>()
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        assertClickPosition(gestureCaptor.lastValue, TEST_X1, TEST_Y1 + TEST_OFFSET_Y)
+    }
+
+    @Test
+    fun execute_oneClick_onCondition_withOffset() = runTest {
+        val condition = getNewDefaultCondition(42L)
+        val clickAction = getNewDefaultClickCondition(1, condition.id.databaseId).copy(
+            offset = GesturePosition.Coordinates(
+                GestureCoordinatesValue.Literal(TEST_OFFSET_X),
+                GestureCoordinatesValue.Literal(TEST_OFFSET_Y),
+            ),
+        )
+        val event = getNewDefaultEvent(AND, conditions = listOf(condition), actions = listOf(clickAction))
+        val results = ConditionsResults()
+        results.addResult(
+            conditionId = condition.getDatabaseId(),
+            result = ProcessedConditionResult.Screen(
+                isFulfilled = true,
+                haveBeenDetected = true,
+                condition = condition,
+                position = Point(15, 15),
+                size = Point(10, 10),
+                confidenceRate = 100.0
+            )
+        )
+
+        actionExecutor.executeActions(event, results)
+
+        val gestureCaptor = argumentCaptor<GestureDescription>()
+        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        assertActionGesture(gestureCaptor.lastValue)
+        assertClickPosition(gestureCaptor.lastValue, 15 + TEST_OFFSET_X, 15 + TEST_OFFSET_Y)
     }
 
     @Test

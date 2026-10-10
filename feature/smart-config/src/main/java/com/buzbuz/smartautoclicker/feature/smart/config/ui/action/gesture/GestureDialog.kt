@@ -157,7 +157,6 @@ class GestureDialog(
     }
 
     private fun updateUiState(state: GestureDialogUiState) {
-        println("TOTO: CanBeSaved=${state.canBeSaved}")
         viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
         adapter.submitList(state.uiItems)
     }

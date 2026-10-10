@@ -56,12 +56,26 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
             event.replaceInCondition(itemToEdit, missingReference, replacement)
     }
 
+    /** Returns null if the action type can't reference a counter. */
+    operator fun invoke(
+        action: Action,
+        missingReference: MissingCopyReference.CounterReference,
+        replacement: String,
+    ): Action? = action.replaceCounterReference(missingReference.name, replacement)
+
+    /** Returns null if the condition type can't reference a counter. */
+    operator fun invoke(
+        condition: Condition,
+        missingReference: MissingCopyReference.CounterReference,
+        replacement: String,
+    ): Condition? = condition.replaceCounterReference(missingReference.name, replacement)
+
     private fun Event.replaceInAction(
         itemToEdit: ItemWithMissingReferences.ActionItem,
         missingReference: MissingCopyReference.CounterReference,
         replacement: String,
     ): Event {
-        val newAction = itemToEdit.item.replaceCounterReference(missingReference.name, replacement)
+        val newAction = invoke(itemToEdit.item, missingReference, replacement)
             ?: return this
 
         val actionIndex = actions.indexOf(itemToEdit.item)
@@ -83,7 +97,7 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
         missingReference: MissingCopyReference.CounterReference,
         replacement: String,
     ): Event {
-        val newCondition = itemToEdit.item.replaceCounterReference(missingReference.name, replacement)
+        val newCondition = invoke(itemToEdit.item, missingReference, replacement)
             ?: return this
 
         val conditionIndex = conditions.indexOf(itemToEdit.item)

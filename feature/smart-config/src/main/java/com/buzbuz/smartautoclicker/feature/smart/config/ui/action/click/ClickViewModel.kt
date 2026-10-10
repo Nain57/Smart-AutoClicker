@@ -25,7 +25,6 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -38,10 +37,10 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getOffsetDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.toPositionUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putClickPressDurationConfig
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -65,7 +64,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(FlowPreview::class)
 class ClickViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val bitmapRepository: BitmapRepository,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val displayConfigManager: DisplayConfigManager,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
@@ -110,7 +109,7 @@ class ClickViewModel @Inject constructor(
         editionRepository.editionState.getEditedAction<Click>()
 
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     /** True if the user must pick the condition to click on, false if it is the first detected one. */
     fun shouldSelectCondition(): Boolean =
@@ -188,12 +187,12 @@ class ClickViewModel @Inject constructor(
         }
     }
 
-    /** The offset to apply when clicking on a condition, defaulting to no offset at all. */
+    /** The offset to apply to the click position, defaulting to no offset at all. */
     fun getClickOffset(): GesturePosition.Coordinates =
         editionRepository.editionState.getEditedAction<Click>()?.offset as? GesturePosition.Coordinates
             ?: NO_CLICK_OFFSET
 
-    /** Set the offset to apply when clicking on a condition. */
+    /** Set the offset to apply to the click position. */
     fun setClickOffset(offset: GesturePosition.Coordinates) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(offset = offset))

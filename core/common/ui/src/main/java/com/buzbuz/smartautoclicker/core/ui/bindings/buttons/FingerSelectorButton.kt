@@ -109,11 +109,9 @@ private fun IncludeButtonFingerSelectorBinding.updateButtonErrorColor(button: Ma
         val error = ColorStateList.valueOf(MaterialColors.getColor(button, AppCompatR.attr.colorError))
         button.setTextColor(error)
         button.iconTint = error
-        println("TOTO: set Error Color for ${fingerIndex(button)}")
     } else {
         button.setTextColor(originalText)
         button.iconTint = originalIcon
-        println("TOTO: set normal Color for ${fingerIndex(button)}")
     }
 }
 

@@ -72,14 +72,10 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         }
     }
 
-    private fun Click.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
-        (position as? GesturePosition.Condition)?.conditionId?.let { conditionId ->
-            return copyResultEvents[eventId]?.conditions
-                ?.find { condition -> condition.id == conditionId } == null
+    private fun Click.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean =
+        listOfNotNull(position, offset).any { clickPosition ->
+            clickPosition.isUnreachable(copyResultEvents, eventId)
         }
-
-        return false
-    }
 
     private fun Notification.isRelatedToUnreachableItem(): Boolean {
         messageText.findCounterReferences().forEach { counterName ->
@@ -97,9 +93,9 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         return false
     }
 
-    private fun Gesture.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
-        for (finger in fingers) {
-            for (motion in finger.motions) {
+    private fun Gesture.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean =
+        fingers.any { finger ->
+            finger.motions.any { motion ->
                 val positions: List<GesturePosition> = when (motion) {
                     is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
                     is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
@@ -107,26 +103,22 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
                     is GestureFingerMotion.Release -> emptyList()
                 }
 
-                for (position in positions) {
-                    when (position) {
-                        is GesturePosition.Condition -> {
-                            position.conditionId?.let { conditionId ->
-                                if (copyResultEvents[eventId]?.conditions?.any { it.id == conditionId } != true) return true
-                            }
-                        }
-                        is GesturePosition.Coordinates -> {
-                            for (coordValue in listOf(position.x, position.y)) {
-                                if (coordValue is GestureCoordinatesValue.Counter) {
-                                    if (editionRepository.counterIsUnreachable(coordValue.counterName)) return true
-                                }
-                            }
-                        }
-                    }
-                }
+                positions.any { position -> position.isUnreachable(copyResultEvents, eventId) }
             }
         }
-        return false
-    }
+
+    private fun GesturePosition.isUnreachable(copyResultEvents: Map<Identifier, Event>, eventId: Identifier): Boolean =
+        when (this) {
+            is GesturePosition.Condition -> {
+                val condId = conditionId ?: return false
+                copyResultEvents[eventId]?.conditions?.any { condition -> condition.id == condId } != true
+            }
+
+            is GesturePosition.Coordinates -> listOf(x, y).any { coordinatesValue ->
+                coordinatesValue is GestureCoordinatesValue.Counter
+                        && editionRepository.counterIsUnreachable(coordinatesValue.counterName)
+            }
+        }
 
     private fun ToggleEvent.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
         if (toggleAll) return false

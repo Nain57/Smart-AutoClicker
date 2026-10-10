@@ -32,6 +32,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 
@@ -111,6 +112,24 @@ class ReplaceMissingEventToggleReferenceUseCaseTest {
         assertEquals(pause, result.actions[0])
         val updatedAction = result.actions[1] as ToggleEvent
         assertEquals(listOf(newToggle), updatedAction.eventToggles)
+    }
+
+    @Test
+    fun `replace event toggles in standalone toggle event action`() {
+        val action = toggleEvent(toggles = listOf(eventToggle(targetEventId = OLD_EVENT_ID)))
+        val missingRef = MissingCopyReference.EventToggleReference("Missing Event")
+        val newToggle = eventToggle(targetEventId = NEW_EVENT_ID)
+
+        val result = useCase(action, missingRef, listOf(newToggle)) as ToggleEvent
+        assertEquals(listOf(newToggle), result.eventToggles)
+    }
+
+    @Test
+    fun `standalone non-toggle-event action returns null`() {
+        val pause = mockk<Pause>(relaxed = true)
+        val missingRef = MissingCopyReference.EventToggleReference("Missing Event")
+
+        assertNull(useCase(pause, missingRef, emptyList()))
     }
 
     private fun triggerEventWithActions(actions: List<com.buzbuz.smartautoclicker.core.domain.model.action.Action>) = TriggerEvent(
