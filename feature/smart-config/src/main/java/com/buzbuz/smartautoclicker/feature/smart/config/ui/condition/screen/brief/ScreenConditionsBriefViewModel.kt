@@ -132,7 +132,7 @@ class ScreenConditionsBriefViewModel @Inject constructor(
         if (index !in conditions.indices) return false
 
         editionRepository.startConditionEdition(conditions[index])
-        if (!force && editionRepository.editionState.isEditedConditionReferencedByClick()) {
+        if (!force && editionRepository.editionState.isEditedConditionReferencedByAction()) {
             editionRepository.stopConditionEdition()
             return false
         }

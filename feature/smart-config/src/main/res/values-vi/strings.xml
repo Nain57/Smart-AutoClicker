@@ -64,7 +64,6 @@
     <string name="item_pause_details">Trong %1$s</string>
     <string name="item_change_counter_title">Bộ đếm thay đổi</string>
     <string name="item_change_counter_desc">Thay đổi một giá trị để xác minh nó sau</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Bộ đếm không hợp lệ</string>
     <string name="item_toggle_event_title">Thay đổi trạng thái Bật/Tắt của Sự kiện</string>
     <string name="item_toggle_event_desc">Thay đổi trạng thái Bật/Tắt của Sự kiện</string>
@@ -267,6 +266,24 @@
     <string name="dropdown_intent_extra_type_title">Loại giá trị</string>
     <string name="dialog_title_change_counter">Bộ đếm thay đổi</string>
     <string name="field_counter_operation_value_label">Giá trị</string>
+    <string name="field_counter_operation_condition_selection_desc">Nếu được phát hiện, vị trí của nó trên màn hình sẽ được dùng làm giá trị</string>
+    <string name="field_counter_operation_condition_selection_title_empty">Chưa chọn điều kiện nào</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">Nhấn vào đây để chọn một điều kiện</string>
+    <string name="field_counter_operation_condition_selection_title_none">Không có điều kiện nào khả dụng</string>
+    <string name="field_counter_operation_condition_selection_desc_none">Hãy tạo một điều kiện màn hình cần được phát hiện trong sự kiện này để sử dụng vị trí của nó</string>
+    <string name="dropdown_condition_position_type_label">Vị trí</string>
+    <string name="dropdown_condition_position_type_item_left">Trái</string>
+    <string name="dropdown_condition_position_type_item_left_desc">Tọa độ X của cạnh trái</string>
+    <string name="dropdown_condition_position_type_item_center_x">Tâm X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">Tọa độ X của tâm</string>
+    <string name="dropdown_condition_position_type_item_right">Phải</string>
+    <string name="dropdown_condition_position_type_item_right_desc">Tọa độ X của cạnh phải</string>
+    <string name="dropdown_condition_position_type_item_top">Trên</string>
+    <string name="dropdown_condition_position_type_item_top_desc">Tọa độ Y của cạnh trên</string>
+    <string name="dropdown_condition_position_type_item_center_y">Tâm Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">Tọa độ Y của tâm</string>
+    <string name="dropdown_condition_position_type_item_bottom">Dưới</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">Tọa độ Y của cạnh dưới</string>
     <string name="dropdown_counter_operation_label">Phép toán</string>
     <string name="field_change_counter_effect_title">Chi tiết hành động</string>
     <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string>

@@ -286,6 +286,29 @@ class ScreenEventsEditorTest {
     }
 
     @Test
+    fun `condition removal keeps change counters without selected condition`() {
+        val condition1 = condition(1)
+        val condition2 = condition(2)
+        val counterWithoutCondition = changeCounter(1, CounterOperationValue.Condition(
+            conditionId = null,
+            positionType = CounterOperationValue.Condition.PositionType.CONDITION_LEFT,
+        ))
+        val event = event(
+            id = 1,
+            conditionOperator = AND,
+            conditions = listOf(condition1, condition2),
+            actions = listOf(counterWithoutCondition),
+        )
+        editor.startEdition(listOf(event))
+        editor.startItemEdition(event)
+
+        editor.conditionsEditor.startItemEdition(condition1)
+        editor.conditionsEditor.deleteEditedItem()
+
+        assertEquals(listOf(counterWithoutCondition), editor.actionsEditor.editedList.value)
+    }
+
+    @Test
     fun `edited event changes are only committed to list on upsert`() = runTest {
         val event = event(1, conditions = listOf(condition(1)))
         editor.startEdition(listOf(event))

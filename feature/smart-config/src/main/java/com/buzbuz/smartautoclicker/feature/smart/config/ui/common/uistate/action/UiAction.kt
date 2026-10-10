@@ -74,7 +74,7 @@ internal fun Action.getActionDescription(context: Context, parent: Event?, inErr
     is Pause -> getDescription(context, inError)
     is Intent -> getDescription(context, inError)
     is ToggleEvent -> getDescription(context, inError)
-    is ChangeCounter -> getDescription(context, inError)
+    is ChangeCounter -> getDescription(context, parent, inError)
     is Notification -> getDescription(context, inError)
     is SystemAction -> getDescription(context, inError)
     is SetText -> getDescription(context, inError)

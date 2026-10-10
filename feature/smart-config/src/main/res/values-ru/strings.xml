@@ -72,7 +72,6 @@
 
     <string name="item_change_counter_title">Изменить счётчик</string>
     <string name="item_change_counter_desc">Изменить значение для последующей проверки</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Counter is invalid</string>
 
     <string name="item_toggle_event_title">Изменить состояние события</string>
@@ -317,6 +316,24 @@
     <string name="dialog_title_change_counter">Изменить счётчик</string>
 
     <string name="field_counter_operation_value_label">Значение</string>
+    <string name="field_counter_operation_condition_selection_desc">Если условие обнаружено, его положение на экране будет использовано как значение</string>
+    <string name="field_counter_operation_condition_selection_title_empty">Условие не выбрано</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">Нажмите здесь, чтобы выбрать условие</string>
+    <string name="field_counter_operation_condition_selection_title_none">Нет доступных условий</string>
+    <string name="field_counter_operation_condition_selection_desc_none">Создайте экранное условие, которое должно быть обнаружено в этом событии, чтобы использовать его положение</string>
+    <string name="dropdown_condition_position_type_label">Положение</string>
+    <string name="dropdown_condition_position_type_item_left">Слева</string>
+    <string name="dropdown_condition_position_type_item_left_desc">Координата X левого края</string>
+    <string name="dropdown_condition_position_type_item_center_x">Центр X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">Координата X центра</string>
+    <string name="dropdown_condition_position_type_item_right">Справа</string>
+    <string name="dropdown_condition_position_type_item_right_desc">Координата X правого края</string>
+    <string name="dropdown_condition_position_type_item_top">Сверху</string>
+    <string name="dropdown_condition_position_type_item_top_desc">Координата Y верхнего края</string>
+    <string name="dropdown_condition_position_type_item_center_y">Центр Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">Координата Y центра</string>
+    <string name="dropdown_condition_position_type_item_bottom">Снизу</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">Координата Y нижнего края</string>
 
     <string name="dropdown_counter_operation_label">Операция</string>
 

@@ -71,7 +71,6 @@
 
     <string name="item_change_counter_title">Contador de cambios</string>
     <string name="item_change_counter_desc">Cambiar un valor para verificarlo más tarde</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">El contador no es válido</string>
 
     <string name="item_toggle_event_title">Cambiar el estado del evento</string>
@@ -316,6 +315,24 @@
     <string name="dialog_title_change_counter">Contador de cambios</string>
 
     <string name="field_counter_operation_value_label">Valor</string>
+    <string name="field_counter_operation_condition_selection_desc">Si se detecta, su posición en la pantalla se usará como valor</string>
+    <string name="field_counter_operation_condition_selection_title_empty">Ninguna condición seleccionada</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">Haz clic aquí para seleccionar una condición</string>
+    <string name="field_counter_operation_condition_selection_title_none">Ninguna condición disponible</string>
+    <string name="field_counter_operation_condition_selection_desc_none">Crea una condición de pantalla que deba detectarse en este evento para usar su posición</string>
+    <string name="dropdown_condition_position_type_label">Posición</string>
+    <string name="dropdown_condition_position_type_item_left">Izquierda</string>
+    <string name="dropdown_condition_position_type_item_left_desc">Coordenada X del borde izquierdo</string>
+    <string name="dropdown_condition_position_type_item_center_x">Centro X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">Coordenada X del centro</string>
+    <string name="dropdown_condition_position_type_item_right">Derecha</string>
+    <string name="dropdown_condition_position_type_item_right_desc">Coordenada X del borde derecho</string>
+    <string name="dropdown_condition_position_type_item_top">Arriba</string>
+    <string name="dropdown_condition_position_type_item_top_desc">Coordenada Y del borde superior</string>
+    <string name="dropdown_condition_position_type_item_center_y">Centro Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">Coordenada Y del centro</string>
+    <string name="dropdown_condition_position_type_item_bottom">Abajo</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">Coordenada Y del borde inferior</string>
 
     <string name="dropdown_counter_operation_label">Operación</string>
 

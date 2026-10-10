@@ -30,11 +30,11 @@ sealed class CounterOperationValue : Completable {
     }
 
     data class Condition(
-        val conditionId: Identifier,
+        val conditionId: Identifier?,
         val positionType: PositionType,
     ): CounterOperationValue() {
 
-        override fun isComplete(): Boolean = true
+        override fun isComplete(): Boolean = conditionId != null
 
         enum class PositionType {
             CONDITION_BOTTOM,

@@ -82,7 +82,7 @@ class NumberConditionViewModel @Inject constructor(
         editedConditionHasChanged.value
 
     fun isConditionRelatedToClick(): Boolean =
-        editionRepository.editionState.isEditedConditionReferencedByClick()
+        editionRepository.editionState.isEditedConditionReferencedByAction()
 
     fun setName(name: String) {
         updateEditedCondition { it.copy(name = name) }
@@ -103,6 +103,7 @@ class NumberConditionViewModel @Inject constructor(
             when (type) {
                 UiOperandType.STATIC -> CounterOperationValue.Number(0.0)
                 UiOperandType.COUNTER -> CounterOperationValue.Counter("")
+                UiOperandType.CONDITION -> return
             }
         )
     }

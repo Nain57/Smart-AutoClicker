@@ -19,23 +19,29 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.actio
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.getConditionOperandDisplayString
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toDropdownItem
 
 
 @DrawableRes
 internal fun getChangeCounterIconRes(): Int =
     R.drawable.ic_change_counter
 
-internal fun ChangeCounter.getDescription(context: Context, inError: Boolean): String =
+internal fun ChangeCounter.getDescription(context: Context, parent: Event?, inError: Boolean): String =
     if (inError) context.getString(R.string.item_change_counter_details_error)
-    else context.getString(
-        R.string.item_change_counter_details,
-        counterName.trim(),
-        when (operation) {
-            ChangeCounter.OperationType.ADD -> "+"
-            ChangeCounter.OperationType.MINUS -> "-"
-            ChangeCounter.OperationType.SET -> "="
+    else operation.toEffectDescription(
+        context = context,
+        counterName = counterName.trim(),
+        operand = when (val value = operationValue) {
+            is CounterOperationValue.Condition -> context.getConditionOperandDisplayString(
+                conditionName = parent?.conditions?.find { it.id == value.conditionId }?.name,
+                positionTypeName = value.positionType.toDropdownItem().title,
+            )
+            else -> value.toNaturalDisplayString()
         },
-        operationValue.toNaturalDisplayString(),
     )

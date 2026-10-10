@@ -44,7 +44,8 @@ internal class ScreenEventsEditor(
                     // Condition used as counter operation value was deleted, delete the action
                     action is ChangeCounter -> {
                         val value = action.operationValue
-                        if (value is CounterOperationValue.Condition && conditions.none { it.id == value.conditionId }) {
+                        if (value is CounterOperationValue.Condition && value.conditionId != null &&
+                            conditions.none { it.id == value.conditionId }) {
                             newActions.remove(action)
                         }
                     }

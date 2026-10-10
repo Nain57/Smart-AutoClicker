@@ -101,6 +101,7 @@ class CounterReachedConditionViewModel @Inject constructor(
             when (type) {
                 UiOperandType.STATIC -> CounterOperationValue.Number(0.0)
                 UiOperandType.COUNTER -> CounterOperationValue.Counter("")
+                UiOperandType.CONDITION -> return
             }
         )
     }
@@ -150,7 +151,7 @@ class CounterReachedConditionViewModel @Inject constructor(
             conditionEffectText = comparisonOperation.toEffectDescription(
                 context = context,
                 counterName = counterName,
-                operand = operand.toDisplayValue(),
+                operand = operand.toDisplayValue(context),
             )
         )
     }

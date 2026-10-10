@@ -73,7 +73,6 @@
 
     <string name="item_change_counter_title">Змінити лічильник</string>
     <string name="item_change_counter_desc">Змінити значення для подальшої перевірки</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Лічильник неправильний</string>
 
     <string name="item_toggle_event_title">Змінити стан події</string>
@@ -322,6 +321,24 @@
     <string name="dialog_title_change_counter">Змінити лічильник</string>
 
     <string name="field_counter_operation_value_label">Значення</string>
+    <string name="field_counter_operation_condition_selection_desc">Якщо умову виявлено, її положення на екрані буде використано як значення</string>
+    <string name="field_counter_operation_condition_selection_title_empty">Жодної умови не обрано</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">Натисніть тут, щоб обрати умову</string>
+    <string name="field_counter_operation_condition_selection_title_none">Немає доступних умов</string>
+    <string name="field_counter_operation_condition_selection_desc_none">Створіть умову екрана, яку має бути виявлено в цій події, щоб використати її положення</string>
+    <string name="dropdown_condition_position_type_label">Положення</string>
+    <string name="dropdown_condition_position_type_item_left">Ліворуч</string>
+    <string name="dropdown_condition_position_type_item_left_desc">Координата X лівого краю</string>
+    <string name="dropdown_condition_position_type_item_center_x">Центр X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">Координата X центру</string>
+    <string name="dropdown_condition_position_type_item_right">Праворуч</string>
+    <string name="dropdown_condition_position_type_item_right_desc">Координата X правого краю</string>
+    <string name="dropdown_condition_position_type_item_top">Вгорі</string>
+    <string name="dropdown_condition_position_type_item_top_desc">Координата Y верхнього краю</string>
+    <string name="dropdown_condition_position_type_item_center_y">Центр Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">Координата Y центру</string>
+    <string name="dropdown_condition_position_type_item_bottom">Внизу</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">Координата Y нижнього краю</string>
 
     <string name="dropdown_counter_operation_label">Операція</string>
 
