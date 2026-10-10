@@ -22,6 +22,7 @@
 #include "detection/text_detector_result.hpp"
 
 // Manual switch for visual debugging. Set to 1 to enable image saving.
+// Also requires adding imgcodecs to OpenCV -DBUILD_LIST in core/smart/detection/build.gradle.kts.
 #define VISUAL_DEBUG 0
 
 #if defined(NDEBUG) || !VISUAL_DEBUG // Skip debugging methods in release builds or when visual debug is disabled
