@@ -31,11 +31,13 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.actions.ActionExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
@@ -450,5 +452,134 @@ class ActionExecutorTests {
 
         // The workaround gesture continues nothing, dispatching it would cancel the held pointer
         verify(mockAndroidExecutor, never()).dispatchPixelWorkaroundGestureIfNeeded()
+    }
+
+    private fun getNewChangeCounterOnCondition(
+        conditionId: Identifier,
+        positionType: CounterOperationValue.Condition.PositionType,
+        operation: ChangeCounter.OperationType = ChangeCounter.OperationType.SET,
+    ) = ChangeCounter(
+        id = Identifier(databaseId = 1L),
+        eventId = TEST_EVENT_ID,
+        name = TEST_NAME,
+        priority = 0,
+        counterName = TEST_COUNTER_NAME,
+        operation = operation,
+        operationValue = CounterOperationValue.Condition(conditionId, positionType),
+    )
+
+    private fun getConditionsResultsWithDetection(condition: ScreenCondition, detected: Boolean) =
+        ConditionsResults().apply {
+            addResult(
+                conditionId = condition.getDatabaseId(),
+                result = ProcessedConditionResult.Screen(
+                    isFulfilled = detected,
+                    haveBeenDetected = detected,
+                    condition = condition,
+                    position = if (detected) Point(100, 200) else null,
+                    size = if (detected) Point(40, 60) else null,
+                    confidenceRate = 100.0,
+                ),
+            )
+        }
+
+    @Test
+    fun execute_changeCounter_conditionValue_allPositionTypes() = runTest {
+        val condition = getNewDefaultCondition(42L)
+        val results = getConditionsResultsWithDetection(condition, detected = true)
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(0.0)
+
+        mapOf(
+            CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X to 100.0,
+            CounterOperationValue.Condition.PositionType.CONDITION_CENTER_Y to 200.0,
+            CounterOperationValue.Condition.PositionType.CONDITION_LEFT to 80.0,
+            CounterOperationValue.Condition.PositionType.CONDITION_RIGHT to 120.0,
+            CounterOperationValue.Condition.PositionType.CONDITION_TOP to 170.0,
+            CounterOperationValue.Condition.PositionType.CONDITION_BOTTOM to 230.0,
+        ).forEach { (positionType, expectedValue) ->
+            val event = getNewDefaultEvent(
+                AND,
+                conditions = listOf(condition),
+                actions = listOf(getNewChangeCounterOnCondition(condition.id, positionType)),
+            )
+
+            actionExecutor.executeActions(event, results)
+
+            verify(mockProcessingState).setCounterValue(TEST_COUNTER_NAME, expectedValue)
+        }
+    }
+
+    @Test
+    fun execute_changeCounter_conditionValue_add() = runTest {
+        val condition = getNewDefaultCondition(42L)
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(5.0)
+        val event = getNewDefaultEvent(
+            AND,
+            conditions = listOf(condition),
+            actions = listOf(
+                getNewChangeCounterOnCondition(
+                    conditionId = condition.id,
+                    positionType = CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X,
+                    operation = ChangeCounter.OperationType.ADD,
+                ),
+            ),
+        )
+
+        actionExecutor.executeActions(event, getConditionsResultsWithDetection(condition, detected = true))
+
+        verify(mockProcessingState).setCounterValue(TEST_COUNTER_NAME, 105.0)
+    }
+
+    @Test
+    fun execute_changeCounter_conditionValue_notDetected_counterUnchanged() = runTest {
+        val conditionNotDetected = getNewDefaultCondition(42L)
+        val conditionDetected = getNewDefaultCondition(75L)
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(5.0)
+        val event = getNewDefaultEvent(
+            OR,
+            conditions = listOf(conditionNotDetected, conditionDetected),
+            actions = listOf(
+                getNewChangeCounterOnCondition(
+                    conditionId = conditionNotDetected.id,
+                    positionType = CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X,
+                ),
+            ),
+        )
+        val results = getConditionsResultsWithDetection(conditionNotDetected, detected = false)
+        results.addResult(
+            conditionId = conditionDetected.getDatabaseId(),
+            result = ProcessedConditionResult.Screen(
+                isFulfilled = true,
+                haveBeenDetected = true,
+                condition = conditionDetected,
+                position = Point(15, 15),
+                size = Point(10, 10),
+                confidenceRate = 100.0,
+            ),
+        )
+
+        actionExecutor.executeActions(event, results)
+
+        verify(mockProcessingState, never()).setCounterValue(any(), any())
+    }
+
+    @Test
+    fun execute_changeCounter_conditionValue_notProcessed_counterUnchanged() = runTest {
+        val condition = getNewDefaultCondition(42L)
+        mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(5.0)
+        val event = getNewDefaultEvent(
+            OR,
+            conditions = listOf(condition),
+            actions = listOf(
+                getNewChangeCounterOnCondition(
+                    conditionId = condition.id,
+                    positionType = CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X,
+                ),
+            ),
+        )
+
+        actionExecutor.executeActions(event, ConditionsResults())
+
+        verify(mockProcessingState, never()).setCounterValue(any(), any())
     }
 }

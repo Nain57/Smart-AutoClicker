@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntityType
 
 
@@ -177,6 +178,9 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
         counterOperationValueType = operationValue.toEntityType(),
         counterOperationValue = (operationValue as? CounterOperationValue.Number)?.value,
         counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.counterName,
+        counterOperationConditionId = (operationValue as? CounterOperationValue.Condition)?.conditionId?.databaseId,
+        counterOperationConditionPositionType =
+            (operationValue as? CounterOperationValue.Condition)?.positionType?.toEntity(),
     )
 
 private fun Notification.toNotificationEntity(): ActionEntity =

@@ -36,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
@@ -57,6 +58,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.event.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -384,7 +386,11 @@ internal class ScenarioDataSource @Inject constructor(
             currentEntities = currentActionsEntities,
             newItems = newActions,
             mappingClosure = { actionInEvent ->
-                actionInEvent.toEntity().apply { eventId = eventDbId }
+                actionInEvent.toEntity().apply {
+                    eventId = eventDbId
+                    counterOperationConditionId = actionInEvent.getCounterOperationConditionIdentifier()
+                        ?.let(scenarioUpdateState::getConditionDbId)
+                }
             }
         )
         Log.d(TAG, "Actions updater: $updater")
@@ -560,6 +566,10 @@ internal class ScenarioDataSource @Inject constructor(
 /** @return the identifier of the condition this motion is positioned on, if any. */
 private fun GestureFingerMotion.getConditionIdentifier(): Identifier? =
     ((this as? Positionable)?.position as? Position.Condition)?.conditionId
+
+/** @return the identifier of the condition this action uses as counter operation value, if any. */
+private fun Action.getCounterOperationConditionIdentifier(): Identifier? =
+    ((this as? ChangeCounter)?.operationValue as? CounterOperationValue.Condition)?.conditionId
 
 /** Tag for logs. */
 private const val TAG = "ScenarioDataSource"

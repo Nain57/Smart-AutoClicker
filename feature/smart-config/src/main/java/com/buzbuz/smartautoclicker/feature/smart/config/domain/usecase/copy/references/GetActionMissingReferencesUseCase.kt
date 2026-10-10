@@ -61,7 +61,7 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         }
 
         val missingReferences = when (action) {
-            is ChangeCounter -> action.getMissingReferences()
+            is ChangeCounter -> action.getMissingReferences(copyResultEvents)
             is Click -> action.getMissingReferences(copyResultEvents)
             is Gesture -> action.getMissingReferences(copyResultEvents)
             is Notification -> action.getMissingReferences()
@@ -80,17 +80,25 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         )
     }
 
-    private fun ChangeCounter.getMissingReferences(): List<MissingCopyReference> =
+    private suspend fun ChangeCounter.getMissingReferences(
+        copyResultEvents: Map<Identifier, Event>,
+    ): List<MissingCopyReference> =
         buildList {
             if (editionRepository.editionState.getCounter(counterName) == null) {
                 add(MissingCopyReference.CounterReference(counterName))
             }
 
-            if (operationValue is CounterOperationValue.Counter) {
-                val valueCounterName = (operationValue as CounterOperationValue.Counter).counterName
-                if (editionRepository.editionState.getCounter(valueCounterName) == null) {
-                    add(MissingCopyReference.CounterReference(valueCounterName))
+            when (val value = operationValue) {
+                is CounterOperationValue.Counter -> {
+                    if (editionRepository.editionState.getCounter(value.counterName) == null) {
+                        add(MissingCopyReference.CounterReference(value.counterName))
+                    }
                 }
+
+                is CounterOperationValue.Condition ->
+                    getMissingConditionReference(copyResultEvents, eventId, value.conditionId)?.let(::add)
+
+                is CounterOperationValue.Number -> Unit
             }
         }
 
@@ -126,16 +134,7 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         when (this) {
             is Position.Condition -> {
                 val condId = conditionId ?: return emptyList()
-                val isFound = copyResultEvents[eventId]?.conditions?.any { it.id == condId } == true
-                if (isFound) return emptyList()
-
-                // The referenced condition can belong to another edited event not yet saved in database
-                val name = copyResultEvents.values
-                    .firstNotNullOfOrNull { event -> event.conditions.find { it.id == condId }?.name }
-                    ?: smartRepository.getConditionName(condId)
-                    ?: "Unknown"
-
-                return listOf(MissingCopyReference.ScreenConditionReference(name = name, conditionId = condId))
+                return listOfNotNull(getMissingConditionReference(copyResultEvents, eventId, condId))
             }
 
             is Position.Coordinates -> {
@@ -151,6 +150,24 @@ class GetActionMissingReferencesUseCase @Inject constructor(
                 return result
             }
         }
+    }
+
+    /** @return the missing reference if the condition can't be found in the action event, null if it is found. */
+    private suspend fun getMissingConditionReference(
+        copyResultEvents: Map<Identifier, Event>,
+        eventId: Identifier,
+        conditionId: Identifier,
+    ): MissingCopyReference.ScreenConditionReference? {
+        val isFound = copyResultEvents[eventId]?.conditions?.any { it.id == conditionId } == true
+        if (isFound) return null
+
+        // The referenced condition can belong to another edited event not yet saved in database
+        val name = copyResultEvents.values
+            .firstNotNullOfOrNull { event -> event.conditions.find { it.id == conditionId }?.name }
+            ?: smartRepository.getConditionName(conditionId)
+            ?: "Unknown"
+
+        return MissingCopyReference.ScreenConditionReference(name = name, conditionId = conditionId)
     }
 
     private fun Notification.getMissingReferences(): List<MissingCopyReference> =

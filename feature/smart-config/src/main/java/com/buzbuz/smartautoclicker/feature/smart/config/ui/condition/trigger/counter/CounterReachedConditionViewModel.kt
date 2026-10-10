@@ -162,5 +162,8 @@ class CounterReachedConditionViewModel @Inject constructor(
 
             is CounterOperationValue.Number ->
                 UiStaticOrCounterSelection.StaticValue(value)
+
+            is CounterOperationValue.Condition ->
+                UiStaticOrCounterSelection.StaticValue(0.0)
         }
 }

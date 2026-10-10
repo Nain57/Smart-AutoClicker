@@ -22,6 +22,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -30,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinge
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ItemWithMissingReferences
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
@@ -316,6 +318,55 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
 
         assertNull(useCase(pause, missingRef, replacement))
     }
+
+    @Test
+    fun `replace condition id in change counter condition value`() {
+        val oldConditionId = Identifier(databaseId = 100L)
+        val replacementConditionId = Identifier(databaseId = 200L)
+        val action = changeCounter(
+            CounterOperationValue.Condition(oldConditionId, CounterOperationValue.Condition.PositionType.CONDITION_TOP)
+        )
+        val missingRef = MissingCopyReference.ScreenConditionReference("Old Condition", conditionId = oldConditionId)
+        val replacement = mockk<ScreenCondition.Image>(relaxed = true) {
+            every { id } returns replacementConditionId
+        }
+
+        val result = useCase(action, missingRef, replacement) as ChangeCounter
+        assertEquals(
+            CounterOperationValue.Condition(replacementConditionId, CounterOperationValue.Condition.PositionType.CONDITION_TOP),
+            result.operationValue,
+        )
+    }
+
+    @Test
+    fun `change counter with non-matching condition value returns null`() {
+        val action = changeCounter(
+            CounterOperationValue.Condition(
+                Identifier(databaseId = 100L),
+                CounterOperationValue.Condition.PositionType.CONDITION_TOP,
+            )
+        )
+        val missingRef = MissingCopyReference.ScreenConditionReference("Other", conditionId = Identifier(databaseId = 999L))
+
+        assertNull(useCase(action, missingRef, mockk<ScreenCondition.Image>(relaxed = true)))
+    }
+
+    @Test
+    fun `change counter with number value returns null`() {
+        val action = changeCounter(CounterOperationValue.Number(3.0))
+        val missingRef = MissingCopyReference.ScreenConditionReference("Other", conditionId = Identifier(databaseId = 100L))
+
+        assertNull(useCase(action, missingRef, mockk<ScreenCondition.Image>(relaxed = true)))
+    }
+
+    private fun changeCounter(operationValue: CounterOperationValue) = ChangeCounter(
+        id = ACTION_ID,
+        eventId = EVENT_ID,
+        priority = 0,
+        counterName = "counter",
+        operation = ChangeCounter.OperationType.SET,
+        operationValue = operationValue,
+    )
 
     private fun triggerEventWithActions(actions: List<com.buzbuz.smartautoclicker.core.domain.model.action.Action>) = TriggerEvent(
         id = EVENT_ID,

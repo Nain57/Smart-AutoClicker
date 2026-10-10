@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
@@ -33,6 +34,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinge
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
 
@@ -94,6 +96,32 @@ class EditedItemsBuilderTest {
         val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
 
         assertEquals(literalPosition(), (copy.actions[0] as Click).position)
+    }
+
+    // endregion
+
+    // region Event copy: change counter on condition
+
+    @Test
+    fun `copied change counter on condition targets the copied condition`() {
+        val changeCounter = changeCounter(conditionValue(CONDITION_ID))
+        val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(changeCounter))
+
+        val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
+
+        val copiedConditionId = copy.conditions[0].id
+        assertNotEquals(CONDITION_ID, copiedConditionId)
+        assertEquals(conditionValue(copiedConditionId), (copy.actions[0] as ChangeCounter).operationValue)
+    }
+
+    @Test
+    fun `copied change counter on unknown condition keeps its condition id`() {
+        val changeCounter = changeCounter(conditionValue(OTHER_CONDITION_ID))
+        val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(changeCounter))
+
+        val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
+
+        assertEquals(conditionValue(OTHER_CONDITION_ID), (copy.actions[0] as ChangeCounter).operationValue)
     }
 
     // endregion
@@ -216,6 +244,21 @@ class EditedItemsBuilderTest {
         priority = 0,
         color = 0,
         detectionArea = Rect(0, 0, 10, 10),
+    )
+
+    private fun changeCounter(operationValue: CounterOperationValue) = ChangeCounter(
+        id = ACTION_ID,
+        eventId = EVENT_ID,
+        name = "counter",
+        priority = 0,
+        counterName = "counter",
+        operation = ChangeCounter.OperationType.SET,
+        operationValue = operationValue,
+    )
+
+    private fun conditionValue(conditionId: Identifier) = CounterOperationValue.Condition(
+        conditionId = conditionId,
+        positionType = CounterOperationValue.Condition.PositionType.CONDITION_BOTTOM,
     )
 
     private fun click(position: Position?) = Click(

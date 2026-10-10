@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data.processor
 
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 
@@ -32,6 +33,32 @@ internal class ConditionsResults {
     fun getFirstScreenConditionDetectedResult(): ProcessedConditionResult.Screen? =
         _results.values.find { it is ProcessedConditionResult.Screen && it.isFulfilled && it.condition.shouldBeDetected }
                 as ProcessedConditionResult.Screen?
+
+    /**
+     * Get the coordinate of a detected screen condition, as defined by [value].
+     *
+     * @return the coordinate in pixels, or null if the condition hasn't been processed or detected.
+     */
+    fun getDetectedConditionCoordinate(value: CounterOperationValue.Condition): Double? {
+        val result = _results.values.find { result ->
+            result is ProcessedConditionResult.Screen && result.condition.id == value.conditionId
+        } as ProcessedConditionResult.Screen? ?: return null
+        if (!result.haveBeenDetected) return null
+
+        val center = result.position ?: return null
+        val size = result.size ?: return null
+
+        val coordinate = when (value.positionType) {
+            CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X -> center.x
+            CounterOperationValue.Condition.PositionType.CONDITION_CENTER_Y -> center.y
+            CounterOperationValue.Condition.PositionType.CONDITION_LEFT -> center.x - size.x / 2
+            CounterOperationValue.Condition.PositionType.CONDITION_RIGHT -> center.x + size.x / 2
+            CounterOperationValue.Condition.PositionType.CONDITION_TOP -> center.y - size.y / 2
+            CounterOperationValue.Condition.PositionType.CONDITION_BOTTOM -> center.y + size.y / 2
+        }
+
+        return coordinate.toDouble()
+    }
 
     fun getAllTriggerConditionsResults(): List<ProcessedConditionResult.Trigger> =
         _results.mapNotNull { it.value as? ProcessedConditionResult.Trigger }

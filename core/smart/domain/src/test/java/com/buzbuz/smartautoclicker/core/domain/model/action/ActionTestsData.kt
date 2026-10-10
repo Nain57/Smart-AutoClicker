@@ -24,6 +24,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationConditionPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
@@ -393,9 +394,13 @@ internal object ActionTestsData {
             counterOperationValueType = when (operationValue) {
                 is CounterOperationValue.Number -> CounterOperationValueType.NUMBER
                 is CounterOperationValue.Counter -> CounterOperationValueType.COUNTER
+                is CounterOperationValue.Condition -> CounterOperationValueType.CONDITION
             },
             counterOperationValue = (operationValue as? CounterOperationValue.Number)?.value,
             counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.counterName,
+            counterOperationConditionId = (operationValue as? CounterOperationValue.Condition)?.conditionId?.databaseId,
+            counterOperationConditionPositionType = (operationValue as? CounterOperationValue.Condition)
+                ?.positionType?.let { CounterOperationConditionPositionType.valueOf(it.name) },
         ),
         gestureFingers = emptyList(),
         intentExtras = emptyList(),

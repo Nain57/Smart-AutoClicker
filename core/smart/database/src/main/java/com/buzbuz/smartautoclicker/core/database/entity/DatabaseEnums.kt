@@ -143,6 +143,30 @@ enum class CounterOperationValueType {
     NUMBER,
     /** The operand is a value reference by another counter. */
     COUNTER,
+    /**
+     * The operand is a coordinate of a screen condition detected in the same event.
+     * Only valid for [ChangeCounterOperationType].
+     */
+    CONDITION,
+}
+
+/**
+ * The coordinate of a detected screen condition to use as operand when the [CounterOperationValueType] is
+ * [CounterOperationValueType.CONDITION]. All values are in pixels, relative to the screen.
+ */
+enum class CounterOperationConditionPositionType {
+    /** The bottom edge of the detected condition area. */
+    CONDITION_BOTTOM,
+    /** The horizontal center of the detected condition area. */
+    CONDITION_CENTER_X,
+    /** The vertical center of the detected condition area. */
+    CONDITION_CENTER_Y,
+    /** The left edge of the detected condition area. */
+    CONDITION_LEFT,
+    /** The right edge of the detected condition area. */
+    CONDITION_RIGHT,
+    /** The top edge of the detected condition area. */
+    CONDITION_TOP,
 }
 
 

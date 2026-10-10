@@ -49,7 +49,7 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         }
 
         return when (action) {
-            is ChangeCounter -> action.isRelatedToUnreachableItem()
+            is ChangeCounter -> action.isRelatedToUnreachableItem(copyResultEvents)
             is Click -> action.isRelatedToUnreachableItem(copyResultEvents)
             is Gesture -> action.isRelatedToUnreachableItem(copyResultEvents)
             is Notification -> action.isRelatedToUnreachableItem()
@@ -63,12 +63,13 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         }
     }
 
-    private fun ChangeCounter.isRelatedToUnreachableItem(): Boolean {
+    private fun ChangeCounter.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
         if (editionRepository.counterIsUnreachable(counterName)) return true
 
         return when (val ctnValue = operationValue) {
             is CounterOperationValue.Counter -> editionRepository.counterIsUnreachable(ctnValue.counterName)
             is CounterOperationValue.Number -> false
+            is CounterOperationValue.Condition -> conditionIsUnreachable(copyResultEvents, eventId, ctnValue.conditionId)
         }
     }
 
@@ -111,7 +112,7 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         when (this) {
             is Position.Condition -> {
                 val condId = conditionId ?: return false
-                copyResultEvents[eventId]?.conditions?.any { condition -> condition.id == condId } != true
+                conditionIsUnreachable(copyResultEvents, eventId, condId)
             }
 
             is Position.Coordinates -> listOf(x, y).any { coordinatesValue ->
@@ -132,4 +133,11 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
 
     private fun EditionRepository.counterIsUnreachable(counterName: String): Boolean =
         editionState.getCounter(counterName) == null
+
+    private fun conditionIsUnreachable(
+        copyResultEvents: Map<Identifier, Event>,
+        eventId: Identifier,
+        conditionId: Identifier,
+    ): Boolean =
+        copyResultEvents[eventId]?.conditions?.any { condition -> condition.id == conditionId } != true
 }

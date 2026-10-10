@@ -133,6 +133,8 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
         type = action.counterOperationValueType,
         numberValue = action.counterOperationValue,
         counterName = action.counterOperationCounterName,
+        conditionId = action.counterOperationConditionId?.let { Identifier(id = it, asTemporary = cleanIds) },
+        conditionPositionType = action.counterOperationConditionPositionType,
     ),
 )
 

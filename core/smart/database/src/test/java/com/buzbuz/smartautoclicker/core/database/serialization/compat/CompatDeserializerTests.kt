@@ -19,8 +19,12 @@ package com.buzbuz.smartautoclicker.core.database.serialization.compat
 import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
+import com.buzbuz.smartautoclicker.core.database.entity.ActionType
+import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationConditionPositionType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -182,5 +186,90 @@ class CompatDeserializerTests {
 
         assertNotNull(result)
         assertEquals(4, result!!.threshold)
+    }
+
+    // ===== deserializeActionChangeCounter – operation value =====
+
+    private fun createJsonChangeCounter(extras: Map<String, JsonPrimitive>): JsonObject = JsonObject(
+        mapOf(
+            "id" to JsonPrimitive(1L),
+            "eventId" to JsonPrimitive(1L),
+            "name" to JsonPrimitive("test"),
+            "priority" to JsonPrimitive(0),
+            "type" to JsonPrimitive(ActionType.CHANGE_COUNTER.name),
+            "counterName" to JsonPrimitive("counter"),
+            "counterOperation" to JsonPrimitive(ChangeCounterOperationType.SET.name),
+        ) + extras
+    )
+
+    @Test
+    fun deserializeActionChangeCounter_v24NumberValue_conditionFieldsNull() {
+        val json = createJsonChangeCounter(
+            mapOf(
+                "counterOperationValueType" to JsonPrimitive(CounterOperationValueType.NUMBER.name),
+                "counterOperationValue" to JsonPrimitive(12.0),
+            )
+        )
+
+        val result = deserializer.deserializeActionChangeCounter(json)
+
+        assertNotNull(result)
+        assertEquals(CounterOperationValueType.NUMBER, result!!.counterOperationValueType)
+        assertEquals(12.0, result.counterOperationValue)
+        assertNull(result.counterOperationConditionId)
+        assertNull(result.counterOperationConditionPositionType)
+    }
+
+    @Test
+    fun deserializeActionChangeCounter_conditionValue_isPreserved() {
+        val json = createJsonChangeCounter(
+            mapOf(
+                "counterOperationValueType" to JsonPrimitive(CounterOperationValueType.CONDITION.name),
+                "counterOperationConditionId" to JsonPrimitive(7L),
+                "counterOperationConditionPositionType" to
+                        JsonPrimitive(CounterOperationConditionPositionType.CONDITION_LEFT.name),
+            )
+        )
+
+        val result = deserializer.deserializeActionChangeCounter(json)
+
+        assertNotNull(result)
+        assertEquals(CounterOperationValueType.CONDITION, result!!.counterOperationValueType)
+        assertEquals(7L, result.counterOperationConditionId)
+        assertEquals(CounterOperationConditionPositionType.CONDITION_LEFT, result.counterOperationConditionPositionType)
+    }
+
+    @Test
+    fun deserializeActionChangeCounter_conditionValue_missingConditionId_fallbackToNumber() {
+        val json = createJsonChangeCounter(
+            mapOf(
+                "counterOperationValueType" to JsonPrimitive(CounterOperationValueType.CONDITION.name),
+                "counterOperationConditionPositionType" to
+                        JsonPrimitive(CounterOperationConditionPositionType.CONDITION_LEFT.name),
+            )
+        )
+
+        val result = deserializer.deserializeActionChangeCounter(json)
+
+        assertNotNull(result)
+        assertEquals(CounterOperationValueType.NUMBER, result!!.counterOperationValueType)
+        assertNull(result.counterOperationConditionId)
+        assertNull(result.counterOperationConditionPositionType)
+    }
+
+    @Test
+    fun deserializeActionChangeCounter_conditionValue_missingPositionType_fallbackToNumber() {
+        val json = createJsonChangeCounter(
+            mapOf(
+                "counterOperationValueType" to JsonPrimitive(CounterOperationValueType.CONDITION.name),
+                "counterOperationConditionId" to JsonPrimitive(7L),
+            )
+        )
+
+        val result = deserializer.deserializeActionChangeCounter(json)
+
+        assertNotNull(result)
+        assertEquals(CounterOperationValueType.NUMBER, result!!.counterOperationValueType)
+        assertNull(result.counterOperationConditionId)
     }
 }

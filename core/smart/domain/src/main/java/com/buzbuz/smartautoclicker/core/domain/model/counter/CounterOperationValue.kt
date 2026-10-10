@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.counter
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
 
 sealed class CounterOperationValue : Completable {
@@ -28,4 +29,20 @@ sealed class CounterOperationValue : Completable {
         override fun isComplete(): Boolean = counterName.isNotEmpty()
     }
 
+    data class Condition(
+        val conditionId: Identifier,
+        val positionType: PositionType,
+    ): CounterOperationValue() {
+
+        override fun isComplete(): Boolean = true
+
+        enum class PositionType {
+            CONDITION_BOTTOM,
+            CONDITION_CENTER_X,
+            CONDITION_CENTER_Y,
+            CONDITION_LEFT,
+            CONDITION_RIGHT,
+            CONDITION_TOP,
+        }
+    }
 }

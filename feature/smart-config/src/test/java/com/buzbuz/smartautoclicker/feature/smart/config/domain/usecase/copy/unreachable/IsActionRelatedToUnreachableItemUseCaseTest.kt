@@ -262,6 +262,45 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         assertFalse(useCase(changeCounter(counterName = COUNTER_NAME, operationValue = CounterOperationValue.Counter(COUNTER_VALUE_NAME))))
     }
 
+    @Test
+    fun `change counter with condition value found in its own edited event is not related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val event = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event)
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+
+        assertFalse(useCase(changeCounter(counterName = COUNTER_NAME, operationValue = conditionValue(conditionId))))
+    }
+
+    @Test
+    fun `change counter with condition value found in a different edited event is related to unreachable item`() {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val otherEvent = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns OTHER_EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(otherEvent)
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+
+        assertTrue(useCase(changeCounter(counterName = COUNTER_NAME, operationValue = conditionValue(conditionId))))
+    }
+
+    @Test
+    fun `change counter with condition value not found is related to unreachable item`() {
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+
+        assertTrue(useCase(changeCounter(
+            counterName = COUNTER_NAME,
+            operationValue = conditionValue(Identifier(databaseId = 100L)),
+        )))
+    }
+
     // endregion
 
     // region Click
@@ -607,6 +646,11 @@ class IsActionRelatedToUnreachableItemUseCaseTest {
         counterName = counterName,
         operation = ChangeCounter.OperationType.SET,
         operationValue = operationValue,
+    )
+
+    private fun conditionValue(conditionId: Identifier) = CounterOperationValue.Condition(
+        conditionId = conditionId,
+        positionType = CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X,
     )
 
     private fun notification(messageText: String) = Notification(

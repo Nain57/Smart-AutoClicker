@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.domain.model.counter
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationConditionPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 
@@ -41,6 +42,27 @@ internal fun CounterOperationValue.toEntityType(): CounterOperationValueType =
     when (this) {
         is CounterOperationValue.Counter -> CounterOperationValueType.COUNTER
         is CounterOperationValue.Number -> CounterOperationValueType.NUMBER
+        is CounterOperationValue.Condition -> CounterOperationValueType.CONDITION
+    }
+
+internal fun CounterOperationValue.Condition.PositionType.toEntity(): CounterOperationConditionPositionType =
+    when (this) {
+        CounterOperationValue.Condition.PositionType.CONDITION_BOTTOM -> CounterOperationConditionPositionType.CONDITION_BOTTOM
+        CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X -> CounterOperationConditionPositionType.CONDITION_CENTER_X
+        CounterOperationValue.Condition.PositionType.CONDITION_CENTER_Y -> CounterOperationConditionPositionType.CONDITION_CENTER_Y
+        CounterOperationValue.Condition.PositionType.CONDITION_LEFT -> CounterOperationConditionPositionType.CONDITION_LEFT
+        CounterOperationValue.Condition.PositionType.CONDITION_RIGHT -> CounterOperationConditionPositionType.CONDITION_RIGHT
+        CounterOperationValue.Condition.PositionType.CONDITION_TOP -> CounterOperationConditionPositionType.CONDITION_TOP
+    }
+
+internal fun CounterOperationConditionPositionType.toDomain(): CounterOperationValue.Condition.PositionType =
+    when (this) {
+        CounterOperationConditionPositionType.CONDITION_BOTTOM -> CounterOperationValue.Condition.PositionType.CONDITION_BOTTOM
+        CounterOperationConditionPositionType.CONDITION_CENTER_X -> CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X
+        CounterOperationConditionPositionType.CONDITION_CENTER_Y -> CounterOperationValue.Condition.PositionType.CONDITION_CENTER_Y
+        CounterOperationConditionPositionType.CONDITION_LEFT -> CounterOperationValue.Condition.PositionType.CONDITION_LEFT
+        CounterOperationConditionPositionType.CONDITION_RIGHT -> CounterOperationValue.Condition.PositionType.CONDITION_RIGHT
+        CounterOperationConditionPositionType.CONDITION_TOP -> CounterOperationValue.Condition.PositionType.CONDITION_TOP
     }
 
 internal fun CountersEntity.toDomain(): Counter =
@@ -63,7 +85,15 @@ internal fun getDomainCounterOperationValue(
     type: CounterOperationValueType?,
     numberValue: Double?,
     counterName: String?,
-) = when (type ?: CounterOperationValueType.NUMBER) {
+    conditionId: Identifier? = null,
+    conditionPositionType: CounterOperationConditionPositionType? = null,
+): CounterOperationValue = when (type ?: CounterOperationValueType.NUMBER) {
     CounterOperationValueType.COUNTER -> CounterOperationValue.Counter(counterName ?: "")
     CounterOperationValueType.NUMBER -> CounterOperationValue.Number(numberValue ?: 0.0)
+    CounterOperationValueType.CONDITION ->
+        if (conditionId != null && conditionPositionType != null) {
+            CounterOperationValue.Condition(conditionId, conditionPositionType.toDomain())
+        } else {
+            CounterOperationValue.Number(numberValue ?: 0.0)
+        }
 }
