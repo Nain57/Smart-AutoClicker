@@ -26,7 +26,7 @@ import android.view.View
 
 import androidx.annotation.ColorInt
 
-internal abstract class ItemBriefRenderer<Style>(
+abstract class ItemBriefRenderer<Style>(
     protected val briefView: View,
     protected val viewStyle: Style,
 ) {

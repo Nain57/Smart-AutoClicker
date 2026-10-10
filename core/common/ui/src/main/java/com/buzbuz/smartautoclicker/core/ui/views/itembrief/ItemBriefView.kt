@@ -33,6 +33,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureBriefRenderer
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRenderer
@@ -82,6 +84,7 @@ class ItemBriefView @JvmOverloads constructor(
             renderer = when (description) {
                 is ClickDescription -> ClickBriefRenderer(this, style.clickStyle)
                 is SwipeDescription -> SwipeBriefRenderer(this, style.swipeStyle)
+                is GestureDescription -> GestureBriefRenderer(this, style.gestureStyle)
                 is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
                 is ImageConditionDescription -> ImageConditionBriefRenderer(
                     this, style.imageConditionStyle, displayConfigManager,

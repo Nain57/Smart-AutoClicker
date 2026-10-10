@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ColorConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBriefRendererStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRendererStyle
@@ -37,6 +38,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditi
 internal class ItemBriefViewStyle(
     val clickStyle: ClickBriefRendererStyle,
     val swipeStyle: SwipeBriefRendererStyle,
+    val gestureStyle: GestureBriefRendererStyle,
     val pauseStyle: PauseBriefRendererStyle,
     val imageConditionStyle: ImageConditionBriefRendererStyle,
     val colorConditionStyle: ColorConditionBriefRendererStyle,
@@ -72,6 +74,14 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 innerFromPaint = newFillPaint(innerColor),
                 outerToPaint = newStrokePaint(colorOutlineSecondary, thickness),
                 innerToPaint = newFillPaint(innerColor),
+                outerRadiusPx = outerRadius,
+                innerRadiusPx = innerRadius,
+            ),
+            gestureStyle = GestureBriefRendererStyle(
+                backgroundColor = backgroundColor,
+                outerPaint = newStrokePaint(colorOutlinePrimary, thickness),
+                innerPaint = newFillPaint(innerColor),
+                linePaint = newFillPaint(innerColor, innerRadius / 2f),
                 outerRadiusPx = outerRadius,
                 innerRadiusPx = innerRadius,
             ),

@@ -25,7 +25,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefLandBinding
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.OverlayViewActionBriefPortBinding
-import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.GestureRecordView
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefView
 
 class ItemsBriefOverlayViewBinding private constructor(
