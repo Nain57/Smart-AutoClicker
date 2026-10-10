@@ -119,6 +119,10 @@ class DebugReportTimelineFiltersDialog(
             }
 
             // Gesture hold filter
+            val holdFilterVisibility = if (viewModel.isHoldFilterAvailable()) View.VISIBLE else View.GONE
+            cardHoldChecks.visibility = holdFilterVisibility
+            cardReleases.visibility = holdFilterVisibility
+
             fieldShowHoldChecks.apply {
                 setTitle(context.getString(R.string.field_debug_filter_hold_checks_title))
                 setupDescriptions(

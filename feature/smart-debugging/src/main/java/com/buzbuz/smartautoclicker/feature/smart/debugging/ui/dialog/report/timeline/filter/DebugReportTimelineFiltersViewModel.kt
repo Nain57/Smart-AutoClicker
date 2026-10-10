@@ -17,6 +17,8 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.lifecycle.ViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.utils.formatDebugTimelineTimestamp
@@ -39,6 +41,10 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
     private val _holdUiState: MutableStateFlow<DebugReportHoldFilterUiState?> = MutableStateFlow(null)
     val holdUiState: StateFlow<DebugReportHoldFilterUiState?> = _holdUiState
 
+
+    @ChecksSdkIntAtLeast(Build.VERSION_CODES.O)
+    fun isHoldFilterAvailable(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
     fun setupUserValues(context: Context, reportDurationMs: Long, filters: List<DebugReportTimelineFilter>) {
         _timeUiState.update {
