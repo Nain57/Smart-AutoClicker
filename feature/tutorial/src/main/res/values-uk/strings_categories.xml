@@ -105,7 +105,7 @@
     <string name="tutorial_category_action_name">Дії</string>
     <string name="tutorial_category_action_desc_short">Виконайте щось, коли умови виконані</string>
     <string name="tutorial_category_action_desc_long">Дія виконується, коли умови події виконані. Дії охоплюють жести
-        (Click, Swipe), керування потоком (ToggleEvent, ChangeCounter, Wait) та системні взаємодії (Intent,
+        (Click, Gesture), керування потоком (ToggleEvent, ChangeCounter, Wait) та системні взаємодії (Intent,
         Notification, SystemAction, SetText).\n\n Дізнайтеся тут, як використовувати кожен тип дії для створення своїх
         скриптів автоматизації.</string>
 
@@ -115,11 +115,9 @@
         в центрі виявленої умови зображення. Можна налаштувати тривалість натискання для імітації довгих
         натискань.\n\n Дізнайтеся тут, як використовувати її для взаємодії з екраном.</string>
 
-    <string name="tutorial_category_gesture_action_name">Свайп</string>
-    <string name="tutorial_category_gesture_action_desc_short">Проведіть пальцем від однієї точки до іншої</string>
-    <string name="tutorial_category_gesture_action_desc_long">Дія «Свайп» імітує жест перетягування від початкової
-        координати до кінцевої. Можна налаштувати тривалість свайпу для керування швидкістю жесту.\n\n Дізнайтеся
-        тут, як використовувати його для прокрутки або перетягування елементів на екрані.</string>
+    <string name="tutorial_category_gesture_action_name">Жест</string>
+    <string name="tutorial_category_gesture_action_desc_short">Виконайте складний жест на екрані</string>
+    <string name="tutorial_category_gesture_action_desc_long">Дія «Жест» імітує рухи одного або кількох пальців по екрану. Можна налаштувати до п\'яти пальців, що діють одночасно.\n\n Дізнайтеся тут, як використовувати її для взаємодії з екраном.</string>
 
     <string name="tutorial_category_pause_action_name">Чекати</string>
     <string name="tutorial_category_pause_action_desc_short">Очікування перед виконанням наступної дії</string>

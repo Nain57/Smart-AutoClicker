@@ -68,7 +68,7 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_desc_dumb_scenario">Звичайний досвід автоклікера.\nПросто розміщуйте натискання та свайпи на екрані.</string>
+    <string name="item_desc_dumb_scenario">Звичайний досвід автоклікера.\nПросто розміщуйте натискання та жести на екрані.</string>
     <string name="item_desc_dumb_scenario_max_duration">Зупинити через %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">Без максимальної тривалості</string>
     <string name="item_desc_dumb_scenario_repeat_count">Повторити %1$d разів</string>

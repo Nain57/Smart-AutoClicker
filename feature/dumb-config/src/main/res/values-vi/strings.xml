@@ -23,12 +23,14 @@
     <string name="menu_item_title_dumb_config">Cấu hình</string>
     <string name="item_desc_dumb_action_duration">Trong %1$s</string>
     <string name="item_desc_dumb_click">Bấm vào đâu đó trên màn hình</string>
+    <string name="item_desc_dumb_gesture">Thực hiện một cử chỉ phức tạp trên màn hình</string>
     <string name="item_desc_dumb_click_details">Trong %1$s lúc [%2$d, %3$d]</string>
     <string name="item_desc_dumb_pause">Tạm dừng thực hiện</string>
     <string name="item_desc_dumb_pause_details">Trong %1$s</string>
     <string name="item_desc_dumb_repeat_count">Lặp lại %1$d lần</string>
     <string name="item_desc_dumb_repeat_infinite">Lặp lại vô hạn</string>
     <string name="item_title_dumb_click">Nhấp chuột</string>
+    <string name="item_title_dumb_gesture">Cử chỉ</string>
     <string name="item_title_dumb_pause">Chờ đợi</string>
     <string name="item_title_no_dumb_actions">Không có hành động</string>
     <string name="item_title_dumb_action_copy">Sao chép</string>

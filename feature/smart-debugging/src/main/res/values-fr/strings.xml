@@ -36,7 +36,19 @@
     <string name="item_event_occurrence_frame_number">Écran #%1$d</string>
     <string name="item_event_occurrence_trigger">Déclencheur</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Remplie: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">Non remplie: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d conditions traitées</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">Maintenu depuis %1$.1fs</string>
+    <string name="item_event_occurrence_released">Relâché: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">Non rempli</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">Actions terminées</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">Durée écoulée</string>
+    <string name="item_event_occurrence_release_reason_interrupted">Interrompu</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">Évènement désactivé</string>
+    <string name="item_event_occurrence_release_reason_other_event">Autre évènement</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">Rotation de l\'écran</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">Scénario arrêté</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +62,12 @@
     <string name="field_debug_filter_trigger_events_title">Évènements de déclencheurs</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">Afficher les occurrences des événements de déclencheurs dans la chronologie</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">Masquer toutes les occurrences d\'événements de déclencheur dans la chronologie</string>
+    <string name="field_debug_filter_hold_checks_title">Afficher les vérifications de maintien</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">Afficher dans la chronologie les vérifications qui maintiennent un geste</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">Masquer dans la chronologie les vérifications qui maintiennent un geste</string>
+    <string name="field_debug_filter_releases_title">Afficher les relâchements de geste</string>
+    <string name="field_debug_filter_releases_show_desc_on">Afficher dans la chronologie les relâchements des gestes maintenus</string>
+    <string name="field_debug_filter_releases_show_desc_off">Masquer dans la chronologie les relâchements des gestes maintenus</string>
 
     <string name="field_debug_filter_events_show_title">Filtres</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d évènements</string>

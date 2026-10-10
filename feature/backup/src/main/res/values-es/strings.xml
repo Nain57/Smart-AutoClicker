@@ -48,7 +48,7 @@
     <string name="message_backup_import_completed">Importación completada\n%1$d guión importado</string>
     <string name="message_backup_import_completed_with_error">Importación completada\n%1$d guiones importados\n%2$d errores</string>
     <string name="message_backup_import_error">Se ha producido un error y se ha cancelado la importación de la copia de seguridad</string>
-    <string name="message_backup_import_compatibility">"Algunos de los escenarios importados se generaron desde un dispositivo con una pantalla diferente, lo que podría causar problemas con las coordenadas de detección y acción.\n\nPara solucionarlo, debes tomar nuevas capturas de pantalla para tus condiciones y actualizar las posiciones de clic/deslizamiento."</string>
+    <string name="message_backup_import_compatibility">"Algunos de los escenarios importados se generaron desde un dispositivo con una pantalla diferente, lo que podría causar problemas con las coordenadas de detección y acción.\n\nPara solucionarlo, debes tomar nuevas capturas de pantalla para tus condiciones y actualizar las posiciones de clic/gesto."</string>
     <string name="message_backup_error_no_zip_app">"No se encontró ninguna aplicación en el dispositivo para manejar la carga/guardado de un archivo ZIP."</string>
 
 

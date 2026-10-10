@@ -27,7 +27,7 @@
 
     <string name="message_tutorial_screen_condition_moving_target_step_4">场景是Klick\'r自动化的根结构。\n\n它包含了通用检测设置和描述在运行你的场景时将执行的事件列表。\n\n点击创建事件按钮以创建你的第一个事件。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">事件描述了在满足特定条件时执行的操作（点击、滑动等）。\n\n为了打赢这个游戏，我们需要检测蓝色角色在屏幕上移动时的位置。\n\n单击条件字段，显示条件列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">事件描述了在满足特定条件时执行的操作（点击、手势等）。\n\n为了打赢这个游戏，我们需要检测蓝色角色在屏幕上移动时的位置。\n\n单击条件字段，显示条件列表。</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_6">图像条件是将与你的设备屏幕的每个屏幕帧进行比较的截图的一部分。\n\n为了打赢游戏，我们希望在蓝色角色显示在屏幕上时进行点击，因此我们需要一个在角色显示在你的设备屏幕上时满足的条件。\n\n点击创建条件按钮以创建你的第一个条件。</string>
 

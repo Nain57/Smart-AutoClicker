@@ -31,7 +31,7 @@
         Ele contém as configurações gerais de detecção e uma lista de Eventos descrevendo o que será executado ao
         rodar seu Cenário.\n\nClique no botão de criar evento para criar seu primeiro Evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Um Evento descreve quais Ações (clique, deslize…) devem ser executadas quando
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Um Evento descreve quais Ações (clique, gesto…) devem ser executadas quando
         certas Condições são atendidas.\n\nPara vencer este jogo, precisamos detectar o personagem azul enquanto ele se move pela tela.
         \n\nClique na campo Condições para exibir a lista de Condições.</string>
 

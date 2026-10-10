@@ -60,6 +60,13 @@
       -->
     <string name="item_click_desc">Cliquer sur l\'écran</string>
     <string name="item_click_details_at_position">Pendant %1$s</string>
+    <string name="item_gesture_title">Geste</string>
+    <string name="item_gesture_desc">Exécuter un geste complexe sur l\'écran</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">Avec %1$d doigt pendant %2$s</item>
+        <item quantity="many">Avec %1$d doigts pendant %2$s</item>
+        <item quantity="other">Avec %1$d doigts pendant %2$s</item>
+    </plurals>
     <string name="item_click_details_on_condition">Pendant %1$s sur %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Pas de condition sélectionnée</string>
@@ -151,7 +158,7 @@
     <string name="message_empty_trigger_event_list_desc">Un événement déclencheur contient un ensemble d\'actions exécutées lorsqu\'un ensemble de conditions personnalisées sont remplies.\nVous avez besoin d\'au moins un événement d\'écran ou de déclenchement dans votre scénario pour l\'exécuter.</string>
     <string name="message_empty_trigger_condition_list_desc">Une condition est un critère personnalisé pour lancer une action.</string>
     <string name="message_empty_screen_condition_list_desc">Une condition d\'écran est une partie d\'une capture d\'écran qui va être recherchée dans chaque image affichées sur l\'écran du téléphone.</string>
-    <string name="message_empty_action_list_desc">Une action est un interraction (clic, swipe…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créés sont remplies.</string>
+    <string name="message_empty_action_list_desc">Une action est une interaction (clic, geste…) avec votre téléphone qui est exécutée lorsque les conditions que vous avez créées sont remplies.</string>
 
     <!--
       - Messages.
@@ -255,6 +262,35 @@
 
     <string name="field_click_offset_title">Décalage</string>
     <string name="field_click_offset_desc_none">Aucun</string>
+    <string name="item_desc_gesture_press_condition">Appuyer sur [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">Appuyer sur la première condition détectée</string>
+    <string name="item_desc_gesture_press_condition_error">Aucune condition sur laquelle appuyer</string>
+    <string name="item_desc_gesture_move_condition">Déplacer vers [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">Déplacer vers la première condition détectée</string>
+    <string name="item_desc_gesture_move_condition_error">Aucune condition vers laquelle se déplacer</string>
+    <string name="message_title_gesture_on_condition_and">Cliquer sur une condition</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">Opérateur de condition OR</string>
+    <string name="message_desc_gesture_on_condition_or">Position de la première condition détectée</string>
+    <string name="message_title_gesture_on_condition_error">Aucune condition sélectionnée</string>
+    <string name="message_desc_gesture_on_condition_error">Vous devez choisir une condition sur laquelle exécuter le geste</string>
+    <string name="button_title_condition_pick">Choisir une condition</string>
+    <string name="button_title_condition_remove">Retirer la condition</string>
+    <string name="field_gesture_release_when_title">Quand</string>
+    <string name="field_gesture_release_when_item_now">Immédiatement</string>
+    <string name="field_gesture_release_when_item_until_actions_end">Fin des actions</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Évènement non rempli</string>
+    <string name="field_gesture_release_when_item_for_duration">Après une durée</string>
+    <string name="field_gesture_release_hold_duration_title">Durée de maintien (ms)</string>
+    <string name="field_gesture_release_desc_now">Relâcher le doigt immédiatement.</string>
+    <string name="field_gesture_release_desc_until_actions_end">Relâcher le doigt une fois que toutes les actions de cet évènement ont été exécutées. Identique à \"Immédiatement\" si cette action est la dernière de la liste.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">Relâcher le doigt dès que cet évènement n\'est plus rempli.</string>
+    <string name="field_gesture_release_desc_for_duration">Relâcher le doigt après %1$d ms.</string>
+    <string name="item_desc_gesture_release_now">Relâcher immédiatement</string>
+    <string name="item_desc_gesture_release_until_actions_end">Relâcher à la fin des actions</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">Relâcher quand l\'évènement n\'est plus rempli</string>
+    <string name="item_desc_gesture_release_for_duration">Relâcher après %1$d ms</string>
+    <string name="field_gesture_release_hold_behaviour">• Un seul maintien à la fois est possible : en démarrer un autre relâchera celui-ci.\n• Tant qu\'un doigt est maintenu, l\'évènement associé ne sera plus déclenché avant que le doigt soit relâché.\n• Si vous appuyez vous-même sur l\'écran, le maintien sera interrompu.\n• La durée maximale de maintien dépend de votre système et de l\'application automatisée. Certains systèmes autorisent une durée infinie, d\'autres non.</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_intent_sending_type_label">Type</string>

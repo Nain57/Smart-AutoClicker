@@ -31,7 +31,7 @@
         Contiene la configuración general de detección y una lista de eventos que describen lo que se ejecutará al ejecutar
         tu escenario.\n\nHaz clic en el botón de crear evento para crear tu primer evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Un evento describe qué acciones (clic, deslizamiento…) ejecutar cuando se cumplen
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Un evento describe qué acciones (clic, gesto…) ejecutar cuando se cumplen
         ciertas condiciones.\n\nPara ganar este juego, necesitamos detectar el personaje azul mientras se mueve por la pantalla.
         \n\nHaz clic en el campo de Condiciones para mostrar la lista de condiciones.</string>
 

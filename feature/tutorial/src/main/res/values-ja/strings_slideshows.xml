@@ -159,12 +159,10 @@
         多いです。</string>
 
     <!-- Gesture Action slideshow -->
-    <string name="tutorial_slideshow_gesture_action_title">スワイプアクション</string>
-    <string name="tutorial_slideshow_gesture_action_desc">スワイプジェスチャーの実行方法を学ぶ</string>
-    <string name="tutorial_slideshow_gesture_action_step_1_text">スワイプアクションは開始位置から終了位置まで直線的な
-        ドラッグジェスチャーを実行します。両方の座標は固定されており、アクションの設定で指定します。\n\nデュレーション
-        はジェスチャーが開始から終了まで要する時間を制御します。短いデュレーションはより速いスワイプを生み出し、長い
-        デュレーションはよりゆっくりと制御されたスワイプを生み出します。</string>
+    <string name="tutorial_slideshow_gesture_action_title">ジェスチャーアクション</string>
+    <string name="tutorial_slideshow_gesture_action_desc">ジェスチャーの実行方法を学ぶ</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">ジェスチャーアクションは、記録または手動で設定した軌跡を、最大 5 本の指で同時に実行します。\n\n軌跡は必ず「押す」から始まり「離す」で終わり、その間に移動や待機を入れることができます。ジェスチャー全体の最大時間は 60 秒です。\n\nこれにより、スワイプやピンチズームなどの複雑なジェスチャーを簡単に再現できます。アクションリストの記録ボタンを使って、画面上で直接ジェスチャーを記録してみましょう！\n\n注：ジェスチャー内の待機は Android 8 以降でのみ利用できます。</string>
+    <string name="tutorial_slideshow_gesture_action_step_2_text">ジェスチャーの最後で最初の指を押したままにして、その間もシナリオの実行を続けることができます。ジェスチャーの「離す」ステップを展開し、指を離すタイミングを選んでください：すぐに、イベントのすべてのアクションが実行された後、イベントの条件が満たされなくなったとき、または一定時間後。\n\n注意点：\n• 押し続けられる指は一度に 1 本だけです。別の押し続けを開始すると、前の指は離されます。\n• 指を押し続けている間、関連するイベントは指が離されるまで再び実行されません。\n• 画面を手動でタッチすると、押し続けは中断されます。\n• 押し続けられる最大時間は、お使いのシステムと自動化しているアプリによって異なります。無制限に押し続けられるシステムもあれば、そうでないものもあります。</string>
 
     <!-- Click Action Offset slideshow -->
     <string name="tutorial_slideshow_click_action_offset_title">クリックオフセット</string>

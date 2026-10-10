@@ -48,7 +48,7 @@
     <string name="message_backup_import_completed">اكتمل الاستيراد\n%1$d تم استيراد السيناريو</string>
     <string name="message_backup_import_completed_with_error">اكتمل الاستيراد\n%1$d السيناريوهات المستوردة\n%2$d أخطاء</string>
     <string name="message_backup_import_error">حدث خطأ وتم إلغاء استيراد النسخة الاحتياطية</string>
-    <string name="message_backup_import_compatibility">تم إنشاء بعض السيناريوهات المستوردة من جهاز بشاشة مختلفة وقد يتسبب هذا في حدوث مشكلات في إحداثيات الكشف والإجراء.\n\nلإصلاح هذه المشكلة، يتعين عليك التقاط لقطات شاشة جديدة لظروفك وتحديث مواضع النقر/التمرير.</string>
+    <string name="message_backup_import_compatibility">تم إنشاء بعض السيناريوهات المستوردة من جهاز بشاشة مختلفة وقد يتسبب هذا في حدوث مشكلات في إحداثيات الكشف والإجراء.\n\nلإصلاح هذه المشكلة، يتعين عليك التقاط لقطات شاشة جديدة لظروفك وتحديث مواضع النقر/الإيماءة.</string>
     <string name="message_backup_error_no_zip_app">لم يتم العثور على تطبيق على الجهاز للتعامل مع حفظ/تحميل ملف مضغوط.</string>
 
 

@@ -96,7 +96,7 @@
     <string name="tutorial_category_action_name">الإجراءات</string>
     <string name="tutorial_category_action_desc_short">نفّذ شيئاً عند استيفاء شروطك</string>
     <string name="tutorial_category_action_desc_long">يتم تنفيذ الإجراء عند استيفاء شروط الحدث. تتراوح الإجراءات بين
-        الإيماءات (Click, Swipe) والتحكم في التدفق (ToggleEvent, ChangeCounter, Wait) والتفاعلات مع النظام (Intent,
+        الإيماءات (Click, Gesture) والتحكم في التدفق (ToggleEvent, ChangeCounter, Wait) والتفاعلات مع النظام (Intent,
         Notification, SystemAction, SetText).\n\n تعلّم هنا كيفية استخدام كل نوع من الإجراءات لبناء سكريبتات
         الأتمتة الخاصة بك.</string>
 
@@ -106,11 +106,9 @@
         صورة تم اكتشافه. يمكنك ضبط مدة الضغط لمحاكاة الضغط المطوّل.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع
         شاشتك.</string>
 
-    <string name="tutorial_category_gesture_action_name">السحب</string>
-    <string name="tutorial_category_gesture_action_desc_short">اسحب من نقطة إلى أخرى على الشاشة</string>
-    <string name="tutorial_category_gesture_action_desc_long">يحاكي إجراء السحب إيماءة سحب من إحداثية البداية إلى
-        إحداثية النهاية. يمكنك ضبط مدة السحب للتحكم في سرعة الإيماءة.\n\n تعلّم هنا كيفية استخدامه للتمرير أو
-        سحب العناصر على شاشتك.</string>
+    <string name="tutorial_category_gesture_action_name">إيماءة</string>
+    <string name="tutorial_category_gesture_action_desc_short">نفّذ إيماءة معقدة على الشاشة</string>
+    <string name="tutorial_category_gesture_action_desc_long">يحاكي إجراء الإيماءة حركات إصبع واحد أو أكثر على الشاشة. يمكنك إعداد ما يصل إلى خمسة أصابع تعمل في نفس الوقت.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع شاشتك.</string>
 
     <string name="tutorial_category_pause_action_name">انتظر</string>
     <string name="tutorial_category_pause_action_desc_short">انتظر مدةً قبل تنفيذ الإجراء التالي</string>

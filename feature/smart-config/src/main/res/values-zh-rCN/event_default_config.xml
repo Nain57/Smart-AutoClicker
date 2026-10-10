@@ -10,6 +10,7 @@
 <resources>
     <string name="default_event_name">默认事件</string>
     <string name="default_click_name">点击</string>
+    <string name="default_gesture_name">手势</string>
     <string name="default_pause_name">等待</string>
     <string name="default_intent_name">意图</string>
     <string name="default_toggle_event_name">切换事件状态</string>

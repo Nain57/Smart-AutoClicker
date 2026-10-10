@@ -94,7 +94,7 @@
     <string name="tutorial_category_action_name">アクション</string>
     <string name="tutorial_category_action_desc_short">条件が満たされたときに何かを実行する</string>
     <string name="tutorial_category_action_desc_long">アクションはイベントの条件が満たされると実行されます。アクションはジェスチャー
-        （Click、Swipe）からフロー制御（ToggleEvent、ChangeCounter、Wait）、システム操作（Intent、Notification、
+        （Click、Gesture）からフロー制御（ToggleEvent、ChangeCounter、Wait）、システム操作（Intent、Notification、
         SystemAction、SetText）まで多岐にわたります。\n\n ここで各アクションタイプを使って自動化スクリプトを作る方法を
         学びましょう。</string>
 
@@ -104,11 +104,9 @@
         シミュレートします。長押しをシミュレートするために押下時間を設定することもできます。\n\n ここで画面との操作方法を学び
         ましょう。</string>
 
-    <string name="tutorial_category_gesture_action_name">スワイプ</string>
-    <string name="tutorial_category_gesture_action_desc_short">画面上で一点から別の点へスワイプする</string>
-    <string name="tutorial_category_gesture_action_desc_long">スワイプアクションは、開始座標から終了座標へのドラッグジェスチャーを
-        シミュレートします。スワイプ時間を設定してジェスチャーの速度を制御できます。\n\n ここで画面上の要素をスクロールまたは
-        ドラッグする方法を学びましょう。</string>
+    <string name="tutorial_category_gesture_action_name">ジェスチャー</string>
+    <string name="tutorial_category_gesture_action_desc_short">画面上で複雑なジェスチャーを実行する</string>
+    <string name="tutorial_category_gesture_action_desc_long">ジェスチャーアクションは、画面上での 1 本または複数の指の動きをシミュレートします。最大 5 本の指を同時に動かすように設定できます。\n\n ここで画面を操作するための使い方を学びましょう。</string>
 
     <string name="tutorial_category_pause_action_name">待機</string>
     <string name="tutorial_category_pause_action_desc_short">次のアクションを実行する前に指定時間待機する</string>

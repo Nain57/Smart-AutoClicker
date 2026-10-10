@@ -31,7 +31,7 @@
         Ele contém as configurações gerais de detecção e uma lista de Eventos descrevendo o que será executado ao
         rodar seu Cenário.\n\nClique no botão de criar evento para criar seu primeiro evento.</string>
 
-    <string name="message_tutorial_screen_condition_still_target_step_5">Um Evento descreve quais Ações (clique, deslize…) devem ser executadas
+    <string name="message_tutorial_screen_condition_still_target_step_5">Um Evento descreve quais Ações (clique, gesto…) devem ser executadas
         quando certas Condições são atendidas.\n\nVocê precisa criar pelo menos uma Condição e uma Ação para ter um
         Evento válido e usá-lo em seu cenário.\n\nClique na campo Condições para exibir a lista de Condições.</string>
 
@@ -70,7 +70,7 @@
         para exibir a lista de Ações.</string>
 
     <string name="message_tutorial_screen_condition_still_target_step_14">Uma Ação é algo que é executado uma vez que as Condições de seu Evento
-        são cumpridas.\n\nPode ser um clique, um deslize, uma espera, um Intent (uma interação com outro aplicativo) ou
+        são cumpridas.\n\nPode ser um clique, um gesto, uma espera, um Intent (uma interação com outro aplicativo) ou
         uma mudança na execução do Cenário, e várias Ações podem ser definidas para o mesmo Evento.\n\nClique no botão
         de criar Ação para criar sua primeira Ação.</string>
 

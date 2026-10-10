@@ -39,12 +39,14 @@
       -->
     <string name="item_desc_dumb_action_duration">Durante %1$s</string>
     <string name="item_desc_dumb_click">Clique em algum lugar na tela</string>
+    <string name="item_desc_dumb_gesture">Executar um gesto complexo na tela</string>
     <string name="item_desc_dumb_click_details">Durante %1$s em [%2$d, %3$d]</string>
     <string name="item_desc_dumb_pause">Pausar a execução</string>
     <string name="item_desc_dumb_pause_details">Durante %1$s</string>
     <string name="item_desc_dumb_repeat_count">Repetir %1$d vezes</string>
     <string name="item_desc_dumb_repeat_infinite">Repetição infinita</string>
     <string name="item_title_dumb_click">Clique</string>
+    <string name="item_title_dumb_gesture">Gesto</string>
     <string name="item_title_dumb_pause">Aguarde</string>
     <string name="item_title_no_dumb_actions">Sem Ações</string>
     <string name="item_title_dumb_action_copy">Cópia</string>

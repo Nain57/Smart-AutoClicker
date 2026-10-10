@@ -31,7 +31,7 @@
       - Views handles any length here, so no limitations.
       -->
     <string name="message_permission_desc_accessibility">La permission de service d\'accessibilité permet à Klick\'r
-        d\'éxecuter des gestes sur votre écran. Cette permission est requise afin d\'éxecuter les clics et les swipes
+        d\'éxecuter des gestes sur votre écran. Cette permission est requise afin d\'éxecuter les clics et les gestes
         que vous allez créer dans vos scénarios d\'automatisation.\n\nAucune donnée n\'est collectée par Klick\'r.\n\n
         Pour accorder la permission de service d\'accessibilité, cliquez sur le boutton ci dessous.</string>
     <string name="message_permission_desc_notification">Optionnel: Affiche une notification pendant que l\'application est lancée afin

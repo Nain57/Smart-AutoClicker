@@ -139,11 +139,10 @@
         需求。</string>
 
     <!-- Gesture Action slideshow -->
-    <string name="tutorial_slideshow_gesture_action_title">滑動動作</string>
-    <string name="tutorial_slideshow_gesture_action_desc">了解滑動手勢的執行方式</string>
-    <string name="tutorial_slideshow_gesture_action_step_1_text">滑動動作沿直線從起始位置到結束位置執行拖曳手勢。
-        兩個座標都是固定的，在動作設定中指定。\n\n持續時間控制手勢從開始到結束所需的時間：較短的持續時間產生
-        更快的滑動，較長的持續時間產生更慢、更受控的滑動。</string>
+    <string name="tutorial_slideshow_gesture_action_title">手勢動作</string>
+    <string name="tutorial_slideshow_gesture_action_desc">了解手勢的執行方式</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">手勢動作會執行您錄製或手動設定的路徑，最多支援五根手指同時操作。\n\n路徑總是以按下開始、以放開結束，中間可以包含移動和等待。整個手勢的最長時長為 60 秒。\n\n藉此，您可以輕鬆重現滑動、雙指縮放等複雜手勢。試試動作清單中的錄製按鈕，直接在螢幕上錄製一個手勢吧！\n\n注意：手勢中的等待僅在 Android 8 及以上版本可用。</string>
+    <string name="tutorial_slideshow_gesture_action_step_2_text">您可以在手勢結束時保持第一根手指按住，並在按住期間繼續執行情境。展開手勢的「放開」步驟，選擇何時放開手指：立即、事件的所有動作執行完畢後、事件不再滿足時，或一段時間後。\n\n請注意：\n• 同一時間只能按住一根手指，開始新的按住會放開之前的手指。\n• 手指按住期間，相關事件在手指放開前不會再次觸發。\n• 如果您手動觸碰螢幕，按住將被中斷。\n• 最長按住時間取決於您的系統和正在自動化的應用程式。有些系統允許無限時長，有些則不允許。</string>
 
     <!-- Click Action Offset slideshow -->
     <string name="tutorial_slideshow_click_action_offset_title">點擊偏移</string>

@@ -6,12 +6,14 @@
     <string name="menu_item_title_dumb_config">設定</string>
     <string name="item_desc_dumb_action_duration">持續 %1$s</string>
     <string name="item_desc_dumb_click">於螢幕上某處點擊</string>
+    <string name="item_desc_dumb_gesture">於螢幕上執行複雜手勢</string>
     <string name="item_desc_dumb_click_details">於 [%2$d, %3$d] 持續 %1$s</string>
     <string name="item_desc_dumb_pause">暫停執行</string>
     <string name="item_desc_dumb_pause_details">持續 %1$s</string>
     <string name="item_desc_dumb_repeat_count">重複 %1$d 次</string>
     <string name="item_desc_dumb_repeat_infinite">無限重複</string>
     <string name="item_title_dumb_click">點擊</string>
+    <string name="item_title_dumb_gesture">手勢</string>
     <string name="item_title_dumb_pause">等待</string>
     <string name="item_title_no_dumb_actions">無動作</string>
     <string name="item_title_dumb_action_copy">複製</string>

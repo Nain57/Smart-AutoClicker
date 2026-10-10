@@ -36,7 +36,19 @@
     <string name="item_event_occurrence_frame_number">Кадр №%1$d</string>
     <string name="item_event_occurrence_trigger">Курок</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Выполнено: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">Не выполнено: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d условий обработано</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">Удерживается %1$.1f с</string>
+    <string name="item_event_occurrence_released">Отпущено: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">Не выполнено</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">Действия завершены</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">Время истекло</string>
+    <string name="item_event_occurrence_release_reason_interrupted">Прервано</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">Событие отключено</string>
+    <string name="item_event_occurrence_release_reason_other_event">Другое событие</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">Поворот экрана</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">Сценарий остановлен</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +62,12 @@
     <string name="field_debug_filter_trigger_events_title">Триггерные события</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">Показывать триггерные события на временной шкале</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">Скрыть все триггерные события на временной шкале</string>
+    <string name="field_debug_filter_hold_checks_title">Показывать проверки удержания жеста</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">Показывать на временной шкале проверки, удерживающие жест</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">Скрывать на временной шкале проверки, удерживающие жест</string>
+    <string name="field_debug_filter_releases_title">Показывать отпускание жеста</string>
+    <string name="field_debug_filter_releases_show_desc_on">Показывать на временной шкале отпускание удерживаемых жестов</string>
+    <string name="field_debug_filter_releases_show_desc_off">Скрывать на временной шкале отпускание удерживаемых жестов</string>
 
     <string name="field_debug_filter_events_show_title">Фильтры</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d событий</string>

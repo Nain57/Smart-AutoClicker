@@ -83,7 +83,7 @@
     <!-- Dropdown field for selecting anti bot state -->
     <string name="dropdown_item_title_anti_detection_enabled">Включено</string>
     <string name="dropdown_item_title_anti_detection_disabled">Отключено</string>
-    <string name="dropdown_helper_text_anti_detection_enabled">Позиции и продолжительность нажатий, смахиваний и бездействий будут выполняться с небольшим беспорядочным смещением</string>
+    <string name="dropdown_helper_text_anti_detection_enabled">Позиции и продолжительность нажатий, жестов и бездействий будут выполняться с небольшим беспорядочным смещением</string>
     <string name="dropdown_helper_text_anti_detection_disabled">Все действия будут выполняться как требуется</string>
 
     <string name="dropdown_label_time_unit_ms">мс</string>
@@ -98,6 +98,24 @@
       -->
     <string name="toast_denied_screen_sharing_permission">Разрешение на трансляцию экрана отклонено пользователем</string>
     <string name="toast_configure_single_click">Коснитесь там, где нужно расположить нажатие</string>
+    <string name="dialog_title_gesture">Жест</string>
+    <string name="item_header_finger_title">Палец №%1$d</string>
+    <string name="item_header_finger_desc">%1$d мс / %2$d мс</string>
+    <string name="item_header_button_capture">Записать</string>
+    <string name="item_header_finger_start_at">Начало через (мс)</string>
+    <string name="item_title_gesture_press">Нажатие</string>
+    <string name="item_desc_gesture_press_value">Нажать в [%1$s, %2$s]</string>
+    <string name="item_title_gesture_move">Перемещение</string>
+    <string name="item_desc_gesture_move_value">Переместить в [%1$s, %2$s]</string>
+    <string name="item_title_gesture_wait">Пауза</string>
+    <string name="item_desc_gesture_wait">Ждать %1$d мс</string>
+    <string name="item_title_gesture_release">Отпускание</string>
+    <string name="item_desc_gesture_release">Убрать палец с экрана</string>
+    <string name="item_title_gesture_add">Добавить</string>
+    <string name="field_title_position_x">X</string>
+    <string name="field_title_position_y">Y</string>
+    <string name="field_title_duration_ms">Длительность (мс)</string>
+    <string name="button_title_position">Выбрать позицию</string>
 
     <!--
       - Content description texts.

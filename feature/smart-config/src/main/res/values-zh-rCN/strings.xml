@@ -60,6 +60,11 @@
       -->
     <string name="item_click_desc">单击屏幕某处</string>
     <string name="item_click_details_at_position">持续 %1$s</string>
+    <string name="item_gesture_title">手势</string>
+    <string name="item_gesture_desc">在屏幕上执行复杂手势</string>
+    <plurals name="item_gesture_details">
+        <item quantity="other">%1$d 根手指，持续 %2$s</item>
+    </plurals>
     <string name="item_click_details_on_condition">于 %2$s 持续 %1$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">未选择条件</string>
@@ -149,7 +154,7 @@
     <string name="message_empty_trigger_event_list_desc">触发器事件包含一组在满足自定义条件时执行的操作。\n您需要在场景中至少有一个屏幕或触发事件才能执行。</string>
     <string name="message_empty_trigger_condition_list_desc">条件是启动一项操作的自定义标准。</string>
     <string name="message_empty_screen_condition_list_desc">屏幕条件是屏幕截图的一部分，将在手机屏幕显示的每个帧上进行搜索。</string>
-    <string name="message_empty_action_list_desc">操作是在满足创建的条件时触发的与手机的交互（点击、轻扫…）。</string>
+    <string name="message_empty_action_list_desc">操作是在满足创建的条件时触发的与手机的交互（点击、手势…）。</string>
 
     <!--
       - Messages.
@@ -254,6 +259,35 @@
 
     <string name="field_click_offset_title">偏移</string>
     <string name="field_click_offset_desc_none">无</string>
+    <string name="item_desc_gesture_press_condition">在 [%1$s] 上按下</string>
+    <string name="item_desc_gesture_press_condition_or">在第一个检测到的条件上按下</string>
+    <string name="item_desc_gesture_press_condition_error">没有可按下的条件</string>
+    <string name="item_desc_gesture_move_condition">移动到 [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">移动到第一个检测到的条件</string>
+    <string name="item_desc_gesture_move_condition_error">没有可移动到的条件</string>
+    <string name="message_title_gesture_on_condition_and">点击条件</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">条件运算符为 OR</string>
+    <string name="message_desc_gesture_on_condition_or">第一个检测到的条件的位置</string>
+    <string name="message_title_gesture_on_condition_error">未选择条件</string>
+    <string name="message_desc_gesture_on_condition_error">需要选择一个条件来执行手势</string>
+    <string name="button_title_condition_pick">选择条件</string>
+    <string name="button_title_condition_remove">移除条件</string>
+    <string name="field_gesture_release_when_title">松开时机</string>
+    <string name="field_gesture_release_when_item_now">立即</string>
+    <string name="field_gesture_release_when_item_until_actions_end">动作结束时</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">事件不再满足时</string>
+    <string name="field_gesture_release_when_item_for_duration">一段时间后</string>
+    <string name="field_gesture_release_hold_duration_title">按住时长（毫秒）</string>
+    <string name="field_gesture_release_desc_now">立即松开手指。</string>
+    <string name="field_gesture_release_desc_until_actions_end">在此事件的所有动作执行完毕后松开手指。如果此动作是列表中的最后一个，则与“立即”相同。</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">当此事件不再满足时松开手指。</string>
+    <string name="field_gesture_release_desc_for_duration">%1$d 毫秒后松开手指。</string>
+    <string name="item_desc_gesture_release_now">立即松开</string>
+    <string name="item_desc_gesture_release_until_actions_end">动作结束时松开</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">事件不再满足时松开</string>
+    <string name="item_desc_gesture_release_for_duration">%1$d 毫秒后松开</string>
+    <string name="field_gesture_release_hold_behaviour">• 同一时间只能按住一根手指，开始新的按住会松开当前手指。\n• 手指按住期间，相关事件在手指松开前不会再次触发。\n• 如果您手动触摸屏幕，按住将被中断。\n• 最长按住时间取决于您的系统和正在自动化的应用。有些系统允许无限时长，有些则不允许。</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_intent_extra_type_title">参数值类型</string>

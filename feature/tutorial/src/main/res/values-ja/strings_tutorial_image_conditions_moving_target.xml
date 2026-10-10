@@ -27,7 +27,7 @@
 
     <string name="message_tutorial_screen_condition_moving_target_step_4">シナリオはKlick\'r自動化の基本構造です。\n\n一般的な検出設定と、シナリオ実行時に何が実行されるかを記述したイベントのリストが含まれます。\n\nイベント作成ボタンをクリックして、最初のイベントを作成してください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">イベントは、特定の条件が満たされたときに実行されるアクション（クリック、スワイプ等）を記述します。\n\nこのゲームに勝つには、青いキャラクターが画面上を動いている間、その位置を検出する必要があります。\n\n条件フィールドをクリックして、条件リストを表示してください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_5">イベントは、特定の条件が満たされたときに実行されるアクション（クリック、ジェスチャー等）を記述します。\n\nこのゲームに勝つには、青いキャラクターが画面上を動いている間、その位置を検出する必要があります。\n\n条件フィールドをクリックして、条件リストを表示してください。</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_6">画像条件とは、デバイス画面の各フレームと比較されるスクリーンショットの一部です。\n\nゲームに勝つには、青いキャラクターが見えているときにクリックしたいので、キャラクターがデバイス画面に表示されているときに満たされる条件が必要です。\n\n条件作成ボタンをクリックして、最初の条件を作成してください。</string>
 

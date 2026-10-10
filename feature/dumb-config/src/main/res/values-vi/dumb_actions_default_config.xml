@@ -10,6 +10,7 @@
 <resources>
 
     <string name="default_dumb_click_name">Nhấp chuột</string>
+    <string name="default_dumb_gesture_name">Cử chỉ</string>
     <string name="default_dumb_pause_name">Chờ đợi</string>
 
 </resources>

@@ -31,7 +31,7 @@
         Il contient les paramètres de détection généraux et une liste d\'événements décrivant ce qui sera exécuté lors de l\'exécution
         de votre scénario.\n\nCliquez sur le bouton de création d\'événement pour créer votre premier événement.</string>
 
-    <string name="message_tutorial_screen_condition_still_target_step_5">Un événement décrit les actions (clic, balayage…) à exécuter lorsque certaines
+    <string name="message_tutorial_screen_condition_still_target_step_5">Un événement décrit les actions (clic, geste…) à exécuter lorsque certaines
         conditions sont remplies.\n\nVous devez créer au moins une condition et une action pour créer un événement valide
         et l\'utiliser dans votre scénario.\n\nCliquez sur le champ "Conditions" pour afficher la liste des conditions.</string>
 
@@ -70,7 +70,7 @@
         le champ "Actions" pour afficher la liste des actions.</string>
 
     <string name="message_tutorial_screen_condition_still_target_step_14">Une action est quelque chose qui est exécuté une fois que les conditions de son événement
-        sont remplies.\n\nIl peut s\'agir d\'un clic, d\'un balayage, d\'une pause, d\'une intention (une interaction avec une autre application) ou d\'un
+        sont remplies.\n\nIl peut s\'agir d\'un clic, d\'un geste, d\'une pause, d\'une intention (une interaction avec une autre application) ou d\'un
         changement dans l\'exécution du scénario, et plusieurs actions peuvent être définies pour le même événement.\n\nCliquez sur le bouton
         de création d\'action pour créer votre première action.</string>
 

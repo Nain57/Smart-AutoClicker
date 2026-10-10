@@ -44,7 +44,7 @@
         <item quantity="other">%1$d 天前</item>
     </plurals>
 
-    <string name="item_desc_dumb_scenario">一般自動點擊體驗。\n於螢幕上設定點擊與滑動即可。</string>
+    <string name="item_desc_dumb_scenario">一般自動點擊體驗。\n於螢幕上設定點擊與手勢即可。</string>
     <string name="item_desc_dumb_scenario_max_duration">於 %1$s 後停止</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">無最長持續時間</string>
     <string name="item_desc_dumb_scenario_repeat_count">重複 %1$d 次</string>

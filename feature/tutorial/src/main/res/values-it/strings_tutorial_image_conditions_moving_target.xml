@@ -31,7 +31,7 @@
         Contiene le impostazioni generali di rilevamento e un elenco di Eventi che descrivono cosa verrà eseguito quando si esegue il tuo
         Scenario.\n\nClicca sul pulsante crea evento per creare il tuo primo Evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Un Evento descrive quali Azioni (clic, swipe…) eseguire quando vengono soddisfatte determinate
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Un Evento descrive quali Azioni (clic, gesto…) eseguire quando vengono soddisfatte determinate
         Condizioni.\n\nPer battere questo gioco, dobbiamo rilevare il personaggio blu mentre si muove sullo schermo.
         \n\nFare clic sul campo Condizioni per visualizzare l\'elenco delle Condizioni.</string>
 

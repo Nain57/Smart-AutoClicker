@@ -66,7 +66,7 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_desc_dumb_scenario">La experiencia normal de clic automático.\nSimplemente haga clic y deslice el dedo en la pantalla.</string>
+    <string name="item_desc_dumb_scenario">La experiencia normal de clic automático.\nSimplemente coloque clics y gestos en la pantalla.</string>
     <string name="item_desc_dumb_scenario_max_duration">Detener después de %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">Sin duración máxima</string>
     <string name="item_desc_dumb_scenario_repeat_count">Repetir %1$d veces</string>

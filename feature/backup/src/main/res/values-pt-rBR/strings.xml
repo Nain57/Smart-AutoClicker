@@ -48,7 +48,7 @@
     <string name="message_backup_import_completed">Importação concluída\n%1$d cenário importado</string>
     <string name="message_backup_import_completed_with_error">Importação concluída\n%1$d cenários importados\n%2$d erros</string>
     <string name="message_backup_import_error">Ocorreu um erro e a importação do backup foi cancelada</string>
-    <string name="message_backup_import_compatibility">Alguns dos cenários importados foram gerados de um dispositivo com uma tela diferente e isso pode causar problemas com a detecção e as coordenadas das ações.\n\nPara corrigir, você precisa tirar novas capturas de tela para suas condições e atualizar as posições dos cliques/swipes.</string>
+    <string name="message_backup_import_compatibility">Alguns dos cenários importados foram gerados de um dispositivo com uma tela diferente e isso pode causar problemas com a detecção e as coordenadas das ações.\n\nPara corrigir, você precisa tirar novas capturas de tela para suas condições e atualizar as posições dos cliques/gestos.</string>
     <string name="message_backup_error_no_zip_app">Nenhum aplicativo encontrado no dispositivo para lidar com o salvamento/carregamento de um arquivo zip.</string>
 
 

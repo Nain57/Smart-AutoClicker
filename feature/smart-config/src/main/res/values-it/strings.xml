@@ -60,6 +60,13 @@
       -->
     <string name="item_click_desc">Clicca un punto dello schermo</string>
     <string name="item_click_details_at_position">Durante %1$s</string>
+    <string name="item_gesture_title">Gesto</string>
+    <string name="item_gesture_desc">Esegui un gesto complesso sullo schermo</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">Con %1$d dito per %2$s</item>
+        <item quantity="many">Con %1$d dita per %2$s</item>
+        <item quantity="other">Con %1$d dita per %2$s</item>
+    </plurals>
     <string name="item_click_details_on_condition">Durante %1$s su %2$s</string>
     <string name="field_condition_selection_desc_and_operator">%1$s</string>
     <string name="field_condition_selection_desc_and_operator_not_found">Nessuna condizione selezionata</string>
@@ -151,7 +158,7 @@
     <string name="message_empty_trigger_event_list_desc">Un evento trigger contiene una serie di azioni eseguite quando si verificano una serie di condizioni personalizzate.\nPer eseguire lo scenario, è necessario disporre di almeno una schermata o di un evento di attivazione.</string>
     <string name="message_empty_trigger_condition_list_desc">Una condizione è un criterio personalizzato per l\'avvio di un\'azione.</string>
     <string name="message_empty_screen_condition_list_desc">Una condizione dello schermo è una parte di una schermata che verrà ricercata su ogni fotogramma visualizzato dallo schermo del telefono.</string>
-    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, scorrimento…) che viene eseguita quando le condizioni create vengono rispettate.</string>
+    <string name="message_empty_action_list_desc">Un\'azione è un\'interazione (clic, gesto…) che viene eseguita quando le condizioni create vengono rispettate.</string>
     <string name="message_empty_counter_name_list_desc">Un contatore memorizza un valore numerico che può essere modificato, verificato o utilizzato nelle azioni o nelle condizioni</string>
 
     <!--
@@ -255,6 +262,35 @@
 
     <string name="field_click_offset_title">Offset</string>
     <string name="field_click_offset_desc_none">Nessuno</string>
+    <string name="item_desc_gesture_press_condition">Premi su [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">Premi sulla prima condizione rilevata</string>
+    <string name="item_desc_gesture_press_condition_error">Nessuna condizione su cui premere</string>
+    <string name="item_desc_gesture_move_condition">Sposta su [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">Sposta sulla prima condizione rilevata</string>
+    <string name="item_desc_gesture_move_condition_error">Nessuna condizione su cui spostarsi</string>
+    <string name="message_title_gesture_on_condition_and">Clicca su una condizione</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">Operatore di condizione OR</string>
+    <string name="message_desc_gesture_on_condition_or">Posizione della prima condizione rilevata</string>
+    <string name="message_title_gesture_on_condition_error">Nessuna condizione selezionata</string>
+    <string name="message_desc_gesture_on_condition_error">Serve una condizione su cui eseguire il gesto</string>
+    <string name="button_title_condition_pick">Scegli condizione</string>
+    <string name="button_title_condition_remove">Rimuovi condizione</string>
+    <string name="field_gesture_release_when_title">Quando</string>
+    <string name="field_gesture_release_when_item_now">Subito</string>
+    <string name="field_gesture_release_when_item_until_actions_end">Fine delle azioni</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Evento non soddisfatto</string>
+    <string name="field_gesture_release_when_item_for_duration">Dopo un certo tempo</string>
+    <string name="field_gesture_release_hold_duration_title">Durata della pressione prolungata (ms)</string>
+    <string name="field_gesture_release_desc_now">Solleva il dito immediatamente.</string>
+    <string name="field_gesture_release_desc_until_actions_end">Solleva il dito dopo che tutte le azioni di questo evento sono state eseguite. Equivale a \"Subito\" se questa azione è l\'ultima della lista.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">Solleva il dito quando questo evento non è più soddisfatto.</string>
+    <string name="field_gesture_release_desc_for_duration">Solleva il dito dopo %1$d ms.</string>
+    <string name="item_desc_gesture_release_now">Rilascia subito</string>
+    <string name="item_desc_gesture_release_until_actions_end">Rilascia alla fine delle azioni</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">Rilascia quando l\'evento non è più soddisfatto</string>
+    <string name="item_desc_gesture_release_for_duration">Rilascia dopo %1$d ms</string>
+    <string name="field_gesture_release_hold_behaviour">• È possibile mantenere una sola pressione alla volta: avviarne un\'altra rilascerà questa.\n• Finché un dito resta premuto, l\'evento collegato non verrà più attivato fino al rilascio del dito.\n• Se tocchi lo schermo manualmente, la pressione verrà interrotta.\n• La durata massima dipende dal sistema e dall\'applicazione automatizzata. Alcuni sistemi consentono una durata illimitata, altri no.</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
     <string name="dropdown_intent_sending_type_label">Tipo</string>

@@ -36,7 +36,19 @@
     <string name="item_event_occurrence_frame_number">الإطار #%1$d</string>
     <string name="item_event_occurrence_trigger">مشغل</string>
     <string name="item_event_occurrence_one_condition_fulfilled">مستوفاة: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">غير مستوفاة: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">تمت معالجة الشروط %1$d</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">مدة الإبقاء %1$.1f ث</string>
+    <string name="item_event_occurrence_released">تم الرفع: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">غير مستوفى</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">اكتملت الإجراءات</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">انقضت المدة</string>
+    <string name="item_event_occurrence_release_reason_interrupted">تمت المقاطعة</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">الحدث معطل</string>
+    <string name="item_event_occurrence_release_reason_other_event">حدث آخر</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">تدوير الشاشة</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">توقف السيناريو</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +62,12 @@
     <string name="field_debug_filter_trigger_events_title">أحداث الزناد</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">إظهار تكرارات الأحداث المحفزة في المخطط الزمني</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">إخفاء كافة أحداث Trigger Events في المخطط الزمني</string>
+    <string name="field_debug_filter_hold_checks_title">إظهار عمليات التحقق من إبقاء الإيماءة</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">إظهار عمليات التحقق التي تُبقي الإيماءة مضغوطة في المخطط الزمني</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">إخفاء عمليات التحقق التي تُبقي الإيماءة مضغوطة في المخطط الزمني</string>
+    <string name="field_debug_filter_releases_title">إظهار رفع الإيماءات</string>
+    <string name="field_debug_filter_releases_show_desc_on">إظهار رفع الإيماءات المضغوطة في المخطط الزمني</string>
+    <string name="field_debug_filter_releases_show_desc_off">إخفاء رفع الإيماءات المضغوطة في المخطط الزمني</string>
 
     <string name="field_debug_filter_events_show_title">المرشحات</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d الأحداث</string>

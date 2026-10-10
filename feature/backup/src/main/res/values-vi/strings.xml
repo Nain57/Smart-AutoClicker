@@ -30,7 +30,7 @@
     <string name="message_backup_import_completed">Đã nhập xong\nĐã nhập %1$d kịch bản</string>
     <string name="message_backup_import_completed_with_error">Đã nhập xong\nĐã nhập %1$d kịch bản\n%2$d lỗi</string>
     <string name="message_backup_import_error">Đã xảy ra lỗi và quá trình nhập bản sao lưu đã bị hủy</string>
-    <string name="message_backup_import_compatibility">Một số kịch bản được nhập vào đã được tạo từ thiết bị có kích thước màn hình khác, điều này có thể gây ra lỗi nhận diện và lệch tọa độ hành động.\n\nĐể khắc phục, bạn cần chụp lại ảnh màn hình mới cho các điều kiện và cập nhật lại vị trí nhấp/vuốt của mình.</string>
+    <string name="message_backup_import_compatibility">Một số kịch bản được nhập vào đã được tạo từ thiết bị có kích thước màn hình khác, điều này có thể gây ra lỗi nhận diện và lệch tọa độ hành động.\n\nĐể khắc phục, bạn cần chụp lại ảnh màn hình mới cho các điều kiện và cập nhật lại vị trí nhấp/cử chỉ của mình.</string>
     <string name="message_backup_error_no_zip_app">Không tìm thấy ứng dụng nào trên thiết bị để xử lý việc lưu/tải tệp zip.</string>
     <string name="content_desc_backup_state">Trạng thái sao lưu</string>
 

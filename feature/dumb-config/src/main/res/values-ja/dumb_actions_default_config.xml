@@ -9,5 +9,6 @@
 -->
 <resources>
     <string name="default_dumb_click_name">クリック</string>
+    <string name="default_dumb_gesture_name">ジェスチャー</string>
     <string name="default_dumb_pause_name">待機</string>
 </resources>
