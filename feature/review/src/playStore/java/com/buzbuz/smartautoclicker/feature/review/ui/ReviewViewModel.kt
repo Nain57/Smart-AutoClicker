@@ -17,8 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.review.ui
 
 import androidx.lifecycle.ViewModel
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepositoryImpl
+import com.buzbuz.smartautoclicker.core.common.review.ReviewRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -31,6 +30,6 @@ class ReviewViewModel @Inject constructor(private val reviewRepository: ReviewRe
         reviewRepository.isUserCandidateForReview()
 
     fun updateLastReviewRequestTimestamp() {
-        (reviewRepository as ReviewRepositoryImpl).updateLastReviewRequestTimestamp()
+        reviewRepository.updateLastReviewRequestTimestamp()
     }
 }

@@ -34,7 +34,9 @@ import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityMetricsMonitor
 import com.buzbuz.smartautoclicker.core.common.quality.domain.QualityRepository
+import com.buzbuz.smartautoclicker.core.common.navigation.getReviewNavigator
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.review.ReviewRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -45,7 +47,6 @@ import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileActionHandler
 import com.buzbuz.smartautoclicker.feature.qstile.domain.QSTileRepository
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
 import com.buzbuz.smartautoclicker.localservice.LocalService
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -158,11 +159,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
         if (reviewRepository.isUserCandidateForReview()) {
             Log.i(TAG, "User is candidate for review")
-
-            reviewRepository.getReviewActivityIntent(this)?.let { intent ->
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-            }
+            getReviewNavigator().startReviewActivity(this)
         }
 
         requestFilterKeyEvents(false)
