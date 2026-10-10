@@ -122,8 +122,7 @@ internal class ScenarioProcessor(
                 Log.d(TAG, "Held event ${heldEvent.name} is disabled, releasing it")
                 releaseHeldEvent(HoldReleaseReason.EventDisabled, cooldown = false)
             } else if (!actionExecutor.checkHeldFinger()) {
-                Log.d(TAG, "Held event ${heldEvent.name} finger has been lifted by the user")
-                startHeldEventCooldown(heldEvent)
+                onHeldEventInterrupted(heldEvent)
             }
         }
         notifyHeldEventChangeIfNeeded(actionExecutor.getHeldEvent(), HoldReleaseReason.Interrupted)
@@ -165,6 +164,8 @@ internal class ScenarioProcessor(
             if (triggerEvent.conditions.isEmpty()) continue
             // Event has a gesture currently held, skip interpretation
             if (actionExecutor.isEventHeld(triggerEvent)) continue
+            // Event hold has just been interrupted, skip it
+            if (processingState.isCooldownRunning(triggerEvent)) continue
 
             val results = verifyConditions(triggerEvent)
             if (results.fulfilled  == true) {
@@ -234,6 +235,11 @@ internal class ScenarioProcessor(
      * left holding a finger, cooldown starts only once the finger is released.
      */
     private suspend fun executeEventActions(event: Event, results: ConditionsResults) {
+        // The user may have touched the screen while this frame was detected
+        actionExecutor.getHeldEvent()?.let { heldEvent ->
+            if (!actionExecutor.checkHeldFinger()) onHeldEventInterrupted(heldEvent)
+        }
+
         val previousHeldEvent = actionExecutor.getHeldEvent()
         val executionStartTimeMs = System.currentTimeMillis()
 
@@ -287,7 +293,11 @@ internal class ScenarioProcessor(
 
     private suspend fun releaseHeldEvent(reason: HoldReleaseReason, cooldown: Boolean = true) {
         val heldEvent = actionExecutor.getHeldEvent() ?: return
-        actionExecutor.releaseHeldFinger()
+        if (!actionExecutor.releaseHeldFinger()) {
+            if (cooldown) onHeldEventInterrupted(heldEvent)
+            notifyHeldEventChangeIfNeeded(null, HoldReleaseReason.Interrupted)
+            return
+        }
 
         if (cooldown) startHeldEventCooldown(heldEvent)
         notifyHeldEventChangeIfNeeded(null, reason)
@@ -296,6 +306,19 @@ internal class ScenarioProcessor(
     /** Cooldown of an event holding a finger starts once it is released. */
     private fun startHeldEventCooldown(heldEvent: Event, startTimeMs: Long = System.currentTimeMillis()) {
         if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent, startTimeMs)
+    }
+
+    /**
+     * The finger of the held event has been lifted by a user touch. The system is still processing that release, and
+     * a gesture dispatched right away can be ignored: the event is put under a minimum cooldown, even a trigger one.
+     */
+    private fun onHeldEventInterrupted(heldEvent: Event) {
+        Log.d(TAG, "Held event ${heldEvent.name} finger has been lifted by the user")
+        processingState.startCooldownIfNeeded(
+            event = heldEvent,
+            startTimeMs = System.currentTimeMillis(),
+            minDurationMs = INTERRUPTED_HOLD_COOLDOWN_MS,
+        )
     }
 
     /**
@@ -312,5 +335,9 @@ internal class ScenarioProcessor(
         progressListener?.onHeldEventChanged(heldEvent)
     }
 }
+
+/** Minimum cooldown of an event whose held finger has been lifted by the user. */
+@VisibleForTesting
+internal const val INTERRUPTED_HOLD_COOLDOWN_MS = 1_000L
 
 private const val TAG = "ScenarioProcessor"

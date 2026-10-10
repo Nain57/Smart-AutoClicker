@@ -85,10 +85,13 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         }
     }
 
-    override fun checkHeldPointer() {
+    override fun checkHeldPointer(): Boolean {
         if (!gestureExecutor.checkHeldPointer()) {
             Log.i(TAG, "Held pointer has been lifted by a user touch")
+            return false
         }
+
+        return gestureExecutor.getHeldPointer() != null
     }
 
     override suspend fun releaseHeldPointer() {

@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.processing.tests.processor.state
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
+import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.CooldownsState
 
 import org.junit.Assert.assertFalse
@@ -106,6 +107,51 @@ class CooldownsStateTests {
 
         cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis() - 2_000L)
 
+        assertTrue(cooldownsState.isCooldownRunning(event))
+    }
+
+    @Test
+    fun startCooldownIfNeeded_zeroCooldown_minDuration_cooldownIsRunning() {
+        val event = newScreenEvent(id = 1L, cooldownMs = 0L)
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis(), minDurationMs = 10_000L)
+
+        assertTrue(cooldownsState.isCooldownRunning(event))
+    }
+
+    @Test
+    fun startCooldownIfNeeded_minDurationShorterThanEventCooldown_eventCooldownApplied() {
+        val event = newScreenEvent(id = 1L, cooldownMs = 10_000L)
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis() - 2_000L, minDurationMs = 1_000L)
+
+        assertTrue(cooldownsState.isCooldownRunning(event))
+    }
+
+    @Test
+    fun startCooldownIfNeeded_minDurationElapsed_cooldownNotRunning() {
+        val event = newScreenEvent(id = 1L, cooldownMs = 0L)
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis() - 2_000L, minDurationMs = 1_000L)
+
+        assertFalse(cooldownsState.isCooldownRunning(event))
+    }
+
+    @Test
+    fun startCooldownIfNeeded_triggerEvent_onlyMinDurationApplied() {
+        val event = TriggerEvent(
+            id = Identifier(databaseId = 2L),
+            scenarioId = Identifier(databaseId = 1L),
+            name = "TestTrigger",
+            conditionOperator = AND,
+            actions = emptyList(),
+            conditions = emptyList(),
+        )
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis())
+        assertFalse(cooldownsState.isCooldownRunning(event))
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis(), minDurationMs = 10_000L)
         assertTrue(cooldownsState.isCooldownRunning(event))
     }
 
