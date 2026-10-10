@@ -18,35 +18,35 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Point
 import android.view.View
-import androidx.core.content.ContextCompat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
-import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
-import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getOffsetDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.toPositionUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
+import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.putClickPressDurationConfig
 
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -55,7 +55,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -67,6 +66,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class ClickViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val bitmapRepository: BitmapRepository,
+    private val displayConfigManager: DisplayConfigManager,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
 ) : ViewModel() {
@@ -102,15 +102,19 @@ class ClickViewModel @Inject constructor(
             event = evt,
             hasUnsavedModifications = actionState.hasChanged,
             canBeSaved = actionState.canBeSaved,
-            availableConditions = conditionsState.value
-                ?.filter { it.shouldBeDetected }
-                ?.map { it.toUiScreenCondition(context = context, shortThreshold = true, inError = !it.isComplete()) }
-                ?: emptyList()
-            )
-    }.flowOn(Dispatchers.IO).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+            availableConditions = conditionsState.value?.filter { it.shouldBeDetected } ?: emptyList(),
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     fun getEditedClick(): Click? =
         editionRepository.editionState.getEditedAction<Click>()
+
+    fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
+        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+
+    /** True if the user must pick the condition to click on, false if it is the first detected one. */
+    fun shouldSelectCondition(): Boolean =
+        editionRepository.editionState.getEditedEvent()?.conditionOperator == AND
 
     fun hasUnsavedModifications(): Boolean =
         editedActionHasChanged.value
@@ -125,21 +129,53 @@ class ClickViewModel @Inject constructor(
         }
     }
 
-    /** Set if this click should be made on the detected condition. */
-    fun setClickOnCondition(newType: Click.PositionType) {
-        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
-            editionRepository.updateEditedAction(click.copy(positionType = newType))
-        }
-    }
-
     /**
      * Set the position of the click.
      * @param position the new position.
      */
     fun setPosition(position: Point) {
+        updateClickPosition(
+            x = GestureCoordinatesValue.Literal(position.x),
+            y = GestureCoordinatesValue.Literal(position.y),
+        )
+    }
+
+    /** Set the x coordinate of the click to a literal value. */
+    fun setPositionX(newXValue: String) {
+        updateClickPosition(x = GestureCoordinatesValue.Literal(newXValue.toIntOrNull() ?: 0))
+    }
+
+    /** Set the y coordinate of the click to a literal value. */
+    fun setPositionY(newYValue: String) {
+        updateClickPosition(y = GestureCoordinatesValue.Literal(newYValue.toIntOrNull() ?: 0))
+    }
+
+    /** Set the x coordinate of the click to the value of a counter. */
+    fun setPositionXCounter(counterName: String) {
+        updateClickPosition(x = GestureCoordinatesValue.Counter(counterName))
+    }
+
+    /** Set the y coordinate of the click to the value of a counter. */
+    fun setPositionYCounter(counterName: String) {
+        updateClickPosition(y = GestureCoordinatesValue.Counter(counterName))
+    }
+
+    /** Click on the condition detected by the parent event, whichever it is. */
+    fun setClickOnDetectedCondition() {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
-            editionRepository.updateEditedAction(click.copy(position = position))
+            editionRepository.updateEditedAction(
+                click.copy(position = GesturePosition.Condition(conditionId = null))
+            )
         }
+    }
+
+    /** Stop clicking on a condition and go back to a click on a position. */
+    fun removeClickOnCondition() {
+        val displaySize = displayConfigManager.displayConfig.sizePx
+        updateClickPosition(
+            x = GestureCoordinatesValue.Literal(displaySize.x / 2),
+            y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+        )
     }
 
     /**
@@ -152,10 +188,46 @@ class ClickViewModel @Inject constructor(
         }
     }
 
+    /** The offset to apply when clicking on a condition, defaulting to no offset at all. */
+    fun getClickOffset(): GesturePosition.Coordinates =
+        editionRepository.editionState.getEditedAction<Click>()?.offset as? GesturePosition.Coordinates
+            ?: NO_CLICK_OFFSET
+
+    /** Set the offset to apply when clicking on a condition. */
+    fun setClickOffset(offset: GesturePosition.Coordinates) {
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
+            editionRepository.updateEditedAction(click.copy(offset = offset))
+        }
+    }
+
     /** Set the condition to click on when the events conditions are fulfilled. */
     fun setConditionToBeClicked(condition: ScreenCondition) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
-            editionRepository.updateEditedAction(click.copy(clickOnConditionId = condition.id))
+            editionRepository.updateEditedAction(
+                click.copy(position = GesturePosition.Condition(conditionId = condition.id))
+            )
+        }
+    }
+
+    /**
+     * Update the click position, switching it back to a user selected position if it was on a condition.
+     * A null coordinate keeps its current value, or defaults to 0 if the click had no coordinates yet.
+     */
+    private fun updateClickPosition(
+        x: GestureCoordinatesValue? = null,
+        y: GestureCoordinatesValue? = null,
+    ) {
+        editionRepository.editionState.getEditedAction<Click>()?.let { click ->
+            val coordinates = click.position as? GesturePosition.Coordinates
+
+            editionRepository.updateEditedAction(
+                click.copy(
+                    position = GesturePosition.Coordinates(
+                        x = x ?: coordinates?.x ?: GestureCoordinatesValue.Literal(0),
+                        y = y ?: coordinates?.y ?: GestureCoordinatesValue.Literal(0),
+                    ),
+                )
+            )
         }
     }
 
@@ -166,10 +238,10 @@ class ClickViewModel @Inject constructor(
         }
     }
 
-    fun monitorViews(onConditionTypeView: View, selectPositionFieldView: View, saveButton: View) {
+    fun monitorViews(selectConditionButton: View, selectPositionButton: View, saveButton: View) {
         monitoredViewsManager.apply {
-            attach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION, onConditionTypeView)
-            attach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION, selectPositionFieldView)
+            attach(MonitoredViewType.CLICK_DIALOG_BUTTON_CONDITION, selectConditionButton)
+            attach(MonitoredViewType.CLICK_DIALOG_BUTTON_POSITION, selectPositionButton)
             attach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE, saveButton)
         }
     }
@@ -177,33 +249,24 @@ class ClickViewModel @Inject constructor(
     fun stopViewMonitoring() {
         monitoredViewsManager.apply {
             detach(MonitoredViewType.CLICK_DIALOG_BUTTON_SAVE)
-            detach(MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION)
-            detach(MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION)
+            detach(MonitoredViewType.CLICK_DIALOG_BUTTON_POSITION)
+            detach(MonitoredViewType.CLICK_DIALOG_BUTTON_CONDITION)
         }
     }
 
-    private suspend fun Click.toDialogUiState(
+    private fun Click.toDialogUiState(
         context: Context,
         event: Event,
-        availableConditions: List<UiScreenCondition>,
+        availableConditions: List<ScreenCondition>,
         hasUnsavedModifications: Boolean,
         canBeSaved: Boolean,
     ) : ClickUiState {
-        val positionState = when (event) {
-            is TriggerEvent ->
-                context.getUserSelectedClickPositionState(this, forced = true)
-
-            is ScreenEvent if this.positionType == Click.PositionType.USER_SELECTED ->
-                context.getUserSelectedClickPositionState(this, forced = false)
-
-            is ScreenEvent if this.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.conditionOperator == OR ->
-                context.getOnConditionWithOrPositionState(this)
-
-            is ScreenEvent if this.positionType == Click.PositionType.ON_DETECTED_CONDITION && event.conditionOperator == AND ->
-                context.getOnConditionWithAndPositionState(event, this, availableConditions)
-
-            else -> null
-        }
+        val positionState = ClickPositionUiState(
+            position = toPositionUiState(editionRepository),
+            isConditionSelectionVisible = event is ScreenEvent,
+            isClickOffsetVisible = event is ScreenEvent,
+            clickOffsetDescription = context.getClickOffsetString(this),
+        )
 
         return ClickUiState(
             canBeSaved = canBeSaved,
@@ -217,71 +280,13 @@ class ClickViewModel @Inject constructor(
         )
     }
 
-    private fun Context.getUserSelectedClickPositionState(click: Click, forced: Boolean): ClickPositionUiState =
-        ClickPositionUiState(
-            positionType = Click.PositionType.USER_SELECTED,
-            isTypeFieldVisible = !forced,
-            isSelectorEnabled = true,
-            selectorTitle = getString(R.string.field_click_position_title),
-            selectorDescription =
-                if (click.position == null) getString(R.string.generic_select_the_position)
-                else getString(R.string.field_click_position_desc, click.position?.x ?: 0, click.position?.y ?: 0),
-            isSelectorInError = click.position == null,
-            isClickOffsetEnabled = false,
-            isClickOffsetVisible = !forced,
-            clickOffsetDescription = getClickOffsetString(click),
-        )
-
-    private fun Context.getOnConditionWithOrPositionState(click: Click): ClickPositionUiState =
-        ClickPositionUiState(
-            positionType = Click.PositionType.ON_DETECTED_CONDITION,
-            isTypeFieldVisible = true,
-            isSelectorEnabled = false,
-            selectorTitle = getString(R.string.field_condition_selection_title_or_operator),
-            selectorDescription = getString(R.string.field_condition_selection_desc_or_operator),
-            isSelectorInError = false,
-            isClickOffsetVisible = true,
-            isClickOffsetEnabled = true,
-            clickOffsetDescription = getClickOffsetString(click),
-        )
-
-    private suspend fun Context.getOnConditionWithAndPositionState(
-        event: ScreenEvent,
-        click: Click,
-        availableConditions: List<UiScreenCondition>,
-    ): ClickPositionUiState {
-        val conditionToClick = event.conditions.find { condition -> click.clickOnConditionId == condition.id }
-
-        val conditionVisualization = when (conditionToClick) {
-            is ScreenCondition.Color -> createColorIndicatorDrawable(conditionToClick.color)
-            is ScreenCondition.Image -> bitmapRepository.getConditionBitmap(conditionToClick)
-            is ScreenCondition.Number -> ContextCompat.getDrawable(this, R.drawable.ic_number_condition)
-            is ScreenCondition.Text -> ContextCompat.getDrawable(this, R.drawable.ic_text_condition)
-            null -> null
-        }
-
-        return ClickPositionUiState(
-            positionType = Click.PositionType.ON_DETECTED_CONDITION,
-            isTypeFieldVisible = true,
-            isSelectorEnabled = availableConditions.isNotEmpty(),
-            selectorTitle = getString(R.string.field_condition_selection_title_and_operator),
-            selectorDescription =
-                if (conditionToClick == null || conditionVisualization == null) getString(R.string.field_condition_selection_desc_and_operator_not_found)
-                else getString(R.string.field_condition_selection_desc_and_operator, conditionToClick.name),
-            selectorVisualization = conditionVisualization,
-            isSelectorInError = availableConditions.isNotEmpty() && (conditionToClick == null || conditionVisualization == null),
-            isClickOffsetVisible = true,
-            isClickOffsetEnabled = true,
-            clickOffsetDescription = getClickOffsetString(click),
-        )
-    }
-
     private fun Context.getClickOffsetString(click: Click): String {
-        val offset =
-            if (click.positionType == Click.PositionType.ON_DETECTED_CONDITION) click.clickOffset
-            else null
-
-        return offset?.let { getString(R.string.field_click_offset_desc, it.x, it.y) }
+        return click.offset?.let { getOffsetDescription(it.toPositionUiState(editionRepository)) }
             ?: getString(R.string.field_click_offset_desc_none)
     }
 }
+
+private val NO_CLICK_OFFSET = GesturePosition.Coordinates(
+    x = GestureCoordinatesValue.Literal(0),
+    y = GestureCoordinatesValue.Literal(0),
+)

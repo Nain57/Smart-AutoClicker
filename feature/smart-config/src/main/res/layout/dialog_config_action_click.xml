@@ -50,7 +50,7 @@
                 android:id="@+id/field_press_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_vertical_small"/>
+                android:layout_marginTop="@dimen/margin_vertical_large"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/AppTheme.Widget.Card"
@@ -61,39 +61,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginVertical="@dimen/margin_vertical_default"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default">
+                    android:orientation="vertical">
 
-                    <include layout="@layout/include_field_multi_state"
-                        android:id="@+id/field_click_type"
+                    <include layout="@layout/include_field_position_selector"
+                        android:id="@+id/field_position"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/margin_vertical_small"/>
+                        android:layout_height="wrap_content" />
 
                     <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/divider_click_type_bottom"
-                        style="@style/AppTheme.Widget.Divider.Horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
-
-                    <include layout="@layout/include_field_selector"
-                        android:id="@+id/field_click_selection"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/margin_vertical_small"/>
-
-                    <com.google.android.material.divider.MaterialDivider
-                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        style="@style/Widget.Material3.MaterialDivider"
                         android:id="@+id/divider_click_offset"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="@dimen/margin_vertical_default" />
 
                     <include layout="@layout/include_field_selector"
                         android:id="@+id/field_click_offset"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="@dimen/margin_vertical_small"/>
+                        android:layout_marginTop="@dimen/margin_vertical_small"
+                        android:layout_marginBottom="@dimen/margin_vertical_default"
+                        android:layout_marginHorizontal="@dimen/margin_horizontal_default"/>
 
                 </LinearLayout>
 
