@@ -17,8 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.tutorial.ui.slideshow
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 
@@ -57,10 +59,29 @@ private fun Context.createDialog(
 
     val dialogContext = getDynamicColorsContext(R.style.AppTheme)
     val dialogViewBinding = DialogTutorialSlideshowBinding.inflate(LayoutInflater.from(dialogContext))
-    val dialog = MaterialAlertDialogBuilder(dialogContext)
+    val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val dialogBuilder = MaterialAlertDialogBuilder(dialogContext)
         .setView(dialogViewBinding.root)
         .setOnDismissListener { onDismissed?.invoke() }
-        .create()
+
+    // Default Material vertical insets eat most of the screen height in landscape, leaving no room for the pages
+    if (isLandscape) {
+        val inset = resources.getDimensionPixelSize(R.dimen.tutorial_slideshow_dialog_inset_landscape)
+        dialogBuilder.setBackgroundInsetTop(inset)
+        dialogBuilder.setBackgroundInsetBottom(inset)
+    }
+
+    val dialog = dialogBuilder.create()
+    if (isLandscape) {
+        // displayMetrics can be stale on overlay contexts after a rotation, configuration is not
+        val screenWidthPx = resources.configuration.screenWidthDp * resources.displayMetrics.density
+        dialog.setOnShowListener {
+            dialog.window?.setLayout(
+                (screenWidthPx * LANDSCAPE_WIDTH_RATIO).toInt(),
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            )
+        }
+    }
 
     dialogViewBinding.bind(
         slideshow = slideshow,
@@ -104,4 +125,5 @@ private fun DialogTutorialSlideshowBinding.updateButtonLabel(currentPage: Int, p
     )
 }
 
+private const val LANDSCAPE_WIDTH_RATIO = 0.8f
 private const val TAG = "TutorialSlideshowDialog"
