@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.application
 import android.app.Application
 import com.buzbuz.smartautoclicker.ComponentConfig
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsManager
+import com.buzbuz.smartautoclicker.core.base.lifecycle.ActivityLifecycleTracker
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -27,9 +28,11 @@ import javax.inject.Inject
 class SmartAutoClickerApplication : Application() {
 
     @Inject lateinit var appComponentsManager: AppComponentsManager
+    @Inject lateinit var activityLifecycleTracker: ActivityLifecycleTracker
 
     override fun onCreate() {
         super.onCreate()
+        activityLifecycleTracker.register(this)
 
         val componentConfig = ComponentConfig
         appComponentsManager.apply {

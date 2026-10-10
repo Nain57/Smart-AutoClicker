@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.base.extensions.requestFilterKeyEvents
 import com.buzbuz.smartautoclicker.core.base.extensions.startForegroundMediaProjectionServiceCompat
+import com.buzbuz.smartautoclicker.core.base.lifecycle.ActivityLifecycleTracker
 import com.buzbuz.smartautoclicker.core.base.notifications.NotificationIds
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityServiceConnection
@@ -88,6 +89,7 @@ class SmartAutoClickerService : AccessibilityService() {
     @Inject lateinit var actionExecutor: AndroidActionExecutor
     @Inject lateinit var debuggingRepository: DebuggingRepository
     @Inject lateinit var tutorialRepository: TutorialRepository
+    @Inject lateinit var activityLifecycleTracker: ActivityLifecycleTracker
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -157,7 +159,9 @@ class SmartAutoClickerService : AccessibilityService() {
         reviewRepository.onUserSessionStopped()
         actionExecutor.resetState()
 
-        if (reviewRepository.isUserCandidateForReview()) {
+        // Starting the review task over one of our activities (e.g. ScenarioActivity stopping the scenario in its
+        // onCreate) can desync the activity lifecycle with the system, leading to a crash.
+        if (reviewRepository.isUserCandidateForReview() && !activityLifecycleTracker.hasActiveActivity()) {
             Log.i(TAG, "User is candidate for review")
             getReviewNavigator().startReviewActivity(this)
         }
