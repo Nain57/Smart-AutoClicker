@@ -45,6 +45,7 @@ internal class BillingClientProxy(
 
     internal val client = BillingClient.newBuilder(context)
         .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+        .enableAutoServiceReconnection()
         .setListener { result, purchases ->
             billingUiFlowResultListener?.invoke(
                 result,
@@ -59,8 +60,6 @@ internal class BillingClientProxy(
     fun launchBillingFlow(activity: Activity, product: InAppProduct): StateFlow<BillingUiFlowState> {
         val billingUiFlowState: MutableStateFlow<BillingUiFlowState> =
             MutableStateFlow(BillingUiFlowState.NOT_VISIBLE_CANNOT_SHOW)
-
-        if (!client.isReady) return billingUiFlowState
 
         billingUiFlowResultListener = { result, purchase ->
             when (result.responseCode) {
@@ -111,14 +110,6 @@ internal class BillingClientProxy(
     }
 
     suspend fun fetchInAppPurchases(): PurchasesQueryResult {
-        if (!client.isReady) {
-            Log.w(TAG, "Cannot refresh purchases, client is not ready.")
-            return PurchasesQueryResult.Failure(
-                responseCode = BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
-                debugMessage = "Client is not ready",
-            )
-        }
-
         Log.i(TAG, "Refreshing purchases")
 
         val result = client.queryPurchasesAsync(inAppProductsPurchasesQueryParams())
@@ -137,8 +128,6 @@ internal class BillingClientProxy(
     }
 
     suspend fun fetchInAppProductDetails(): Pair<Boolean, InAppProduct?> {
-        if (!client.isReady) return (false to null)
-
         Log.i(TAG, "Refreshing product details")
 
         val (billingResult, product) = fetchInAppProductDetailsCompat()
