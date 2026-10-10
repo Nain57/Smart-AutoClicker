@@ -59,21 +59,19 @@
 
     <string name="message_tutorial_screen_condition_moving_target_step_18">首先，需要為你的操作選擇一個類型。\n\n對於這個遊戲，我們需要點擊藍色角色，所以選擇點擊來創建新的點擊操作。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">點擊操作由位置和按壓持續時間定義。\n\n由於藍色角色在移動，我們無法使用固定位置。將「點擊位置」設置更改為「條件」，以在找到檢測到的條件的地方點擊。\n\n選擇它以在你的操作中使用它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">點擊操作由位置和按壓持續時間定義。\n\n由於藍色角色在移動，我們無法使用固定位置。\n\n點擊「選擇條件」按鈕，以在偵測到條件的位置進行點擊。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">點擊條件選擇器以選擇要點擊的檢測條件。\n\n我們需要指定它，因為一個事件可以有多個條件。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">對於我們的用例來說很容易，我們只有一個條件，即藍色角色。\n\n選擇它以在螢幕上檢測到此條件時單擊它。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_21">對於我們的用例來說很容易，我們只有一個條件，即藍色角色。\n\n選擇它以在螢幕上檢測到此條件時單擊它。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_21">就是這樣！\n你的點擊操作現在已經正確配置以打贏比賽。\n\n單擊保存按鈕註冊並返回操作列表。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">就是這樣！\n你的點擊操作現在已經正確配置以打贏比賽。\n\n單擊保存按鈕註冊並返回操作列表。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">關閉操作列表，返回事件配置。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">關閉操作列表，返回事件配置。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_23">你的事件現在有一個條件和一個操作，這意味著它知道何時執行操作。\n\n點擊保存按鈕以保存它並返回場景對話框。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">你的事件現在有一個條件和一個操作，這意味著它知道何時執行操作。\n\n點擊保存按鈕以保存它並返回場景對話框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_24">場景的唯一要求是至少有一個事件。\n由於我們的事件已經涵蓋了如何贏得比賽，我們不需要其他任何東西。\n\n點擊保存按鈕以將場景保存在資料庫中並關閉配置對話框。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">場景的唯一要求是至少有一個事件。\n由於我們的事件已經涵蓋了如何贏得比賽，我們不需要其他任何東西。\n\n點擊保存按鈕以將場景保存在資料庫中並關閉配置對話框。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_25">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於檢測。\n\n點擊它以開始檢測，然後開始遊戲。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">正如你所看到的，播放按鈕現在可用，這意味著你的場景有效並且可以用於檢測。\n\n點擊它以開始檢測，然後開始遊戲。</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_27">恭喜！\n\n你現在知道如何使用「整個螢幕」檢測類型和「點擊條件」功能來跟蹤移動目標！</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_26">恭喜！\n\n你現在知道如何使用「整個螢幕」檢測類型和「點擊條件」功能來跟蹤移動目標！</string>
 </resources>

@@ -209,7 +209,7 @@ object ImageConditionsStillTargetTutorial : TutorialItem {
                         MonitoredOverlayType.CLICK,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
+                        MonitoredViewType.CLICK_DIALOG_BUTTON_POSITION,
                     ),
                 ),
                 // Pick location

@@ -88,30 +88,27 @@
         cliquer sur le personnage bleu, donc choisissez Clic pour créer une nouvelle action de clic.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">Une action de clic est définie par une position et une durée d\'appui.\n\nComme le
-        personnage bleu se déplace, nous ne pouvons pas utiliser une position fixe. Modifiez le paramètre "Cliquer sur" en "Condition"
-        pour cliquer là où une condition détectée est trouvée.\n\nSélectionnez-le pour l\'utiliser dans votre action.</string>
+        personnage bleu se déplace, nous ne pouvons pas utiliser une position fixe.\n\nAppuyez sur le bouton "Choisir une condition"
+        pour cliquer là où une condition détectée est trouvée.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Cliquez sur le sélecteur de condition pour choisir sur quelle condition détectée cliquer.
-        \n\nNous devons le spécifier car un événement peut avoir plusieurs conditions.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">Pour notre cas d\'utilisation, c\'est facile, nous n\'avons qu\'une seule condition, le personnage bleu.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Pour notre cas d\'utilisation, c\'est facile, nous n\'avons qu\'une seule condition, le personnage bleu.
         \n\nSélectionnez-la pour cliquer sur cette condition lorsqu\'elle est détectée sur votre écran.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">C\'est tout !\nVotre action de clic est maintenant correctement configurée pour battre le
+    <string name="message_tutorial_screen_condition_moving_target_step_21">C\'est tout !\nVotre action de clic est maintenant correctement configurée pour battre le
         jeu.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la liste des actions.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Fermez la liste des actions pour revenir à la configuration de l\'événement.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Fermez la liste des actions pour revenir à la configuration de l\'événement.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Votre événement a désormais une condition et une action, ce qui signifie qu\'il sait quoi
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Votre événement a désormais une condition et une action, ce qui signifie qu\'il sait quoi
         exécuter et quand l\'exécuter.\n\nCliquez sur le bouton "Enregistrer" pour l\'enregistrer et revenir à la boîte de dialogue du scénario.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">La seule exigence pour un scénario est d\'avoir au moins un événement.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">La seule exigence pour un scénario est d\'avoir au moins un événement.\n
         Comme notre événement couvre déjà la manière de gagner le jeu, nous n\'avons besoin de rien d\'autre.\n\nCliquez sur le bouton
         "Enregistrer" pour sauvegarder le scénario dans la base de données et fermer les boîtes de dialogue de configuration.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">Comme vous pouvez le voir, le bouton de lecture est maintenant disponible, ce qui signifie que
+    <string name="message_tutorial_screen_condition_moving_target_step_25">Comme vous pouvez le voir, le bouton de lecture est maintenant disponible, ce qui signifie que
         votre scénario est valide et peut être utilisé pour la détection.\n\nCliquez dessus pour lancer la détection, puis lancez le jeu.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">Félicitations !\n\nVous savez maintenant comment suivre une cible en mouvement en utilisant
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Félicitations !\n\nVous savez maintenant comment suivre une cible en mouvement en utilisant
         le type de détection "Tout l\'écran" et la fonctionnalité "Cliquer sur condition" !</string>
 </resources>

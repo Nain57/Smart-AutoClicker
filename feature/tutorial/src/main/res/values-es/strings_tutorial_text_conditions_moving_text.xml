@@ -70,33 +70,30 @@
         necesitamos hacer clic en el botón, así que elige Clic para crear una nueva Acción de clic.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Como \"Hello\" está en movimiento, no podemos usar
-        una posición fija. Cambia la configuración \"Hacer clic en\" a \"Condición\" para hacer clic en la Condición detectada.</string>
+        una posición fija.\n\nPulsa el botón \"Elegir condición\" para hacer clic donde se encuentre la Condición detectada.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Haz clic en el selector de Condición para elegir en qué Condición detectada
-        hacer clic.\n\nNecesitamos especificarlo porque un Evento puede tener varias Condiciones.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">Para nuestro caso de uso es fácil, solo tenemos una Condición, el texto \"Hello\".
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Para nuestro caso de uso es fácil, solo tenemos una Condición, el texto \"Hello\".
         \n\nSelecciónala para hacer clic en esta Condición cuando se detecte en tu pantalla.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">¡Eso es todo!\nTu Acción de clic está ahora correctamente configurada para ganar el
+    <string name="message_tutorial_text_conditions_moving_text_step_16">¡Eso es todo!\nTu Acción de clic está ahora correctamente configurada para ganar el
         juego.\n\nHaz clic en el botón guardar para registrarla y volver a la lista de Acciones.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Cierra la lista de Acciones para volver a la configuración del Evento.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Cierra la lista de Acciones para volver a la configuración del Evento.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Tu Evento ahora tiene una Condición y una Acción, lo que significa que sabe qué
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Tu Evento ahora tiene una Condición y una Acción, lo que significa que sabe qué
         ejecutar y cuándo ejecutarlo.\n\nHaz clic en el botón guardar para registrarlo y volver al diálogo del Escenario.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">El único requisito para un Escenario es tener al menos un Evento.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">El único requisito para un Escenario es tener al menos un Evento.\n
         Como nuestro Evento ya cubre cómo ganar el juego, no necesitamos nada más.\n\nHaz clic en el botón
         guardar para guardar el Escenario en la base de datos y cerrar los diálogos de configuración.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">Como puedes ver, el botón de reproducción ya está disponible, lo que significa que
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Como puedes ver, el botón de reproducción ya está disponible, lo que significa que
         tu Escenario es válido y puede usarse para la detección.\n\nHaz clic en él para iniciar la detección.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">¿Está funcionando pero no ocurre nada?\n\nEso es normal, solo hará clic
+    <string name="message_tutorial_text_conditions_moving_text_step_21">¿Está funcionando pero no ocurre nada?\n\nEso es normal, solo hará clic
         cuando el botón muestre \"Hello\", ¿recuerdas? Mientras mantienes el escenario en ejecución, pulsa el botón iniciar juego
         ¡y observa cómo Klick\'r lo gana por ti!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">¡Felicidades!\n\nAhora sabes cómo detectar un texto en movimiento que se muestra en la
+    <string name="message_tutorial_text_conditions_moving_text_step_22">¡Felicidades!\n\nAhora sabes cómo detectar un texto en movimiento que se muestra en la
         pantalla.\nEcha un vistazo a los otros tutoriales para descubrir más casos de uso.</string>
 </resources>

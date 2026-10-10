@@ -87,30 +87,27 @@
         hacer clic en el personaje azul, así que elige Clic para crear una nueva Acción de clic.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">Una Acción de clic está definida por una posición y una duración de presión.\n\nComo el
-        personaje azul se mueve, no podemos usar una posición fija. Cambia la configuración "Hacer clic en" a "Condición"
-        para hacer clic donde se encuentre una condición detectada.\n\nSelecciónalo para usarlo en tu acción.</string>
+        personaje azul se mueve, no podemos usar una posición fija.\n\nPulsa el botón "Elegir condición"
+        para hacer clic donde se encuentre una Condición detectada.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Haz clic en el selector de condición para elegir en qué condición detectada
-        hacer clic.\n\nNecesitamos especificarlo porque un evento puede tener varias condiciones.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">Para nuestro caso de uso es fácil, solo tenemos una condición, el personaje azul.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Para nuestro caso de uso es fácil, solo tenemos una condición, el personaje azul.
         \n\nSelecciónala para hacer clic en esta condición cuando se detecte en tu pantalla.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">¡Eso es todo!\nTu Acción de clic está configurada correctamente para ganar el
+    <string name="message_tutorial_screen_condition_moving_target_step_21">¡Eso es todo!\nTu Acción de clic está configurada correctamente para ganar el
         juego.\n\nHaz clic en el botón de guardar para registrarla y volver a la lista de acciones.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Cierra la lista de acciones para volver a la configuración del evento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Cierra la lista de acciones para volver a la configuración del evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Tu evento ahora tiene una condición y una acción, lo que significa que sabe qué
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Tu evento ahora tiene una condición y una acción, lo que significa que sabe qué
         ejecutar y cuándo ejecutarlo.\n\nHaz clic en el botón de guardar para registrarlo y volver al diálogo del escenario.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">El único requisito para un escenario es tener al menos un evento.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">El único requisito para un escenario es tener al menos un evento.\n
         Como nuestro evento ya cubre cómo ganar el juego, no necesitamos nada más.\n\nHaz clic en el botón de guardar para guardar el
         escenario en la base de datos y cerrar los diálogos de configuración.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">Como puedes ver, el botón de reproducción ahora está disponible, lo que significa que
+    <string name="message_tutorial_screen_condition_moving_target_step_25">Como puedes ver, el botón de reproducción ahora está disponible, lo que significa que
         tu escenario es válido y puede usarse para la detección.\n\nHaz clic en él para iniciar la detección y luego inicia el juego.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">¡Felicidades!\n\nAhora sabes cómo rastrear un objetivo en movimiento usando el tipo de
+    <string name="message_tutorial_screen_condition_moving_target_step_26">¡Felicidades!\n\nAhora sabes cómo rastrear un objetivo en movimiento usando el tipo de
         detección "Pantalla completa" y la función "Hacer clic en Condición"!</string>
 </resources>

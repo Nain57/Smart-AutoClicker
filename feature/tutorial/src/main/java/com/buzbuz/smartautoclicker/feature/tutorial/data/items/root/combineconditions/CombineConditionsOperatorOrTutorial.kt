@@ -151,7 +151,7 @@ object CombineConditionsOperatorOrTutorial : TutorialItem {
                         MonitoredOverlayType.CLICK,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION,
+                        MonitoredViewType.CLICK_DIALOG_BUTTON_CONDITION,
                     ),
                 ),
                 // Scenario saved, start it and start the game

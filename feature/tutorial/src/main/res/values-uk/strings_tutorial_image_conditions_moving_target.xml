@@ -88,30 +88,27 @@
         клікнути на синього персонажа, тому виберіть клік, щоб створити нову дію кліку.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">Дія кліку визначається позицією та тривалістю натискання.\n\nОскільки синій
-        персонаж рухається, ми не можемо використовувати фіксовану позицію. Змініть параметр «Клікнути на» на «Умова»,
-        щоб клікати там, де знайдено виявлену умову.\n\nВиберіть її для використання у вашій дії.</string>
+        персонаж рухається, ми не можемо використовувати фіксовану позицію.\n\nНатисніть кнопку «Вибрати умову»,
+        щоб клікати там, де знайдено виявлену умову.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Клікніть на селектор умови, щоб вибрати, на яку виявлену умову клікати.
-        \n\nНам потрібно вказати це, оскільки подія може мати кілька умов.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">Для нашого випадку використання це легко — у нас є лише одна умова, синій персонаж.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Для нашого випадку використання це легко — у нас є лише одна умова, синій персонаж.
         \n\nВиберіть її, щоб клікати на цю умову, коли вона виявлена на вашому екрані.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">Ось і все!\nВаша дія кліку тепер правильно налаштована для перемоги в
+    <string name="message_tutorial_screen_condition_moving_target_step_21">Ось і все!\nВаша дія кліку тепер правильно налаштована для перемоги в
         грі.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку дій.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Закрийте список дій, щоб повернутися до налаштування події.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Закрийте список дій, щоб повернутися до налаштування події.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Ваша подія тепер має умову та дію, що означає, що вона знає, що виконувати та
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Ваша подія тепер має умову та дію, що означає, що вона знає, що виконувати та
         коли це виконувати.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу сценарію.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">Єдина вимога для сценарію — мати принаймні одну подію.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">Єдина вимога для сценарію — мати принаймні одну подію.\n
         Оскільки наша подія вже охоплює, як виграти гру, нам більше нічого не потрібно.\n\nКлікніть на кнопку збереження, щоб
         зберегти сценарій в базі даних та закрити діалоги налаштування.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
+    <string name="message_tutorial_screen_condition_moving_target_step_25">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
         сценарій дійсний і може використовуватися для виявлення.\n\nКлікніть на неї, щоб почати виявлення, а потім запустіть гру.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">Вітаємо!\n\nТепер ви знаєте, як відстежувати рухому ціль, використовуючи тип
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Вітаємо!\n\nТепер ви знаєте, як відстежувати рухому ціль, використовуючи тип
         виявлення «Весь екран» та функцію «Клікнути на умову»!</string>
 </resources>

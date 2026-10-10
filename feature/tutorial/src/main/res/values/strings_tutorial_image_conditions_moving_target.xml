@@ -88,30 +88,27 @@
         to click on the blue character, so choose Click to create a new Click Action.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">A Click Action is defined by a position and a press duration.\n\nSince
-        the blue character is moving, we cannot use a fixed position. Change the \"Click on\" setting to \"Condition\"
-        to click wherever a detected Condition is found.\n\nSelect it to use it in your Action.</string>
+        the blue character is moving, we cannot use a fixed position.\n\nPress the \"Pick condition\" button
+        to click wherever a detected Condition is found.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Click on the Condition selector to choose which detected Condition to
-        click on.\n\nWe need to specify it because an Event can have multiple Conditions.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">For our use case it is easy, we only have one Condition, the blue
+    <string name="message_tutorial_screen_condition_moving_target_step_20">For our use case it is easy, we only have one Condition, the blue
         character.\n\nSelect it to click on this Condition when it is detected on your screen.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">That\'s it!\nYour Click Action is now correctly configured to beat the
+    <string name="message_tutorial_screen_condition_moving_target_step_21">That\'s it!\nYour Click Action is now correctly configured to beat the
         game.\n\nClick on the save button to register it and return to the Actions list.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Close the Actions list to return to the Event configuration.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Close the Actions list to return to the Event configuration.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Your Event now has a Condition and an Action, which means it knows what
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Your Event now has a Condition and an Action, which means it knows what
         to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">The only requirement for a Scenario is to have at least one Event.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">The only requirement for a Scenario is to have at least one Event.\n
         As our Event already covers how to win the game, we don\'t need anything else.\n\nClick on the save button to
         save the Scenario in database and close the configuration dialogs.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">As you can see, the play button is now available, meaning that your
+    <string name="message_tutorial_screen_condition_moving_target_step_25">As you can see, the play button is now available, meaning that your
         Scenario is valid and can be used for detection.\n\nClick on it to start the detection, and then start the game.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">Congratulations!\n\nYou now know how to track a moving target using the
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Congratulations!\n\nYou now know how to track a moving target using the
         \"Whole screen\" detection type and the \"Click on Condition\" feature!</string>
 </resources>
