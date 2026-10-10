@@ -70,6 +70,8 @@ internal class BillingDataSource @Inject constructor(
     private var debugReceiver: DebugBillingStateReceiver? = null
 
     init {
+        coroutineScopeIo.launch { purchaseManager.restoreCachedPurchase() }
+
         billingServiceConnection.monitorConnection(
             productId = PRODUCT_ID,
             onConnectionChangedListener = { client ->
@@ -108,7 +110,7 @@ internal class BillingDataSource @Inject constructor(
         val client = billingClient ?: return
 
         coroutineScopeIo.launch {
-            client.refreshPurchases(purchase, fromQuery = false)
+            purchaseManager.handleUiFlowPurchase(purchase, client::acknowledgePurchase)
         }
     }
 
@@ -116,10 +118,7 @@ internal class BillingDataSource @Inject constructor(
         val client = billingClient ?: return
 
         coroutineScopeIo.launch {
-            client.refreshPurchases(
-                purchase = client.fetchInAppPurchases(),
-                fromQuery = true,
-            )
+            purchaseManager.handlePurchasesQueryResult(client.fetchInAppPurchases(), client::acknowledgePurchase)
         }
     }
 
@@ -128,14 +127,6 @@ internal class BillingDataSource @Inject constructor(
         val details = productDetailsManager.productDetails.value ?: return null
 
         return client.launchBillingFlow(activity, details)
-    }
-
-    private suspend fun BillingClientProxy.refreshPurchases(purchase: Purchase?, fromQuery: Boolean) {
-        purchaseManager.handleNewPurchases(
-            purchase = purchase,
-            fromFetch = fromQuery,
-            ackQuery = ::acknowledgePurchase,
-       )
     }
 }
 

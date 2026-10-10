@@ -25,3 +25,7 @@ fun Exception.throwWithKeys(keys: Map<String, String>) {
     }
     throw this
 }
+
+fun Exception.recordNonFatal() {
+    Log.w("Exception", "Non fatal exception", this)
+}
