@@ -40,6 +40,9 @@
 
     <dimen name="drawable_padding_small">2dp</dimen>
 
+    <dimen name="gesture_condition_label_text_size">10sp</dimen>
+    <dimen name="gesture_condition_label_padding">2dp</dimen>
+
     <dimen name="elevation_level_2">3dp</dimen>
     <dimen name="elevation_level_3">6dp</dimen>
 

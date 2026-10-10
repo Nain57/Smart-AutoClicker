@@ -31,6 +31,9 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureBrie
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureFingerPath
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureConditionLabelStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureFingerColors
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureHeldColor
 
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -89,6 +92,9 @@ class GestureEditorOverlayView(context: Context) : View(context) {
                 color = Color.WHITE
                 style = Paint.Style.FILL
             },
+            fingerColors = context.getGestureFingerColors(),
+            heldColor = context.getGestureHeldColor(),
+            conditionLabelStyle = context.getGestureConditionLabelStyle(),
         )
     )
 
@@ -299,7 +305,7 @@ class GestureEditorOverlayView(context: Context) : View(context) {
 
         return copy(
             waypoints = waypoints.map { wp ->
-                if (wp.isEditable && wp.motionId == dragState.motionId) wp.copy(position = dragState.currentPos)
+                if (wp.isEditable && wp.motionId == dragState.motionId) wp.copy(position = dragState.currentPos, condition = null)
                 else wp
             },
         )

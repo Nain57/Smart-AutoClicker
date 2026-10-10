@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
+import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
@@ -62,6 +63,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.Acti
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toItemBriefs
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toGestureDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toWaypointConditions
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -354,10 +356,16 @@ class SmartActionsBriefViewModel @Inject constructor(
             imageConditionBitmap = findClickOnConditionBitmap(context),
         )
 
-        is Gesture -> toGestureDescription(
-            conditions = editionRepository.editionState.getEditedEventConditions() ?: emptyList(),
-            screenSize = displayConfigManager.displayConfig.sizePx,
-        )
+        is Gesture -> {
+            val conditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition>() ?: emptyList()
+            toGestureDescription(
+                conditionOperator = editionRepository.editionState.getEditedEvent()?.conditionOperator ?: AND,
+                conditions = conditions,
+                counters = editionRepository.editionState.getAllEditedCounters(),
+                screenSize = displayConfigManager.displayConfig.sizePx,
+                conditionDisplays = conditions.toWaypointConditions(context, bitmapRepository),
+            )
+        }
 
         is Pause -> PauseDescription(
             pauseDurationMs = pauseDuration ?: 1,

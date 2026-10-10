@@ -17,18 +17,28 @@
 package com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers
 
 import android.animation.ValueAnimator
+import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PointF
+import android.graphics.RectF
+import android.text.TextPaint
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.utils.ExtendedValueAnimator
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefRenderer
 
+import kotlin.math.PI
 import kotlin.math.max
 
 
@@ -59,12 +69,36 @@ class GestureBriefRenderer(
         strokeWidth = viewStyle.innerRadiusPx * 0.75f
     }
 
+    private val labelBandWidthPx: Float = viewStyle.conditionLabelStyle?.let { labelStyle ->
+        labelStyle.textPaint.descent() - labelStyle.textPaint.ascent() + labelStyle.paddingPx * 2
+    } ?: 0f
+
+    private val defaultWaypointPaints: WaypointPaints = WaypointPaints(
+        outer = viewStyle.outerPaint,
+        inner = viewStyle.innerPaint,
+        fixedOuter = viewStyle.fixedOuterPaint ?: viewStyle.outerPaint,
+        fixedInner = viewStyle.fixedInnerPaint ?: viewStyle.innerPaint,
+        labelBackground = viewStyle.outerPaint.asLabelBand(labelBandWidthPx),
+        fixedLabelBackground = (viewStyle.fixedOuterPaint ?: viewStyle.outerPaint).asLabelBand(labelBandWidthPx),
+    )
+
+    private val fingerWaypointPaints: List<WaypointPaints> =
+        viewStyle.fingerColors.map(defaultWaypointPaints::withColor)
+
+    private val heldWaypointPaints: WaypointPaints? =
+        viewStyle.heldColor?.let(defaultWaypointPaints::withColor)
+
     private var fingerPaths: List<GestureFingerPath> = emptyList()
     private var waypointGradientPaints: List<List<Paint>> = emptyList()
 
     private var animatedRatio: Float = 0f
     private var gestureTotalDurationMs: Long = 0L
     private val travelerPos = PointF()
+    private val conditionRect = RectF()
+    private val labelArcOval = RectF()
+    private val labelArcPath = Path()
+    /** Labels already laid out along the waypoint circle, by original label. */
+    private val labelLayouts: MutableMap<String, LabelLayout> = mutableMapOf()
 
     override fun onNewDescription(description: ItemBriefDescription, animate: Boolean) {
         if (description !is GestureDescription) return
@@ -114,6 +148,12 @@ class GestureBriefRenderer(
     }
 
     override fun onDraw(canvas: Canvas) {
+        fingerPaths.forEach { path ->
+            path.waypoints.forEach { waypoint ->
+                waypoint.condition?.bitmap?.let { canvas.drawConditionBitmap(waypoint.position, it) }
+            }
+        }
+
         fingerPaths.forEachIndexed { index, path ->
             val waypoints = path.waypoints
             if (waypoints.isEmpty()) return@forEachIndexed
@@ -127,8 +167,17 @@ class GestureBriefRenderer(
                 )
             }
 
+            val fingerWaypointPaints = waypointPaints(index)
             waypoints.forEachIndexed { wpIndex, waypoint ->
-                canvas.drawSelectorCircle(waypoint.position, fingerGradients?.getOrNull(wpIndex), waypoint.isEditable)
+                val isHeldWaypoint = path.isHeld && wpIndex == waypoints.lastIndex
+                canvas.drawSelectorCircle(
+                    waypoint.position,
+                    fingerGradients?.getOrNull(wpIndex),
+                    waypoint.isEditable,
+                    if (isHeldWaypoint) heldWaypointPaints ?: fingerWaypointPaints else fingerWaypointPaints,
+                    index,
+                    waypoint.condition?.label,
+                )
             }
 
             if (!isActivelyDragging && path.animationSegments.isNotEmpty() && gestureTotalDurationMs > 0L) {
@@ -148,9 +197,14 @@ class GestureBriefRenderer(
         gestureAnimator.cancel()
         fingerPaths = emptyList()
         waypointGradientPaints = emptyList()
+        labelLayouts.clear()
         animatedRatio = 0f
         gestureTotalDurationMs = 0L
     }
+
+    private fun waypointPaints(fingerIndex: Int): WaypointPaints =
+        if (fingerWaypointPaints.isEmpty()) defaultWaypointPaints
+        else fingerWaypointPaints[fingerIndex % fingerWaypointPaints.size]
 
     private fun computeTravelerPosition(path: GestureFingerPath, fingerLocalTimeMs: Float): Boolean {
         if (path.animationSegments.isEmpty()) return false
@@ -184,12 +238,79 @@ class GestureBriefRenderer(
         return true
     }
 
-    private fun Canvas.drawSelectorCircle(position: PointF, backgroundPaint: Paint?, isEditable: Boolean) {
-        val outerP = if (isEditable) viewStyle.outerPaint else (viewStyle.fixedOuterPaint ?: viewStyle.outerPaint)
-        val innerP = if (isEditable) viewStyle.innerPaint else (viewStyle.fixedInnerPaint ?: viewStyle.innerPaint)
+    private fun Canvas.drawConditionBitmap(position: PointF, bitmap: Bitmap) {
+        conditionRect.set(
+            position.x - bitmap.width / 2f,
+            position.y - bitmap.height / 2f,
+            position.x + bitmap.width / 2f,
+            position.y + bitmap.height / 2f,
+        )
+        drawBitmap(bitmap, null, conditionRect, null)
+    }
+
+    private fun Canvas.drawSelectorCircle(
+        position: PointF,
+        backgroundPaint: Paint?,
+        isEditable: Boolean,
+        paints: WaypointPaints,
+        fingerIndex: Int,
+        label: String?,
+    ) {
+        val outerP = if (isEditable) paints.outer else paints.fixedOuter
+        val innerP = if (isEditable) paints.inner else paints.fixedInner
         backgroundPaint?.let { drawCircle(position.x, position.y, viewStyle.outerRadiusPx * 2f, it) }
-        drawCircle(position.x, position.y, viewStyle.outerRadiusPx, outerP)
+
+        val labelStyle = viewStyle.conditionLabelStyle
+        if (label != null && labelStyle != null) {
+            val labelBackgroundP = if (isEditable) paints.labelBackground else paints.fixedLabelBackground
+            drawLabelledOuterCircle(position, label, labelStyle, outerP, labelBackgroundP, fingerIndex)
+        } else {
+            drawCircle(position.x, position.y, viewStyle.outerRadiusPx, outerP)
+        }
+
         drawCircle(position.x, position.y, viewStyle.innerRadiusPx, innerP)
+    }
+
+    /**
+     * Draws the outer circle thickened inward to contain [label], curved along it and centered at its bottom. The
+     * label can go all around the circle and is ellipsized when it doesn't fit.
+     */
+    private fun Canvas.drawLabelledOuterCircle(
+        position: PointF,
+        label: String,
+        labelStyle: GestureConditionLabelStyle,
+        outerPaint: Paint,
+        backgroundPaint: Paint,
+        fingerIndex: Int,
+    ) {
+        val textPaint = labelStyle.textPaint
+        val bandWidth = backgroundPaint.strokeWidth
+        val outerEdgeRadius = viewStyle.outerRadiusPx + outerPaint.strokeWidth / 2f
+        val arcRadius = outerEdgeRadius - bandWidth / 2f
+        if (arcRadius <= 0f) {
+            drawCircle(position.x, position.y, viewStyle.outerRadiusPx, outerPaint)
+            return
+        }
+
+        drawCircle(position.x, position.y, arcRadius, backgroundPaint)
+
+        val layout = labelLayouts.getOrPut(label) {
+            // Keep a gap between the label end and start when it goes all around the circle
+            val maxWidth = (2 * PI * arcRadius).toFloat() - bandWidth
+            val text = TextUtils.ellipsize(label, textPaint, maxWidth, TextUtils.TruncateAt.END).toString()
+            LabelLayout(text, Math.toDegrees((textPaint.measureText(text) / arcRadius).toDouble()).toFloat())
+        }
+
+        // Clockwise angles from the right; going counterclockwise along the bottom keeps the text upright.
+        labelArcOval.set(position.x - arcRadius, position.y - arcRadius, position.x + arcRadius, position.y + arcRadius)
+        labelArcPath.reset()
+        labelArcPath.arcTo(labelArcOval, 90f + layout.sweepDegrees / 2f, -layout.sweepDegrees, true)
+
+        val textColors = labelStyle.fingerTextColors
+        val textColor = if (textColors.isEmpty()) Color.WHITE else textColors[fingerIndex % textColors.size]
+        textPaint.color = textColor
+        textPaint.alpha = Color.alpha(textColor) * outerPaint.alpha / 255
+        drawTextOnPath(layout.text, labelArcPath, 0f, -(textPaint.descent() + textPaint.ascent()) / 2f, textPaint)
     }
 }
 
@@ -208,6 +329,8 @@ data class GestureFingerPath(
     val startTimeMs: Long = 0L,
     val durationMs: Long = 0L,
     val animationSegments: List<GestureAnimationSegment> = emptyList(),
+    /** True if the finger stays pressed on its last waypoint once the gesture is completed. */
+    val isHeld: Boolean = false,
 )
 
 data class GestureWaypoint(
@@ -215,6 +338,16 @@ data class GestureWaypoint(
     val isEditable: Boolean = true,
     /** Identifier of the gesture motion this waypoint originates from, if any. Used to map an edition back to it. */
     val motionId: Identifier? = null,
+    /** The condition this waypoint position is taken from, if any. */
+    val condition: GestureWaypointCondition? = null,
+)
+
+/** How the condition a waypoint position is taken from is displayed. */
+data class GestureWaypointCondition(
+    /** Drawn at its size behind the waypoint, centered on it. */
+    val bitmap: Bitmap? = null,
+    /** Drawn at the bottom of the waypoint outer circle, ellipsized if too long. */
+    val label: String? = null,
 )
 
 sealed class GestureAnimationSegment {
@@ -240,6 +373,78 @@ data class GestureBriefRendererStyle(
     @field:ColorInt val fixedBackgroundColor: Int? = null,
     /** When non-null, used for the traveller fill circle instead of [innerPaint]. */
     val travelerPaint: Paint? = null,
+    /** Colour of each finger's waypoints, by finger index. When empty, the waypoint paints colours are kept. */
+    @field:ColorInt val fingerColors: List<Int> = emptyList(),
+    /** When non-null, colour of the last waypoint of a held finger instead of its finger colour. */
+    @field:ColorInt val heldColor: Int? = null,
+    /** When non-null, style of the [GestureWaypointCondition.label] drawn in waypoints. Labels are hidden otherwise. */
+    val conditionLabelStyle: GestureConditionLabelStyle? = null,
 )
+
+data class GestureConditionLabelStyle(
+    val textPaint: TextPaint,
+    /** Colour of the label text, by finger index, to be readable on its finger colour. */
+    @field:ColorInt val fingerTextColors: List<Int>,
+    val paddingPx: Float,
+)
+
+internal fun Context.getGestureConditionLabelStyle(): GestureConditionLabelStyle =
+    GestureConditionLabelStyle(
+        textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = resources.getDimension(R.dimen.gesture_condition_label_text_size)
+        },
+        fingerTextColors = listOf(
+            R.color.gesture_finger_1_label_text_color,
+            R.color.gesture_finger_2_label_text_color,
+            R.color.gesture_finger_3_label_text_color,
+            R.color.gesture_finger_4_label_text_color,
+            R.color.gesture_finger_5_label_text_color,
+        ).map { ContextCompat.getColor(this, it) },
+        paddingPx = resources.getDimension(R.dimen.gesture_condition_label_padding),
+    )
+
+internal fun Context.getGestureHeldColor(): Int =
+    ContextCompat.getColor(this, R.color.gesture_finger_held_color)
+
+internal fun Context.getGestureFingerColors(): List<Int> = listOf(
+    R.color.gesture_finger_1_color,
+    R.color.gesture_finger_2_color,
+    R.color.gesture_finger_3_color,
+    R.color.gesture_finger_4_color,
+    R.color.gesture_finger_5_color,
+).map { ContextCompat.getColor(this, it) }
+
+private class WaypointPaints(
+    val outer: Paint,
+    val inner: Paint,
+    val fixedOuter: Paint,
+    val fixedInner: Paint,
+    val labelBackground: Paint,
+    val fixedLabelBackground: Paint,
+) {
+    fun withColor(@ColorInt newColor: Int): WaypointPaints = WaypointPaints(
+        outer = outer.withColor(newColor),
+        inner = inner.withColor(newColor),
+        fixedOuter = fixedOuter.withColor(newColor),
+        fixedInner = fixedInner.withColor(newColor),
+        labelBackground = labelBackground.withColor(newColor),
+        fixedLabelBackground = fixedLabelBackground.withColor(newColor),
+    )
+}
+
+private class LabelLayout(val text: String, val sweepDegrees: Float)
+
+private fun Paint.asLabelBand(widthPx: Float): Paint = Paint(this).apply {
+    style = Paint.Style.STROKE
+    strokeWidth = widthPx
+}
+
+private fun Paint.withColor(@ColorInt newColor: Int): Paint {
+    val baseAlpha = alpha
+    return Paint(this).apply {
+        color = newColor
+        alpha = Color.alpha(newColor) * baseAlpha / 255
+    }
+}
 
 private const val MINIMAL_ANIMATION_DURATION_MS = 250L
