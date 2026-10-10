@@ -27,6 +27,7 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.advanceTimeBy
@@ -72,7 +73,7 @@ class GestureExecutorTests {
     fun setUp() {
         service = mock(AccessibilityService::class.java)
         heldPointerManager = HeldPointerManager()
-        executor = GestureExecutor(heldPointerManager)
+        executor = GestureExecutor(heldPointerManager, Dispatchers.Unconfined)
         callbackCaptor = ArgumentCaptor.forClass(GestureResultCallback::class.java)
     }
 
@@ -337,7 +338,7 @@ class GestureExecutorTests {
         debouncerConstruction = mockConstruction(GestureDebouncer::class.java) { debouncer, _ ->
             mockWhen(debouncer.shouldTrigger()).thenReturn(true)
         }
-        executor = GestureExecutor(heldPointerManager)
+        executor = GestureExecutor(heldPointerManager, Dispatchers.Unconfined)
     }
 
     private fun builtGesture(vararg chains: List<GestureDescription>, held: HeldPointer? = null): BuiltGesture =

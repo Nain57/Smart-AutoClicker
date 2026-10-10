@@ -40,24 +40,26 @@ internal class AndroidGestureBuilderCompat24(
 
     override val supportsStrokeContinuation: Boolean = false
 
-    /** Without stroke continuation there is nothing to continue and nothing can be left down, so both maps stay empty. */
+    /** The path of the stroke being built. A [StrokeDescription] keeps its own copy, so it can be reused right away. */
+    private val strokePath: Path = Path()
+
+    /** Without stroke continuation there is nothing to continue and nothing can be left down. */
     override fun buildSlices(
         fingers: List<ResolvedFinger>,
-        initialHeldStrokes: Map<Int, StrokeDescription>,
+        carriedStroke: StrokeDescription?,
     ): AndroidGestureSlices {
         val builder = GestureDescription.Builder()
 
         fingers.forEach { finger ->
-            val path = Path().apply {
-                moveTo(finger.segments.first().from)
-                finger.segments.forEach { segment ->
-                    if (segment.from != segment.to) lineTo(segment.to)
-                }
+            strokePath.reset()
+            strokePath.moveTo(finger.segments.first().from)
+            finger.segments.forEach { segment ->
+                if (segment.from != segment.to) strokePath.lineTo(segment.to)
             }
 
             builder.addStroke(
                 buildStroke(
-                    path = path,
+                    path = strokePath,
                     startTimeMs = finger.downMs,
                     durationMs = finger.upMs - finger.downMs,
                     willContinue = false,
