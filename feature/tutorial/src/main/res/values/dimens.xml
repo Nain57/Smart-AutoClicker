@@ -28,4 +28,6 @@
     <dimen name="tutorial_overlay_menu_height">152dp</dimen>
 
     <dimen name="tutorial_hole_border_width">3dp</dimen>
+
+    <dimen name="tutorial_slideshow_dialog_inset_landscape">16dp</dimen>
 </resources>
