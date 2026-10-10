@@ -40,6 +40,9 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.state.Processi
  * Resolves the finger positions of a [Gesture] or [Click] into screen pixels, from the detection results and the scenario
  * counters.
  *
+ * Actions can be executed on every processed frame, so the positions are resolved into points kept between two
+ * resolutions instead of being allocated each time. This makes an instance not thread safe.
+ *
  * @param processingState the state of the current processing, holding the counters.
  * @param gestureBuilder the builder the resolved fingers are meant for.
  */
@@ -47,6 +50,11 @@ internal class FingerResolver(
     private val processingState: ProcessingState,
     private val gestureBuilder: AndroidGestureBuilder,
 ) {
+
+    /** The last resolved position, offset included. A finger builder never keeps the position it is given. */
+    private val resolvedPosition: Point = Point()
+    /** The last resolved offset, to be applied to [resolvedPosition]. */
+    private val resolvedOffset: Point = Point()
 
     /**
      * Resolve the finger position for the click.
@@ -56,17 +64,15 @@ internal class FingerResolver(
      * @param results the results of the conditions detection for this event, if any.
      */
     fun resolve(click: Click, event: Event, results: ConditionsResults?): ResolvedFinger? {
-        val base = click.position?.let { resolveGesturePosition(it, event, results) }
-        if (base == null) {
+        if (!resolvePosition(click.position, click.offset, event, results)) {
             Log.d(TAG, "Cannot resolve position for $click")
             return null
         }
-        val offset = resolveGestureOffset(click.offset, event, results)
 
         return gestureBuilder
             .newFinger(index = FIRST_FINGER_INDEX, startTimeMs = 0L)
             .press(
-                position = Point(base.x + offset.x, base.y + offset.y),
+                position = resolvedPosition,
                 holdMs = click.pressDuration!!,
             )
             .release()
@@ -92,10 +98,14 @@ internal class FingerResolver(
         val fingerBuilder = gestureBuilder.newFinger(index, finger.startTimeMs)
         finger.motions.forEach { motion ->
             when (motion) {
-                is GestureFingerMotion.Press ->
-                    fingerBuilder.press(resolveMotionPosition(motion, event, results) ?: return null)
-                is GestureFingerMotion.Move ->
-                    fingerBuilder.move(resolveMotionPosition(motion, event, results) ?: return null, motion.durationMs)
+                is GestureFingerMotion.Press -> {
+                    if (!resolveMotionPosition(motion, event, results)) return null
+                    fingerBuilder.press(resolvedPosition)
+                }
+                is GestureFingerMotion.Move -> {
+                    if (!resolveMotionPosition(motion, event, results)) return null
+                    fingerBuilder.move(resolvedPosition, motion.durationMs)
+                }
                 is GestureFingerMotion.Wait ->
                     fingerBuilder.wait(motion.durationMs)
                 is GestureFingerMotion.Release ->
@@ -106,70 +116,93 @@ internal class FingerResolver(
         return fingerBuilder.build()
     }
 
+    /** Resolve the position of [motion] into [resolvedPosition]. @return false if it can't be resolved. */
     private fun resolveMotionPosition(
         motion: GestureFingerMotion.Positionable,
         event: Event,
         results: ConditionsResults?,
-    ): Point? {
-        val base = resolveGesturePosition(motion.position, event, results)
-        if (base == null) {
+    ): Boolean {
+        if (!resolvePosition(motion.position, motion.offset, event, results)) {
             Log.d(TAG, "Cannot resolve position for $motion")
-            return null
+            return false
         }
-        val off = resolveGestureOffset(motion.offset, event, results)
+        return true
+    }
 
-        return Point(base.x + off.x, base.y + off.y)
+    /** Resolve [position] with its [offset] applied into [resolvedPosition]. @return false if it can't be resolved. */
+    private fun resolvePosition(
+        position: GesturePosition?,
+        offset: GesturePosition?,
+        event: Event,
+        results: ConditionsResults?,
+    ): Boolean {
+        if (position == null || !resolveGesturePosition(position, event, results, resolvedPosition)) return false
+
+        resolveGestureOffset(offset, event, results, resolvedOffset)
+        resolvedPosition.offset(resolvedOffset.x, resolvedOffset.y)
+        return true
     }
 
     /**
      * Unlike a position, an offset never prevents the execution: each coordinate that can't be resolved falls back to
      * 0, independently of the other one.
      */
-    private fun resolveGestureOffset(offset: GesturePosition?, event: Event, results: ConditionsResults?): Point =
+    private fun resolveGestureOffset(offset: GesturePosition?, event: Event, results: ConditionsResults?, into: Point) {
         when (offset) {
-            null -> Point(0, 0)
-            is GesturePosition.Coordinates -> Point(
-                resolveGesturePositionCoordinateValue(offset.x) ?: 0,
-                resolveGesturePositionCoordinateValue(offset.y) ?: 0,
+            null -> into.set(0, 0)
+            is GesturePosition.Coordinates -> into.set(
+                resolveGesturePositionCoordinateValue(offset.x).orZeroIfUnresolved(),
+                resolveGesturePositionCoordinateValue(offset.y).orZeroIfUnresolved(),
             )
-            is GesturePosition.Condition -> resolveGesturePositionConditionValue(offset, event, results) ?: Point(0, 0)
+            is GesturePosition.Condition ->
+                if (!resolveGesturePositionConditionValue(offset, event, results, into)) into.set(0, 0)
         }
+    }
 
-    private fun resolveGesturePosition(position: GesturePosition, event: Event, results: ConditionsResults?): Point? =
+    /** Resolve [position] into [into]. @return false if it can't be resolved. */
+    private fun resolveGesturePosition(
+        position: GesturePosition,
+        event: Event,
+        results: ConditionsResults?,
+        into: Point,
+    ): Boolean =
         when (position) {
-            is GesturePosition.Coordinates -> resolveGesturePositionCoordinates(position)
-            is GesturePosition.Condition -> resolveGesturePositionConditionValue(position, event, results)
+            is GesturePosition.Coordinates -> resolveGesturePositionCoordinates(position, into)
+            is GesturePosition.Condition -> resolveGesturePositionConditionValue(position, event, results, into)
         }
 
-    private fun resolveGesturePositionCoordinates(coordinates: GesturePosition.Coordinates): Point? {
+    private fun resolveGesturePositionCoordinates(coordinates: GesturePosition.Coordinates, into: Point): Boolean {
         val x = resolveGesturePositionCoordinateValue(coordinates.x)
         val y = resolveGesturePositionCoordinateValue(coordinates.y)
 
-        if (x == null || y == null) {
+        if (x == UNRESOLVED_COORDINATE || y == UNRESOLVED_COORDINATE) {
             Log.d(TAG, "Cannot resolve position for $coordinates, coordinates are null")
-            return null
+            return false
         }
 
-        return Point(x, y)
+        into.set(x, y)
+        return true
     }
 
-    private fun resolveGesturePositionCoordinateValue(coordinatesValue: GestureCoordinatesValue): Int? =
+    /** @return the value of the coordinate, or [UNRESOLVED_COORDINATE]. Not nullable, to avoid boxing the result. */
+    private fun resolveGesturePositionCoordinateValue(coordinatesValue: GestureCoordinatesValue): Int =
         when (coordinatesValue) {
             is GestureCoordinatesValue.Literal ->
                 coordinatesValue.value
             is GestureCoordinatesValue.Counter ->
-                processingState.getCounterValue(coordinatesValue.counterName)?.toInt()
+                processingState.getCounterValue(coordinatesValue.counterName)?.toInt() ?: UNRESOLVED_COORDINATE
         }
 
     private fun resolveGesturePositionConditionValue(
         condition: GesturePosition.Condition,
         event: Event,
         results: ConditionsResults?,
-    ): Point? {
+        into: Point,
+    ): Boolean {
 
         if (event !is ScreenEvent) {
             Log.d(TAG, "Cannot resolve position for condition $condition, condition must be a screen event")
-            return null
+            return false
         }
 
         val condId = condition.conditionId
@@ -178,7 +211,7 @@ internal class FingerResolver(
                 val condResult = results?.getScreenConditionResult(condId.databaseId)
                 if (condResult == null) {
                     Log.d(TAG, "Cannot resolve position for $condId, condition has not been processed")
-                    return null
+                    return false
                 } else condResult
             }
 
@@ -187,12 +220,23 @@ internal class FingerResolver(
 
             else -> {
                 Log.d(TAG, "Cannot find a condition to resolve, config is invalid")
-                return null
+                return false
             }
         }
 
-        return result?.position?.let { Point(it.x, it.y) }
+        val position = result?.position ?: return false
+        into.set(position.x, position.y)
+        return true
     }
 }
+
+private fun Int.orZeroIfUnresolved(): Int =
+    if (this == UNRESOLVED_COORDINATE) 0 else this
+
+/**
+ * Marks a coordinate that can't be resolved. A counter value this far off the screen is meaningless as a coordinate, so
+ * it can't be mistaken for a real one.
+ */
+private const val UNRESOLVED_COORDINATE = Int.MIN_VALUE
 
 private const val TAG = "GestureResolver"

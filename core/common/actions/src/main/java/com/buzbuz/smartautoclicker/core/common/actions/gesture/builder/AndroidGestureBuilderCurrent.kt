@@ -21,11 +21,13 @@ import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Path
 import android.graphics.Point
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.buildStroke
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.continueWith
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.hold
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.line
+import com.buzbuz.smartautoclicker.core.common.actions.model.HELD_POINTER_FINGER_INDEX
 import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 
 import kotlin.random.Random
@@ -38,6 +40,9 @@ import kotlin.random.Random
  *
  * The slicing is global to the gesture, and not per finger: the system only accepts a continuation when the first
  * step of the dispatched gesture holds exactly one stroke for each pointer currently down, no more, no less.
+ *
+ * A gesture can be built on every processed frame when its event keeps being detected, so the working buffers are kept
+ * between two builds instead of being allocated each time. This makes an instance not thread safe.
  */
 @RequiresApi(Build.VERSION_CODES.O)
 internal class AndroidGestureBuilderCurrent(
@@ -46,22 +51,51 @@ internal class AndroidGestureBuilderCurrent(
 
     override val supportsStrokeContinuation: Boolean = true
 
+    /** Sorted and distinct slice boundaries of the gesture being built, valid up to the count returned by [toSliceBoundaries]. */
+    private var boundaries: LongArray = LongArray(INITIAL_BOUNDARIES_CAPACITY)
+
+    /** Last stroke built for a finger still touching the screen, indexed by finger index. */
+    private var heldStrokes: Array<StrokeDescription?> = arrayOfNulls(FINGER_SLOTS_COUNT)
+    /** Position at which the last stroke of a finger ended, indexed by finger index. */
+    private var heldPositions: Array<Point?> = arrayOfNulls(FINGER_SLOTS_COUNT)
+    /** Same as [heldStrokes], for the slice being built. Swapped with it once the slice is done. */
+    private var sliceStrokes: Array<StrokeDescription?> = arrayOfNulls(FINGER_SLOTS_COUNT)
+    /** Same as [heldPositions], for the slice being built. Swapped with it once the slice is done. */
+    private var slicePositions: Array<Point?> = arrayOfNulls(FINGER_SLOTS_COUNT)
+
+    /** The path of the stroke being built. A [StrokeDescription] keeps its own copy, so it can be reused right away. */
+    private val strokePath: Path = Path()
+
     override fun buildSlices(
         fingers: List<ResolvedFinger>,
-        initialHeldStrokes: Map<Int, StrokeDescription>,
+        carriedStroke: StrokeDescription?,
     ): AndroidGestureSlices? {
-        val boundaries = fingers.toSliceBoundaries()
-        if (boundaries.size < 2) return null
+        if (fingers.any { finger -> finger.index !in 0 until FINGER_SLOTS_COUNT }) {
+            Log.w(TAG, "Gesture has a finger index out of bounds, can't build it")
+            return null
+        }
 
+        val boundariesCount = fingers.toSliceBoundaries()
+        if (boundariesCount < 2) return null
+
+        try {
+            heldStrokes[HELD_POINTER_FINGER_INDEX] = carriedStroke
+            return buildSlices(fingers, boundariesCount)
+        } finally {
+            // Don't keep the strokes of this gesture alive until the next one is built
+            heldStrokes.fill(null)
+            heldPositions.fill(null)
+            sliceStrokes.fill(null)
+            slicePositions.fill(null)
+        }
+    }
+
+    private fun buildSlices(fingers: List<ResolvedFinger>, boundariesCount: Int): AndroidGestureSlices? {
         val slices = mutableListOf<AndroidGestureSlice>()
-        /** Last stroke built for a finger still touching the screen, indexed by finger index. */
-        val heldStrokes = initialHeldStrokes.toMutableMap()
-        /** Position at which the last stroke of a finger ended, indexed by finger index. */
-        val heldPositions = mutableMapOf<Int, Point>()
         /** Time not consumed by the previous slices, to delay the next one with. */
         var pendingDelayMs = 0L
 
-        for (boundaryIndex in 0 until boundaries.lastIndex) {
+        for (boundaryIndex in 0 until boundariesCount - 1) {
             val sliceStartMs = boundaries[boundaryIndex]
             val sliceEndMs = boundaries[boundaryIndex + 1]
             val sliceDurationMs = sliceEndMs - sliceStartMs
@@ -80,8 +114,8 @@ internal class AndroidGestureBuilderCurrent(
             // Nothing is touching the screen during this window, keep its duration to delay the next slice.
             if (sliceFingers.isEmpty()) {
                 pendingDelayMs += sliceDurationMs
-                heldStrokes.clear()
-                heldPositions.clear()
+                heldStrokes.fill(null)
+                heldPositions.fill(null)
                 continue
             }
 
@@ -98,14 +132,15 @@ internal class AndroidGestureBuilderCurrent(
 
             val continuesPreviousSlice = sliceFingers.any { sliceFinger -> !sliceFinger.isPressing }
             val builder = GestureDescription.Builder()
-            val newStrokes = mutableMapOf<Int, StrokeDescription>()
-            val newPositions = mutableMapOf<Int, Point>()
+            sliceStrokes.fill(null)
+            slicePositions.fill(null)
 
-            sliceFingers.forEach { sliceFinger ->
-                val path = Path().apply {
-                    if (sliceFinger.isMoving) line(sliceFinger.from, sliceFinger.to)
-                    else hold(sliceFinger.from)
-                }
+            for (sliceFingerIndex in sliceFingers.indices) {
+                val sliceFinger = sliceFingers[sliceFingerIndex]
+
+                strokePath.reset()
+                if (sliceFinger.isMoving) strokePath.line(sliceFinger.from, sliceFinger.to)
+                else strokePath.hold(sliceFinger.from)
 
                 // A finger pressing down while others are already held can't be part of the first step of the slice,
                 // the system would then refuse the whole continuation. Delay its press by one millisecond.
@@ -116,44 +151,87 @@ internal class AndroidGestureBuilderCurrent(
                 val durationMs = (sliceDurationMs - pressDelayMs).coerceAtLeast(1L)
 
                 val stroke = sliceFinger.continuedStroke
-                    ?.continueWith(path, startTimeMs, durationMs, sliceFinger.willContinue)
-                    ?: buildStroke(path, startTimeMs, durationMs, sliceFinger.willContinue)
+                    ?.continueWith(strokePath, startTimeMs, durationMs, sliceFinger.willContinue)
+                    ?: buildStroke(strokePath, startTimeMs, durationMs, sliceFinger.willContinue)
 
                 builder.addStroke(stroke)
                 if (sliceFinger.willContinue) {
-                    newStrokes[sliceFinger.index] = stroke
-                    newPositions[sliceFinger.index] = sliceFinger.to
+                    sliceStrokes[sliceFinger.index] = stroke
+                    slicePositions[sliceFinger.index] = sliceFinger.to
                 }
             }
 
             slices.add(AndroidGestureSlice(builder.build(), continuesPreviousSlice))
+            swapSliceBuffers()
 
-            heldStrokes.clear()
-            heldStrokes.putAll(newStrokes)
-            heldPositions.clear()
-            heldPositions.putAll(newPositions)
             // A slice dispatched only to press a finger down emits its event right away and consumes nothing more.
             pendingDelayMs = if (advancesTime) 0L else sliceDurationMs
         }
 
         if (slices.isEmpty()) return null
-        return AndroidGestureSlices(slices, heldStrokes.toMap(), heldPositions.toMap())
+        return toAndroidGestureSlices(slices)
+    }
+
+    /** The strokes of the slice that was just built become the ones to continue in the next slice. */
+    private fun swapSliceBuffers() {
+        val strokes = heldStrokes
+        heldStrokes = sliceStrokes
+        sliceStrokes = strokes
+
+        val positions = heldPositions
+        heldPositions = slicePositions
+        slicePositions = positions
+    }
+
+    private fun toAndroidGestureSlices(slices: List<AndroidGestureSlice>): AndroidGestureSlices {
+        var heldFingersCount = 0
+        var heldFingerIndex = -1
+        for (fingerIndex in heldStrokes.indices) {
+            if (heldStrokes[fingerIndex] == null) continue
+            heldFingersCount++
+            heldFingerIndex = fingerIndex
+        }
+
+        if (heldFingersCount == 0) return AndroidGestureSlices(slices)
+        return AndroidGestureSlices(
+            slices = slices,
+            heldFingersCount = heldFingersCount,
+            heldFingerIndex = heldFingerIndex,
+            heldStroke = heldStrokes[heldFingerIndex],
+            heldPosition = heldPositions[heldFingerIndex],
+        )
     }
 
     /**
-     * All the times at which a finger starts or ends a motion, defining the windows to slice the gesture into. Zero
-     * is always one of them, so that a gesture where no finger starts immediately keeps its initial delay.
+     * Fill [boundaries] with all the times at which a finger starts or ends a motion, sorted and without duplicates.
+     * They define the windows to slice the gesture into. Zero is always one of them, so that a gesture where no finger
+     * starts immediately keeps its initial delay.
+     *
+     * @return the number of boundaries.
      */
-    private fun List<ResolvedFinger>.toSliceBoundaries(): List<Long> {
-        val boundaries = sortedSetOf(0L)
-        forEach { finger ->
-            finger.segments.forEach { segment ->
-                boundaries.add(segment.startMs)
-                boundaries.add(segment.endMs)
+    private fun List<ResolvedFinger>.toSliceBoundaries(): Int {
+        var capacity = 1
+        for (fingerIndex in indices) capacity += this[fingerIndex].segments.size * 2
+        if (boundaries.size < capacity) boundaries = LongArray(capacity)
+
+        var count = 0
+        boundaries[count++] = 0L
+        for (fingerIndex in indices) {
+            val segments = this[fingerIndex].segments
+            for (segmentIndex in segments.indices) {
+                boundaries[count++] = segments[segmentIndex].startMs
+                boundaries[count++] = segments[segmentIndex].endMs
             }
         }
 
-        return boundaries.toList()
+        boundaries.sort(fromIndex = 0, toIndex = count)
+
+        var distinctCount = 1
+        for (index in 1 until count) {
+            if (boundaries[index] != boundaries[distinctCount - 1]) boundaries[distinctCount++] = boundaries[index]
+        }
+
+        return distinctCount
     }
 }
 
@@ -171,3 +249,9 @@ private data class SliceFinger(
 
 /** Delay applied to a finger pressing down in a slice that continues another one. */
 private const val NEW_FINGER_PRESS_DELAY_MS = 1L
+/** One slot for each finger a gesture can have, plus the carried held pointer, which has the highest index. */
+private const val FINGER_SLOTS_COUNT = HELD_POINTER_FINGER_INDEX + 1
+/** Enough for a few fingers with a few motions each, the buffer grows if a gesture needs more. */
+private const val INITIAL_BOUNDARIES_CAPACITY = 32
+
+private const val TAG = "AndroidGestureBuilderCurrent"

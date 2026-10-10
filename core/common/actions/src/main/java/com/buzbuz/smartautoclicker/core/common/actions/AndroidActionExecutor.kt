@@ -68,7 +68,8 @@ interface AndroidActionExecutor: Dumpable {
      * Verify the pointer left down on the screen by a gesture holding its first finger, if any, is still held.
      *
      * The system lifts it without notice when the user touches the screen. Once lost, [getHeldPointer] returns null.
-     * Method will return only once the system has answered.
+     * Method will return only once the system has answered. Can be called from any thread: probes are debounced, and
+     * only an actual probe is dispatched from the main thread.
      */
     suspend fun checkHeldPointer()
 

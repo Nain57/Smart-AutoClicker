@@ -23,11 +23,15 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -38,6 +42,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Singleton
 internal class GestureExecutor @Inject constructor(
     private val heldPointerManager: HeldPointerManager,
+    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
 ) : Dumpable {
 
     /**
@@ -102,11 +107,17 @@ internal class GestureExecutor @Inject constructor(
         }
     }
 
+    /**
+     * Called on every processed frame while a pointer is held: the debouncing is checked from the calling thread, and
+     * only an actual probe switches to the main thread.
+     */
     suspend fun checkHeldPointer(service: AccessibilityService): Boolean {
         if (heldPointerManager.heldPointer == null || !holdProbeDebouncer.shouldTrigger()) return true
 
-        return heldPointerManager.checkHeldPointer { heldGesture ->
-            dispatchGesture(service, heldGesture)
+        return withContext(mainDispatcher) {
+            heldPointerManager.checkHeldPointer { heldGesture ->
+                dispatchGesture(service, heldGesture)
+            }
         }
     }
 

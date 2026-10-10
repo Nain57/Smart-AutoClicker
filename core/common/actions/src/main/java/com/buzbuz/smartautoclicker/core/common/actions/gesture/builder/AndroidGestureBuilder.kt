@@ -38,6 +38,9 @@ import kotlin.random.Random
  * [newFinger]. This is the only entry point for the randomization: the same [Random] is applied to all the fingers,
  * and the fingers alone know nothing about it.
  *
+ * Implementations keep their working buffers between two builds to avoid allocating them for every gesture: an
+ * instance must only be used from one thread at a time.
+ *
  * @param random the source for the randomization of positions and durations, or null for exact values.
  */
 abstract class AndroidGestureBuilder internal constructor(
@@ -95,10 +98,10 @@ abstract class AndroidGestureBuilder internal constructor(
             val gestureFingers = fingers.withHeldFingerExtendedToGestureEnd()
 
             val slices = when (heldPointer) {
-                null -> buildSlices(gestureFingers, emptyMap())
+                null -> buildSlices(gestureFingers, carriedStroke = null)
                 else -> buildSlices(
                     fingers = gestureFingers + heldPointer.toCarriedFinger(gestureFingers),
-                    initialHeldStrokes = mapOf(HELD_POINTER_FINGER_INDEX to heldPointer.stroke),
+                    carriedStroke = heldPointer.stroke,
                 )
             } ?: return null
 
@@ -119,12 +122,12 @@ abstract class AndroidGestureBuilder internal constructor(
      * Split the resolved fingers into the slices to dispatch, in order.
      *
      * @param fingers the fingers of the gesture, including the carried [HeldPointer] when there is one.
-     * @param initialHeldStrokes the strokes already dispatched for the pointers down on the screen when the gesture
-     * starts, indexed by finger index. A finger found in there is continued instead of pressed.
+     * @param carriedStroke the stroke already dispatched for the carried [HeldPointer], if any. Its finger, at
+     * [HELD_POINTER_FINGER_INDEX], is continued instead of pressed.
      */
     protected abstract fun buildSlices(
         fingers: List<ResolvedFinger>,
-        initialHeldStrokes: Map<Int, StrokeDescription>,
+        carriedStroke: StrokeDescription?,
     ): AndroidGestureSlices?
 
     /**
@@ -189,19 +192,19 @@ abstract class AndroidGestureBuilder internal constructor(
         carriedPointer: HeldPointer?,
         owner: Any?,
     ): HeldPointer? {
-        if (heldStrokes.isEmpty()) return null
-
-        val fingerIndex = heldStrokes.keys.singleOrNull() ?: let {
-            Log.w(TAG, "Gesture $gestureName keeps ${heldStrokes.size} pointers down, only one can be held")
+        if (heldFingersCount == 0) return null
+        if (heldFingersCount > 1) {
+            Log.w(TAG, "Gesture $gestureName keeps $heldFingersCount pointers down, only one can be held")
             return null
         }
-        val position = heldPositions[fingerIndex] ?: return null
+        val stroke = heldStroke ?: return null
+        val position = heldPosition ?: return null
 
         val heldOwner =
-            if (fingerIndex == HELD_POINTER_FINGER_INDEX) carriedPointer?.owner
+            if (heldFingerIndex == HELD_POINTER_FINGER_INDEX) carriedPointer?.owner
             else owner
 
-        return HeldPointer(heldStrokes.getValue(fingerIndex), position, heldOwner)
+        return HeldPointer(stroke, position, heldOwner)
     }
 
     /**
@@ -244,13 +247,17 @@ abstract class AndroidGestureBuilder internal constructor(
      * The slices of a gesture, and what they leave down on the screen.
      *
      * @param slices the slices to dispatch, in order.
-     * @param heldStrokes the last stroke built for each finger whose pointer is still down once the last slice is
-     * played, indexed by finger index.
-     * @param heldPositions the position at which each of those pointers rests, indexed by finger index.
+     * @param heldFingersCount the number of fingers whose pointer is still down once the last slice is played. Only
+     * one can be held, the held finger values below are those of the last one when there are more.
+     * @param heldFingerIndex the index of the finger whose pointer is still down, or -1 if there is none.
+     * @param heldStroke the last stroke built for that finger.
+     * @param heldPosition the position at which that pointer rests.
      */
     protected data class AndroidGestureSlices(
         val slices: List<AndroidGestureSlice>,
-        val heldStrokes: Map<Int, StrokeDescription> = emptyMap(),
-        val heldPositions: Map<Int, Point> = emptyMap(),
+        val heldFingersCount: Int = 0,
+        val heldFingerIndex: Int = -1,
+        val heldStroke: StrokeDescription? = null,
+        val heldPosition: Point? = null,
     )
 }
