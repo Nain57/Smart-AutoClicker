@@ -16,21 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.feature.review.di
 
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepository
-import com.buzbuz.smartautoclicker.feature.review.ReviewRepositoryImpl
+import com.buzbuz.smartautoclicker.core.common.navigation.ReviewNavigator
+import com.buzbuz.smartautoclicker.feature.review.navigation.ReviewNavigatorImpl
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ReviewHiltModule {
+internal abstract class ReviewNavigationModule {
 
-    @Provides
+    @Binds
     @Singleton
-    internal fun providesReviewRepository(reviewRepository: ReviewRepositoryImpl): ReviewRepository =
-        reviewRepository
+    abstract fun bindReviewNavigator(impl: ReviewNavigatorImpl): ReviewNavigator
 }
