@@ -42,7 +42,7 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 /**
- * Tests the single stroke per finger description of [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCompat24]. The builder only uses APIs
+ * Tests the single stroke per finger description of [AndroidGestureBuilderCompat24]. The builder only uses APIs
  * available before Android O, so it is tested on a recent SDK where the stroke paths can be inspected.
  */
 @RunWith(AndroidJUnit4::class)

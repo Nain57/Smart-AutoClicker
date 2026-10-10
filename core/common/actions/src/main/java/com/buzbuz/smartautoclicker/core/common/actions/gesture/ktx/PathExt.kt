@@ -18,34 +18,8 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx
 
 import android.graphics.Path
 import android.graphics.Point
-import com.buzbuz.smartautoclicker.core.base.extensions.nextIntInOffset
 import com.buzbuz.smartautoclicker.core.base.extensions.safeLineTo
 import com.buzbuz.smartautoclicker.core.base.extensions.safeMoveTo
-import com.buzbuz.smartautoclicker.core.common.actions.utils.RANDOMIZATION_POSITION_MAX_OFFSET_PX
-import kotlin.random.Random
-
-internal fun Path.moveTo(position: Point, random: Random?) {
-    if (random == null) safeMoveTo(position.x, position.y)
-    else safeMoveTo(
-        random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-        random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-    )
-}
-
-internal fun Path.line(from: Point?, to: Point?, random: Random?) {
-    if (from == null || to == null) return
-
-    moveTo(from, random)
-    lineTo(to, random)
-}
-
-private fun Path.lineTo(position: Point, random: Random?) {
-    if (random == null) safeLineTo(position.x, position.y)
-    else safeLineTo(
-        random.nextIntInOffset(position.x, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-        random.nextIntInOffset(position.y, RANDOMIZATION_POSITION_MAX_OFFSET_PX),
-    )
-}
 
 internal fun Path.moveTo(position: Point): Unit =
     safeMoveTo(position.x, position.y)

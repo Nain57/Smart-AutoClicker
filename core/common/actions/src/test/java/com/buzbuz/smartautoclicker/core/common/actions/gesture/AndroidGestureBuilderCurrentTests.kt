@@ -40,7 +40,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-/** Tests the slicing of a gesture into continued strokes by [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCurrent]. */
+/** Tests the slicing of a gesture into continued strokes by [AndroidGestureBuilderCurrent]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class AndroidGestureBuilderCurrentTests {

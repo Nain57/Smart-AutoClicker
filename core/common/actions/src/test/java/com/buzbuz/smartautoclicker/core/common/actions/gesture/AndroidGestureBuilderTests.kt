@@ -47,7 +47,7 @@ import org.robolectric.annotation.Config
 import kotlin.random.Random
 
 /**
- * Tests the behaviour shared by all [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder] implementations: builder selection, error handling and
+ * Tests the behaviour shared by all [AndroidGestureBuilder] implementations: builder selection, error handling and
  * the randomization applied to the fingers it creates.
  */
 @RunWith(AndroidJUnit4::class)

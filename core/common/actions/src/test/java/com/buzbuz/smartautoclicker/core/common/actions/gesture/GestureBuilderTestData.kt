@@ -20,6 +20,8 @@ import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 
 import org.junit.Assert.assertEquals
@@ -27,7 +29,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import kotlin.math.roundToInt
 
-/** Describes the fingers of a gesture, to be resolved by the [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder] under test. */
+/** Describes the fingers of a gesture, to be resolved by the [AndroidGestureBuilder] under test. */
 internal object GestureBuilderTestData {
 
     /** Duration of a finger pressing and releasing without moving, as applied by the builder. */

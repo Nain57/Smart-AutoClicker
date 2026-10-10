@@ -16,38 +16,44 @@
  */
 package com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx
 
-import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Path
+import android.graphics.Point
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+
+import com.buzbuz.smartautoclicker.core.common.actions.model.HELD_POINTER_RELEASE_DURATION_MS
 import com.buzbuz.smartautoclicker.core.common.actions.utils.MAXIMUM_STROKE_DURATION_MS
 import com.buzbuz.smartautoclicker.core.common.actions.utils.MINIMUM_STROKE_DURATION_MS
+
 import kotlin.math.max
 import kotlin.math.min
+
 
 internal fun buildStroke(
     path: Path,
     startTimeMs: Long,
     durationMs: Long,
     willContinue: Boolean,
-): GestureDescription.StrokeDescription {
+): StrokeDescription {
     val normalizedStart = startTimeMs.toNormalizedStrokeStartTime()
     val normalizedDuration = durationMs.toNormalizedStrokeDurationMs()
 
     return if (willContinue && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        GestureDescription.StrokeDescription(path, normalizedStart, normalizedDuration, true)
+        StrokeDescription(path, normalizedStart, normalizedDuration, true)
     } else {
-        GestureDescription.StrokeDescription(path, normalizedStart, normalizedDuration)
+        StrokeDescription(path, normalizedStart, normalizedDuration)
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-internal fun GestureDescription.StrokeDescription.continueWith(
+internal fun StrokeDescription.continueWith(
     path: Path,
     startTimeMs: Long,
     durationMs: Long,
     willContinue: Boolean,
-): GestureDescription.StrokeDescription =
+): StrokeDescription =
     continueStroke(
         path,
         startTimeMs.toNormalizedStrokeStartTime(),
@@ -55,8 +61,30 @@ internal fun GestureDescription.StrokeDescription.continueWith(
         willContinue,
     )
 
+/** A continuation of this stroke, as short as possible, from where the pointer rests to [to]. */
+internal fun StrokeDescription.toContinuation(from: Point, to: Point, willContinue: Boolean): StrokeDescription? {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
+
+    return try {
+        continueWith(
+            path = Path().apply { if (from == to) hold(from) else line(from, to) },
+            startTimeMs = 0L,
+            durationMs = HELD_POINTER_RELEASE_DURATION_MS,
+            willContinue = willContinue,
+        )
+    } catch (ex: IllegalArgumentException) {
+        Log.w(TAG, "Can't build the continuation of the held pointer stroke", ex)
+        null
+    } catch (ex: IllegalStateException) {
+        Log.w(TAG, "Can't build the continuation of the held pointer stroke", ex)
+        null
+    }
+}
+
 private fun Long.toNormalizedStrokeStartTime(): Long =
     max(0, this)
 
 private fun Long.toNormalizedStrokeDurationMs(): Long =
     max(MINIMUM_STROKE_DURATION_MS, min(MAXIMUM_STROKE_DURATION_MS, this))
+
+private const val TAG = "StrokeDescriptionExt"

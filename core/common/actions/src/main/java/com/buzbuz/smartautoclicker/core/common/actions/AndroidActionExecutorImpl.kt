@@ -103,8 +103,6 @@ internal class AndroidActionExecutorImpl @Inject constructor(
 
     override suspend fun dispatchPixelWorkaroundGestureIfNeeded() {
         val service = accessibilityService ?: return
-
-        Log.i(TAG, "Dispatching workaround gesture")
         gestureExecutor.dispatchPixelWorkaroundGestureIfNeeded(service)
     }
 
