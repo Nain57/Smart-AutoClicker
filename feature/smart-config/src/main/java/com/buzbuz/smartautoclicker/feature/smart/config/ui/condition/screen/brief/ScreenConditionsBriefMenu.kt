@@ -23,12 +23,15 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.navigation.getDebuggingNavigator
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
@@ -67,6 +70,10 @@ class ScreenConditionsBriefMenu(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { screenConditionsBriefViewModel() }
     )
+
+    private val tutorialNavigator: TutorialNavigator by lazy {
+        context.getTutorialNavigator()
+    }
 
     private lateinit var viewBinding: OverlayScreenConditionsBriefMenuBinding
 
@@ -115,6 +122,7 @@ class ScreenConditionsBriefMenu(
             R.id.btn_save -> back()
             R.id.btn_add -> showScreenConditionTypeSelectionDialog()
             R.id.btn_copy -> showScreenConditionCopyDialog()
+            R.id.btn_help -> showHelpDialog()
         }
     }
 
@@ -269,5 +277,10 @@ class ScreenConditionsBriefMenu(
                 }
             ),
         )
+    }
+
+    private fun showHelpDialog() {
+        println("TOTO: show help")
+        tutorialNavigator.showTipDialog(context, Tip.SCREEN_CONDITION_BRIEF)
     }
 }

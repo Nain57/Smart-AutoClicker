@@ -190,6 +190,13 @@
         \n\n結果として、ORオペレーターでは特定の条件をターゲットとして選ぶことができません：クリックは常に実行時に
         最初に検出された条件に適用されます。</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">条件リスト</string>
+    <string name="tutorial_slideshow_conditions_list_desc">条件リストの実行方法を学ぶ</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">画面上のどこでも左/右にスワイプすると、次/前の条件を表示できます。\n\n&lt;&lt; と &gt;&gt; ボタンを使うか、インデックスボックスを直接タップして条件の順序を変更できます。</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">高度に最適化されたシナリオでは、リスト内の条件の順序が重要になります。色の条件のような軽い条件を先頭に置くことで、軽い条件が満たされない場合に、後に続く重い条件が評価されなくなります。\n\nOR 演算子を使用する場合はこのロジックが逆になり、最初の条件が満たされると後に続く条件は評価されません。</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">条件の順序と速度</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件の順序がイベントの確認速度に与える影響</string>

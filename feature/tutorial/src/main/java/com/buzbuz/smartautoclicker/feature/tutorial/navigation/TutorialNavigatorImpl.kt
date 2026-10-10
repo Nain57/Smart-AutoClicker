@@ -70,6 +70,11 @@ internal class TutorialNavigatorImpl @Inject constructor(
                 slideshowType = TutorialSlideshow.Type.ACTIONS_LIST,
                 onDismissed = onDismissed,
             )?.showAsOverlay()
+
+            Tip.SCREEN_CONDITION_BRIEF -> context.createTutorialSlideshowDialog(
+                slideshowType = TutorialSlideshow.Type.SCREEN_CONDITIONS_LIST,
+                onDismissed = onDismissed,
+            )?.showAsOverlay()
         }
     }
 }

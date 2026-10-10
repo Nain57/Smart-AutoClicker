@@ -198,6 +198,18 @@
         \n\nОтже, з оператором OR не можна обрати конкретну умову як ціль: клік завжди буде застосований до
         першої виявленої умови, якою б вона не виявилась під час виконання.</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">Список умов</string>
+    <string name="tutorial_slideshow_conditions_list_desc">Дізнайтесь, як виконується список умов</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">Ви можете переглянути наступну/попередню умову, провівши пальцем ліворуч/праворуч у
+        будь-якому місці екрана.\n\nВи можете змінити порядок умови за допомогою кнопок &lt;&lt; і &gt;&gt; або
+        натиснувши безпосередньо на поле її індексу.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">У добре оптимізованих сценаріях порядок умов у списку має значення.
+        Розміщення легких умов, таких як Кольорові умови, першими гарантує, що наступні, важчі, не перевірятимуться,
+        якщо легка умова не виконана.\n\nЗверніть увагу, що при операторі АБО ця логіка обернена: наступні умови не
+        перевірятимуться, якщо перша виконана.</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">Порядок умов і швидкість</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">Як порядок умов впливає на швидкість перевірки

@@ -202,6 +202,18 @@
         \n\nEn consecuencia, con el operador OR no puedes elegir una condición específica como objetivo: el clic
         siempre se aplicará en la primera detectada, sea cual sea en tiempo de ejecución.</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">Lista de condiciones</string>
+    <string name="tutorial_slideshow_conditions_list_desc">Aprende cómo se ejecuta la lista de condiciones</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">Puedes visualizar la condición siguiente/anterior deslizando hacia la izquierda/derecha en cualquier
+        parte de la pantalla.\n\nPuedes cambiar el orden de una condición usando los botones &lt;&lt; y &gt;&gt;, o
+        pulsando directamente en su casilla de índice.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">En escenarios muy optimizados, el orden de las condiciones en la
+        lista importa. Colocar primero las condiciones más ligeras, como las Condiciones de color, garantiza que las
+        siguientes, más pesadas, no se evalúen si la ligera no se cumple.\n\nTen en cuenta que esta lógica se invierte
+        si usas el operador O, ya que las siguientes no se evaluarán si la primera se cumple.</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">Orden de condiciones y velocidad</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">Cómo el orden de tus condiciones afecta la
