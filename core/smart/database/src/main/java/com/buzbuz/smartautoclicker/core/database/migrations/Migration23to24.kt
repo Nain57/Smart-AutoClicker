@@ -335,11 +335,12 @@ private object GestureFingerMotionTableColumns {
     val xOffsetCounter = SQLiteColumn.Text("x_offset_counter", isNotNull = false)
     val yOffsetLiteral = SQLiteColumn.Int("y_offset_literal", isNotNull = false)
     val yOffsetCounter = SQLiteColumn.Text("y_offset_counter", isNotNull = false)
-    val holdUntilUnfulfilled = SQLiteColumn.Boolean("hold_until_unfulfilled", isNotNull = false)
+    val releaseHoldType = SQLiteColumn.Text("release_hold_type", isNotNull = false)
+    val holdDurationMs = SQLiteColumn.Long("hold_duration_ms", isNotNull = false)
 
 
     fun allColumns(): Set<SQLiteColumn<*>> =
         setOf(fingerId, index, motionType, durationMs, xCoordinatesType, yCoordinatesType, conditionId, xLiteral,
             xCounter, yLiteral, yCounter, xOffsetCoordinatesType, yOffsetCoordinatesType, xOffsetLiteral,
-            xOffsetCounter, yOffsetLiteral, yOffsetCounter, holdUntilUnfulfilled)
+            xOffsetCounter, yOffsetLiteral, yOffsetCounter, releaseHoldType, holdDurationMs)
 }

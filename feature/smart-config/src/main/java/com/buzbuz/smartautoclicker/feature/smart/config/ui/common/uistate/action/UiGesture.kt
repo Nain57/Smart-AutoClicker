@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.GestureDialogUiStateItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.ReleaseWhenDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.UiGesturePosition
 
 
@@ -43,11 +44,20 @@ internal fun Context.getGestureUiStateItemDescription(motion: GestureDialogUiSta
     when (motion) {
         is GestureDialogUiStateItem.Move -> getMoveDescription(motion.position)
         is GestureDialogUiStateItem.Press -> getPressDescription(motion.position)
-        is GestureDialogUiStateItem.Release -> getString(R.string.item_desc_gesture_release)
+        is GestureDialogUiStateItem.Release -> getReleaseDescription(motion)
         is GestureDialogUiStateItem.Wait -> getString(R.string.item_desc_gesture_wait, motion.durationMs)
 
         is GestureDialogUiStateItem.Add,
         is GestureDialogUiStateItem.Header -> throw IllegalArgumentException("Unsupported motion item")
+    }
+
+internal fun Context.getReleaseDescription(release: GestureDialogUiStateItem.Release): String =
+    when (release.whenItem) {
+        ReleaseWhenDropdownItem.Now -> getString(R.string.item_desc_gesture_release_now)
+        ReleaseWhenDropdownItem.UntilActionsEnd -> getString(R.string.item_desc_gesture_release_until_actions_end)
+        ReleaseWhenDropdownItem.OnceUnfulfilled -> getString(R.string.item_desc_gesture_release_once_unfulfilled)
+        ReleaseWhenDropdownItem.ForDuration ->
+            getString(R.string.item_desc_gesture_release_for_duration, release.holdDurationMs ?: 0L)
     }
 
 internal fun Context.getMoveDescription(position: UiGesturePosition): String =

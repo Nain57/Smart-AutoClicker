@@ -483,7 +483,10 @@ class GestureBriefDescriptionMapperTests {
         GestureFingerMotion.Move(id = id, position = position, offset = literal(0, 0), durationMs = durationMs)
 
     private fun release(id: Identifier, hold: Boolean = false) =
-        GestureFingerMotion.Release(id = id, holdUntilUnfulfilled = hold)
+        GestureFingerMotion.Release(
+            id = id,
+            hold = if (hold) GestureFingerMotion.Release.Hold.UntilUnfulfilled else GestureFingerMotion.Release.Hold.None,
+        )
 
     private fun literal(x: Int, y: Int) = Position.Coordinates(
         x = CoordinatesValue.Literal(x),

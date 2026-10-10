@@ -20,6 +20,7 @@ import androidx.annotation.StringRes
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Release.Hold
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.UiGesturePosition
@@ -52,7 +53,11 @@ sealed interface GestureDialogUiStateItem {
         val fingerIndex: Int,
         val isWhenFieldVisible: Boolean,
         val whenItem: ReleaseWhenDropdownItem,
-    ) : Collapsable
+        val holdDurationMs: Long?,
+    ) : Collapsable {
+        val isHoldDurationInError: Boolean
+            get() = holdDurationMs != null && holdDurationMs !in 1..Hold.ForDuration.MAXIMUM_DURATION_MS
+    }
 
     data class Press(
         override val id: Identifier,
@@ -92,8 +97,15 @@ sealed interface GestureDialogUiStateItem {
 
 sealed class ReleaseWhenDropdownItem(@StringRes title: Int) : DropdownItem(title) {
     data object Now : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_now)
+    data object UntilActionsEnd : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_until_actions_end)
     data object OnceUnfulfilled : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_once_unfulfilled)
+    data object ForDuration : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_for_duration)
 }
 
 val releaseWhenDropdownItems: List<ReleaseWhenDropdownItem> =
-    listOf(ReleaseWhenDropdownItem.Now, ReleaseWhenDropdownItem.OnceUnfulfilled)
+    listOf(
+        ReleaseWhenDropdownItem.Now,
+        ReleaseWhenDropdownItem.UntilActionsEnd,
+        ReleaseWhenDropdownItem.OnceUnfulfilled,
+        ReleaseWhenDropdownItem.ForDuration,
+    )

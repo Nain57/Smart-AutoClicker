@@ -142,6 +142,10 @@ enum class EventType {
 enum class HoldReleaseReason {
     /** The conditions of the held event are no longer fulfilled. */
     Unfulfilled,
+    /** All the actions of the held event have been executed. */
+    ActionsCompleted,
+    /** The defined hold duration has elapsed. */
+    DurationElapsed,
     /** The pointer has been lifted outside of the scenario, most likely by a user interaction with the screen. */
     Interrupted,
     /** The held event has been disabled. */

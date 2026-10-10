@@ -212,6 +212,10 @@ class DebugReportTimelineViewModel @Inject constructor(
     private fun DebugReportHoldReleaseReason.getDisplayNameRes(): Int =
         when (this) {
             DebugReportHoldReleaseReason.UNFULFILLED -> R.string.item_event_occurrence_release_reason_unfulfilled
+            DebugReportHoldReleaseReason.ACTIONS_COMPLETED ->
+                R.string.item_event_occurrence_release_reason_actions_completed
+            DebugReportHoldReleaseReason.DURATION_ELAPSED ->
+                R.string.item_event_occurrence_release_reason_duration_elapsed
             DebugReportHoldReleaseReason.INTERRUPTED -> R.string.item_event_occurrence_release_reason_interrupted
             DebugReportHoldReleaseReason.EVENT_DISABLED -> R.string.item_event_occurrence_release_reason_event_disabled
             DebugReportHoldReleaseReason.OTHER_EVENT -> R.string.item_event_occurrence_release_reason_other_event

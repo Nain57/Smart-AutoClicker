@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Release.Hold
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -364,9 +365,28 @@ class GestureDialogViewModel @Inject constructor(
         updateMotionAtItem(item) { motion ->
             when (motion) {
                 is GestureFingerMotion.Release ->
-                    motion.copy(holdUntilUnfulfilled = whenItem == ReleaseWhenDropdownItem.OnceUnfulfilled)
+                    motion.copy(
+                        hold = when (whenItem) {
+                            ReleaseWhenDropdownItem.Now -> Hold.None
+                            ReleaseWhenDropdownItem.OnceUnfulfilled -> Hold.UntilUnfulfilled
+                            ReleaseWhenDropdownItem.UntilActionsEnd -> Hold.UntilActionsEnd
+                            ReleaseWhenDropdownItem.ForDuration ->
+                                motion.hold as? Hold.ForDuration ?: Hold.ForDuration(DEFAULT_HOLD_DURATION_MS)
+                        }
+                    )
                 else -> motion
             }
+        }
+    }
+
+    fun setItemReleaseHoldDurationMs(item: GestureDialogUiStateItem, newDurationMs: String) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || selectedFinger.value != 0) return
+
+        val durationMs = newDurationMs.toLongOrNull() ?: 0L
+        updateMotionAtItem(item) { motion ->
+            if (motion is GestureFingerMotion.Release && motion.hold is Hold.ForDuration)
+                motion.copy(hold = Hold.ForDuration(durationMs))
+            else motion
         }
     }
 
@@ -467,6 +487,10 @@ class GestureDialogViewModel @Inject constructor(
                     )
 
                     is GestureFingerMotion.Release -> {
+                        val hold =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && selectedFinger == 0) motion.hold
+                            else Hold.None
+
                         add(GestureDialogUiStateItem.Add(selectedFinger))
                         add(
                             GestureDialogUiStateItem.Release(
@@ -474,10 +498,13 @@ class GestureDialogViewModel @Inject constructor(
                                 isCollapsed = isCollapsed,
                                 fingerIndex = selectedFinger,
                                 isWhenFieldVisible = selectedFinger == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O,
-                                whenItem =
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && motion.holdUntilUnfulfilled)
-                                        ReleaseWhenDropdownItem.OnceUnfulfilled
-                                    else ReleaseWhenDropdownItem.Now,
+                                whenItem = when (hold) {
+                                    Hold.None -> ReleaseWhenDropdownItem.Now
+                                    Hold.UntilUnfulfilled -> ReleaseWhenDropdownItem.OnceUnfulfilled
+                                    Hold.UntilActionsEnd -> ReleaseWhenDropdownItem.UntilActionsEnd
+                                    is Hold.ForDuration -> ReleaseWhenDropdownItem.ForDuration
+                                },
+                                holdDurationMs = (hold as? Hold.ForDuration)?.durationMs,
                             )
                         )
                     }
@@ -487,4 +514,4 @@ class GestureDialogViewModel @Inject constructor(
     }
 }
 
-
+private const val DEFAULT_HOLD_DURATION_MS = 1000L

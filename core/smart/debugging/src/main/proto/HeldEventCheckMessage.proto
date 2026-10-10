@@ -73,5 +73,9 @@ message HeldEventCheckMessage {
         HOLD_STATE_RELEASED_SCREEN_ROTATION = 6;
         /** The scenario has been stopped. */
         HOLD_STATE_RELEASED_SCENARIO_STOPPED = 7;
+        /** All the actions of the held event have been executed. */
+        HOLD_STATE_RELEASED_ACTIONS_COMPLETED = 8;
+        /** The defined hold duration has elapsed. */
+        HOLD_STATE_RELEASED_DURATION_ELAPSED = 9;
     }
 }

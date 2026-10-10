@@ -33,7 +33,6 @@ import com.buzbuz.smartautoclicker.core.base.interfaces.containsId
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteEventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
@@ -50,6 +49,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
+import com.buzbuz.smartautoclicker.core.database.entity.GestureReleaseHoldType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
@@ -738,7 +738,8 @@ internal open class CompatDeserializer : Deserializer() {
             xOffsetCounter = jsonMotion.getString("xOffsetCounter"),
             yOffsetLiteral = jsonMotion.getInt("yOffsetLiteral"),
             yOffsetCounter = jsonMotion.getString("yOffsetCounter"),
-            holdUntilUnfulfilled = jsonMotion.getBoolean("holdUntilUnfulfilled"),
+            releaseHoldType = jsonMotion.getEnum<GestureReleaseHoldType>("releaseHoldType"),
+            holdDurationMs = jsonMotion.getLong("holdDurationMs"),
         )
 
     // ======================= COMPAT METHODS

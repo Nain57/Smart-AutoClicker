@@ -63,6 +63,19 @@ enum class GestureFingerMotionType {
     WAIT,
 }
 
+/** How long the finger of a [GestureFingerMotionType.RELEASE] stays pressed once its gesture is over. */
+enum class GestureReleaseHoldType {
+    /** Until the conditions of the event are no longer fulfilled. */
+    UNTIL_UNFULFILLED,
+    /** Until all the actions of the event have been executed. */
+    UNTIL_ACTIONS_END,
+    /**
+     * For a custom duration defined by the user, starting once the gesture is over. The duration is stored in
+     * [GestureFingerMotionEntity.holdDurationMs].
+     */
+    FOR_DURATION,
+}
+
 enum class CoordinatesType {
     CONDITION,
     COUNTER,

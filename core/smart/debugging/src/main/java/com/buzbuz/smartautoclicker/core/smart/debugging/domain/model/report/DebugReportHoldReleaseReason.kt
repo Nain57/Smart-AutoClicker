@@ -20,6 +20,10 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report
 enum class DebugReportHoldReleaseReason {
     /** The conditions of the held event are no longer fulfilled. */
     UNFULFILLED,
+    /** All the actions of the held event have been executed. */
+    ACTIONS_COMPLETED,
+    /** The defined hold duration has elapsed. */
+    DURATION_ELAPSED,
     /** The pointer has been lifted outside of the scenario, most likely by a user interaction with the screen. */
     INTERRUPTED,
     /** The held event has been disabled. */
