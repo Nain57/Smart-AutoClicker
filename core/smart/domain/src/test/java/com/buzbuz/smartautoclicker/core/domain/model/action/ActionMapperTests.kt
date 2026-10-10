@@ -23,6 +23,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationConditionPositionType
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Counter
@@ -58,6 +60,7 @@ class ActionMapperTests {
         private const val GESTURE_SECOND_FINGER_DB_ID = 81L
 
         private const val CHANGE_COUNTER_OTHER_COUNTER_NAME = "otherCounter"
+        private const val CHANGE_COUNTER_CONDITION_ID = 42L
     }
 
     /* ======================== Incomplete action ======================== */
@@ -627,6 +630,68 @@ class ActionMapperTests {
         assertEquals(
             ActionTestsData.getNewChangeCounter(eventId = ActionTestsData.ACTION_EVENT_ID),
             entity.copy(action = entity.action.copy(counterOperationValueType = null)).toDomain(),
+        )
+    }
+
+    @Test
+    fun changeCounter_toEntity_conditionOperationValue() {
+        val operationValue = CounterOperationValue.Condition(
+            conditionId = CHANGE_COUNTER_CONDITION_ID.asIdentifier(),
+            positionType = CounterOperationValue.Condition.PositionType.CONDITION_RIGHT,
+        )
+
+        val entity = ActionTestsData.getNewChangeCounter(
+            eventId = ActionTestsData.ACTION_EVENT_ID,
+            operationValue = operationValue,
+        ).toEntity()
+
+        assertEquals(
+            ActionTestsData.getNewChangeCounterEntity(
+                eventId = ActionTestsData.ACTION_EVENT_ID,
+                operationValue = operationValue,
+            ).action,
+            entity,
+        )
+        assertEquals(CounterOperationValueType.CONDITION, entity.counterOperationValueType)
+        assertEquals(CHANGE_COUNTER_CONDITION_ID, entity.counterOperationConditionId)
+        assertEquals(CounterOperationConditionPositionType.CONDITION_RIGHT, entity.counterOperationConditionPositionType)
+    }
+
+    @Test
+    fun changeCounter_toDomain_conditionOperationValue() {
+        CounterOperationValue.Condition.PositionType.entries.forEach { positionType ->
+            val operationValue = CounterOperationValue.Condition(
+                conditionId = CHANGE_COUNTER_CONDITION_ID.asIdentifier(),
+                positionType = positionType,
+            )
+
+            assertEquals(
+                ActionTestsData.getNewChangeCounter(
+                    eventId = ActionTestsData.ACTION_EVENT_ID,
+                    operationValue = operationValue,
+                ),
+                ActionTestsData.getNewChangeCounterEntity(
+                    eventId = ActionTestsData.ACTION_EVENT_ID,
+                    operationValue = operationValue,
+                ).toDomain(),
+            )
+        }
+    }
+
+    @Test
+    fun changeCounter_toDomain_conditionOperationValueWithoutConditionId_isReadAsNumber() {
+        val entity = ActionTestsData.getNewChangeCounterEntity(
+            eventId = ActionTestsData.ACTION_EVENT_ID,
+            operationValue = CounterOperationValue.Condition(
+                conditionId = CHANGE_COUNTER_CONDITION_ID.asIdentifier(),
+                positionType = CounterOperationValue.Condition.PositionType.CONDITION_TOP,
+            ),
+        )
+
+        assertEquals(
+            CounterOperationValue.Number(0.0),
+            (entity.copy(action = entity.action.copy(counterOperationConditionId = null)).toDomain() as ChangeCounter)
+                .operationValue,
         )
     }
 

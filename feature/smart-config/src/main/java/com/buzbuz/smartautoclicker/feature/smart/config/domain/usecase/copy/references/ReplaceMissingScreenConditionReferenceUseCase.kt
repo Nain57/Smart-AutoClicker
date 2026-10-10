@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ItemWithMissingReferences
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
@@ -87,7 +88,16 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
 
             is Gesture -> return replaceScreenConditionReference(missingReference, replacement)
 
-            is ChangeCounter,
+            is ChangeCounter -> {
+                val value = operationValue
+                if (value is CounterOperationValue.Condition && value.conditionId == missingReference.conditionId) {
+                    return copy(operationValue = value.copy(conditionId = replacement.id))
+                }
+
+                Log.e(TAG, "Can't replace, can't find missing reference to replace")
+                return null
+            }
+
             is Intent,
             is Notification,
             is Pause,

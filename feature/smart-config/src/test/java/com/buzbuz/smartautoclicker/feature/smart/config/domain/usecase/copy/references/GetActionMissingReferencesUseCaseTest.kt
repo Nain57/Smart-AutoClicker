@@ -358,6 +358,51 @@ class GetActionMissingReferencesUseCaseTest {
         assertTrue(result.missingReferences.contains(MissingCopyReference.CounterReference(COUNTER_VALUE_NAME)))
     }
 
+    @Test
+    fun `change counter with condition value found in event has no missing references`() = runTest {
+        val conditionId = Identifier(databaseId = 100L)
+        val condition = mockk<ScreenCondition>(relaxed = true) { every { id } returns conditionId }
+        val event = mockk<ScreenEvent>(relaxed = true) {
+            every { id } returns EVENT_ID
+            every { conditions } returns listOf(condition)
+        }
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event)
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+
+        val result = useCase(changeCounter(COUNTER_NAME, conditionValue(conditionId)))
+        assertActionItem(result, expectedMissingCount = 0)
+    }
+
+    @Test
+    fun `change counter with condition value not found has one screen condition reference`() = runTest {
+        val conditionId = Identifier(databaseId = 100L)
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
+        coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
+
+        val result = useCase(changeCounter(COUNTER_NAME, conditionValue(conditionId)))
+        assertActionItem(result, expectedMissingCount = 1)
+        assertEquals(
+            MissingCopyReference.ScreenConditionReference(name = CONDITION_NAME, conditionId = conditionId),
+            result.missingReferences[0],
+        )
+    }
+
+    @Test
+    fun `change counter with missing counter name and condition value has two references`() = runTest {
+        val conditionId = Identifier(databaseId = 100L)
+        every { mockEditionState.getAllEditedEvents() } returns emptyList()
+        every { mockEditionState.getCounter(COUNTER_NAME) } returns null
+        coEvery { mockSmartRepository.getConditionName(conditionId) } returns null
+
+        val result = useCase(changeCounter(COUNTER_NAME, conditionValue(conditionId)))
+        assertActionItem(result, expectedMissingCount = 2)
+        assertTrue(result.missingReferences.contains(MissingCopyReference.CounterReference(COUNTER_NAME)))
+        assertTrue(result.missingReferences.contains(
+            MissingCopyReference.ScreenConditionReference(name = "Unknown", conditionId = conditionId)
+        ))
+    }
+
     // endregion
 
     // region Click
@@ -840,6 +885,11 @@ class GetActionMissingReferencesUseCaseTest {
         counterName = counterName,
         operation = ChangeCounter.OperationType.SET,
         operationValue = operationValue,
+    )
+
+    private fun conditionValue(conditionId: Identifier) = CounterOperationValue.Condition(
+        conditionId = conditionId,
+        positionType = CounterOperationValue.Condition.PositionType.CONDITION_CENTER_X,
     )
 
     private fun notification(messageText: String) = Notification(

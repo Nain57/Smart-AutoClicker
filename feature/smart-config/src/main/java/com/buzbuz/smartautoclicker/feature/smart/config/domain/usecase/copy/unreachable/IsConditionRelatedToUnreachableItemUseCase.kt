@@ -45,6 +45,7 @@ class IsConditionRelatedToUnreachableItemUseCase @Inject constructor(
         when (val ctnValue = counterValue) {
             is CounterOperationValue.Counter -> editionRepository.editionState.getCounter(ctnValue.counterName) == null
             is CounterOperationValue.Number -> false
+            is CounterOperationValue.Condition -> false
         }
 
     private fun TriggerCondition.OnCounterCountReached.isRelatedToUnreachableItem(): Boolean {
@@ -53,6 +54,7 @@ class IsConditionRelatedToUnreachableItemUseCase @Inject constructor(
         return when (val ctnValue = counterValue) {
             is CounterOperationValue.Counter -> editionRepository.editionState.getCounter(ctnValue.counterName) == null
             is CounterOperationValue.Number -> false
+            is CounterOperationValue.Condition -> false
         }
     }
 }

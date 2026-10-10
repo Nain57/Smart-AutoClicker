@@ -594,7 +594,15 @@ class EditedItemsBuilder internal constructor(
             eventId = eventId,
             name = "" + from.name,
             counterName = "" + from.counterName,
+            operationValue = from.operationValue.toCopiedConditionValue(),
         )
+    }
+
+    /** Same as [toCopiedConditionPosition], for a counter operation value targeting a condition. */
+    private fun CounterOperationValue.toCopiedConditionValue(): CounterOperationValue {
+        if (this !is CounterOperationValue.Condition) return this
+        val mappedId = eventCopyConditionIdMap[conditionId] ?: return this
+        return copy(conditionId = mappedId)
     }
 
     private fun createNewNotificationFrom(from: Notification, eventId: Identifier): Notification {

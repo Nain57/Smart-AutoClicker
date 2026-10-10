@@ -109,7 +109,7 @@ internal class ActionExecutor(
                 is Pause -> executePause(action, onHoldDurationElapsed)
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
-                is ChangeCounter -> executeChangeCounter(action)
+                is ChangeCounter -> executeChangeCounter(action, results)
                 is Notification -> executeNotification(event, action)
                 is SystemAction -> executeSystemAction(action)
                 is SetText -> executeSetText(action)
@@ -290,14 +290,20 @@ internal class ActionExecutor(
 
     /**
      * Execute the provided change counter.
+     *
+     * A [CounterOperationValue.Condition] referencing a condition that has not been detected (possible with the OR
+     * operator) leaves the counter untouched.
+     *
      * @param changeCounter the changeCounter action to be executed.
+     * @param results the results of the conditions detection for this event, if any.
      */
-    private fun executeChangeCounter(changeCounter: ChangeCounter) {
+    private fun executeChangeCounter(changeCounter: ChangeCounter, results: ConditionsResults?) {
         val oldValue = processingState.getCounterValue(changeCounter.counterName) ?: return
 
         val operandValue = when (val operationValue = changeCounter.operationValue) {
             is CounterOperationValue.Counter -> processingState.getCounterValue(operationValue.counterName) ?: 0.0
             is CounterOperationValue.Number -> operationValue.value
+            is CounterOperationValue.Condition -> results?.getDetectedConditionCoordinate(operationValue) ?: return
         }
 
         processingState.setCounterValue(

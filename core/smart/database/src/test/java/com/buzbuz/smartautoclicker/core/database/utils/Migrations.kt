@@ -287,3 +287,24 @@ fun getV24GestureFingers() = "SELECT * FROM gesture_finger_table ORDER BY id"
 fun getV24GestureFingerMotions() = "SELECT * FROM gesture_finger_motion_table ORDER BY id"
 fun getV24GestureFingersForAction(actionId: Long) = "SELECT * FROM gesture_finger_table WHERE action_id = $actionId ORDER BY `index`"
 fun getV24GestureFingerMotionsForFinger(fingerId: Long) = "SELECT * FROM gesture_finger_motion_table WHERE finger_id = $fingerId ORDER BY `index`"
+
+
+fun getInsertV24ChangeCounter(
+    id: Long,
+    eventId: Long,
+    name: String,
+    priority: Int,
+    counterName: String,
+    counterOperation: String,
+    counterOperationValueType: String,
+    counterOperationValue: Double?,
+    counterOperationCounterName: String?,
+) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, counter_name, counter_operation, 
+            counter_operation_value_type, counter_operation_value, counter_operation_counter_name)
+        VALUES ($id, $eventId, $priority, "$name", "CHANGE_COUNTER", "$counterName", "$counterOperation", 
+            "$counterOperationValueType", $counterOperationValue, ${counterOperationCounterName?.let { "\"$it\"" }})
+    """.trimIndent()
+
+fun getV25Actions() = "SELECT * FROM action_table ORDER BY id"

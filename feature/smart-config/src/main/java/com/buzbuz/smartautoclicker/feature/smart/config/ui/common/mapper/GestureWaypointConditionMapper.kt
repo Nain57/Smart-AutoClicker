@@ -73,4 +73,5 @@ private fun CounterOperationValue.toDisplayText(): String =
         is CounterOperationValue.Number ->
             if (value % 1.0 == 0.0) value.toLong().toString() else value.toString()
         is CounterOperationValue.Counter -> counterName.ifEmpty { "?" }
+        is CounterOperationValue.Condition -> "?"
     }

@@ -39,6 +39,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationConditionPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
@@ -588,9 +589,19 @@ internal open class CompatDeserializer : Deserializer() {
         val counterName = jsonChangeCounter.getString("counterName") ?: return null
         val counterOperation = jsonChangeCounter.getEnum<ChangeCounterOperationType>("counterOperation") ?: return null
 
-        val counterOperationValueType = jsonChangeCounter.getEnum<CounterOperationValueType>("counterOperationValueType")
-            ?: CounterOperationValueType.NUMBER
         val counterOperationCounterName = jsonChangeCounter.getString("counterOperationCounterName") ?: ""
+        val counterOperationConditionId = jsonChangeCounter.getLong("counterOperationConditionId")
+        val counterOperationConditionPositionType = jsonChangeCounter
+            .getEnum<CounterOperationConditionPositionType>("counterOperationConditionPositionType")
+
+        // A condition value without its condition can't be used, fallback to the default number value
+        val counterOperationValueType = jsonChangeCounter.getEnum<CounterOperationValueType>("counterOperationValueType")
+            ?.takeIf { type ->
+                type != CounterOperationValueType.CONDITION ||
+                        (counterOperationConditionId != null && counterOperationConditionPositionType != null)
+            }
+            ?: CounterOperationValueType.NUMBER
+        val isConditionValue = counterOperationValueType == CounterOperationValueType.CONDITION
 
         return ActionEntity(
             id = id,
@@ -603,6 +614,9 @@ internal open class CompatDeserializer : Deserializer() {
             counterOperationValueType = counterOperationValueType,
             counterOperationValue = deserializeCounterActionValue(jsonChangeCounter),
             counterOperationCounterName = counterOperationCounterName,
+            counterOperationConditionId = if (isConditionValue) counterOperationConditionId else null,
+            counterOperationConditionPositionType =
+                if (isConditionValue) counterOperationConditionPositionType else null,
         )
     }
 

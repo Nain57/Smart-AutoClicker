@@ -61,6 +61,11 @@ import kotlinx.serialization.Serializable
  * for the operation on this counter. Null for others [ActionType].
  * @param counterOperationCounterName [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.COUNTER] only: the name
  * of the counter containing the value for the operation on this counter. Null for others [ActionType].
+ * @param counterOperationConditionId [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.CONDITION] only: the
+ * identifier of the screen condition, in the same event, whose detected position is used for the operation on this
+ * counter. Null for others [ActionType].
+ * @param counterOperationConditionPositionType [ActionType.CHANGE_COUNTER] & [CounterOperationValueType.CONDITION]
+ * only: the coordinate of the detected condition to use for the operation on this counter. Null for others [ActionType].
  *
  * @param notificationMessageText [ActionType.NOTIFICATION] only: used as notification message.
  * @param notificationImportance [ActionType.NOTIFICATION] only: how the notification will behave.
@@ -114,6 +119,8 @@ data class ActionEntity(
     @ColumnInfo(name = "counter_operation_value_type") val counterOperationValueType: CounterOperationValueType? = null,
     @ColumnInfo(name = "counter_operation_value") val counterOperationValue: Double? = null,
     @ColumnInfo(name = "counter_operation_counter_name") val counterOperationCounterName: String? = null,
+    @ColumnInfo(name = "counter_operation_condition_id") var counterOperationConditionId: Long? = null,
+    @ColumnInfo(name = "counter_operation_condition_position_type") val counterOperationConditionPositionType: CounterOperationConditionPositionType? = null,
 
     // ActionType.NOTIFICATION
     @ColumnInfo(name = "notification_message_text") val notificationMessageText: String? = null,

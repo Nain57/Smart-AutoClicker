@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
@@ -32,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.position.Coordinates
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 
@@ -255,6 +257,35 @@ class ScreenEventsEditorTest {
     }
 
     @Test
+    fun `condition removal deletes change counters using it as operation value`() {
+        listOf(AND, OR).forEach { operator ->
+            val condition1 = condition(1)
+            val condition2 = condition(2)
+            val counterOnCondition1 = changeCounter(1, conditionValue(condition1.id))
+            val counterOnCondition2 = changeCounter(2, conditionValue(condition2.id))
+            val counterOnNumber = changeCounter(3, CounterOperationValue.Number(2.0))
+            val event = event(
+                id = 1,
+                conditionOperator = operator,
+                conditions = listOf(condition1, condition2),
+                actions = listOf(counterOnCondition1, counterOnCondition2, counterOnNumber),
+            )
+            editor.startEdition(listOf(event))
+            editor.startItemEdition(event)
+
+            editor.conditionsEditor.startItemEdition(condition1)
+            editor.conditionsEditor.deleteEditedItem()
+
+            val expectedActions = listOf(counterOnCondition2, counterOnNumber)
+            assertEquals(expectedActions, editor.actionsEditor.editedList.value)
+            assertEquals(event.copy(conditions = listOf(condition2), actions = expectedActions), editor.editedItem.value)
+
+            editor.stopItemEdition()
+            editor.stopEdition()
+        }
+    }
+
+    @Test
     fun `edited event changes are only committed to list on upsert`() = runTest {
         val event = event(1, conditions = listOf(condition(1)))
         editor.startEdition(listOf(event))
@@ -336,6 +367,21 @@ class ScreenEventsEditorTest {
         priority = 0,
         pressDuration = 100L,
         position = position,
+    )
+
+    private fun changeCounter(id: Long, operationValue: CounterOperationValue) = ChangeCounter(
+        id = Identifier(databaseId = id),
+        eventId = EVENT_ID,
+        name = "counter",
+        priority = 0,
+        counterName = "counter",
+        operation = ChangeCounter.OperationType.SET,
+        operationValue = operationValue,
+    )
+
+    private fun conditionValue(conditionId: Identifier) = CounterOperationValue.Condition(
+        conditionId = conditionId,
+        positionType = CounterOperationValue.Condition.PositionType.CONDITION_LEFT,
     )
 
     private fun coordinates() = Position.Coordinates(
