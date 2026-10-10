@@ -200,6 +200,18 @@
         клик всегда будет применён к первому обнаруженному условию, каким бы оно ни оказалось во время
         выполнения.</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">Список условий</string>
+    <string name="tutorial_slideshow_conditions_list_desc">Узнайте, как выполняется список условий</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">Вы можете просмотреть следующее/предыдущее условие, проведя пальцем влево/вправо в любом
+        месте экрана.\n\nВы можете изменить порядок условия с помощью кнопок &lt;&lt; и &gt;&gt; или нажав прямо на
+        поле его индекса.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">В хорошо оптимизированных сценариях порядок условий в списке имеет
+        значение. Размещение лёгких условий, таких как Условия цвета, первыми гарантирует, что следующие, более тяжёлые,
+        не будут проверяться, если лёгкое условие не выполнено.\n\nОбратите внимание, что при операторе ИЛИ эта логика
+        обратная: следующие условия не будут проверяться, если первое выполнено.</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">Порядок условий и скорость</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">Как порядок условий влияет на скорость проверки

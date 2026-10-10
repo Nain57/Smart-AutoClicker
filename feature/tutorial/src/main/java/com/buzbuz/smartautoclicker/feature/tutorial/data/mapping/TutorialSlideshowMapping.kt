@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actio
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.changeeventstate.getChangeEventStateActionSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.system.getSystemActionSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.writetext.getWriteTextActionSlideshow
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.getScreenConditionsListSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.getScreenConditionsThresholdSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.getScreenConditionsTypeSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.screenconditions.image.getImageConditionsCaptureSlideshow
@@ -64,6 +65,7 @@ internal fun TutorialSlideshow.Type.toTutorialSlideshow(): TutorialSlideshow =
         NUMBER_CONDITION_DETECTION_AREA -> getNumberConditionsDetectionAreaSlideshow()
         PAUSE_ACTION -> getPauseActionSlideshow()
         SCREEN_CONDITIONS_DETECTION_THRESHOLD -> getScreenConditionsThresholdSlideshow()
+        SCREEN_CONDITIONS_LIST -> getScreenConditionsListSlideshow()
         SCREEN_CONDITIONS_TYPE -> getScreenConditionsTypeSlideshow()
         GESTURE_ACTION -> getGestureActionSlideshow()
         SYSTEM_ACTION -> getSystemActionSlideshow()

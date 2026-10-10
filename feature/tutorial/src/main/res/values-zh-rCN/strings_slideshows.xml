@@ -166,6 +166,13 @@
         评估，其余条件将被忽略。因此，Klick\'r 无法提前知道哪个条件会被检测到。\n\n因此，使用 OR 运算符时无法
         选择特定条件作为目标：点击始终会应用于运行时第一个检测到的条件，无论它是哪个。</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">条件列表</string>
+    <string name="tutorial_slideshow_conditions_list_desc">了解条件列表的执行方式</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">在屏幕任意位置向左/向右滑动即可查看下一个/上一个条件。\n\n您可以使用 &lt;&lt; 和 &gt;&gt; 按钮更改条件的顺序，或直接点击其索引框。</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">在高度优化的场景中，条件在列表中的顺序很重要。将颜色条件等较轻量的条件放在前面，可以确保在轻量条件未满足时，不会评估后面较重的条件。\n\n请注意，如果使用 OR 运算符，此逻辑会反转：只要第一个条件满足，后面的条件就不会被评估。</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">条件顺序与速度</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">条件的顺序如何影响事件检查速度</string>

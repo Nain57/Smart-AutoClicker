@@ -205,6 +205,19 @@
         pas choisir une condition spécifique comme cible du clic : le clic sera toujours appliqué sur la première
         condition détectée, quelle qu\'elle soit lors de l\'exécution.</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">Liste de conditions</string>
+    <string name="tutorial_slideshow_conditions_list_desc">Apprenez comment la liste de conditions est exécutée</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">Vous pouvez visualiser la condition suivante/précédente en balayant vers la gauche/droite
+        n\'importe où sur l\'écran.\n\nVous pouvez modifier l\'ordre d\'une condition à l\'aide des boutons &lt;&lt;
+        et &gt;&gt;, ou en appuyant directement sur sa case d\'index.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">Dans les scénarios très optimisés, l\'ordre des conditions dans la
+        liste a son importance. Placer en premier les conditions les plus légères, comme les Conditions de couleur,
+        garantit que les suivantes, plus lourdes, ne seront pas évaluées si la légère n\'est pas remplie.\n\nNotez que
+        cette logique est inversée si vous utilisez l\'opérateur OU, car les suivantes ne seront pas évaluées si la
+        première est remplie.</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">Ordre des conditions et vitesse</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">Comment l\'ordre de vos conditions influence la

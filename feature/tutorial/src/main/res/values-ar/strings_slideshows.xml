@@ -189,6 +189,16 @@
         على ذلك، مع عامل التشغيل OR لا يمكنك اختيار شرط محدد كهدف: سيُطبَّق النقر دائمًا على أول شرط
         مكتشف في وقت التشغيل، أيًّا كان.</string>
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">قائمة الشروط</string>
+    <string name="tutorial_slideshow_conditions_list_desc">تعلّم كيف يتم تنفيذ قائمة الشروط</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">يمكنك عرض الشرط التالي/السابق بالسحب يسارًا/يمينًا في أي مكان على الشاشة.\n\nيمكنك تغيير ترتيب
+        شرط باستخدام زرَّي &lt;&lt; و &gt;&gt;، أو بالنقر مباشرة على مربع فهرسه.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">في السيناريوهات المُحسَّنة للغاية، يكون لترتيب الشروط في القائمة أهمية. وضع الشروط الأخف مثل شروط اللون
+        أولاً يضمن عدم تقييم الشروط الأثقل التالية إذا لم يكن الشرط الخفيف مستوفًى.\n\nلاحظ أن هذا المنطق ينعكس عند
+        استخدام عامل التشغيل OR، إذ لن تُقيَّم الشروط التالية إذا كان الشرط الأول مستوفًى.</string>
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">ترتيب الشروط والسرعة</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">كيف يؤثر ترتيب شروطك على سرعة فحص الحدث</string>

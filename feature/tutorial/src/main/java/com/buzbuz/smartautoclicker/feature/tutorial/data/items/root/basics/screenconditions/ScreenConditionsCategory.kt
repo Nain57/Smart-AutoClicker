@@ -36,5 +36,6 @@ internal fun getScreenConditionsCategory() =
             TutorialCategory.Content.Divider,
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_TYPE),
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_DETECTION_THRESHOLD),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SCREEN_CONDITIONS_LIST),
         ),
     )

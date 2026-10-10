@@ -339,6 +339,19 @@
         This is the see-and-act philosophy of Klick\'r: detect first, then act.</string>
 
 
+    <!-- Conditions List slideshow -->
+    <string name="tutorial_slideshow_conditions_list_title">Condition list</string>
+    <string name="tutorial_slideshow_conditions_list_desc">Learn how the condition list is executed</string>
+
+    <string name="tutorial_slideshow_conditions_list_step_1_text">
+        You can visualize the next/previous condition by swiping left/right anywhere on your screen.\n\nYou can change
+        the order of a condition using the &lt;&lt; and &gt;&gt; buttons, or by tapping directly on the index box.</string>
+    <string name="tutorial_slideshow_conditions_list_step_2_text">In highly optimized scenarios, the condition order in
+        the list will matter. Moving the smaller conditions such as Color Conditions first will ensure the following heavier
+        ones won\'t be evaluated if the small one is not fulfilled.\n\nNote that this logic is inverted if you are
+        using the OR operator, as the next ones won\'t be evaluated if the first is fulfilled.</string>
+
+
     <!-- Combine Conditions Ordering slideshow -->
     <string name="tutorial_slideshow_combine_conditions_ordering_title">Condition order and speed</string>
     <string name="tutorial_slideshow_combine_conditions_ordering_desc">How the order of your conditions affects how fast

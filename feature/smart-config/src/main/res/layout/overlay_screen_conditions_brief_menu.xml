@@ -52,6 +52,11 @@
                 android:src="@drawable/ic_visible_on" />
 
             <ImageButton
+                android:id="@+id/btn_help"
+                style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
+                android:src="@drawable/ic_help" />
+
+            <ImageButton
                 android:id="@+id/btn_move"
                 style="@style/AppTheme.Overlay.FloatingMenu.Buttons"
                 android:src="@drawable/ic_move"
