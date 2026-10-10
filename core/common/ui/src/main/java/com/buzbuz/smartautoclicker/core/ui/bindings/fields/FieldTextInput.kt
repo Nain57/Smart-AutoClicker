@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
 
@@ -49,6 +50,10 @@ fun IncludeFieldTextInputBinding.setError(isError: Boolean) {
 
 fun IncludeFieldTextInputBinding.setError(@StringRes messageId: Int, isError: Boolean) {
     root.error = if (isError) root.context.getString(messageId) else null
+}
+
+fun IncludeFieldTextInputBinding.setInputFilter(filter: InputFilter) {
+    textField.filters = arrayOf(filter)
 }
 
 fun IncludeFieldTextInputBinding.setOnTextChangedListener(listener: (Editable) -> Unit) {
