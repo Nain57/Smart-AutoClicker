@@ -22,17 +22,64 @@ import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionType
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionWithFingers
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbGestureFingerEntity
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbGestureFingerMotionEntity
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbGestureFingerMotionType
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbGestureFingerWithMotions
 
-internal fun DumbActionEntity.toDomain(asDomain: Boolean = false): DumbAction = when (type) {
-    DumbActionType.CLICK -> toDomainClick(asDomain)
-    DumbActionType.SWIPE -> toDomainSwipe(asDomain)
-    DumbActionType.PAUSE -> toDomainPause(asDomain)
+internal fun DumbActionWithFingers.toDomain(asDomain: Boolean = false): DumbAction = when (action.type) {
+    DumbActionType.CLICK -> action.toDomainClick(asDomain)
+    DumbActionType.GESTURE -> toDomainGesture(asDomain)
+    DumbActionType.PAUSE -> action.toDomainPause(asDomain)
 }
 internal fun DumbAction.toEntity(scenarioDbId: Long = DATABASE_ID_INSERTION): DumbActionEntity = when (this) {
     is DumbAction.DumbClick -> toClickEntity(scenarioDbId)
-    is DumbAction.DumbSwipe -> toSwipeEntity(scenarioDbId)
+    is DumbAction.DumbGesture -> toGestureEntity(scenarioDbId)
     is DumbAction.DumbPause -> toPauseEntity(scenarioDbId)
 }
+
+internal fun DumbGestureFinger.toEntity(dumbActionDbId: Long, index: Int): DumbGestureFingerEntity =
+    DumbGestureFingerEntity(
+        id = id.databaseId,
+        dumbActionId = dumbActionDbId,
+        index = index,
+        startTimeMs = startTimeMs,
+    )
+
+internal fun DumbGestureFingerMotion.toEntity(fingerDbId: Long, index: Int): DumbGestureFingerMotionEntity =
+    when (this) {
+        is DumbGestureFingerMotion.Press -> DumbGestureFingerMotionEntity(
+            id = id.databaseId,
+            fingerId = fingerDbId,
+            index = index,
+            motionType = DumbGestureFingerMotionType.PRESS,
+            x = position.x,
+            y = position.y,
+        )
+        is DumbGestureFingerMotion.Move -> DumbGestureFingerMotionEntity(
+            id = id.databaseId,
+            fingerId = fingerDbId,
+            index = index,
+            motionType = DumbGestureFingerMotionType.MOVE,
+            durationMs = durationMs,
+            x = position.x,
+            y = position.y,
+        )
+        is DumbGestureFingerMotion.Wait -> DumbGestureFingerMotionEntity(
+            id = id.databaseId,
+            fingerId = fingerDbId,
+            index = index,
+            motionType = DumbGestureFingerMotionType.WAIT,
+            durationMs = durationMs,
+        )
+        is DumbGestureFingerMotion.Release -> DumbGestureFingerMotionEntity(
+            id = id.databaseId,
+            fingerId = fingerDbId,
+            index = index,
+            motionType = DumbGestureFingerMotionType.RELEASE,
+        )
+    }
 
 private fun DumbActionEntity.toDomainClick(asDomain: Boolean): DumbAction.DumbClick =
     DumbAction.DumbClick(
@@ -47,19 +94,48 @@ private fun DumbActionEntity.toDomainClick(asDomain: Boolean): DumbAction.DumbCl
         repeatDelayMs = repeatDelay!!,
     )
 
-private fun DumbActionEntity.toDomainSwipe(asDomain: Boolean): DumbAction.DumbSwipe =
-    DumbAction.DumbSwipe(
-        id = Identifier(id = id, asTemporary = asDomain),
-        scenarioId = Identifier(id = dumbScenarioId, asTemporary = asDomain),
-        name = name,
-        priority = priority,
-        fromPosition = Point(fromX!!, fromY!!),
-        toPosition = Point(toX!!, toY!!),
-        swipeDurationMs = swipeDuration!!,
-        repeatCount = repeatCount!!,
-        isRepeatInfinite = isRepeatInfinite!!,
-        repeatDelayMs = repeatDelay!!,
+private fun DumbActionWithFingers.toDomainGesture(asDomain: Boolean): DumbAction.DumbGesture =
+    DumbAction.DumbGesture(
+        id = Identifier(id = action.id, asTemporary = asDomain),
+        scenarioId = Identifier(id = action.dumbScenarioId, asTemporary = asDomain),
+        name = action.name,
+        priority = action.priority,
+        repeatCount = action.repeatCount!!,
+        isRepeatInfinite = action.isRepeatInfinite!!,
+        repeatDelayMs = action.repeatDelay!!,
+        fingers = gestureFingers
+            .sortedBy { it.finger.index }
+            .map { fingerWithMotions -> fingerWithMotions.toDomain(asDomain) },
     )
+
+private fun DumbGestureFingerWithMotions.toDomain(asDomain: Boolean): DumbGestureFinger =
+    DumbGestureFinger(
+        id = Identifier(id = finger.id, asTemporary = asDomain),
+        startTimeMs = finger.startTimeMs,
+        motions = motions
+            .sortedBy { it.index }
+            .map { motion -> motion.toDomain(asDomain) },
+    )
+
+private fun DumbGestureFingerMotionEntity.toDomain(asDomain: Boolean): DumbGestureFingerMotion =
+    when (motionType) {
+        DumbGestureFingerMotionType.PRESS -> DumbGestureFingerMotion.Press(
+            id = Identifier(id = id, asTemporary = asDomain),
+            position = Point(x!!, y!!),
+        )
+        DumbGestureFingerMotionType.MOVE -> DumbGestureFingerMotion.Move(
+            id = Identifier(id = id, asTemporary = asDomain),
+            position = Point(x!!, y!!),
+            durationMs = durationMs!!,
+        )
+        DumbGestureFingerMotionType.WAIT -> DumbGestureFingerMotion.Wait(
+            id = Identifier(id = id, asTemporary = asDomain),
+            durationMs = durationMs!!,
+        )
+        DumbGestureFingerMotionType.RELEASE -> DumbGestureFingerMotion.Release(
+            id = Identifier(id = id, asTemporary = asDomain),
+        )
+    }
 
 private fun DumbActionEntity.toDomainPause(asDomain: Boolean): DumbAction.DumbPause =
     DumbAction.DumbPause(
@@ -88,23 +164,18 @@ private fun DumbAction.DumbClick.toClickEntity(scenarioDbId: Long): DumbActionEn
     )
 }
 
-private fun DumbAction.DumbSwipe.toSwipeEntity(scenarioDbId: Long): DumbActionEntity {
-    if (!isValid()) throw IllegalStateException("Can't transform to entity, Swipe is incomplete.")
+private fun DumbAction.DumbGesture.toGestureEntity(scenarioDbId: Long): DumbActionEntity {
+    if (!isValid()) throw IllegalStateException("Can't transform to entity, Gesture is incomplete.")
 
     return DumbActionEntity(
         id = id.databaseId,
         dumbScenarioId = if (scenarioDbId != DATABASE_ID_INSERTION) scenarioDbId else scenarioId.databaseId,
         name = name,
         priority = priority,
-        type = DumbActionType.SWIPE,
+        type = DumbActionType.GESTURE,
         repeatCount = repeatCount,
         isRepeatInfinite = isRepeatInfinite,
         repeatDelay = repeatDelayMs,
-        swipeDuration = swipeDurationMs,
-        fromX = fromPosition.x,
-        fromY = fromPosition.y,
-        toX = toPosition.x,
-        toY = toPosition.y,
     )
 }
 

@@ -17,6 +17,7 @@
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidRoom)
+    alias(libs.plugins.buzbuz.androidUnitTest)
     alias(libs.plugins.buzbuz.flavour)
     alias(libs.plugins.buzbuz.kotlinSerialization)
     alias(libs.plugins.buzbuz.hilt)
@@ -37,4 +38,6 @@ dependencies {
     implementation(project(":core:common:actions"))
     implementation(project(":core:common:base"))
     implementation(project(":core:common:settings"))
+
+    testImplementation(libs.androidx.room.testing)
 }

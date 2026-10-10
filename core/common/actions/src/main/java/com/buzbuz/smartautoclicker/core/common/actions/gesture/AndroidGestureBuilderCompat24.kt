@@ -14,15 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.processing.data.processor.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.gesture
 
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
-
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildStroke
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.lineTo
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
-import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlin.random.Random
 
@@ -35,9 +30,8 @@ import kotlin.random.Random
  * duration is correct, the timing of each motion is not: this is why waits are not offered on those versions.
  */
 internal class AndroidGestureBuilderCompat24(
-    processingState: ProcessingState,
     random: Random?,
-) : AndroidGestureBuilder(processingState, random) {
+) : AndroidGestureBuilder(random) {
 
     override val supportsWaitMotions: Boolean = false
 

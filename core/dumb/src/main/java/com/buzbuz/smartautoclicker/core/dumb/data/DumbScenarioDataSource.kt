@@ -23,6 +23,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.mapList
 import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbActionEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbDatabase
+import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbGestureFingerWithMotions
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioDao
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.dumb.data.database.DumbScenarioWithActions
@@ -88,14 +89,18 @@ class DumbScenarioDataSource @Inject constructor(
                 )
             )
 
-            dumbScenarioDao.addDumbActions(
+            val actionIds = dumbScenarioDao.addDumbActions(
                 scenarioWithActions.dumbActions.map { dumbAction ->
-                    dumbAction.copy(
+                    dumbAction.action.copy(
                         id = DATABASE_ID_INSERTION,
                         dumbScenarioId = scenarioId,
                     )
                 }
             )
+
+            scenarioWithActions.dumbActions.forEachIndexed { index, dumbAction ->
+                addGestureFingersCopy(actionIds[index], dumbAction.gestureFingers)
+            }
 
             scenarioId
         } catch (ex: Exception) {
@@ -147,7 +152,39 @@ class DumbScenarioDataSource @Inject constructor(
             addList = dumbScenarioDao::addDumbActions,
             updateList = dumbScenarioDao::updateDumbActions,
             removeList = dumbScenarioDao::deleteDumbActions,
+            onSuccess = { addedMapping, added, updated, _ ->
+                added.forEach { action ->
+                    val actionDbId = action.getDomainId()?.let(addedMapping::get) ?: return@forEach
+                    updateDumbActionChildren(actionDbId, action)
+                }
+                updated.forEach { action -> updateDumbActionChildren(action.id.databaseId, action) }
+            }
         )
+    }
+
+    private suspend fun updateDumbActionChildren(actionDbId: Long, action: DumbAction) {
+        if (action !is DumbAction.DumbGesture) return
+
+        dumbScenarioDao.deleteGestureFingersByActionId(actionDbId)
+        action.fingers.forEachIndexed { fingerIndex, finger ->
+            val fingerDbId = dumbScenarioDao.addGestureFinger(finger.toEntity(actionDbId, fingerIndex))
+            dumbScenarioDao.addGestureFingerMotions(
+                finger.motions.mapIndexed { motionIndex, motion -> motion.toEntity(fingerDbId, motionIndex) }
+            )
+        }
+    }
+
+    private suspend fun addGestureFingersCopy(actionDbId: Long, fingers: List<DumbGestureFingerWithMotions>) {
+        fingers.forEach { fingerWithMotions ->
+            val fingerDbId = dumbScenarioDao.addGestureFinger(
+                fingerWithMotions.finger.copy(id = DATABASE_ID_INSERTION, dumbActionId = actionDbId)
+            )
+            dumbScenarioDao.addGestureFingerMotions(
+                fingerWithMotions.motions.map { motion ->
+                    motion.copy(id = DATABASE_ID_INSERTION, fingerId = fingerDbId)
+                }
+            )
+        }
     }
 
     suspend fun deleteDumbScenario(scenario: DumbScenario) {

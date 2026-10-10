@@ -17,10 +17,12 @@
 package com.buzbuz.smartautoclicker.core.dumb.data.database
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import androidx.room.TypeConverter
 import com.buzbuz.smartautoclicker.core.base.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
@@ -29,7 +31,7 @@ import kotlinx.serialization.Serializable
  * Entity defining an action from an action.
  */
 @Entity(
-    tableName = "dumb_action_table",
+    tableName = DUMB_ACTION_TABLE,
     indices = [Index("dumb_scenario_id")],
     foreignKeys = [
         ForeignKey(
@@ -58,16 +60,27 @@ data class DumbActionEntity(
     @ColumnInfo(name = "x") val x: Int? = null,
     @ColumnInfo(name = "y") val y: Int? = null,
 
-    // ActionType.SWIPE
-    @ColumnInfo(name = "swipe_duration") val swipeDuration: Long? = null,
-    @ColumnInfo(name = "fromX") val fromX: Int? = null,
-    @ColumnInfo(name = "fromY") val fromY: Int? = null,
-    @ColumnInfo(name = "toX") val toX: Int? = null,
-    @ColumnInfo(name = "toY") val toY: Int? = null,
-
     // ActionType.PAUSE
     @ColumnInfo(name = "pause_duration") val pauseDuration: Long? = null,
+
+    // ActionType.GESTURE
+    // No specific columns, specificities contained in DumbGestureFingerEntity relation
 ) : EntityWithId
+
+/**
+ * Entity embedding a dumb action and its relations.
+ * Only [DumbActionType.GESTURE] actions have [gestureFingers], the list is empty for all other types.
+ */
+@Serializable
+data class DumbActionWithFingers(
+    @Embedded val action: DumbActionEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "dumb_action_id",
+        entity = DumbGestureFingerEntity::class,
+    )
+    val gestureFingers: List<DumbGestureFingerWithMotions>,
+)
 
 /**
  * Type of [DumbActionEntity].
@@ -79,8 +92,8 @@ data class DumbActionEntity(
 enum class DumbActionType {
     /** A single tap on the screen. */
     CLICK,
-    /** A swipe on the screen. */
-    SWIPE,
+    /** A complex gesture to execute on the screen. */
+    GESTURE,
     /** A pause, waiting before the next action. */
     PAUSE,
 }

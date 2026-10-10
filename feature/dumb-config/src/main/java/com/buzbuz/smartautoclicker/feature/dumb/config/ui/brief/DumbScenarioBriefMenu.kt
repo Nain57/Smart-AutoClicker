@@ -83,7 +83,6 @@ class DumbScenarioBriefMenu(
     override fun onCreateMenu(layoutInflater: LayoutInflater): ViewGroup {
         dumbActionCreator = DumbActionCreator(
             createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
-            createNewDumbSwipe = { from, to -> viewModel.createNewDumbSwipe(context, from, to) },
             createNewDumbPause = { viewModel.createNewDumbPause(context) },
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )

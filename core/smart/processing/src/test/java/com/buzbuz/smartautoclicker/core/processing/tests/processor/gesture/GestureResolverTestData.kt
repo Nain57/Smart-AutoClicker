@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture
 
-import android.accessibilityservice.GestureDescription
-import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Point
 import android.graphics.Rect
 
@@ -38,18 +36,8 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResu
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import kotlin.math.roundToInt
-
-/** Builds the domain objects consumed by the gesture builders. */
-internal object GestureBuilderTestData {
-
-    /** Duration of a finger pressing and releasing without moving, as applied by the builder. */
-    const val TAP_DURATION_MS = 100L
-    /** Delay applied by the builder to a finger pressing down while another one is already held. */
-    const val NEW_FINGER_PRESS_DELAY_MS = 1L
+/** Builds the domain objects consumed by the gesture resolver. */
+internal object GestureResolverTestData {
 
     const val COUNTER_NAME = "counter"
     const val COUNTER_VALUE = 300
@@ -146,59 +134,3 @@ internal object GestureBuilderTestData {
         GestureFingerMotion.Release(ITEM_ID)
 }
 
-/** The points the stroke path goes through, from its start to its end. A held finger has a single point. */
-internal val StrokeDescription.points: List<Point>
-    get() = path.approximate(0.5f).toList().chunked(3).map { (_, x, y) -> Point(x.roundToInt(), y.roundToInt()) }
-
-/** [StrokeDescription.getId] is hidden from the SDK, but available at runtime. */
-internal val StrokeDescription.strokeId: Int
-    get() = StrokeDescription::class.java.getMethod("getId").invoke(this) as Int
-
-/** [StrokeDescription.getContinuedStrokeId] is hidden from the SDK, but available at runtime. */
-internal val StrokeDescription.continuedStrokeId: Int
-    get() = StrokeDescription::class.java.getMethod("getContinuedStrokeId").invoke(this) as Int
-
-internal fun assertChainsCount(expected: Int, chains: List<List<GestureDescription>>?) {
-    assertTrue("Gesture should have been built", chains != null)
-    assertEquals("Invalid chains count", expected, chains!!.size)
-}
-
-internal fun assertGesturesCount(expected: Int, chain: List<GestureDescription>) {
-    assertEquals("Invalid gestures count in chain", expected, chain.size)
-}
-
-internal fun assertStrokesCount(expected: Int, gesture: GestureDescription) {
-    assertEquals("Invalid strokes count in gesture", expected, gesture.strokeCount)
-}
-
-internal fun assertStroke(
-    stroke: StrokeDescription,
-    startTimeMs: Long,
-    durationMs: Long,
-    from: Point,
-    to: Point = from,
-    willContinue: Boolean = false,
-    continues: StrokeDescription? = null,
-) {
-    assertEquals("Invalid stroke start time", startTimeMs, stroke.startTime)
-    assertEquals("Invalid stroke duration", durationMs, stroke.duration)
-    assertEquals("Invalid stroke start position", from, stroke.points.first())
-    assertEquals("Invalid stroke end position", to, stroke.points.last())
-    assertEquals("Invalid stroke continuation flag", willContinue, stroke.willContinue())
-
-    if (continues == null) assertFalse("Stroke should not continue another one", stroke.continuedStrokeId >= 0)
-    else assertEquals("Stroke continues the wrong stroke", continues.strokeId, stroke.continuedStrokeId)
-}
-
-/** A held finger is described by a single point path: it stays at its start position without moving. */
-internal fun assertHoldStroke(
-    stroke: StrokeDescription,
-    startTimeMs: Long,
-    durationMs: Long,
-    position: Point,
-    willContinue: Boolean = false,
-    continues: StrokeDescription? = null,
-) {
-    assertStroke(stroke, startTimeMs, durationMs, position, position, willContinue, continues)
-    assertEquals("A held finger should not move", listOf(position), stroke.points)
-}

@@ -143,7 +143,7 @@ data class ScenarioListUiState(
                     override val lastStartTimestamp: Long,
                     override val startCount: Long,
                     val clickCount: Int,
-                    val swipeCount: Int,
+                    val gestureCount: Int,
                     val pauseCount: Int,
                     val repeatText: String,
                     val maxDurationText: String,

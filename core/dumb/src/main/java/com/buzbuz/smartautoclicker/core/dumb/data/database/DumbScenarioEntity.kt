@@ -37,7 +37,7 @@ import kotlinx.serialization.Serializable
  * @param maxDurationMin
  * @param isDurationInfinite
  */
-@Entity(tableName = "dumb_scenario_table")
+@Entity(tableName = DUMB_SCENARIO_TABLE)
 @Serializable
 data class DumbScenarioEntity(
     @PrimaryKey(autoGenerate = true) override val id: Long,
@@ -63,9 +63,10 @@ data class DumbScenarioWithActions(
     @Embedded val scenario: DumbScenarioEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "dumb_scenario_id"
+        entityColumn = "dumb_scenario_id",
+        entity = DumbActionEntity::class,
     )
-    val dumbActions: List<DumbActionEntity>,
+    val dumbActions: List<DumbActionWithFingers>,
     @Relation(
         parentColumn = "id",
         entityColumn = "dumb_scenario_id"

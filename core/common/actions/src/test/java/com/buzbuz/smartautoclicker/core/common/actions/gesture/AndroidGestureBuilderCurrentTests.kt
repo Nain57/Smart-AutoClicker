@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.gesture
 
 import android.accessibilityservice.GestureDescription
 import android.graphics.Point
@@ -22,19 +22,17 @@ import android.os.Build
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.AndroidGestureBuilderCurrent
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.NEW_FINGER_PRESS_DELAY_MS
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.TAP_DURATION_MS
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.move
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.newFinger
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.newGesture
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.newProcessingState
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.newScreenEvent
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.newTapFinger
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.press
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.release
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureBuilderTestData.wait
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.Gesture
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.NEW_FINGER_PRESS_DELAY_MS
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.TAP_DURATION_MS
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.build
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.move
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.newFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.newGesture
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.newTapFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.press
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.release
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.wait
 
 import org.junit.Before
 import org.junit.Test
@@ -50,11 +48,10 @@ class AndroidGestureBuilderCurrentTests {
 
     @Before
     fun setUp() {
-        builder = AndroidGestureBuilderCurrent(newProcessingState(), random = null)
+        builder = AndroidGestureBuilderCurrent(random = null)
     }
 
-    private fun build(gesture: Gesture): List<List<GestureDescription>>? =
-        builder.build(gesture, newScreenEvent(), null)
+    private fun build(gesture: Gesture): List<List<GestureDescription>>? = builder.build(gesture)
 
     @Test
     fun tap_singleHoldStroke() {
