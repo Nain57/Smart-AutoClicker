@@ -27,9 +27,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -170,22 +170,22 @@ class ReplaceCounterUseCase @Inject constructor(
         }
     }
 
-    private fun GesturePosition.replaceCounter(from: Counter, to: Counter): GesturePosition =
+    private fun Position.replaceCounter(from: Counter, to: Counter): Position =
         when (this) {
-            is GesturePosition.Condition -> this
-            is GesturePosition.Coordinates -> replaceCounter(from, to)
+            is Position.Condition -> this
+            is Position.Coordinates -> replaceCounter(from, to)
         }
 
-    private fun GesturePosition.Coordinates.replaceCounter(from: Counter, to: Counter): GesturePosition.Coordinates =
+    private fun Position.Coordinates.replaceCounter(from: Counter, to: Counter): Position.Coordinates =
         copy(
             x = x.replaceCounter(from, to),
             y = y.replaceCounter(from, to),
         )
 
-    private fun GestureCoordinatesValue.replaceCounter(from: Counter, to: Counter): GestureCoordinatesValue =
+    private fun CoordinatesValue.replaceCounter(from: Counter, to: Counter): CoordinatesValue =
         when (this) {
-            is GestureCoordinatesValue.Literal -> this
-            is GestureCoordinatesValue.Counter ->
-                if (counterName == from.counterName) GestureCoordinatesValue.Counter(to.counterName) else this
+            is CoordinatesValue.Literal -> this
+            is CoordinatesValue.Counter ->
+                if (counterName == from.counterName) CoordinatesValue.Counter(to.counterName) else this
         }
 }

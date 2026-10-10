@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
@@ -213,7 +213,7 @@ class GestureDialog(
         )
     }
 
-    private fun showClickOffsetDialog(item: GestureDialogUiStateItem, onOffsetSelected: (GesturePosition.Coordinates) -> Unit) {
+    private fun showClickOffsetDialog(item: GestureDialogUiStateItem, onOffsetSelected: (Position.Coordinates) -> Unit) {
         val currentOffset = viewModel.getItemOffset(item) ?: return
         overlayManager.navigateTo(
             context = context,

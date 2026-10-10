@@ -26,10 +26,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -244,16 +244,16 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Gesture with matching Counter coordinate is updated`() {
-        val pressPos = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val pressPos = Position.Coordinates(
+            CoordinatesValue.Counter(FROM_COUNTER_NAME), CoordinatesValue.Literal(0),
         )
         val action = gestureAction(pressPos)
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
         useCase(FROM_COUNTER, TO_COUNTER)
 
-        val updatedPos = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val updatedPos = Position.Coordinates(
+            CoordinatesValue.Counter(TO_COUNTER_NAME), CoordinatesValue.Literal(0),
         )
         verifyOrder {
             mockEditionRepository.startActionEdition(action)
@@ -264,8 +264,8 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Gesture with no matching counter coordinate is not updated`() {
-        val action = gestureAction(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+        val action = gestureAction(Position.Coordinates(
+            CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
         ))
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
@@ -277,9 +277,9 @@ class ReplaceCounterUseCaseTest {
     @Test
     fun `Gesture with other counter or condition position is not updated`() {
         val action = gestureAction(
-            pressPosition = GesturePosition.Condition(Identifier(databaseId = 100L)),
-            pressOffset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Counter("otherCounter"), GestureCoordinatesValue.Literal(0),
+            pressPosition = Position.Condition(Identifier(databaseId = 100L)),
+            pressOffset = Position.Coordinates(
+                CoordinatesValue.Counter("otherCounter"), CoordinatesValue.Literal(0),
             ),
         )
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
@@ -293,8 +293,8 @@ class ReplaceCounterUseCaseTest {
     fun `Gesture with matching Counter in press offset is updated`() {
         val action = gestureAction(
             pressPosition = literalPosition(),
-            pressOffset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(FROM_COUNTER_NAME),
+            pressOffset = Position.Coordinates(
+                CoordinatesValue.Literal(0), CoordinatesValue.Counter(FROM_COUNTER_NAME),
             ),
         )
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
@@ -303,8 +303,8 @@ class ReplaceCounterUseCaseTest {
 
         val expected = gestureAction(
             pressPosition = literalPosition(),
-            pressOffset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(TO_COUNTER_NAME),
+            pressOffset = Position.Coordinates(
+                CoordinatesValue.Literal(0), CoordinatesValue.Counter(TO_COUNTER_NAME),
             ),
         )
         verifyOrder {
@@ -319,8 +319,8 @@ class ReplaceCounterUseCaseTest {
         val action = gestureAction(
             pressPosition = literalPosition(),
             move = moveMotion(
-                position = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
-                offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(FROM_COUNTER_NAME)),
+                position = Position.Coordinates(CoordinatesValue.Counter(FROM_COUNTER_NAME), CoordinatesValue.Literal(0)),
+                offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(FROM_COUNTER_NAME)),
             ),
         )
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
@@ -330,8 +330,8 @@ class ReplaceCounterUseCaseTest {
         val expected = gestureAction(
             pressPosition = literalPosition(),
             move = moveMotion(
-                position = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
-                offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(TO_COUNTER_NAME)),
+                position = Position.Coordinates(CoordinatesValue.Counter(TO_COUNTER_NAME), CoordinatesValue.Literal(0)),
+                offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(TO_COUNTER_NAME)),
             ),
         )
         verifyOrder {
@@ -344,15 +344,15 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Click with matching Counter coordinate is updated`() {
-        val action = clickAction(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val action = clickAction(position = Position.Coordinates(
+            CoordinatesValue.Counter(FROM_COUNTER_NAME), CoordinatesValue.Literal(0),
         ))
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
         useCase(FROM_COUNTER, TO_COUNTER)
 
-        val expected = clickAction(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val expected = clickAction(position = Position.Coordinates(
+            CoordinatesValue.Counter(TO_COUNTER_NAME), CoordinatesValue.Literal(0),
         ))
         verifyOrder {
             mockEditionRepository.startActionEdition(action)
@@ -363,15 +363,15 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Click with matching Counter in both coordinates is updated in one call`() {
-        val action = clickAction(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Counter(FROM_COUNTER_NAME),
+        val action = clickAction(position = Position.Coordinates(
+            CoordinatesValue.Counter(FROM_COUNTER_NAME), CoordinatesValue.Counter(FROM_COUNTER_NAME),
         ))
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
         useCase(FROM_COUNTER, TO_COUNTER)
 
-        val expected = clickAction(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Counter(TO_COUNTER_NAME),
+        val expected = clickAction(position = Position.Coordinates(
+            CoordinatesValue.Counter(TO_COUNTER_NAME), CoordinatesValue.Counter(TO_COUNTER_NAME),
         ))
         verifyOrder {
             mockEditionRepository.startActionEdition(action)
@@ -383,10 +383,10 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Click on Condition with matching Counter offset is updated`() {
-        val conditionPosition = GesturePosition.Condition(Identifier(databaseId = 100L))
+        val conditionPosition = Position.Condition(Identifier(databaseId = 100L))
         val action = clickAction(
             position = conditionPosition,
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Counter(FROM_COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
@@ -394,7 +394,7 @@ class ReplaceCounterUseCaseTest {
 
         val expected = clickAction(
             position = conditionPosition,
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Counter(TO_COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         verifyOrder {
             mockEditionRepository.startActionEdition(action)
@@ -405,8 +405,8 @@ class ReplaceCounterUseCaseTest {
 
     @Test
     fun `Click with no matching counter coordinate is not updated`() {
-        val action = clickAction(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter("otherCounter"), GestureCoordinatesValue.Literal(0),
+        val action = clickAction(position = Position.Coordinates(
+            CoordinatesValue.Counter("otherCounter"), CoordinatesValue.Literal(0),
         ))
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
 
@@ -443,11 +443,11 @@ class ReplaceCounterUseCaseTest {
 
     // region helpers
 
-    private fun literalPosition() = GesturePosition.Coordinates(
-        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    private fun literalPosition() = Position.Coordinates(
+        CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
     )
 
-    private fun moveMotion(position: GesturePosition, offset: GesturePosition) = GestureFingerMotion.Move(
+    private fun moveMotion(position: Position, offset: Position) = GestureFingerMotion.Move(
         id = Identifier(databaseId = 52L),
         position = position,
         offset = offset,
@@ -455,8 +455,8 @@ class ReplaceCounterUseCaseTest {
     )
 
     private fun gestureAction(
-        pressPosition: GesturePosition,
-        pressOffset: GesturePosition = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+        pressPosition: Position,
+        pressOffset: Position = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
         move: GestureFingerMotion.Move? = null,
     ): Gesture = Gesture(
         id = Identifier(databaseId = 4L),
@@ -478,7 +478,7 @@ class ReplaceCounterUseCaseTest {
         )),
     )
 
-    private fun clickAction(position: GesturePosition?, offset: GesturePosition? = null): Click = Click(
+    private fun clickAction(position: Position?, offset: Position? = null): Click = Click(
         id = Identifier(databaseId = 5L),
         eventId = Identifier(databaseId = 1L),
         name = "Click",

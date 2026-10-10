@@ -21,10 +21,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toDomainGestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
 
 /** Convert an Action entity into a Domain Action. */
@@ -60,9 +60,9 @@ private fun CompleteActionEntity.toDomainClick(cleanIds: Boolean = false): Click
     )
 }
 
-private fun GestureFingerMotionEntity.toDomainClickPosition(cleanIds: Boolean): GesturePosition? {
+private fun GestureFingerMotionEntity.toDomainClickPosition(cleanIds: Boolean): Position? {
     if (xCoordinateType == CoordinatesType.CONDITION && yCoordinateType == CoordinatesType.CONDITION) {
-        return GesturePosition.Condition(
+        return Position.Condition(
             conditionId = conditionId?.let { Identifier(id = it, asTemporary = cleanIds) },
         )
     }
@@ -70,14 +70,14 @@ private fun GestureFingerMotionEntity.toDomainClickPosition(cleanIds: Boolean): 
     val x = toClickCoordinatesValue(xCoordinateType, xLiteral, xCounter) ?: return null
     val y = toClickCoordinatesValue(yCoordinateType, yLiteral, yCounter) ?: return null
 
-    return GesturePosition.Coordinates(x = x, y = y)
+    return Position.Coordinates(x = x, y = y)
 }
 
-private fun GestureFingerMotionEntity.toDomainClickOffset(): GesturePosition.Coordinates? {
+private fun GestureFingerMotionEntity.toDomainClickOffset(): Position.Coordinates? {
     val x = toClickCoordinatesValue(xOffsetCoordinateType, xOffsetLiteral, xOffsetCounter) ?: return null
     val y = toClickCoordinatesValue(yOffsetCoordinateType, yOffsetLiteral, yOffsetCounter) ?: return null
 
-    return GesturePosition.Coordinates(x = x, y = y)
+    return Position.Coordinates(x = x, y = y)
 }
 
 private fun CompleteActionEntity.toDomainGesture(cleanIds: Boolean = false) = Gesture(
@@ -175,10 +175,10 @@ private fun String?.toComponentName(): ComponentName? = this?.let {
 }
 
 /** A null [type] with a null [literal] means the click has no position yet. */
-private fun toClickCoordinatesValue(type: CoordinatesType?, literal: Int?, counter: String?): GestureCoordinatesValue? =
+private fun toClickCoordinatesValue(type: CoordinatesType?, literal: Int?, counter: String?): CoordinatesValue? =
     when (type) {
-        CoordinatesType.COUNTER -> GestureCoordinatesValue.Counter(counterName = counter ?: "")
-        CoordinatesType.LITERAL, null -> literal?.let(GestureCoordinatesValue::Literal)
+        CoordinatesType.COUNTER -> CoordinatesValue.Counter(counterName = counter ?: "")
+        CoordinatesType.LITERAL, null -> literal?.let(CoordinatesValue::Literal)
         CoordinatesType.CONDITION -> null
     }
 

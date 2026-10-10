@@ -41,15 +41,15 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Move
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Press
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Release
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Wait
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
@@ -321,9 +321,9 @@ class EditedItemsBuilder internal constructor(
             eventId = getEditedEventIdOrThrow(),
             name = defaultValues.clickName(context),
             pressDuration = defaultValues.clickPressDuration(context),
-            position = GesturePosition.Coordinates(
-                x = GestureCoordinatesValue.Literal(displaySize.x / 2),
-                y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+            position = Position.Coordinates(
+                x = CoordinatesValue.Literal(displaySize.x / 2),
+                y = CoordinatesValue.Literal(displaySize.y / 2),
             ),
             priority = 0,
         )
@@ -466,13 +466,13 @@ class EditedItemsBuilder internal constructor(
             motions = listOf(
                 Press(
                     id = gestureMotionIdCreator.generateNewIdentifier(),
-                    position = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(displaySize.x / 2),
-                        y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+                    position = Position.Coordinates(
+                        x = CoordinatesValue.Literal(displaySize.x / 2),
+                        y = CoordinatesValue.Literal(displaySize.y / 2),
                     ),
-                    offset = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(0),
-                        y = GestureCoordinatesValue.Literal(0),
+                    offset = Position.Coordinates(
+                        x = CoordinatesValue.Literal(0),
+                        y = CoordinatesValue.Literal(0),
                     ),
                 ),
                 Release(
@@ -486,13 +486,13 @@ class EditedItemsBuilder internal constructor(
         val displaySize = displayConfigManager.displayConfig.sizePx
         return Move(
             id = gestureMotionIdCreator.generateNewIdentifier(),
-            position = GesturePosition.Coordinates(
-                x = GestureCoordinatesValue.Literal(displaySize.x / 2),
-                y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+            position = Position.Coordinates(
+                x = CoordinatesValue.Literal(displaySize.x / 2),
+                y = CoordinatesValue.Literal(displaySize.y / 2),
             ),
-            offset = GesturePosition.Coordinates(
-                x = GestureCoordinatesValue.Literal(0),
-                y = GestureCoordinatesValue.Literal(0),
+            offset = Position.Coordinates(
+                x = CoordinatesValue.Literal(0),
+                y = CoordinatesValue.Literal(0),
             ),
             durationMs = DEFAULT_GESTURE_MOTION_DURATION_MS,
         )
@@ -532,8 +532,8 @@ class EditedItemsBuilder internal constructor(
      * When copying a whole event, the conditions are copied first and get new identifiers. A position targeting one
      * of them must follow to the copied condition instead of pointing back at the original event.
      */
-    private fun GesturePosition.toCopiedConditionPosition(): GesturePosition {
-        if (this !is GesturePosition.Condition) return this
+    private fun Position.toCopiedConditionPosition(): Position {
+        if (this !is Position.Condition) return this
         val mappedId = conditionId?.let { eventCopyConditionIdMap[it] } ?: return this
         return copy(conditionId = mappedId)
     }

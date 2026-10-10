@@ -28,9 +28,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -96,7 +96,7 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
     private fun Gesture.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean =
         fingers.any { finger ->
             finger.motions.any { motion ->
-                val positions: List<GesturePosition> = when (motion) {
+                val positions: List<Position> = when (motion) {
                     is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
                     is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
                     is GestureFingerMotion.Wait,
@@ -107,15 +107,15 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
             }
         }
 
-    private fun GesturePosition.isUnreachable(copyResultEvents: Map<Identifier, Event>, eventId: Identifier): Boolean =
+    private fun Position.isUnreachable(copyResultEvents: Map<Identifier, Event>, eventId: Identifier): Boolean =
         when (this) {
-            is GesturePosition.Condition -> {
+            is Position.Condition -> {
                 val condId = conditionId ?: return false
                 copyResultEvents[eventId]?.conditions?.any { condition -> condition.id == condId } != true
             }
 
-            is GesturePosition.Coordinates -> listOf(x, y).any { coordinatesValue ->
-                coordinatesValue is GestureCoordinatesValue.Counter
+            is Position.Coordinates -> listOf(x, y).any { coordinatesValue ->
+                coordinatesValue is CoordinatesValue.Counter
                         && editionRepository.counterIsUnreachable(coordinatesValue.counterName)
             }
         }

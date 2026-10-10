@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
 import com.buzbuz.smartautoclicker.core.processing.data.processor.actions.FingerResolver
@@ -69,8 +69,8 @@ class FingerResolverTests {
     private fun resolve(gesture: Gesture, event: Event = newScreenEvent(), results: ConditionsResults? = null): List<ResolvedFinger> =
         resolver.resolve(gesture, event, results)
 
-    private fun conditionPosition(conditionId: Long? = null): GesturePosition.Condition =
-        GesturePosition.Condition(conditionId?.let { Identifier(databaseId = it) })
+    private fun conditionPosition(conditionId: Long? = null): Position.Condition =
+        Position.Condition(conditionId?.let { Identifier(databaseId = it) })
 
     private fun assertNoFinger(fingers: List<ResolvedFinger>) {
         assertTrue("No finger should have been resolved", fingers.isEmpty())
@@ -126,9 +126,9 @@ class FingerResolverTests {
 
     @Test
     fun resolve_counterCoordinate_usesCounterValue() {
-        val position = GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Counter(COUNTER_NAME),
-            y = GestureCoordinatesValue.Literal(20),
+        val position = Position.Coordinates(
+            x = CoordinatesValue.Counter(COUNTER_NAME),
+            y = CoordinatesValue.Literal(20),
         )
         val gesture = newGesture(newFinger(0L, press(position), release()))
 
@@ -137,9 +137,9 @@ class FingerResolverTests {
 
     @Test
     fun resolve_unknownCounter_skipsFinger() {
-        val position = GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Counter("unknown"),
-            y = GestureCoordinatesValue.Literal(20),
+        val position = Position.Coordinates(
+            x = CoordinatesValue.Counter("unknown"),
+            y = CoordinatesValue.Literal(20),
         )
 
         assertNoFinger(resolve(newGesture(newFinger(0L, press(position), release()))))
@@ -147,9 +147,9 @@ class FingerResolverTests {
 
     @Test
     fun resolve_unresolvableMove_skipsFinger() {
-        val position = GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Counter("unknown"),
-            y = GestureCoordinatesValue.Literal(20),
+        val position = Position.Coordinates(
+            x = CoordinatesValue.Counter("unknown"),
+            y = CoordinatesValue.Literal(20),
         )
         val gesture = newGesture(newFinger(0L, press(10, 20), move(position, durationMs = 100L), release()))
 

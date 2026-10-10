@@ -32,8 +32,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -84,13 +84,13 @@ class ActionExecutorTests {
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
             Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration,
-                GesturePosition.Coordinates(
-                    GestureCoordinatesValue.Literal(TEST_X1),
-                    GestureCoordinatesValue.Literal(TEST_Y1),
+                Position.Coordinates(
+                    CoordinatesValue.Literal(TEST_X1),
+                    CoordinatesValue.Literal(TEST_Y1),
                 ))
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
             Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION,
-                GesturePosition.Condition(conditionId?.let { Identifier(databaseId = it) }))
+                Position.Condition(conditionId?.let { Identifier(databaseId = it) }))
         fun getNewDefaultPause(id: Long) =
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
@@ -161,9 +161,9 @@ class ActionExecutorTests {
     @Test
     fun execute_oneClick_notOnCondition_withOffset() = runTest {
         val clickAction = getNewDefaultClickUserPos(1).copy(
-            offset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Literal(TEST_OFFSET_X),
-                GestureCoordinatesValue.Counter(TEST_COUNTER_NAME),
+            offset = Position.Coordinates(
+                CoordinatesValue.Literal(TEST_OFFSET_X),
+                CoordinatesValue.Counter(TEST_COUNTER_NAME),
             ),
         )
         mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(TEST_OFFSET_Y.toDouble())
@@ -180,9 +180,9 @@ class ActionExecutorTests {
     @Test
     fun execute_oneClick_notOnCondition_withUnresolvableOffset() = runTest {
         val clickAction = getNewDefaultClickUserPos(1).copy(
-            offset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Counter(TEST_COUNTER_NAME),
-                GestureCoordinatesValue.Literal(TEST_OFFSET_Y),
+            offset = Position.Coordinates(
+                CoordinatesValue.Counter(TEST_COUNTER_NAME),
+                CoordinatesValue.Literal(TEST_OFFSET_Y),
             ),
         )
         mockWhen(mockProcessingState.getCounterValue(TEST_COUNTER_NAME)).thenReturn(null)
@@ -199,9 +199,9 @@ class ActionExecutorTests {
     fun execute_oneClick_onCondition_withOffset() = runTest {
         val condition = getNewDefaultCondition(42L)
         val clickAction = getNewDefaultClickCondition(1, condition.id.databaseId).copy(
-            offset = GesturePosition.Coordinates(
-                GestureCoordinatesValue.Literal(TEST_OFFSET_X),
-                GestureCoordinatesValue.Literal(TEST_OFFSET_Y),
+            offset = Position.Coordinates(
+                CoordinatesValue.Literal(TEST_OFFSET_X),
+                CoordinatesValue.Literal(TEST_OFFSET_Y),
             ),
         )
         val event = getNewDefaultEvent(AND, conditions = listOf(condition), actions = listOf(clickAction))

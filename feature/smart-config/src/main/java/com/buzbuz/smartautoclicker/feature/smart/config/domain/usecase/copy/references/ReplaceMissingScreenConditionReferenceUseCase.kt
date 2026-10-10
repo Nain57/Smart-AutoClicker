@@ -30,7 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ItemWithMissingReferences
@@ -78,7 +78,7 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
         when (this) {
             is Click -> {
                 if (getClickOnConditionId() == missingReference.conditionId) {
-                    return copy(position = GesturePosition.Condition(conditionId = replacement.id))
+                    return copy(position = Position.Condition(conditionId = replacement.id))
                 }
 
                 Log.e(TAG, "Can't replace, can't find missing reference to replace")
@@ -122,10 +122,10 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
         })
     })
 
-    private fun GesturePosition.replaceConditionId(oldId: Identifier, newId: Identifier): GesturePosition =
+    private fun Position.replaceConditionId(oldId: Identifier, newId: Identifier): Position =
         when (this) {
-            is GesturePosition.Condition -> if (conditionId == oldId) copy(conditionId = newId) else this
-            is GesturePosition.Coordinates -> this
+            is Position.Condition -> if (conditionId == oldId) copy(conditionId = newId) else this
+            is Position.Coordinates -> this
         }
 }
 

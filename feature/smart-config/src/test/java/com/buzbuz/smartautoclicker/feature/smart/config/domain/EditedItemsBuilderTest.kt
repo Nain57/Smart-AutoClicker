@@ -28,10 +28,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.data.ScenarioEditor
@@ -66,24 +66,24 @@ class EditedItemsBuilderTest {
     @Test
     fun `copied click on condition targets the copied condition`() {
         val condition = colorCondition(CONDITION_ID)
-        val click = click(position = GesturePosition.Condition(CONDITION_ID))
+        val click = click(position = Position.Condition(CONDITION_ID))
         val event = screenEvent(conditions = listOf(condition), actions = listOf(click))
 
         val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
 
         val copiedConditionId = copy.conditions[0].id
         assertNotEquals(CONDITION_ID, copiedConditionId)
-        assertEquals(GesturePosition.Condition(copiedConditionId), (copy.actions[0] as Click).position)
+        assertEquals(Position.Condition(copiedConditionId), (copy.actions[0] as Click).position)
     }
 
     @Test
     fun `copied click on unknown condition keeps its condition id`() {
-        val click = click(position = GesturePosition.Condition(OTHER_CONDITION_ID))
+        val click = click(position = Position.Condition(OTHER_CONDITION_ID))
         val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(click))
 
         val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
 
-        assertEquals(GesturePosition.Condition(OTHER_CONDITION_ID), (copy.actions[0] as Click).position)
+        assertEquals(Position.Condition(OTHER_CONDITION_ID), (copy.actions[0] as Click).position)
     }
 
     @Test
@@ -102,21 +102,21 @@ class EditedItemsBuilderTest {
 
     @Test
     fun `copied gesture press on condition targets the copied condition`() {
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(CONDITION_ID)), releaseMotion()))
+        val gesture = gesture(finger(pressMotion(Position.Condition(CONDITION_ID)), releaseMotion()))
         val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(gesture))
 
         val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
 
         val copiedConditionId = copy.conditions[0].id
         val copiedPress = (copy.actions[0] as Gesture).fingers[0].motions[0] as GestureFingerMotion.Press
-        assertEquals(GesturePosition.Condition(copiedConditionId), copiedPress.position)
+        assertEquals(Position.Condition(copiedConditionId), copiedPress.position)
     }
 
     @Test
     fun `copied gesture move on condition targets the copied condition in position and offset`() {
         val gesture = gesture(finger(
             pressMotion(literalPosition()),
-            moveMotion(position = GesturePosition.Condition(CONDITION_ID), offset = GesturePosition.Condition(CONDITION_ID)),
+            moveMotion(position = Position.Condition(CONDITION_ID), offset = Position.Condition(CONDITION_ID)),
             releaseMotion(),
         ))
         val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(gesture))
@@ -125,15 +125,15 @@ class EditedItemsBuilderTest {
 
         val copiedConditionId = copy.conditions[0].id
         val copiedMove = (copy.actions[0] as Gesture).fingers[0].motions[1] as GestureFingerMotion.Move
-        assertEquals(GesturePosition.Condition(copiedConditionId), copiedMove.position)
-        assertEquals(GesturePosition.Condition(copiedConditionId), copiedMove.offset)
+        assertEquals(Position.Condition(copiedConditionId), copiedMove.position)
+        assertEquals(Position.Condition(copiedConditionId), copiedMove.offset)
     }
 
     @Test
     fun `copied gesture targets the copied condition in every finger`() {
         val gesture = gesture(
-            finger(pressMotion(GesturePosition.Condition(CONDITION_ID)), releaseMotion()),
-            finger(pressMotion(GesturePosition.Condition(CONDITION_ID)), releaseMotion()),
+            finger(pressMotion(Position.Condition(CONDITION_ID)), releaseMotion()),
+            finger(pressMotion(Position.Condition(CONDITION_ID)), releaseMotion()),
         )
         val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(gesture))
 
@@ -141,25 +141,25 @@ class EditedItemsBuilderTest {
 
         val copiedConditionId = copy.conditions[0].id
         (copy.actions[0] as Gesture).fingers.forEach { finger ->
-            assertEquals(GesturePosition.Condition(copiedConditionId), (finger.motions[0] as GestureFingerMotion.Press).position)
+            assertEquals(Position.Condition(copiedConditionId), (finger.motions[0] as GestureFingerMotion.Press).position)
         }
     }
 
     @Test
     fun `copied gesture on unknown condition keeps its condition id`() {
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(OTHER_CONDITION_ID)), releaseMotion()))
+        val gesture = gesture(finger(pressMotion(Position.Condition(OTHER_CONDITION_ID)), releaseMotion()))
         val event = screenEvent(conditions = listOf(colorCondition(CONDITION_ID)), actions = listOf(gesture))
 
         val copy = builder.createNewImageEventFrom(event, scenarioId = SCENARIO_ID)
 
         val copiedPress = (copy.actions[0] as Gesture).fingers[0].motions[0] as GestureFingerMotion.Press
-        assertEquals(GesturePosition.Condition(OTHER_CONDITION_ID), copiedPress.position)
+        assertEquals(Position.Condition(OTHER_CONDITION_ID), copiedPress.position)
     }
 
     @Test
     fun `copied gesture on coordinates keeps its positions`() {
-        val counterPosition = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter("counter"), GestureCoordinatesValue.Literal(0),
+        val counterPosition = Position.Coordinates(
+            CoordinatesValue.Counter("counter"), CoordinatesValue.Literal(0),
         )
         val gesture = gesture(finger(
             pressMotion(literalPosition()),
@@ -218,7 +218,7 @@ class EditedItemsBuilderTest {
         detectionArea = Rect(0, 0, 10, 10),
     )
 
-    private fun click(position: GesturePosition?) = Click(
+    private fun click(position: Position?) = Click(
         id = ACTION_ID,
         eventId = EVENT_ID,
         name = "click",
@@ -241,17 +241,17 @@ class EditedItemsBuilderTest {
         motions = motions.toList(),
     )
 
-    private fun literalPosition() = GesturePosition.Coordinates(
-        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    private fun literalPosition() = Position.Coordinates(
+        CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
     )
 
-    private fun pressMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Press(
+    private fun pressMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Press(
         id = Identifier(databaseId = 51L),
         position = position,
         offset = offset,
     )
 
-    private fun moveMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Move(
+    private fun moveMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Move(
         id = Identifier(databaseId = 52L),
         position = position,
         offset = offset,
@@ -269,6 +269,6 @@ class EditedItemsBuilderTest {
         val OTHER_CONDITION_ID = Identifier(databaseId = 101L)
         val ACTION_ID = Identifier(databaseId = 200L)
         val FINGER_ID = Identifier(databaseId = 50L)
-        val NO_OFFSET = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0))
+        val NO_OFFSET = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0))
     }
 }

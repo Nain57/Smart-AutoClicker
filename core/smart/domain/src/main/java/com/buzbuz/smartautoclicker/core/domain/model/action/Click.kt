@@ -18,8 +18,9 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.literal
 
 /**
  * Click action.
@@ -37,8 +38,8 @@ data class Click(
     override val name: String? = null,
     override var priority: Int,
     val pressDuration: Long? = null,
-    val position: GesturePosition? = null,
-    val offset: GesturePosition? = null,
+    val position: Position? = null,
+    val offset: Position? = null,
 ) : Action() {
 
     override fun isComplete(): Boolean =
@@ -52,16 +53,16 @@ data class Click(
 
     /** The click position, or null if it is not a pair of literal coordinates. */
     fun getLiteralPosition(): Point? {
-        val coordinates = position as? GesturePosition.Coordinates ?: return null
-        val literalX = coordinates.x as? GestureCoordinatesValue.Literal ?: return null
-        val literalY = coordinates.y as? GestureCoordinatesValue.Literal ?: return null
-        return Point(literalX.value, literalY.value)
+        val coordinates = position as? Position.Coordinates ?: return null
+        val literalX = coordinates.x.literal() ?: return null
+        val literalY = coordinates.y.literal() ?: return null
+        return Point(literalX, literalY)
     }
 
     /** The identifier of the condition to click on, or null if the click is not on a condition. */
     fun getClickOnConditionId(): Identifier? =
-        (position as? GesturePosition.Condition)?.conditionId
+        (position as? Position.Condition)?.conditionId
 
     fun isClickOnConditionValid(): Boolean =
-        position !is GesturePosition.Condition || position.conditionId != null
+        position !is Position.Condition || position.conditionId != null
 }

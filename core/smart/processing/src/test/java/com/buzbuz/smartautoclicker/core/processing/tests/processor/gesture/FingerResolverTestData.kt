@@ -24,10 +24,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -108,21 +108,21 @@ internal object FingerResolverTestData {
     fun newTapFinger(x: Int, y: Int, startTimeMs: Long = 0L): GestureFinger =
         newFinger(startTimeMs, press(x, y), release())
 
-    fun coordinates(x: Int, y: Int): GesturePosition.Coordinates =
-        GesturePosition.Coordinates(GestureCoordinatesValue.Literal(x), GestureCoordinatesValue.Literal(y))
+    fun coordinates(x: Int, y: Int): Position.Coordinates =
+        Position.Coordinates(CoordinatesValue.Literal(x), CoordinatesValue.Literal(y))
 
     fun press(x: Int, y: Int): GestureFingerMotion.Press =
         press(coordinates(x, y))
 
-    fun press(position: GesturePosition, offset: GesturePosition = coordinates(0, 0)): GestureFingerMotion.Press =
+    fun press(position: Position, offset: Position = coordinates(0, 0)): GestureFingerMotion.Press =
         GestureFingerMotion.Press(ITEM_ID, position, offset)
 
     fun move(x: Int, y: Int, durationMs: Long): GestureFingerMotion.Move =
         move(coordinates(x, y), durationMs = durationMs)
 
     fun move(
-        position: GesturePosition,
-        offset: GesturePosition = coordinates(0, 0),
+        position: Position,
+        offset: Position = coordinates(0, 0),
         durationMs: Long,
     ): GestureFingerMotion.Move =
         GestureFingerMotion.Move(ITEM_ID, position, offset, durationMs)

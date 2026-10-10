@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.offse
 import android.graphics.PointF
 
 import androidx.lifecycle.ViewModel
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 class GestureOffsetViewModel @Inject constructor() : ViewModel() {
 
-    private val editedOffset = MutableStateFlow<GesturePosition.Coordinates?>(null)
+    private val editedOffset = MutableStateFlow<Position.Coordinates?>(null)
     private val updateSource = MutableStateFlow(GestureOffsetUpdateSource.OTHER)
 
     val uiState: Flow<GestureOffsetUiState> =
@@ -47,46 +47,46 @@ class GestureOffsetViewModel @Inject constructor() : ViewModel() {
             )
         }.filterNotNull()
 
-    fun initialize(currentOffset: GesturePosition.Coordinates) {
+    fun initialize(currentOffset: Position.Coordinates) {
         if (editedOffset.value != null) return
         editedOffset.value = currentOffset
     }
 
     fun setXLiteral(value: Int) {
-        editedOffset.update { it?.copy(x = GestureCoordinatesValue.Literal(value)) }
+        editedOffset.update { it?.copy(x = CoordinatesValue.Literal(value)) }
         updateSource.value = GestureOffsetUpdateSource.TEXT_INPUT
     }
 
     fun setXCounter(counterName: String) {
-        editedOffset.update { it?.copy(x = GestureCoordinatesValue.Counter(counterName)) }
+        editedOffset.update { it?.copy(x = CoordinatesValue.Counter(counterName)) }
         updateSource.value = GestureOffsetUpdateSource.OTHER
     }
 
     fun setYLiteral(value: Int) {
-        editedOffset.update { it?.copy(y = GestureCoordinatesValue.Literal(value)) }
+        editedOffset.update { it?.copy(y = CoordinatesValue.Literal(value)) }
         updateSource.value = GestureOffsetUpdateSource.TEXT_INPUT
     }
 
     fun setYCounter(counterName: String) {
-        editedOffset.update { it?.copy(y = GestureCoordinatesValue.Counter(counterName)) }
+        editedOffset.update { it?.copy(y = CoordinatesValue.Counter(counterName)) }
         updateSource.value = GestureOffsetUpdateSource.OTHER
     }
 
     fun setOffsetFromView(pointF: PointF) {
         editedOffset.update { current ->
             current?.copy(
-                x = GestureCoordinatesValue.Literal(pointF.x.toInt()),
-                y = GestureCoordinatesValue.Literal(pointF.y.toInt()),
+                x = CoordinatesValue.Literal(pointF.x.toInt()),
+                y = CoordinatesValue.Literal(pointF.y.toInt()),
             )
         }
         updateSource.value = GestureOffsetUpdateSource.VIEW
     }
 
-    fun getCurrentOffset(): GesturePosition.Coordinates? = editedOffset.value
+    fun getCurrentOffset(): Position.Coordinates? = editedOffset.value
 
-    private fun GestureCoordinatesValue.toValueUiState(): GestureOffsetValueUiState =
+    private fun CoordinatesValue.toValueUiState(): GestureOffsetValueUiState =
         when (this) {
-            is GestureCoordinatesValue.Literal -> GestureOffsetValueUiState.Literal(value.toString())
-            is GestureCoordinatesValue.Counter -> GestureOffsetValueUiState.Counter("{$counterName}")
+            is CoordinatesValue.Literal -> GestureOffsetValueUiState.Literal(value.toString())
+            is CoordinatesValue.Counter -> GestureOffsetValueUiState.Counter("{$counterName}")
         }
 }

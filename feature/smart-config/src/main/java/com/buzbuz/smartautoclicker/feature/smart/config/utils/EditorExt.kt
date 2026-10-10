@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.utils
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 internal fun Action.isValidInEvent(event: ScreenEvent?): Boolean {
@@ -31,7 +31,7 @@ internal fun Action.isValidInEvent(event: ScreenEvent?): Boolean {
 }
 
 internal fun Action.isClickOnCondition(): Boolean =
-    this is Click && this.position is GesturePosition.Condition
+    this is Click && this.position is Position.Condition
 
 /** Check if this list does not already contains the provided action */
 internal fun List<Action>.doesNotContainAction(action: Action): Boolean =

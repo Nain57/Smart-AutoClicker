@@ -26,8 +26,9 @@ import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Counter
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -71,7 +72,7 @@ class GestureFingerMapperTests {
             id = fingerId,
             startTimeMs = startTimeMs,
             motions = listOf(
-                GestureFingerMotion.Press(pressMotionId, GesturePosition.Coordinates(Literal(pressX), Literal(pressY)), GesturePosition.Coordinates(Literal(0), Literal(0))),
+                GestureFingerMotion.Press(pressMotionId, Position.Coordinates(Literal(pressX), Literal(pressY)), Position.Coordinates(Literal(0), Literal(0))),
                 GestureFingerMotion.Release(releaseMotionId),
             ),
         )
@@ -88,8 +89,8 @@ class GestureFingerMapperTests {
     fun pressMotion_literalCoords_toEntity() {
         val press = GestureFingerMotion.Press(
             id = pressMotionId,
-            position = GesturePosition.Coordinates(Literal(pressX), Literal(pressY)),
-            offset = GesturePosition.Coordinates(Literal(offsetX), Literal(offsetY)),
+            position = Position.Coordinates(Literal(pressX), Literal(pressY)),
+            offset = Position.Coordinates(Literal(offsetX), Literal(offsetY)),
         )
 
         assertEquals(
@@ -115,8 +116,8 @@ class GestureFingerMapperTests {
     fun pressMotion_counterCoords_toEntity() {
         val press = GestureFingerMotion.Press(
             id = pressMotionId,
-            position = GesturePosition.Coordinates(Counter(counterXName), Counter(counterYName)),
-            offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+            position = Position.Coordinates(Counter(counterXName), Counter(counterYName)),
+            offset = Position.Coordinates(Literal(0), Literal(0)),
         )
 
         assertEquals(
@@ -142,8 +143,8 @@ class GestureFingerMapperTests {
     fun pressMotion_conditionPosition_toEntity() {
         val press = GestureFingerMotion.Press(
             id = pressMotionId,
-            position = GesturePosition.Condition(conditionId = conditionId),
-            offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+            position = Position.Condition(conditionId = conditionId),
+            offset = Position.Coordinates(Literal(0), Literal(0)),
         )
 
         assertEquals(
@@ -170,8 +171,8 @@ class GestureFingerMapperTests {
     fun moveMotion_literalCoords_toEntity() {
         val move = GestureFingerMotion.Move(
             id = moveMotionId,
-            position = GesturePosition.Coordinates(Literal(moveToX), Literal(moveToY)),
-            offset = GesturePosition.Coordinates(Literal(offsetX), Literal(offsetY)),
+            position = Position.Coordinates(Literal(moveToX), Literal(moveToY)),
+            offset = Position.Coordinates(Literal(offsetX), Literal(offsetY)),
             durationMs = moveDurationMs,
         )
 
@@ -279,8 +280,8 @@ class GestureFingerMapperTests {
                 motions = listOf(
                     GestureFingerMotion.Press(
                         id = pressMotionId,
-                        position = GesturePosition.Coordinates(Literal(pressX), Literal(pressY)),
-                        offset = GesturePosition.Coordinates(Literal(offsetX), Literal(offsetY)),
+                        position = Position.Coordinates(Literal(pressX), Literal(pressY)),
+                        offset = Position.Coordinates(Literal(offsetX), Literal(offsetY)),
                     ),
                     GestureFingerMotion.Release(id = releaseMotionId),
                 ),
@@ -330,13 +331,13 @@ class GestureFingerMapperTests {
                 motions = listOf(
                     GestureFingerMotion.Press(
                         id = pressMotionId,
-                        position = GesturePosition.Coordinates(Literal(pressX), Literal(pressY)),
-                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                        position = Position.Coordinates(Literal(pressX), Literal(pressY)),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
                     ),
                     GestureFingerMotion.Move(
                         id = moveMotionId,
-                        position = GesturePosition.Coordinates(Literal(moveToX), Literal(moveToY)),
-                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                        position = Position.Coordinates(Literal(moveToX), Literal(moveToY)),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
                         durationMs = moveDurationMs,
                     ),
                     GestureFingerMotion.Wait(
@@ -377,8 +378,8 @@ class GestureFingerMapperTests {
                 motions = listOf(
                     GestureFingerMotion.Press(
                         id = pressMotionId,
-                        position = GesturePosition.Condition(conditionId = conditionId),
-                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                        position = Position.Condition(conditionId = conditionId),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
                     ),
                     GestureFingerMotion.Release(id = releaseMotionId),
                 ),
@@ -415,8 +416,8 @@ class GestureFingerMapperTests {
                 motions = listOf(
                     GestureFingerMotion.Press(
                         id = pressMotionId,
-                        position = GesturePosition.Coordinates(Literal(pressX), Literal(pressY)),
-                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                        position = Position.Coordinates(Literal(pressX), Literal(pressY)),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
                     ),
                     GestureFingerMotion.Release(id = releaseMotionId, holdUntilUnfulfilled = true),
                 ),

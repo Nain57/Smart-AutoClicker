@@ -19,7 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.actio
 import android.content.Context
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.utils.formatDuration
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -32,7 +32,7 @@ internal fun getClickIconRes(): Int =
 internal fun Click.getDescription(context: Context, parent: Event?, inError: Boolean): String {
     if (inError) return context.getString(R.string.item_error_action_invalid_generic)
 
-    if (position is GesturePosition.Condition) {
+    if (position is Position.Condition) {
         val condition = parent?.conditions?.find { it.id == getClickOnConditionId() }
         return if (condition != null) {
             context.getString(

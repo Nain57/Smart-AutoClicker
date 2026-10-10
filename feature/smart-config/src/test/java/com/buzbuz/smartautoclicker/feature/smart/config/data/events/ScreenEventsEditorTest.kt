@@ -28,8 +28,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -184,8 +184,8 @@ class ScreenEventsEditorTest {
     fun `AND event condition removal deletes clicks referencing it`() {
         val condition1 = condition(1)
         val condition2 = condition(2)
-        val clickOnCondition1 = click(1, position = GesturePosition.Condition(condition1.id))
-        val clickOnCondition2 = click(2, position = GesturePosition.Condition(condition2.id))
+        val clickOnCondition1 = click(1, position = Position.Condition(condition1.id))
+        val clickOnCondition2 = click(2, position = Position.Condition(condition2.id))
         val clickOnCoordinates = click(3, position = coordinates())
         val pause = pause(4)
         val event = event(
@@ -208,7 +208,7 @@ class ScreenEventsEditorTest {
     @Test
     fun `AND event condition update deletes clicks on condition without reference`() {
         val condition = condition(1)
-        val unreferencedClick = click(1, position = GesturePosition.Condition(null))
+        val unreferencedClick = click(1, position = Position.Condition(null))
         val event = event(1, conditionOperator = AND, conditions = listOf(condition), actions = listOf(unreferencedClick))
         editor.startEdition(listOf(event))
         editor.startItemEdition(event)
@@ -225,8 +225,8 @@ class ScreenEventsEditorTest {
     fun `OR event condition update clears click condition references`() {
         val condition1 = condition(1)
         val condition2 = condition(2)
-        val clickOnCondition = click(1, position = GesturePosition.Condition(condition1.id))
-        val clickOnNoCondition = click(2, position = GesturePosition.Condition(null))
+        val clickOnCondition = click(1, position = Position.Condition(condition1.id))
+        val clickOnNoCondition = click(2, position = Position.Condition(null))
         val clickOnCoordinates = click(3, position = coordinates())
         val pause = pause(4)
         val event = event(
@@ -242,7 +242,7 @@ class ScreenEventsEditorTest {
         editor.conditionsEditor.upsertEditedItem()
 
         val expectedActions = listOf(
-            clickOnCondition.copy(position = GesturePosition.Condition(null)),
+            clickOnCondition.copy(position = Position.Condition(null)),
             clickOnNoCondition,
             clickOnCoordinates,
             pause,
@@ -329,7 +329,7 @@ class ScreenEventsEditorTest {
         detectionArea = Rect(0, 0, 10, 10),
     )
 
-    private fun click(id: Long, position: GesturePosition) = Click(
+    private fun click(id: Long, position: Position) = Click(
         id = Identifier(databaseId = id),
         eventId = EVENT_ID,
         name = "click",
@@ -338,9 +338,9 @@ class ScreenEventsEditorTest {
         position = position,
     )
 
-    private fun coordinates() = GesturePosition.Coordinates(
-        x = GestureCoordinatesValue.Literal(10),
-        y = GestureCoordinatesValue.Literal(20),
+    private fun coordinates() = Position.Coordinates(
+        x = CoordinatesValue.Literal(10),
+        y = CoordinatesValue.Literal(20),
     )
 
     private fun pause(id: Long) = Pause(

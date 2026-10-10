@@ -25,9 +25,9 @@ import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFinger as RecordedGestureFinger
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFingerMotion as RecordedGestureFingerMotion
@@ -133,24 +133,24 @@ class GestureEditorViewModel @Inject constructor(
             when (motion) {
                 is RecordedGestureFingerMotion.Press -> GestureFingerMotion.Press(
                     id = builder.newMotionIdentifier(),
-                    position = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(motion.position.x.roundToInt()),
-                        y = GestureCoordinatesValue.Literal(motion.position.y.roundToInt()),
+                    position = Position.Coordinates(
+                        x = CoordinatesValue.Literal(motion.position.x.roundToInt()),
+                        y = CoordinatesValue.Literal(motion.position.y.roundToInt()),
                     ),
-                    offset = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(0),
-                        y = GestureCoordinatesValue.Literal(0),
+                    offset = Position.Coordinates(
+                        x = CoordinatesValue.Literal(0),
+                        y = CoordinatesValue.Literal(0),
                     ),
                 )
                 is RecordedGestureFingerMotion.Move -> GestureFingerMotion.Move(
                     id = builder.newMotionIdentifier(),
-                    position = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(motion.moveToPosition.x.roundToInt()),
-                        y = GestureCoordinatesValue.Literal(motion.moveToPosition.y.roundToInt()),
+                    position = Position.Coordinates(
+                        x = CoordinatesValue.Literal(motion.moveToPosition.x.roundToInt()),
+                        y = CoordinatesValue.Literal(motion.moveToPosition.y.roundToInt()),
                     ),
-                    offset = GesturePosition.Coordinates(
-                        x = GestureCoordinatesValue.Literal(0),
-                        y = GestureCoordinatesValue.Literal(0),
+                    offset = Position.Coordinates(
+                        x = CoordinatesValue.Literal(0),
+                        y = CoordinatesValue.Literal(0),
                     ),
                     durationMs = motion.moveToDurationMs,
                 )
@@ -172,9 +172,9 @@ class GestureEditorViewModel @Inject constructor(
     }
 
     /** Dragging a waypoint always overrides its previous definition, be it a condition or a counter. */
-    private fun literalPosition(x: Int, y: Int): GesturePosition =
-        GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Literal(x),
-            y = GestureCoordinatesValue.Literal(y),
+    private fun literalPosition(x: Int, y: Int): Position =
+        Position.Coordinates(
+            x = CoordinatesValue.Literal(x),
+            y = CoordinatesValue.Literal(y),
         )
 }
