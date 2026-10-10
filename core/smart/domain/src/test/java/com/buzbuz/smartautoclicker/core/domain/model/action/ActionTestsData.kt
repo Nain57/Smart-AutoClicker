@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.content.ComponentName
 import android.content.Intent
-import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
@@ -35,11 +34,10 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Literal
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
@@ -143,10 +141,10 @@ internal object ActionTestsData {
         x: Int? = CLICK_X_POSITION,
         y: Int? = CLICK_Y_POSITION,
         clickOnConditionId: Long? = null,
-        position: GesturePosition? =
-            if (x != null && y != null) GesturePosition.Coordinates(Literal(x), Literal(y))
-            else GesturePosition.Condition(clickOnConditionId?.let { Identifier(databaseId = it) }),
-        offset: GesturePosition? = null,
+        position: Position? =
+            if (x != null && y != null) Position.Coordinates(Literal(x), Literal(y))
+            else Position.Condition(clickOnConditionId?.let { Identifier(databaseId = it) }),
+        offset: Position? = null,
         eventId: Long,
     ) = Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, position, offset)
 
@@ -217,8 +215,8 @@ internal object ActionTestsData {
                 motions = listOf(
                     GestureFingerMotion.Press(
                         id = GESTURE_PRESS_MOTION_ID.asIdentifier(),
-                        position = GesturePosition.Coordinates(Literal(GESTURE_PRESS_X), Literal(GESTURE_PRESS_Y)),
-                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                        position = Position.Coordinates(Literal(GESTURE_PRESS_X), Literal(GESTURE_PRESS_Y)),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
                     ),
                     GestureFingerMotion.Release(
                         id = GESTURE_RELEASE_MOTION_ID.asIdentifier(),

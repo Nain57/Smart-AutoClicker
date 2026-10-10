@@ -25,9 +25,9 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Counter
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Literal
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toGestureFingerEntity
@@ -100,7 +100,7 @@ class ActionMapperTests {
         ).copy(
             id = Identifier(id = ACTION_DB_ID, asTemporary = true),
             eventId = Identifier(id = ActionTestsData.ACTION_EVENT_ID, asTemporary = true),
-            position = GesturePosition.Condition(Identifier(id = CLICK_CONDITION_DB_ID, asTemporary = true)),
+            position = Position.Condition(Identifier(id = CLICK_CONDITION_DB_ID, asTemporary = true)),
         )
 
         assertEquals(
@@ -132,7 +132,7 @@ class ActionMapperTests {
         assertEquals(
             ActionTestsData.getNewClick(
                 eventId = ActionTestsData.ACTION_EVENT_ID,
-                position = GesturePosition.Coordinates(Counter(CLICK_X_COUNTER_NAME), Counter(CLICK_Y_COUNTER_NAME)),
+                position = Position.Coordinates(Counter(CLICK_X_COUNTER_NAME), Counter(CLICK_Y_COUNTER_NAME)),
             ),
             ActionTestsData.getNewClickEntity(eventId = ActionTestsData.ACTION_EVENT_ID, motions = motions).toDomain(),
         )
@@ -156,7 +156,7 @@ class ActionMapperTests {
         assertEquals(
             ActionTestsData.getNewClick(
                 eventId = ActionTestsData.ACTION_EVENT_ID,
-                offset = GesturePosition.Coordinates(Literal(CLICK_OFFSET_X), Literal(CLICK_OFFSET_Y)),
+                offset = Position.Coordinates(Literal(CLICK_OFFSET_X), Literal(CLICK_OFFSET_Y)),
             ),
             ActionTestsData.getNewClickEntity(
                 eventId = ActionTestsData.ACTION_EVENT_ID,
@@ -247,7 +247,7 @@ class ActionMapperTests {
             expected,
             ActionTestsData.getNewClick(
                 eventId = ActionTestsData.ACTION_EVENT_ID,
-                position = GesturePosition.Coordinates(Counter(CLICK_X_COUNTER_NAME), Counter(CLICK_Y_COUNTER_NAME)),
+                position = Position.Coordinates(Counter(CLICK_X_COUNTER_NAME), Counter(CLICK_Y_COUNTER_NAME)),
             ).toGestureMotionEntities(
                 fingerId = ActionTestsData.CLICK_FINGER_ID,
                 clickOnConditionDbId = null,
@@ -268,7 +268,7 @@ class ActionMapperTests {
             ),
             ActionTestsData.getNewClick(
                 eventId = ActionTestsData.ACTION_EVENT_ID,
-                offset = GesturePosition.Coordinates(Literal(CLICK_OFFSET_X), Literal(CLICK_OFFSET_Y)),
+                offset = Position.Coordinates(Literal(CLICK_OFFSET_X), Literal(CLICK_OFFSET_Y)),
             ).toGestureMotionEntities(
                 fingerId = ActionTestsData.CLICK_FINGER_ID,
                 clickOnConditionDbId = null,

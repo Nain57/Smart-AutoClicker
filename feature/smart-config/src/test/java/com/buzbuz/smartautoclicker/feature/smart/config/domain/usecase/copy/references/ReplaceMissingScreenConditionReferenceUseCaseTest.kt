@@ -25,10 +25,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ItemWithMissingReferences
@@ -126,7 +126,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
     fun `replace condition id in gesture press position`() {
         val oldConditionId = Identifier(databaseId = 100L)
         val replacementConditionId = Identifier(databaseId = 200L)
-        val action = gesture(finger(pressMotion(GesturePosition.Condition(oldConditionId))))
+        val action = gesture(finger(pressMotion(Position.Condition(oldConditionId))))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
         val missingRef = MissingCopyReference.ScreenConditionReference("Old Condition", conditionId = oldConditionId)
@@ -136,7 +136,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, replacement) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedPosition = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Condition
+        val updatedPosition = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as Position.Condition
         assertEquals(replacementConditionId, updatedPosition.conditionId)
     }
 
@@ -146,13 +146,13 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val replacementConditionId = Identifier(databaseId = 200L)
         val press = GestureFingerMotion.Press(
             id = Identifier(databaseId = 51L),
-            position = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            position = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
         )
         val move = GestureFingerMotion.Move(
             id = Identifier(databaseId = 52L),
-            position = GesturePosition.Condition(oldConditionId),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            position = Position.Condition(oldConditionId),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
             durationMs = 100L,
         )
         val action = gesture(finger(press, move))
@@ -165,7 +165,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, replacement) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedPosition = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).position as GesturePosition.Condition
+        val updatedPosition = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).position as Position.Condition
         assertEquals(replacementConditionId, updatedPosition.conditionId)
     }
 
@@ -175,7 +175,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val replacementConditionId = Identifier(databaseId = 200L)
         val action = gesture(finger(pressMotion(
             position = literalPosition(),
-            offset = GesturePosition.Condition(oldConditionId),
+            offset = Position.Condition(oldConditionId),
         )))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -186,7 +186,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, replacement) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedOffset = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).offset as GesturePosition.Condition
+        val updatedOffset = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).offset as Position.Condition
         assertEquals(replacementConditionId, updatedOffset.conditionId)
     }
 
@@ -196,7 +196,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val replacementConditionId = Identifier(databaseId = 200L)
         val action = gesture(finger(
             pressMotion(literalPosition()),
-            moveMotion(position = literalPosition(), offset = GesturePosition.Condition(oldConditionId)),
+            moveMotion(position = literalPosition(), offset = Position.Condition(oldConditionId)),
             releaseMotion(),
         ))
         val event = triggerEventWithActions(listOf(action))
@@ -208,7 +208,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, replacement) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedOffset = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).offset as GesturePosition.Condition
+        val updatedOffset = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).offset as Position.Condition
         assertEquals(replacementConditionId, updatedOffset.conditionId)
     }
 
@@ -217,8 +217,8 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val oldConditionId = Identifier(databaseId = 100L)
         val replacementConditionId = Identifier(databaseId = 200L)
         val action = gesture(
-            finger(pressMotion(GesturePosition.Condition(oldConditionId))),
-            finger(pressMotion(GesturePosition.Condition(oldConditionId))),
+            finger(pressMotion(Position.Condition(oldConditionId))),
+            finger(pressMotion(Position.Condition(oldConditionId))),
         )
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -230,7 +230,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val result = useCase(event, item, missingRef, replacement) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
         updatedGesture.fingers.forEach { finger ->
-            val updatedPosition = (finger.motions[0] as GestureFingerMotion.Press).position as GesturePosition.Condition
+            val updatedPosition = (finger.motions[0] as GestureFingerMotion.Press).position as Position.Condition
             assertEquals(replacementConditionId, updatedPosition.conditionId)
         }
     }
@@ -239,8 +239,8 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
     fun `gesture with non-matching condition id and coordinates is unchanged`() {
         val otherConditionId = Identifier(databaseId = 999L)
         val action = gesture(finger(
-            pressMotion(GesturePosition.Condition(otherConditionId)),
-            moveMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter("counter"), GestureCoordinatesValue.Literal(0))),
+            pressMotion(Position.Condition(otherConditionId)),
+            moveMotion(Position.Coordinates(CoordinatesValue.Counter("counter"), CoordinatesValue.Literal(0))),
             waitMotion(),
             releaseMotion(),
         ))
@@ -339,17 +339,17 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         motions = motions.toList(),
     )
 
-    private fun literalPosition() = GesturePosition.Coordinates(
-        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    private fun literalPosition() = Position.Coordinates(
+        CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
     )
 
-    private fun pressMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Press(
+    private fun pressMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Press(
         id = Identifier(databaseId = 51L),
         position = position,
         offset = offset,
     )
 
-    private fun moveMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Move(
+    private fun moveMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Move(
         id = Identifier(databaseId = 52L),
         position = position,
         offset = offset,
@@ -369,7 +369,7 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         id = ACTION_ID,
         eventId = EVENT_ID,
         priority = 0,
-        position = GesturePosition.Condition(conditionId = clickOnConditionId),
+        position = Position.Condition(conditionId = clickOnConditionId),
         pressDuration = 100L,
     )
 
@@ -377,6 +377,6 @@ class ReplaceMissingScreenConditionReferenceUseCaseTest {
         val ACTION_ID = Identifier(databaseId = 1L)
         val EVENT_ID = Identifier(databaseId = 10L)
         val SCENARIO_ID = Identifier(databaseId = 20L)
-        val NO_OFFSET = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0))
+        val NO_OFFSET = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0))
     }
 }

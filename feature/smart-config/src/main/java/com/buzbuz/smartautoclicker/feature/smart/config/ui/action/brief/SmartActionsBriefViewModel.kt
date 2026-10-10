@@ -35,10 +35,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger as DomainGestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion as DomainGestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
@@ -48,6 +47,7 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsMan
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFingerMotion
@@ -287,9 +287,9 @@ class SmartActionsBriefViewModel @Inject constructor(
                 val pt = position.toPoint()
                 editionRepository.editedItemsBuilder.createNewClick(context)
                     .copy(
-                        position = GesturePosition.Coordinates(
-                            x = GestureCoordinatesValue.Literal(pt.x),
-                            y = GestureCoordinatesValue.Literal(pt.y),
+                        position = Position.Coordinates(
+                            x = CoordinatesValue.Literal(pt.x),
+                            y = CoordinatesValue.Literal(pt.y),
                         ),
                         pressDuration = durationMs,
                     )
@@ -309,13 +309,13 @@ class SmartActionsBriefViewModel @Inject constructor(
                                         val pt = uiMotion.position.toPoint()
                                         DomainGestureFingerMotion.Press(
                                             id = builder.newMotionIdentifier(),
-                                            position = GesturePosition.Coordinates(
-                                                x = GestureCoordinatesValue.Literal(pt.x),
-                                                y = GestureCoordinatesValue.Literal(pt.y),
+                                            position = Position.Coordinates(
+                                                x = CoordinatesValue.Literal(pt.x),
+                                                y = CoordinatesValue.Literal(pt.y),
                                             ),
-                                            offset = GesturePosition.Coordinates(
-                                                x = GestureCoordinatesValue.Literal(0),
-                                                y = GestureCoordinatesValue.Literal(0),
+                                            offset = Position.Coordinates(
+                                                x = CoordinatesValue.Literal(0),
+                                                y = CoordinatesValue.Literal(0),
                                             ),
                                         )
                                     }
@@ -323,13 +323,13 @@ class SmartActionsBriefViewModel @Inject constructor(
                                         val pt = uiMotion.moveToPosition.toPoint()
                                         DomainGestureFingerMotion.Move(
                                             id = builder.newMotionIdentifier(),
-                                            position = GesturePosition.Coordinates(
-                                                x = GestureCoordinatesValue.Literal(pt.x),
-                                                y = GestureCoordinatesValue.Literal(pt.y),
+                                            position = Position.Coordinates(
+                                                x = CoordinatesValue.Literal(pt.x),
+                                                y = CoordinatesValue.Literal(pt.y),
                                             ),
-                                            offset = GesturePosition.Coordinates(
-                                                x = GestureCoordinatesValue.Literal(0),
-                                                y = GestureCoordinatesValue.Literal(0),
+                                            offset = Position.Coordinates(
+                                                x = CoordinatesValue.Literal(0),
+                                                y = CoordinatesValue.Literal(0),
                                             ),
                                             durationMs = uiMotion.moveToDurationMs,
                                         )

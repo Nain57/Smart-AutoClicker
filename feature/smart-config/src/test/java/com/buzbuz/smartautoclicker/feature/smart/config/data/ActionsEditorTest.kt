@@ -24,8 +24,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -277,30 +277,30 @@ class ActionsEditorTest {
 
     @Test
     fun `click on condition can not be saved in trigger event`() {
-        assertFalse(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(CONDITION_ID)), triggerEvent()))
-        assertFalse(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(null)), triggerEvent()))
+        assertFalse(editor.itemCanBeSaved(click(1, position = Position.Condition(CONDITION_ID)), triggerEvent()))
+        assertFalse(editor.itemCanBeSaved(click(1, position = Position.Condition(null)), triggerEvent()))
     }
 
     @Test
     fun `click on condition in AND screen event requires a condition id`() {
-        assertTrue(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(CONDITION_ID)), screenEvent(AND)))
-        assertFalse(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(null)), screenEvent(AND)))
+        assertTrue(editor.itemCanBeSaved(click(1, position = Position.Condition(CONDITION_ID)), screenEvent(AND)))
+        assertFalse(editor.itemCanBeSaved(click(1, position = Position.Condition(null)), screenEvent(AND)))
     }
 
     @Test
     fun `click on condition in OR screen event can be saved without condition id`() {
-        assertTrue(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(CONDITION_ID)), screenEvent(OR)))
-        assertTrue(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(null)), screenEvent(OR)))
+        assertTrue(editor.itemCanBeSaved(click(1, position = Position.Condition(CONDITION_ID)), screenEvent(OR)))
+        assertTrue(editor.itemCanBeSaved(click(1, position = Position.Condition(null)), screenEvent(OR)))
     }
 
     @Test
     fun `click on condition without parent can be saved`() {
-        assertTrue(editor.itemCanBeSaved(click(1, position = GesturePosition.Condition(null)), null))
+        assertTrue(editor.itemCanBeSaved(click(1, position = Position.Condition(null)), null))
     }
 
     @Test
     fun `edited item state follows parent event changes`() = runTest {
-        val click = click(1, position = GesturePosition.Condition(null))
+        val click = click(1, position = Position.Condition(null))
         parentFlow.value = screenEvent(OR)
         editor.startEdition(listOf(click))
         editor.startItemEdition(click)
@@ -324,7 +324,7 @@ class ActionsEditorTest {
         pauseDuration = 100L,
     )
 
-    private fun click(id: Long, position: GesturePosition?) = Click(
+    private fun click(id: Long, position: Position?) = Click(
         id = Identifier(databaseId = id),
         eventId = EVENT_ID,
         name = "click",
@@ -333,9 +333,9 @@ class ActionsEditorTest {
         position = position,
     )
 
-    private fun coordinates() = GesturePosition.Coordinates(
-        x = GestureCoordinatesValue.Literal(10),
-        y = GestureCoordinatesValue.Literal(20),
+    private fun coordinates() = Position.Coordinates(
+        x = CoordinatesValue.Literal(10),
+        y = CoordinatesValue.Literal(20),
     )
 
     private fun intent(id: Long, extras: List<IntentExtra<out Any>>?) = Intent(

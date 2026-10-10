@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.domain.model.action.gesture
+package com.buzbuz.smartautoclicker.core.domain.model.action.position
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
@@ -24,7 +24,7 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
  * The actual screen point is only known at execution time: it is either taken from a detection result or computed
  * from coordinates that can themselves depend on the scenario counters.
  */
-sealed interface GesturePosition {
+sealed interface Position {
 
     /**
      * The position where a screen condition of the event has been detected.
@@ -34,7 +34,7 @@ sealed interface GesturePosition {
      */
     data class Condition(
         val conditionId: Identifier?,
-    ) : GesturePosition
+    ) : Position
 
     /**
      * A position defined by its coordinates.
@@ -43,25 +43,7 @@ sealed interface GesturePosition {
      * @param y the vertical coordinate in px.
      */
     data class Coordinates(
-        val x: GestureCoordinatesValue,
-        val y: GestureCoordinatesValue,
-    ) : GesturePosition
-}
-
-/** A single coordinate of a [GesturePosition.Coordinates]. */
-sealed interface GestureCoordinatesValue {
-
-    /**
-     * A fixed coordinate.
-     *
-     * @param value the coordinate in px.
-     */
-    data class Literal(val value: Int) : GestureCoordinatesValue
-
-    /**
-     * A coordinate read from a scenario counter at execution time.
-     *
-     * @param counterName the name of the counter holding the coordinate in px.
-     */
-    data class Counter(val counterName: String) : GestureCoordinatesValue
+        val x: CoordinatesValue,
+        val y: CoordinatesValue,
+    ) : Position
 }

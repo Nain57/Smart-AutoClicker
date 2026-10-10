@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
@@ -44,8 +44,8 @@ import kotlinx.coroutines.launch
 
 
 class GestureOffsetDialog(
-    private val currentOffset: GesturePosition.Coordinates,
-    private val onNewOffset: (GesturePosition.Coordinates) -> Unit,
+    private val currentOffset: Position.Coordinates,
+    private val onNewOffset: (Position.Coordinates) -> Unit,
 ) : OverlayDialog(R.style.ScenarioConfigTheme) {
 
     private val viewModel: GestureOffsetViewModel by viewModels(

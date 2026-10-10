@@ -26,9 +26,9 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -261,68 +261,68 @@ class GestureDialogViewModel @Inject constructor(
     }
 
     fun setItemXPosition(item: GestureDialogUiStateItem, newXValue: String) {
-        val newX = GestureCoordinatesValue.Literal(newXValue.toIntOrNull() ?: 0)
+        val newX = CoordinatesValue.Literal(newXValue.toIntOrNull() ?: 0)
         updateMotionMainPosition(item) { pos ->
             when (pos) {
-                is GesturePosition.Coordinates -> pos.copy(x = newX)
-                is GesturePosition.Condition -> GesturePosition.Coordinates(x = newX, y = GestureCoordinatesValue.Literal(0))
+                is Position.Coordinates -> pos.copy(x = newX)
+                is Position.Condition -> Position.Coordinates(x = newX, y = CoordinatesValue.Literal(0))
             }
         }
     }
 
     fun setItemYPosition(item: GestureDialogUiStateItem, newYValue: String) {
-        val newY = GestureCoordinatesValue.Literal(newYValue.toIntOrNull() ?: 0)
+        val newY = CoordinatesValue.Literal(newYValue.toIntOrNull() ?: 0)
         updateMotionMainPosition(item) { pos ->
             when (pos) {
-                is GesturePosition.Coordinates -> pos.copy(y = newY)
-                is GesturePosition.Condition -> GesturePosition.Coordinates(x = GestureCoordinatesValue.Literal(0), y = newY)
+                is Position.Coordinates -> pos.copy(y = newY)
+                is Position.Condition -> Position.Coordinates(x = CoordinatesValue.Literal(0), y = newY)
             }
         }
     }
 
     fun setItemPosition(item: GestureDialogUiStateItem, newValue: Point) {
-        val newPos = GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Literal(newValue.x),
-            y = GestureCoordinatesValue.Literal(newValue.y),
+        val newPos = Position.Coordinates(
+            x = CoordinatesValue.Literal(newValue.x),
+            y = CoordinatesValue.Literal(newValue.y),
         )
         updateMotionMainPosition(item) { newPos }
     }
 
     fun setItemCondition(item: GestureDialogUiStateItem, newValue: Condition?) {
-        updateMotionMainPosition(item) { GesturePosition.Condition(conditionId = newValue?.id) }
+        updateMotionMainPosition(item) { Position.Condition(conditionId = newValue?.id) }
     }
 
     fun removeItemCondition(item: GestureDialogUiStateItem) {
         val displaySize = displayConfigManager.displayConfig.sizePx
         updateMotionMainPosition(item) {
-            GesturePosition.Coordinates(
-                x = GestureCoordinatesValue.Literal(displaySize.x / 2),
-                y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+            Position.Coordinates(
+                x = CoordinatesValue.Literal(displaySize.x / 2),
+                y = CoordinatesValue.Literal(displaySize.y / 2),
             )
         }
     }
 
     fun setItemXCounter(item: GestureDialogUiStateItem, counterName: String) {
-        val newX = GestureCoordinatesValue.Counter(counterName)
+        val newX = CoordinatesValue.Counter(counterName)
         updateMotionMainPosition(item) { pos ->
             when (pos) {
-                is GesturePosition.Coordinates -> pos.copy(x = newX)
-                is GesturePosition.Condition -> GesturePosition.Coordinates(x = newX, y = GestureCoordinatesValue.Literal(0))
+                is Position.Coordinates -> pos.copy(x = newX)
+                is Position.Condition -> Position.Coordinates(x = newX, y = CoordinatesValue.Literal(0))
             }
         }
     }
 
     fun setItemYCounter(item: GestureDialogUiStateItem, counterName: String) {
-        val newY = GestureCoordinatesValue.Counter(counterName)
+        val newY = CoordinatesValue.Counter(counterName)
         updateMotionMainPosition(item) { pos ->
             when (pos) {
-                is GesturePosition.Coordinates -> pos.copy(y = newY)
-                is GesturePosition.Condition -> GesturePosition.Coordinates(x = GestureCoordinatesValue.Literal(0), y = newY)
+                is Position.Coordinates -> pos.copy(y = newY)
+                is Position.Condition -> Position.Coordinates(x = CoordinatesValue.Literal(0), y = newY)
             }
         }
     }
 
-    fun getItemOffset(item: GestureDialogUiStateItem): GesturePosition.Coordinates? {
+    fun getItemOffset(item: GestureDialogUiStateItem): Position.Coordinates? {
         if (item !is GestureDialogUiStateItem.Collapsable) return null
         val gesture = editionRepository.editionState.getEditedAction<Gesture>() ?: return null
         val finger = gesture.fingers.getOrNull(selectedFinger.value) ?: return null
@@ -332,10 +332,10 @@ class GestureDialogViewModel @Inject constructor(
             is GestureFingerMotion.Move -> motion.offset
             else -> return null
         }
-        return offset as? GesturePosition.Coordinates
+        return offset as? Position.Coordinates
     }
 
-    fun setItemOffset(item: GestureDialogUiStateItem, newValue: GesturePosition.Coordinates) {
+    fun setItemOffset(item: GestureDialogUiStateItem, newValue: Position.Coordinates) {
         updateMotionAtItem(item) { motion ->
             when (motion) {
                 is GestureFingerMotion.Press -> motion.copy(offset = newValue)
@@ -372,7 +372,7 @@ class GestureDialogViewModel @Inject constructor(
 
     private fun updateMotionMainPosition(
         item: GestureDialogUiStateItem,
-        transform: (GesturePosition) -> GesturePosition,
+        transform: (Position) -> Position,
     ) {
         updateMotionAtItem(item) { motion ->
             when (motion) {

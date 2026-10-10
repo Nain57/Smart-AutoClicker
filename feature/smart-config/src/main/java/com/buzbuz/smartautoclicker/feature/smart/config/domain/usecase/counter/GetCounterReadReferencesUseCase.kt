@@ -27,9 +27,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -116,9 +116,9 @@ class GetCounterReadReferencesUseCase @Inject constructor(
 
                     is Click -> {
                         listOfNotNull(action.position, action.offset).forEach { position ->
-                            if (position !is GesturePosition.Coordinates) return@forEach
+                            if (position !is Position.Coordinates) return@forEach
                             listOf(position.x, position.y).forEach { coordValue ->
-                                if (coordValue is GestureCoordinatesValue.Counter) {
+                                if (coordValue is CoordinatesValue.Counter) {
                                     addReference(event, coordValue.counterName, action)
                                 }
                             }
@@ -128,16 +128,16 @@ class GetCounterReadReferencesUseCase @Inject constructor(
                     is Gesture -> {
                         action.fingers.forEach { finger ->
                             finger.motions.forEach { motion ->
-                                val positions: List<GesturePosition> = when (motion) {
+                                val positions: List<Position> = when (motion) {
                                     is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
                                     is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
                                     is GestureFingerMotion.Wait,
                                     is GestureFingerMotion.Release -> emptyList()
                                 }
                                 positions.forEach { position ->
-                                    if (position is GesturePosition.Coordinates) {
+                                    if (position is Position.Coordinates) {
                                         listOf(position.x, position.y).forEach { coordValue ->
-                                            if (coordValue is GestureCoordinatesValue.Counter) {
+                                            if (coordValue is CoordinatesValue.Counter) {
                                                 addReference(event, coordValue.counterName, action)
                                             }
                                         }

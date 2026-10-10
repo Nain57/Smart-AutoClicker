@@ -28,10 +28,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -165,26 +165,26 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
             is GestureFingerMotion.Release -> this
         }
 
-    private fun GesturePosition.replaceCounterReference(oldName: String, newName: String): GesturePosition =
+    private fun Position.replaceCounterReference(oldName: String, newName: String): Position =
         when (this) {
-            is GesturePosition.Condition -> this
-            is GesturePosition.Coordinates -> replaceCounterReference(oldName, newName)
+            is Position.Condition -> this
+            is Position.Coordinates -> replaceCounterReference(oldName, newName)
         }
 
-    private fun GesturePosition.Coordinates.replaceCounterReference(
+    private fun Position.Coordinates.replaceCounterReference(
         oldName: String,
         newName: String,
-    ): GesturePosition.Coordinates =
+    ): Position.Coordinates =
         copy(
             x = x.replaceCounterReference(oldName, newName),
             y = y.replaceCounterReference(oldName, newName),
         )
 
-    private fun GestureCoordinatesValue.replaceCounterReference(oldName: String, newName: String): GestureCoordinatesValue =
+    private fun CoordinatesValue.replaceCounterReference(oldName: String, newName: String): CoordinatesValue =
         when (this) {
-            is GestureCoordinatesValue.Literal -> this
-            is GestureCoordinatesValue.Counter ->
-                if (counterName == oldName) GestureCoordinatesValue.Counter(newName)
+            is CoordinatesValue.Literal -> this
+            is CoordinatesValue.Counter ->
+                if (counterName == oldName) CoordinatesValue.Counter(newName)
                 else this
         }
 

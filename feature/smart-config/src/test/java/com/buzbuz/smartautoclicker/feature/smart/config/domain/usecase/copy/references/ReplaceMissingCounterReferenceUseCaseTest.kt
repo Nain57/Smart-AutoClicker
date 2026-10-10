@@ -28,10 +28,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
@@ -144,8 +144,8 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
     @Test
     fun `replace counter x coordinate in gesture press position`() {
-        val action = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0),
+        val action = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0),
         ))))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -153,14 +153,14 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
+        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
     }
 
     @Test
     fun `replace counter y coordinate in gesture press position`() {
-        val action = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(OLD_COUNTER),
+        val action = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Literal(0), CoordinatesValue.Counter(OLD_COUNTER),
         ))))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -168,21 +168,21 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.y)
+        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedCoords.y)
     }
 
     @Test
     fun `replace counter coordinate in gesture move position`() {
         val press = GestureFingerMotion.Press(
             id = Identifier(databaseId = 51L),
-            position = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            position = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
         )
         val move = GestureFingerMotion.Move(
             id = Identifier(databaseId = 52L),
-            position = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0)),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            position = Position.Coordinates(CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0)),
             durationMs = 100L,
         )
         val action = gesture(finger(press, move))
@@ -192,15 +192,15 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedCoords = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
+        val updatedCoords = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
     }
 
     @Test
     fun `replace counter coordinate in gesture press offset`() {
         val action = gesture(finger(pressMotion(
             position = literalPosition(),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(OLD_COUNTER)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(OLD_COUNTER)),
         )))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -208,8 +208,8 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedOffset = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).offset as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedOffset.y)
+        val updatedOffset = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).offset as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedOffset.y)
     }
 
     @Test
@@ -218,7 +218,7 @@ class ReplaceMissingCounterReferenceUseCaseTest {
             pressMotion(literalPosition()),
             moveMotion(
                 position = literalPosition(),
-                offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0)),
+                offset = Position.Coordinates(CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0)),
             ),
             releaseMotion(),
         ))
@@ -228,15 +228,15 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val updatedOffset = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).offset as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedOffset.x)
+        val updatedOffset = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).offset as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedOffset.x)
     }
 
     @Test
     fun `replace counter reference in every finger of the gesture`() {
         val action = gesture(
-            finger(pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0)))),
-            finger(pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(OLD_COUNTER)))),
+            finger(pressMotion(Position.Coordinates(CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0)))),
+            finger(pressMotion(Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(OLD_COUNTER)))),
         )
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -244,17 +244,17 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedGesture = result.actions[0] as Gesture
-        val firstCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
-        val secondCoords = (updatedGesture.fingers[1].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), firstCoords.x)
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), secondCoords.y)
+        val firstCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as Position.Coordinates
+        val secondCoords = (updatedGesture.fingers[1].motions[0] as GestureFingerMotion.Press).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), firstCoords.x)
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), secondCoords.y)
     }
 
     @Test
     fun `gesture with non-matching counter, condition position and literal coordinates is unchanged`() {
         val action = gesture(finger(
-            pressMotion(GesturePosition.Condition(Identifier(databaseId = 100L))),
-            moveMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter("other"), GestureCoordinatesValue.Literal(0))),
+            pressMotion(Position.Condition(Identifier(databaseId = 100L))),
+            moveMotion(Position.Coordinates(CoordinatesValue.Counter("other"), CoordinatesValue.Literal(0))),
             waitMotion(),
             releaseMotion(),
         ))
@@ -272,39 +272,39 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
     @Test
     fun `replace counter x coordinate in click position`() {
-        val action = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0),
+        val action = click(position = Position.Coordinates(
+            CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0),
         ))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
         val missingRef = MissingCopyReference.CounterReference(OLD_COUNTER)
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
-        val updatedCoords = (result.actions[0] as Click).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
-        assertEquals(GestureCoordinatesValue.Literal(0), updatedCoords.y)
+        val updatedCoords = (result.actions[0] as Click).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
+        assertEquals(CoordinatesValue.Literal(0), updatedCoords.y)
     }
 
     @Test
     fun `replace counter y coordinate in click position`() {
-        val action = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(OLD_COUNTER),
+        val action = click(position = Position.Coordinates(
+            CoordinatesValue.Literal(0), CoordinatesValue.Counter(OLD_COUNTER),
         ))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
         val missingRef = MissingCopyReference.CounterReference(OLD_COUNTER)
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
-        val updatedCoords = (result.actions[0] as Click).position as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.y)
+        val updatedCoords = (result.actions[0] as Click).position as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedCoords.y)
     }
 
     @Test
     fun `replace counter coordinate in click on condition offset`() {
         val conditionId = Identifier(databaseId = 100L)
         val action = click(
-            position = GesturePosition.Condition(conditionId),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0)),
+            position = Position.Condition(conditionId),
+            offset = Position.Coordinates(CoordinatesValue.Counter(OLD_COUNTER), CoordinatesValue.Literal(0)),
         )
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -312,15 +312,15 @@ class ReplaceMissingCounterReferenceUseCaseTest {
 
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedClick = result.actions[0] as Click
-        assertEquals(GesturePosition.Condition(conditionId), updatedClick.position)
-        val updatedOffset = updatedClick.offset as GesturePosition.Coordinates
-        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedOffset.x)
+        assertEquals(Position.Condition(conditionId), updatedClick.position)
+        val updatedOffset = updatedClick.offset as Position.Coordinates
+        assertEquals(CoordinatesValue.Counter(NEW_COUNTER), updatedOffset.x)
     }
 
     @Test
     fun `click with non-matching counter is unchanged`() {
-        val action = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter("other"), GestureCoordinatesValue.Literal(0),
+        val action = click(position = Position.Coordinates(
+            CoordinatesValue.Counter("other"), CoordinatesValue.Literal(0),
         ))
         val event = triggerEventWithActions(listOf(action))
         val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
@@ -504,17 +504,17 @@ class ReplaceMissingCounterReferenceUseCaseTest {
         motions = motions.toList(),
     )
 
-    private fun literalPosition() = GesturePosition.Coordinates(
-        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    private fun literalPosition() = Position.Coordinates(
+        CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
     )
 
-    private fun pressMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Press(
+    private fun pressMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Press(
         id = Identifier(databaseId = 51L),
         position = position,
         offset = offset,
     )
 
-    private fun moveMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Move(
+    private fun moveMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Move(
         id = Identifier(databaseId = 52L),
         position = position,
         offset = offset,
@@ -530,7 +530,7 @@ class ReplaceMissingCounterReferenceUseCaseTest {
         id = Identifier(databaseId = 54L),
     )
 
-    private fun click(position: GesturePosition?, offset: GesturePosition? = null) = Click(
+    private fun click(position: Position?, offset: Position? = null) = Click(
         id = ACTION_ID,
         eventId = EVENT_ID,
         priority = 0,
@@ -581,6 +581,6 @@ class ReplaceMissingCounterReferenceUseCaseTest {
         val SCENARIO_ID = Identifier(databaseId = 20L)
         const val OLD_COUNTER = "oldCounter"
         const val NEW_COUNTER = "newCounter"
-        val NO_OFFSET = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0))
+        val NO_OFFSET = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0))
     }
 }

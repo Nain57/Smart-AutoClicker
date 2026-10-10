@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate
 
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
@@ -36,15 +36,15 @@ sealed interface UiGesturePosition {
     ) : UiGesturePosition
 }
 
-internal fun GesturePosition.toPositionUiState(editionRepository: EditionRepository): UiGesturePosition =
+internal fun Position.toPositionUiState(editionRepository: EditionRepository): UiGesturePosition =
     when (this) {
-        is GesturePosition.Coordinates ->
+        is Position.Coordinates ->
             UiGesturePosition.Position(
                 xValue = x.toValueString(),
                 yValue = y.toValueString(),
             )
 
-        is GesturePosition.Condition -> {
+        is Position.Condition -> {
             val screenConditions = editionRepository.editionState
                 .getEditedEventConditions<ScreenCondition>() ?: emptyList()
             val isAnd = editionRepository.editionState.getEditedEvent()?.conditionOperator == AND
@@ -64,8 +64,8 @@ internal fun Click.toPositionUiState(editionRepository: EditionRepository): UiGe
     position?.toPositionUiState(editionRepository)
         ?: UiGesturePosition.Position(xValue = "", yValue = "")
 
-private fun GestureCoordinatesValue.toValueString(): String =
+private fun CoordinatesValue.toValueString(): String =
     when (this) {
-        is GestureCoordinatesValue.Literal -> value.toString()
-        is GestureCoordinatesValue.Counter -> "{$counterName}"
+        is CoordinatesValue.Literal -> value.toString()
+        is CoordinatesValue.Counter -> "{$counterName}"
     }

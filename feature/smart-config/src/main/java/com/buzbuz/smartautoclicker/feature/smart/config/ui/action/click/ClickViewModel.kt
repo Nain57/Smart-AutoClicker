@@ -28,8 +28,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
@@ -58,6 +57,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import androidx.core.content.edit
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -134,36 +134,36 @@ class ClickViewModel @Inject constructor(
      */
     fun setPosition(position: Point) {
         updateClickPosition(
-            x = GestureCoordinatesValue.Literal(position.x),
-            y = GestureCoordinatesValue.Literal(position.y),
+            x = CoordinatesValue.Literal(position.x),
+            y = CoordinatesValue.Literal(position.y),
         )
     }
 
     /** Set the x coordinate of the click to a literal value. */
     fun setPositionX(newXValue: String) {
-        updateClickPosition(x = GestureCoordinatesValue.Literal(newXValue.toIntOrNull() ?: 0))
+        updateClickPosition(x = CoordinatesValue.Literal(newXValue.toIntOrNull() ?: 0))
     }
 
     /** Set the y coordinate of the click to a literal value. */
     fun setPositionY(newYValue: String) {
-        updateClickPosition(y = GestureCoordinatesValue.Literal(newYValue.toIntOrNull() ?: 0))
+        updateClickPosition(y = CoordinatesValue.Literal(newYValue.toIntOrNull() ?: 0))
     }
 
     /** Set the x coordinate of the click to the value of a counter. */
     fun setPositionXCounter(counterName: String) {
-        updateClickPosition(x = GestureCoordinatesValue.Counter(counterName))
+        updateClickPosition(x = CoordinatesValue.Counter(counterName))
     }
 
     /** Set the y coordinate of the click to the value of a counter. */
     fun setPositionYCounter(counterName: String) {
-        updateClickPosition(y = GestureCoordinatesValue.Counter(counterName))
+        updateClickPosition(y = CoordinatesValue.Counter(counterName))
     }
 
     /** Click on the condition detected by the parent event, whichever it is. */
     fun setClickOnDetectedCondition() {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(
-                click.copy(position = GesturePosition.Condition(conditionId = null))
+                click.copy(position = Position.Condition(conditionId = null))
             )
         }
     }
@@ -172,8 +172,8 @@ class ClickViewModel @Inject constructor(
     fun removeClickOnCondition() {
         val displaySize = displayConfigManager.displayConfig.sizePx
         updateClickPosition(
-            x = GestureCoordinatesValue.Literal(displaySize.x / 2),
-            y = GestureCoordinatesValue.Literal(displaySize.y / 2),
+            x = CoordinatesValue.Literal(displaySize.x / 2),
+            y = CoordinatesValue.Literal(displaySize.y / 2),
         )
     }
 
@@ -188,12 +188,12 @@ class ClickViewModel @Inject constructor(
     }
 
     /** The offset to apply to the click position, defaulting to no offset at all. */
-    fun getClickOffset(): GesturePosition.Coordinates =
-        editionRepository.editionState.getEditedAction<Click>()?.offset as? GesturePosition.Coordinates
+    fun getClickOffset(): Position.Coordinates =
+        editionRepository.editionState.getEditedAction<Click>()?.offset as? Position.Coordinates
             ?: NO_CLICK_OFFSET
 
     /** Set the offset to apply to the click position. */
-    fun setClickOffset(offset: GesturePosition.Coordinates) {
+    fun setClickOffset(offset: Position.Coordinates) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(click.copy(offset = offset))
         }
@@ -203,7 +203,7 @@ class ClickViewModel @Inject constructor(
     fun setConditionToBeClicked(condition: ScreenCondition) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
             editionRepository.updateEditedAction(
-                click.copy(position = GesturePosition.Condition(conditionId = condition.id))
+                click.copy(position = Position.Condition(conditionId = condition.id))
             )
         }
     }
@@ -213,17 +213,17 @@ class ClickViewModel @Inject constructor(
      * A null coordinate keeps its current value, or defaults to 0 if the click had no coordinates yet.
      */
     private fun updateClickPosition(
-        x: GestureCoordinatesValue? = null,
-        y: GestureCoordinatesValue? = null,
+        x: CoordinatesValue? = null,
+        y: CoordinatesValue? = null,
     ) {
         editionRepository.editionState.getEditedAction<Click>()?.let { click ->
-            val coordinates = click.position as? GesturePosition.Coordinates
+            val coordinates = click.position as? Position.Coordinates
 
             editionRepository.updateEditedAction(
                 click.copy(
-                    position = GesturePosition.Coordinates(
-                        x = x ?: coordinates?.x ?: GestureCoordinatesValue.Literal(0),
-                        y = y ?: coordinates?.y ?: GestureCoordinatesValue.Literal(0),
+                    position = Position.Coordinates(
+                        x = x ?: coordinates?.x ?: CoordinatesValue.Literal(0),
+                        y = y ?: coordinates?.y ?: CoordinatesValue.Literal(0),
                     ),
                 )
             )
@@ -285,7 +285,7 @@ class ClickViewModel @Inject constructor(
     }
 }
 
-private val NO_CLICK_OFFSET = GesturePosition.Coordinates(
-    x = GestureCoordinatesValue.Literal(0),
-    y = GestureCoordinatesValue.Literal(0),
+private val NO_CLICK_OFFSET = Position.Coordinates(
+    x = CoordinatesValue.Literal(0),
+    y = CoordinatesValue.Literal(0),
 )

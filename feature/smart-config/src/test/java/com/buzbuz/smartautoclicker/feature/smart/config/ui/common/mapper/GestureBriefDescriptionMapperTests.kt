@@ -29,10 +29,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
@@ -209,15 +209,46 @@ class GestureBriefDescriptionMapperTests {
 
     @Test
     fun mixedLiteralAndCounterCoordinates() {
-        val position = GesturePosition.Coordinates(
-            x = GestureCoordinatesValue.Literal(42),
-            y = GestureCoordinatesValue.Counter(COUNTER_Y),
+        val position = Position.Coordinates(
+            x = CoordinatesValue.Literal(42),
+            y = CoordinatesValue.Counter(COUNTER_Y),
         )
         val description = gestureOf(
             fingerOf(press(MOTION_1_ID, position), release(MOTION_2_ID)),
         ).map(counters = listOf(counter(COUNTER_Y, 77.0)))
 
         assertEquals(PointF(42f, 77f), description.waypoint(0, 0).position)
+    }
+
+    @Test
+    fun counterCoordinates_labelWithCounterNames() {
+        val description = gestureOf(
+            fingerOf(press(MOTION_1_ID, counters(COUNTER_X, COUNTER_Y)), release(MOTION_2_ID)),
+        ).map()
+
+        assertEquals(GestureWaypointCondition(label = "$COUNTER_X / $COUNTER_Y"), description.waypoint(0, 0).condition)
+    }
+
+    @Test
+    fun mixedLiteralAndCounterCoordinates_labelWithValueAndCounterName() {
+        val position = Position.Coordinates(
+            x = CoordinatesValue.Literal(42),
+            y = CoordinatesValue.Counter(COUNTER_Y),
+        )
+        val description = gestureOf(
+            fingerOf(press(MOTION_1_ID, position), release(MOTION_2_ID)),
+        ).map()
+
+        assertEquals(GestureWaypointCondition(label = "42 / $COUNTER_Y"), description.waypoint(0, 0).condition)
+    }
+
+    @Test
+    fun counterCoordinates_emptyCounterName_placeholderInLabel() {
+        val description = gestureOf(
+            fingerOf(press(MOTION_1_ID, counters("", COUNTER_Y)), release(MOTION_2_ID)),
+        ).map()
+
+        assertEquals(GestureWaypointCondition(label = "? / $COUNTER_Y"), description.waypoint(0, 0).condition)
     }
 
     // ---- Condition positions: area per condition type ----
@@ -353,7 +384,7 @@ class GestureBriefDescriptionMapperTests {
         )
 
         val description = gestureOf(
-            fingerOf(press(MOTION_1_ID, GesturePosition.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
+            fingerOf(press(MOTION_1_ID, Position.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
         ).map(conditions = conditions, conditionDisplays = displays)
 
         assertEquals(GestureWaypointCondition(label = "second"), description.waypoint(0, 0).condition)
@@ -368,7 +399,7 @@ class GestureBriefDescriptionMapperTests {
         )
 
         val description = gestureOf(
-            fingerOf(press(MOTION_1_ID, GesturePosition.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
+            fingerOf(press(MOTION_1_ID, Position.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
         ).map(conditionOperator = OR, conditions = conditions, conditionDisplays = displays)
 
         assertEquals(GestureWaypointCondition(label = "first"), description.waypoint(0, 0).condition)
@@ -377,7 +408,7 @@ class GestureBriefDescriptionMapperTests {
     @Test
     fun conditionPosition_conditionWithoutDisplay_noCondition() {
         val description = gestureOf(
-            fingerOf(press(MOTION_1_ID, GesturePosition.Condition(CONDITION_1_ID)), release(MOTION_2_ID)),
+            fingerOf(press(MOTION_1_ID, Position.Condition(CONDITION_1_ID)), release(MOTION_2_ID)),
         ).map(conditions = listOf(exactImageAt(CONDITION_1_ID, 0, 0)), conditionDisplays = emptyMap())
 
         assertNull(description.waypoint(0, 0).condition)
@@ -386,7 +417,7 @@ class GestureBriefDescriptionMapperTests {
     @Test
     fun conditionPosition_conditionNotFound_noCondition() {
         val description = gestureOf(
-            fingerOf(press(MOTION_1_ID, GesturePosition.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
+            fingerOf(press(MOTION_1_ID, Position.Condition(CONDITION_2_ID)), release(MOTION_2_ID)),
         ).map(
             conditions = listOf(exactImageAt(CONDITION_1_ID, 0, 0)),
             conditionDisplays = mapOf(CONDITION_1_ID to GestureWaypointCondition(label = "first")),
@@ -423,7 +454,7 @@ class GestureBriefDescriptionMapperTests {
         conditions: List<ScreenCondition>,
         conditionOperator: Int = AND,
     ): PointF =
-        gestureOf(fingerOf(press(MOTION_1_ID, GesturePosition.Condition(conditionId)), release(MOTION_2_ID)))
+        gestureOf(fingerOf(press(MOTION_1_ID, Position.Condition(conditionId)), release(MOTION_2_ID)))
             .map(conditionOperator = conditionOperator, conditions = conditions)
             .waypoint(0, 0)
             .position
@@ -445,23 +476,23 @@ class GestureBriefDescriptionMapperTests {
         motions = motions.toList(),
     )
 
-    private fun press(id: Identifier, position: GesturePosition) =
+    private fun press(id: Identifier, position: Position) =
         GestureFingerMotion.Press(id = id, position = position, offset = literal(0, 0))
 
-    private fun move(id: Identifier, position: GesturePosition, durationMs: Long) =
+    private fun move(id: Identifier, position: Position, durationMs: Long) =
         GestureFingerMotion.Move(id = id, position = position, offset = literal(0, 0), durationMs = durationMs)
 
     private fun release(id: Identifier, hold: Boolean = false) =
         GestureFingerMotion.Release(id = id, holdUntilUnfulfilled = hold)
 
-    private fun literal(x: Int, y: Int) = GesturePosition.Coordinates(
-        x = GestureCoordinatesValue.Literal(x),
-        y = GestureCoordinatesValue.Literal(y),
+    private fun literal(x: Int, y: Int) = Position.Coordinates(
+        x = CoordinatesValue.Literal(x),
+        y = CoordinatesValue.Literal(y),
     )
 
-    private fun counters(xCounter: String, yCounter: String) = GesturePosition.Coordinates(
-        x = GestureCoordinatesValue.Counter(xCounter),
-        y = GestureCoordinatesValue.Counter(yCounter),
+    private fun counters(xCounter: String, yCounter: String) = Position.Coordinates(
+        x = CoordinatesValue.Counter(xCounter),
+        y = CoordinatesValue.Counter(yCounter),
     )
 
     private fun counter(name: String, startValue: Double) =

@@ -23,7 +23,17 @@ import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.*
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.counter
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.toCoordinatesType
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.xCoordinatesType
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.xCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.xLiteral
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.yCoordinatesType
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.yCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.yLiteral
 
 
 internal fun GestureFinger.toFingerEntity(actionId: Long, index: Int): GestureFingerEntity =
@@ -43,17 +53,17 @@ internal fun GestureFingerMotion.toMotionEntity(fingerId: Long, index: Int): Ges
             motionType = GestureFingerMotionType.PRESS,
             xCoordinateType = position.xCoordinatesType(),
             yCoordinateType = position.yCoordinatesType(),
-            conditionId = (position as? GesturePosition.Condition)?.conditionId?.databaseId,
+            conditionId = (position as? Position.Condition)?.conditionId?.databaseId,
             xLiteral = position.xLiteral(),
             xCounter = position.xCounter(),
             yLiteral = position.yLiteral(),
             yCounter = position.yCounter(),
-            xOffsetCoordinateType = (offset as? GesturePosition.Coordinates)?.x?.toCoordinatesType(),
-            yOffsetCoordinateType = (offset as? GesturePosition.Coordinates)?.y?.toCoordinatesType(),
-            xOffsetLiteral = (offset as? GesturePosition.Coordinates)?.x?.literal(),
-            xOffsetCounter = (offset as? GesturePosition.Coordinates)?.x?.counter(),
-            yOffsetLiteral = (offset as? GesturePosition.Coordinates)?.y?.literal(),
-            yOffsetCounter = (offset as? GesturePosition.Coordinates)?.y?.counter(),
+            xOffsetCoordinateType = (offset as? Position.Coordinates)?.x?.toCoordinatesType(),
+            yOffsetCoordinateType = (offset as? Position.Coordinates)?.y?.toCoordinatesType(),
+            xOffsetLiteral = (offset as? Position.Coordinates)?.x?.literal(),
+            xOffsetCounter = (offset as? Position.Coordinates)?.x?.counter(),
+            yOffsetLiteral = (offset as? Position.Coordinates)?.y?.literal(),
+            yOffsetCounter = (offset as? Position.Coordinates)?.y?.counter(),
         )
 
         is GestureFingerMotion.Move -> GestureFingerMotionEntity(
@@ -64,17 +74,17 @@ internal fun GestureFingerMotion.toMotionEntity(fingerId: Long, index: Int): Ges
             durationMs = durationMs,
             xCoordinateType = position.xCoordinatesType(),
             yCoordinateType = position.yCoordinatesType(),
-            conditionId = (position as? GesturePosition.Condition)?.conditionId?.databaseId,
+            conditionId = (position as? Position.Condition)?.conditionId?.databaseId,
             xLiteral = position.xLiteral(),
             xCounter = position.xCounter(),
             yLiteral = position.yLiteral(),
             yCounter = position.yCounter(),
-            xOffsetCoordinateType = (offset as? GesturePosition.Coordinates)?.x?.toCoordinatesType(),
-            yOffsetCoordinateType = (offset as? GesturePosition.Coordinates)?.y?.toCoordinatesType(),
-            xOffsetLiteral = (offset as? GesturePosition.Coordinates)?.x?.literal(),
-            xOffsetCounter = (offset as? GesturePosition.Coordinates)?.x?.counter(),
-            yOffsetLiteral = (offset as? GesturePosition.Coordinates)?.y?.literal(),
-            yOffsetCounter = (offset as? GesturePosition.Coordinates)?.y?.counter(),
+            xOffsetCoordinateType = (offset as? Position.Coordinates)?.x?.toCoordinatesType(),
+            yOffsetCoordinateType = (offset as? Position.Coordinates)?.y?.toCoordinatesType(),
+            xOffsetLiteral = (offset as? Position.Coordinates)?.x?.literal(),
+            xOffsetCounter = (offset as? Position.Coordinates)?.x?.counter(),
+            yOffsetLiteral = (offset as? Position.Coordinates)?.y?.literal(),
+            yOffsetCounter = (offset as? Position.Coordinates)?.y?.counter(),
         )
 
         is GestureFingerMotion.Wait -> GestureFingerMotionEntity(
@@ -94,35 +104,7 @@ internal fun GestureFingerMotion.toMotionEntity(fingerId: Long, index: Int): Ges
         )
     }
 
-private fun GesturePosition.xCoordinatesType(): CoordinatesType = when (this) {
-    is GesturePosition.Condition -> CoordinatesType.CONDITION
-    is GesturePosition.Coordinates -> x.toCoordinatesType()
-}
 
-private fun GesturePosition.yCoordinatesType(): CoordinatesType = when (this) {
-    is GesturePosition.Condition -> CoordinatesType.CONDITION
-    is GesturePosition.Coordinates -> y.toCoordinatesType()
-}
-
-private fun GesturePosition.xLiteral(): Int? =
-    (this as? GesturePosition.Coordinates)?.x?.literal()
-
-private fun GesturePosition.xCounter(): String? =
-    (this as? GesturePosition.Coordinates)?.x?.counter()
-
-private fun GesturePosition.yLiteral(): Int? =
-    (this as? GesturePosition.Coordinates)?.y?.literal()
-
-private fun GesturePosition.yCounter(): String? =
-    (this as? GesturePosition.Coordinates)?.y?.counter()
-
-private fun GestureCoordinatesValue.toCoordinatesType(): CoordinatesType = when (this) {
-    is Literal -> CoordinatesType.LITERAL
-    is Counter -> CoordinatesType.COUNTER
-}
-
-private fun GestureCoordinatesValue.literal(): Int? = (this as? Literal)?.value
-private fun GestureCoordinatesValue.counter(): String? = (this as? Counter)?.counterName
 
 internal fun GestureFingerWithMotions.toDomainGestureFinger(cleanIds: Boolean = false): GestureFinger =
     GestureFinger(
@@ -156,29 +138,29 @@ private fun GestureFingerMotionEntity.toDomainGestureMotion(cleanIds: Boolean = 
         )
     }
 
-private fun GestureFingerMotionEntity.toGesturePosition(): GesturePosition =
+private fun GestureFingerMotionEntity.toGesturePosition(): Position =
     if (xCoordinateType == yCoordinateType && xCoordinateType == CoordinatesType.CONDITION) {
-        GesturePosition.Condition(conditionId = conditionId?.let { Identifier(databaseId = it) })
+        Position.Condition(conditionId = conditionId?.let { Identifier(databaseId = it) })
     } else {
-        GesturePosition.Coordinates(
-            x = toGestureCoordinatesValue(xCoordinateType, xLiteral, xCounter),
-            y = toGestureCoordinatesValue(yCoordinateType, yLiteral, yCounter),
+        Position.Coordinates(
+            x = xCoordinateType.toGestureCoordinatesValue(xLiteral, xCounter),
+            y = yCoordinateType.toGestureCoordinatesValue(yLiteral, yCounter),
         )
     }
 
-private fun GestureFingerMotionEntity.toGestureOffset(): GesturePosition =
-    GesturePosition.Coordinates(
-        x = toGestureCoordinatesValue(xOffsetCoordinateType, xOffsetLiteral, xOffsetCounter),
-        y = toGestureCoordinatesValue(yOffsetCoordinateType, yOffsetLiteral, yOffsetCounter),
+private fun GestureFingerMotionEntity.toGestureOffset(): Position =
+    Position.Coordinates(
+        x = xOffsetCoordinateType.toGestureCoordinatesValue(xOffsetLiteral, xOffsetCounter),
+        y = yOffsetCoordinateType.toGestureCoordinatesValue(yOffsetLiteral, yOffsetCounter),
     )
 
-private fun toGestureCoordinatesValue(type: CoordinatesType?, literal: Int?, counter: String?): GestureCoordinatesValue =
-    when (type) {
-        CoordinatesType.COUNTER -> Counter(counterName = counter ?: "")
-        CoordinatesType.LITERAL -> Literal(value = literal ?: 0)
+private fun CoordinatesType?.toGestureCoordinatesValue(literal: Int?, counter: String?): CoordinatesValue =
+    when (this) {
+        CoordinatesType.COUNTER -> CoordinatesValue.Counter(counterName = counter ?: "")
+        CoordinatesType.LITERAL -> CoordinatesValue.Literal(value = literal ?: 0)
         else -> {
-            Log.e(TAG, "Unsupported coordinates type $type; using 0 as value for coordinates")
-            Literal(value = 0)
+            Log.e(TAG, "Unsupported coordinates type $this; using 0 as value for coordinates")
+            CoordinatesValue.Literal(value = 0)
         }
     }
 

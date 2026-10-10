@@ -36,8 +36,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
@@ -121,9 +121,9 @@ class ScenarioProcessorTests {
                 eventId = Identifier(databaseId = 1),
                 priority = 0,
                 pressDuration = duration,
-                position = GesturePosition.Coordinates(
-                    x = GestureCoordinatesValue.Literal(10),
-                    y = GestureCoordinatesValue.Literal(10),
+                position = Position.Coordinates(
+                    x = CoordinatesValue.Literal(10),
+                    y = CoordinatesValue.Literal(10),
                 ),
             )
     }

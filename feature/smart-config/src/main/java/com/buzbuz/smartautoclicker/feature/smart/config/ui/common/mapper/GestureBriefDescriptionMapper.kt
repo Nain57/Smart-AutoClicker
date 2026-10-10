@@ -27,10 +27,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.IN_AREA
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureAnimationSegment
@@ -53,7 +53,8 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureWayp
  * @param screenSize the size of the screen, used for conditions detected on the whole screen or not found.
  * @param singleEditableMotionId when non null, only the waypoint of this motion is editable, all others are fixed.
  * @param conditionDisplays the display of each condition, by condition identifier, attached to the waypoints placed on
- * that condition. See [toWaypointConditions].
+ * that condition. See [toWaypointConditions]. Waypoints with counter based coordinates get a label with those
+ * coordinates instead, such as "counterX / 120".
  */
 internal fun Gesture.toGestureDescription(
     @ConditionOperator conditionOperator: Int,
@@ -123,25 +124,32 @@ private class PositionResolver(
     /** Counters without a custom starting value aren't stored and starts at 0. */
     private val counterStartValues: Map<String, Double> = counters.associate { it.counterName to it.defaultValue }
 
-    fun toWaypoint(position: GesturePosition, motionId: Identifier, singleEditableMotionId: Identifier?): GestureWaypoint {
-        val condition = (position as? GesturePosition.Condition)?.let(::findCondition)
+    fun toWaypoint(position: Position, motionId: Identifier, singleEditableMotionId: Identifier?): GestureWaypoint {
+        val condition = (position as? Position.Condition)?.let(::findCondition)
 
         return GestureWaypoint(
             position = condition?.getDisplayPoint() ?: toDisplayPoint(position),
             isEditable = singleEditableMotionId == null || motionId == singleEditableMotionId,
             motionId = motionId,
-            condition = condition?.let { conditionDisplays[it.id] },
+            condition = condition?.let { conditionDisplays[it.id] }
+                ?: (position as? Position.Coordinates)?.toCounterWaypointCondition(),
         )
     }
 
-    private fun findCondition(position: GesturePosition.Condition): ScreenCondition? =
+    /** @return a label such as "counterX / 120" if any coordinate is read from a counter, null otherwise. */
+    private fun Position.Coordinates.toCounterWaypointCondition(): GestureWaypointCondition? {
+        if (x !is CoordinatesValue.Counter && y !is CoordinatesValue.Counter) return null
+        return GestureWaypointCondition(label = "${x.toLabel()} / ${y.toLabel()}")
+    }
+
+    private fun findCondition(position: Position.Condition): ScreenCondition? =
         if (conditionOperator == AND && position.conditionId != null) conditions.find { it.id == position.conditionId }
         else conditions.firstOrNull()
 
-    private fun toDisplayPoint(position: GesturePosition): PointF =
+    private fun toDisplayPoint(position: Position): PointF =
         when (position) {
-            is GesturePosition.Condition -> screenCenter()
-            is GesturePosition.Coordinates -> PointF(position.x.toDisplayValue(), position.y.toDisplayValue())
+            is Position.Condition -> screenCenter()
+            is Position.Coordinates -> PointF(position.x.toDisplayValue(), position.y.toDisplayValue())
         }
 
     private fun ScreenCondition.getDisplayPoint(): PointF =
@@ -152,10 +160,16 @@ private class PositionResolver(
 
     private fun screenCenter(): PointF = PointF(screenSize.x / 2f, screenSize.y / 2f)
 
-    private fun GestureCoordinatesValue.toDisplayValue(): Float =
+    private fun CoordinatesValue.toDisplayValue(): Float =
         when (this) {
-            is GestureCoordinatesValue.Literal -> value.toFloat()
-            is GestureCoordinatesValue.Counter -> counterStartValues[counterName]?.toFloat() ?: 0f
+            is CoordinatesValue.Literal -> value.toFloat()
+            is CoordinatesValue.Counter -> counterStartValues[counterName]?.toFloat() ?: 0f
+        }
+
+    private fun CoordinatesValue.toLabel(): String =
+        when (this) {
+            is CoordinatesValue.Literal -> value.toString()
+            is CoordinatesValue.Counter -> counterName.ifEmpty { "?" }
         }
 
     /** @return the area where the condition can be detected, or null if it is the whole screen. */

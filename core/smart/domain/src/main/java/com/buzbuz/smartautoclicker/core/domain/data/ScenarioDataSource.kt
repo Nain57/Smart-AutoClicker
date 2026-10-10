@@ -42,7 +42,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toFingerEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toMotionEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
@@ -51,6 +51,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toGestureFingerEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toGestureMotionEntities
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Positionable
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -558,7 +559,7 @@ internal class ScenarioDataSource @Inject constructor(
 
 /** @return the identifier of the condition this motion is positioned on, if any. */
 private fun GestureFingerMotion.getConditionIdentifier(): Identifier? =
-    ((this as? GestureFingerMotion.Positionable)?.position as? GesturePosition.Condition)?.conditionId
+    ((this as? Positionable)?.position as? Position.Condition)?.conditionId
 
 /** Tag for logs. */
 private const val TAG = "ScenarioDataSource"

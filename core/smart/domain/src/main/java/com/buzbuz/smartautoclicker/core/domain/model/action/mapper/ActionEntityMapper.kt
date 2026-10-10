@@ -35,8 +35,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 
 
 internal fun Action.toEntity(): ActionEntity {
@@ -52,7 +52,6 @@ internal fun Action.toEntity(): ActionEntity {
         is Notification -> toNotificationEntity()
         is SystemAction -> toSystemActionEntity()
         is SetText -> toSetTextEntity()
-        is Gesture -> TODO()
     }
 }
 
@@ -82,9 +81,9 @@ internal fun Click.toGestureFingerEntity(actionId: Long): GestureFingerEntity =
  * @param clickOnConditionDbId the database identifier of the condition to click on, if any.
  */
 internal fun Click.toGestureMotionEntities(fingerId: Long, clickOnConditionDbId: Long?): List<GestureFingerMotionEntity> {
-    val isOnCondition = position is GesturePosition.Condition
-    val coordinates = position as? GesturePosition.Coordinates
-    val offsetCoordinates = offset as? GesturePosition.Coordinates
+    val isOnCondition = position is Position.Condition
+    val coordinates = position as? Position.Coordinates
+    val offsetCoordinates = offset as? Position.Coordinates
 
     return listOf(
         GestureFingerMotionEntity(
@@ -95,16 +94,16 @@ internal fun Click.toGestureMotionEntities(fingerId: Long, clickOnConditionDbId:
             xCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else coordinates?.x?.toCoordinatesType(),
             yCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else coordinates?.y?.toCoordinatesType(),
             conditionId = clickOnConditionDbId,
-            xLiteral = (coordinates?.x as? GestureCoordinatesValue.Literal)?.value,
-            yLiteral = (coordinates?.y as? GestureCoordinatesValue.Literal)?.value,
-            xCounter = (coordinates?.x as? GestureCoordinatesValue.Counter)?.counterName,
-            yCounter = (coordinates?.y as? GestureCoordinatesValue.Counter)?.counterName,
+            xLiteral = (coordinates?.x as? CoordinatesValue.Literal)?.value,
+            yLiteral = (coordinates?.y as? CoordinatesValue.Literal)?.value,
+            xCounter = (coordinates?.x as? CoordinatesValue.Counter)?.counterName,
+            yCounter = (coordinates?.y as? CoordinatesValue.Counter)?.counterName,
             xOffsetCoordinateType = offsetCoordinates?.x?.toCoordinatesType(),
             yOffsetCoordinateType = offsetCoordinates?.y?.toCoordinatesType(),
-            xOffsetLiteral = (offsetCoordinates?.x as? GestureCoordinatesValue.Literal)?.value,
-            yOffsetLiteral = (offsetCoordinates?.y as? GestureCoordinatesValue.Literal)?.value,
-            xOffsetCounter = (offsetCoordinates?.x as? GestureCoordinatesValue.Counter)?.counterName,
-            yOffsetCounter = (offsetCoordinates?.y as? GestureCoordinatesValue.Counter)?.counterName,
+            xOffsetLiteral = (offsetCoordinates?.x as? CoordinatesValue.Literal)?.value,
+            yOffsetLiteral = (offsetCoordinates?.y as? CoordinatesValue.Literal)?.value,
+            xOffsetCounter = (offsetCoordinates?.x as? CoordinatesValue.Counter)?.counterName,
+            yOffsetCounter = (offsetCoordinates?.y as? CoordinatesValue.Counter)?.counterName,
         ),
         GestureFingerMotionEntity(
             id = DATABASE_ID_INSERTION,
@@ -215,8 +214,8 @@ private fun SetText.toSetTextEntity(): ActionEntity =
         textValidateInput = validateInput,
     )
 
-private fun GestureCoordinatesValue.toCoordinatesType(): CoordinatesType =
+private fun CoordinatesValue.toCoordinatesType(): CoordinatesType =
     when (this) {
-        is GestureCoordinatesValue.Literal -> CoordinatesType.LITERAL
-        is GestureCoordinatesValue.Counter -> CoordinatesType.COUNTER
+        is CoordinatesValue.Literal -> CoordinatesType.LITERAL
+        is CoordinatesValue.Counter -> CoordinatesType.COUNTER
     }

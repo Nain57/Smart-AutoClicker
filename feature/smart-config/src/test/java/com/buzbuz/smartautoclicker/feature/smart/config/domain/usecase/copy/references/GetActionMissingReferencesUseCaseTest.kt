@@ -31,10 +31,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
@@ -94,8 +94,8 @@ class GetActionMissingReferencesUseCaseTest {
 
     @Test
     fun `gesture with literal coordinates has no missing references`() = runTest {
-        val gesture = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+        val gesture = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
         ))))
         assertActionItem(useCase(gesture), expectedMissingCount = 0)
     }
@@ -103,8 +103,8 @@ class GetActionMissingReferencesUseCaseTest {
     @Test
     fun `gesture with reachable counter coordinate has no missing references`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
-        val gesture = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val gesture = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0),
         ))))
         assertActionItem(useCase(gesture), expectedMissingCount = 0)
     }
@@ -112,8 +112,8 @@ class GetActionMissingReferencesUseCaseTest {
     @Test
     fun `gesture with missing counter coordinate has one counter reference`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
-        val gesture = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        val gesture = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0),
         ))))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
@@ -122,7 +122,7 @@ class GetActionMissingReferencesUseCaseTest {
 
     @Test
     fun `gesture with null condition position has no missing references`() = runTest {
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId = null))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId = null))))
         assertActionItem(useCase(gesture), expectedMissingCount = 0)
     }
 
@@ -136,7 +136,7 @@ class GetActionMissingReferencesUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns listOf(event)
 
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId))))
         assertActionItem(useCase(gesture), expectedMissingCount = 0)
     }
 
@@ -146,7 +146,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
 
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId))))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
         val ref = result.missingReferences[0] as MissingCopyReference.ScreenConditionReference
@@ -160,7 +160,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns null
 
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId))))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
         val ref = result.missingReferences[0] as MissingCopyReference.ScreenConditionReference
@@ -186,7 +186,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getAllEditedEvents() } returns listOf(targetEvent, otherEvent)
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns null
 
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId))))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
         val ref = result.missingReferences[0] as MissingCopyReference.ScreenConditionReference
@@ -204,7 +204,7 @@ class GetActionMissingReferencesUseCaseTest {
         }
         every { mockEditionState.getAllEditedEvents() } returns emptyList()
 
-        val gesture = gesture(finger(pressMotion(GesturePosition.Condition(conditionId))))
+        val gesture = gesture(finger(pressMotion(Position.Condition(conditionId))))
         assertActionItem(useCase(gesture, eventsToCopy = listOf(copyEvent)), expectedMissingCount = 0)
     }
 
@@ -213,7 +213,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         val gesture = gesture(finger(pressMotion(
             position = literalPosition(),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(COUNTER_NAME)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(COUNTER_NAME)),
         )))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
@@ -228,7 +228,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val gesture = gesture(finger(pressMotion(
             position = literalPosition(),
-            offset = GesturePosition.Condition(conditionId),
+            offset = Position.Condition(conditionId),
         )))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 1)
@@ -242,7 +242,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         val gesture = gesture(finger(
             pressMotion(literalPosition()),
-            moveMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0))),
+            moveMotion(Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0))),
             releaseMotion(),
         ))
         val result = useCase(gesture)
@@ -258,7 +258,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val gesture = gesture(finger(
             pressMotion(literalPosition()),
-            moveMotion(position = literalPosition(), offset = GesturePosition.Condition(conditionId)),
+            moveMotion(position = literalPosition(), offset = Position.Condition(conditionId)),
             releaseMotion(),
         ))
         val result = useCase(gesture)
@@ -271,8 +271,8 @@ class GetActionMissingReferencesUseCaseTest {
     fun `gesture with both missing counter coordinates has two counter references`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         every { mockEditionState.getCounter(COUNTER_VALUE_NAME) } returns null
-        val gesture = gesture(finger(pressMotion(GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Counter(COUNTER_VALUE_NAME),
+        val gesture = gesture(finger(pressMotion(Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Counter(COUNTER_VALUE_NAME),
         ))))
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 2)
@@ -288,8 +288,8 @@ class GetActionMissingReferencesUseCaseTest {
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
 
         val gesture = gesture(
-            finger(pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)))),
-            finger(pressMotion(GesturePosition.Condition(conditionId))),
+            finger(pressMotion(Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)))),
+            finger(pressMotion(Position.Condition(conditionId))),
         )
         val result = useCase(gesture)
         assertActionItem(result, expectedMissingCount = 2)
@@ -301,7 +301,7 @@ class GetActionMissingReferencesUseCaseTest {
     fun `gesture with wait and release motions only checks positioned motions`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
         val gesture = gesture(finger(
-            pressMotion(GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0))),
+            pressMotion(Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0))),
             waitMotion(),
             releaseMotion(),
         ))
@@ -370,8 +370,8 @@ class GetActionMissingReferencesUseCaseTest {
     @Test
     fun `click with reachable counter coordinate has no missing references`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
-        val click = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(200),
+        val click = click(position = Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(200),
         ))
         assertActionItem(useCase(click), expectedMissingCount = 0)
     }
@@ -379,8 +379,8 @@ class GetActionMissingReferencesUseCaseTest {
     @Test
     fun `click with missing counter coordinate has one counter reference`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
-        val click = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(200),
+        val click = click(position = Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(200),
         ))
 
         val result = useCase(click)
@@ -397,8 +397,8 @@ class GetActionMissingReferencesUseCaseTest {
     fun `click with both missing counter coordinates has two counter references`() = runTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         every { mockEditionState.getCounter(COUNTER_VALUE_NAME) } returns null
-        val click = click(position = GesturePosition.Coordinates(
-            GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Counter(COUNTER_VALUE_NAME),
+        val click = click(position = Position.Coordinates(
+            CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Counter(COUNTER_VALUE_NAME),
         ))
 
         val result = useCase(click)
@@ -412,7 +412,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
         val click = click(
             position = literalPosition(),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         assertActionItem(useCase(click), expectedMissingCount = 0)
     }
@@ -422,7 +422,7 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         val click = click(
             position = literalPosition(),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         val result = useCase(click)
         assertActionItem(result, expectedMissingCount = 1)
@@ -434,8 +434,8 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
         every { mockEditionState.getCounter(COUNTER_VALUE_NAME) } returns null
         val click = click(
-            position = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(COUNTER_VALUE_NAME)),
+            position = Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(COUNTER_VALUE_NAME)),
         )
         val result = useCase(click)
         assertActionItem(result, expectedMissingCount = 2)
@@ -455,8 +455,8 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns mockk<Counter>()
 
         val click = click(
-            position = GesturePosition.Condition(conditionId),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            position = Position.Condition(conditionId),
+            offset = Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         assertActionItem(useCase(click), expectedMissingCount = 0)
     }
@@ -473,8 +473,8 @@ class GetActionMissingReferencesUseCaseTest {
         every { mockEditionState.getCounter(COUNTER_NAME) } returns null
 
         val click = click(
-            position = GesturePosition.Condition(conditionId),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(COUNTER_NAME)),
+            position = Position.Condition(conditionId),
+            offset = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Counter(COUNTER_NAME)),
         )
         val result = useCase(click)
         assertActionItem(result, expectedMissingCount = 1)
@@ -489,8 +489,8 @@ class GetActionMissingReferencesUseCaseTest {
         coEvery { mockSmartRepository.getConditionName(conditionId) } returns CONDITION_NAME
 
         val click = click(
-            position = GesturePosition.Condition(conditionId),
-            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(COUNTER_NAME), GestureCoordinatesValue.Literal(0)),
+            position = Position.Condition(conditionId),
+            offset = Position.Coordinates(CoordinatesValue.Counter(COUNTER_NAME), CoordinatesValue.Literal(0)),
         )
         val result = useCase(click)
         assertActionItem(result, expectedMissingCount = 2)
@@ -501,7 +501,7 @@ class GetActionMissingReferencesUseCaseTest {
     @Test
     fun `click on detected condition with null conditionId has no missing references`() = runTest {
         val click = mockk<Click>(relaxed = true) {
-            every { position } returns GesturePosition.Condition(null)
+            every { position } returns Position.Condition(null)
             every { offset } returns null
         }
         assertActionItem(useCase(click), expectedMissingCount = 0)
@@ -519,7 +519,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         assertActionItem(useCase(click), expectedMissingCount = 0)
@@ -541,7 +541,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         val result = useCase(click)
@@ -563,7 +563,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         assertActionItem(useCase(click, eventsToCopy = listOf(copyEvent)), expectedMissingCount = 0)
@@ -585,7 +585,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         val result = useCase(click, eventsToCopy = listOf(copyEvent))
@@ -603,7 +603,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         val result = useCase(click)
@@ -633,7 +633,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         val result = useCase(click)
@@ -651,7 +651,7 @@ class GetActionMissingReferencesUseCaseTest {
 
         val click = mockk<Click>(relaxed = true) {
             every { eventId } returns EVENT_ID
-            every { position } returns GesturePosition.Condition(conditionId)
+            every { position } returns Position.Condition(conditionId)
             every { offset } returns null
         }
         val result = useCase(click)
@@ -798,17 +798,17 @@ class GetActionMissingReferencesUseCaseTest {
         motions = motions.toList(),
     )
 
-    private fun literalPosition() = GesturePosition.Coordinates(
-        GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+    private fun literalPosition() = Position.Coordinates(
+        CoordinatesValue.Literal(100), CoordinatesValue.Literal(200),
     )
 
-    private fun pressMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Press(
+    private fun pressMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Press(
         id = Identifier(databaseId = 51L),
         position = position,
         offset = offset,
     )
 
-    private fun moveMotion(position: GesturePosition, offset: GesturePosition = NO_OFFSET) = GestureFingerMotion.Move(
+    private fun moveMotion(position: Position, offset: Position = NO_OFFSET) = GestureFingerMotion.Move(
         id = Identifier(databaseId = 52L),
         position = position,
         offset = offset,
@@ -824,7 +824,7 @@ class GetActionMissingReferencesUseCaseTest {
         id = Identifier(databaseId = 54L),
     )
 
-    private fun click(position: GesturePosition?, offset: GesturePosition? = null) = Click(
+    private fun click(position: Position?, offset: Position? = null) = Click(
         id = ACTION_ID,
         eventId = EVENT_ID,
         priority = 0,
@@ -881,6 +881,6 @@ class GetActionMissingReferencesUseCaseTest {
         const val COUNTER_VALUE_NAME = "otherCounter"
         const val CONDITION_NAME = "myCondition"
         const val EVENT_NAME = "myEvent"
-        val NO_OFFSET = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0))
+        val NO_OFFSET = Position.Coordinates(CoordinatesValue.Literal(0), CoordinatesValue.Literal(0))
     }
 }
