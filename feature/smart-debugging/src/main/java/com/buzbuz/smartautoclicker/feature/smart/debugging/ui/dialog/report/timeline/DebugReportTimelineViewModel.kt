@@ -203,10 +203,10 @@ class DebugReportTimelineViewModel @Inject constructor(
             else -> R.color.debug_timeline_release_color
         }
 
-    /** Only unfulfilled releases have conditions results worth detailing, other held event checks have nothing more to display. */
+    /** Only holds and unfulfilled releases have conditions results worth detailing, other releases have nothing more to display. */
     private fun DebugReportEventOccurrence.hasDetails(): Boolean =
         this !is DebugReportEventOccurrence.HeldEventCheck ||
-                releaseReason == DebugReportHoldReleaseReason.UNFULFILLED
+                isHeld || releaseReason == DebugReportHoldReleaseReason.UNFULFILLED
 
     @StringRes
     private fun DebugReportHoldReleaseReason.getDisplayNameRes(): Int =
