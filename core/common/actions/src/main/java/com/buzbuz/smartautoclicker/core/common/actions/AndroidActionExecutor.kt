@@ -62,6 +62,20 @@ interface AndroidActionExecutor: Dumpable {
     suspend fun dispatchGesture(gestureDescription: GestureDescription)
 
     /**
+     * Dispatch a chain of gestures, each one continuing the pointers left down by the previous one.
+     *
+     * A finger crossing several motions can't be described by a single GestureDescription: the system only honours a
+     * continued stroke when it is found in the first step of a separately dispatched gesture. Such a chain must be
+     * dispatched in one go, without waiting in between, otherwise the fingers would freeze on the screen between two
+     * of its gestures.
+     *
+     * Method will return only once the whole chain is dispatched.
+     *
+     * @param gestureDescriptions the gestures to dispatch, in order.
+     */
+    suspend fun dispatchGestureChain(gestureDescriptions: List<GestureDescription>)
+
+    /**
      * Performs a global action.
      *
      * Such an action can be performed at any moment regardless of the current application or user location in that

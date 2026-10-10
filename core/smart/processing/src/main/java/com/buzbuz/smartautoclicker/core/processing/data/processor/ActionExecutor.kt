@@ -27,7 +27,6 @@ import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.line
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
@@ -38,21 +37,25 @@ import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
+import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.AndroidGestureBuilder
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Execute the actions of an event.
@@ -93,7 +96,7 @@ internal class ActionExecutor(
         event.actions.forEach { action ->
             when (action) {
                 is Click -> executeClick(event, action, results)
-                is Swipe -> executeSwipe(action)
+                is Gesture -> executeGesture(event, action, results)
                 is Pause -> executePause(action)
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
@@ -106,15 +109,16 @@ internal class ActionExecutor(
     }
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
-        val clickPath = when (click.positionType) {
-            Click.PositionType.USER_SELECTED -> {
-                click.position?.let { position ->
-                    Path().apply { moveTo(position, random) }
+        val clickPath = when (val position = click.position) {
+            is GesturePosition.Coordinates ->
+                getUserSelectedClickPosition(position)?.let { point ->
+                    Path().apply { moveTo(point, random) }
                 }
-            }
 
-            Click.PositionType.ON_DETECTED_CONDITION ->
-                getOnConditionClickPath(event, click, results)
+            is GesturePosition.Condition ->
+                getOnConditionClickPath(event, position, click.offset, results)
+
+            null -> null
         } ?: return
 
         val clickGesture = GestureDescription.Builder().buildSingleStroke(
@@ -128,12 +132,32 @@ internal class ActionExecutor(
         }
     }
 
-    private fun getOnConditionClickPath(event: Event, click: Click, results: ConditionsResults?): Path? {
+    private fun getUserSelectedClickPosition(position: GesturePosition.Coordinates): Point? {
+        val x = resolveCoordinateValue(position.x) ?: return null
+        val y = resolveCoordinateValue(position.y) ?: return null
+        return Point(x, y)
+    }
+
+    private fun resolveCoordinateValue(coordinatesValue: GestureCoordinatesValue): Int? =
+        when (coordinatesValue) {
+            is GestureCoordinatesValue.Literal ->
+                coordinatesValue.value
+            is GestureCoordinatesValue.Counter ->
+                processingState.getCounterValue(coordinatesValue.counterName)?.toInt()
+        }
+
+    private fun getOnConditionClickPath(
+        event: Event,
+        position: GesturePosition.Condition,
+        clickOffset: GesturePosition?,
+        results: ConditionsResults?,
+    ): Path? {
         if (event !is ScreenEvent) return null
 
+        val conditionId = position.conditionId
         val result = when {
             event.conditionOperator == OR -> results?.getFirstScreenConditionDetectedResult()
-            click.clickOnConditionId != null -> results?.getScreenConditionResult(click.clickOnConditionId!!.databaseId)
+            conditionId != null -> results?.getScreenConditionResult(conditionId.databaseId)
             else -> null
         }
 
@@ -142,32 +166,25 @@ internal class ActionExecutor(
             return null
         }
 
+        val offset = clickOffset as? GesturePosition.Coordinates
         return Path().apply {
             moveTo(
                 position = Point(
-                    (result.position?.x ?: 0) + (click.clickOffset?.x ?: 0),
-                    (result.position?.y ?: 0) + (click.clickOffset?.y ?: 0),
+                    (result.position?.x ?: 0) + (offset?.x?.let(::resolveCoordinateValue) ?: 0),
+                    (result.position?.y ?: 0) + (offset?.y?.let(::resolveCoordinateValue) ?: 0),
                 ),
                 random = random,
             )
         }
     }
 
-    /**
-     * Execute the provided swipe.
-     * @param swipe the swipe to be executed.
-     */
-    private suspend fun executeSwipe(swipe: Swipe) {
-        val swipeGesture = GestureDescription.Builder().buildSingleStroke(
-            path =
-                if (swipe.from == null || swipe.to == null) return
-                else Path().apply { line(swipe.from, swipe.to, random) },
-            durationMs = swipe.swipeDuration!!,
-            random = random,
-        )
+    private suspend fun executeGesture(event: Event, gesture: Gesture, results: ConditionsResults?) {
+        val gestureChains = AndroidGestureBuilder
+            .createNewBuilder(processingState, random)
+            .build(gesture, event, results) ?: return
 
         withContext(Dispatchers.Main) {
-            androidExecutor.dispatchGesture(swipeGesture)
+            gestureChains.forEach { chain -> androidExecutor.dispatchGestureChain(chain) }
         }
     }
 
@@ -176,7 +193,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(pause.pauseDuration!!.getPauseDurationMs(random))
+        delay(pause.pauseDuration!!.getPauseDurationMs(random).milliseconds)
     }
 
     /**
@@ -199,12 +216,12 @@ internal class ActionExecutor(
             withContext(Dispatchers.Main) {
                 androidExecutor.sendBroadcast(androidIntent)
             }
-            delay(INTENT_BROADCAST_DELAY)
+            delay(INTENT_BROADCAST_DELAY.milliseconds)
         } else {
             withContext(Dispatchers.Main) {
                 androidExecutor.startActivity(androidIntent)
             }
-            delay(INTENT_START_ACTIVITY_DELAY)
+            delay(INTENT_START_ACTIVITY_DELAY.milliseconds)
         }
     }
 

@@ -30,8 +30,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
@@ -70,23 +71,20 @@ class ActionExecutorTests {
         private const val TEST_NAME = "Action name"
         private const val TEST_DURATION = 25L
         private const val TEST_X1 = 12
-        private const val TEST_X2 = 24
         private const val TEST_Y1 = 88
-        private const val TEST_Y2 = 76
 
         fun getNewDefaultEvent(operator: Int = OR, conditions: List<ScreenCondition.Image> = emptyList(), actions: List<Action> = emptyList()) =
             ScreenEvent(TEST_EVENT_ID, Identifier(databaseId = 12L), "Name", operator, actions, conditions, true, 0, cooldownMs = 0, keepDetecting = false)
 
         fun getNewDefaultClickUserPos(id: Long, duration: Long = TEST_DURATION) =
-            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration, Click.PositionType.USER_SELECTED, Point(
-                TEST_X1, TEST_Y1
-            ), null)
+            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 0, duration,
+                GesturePosition.Coordinates(
+                    GestureCoordinatesValue.Literal(TEST_X1),
+                    GestureCoordinatesValue.Literal(TEST_Y1),
+                ))
         fun getNewDefaultClickCondition(id: Long, conditionId: Long? = null) =
-            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION, Click.PositionType.ON_DETECTED_CONDITION, null, conditionId?.let { Identifier(databaseId = conditionId) })
-        fun getNewDefaultSwipe(id: Long) =
-            Swipe(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 2, TEST_DURATION, Point(TEST_X1, TEST_Y1), Point(
-                TEST_X2, TEST_Y2
-            ))
+            Click(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 1, TEST_DURATION,
+                GesturePosition.Condition(conditionId?.let { Identifier(databaseId = it) }))
         fun getNewDefaultPause(id: Long) =
             Pause(Identifier(databaseId = id), TEST_EVENT_ID, TEST_NAME, 3, TEST_DURATION)
 
@@ -213,20 +211,6 @@ class ActionExecutorTests {
     }
 
     @Test
-    fun execute_oneSwipe() = runTest {
-        val swipeAction = getNewDefaultSwipe(1)
-
-        actionExecutor.executeActions(
-            event = getNewDefaultEvent(actions = listOf(swipeAction)),
-            results = ConditionsResults(),
-        )
-
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
-        assertActionGesture(gestureCaptor.lastValue)
-    }
-
-    @Test
     fun execute_onePause() = runTest {
         val pause = getNewDefaultPause(1)
 
@@ -244,12 +228,12 @@ class ActionExecutorTests {
     fun execute_mixed() = runTest {
         val click = getNewDefaultClickUserPos(1)
         val pause = getNewDefaultPause(2)
-        val swipe = getNewDefaultSwipe(3)
+        val otherClick = getNewDefaultClickUserPos(3)
         val gestureCaptor = argumentCaptor<GestureDescription>()
 
         // Execute the actions.
         actionExecutor.executeActions(
-            event = getNewDefaultEvent(actions = listOf(click, pause, swipe)),
+            event = getNewDefaultEvent(actions = listOf(click, pause, otherClick)),
             results = ConditionsResults(),
         )
 

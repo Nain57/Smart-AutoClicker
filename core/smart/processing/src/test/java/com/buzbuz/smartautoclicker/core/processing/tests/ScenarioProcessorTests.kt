@@ -34,6 +34,8 @@ import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
@@ -101,8 +103,10 @@ class ScenarioProcessorTests {
                 eventId = Identifier(databaseId = 1),
                 priority = 0,
                 pressDuration = duration,
-                positionType = Click.PositionType.USER_SELECTED,
-                position = Point(10, 10),
+                position = GesturePosition.Coordinates(
+                    x = GestureCoordinatesValue.Literal(10),
+                    y = GestureCoordinatesValue.Literal(10),
+                ),
             )
     }
 
