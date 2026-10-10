@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 import kotlin.getValue
 
 
-/** Displays the unfulfilled conditions that caused the release of a held event. */
+/** Displays the conditions results of a held event check, either keeping the event held or causing its release. */
 class DebugReportHeldEventReleaseDetailsDialog(
     private val scenarioId: Long,
     private val heldEventCheck: DebugReportEventOccurrence.HeldEventCheck,
