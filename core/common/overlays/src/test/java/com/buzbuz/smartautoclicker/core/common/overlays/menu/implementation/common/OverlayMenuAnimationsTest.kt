@@ -66,4 +66,17 @@ class OverlayMenuAnimationsTests {
 
         assertEquals(1, completionCount)
     }
+
+    @Test
+    fun showAnimation_restoresAlphaAfterHideTimeout() {
+        val animations = OverlayMenuAnimations()
+        val view = View(ApplicationProvider.getApplicationContext())
+
+        animations.startHideAnimation(view) {}
+        view.alpha = 0f // Simulates the hide timeout fallback, triggered when the screen is off
+
+        animations.startShowAnimation(view) {}
+
+        assertEquals(1f, view.alpha)
+    }
 }

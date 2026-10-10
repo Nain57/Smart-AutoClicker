@@ -131,6 +131,9 @@
     <string name="field_force_entire_screen_title">Принудительно весь экран</string>
     <string name="field_force_entire_screen_desc">Установите переключатель захвата экрана в положение «Весь экран». Может не работать в зависимости от вашего устройства</string>
 
+    <string name="field_show_on_lock_screen_title">Показывать на экране блокировки</string>
+    <string name="field_show_on_lock_screen_desc">Оставлять плавающее меню видимым, когда устройство заблокировано.</string>
+
     <string name="field_input_block_workaround_title">Разблокировать сенсорный экран</string>
     <string name="field_input_block_workaround_desc">На устройствах Pixel с Android 15 использование автоматического кликера может заблокировать сенсорный экран.\nЧтобы разблокировать его, необходимо одновременно коснуться экрана несколькими пальцами. Этот параметр пытается имитировать это каждые 10 секунд.</string>
 

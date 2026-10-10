@@ -141,6 +141,9 @@
     <string name="field_force_entire_screen_title">فرض الشاشة بأكملها</string>
     <string name="field_force_entire_screen_desc">فرض محدد التقاط الشاشة على "الشاشة بأكملها". قد لا يعمل حسب جهازك</string>
 
+    <string name="field_show_on_lock_screen_title">الإظهار على شاشة القفل</string>
+    <string name="field_show_on_lock_screen_desc">إبقاء القائمة العائمة مرئية عندما يكون الجهاز مقفلاً.</string>
+
     <string name="field_input_block_workaround_title">إلغاء حظر الشاشة باللمس</string>
     <string name="field_input_block_workaround_desc">في أجهزة Pixel مع Android 15، استخدام النقر التلقائي يمكن أن يحجب الشاشة باللمس.\nلفك الحظر، تحتاج إلى لمس الشاشة بعدة أصابع في نفس الوقت. تحاول هذه الإعدادات محاكاة ذلك كل 10 ثوانٍ.</string>
 

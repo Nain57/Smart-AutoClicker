@@ -26,6 +26,8 @@ import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
+import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.common.overlays.base.BaseOverlay
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
@@ -33,13 +35,23 @@ import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.Overl
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.navigation.OverlayNavigationRequestStack
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
 import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 import java.io.PrintWriter
@@ -52,8 +64,11 @@ import javax.inject.Singleton
  */
 @Singleton
 class OverlayManager @Inject internal constructor(
+    @Dispatcher(Main) mainDispatcher: CoroutineDispatcher,
     private val displayConfigManager: DisplayConfigManager,
     private val menuPositionDataSource: OverlayMenuPositionDataSource,
+    private val keyguardStateDataSource: KeyguardStateDataSource,
+    private val settingsRepository: SettingsRepository,
 ): Dumpable {
 
     companion object {
@@ -66,6 +81,7 @@ class OverlayManager @Inject internal constructor(
         }
     }
 
+    private val mainScope: CoroutineScope = CoroutineScope(SupervisorJob() + mainDispatcher)
 
     /** The listener upon screen rotation. */
     private val orientationListener: (Context) -> Unit = { onOrientationChanged() }
@@ -90,6 +106,8 @@ class OverlayManager @Inject internal constructor(
     /** The tells if the stack is hidden by [hideAll]. */
     private val _isStackHidden: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isStackHidden: StateFlow<Boolean> = _isStackHidden
+    /** Tells if the stack and the top overlay are hidden because the keyguard is visible. */
+    private var isHiddenByKeyguard: Boolean = false
 
     /** Flow on the top of the overlay stack. Null if the stack is empty. */
     val backStackTopFlow: Flow<Overlay?> = isNavigating
@@ -99,6 +117,21 @@ class OverlayManager @Inject internal constructor(
             stackTop
         }
         .distinctUntilChanged()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val keyguardState: Flow<Boolean> = backStackTopFlow
+        .map { top -> top == null }
+        .distinctUntilChanged()
+        .flatMapLatest { isBackstackEmpty ->
+            if (settingsRepository.showOnLockScreen() || isBackstackEmpty) flowOf(false)
+            else keyguardStateDataSource.isKeyguardVisibleFlow
+        }
+
+    init {
+        keyguardState
+            .onEach(::onKeyguardStateChanged)
+            .launchIn(mainScope)
+    }
 
     /** @return the top of the overlay back stack. */
     fun getBackStackTop(): Overlay? =
@@ -184,11 +217,8 @@ class OverlayManager @Inject internal constructor(
 
         Log.d(TAG, "Hide all overlays from the stack")
 
-        // Save the overlays states to restore them when restoreAll is called
-        lifecyclesRegistry.saveStates(overlayBackStack.toList())
-        // Hide from top to bottom of the stack
-        overlayBackStack.forEachReversed { it.hide() }
-
+        // Already hidden by the keyguard: states are saved, they will be restored by restoreVisibility
+        if (!isHiddenByKeyguard) hideStack()
         _isStackHidden.update { true }
     }
 
@@ -199,10 +229,38 @@ class OverlayManager @Inject internal constructor(
     fun restoreVisibility() {
         if (!isOverlayStackHidden()) return
 
-        val overlayStates = lifecyclesRegistry.restoreStates()
-        if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return
-
         Log.d(TAG, "Restore overlays visibility")
+
+        // Keyguard is visible: keep the stack hidden, it will be shown once the keyguard is dismissed
+        if (!isHiddenByKeyguard && !showStack()) return
+        _isStackHidden.update { false }
+    }
+
+    /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
+    fun isOverlayStackHidden(): Boolean = _isStackHidden.value
+
+    fun isOverlayStackVisible(): Boolean =
+        getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
+
+    /** @return true if the overlay stack is hidden, either via [hideAll] or because of the keyguard. */
+    private fun isStackHiddenForAnyReason(): Boolean =
+        isOverlayStackHidden() || isHiddenByKeyguard
+
+    /** Save the states of all overlays on the backstack and hide them. */
+    private fun hideStack() {
+        // Save the overlays states to restore them when showStack is called
+        lifecyclesRegistry.saveStates(overlayBackStack.toList())
+        // Hide from top to bottom of the stack
+        overlayBackStack.forEachReversed { it.hide() }
+    }
+
+    /**
+     * Restore the states of all overlays on the backstack saved by [hideStack].
+     * @return false if there was nothing to restore, true if not.
+     */
+    private fun showStack(): Boolean {
+        val overlayStates = lifecyclesRegistry.restoreStates()
+        if (overlayBackStack.isEmpty() || overlayStates.isEmpty()) return false
 
         // Restore from bottom to top
         overlayBackStack.forEach { overlay ->
@@ -218,14 +276,8 @@ class OverlayManager @Inject internal constructor(
             } ?: Log.w(TAG, "State for overlay ${overlay.hashCode()} not found, can't restore state")
         }
 
-        _isStackHidden.update { false }
+        return true
     }
-
-    /** @return true if the overlay stack has been hidden via [hideAll], false if not. */
-    fun isOverlayStackHidden(): Boolean = _isStackHidden.value
-
-    fun isOverlayStackVisible(): Boolean =
-        getBackStackTop()?.lifecycle?.currentState?.isAtLeast(Lifecycle.State.STARTED) ?: false
 
     /**
      * Set an overlay as being shown above all overlays in the backstack.
@@ -243,7 +295,7 @@ class OverlayManager @Inject internal constructor(
                 dismissListener = { _, _ -> topOverlay = null },
             )
 
-            resume()
+            if (!isHiddenByKeyguard) resume()
         }
     }
 
@@ -300,7 +352,7 @@ class OverlayManager @Inject internal constructor(
             if (request.hideCurrent) stop()
         }
 
-        if (isOverlayStackHidden()) {
+        if (isStackHiddenForAnyReason()) {
             Log.d(TAG, "Stack is hidden, stay in created state")
             lifecyclesRegistry.saveNewOverlayState(request.overlay, Lifecycle.State.RESUMED)
         } else {
@@ -340,7 +392,7 @@ class OverlayManager @Inject internal constructor(
         // If there is no more navigation requests, resume the top overlay
         if (overlayBackStack.isNotEmpty()) {
             // If the overlay stack was requested hidden, do nothing
-            if (!isOverlayStackHidden()) {
+            if (!isStackHiddenForAnyReason()) {
                 Log.d(TAG, "No more pending request, resume stack top overlay")
                 overlayBackStack.peek().resume()
             } else {
@@ -356,6 +408,23 @@ class OverlayManager @Inject internal constructor(
 
     private fun onOrientationChanged() {
         overlayBackStack.forEach { it.changeOrientation() }
+    }
+
+    private fun onKeyguardStateChanged(keyguardVisible: Boolean) {
+        if (keyguardVisible == isHiddenByKeyguard) return
+        Log.d(TAG, "Keyguard visibility changed: $keyguardVisible")
+
+        if (keyguardVisible) {
+            // Already hidden via hideAll: states are already saved
+            if (!isOverlayStackHidden()) hideStack()
+            topOverlay?.hide()
+            isHiddenByKeyguard = true
+        } else {
+            isHiddenByKeyguard = false
+            // Hidden via hideAll: keep it hidden, restoreVisibility will show it
+            if (!isOverlayStackHidden()) showStack()
+            topOverlay?.show()
+        }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {

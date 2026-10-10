@@ -66,6 +66,10 @@ internal class SettingsRepositoryImpl @Inject constructor(
         .stateIn(coroutineScope, SharingStarted.Eagerly, false)
     override val isInputBlockWorkaroundEnabledFlow: Flow<Boolean> = _isInputBlockWorkaroundEnabledFlow
 
+    private val _showOnLockScreenFlow: StateFlow<Boolean> = dataSource.showOnLockScreen()
+        .stateIn(coroutineScope, SharingStarted.Eagerly, false)
+    override val showOnLockScreenFlow: Flow<Boolean> = _showOnLockScreenFlow
+
     override val scenarioSortSettings: Flow<ScenarioSortSettings> = scenarioSortSettingsDatasource.getSortConfig()
 
 
@@ -114,6 +118,17 @@ internal class SettingsRepositoryImpl @Inject constructor(
             dataSource.toggleInputBlockWorkaround()
         }
     }
+
+
+    override fun showOnLockScreen(): Boolean =
+        _showOnLockScreenFlow.value
+
+    override fun toggleShowOnLockScreenFlow() {
+        coroutineScope.launch {
+            dataSource.toggleShowOnLockScreen()
+        }
+    }
+
 
     override fun setScenarioSortType(type: ScenarioSortType) {
         coroutineScope.launch { scenarioSortSettingsDatasource.setSortType(type) }

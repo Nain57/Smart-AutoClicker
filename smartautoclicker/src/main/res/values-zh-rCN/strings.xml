@@ -81,6 +81,9 @@
     <string name="field_force_entire_screen_title">强制全屏</string>
     <string name="field_force_entire_screen_desc">将屏幕捕获选择器固定为「整个屏幕」。视设备而定，可能无法生效。</string>
 
+    <string name="field_show_on_lock_screen_title">在锁屏上显示</string>
+    <string name="field_show_on_lock_screen_desc">设备锁定时保持悬浮菜单可见。</string>
+
     <string name="field_input_block_workaround_title">解除触控阻塞</string>
     <string name="field_input_block_workaround_desc">在运行 Android 15 的部分 Pixel 设备上，使用自动点击器可能导致触控暂时无响应。\n可同时以多指触摸屏幕以恢复。本设置将尝试每 10 秒模拟该操作。</string>
 

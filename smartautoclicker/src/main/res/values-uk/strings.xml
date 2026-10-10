@@ -134,6 +134,9 @@
     <string name="field_force_entire_screen_title">Примусово весь екран</string>
     <string name="field_force_entire_screen_desc">Примусити селектор захоплення екрана до \"Весь екран\". Може не працювати в залежності від вашого пристрою</string>
 
+    <string name="field_show_on_lock_screen_title">Показувати на екрані блокування</string>
+    <string name="field_show_on_lock_screen_desc">Залишати плаваюче меню видимим, коли пристрій заблоковано.</string>
+
     <string name="field_input_block_workaround_title">Розблокувати сенсорний екран</string>
     <string name="field_input_block_workaround_desc">На пристроях Pixel з Android 15 використання автоклікера може заблокувати сенсорний екран.\nЩоб розблокувати його, потрібно доторкнутися до екрана кількома пальцями одночасно. Це налаштування намагається імітувати це кожні 10 секунд.</string>
 

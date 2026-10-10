@@ -20,26 +20,37 @@ import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortSettin
 import com.buzbuz.smartautoclicker.core.settings.domain.model.ScenarioSortType
 import kotlinx.coroutines.flow.Flow
 
+/** Keep track of the app user settings. */
 interface SettingsRepository {
 
+    /** Allows to display the action overlay as a list dialog. False by default. */
     val isLegacyActionUiEnabledFlow: Flow<Boolean>
     fun isLegacyActionUiEnabled(): Boolean
     fun toggleLegacyActionUi()
 
+    /** Allows to display the buttons in the notification as text. False by default. */
     val isLegacyNotificationUiEnabledFlow: Flow<Boolean>
     fun isLegacyNotificationUiEnabled(): Boolean
     fun toggleLegacyNotificationUi()
 
+    /** Allows to force the MediaProjection permission dialog to use "Entire Screen" option by default. False by default. */
     val isEntireScreenCaptureForcedFlow: Flow<Boolean>
     fun isEntireScreenCaptureForced(): Boolean
     fun toggleForceEntireScreenCapture()
 
+    /** Allows to show/hide the filters in the scenario list screen. True by default.*/
     val isFilterScenarioUiEnabledFlow: Flow<Boolean>
     fun toggleFilterScenarioUi()
 
+    /** Allows to inject an unblock gesture during the scenario as a workaround for some devices. */
     val isInputBlockWorkaroundEnabledFlow: Flow<Boolean>
     fun isInputBlockWorkaroundEnabled(): Boolean
     fun toggleInputBlockWorkaround()
+
+    /** Allows to show the app overlays on the lockscreen. */
+    val showOnLockScreenFlow: Flow<Boolean>
+    fun showOnLockScreen(): Boolean
+    fun toggleShowOnLockScreenFlow()
 
 
     val scenarioSortSettings: Flow<ScenarioSortSettings>
@@ -47,4 +58,6 @@ interface SettingsRepository {
     fun setScenarioSortOrder(invertSortOrder: Boolean)
     fun setScenarioSortShowDumb(show: Boolean)
     fun setScenarioSortShowSmart(show: Boolean)
+
+
 }

@@ -55,6 +55,9 @@ class SettingsViewModel @Inject constructor(
     val isInputWorkaroundEnabled: Flow<Boolean> =
         settingsRepository.isInputBlockWorkaroundEnabledFlow
 
+    val isShowOnLockScreenEnabled: Flow<Boolean> =
+        settingsRepository.showOnLockScreenFlow
+
     val shouldShowEntireScreenCapture: Flow<Boolean> =
         flowOf(Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)
 
@@ -84,6 +87,10 @@ class SettingsViewModel @Inject constructor(
 
     fun toggleForceEntireScreenCapture() {
         settingsRepository.toggleForceEntireScreenCapture()
+    }
+
+    fun toggleShowOnLockScreen() {
+        settingsRepository.toggleShowOnLockScreenFlow()
     }
 
     fun toggleInputBlockWorkaround() {

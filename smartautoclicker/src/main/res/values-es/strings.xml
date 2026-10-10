@@ -134,6 +134,9 @@
     <string name="field_force_entire_screen_title">Forzar pantalla completa</string>
     <string name="field_force_entire_screen_desc">Fuerce el selector de captura de pantalla a \"Pantalla completa\". Puede que no funcione dependiendo de su dispositivo</string>
 
+    <string name="field_show_on_lock_screen_title">Mostrar en la pantalla de bloqueo</string>
+    <string name="field_show_on_lock_screen_desc">Mantener el menú flotante visible cuando el dispositivo está bloqueado.</string>
+
     <string name="field_input_block_workaround_title">Desbloquear pantalla táctil</string>
     <string name="field_input_block_workaround_desc">En dispositivos Pixel con Android 15, el uso de un control automático puede bloquear la pantalla táctil.\nPara desbloquearla, debes tocar la pantalla con varios dedos al mismo tiempo. Esta configuración intenta simular esto cada 10 segundos.</string>
 
