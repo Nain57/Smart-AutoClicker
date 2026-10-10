@@ -54,7 +54,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogEventConfigBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsBriefMenu
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.SmartActionsLegacyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.legacy.SmartActionsLegacyDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefMenu

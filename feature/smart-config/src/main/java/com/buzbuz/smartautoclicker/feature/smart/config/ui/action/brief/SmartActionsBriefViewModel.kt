@@ -42,7 +42,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
-import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
@@ -60,9 +59,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsActionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toItemBriefs
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toGestureDescription
 
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -73,10 +71,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 import java.util.Collections
@@ -92,50 +91,57 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val smartProcessingRepository: SmartProcessingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     tutorialRepository: TutorialRepository,
-    settingsRepository: SettingsRepository,
 ) : ViewModel(), ActionConfigurator {
-
-    private val isLegacyUiEnabled: Flow<Boolean> = settingsRepository.isLegacyActionUiEnabledFlow
 
     private val editedActions: Flow<EditedListState<Action>> = editionRepository.editionState.editedEventActionsState
     private val editedEvent: Flow<Event> = editionRepository.editionState.editedEventState.mapNotNull { it.value }
 
-    private val briefVisualizationState: MutableStateFlow<BriefVisualizationState> =
-        MutableStateFlow(BriefVisualizationState(0, false))
+    private val visualizationState: MutableStateFlow<BriefVisualizationState> =
+        MutableStateFlow(BriefVisualizationState(focusedIndex = 0, isGestureCaptureStarted = false))
 
-    val isGestureCaptureStarted: StateFlow<Boolean> = briefVisualizationState
-        .map { it.gestureCaptureStarted }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    private val actionBriefs: Flow<List<ItemBrief>> =
+        combine(editedEvent, editedActions) { event, actions -> actions.toItemBriefs(context, event) }
 
-    val actionBriefList: Flow<List<ItemBrief>> =
-        combine(editedEvent, editedActions) { event, actions ->
-            val actionList = actions.value ?: emptyList()
-            actionList.mapIndexed { index, action ->
-                ItemBrief(action.id, action.toUiAction(context, event, inError = !actions.itemValidity[index]) )
-            }
+    private val focusedActionDescription: Flow<ItemBriefDescription?> =
+        combine(visualizationState, editedActions) { state, actions ->
+            if (state.isGestureCaptureStarted) null
+            else actions.value?.getOrNull(state.focusedIndex)
         }
+            .distinctUntilChanged()
+            .map { action -> action?.toActionDescription(context) }
 
-    val isTestingAction: Flow<Boolean> = smartProcessingRepository.detectionState
-        .map { state -> state == DetectionState.DETECTING }
-
-    private val focusedAction: Flow<Pair<Action?, Boolean>> =
-        combine(briefVisualizationState, editedActions) { visualizationState, actions ->
-            val filterUpdates = visualizationState.gestureCaptureStarted
-            val actionList = actions.value ?: return@combine null to filterUpdates
-            if (visualizationState.focusedIndex !in actionList.indices) return@combine null to filterUpdates
-            actionList[visualizationState.focusedIndex] to filterUpdates
+    private val mode: Flow<SmartActionsBriefMode> = combine(
+        visualizationState,
+        smartProcessingRepository.detectionState,
+    ) { state, detectionState ->
+        when {
+            detectionState == DetectionState.DETECTING -> SmartActionsBriefMode.ACTION_TESTING
+            state.isGestureCaptureStarted -> SmartActionsBriefMode.GESTURE_CAPTURE
+            else -> SmartActionsBriefMode.IDLE
         }
+    }
 
-    val actionVisualization: Flow<ItemBriefDescription?> = focusedAction
-        .filter { !it.second }
-        .map { (action, _) -> action?.toActionDescription(context) }
+    private val isTutorialModeEnabled: Flow<Boolean> =
+        tutorialRepository.tutorialState.map { it is TutorialState.Started }
 
-    val canCopyActions: Flow<Boolean> = isActionCopyAvailableUseCase()
+    val uiState: StateFlow<SmartActionsBriefUiState?> = combine(
+        actionBriefs,
+        focusedActionDescription,
+        mode,
+        isTutorialModeEnabled,
+    ) { briefs, description, mode, isTutorialEnabled ->
+        SmartActionsBriefUiState(
+            actionBriefs = briefs,
+            focusedActionDescription = description,
+            mode = mode,
+            isBriefPanelAutoHideEnabled = !isTutorialEnabled,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-    val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
-        combine(canCopyActions, isLegacyUiEnabled) { canCopy, legacyEnabled ->
+    private val actionTypeChoices: StateFlow<List<ActionTypeChoice>> =
+        isActionCopyAvailableUseCase().map { canCopy ->
             buildList {
-                if (!legacyEnabled && canCopy) add(ActionTypeChoice.Copy)
+                if (canCopy) add(ActionTypeChoice.Copy)
                 add(ActionTypeChoice.Click)
                 add(ActionTypeChoice.Gesture)
                 add(ActionTypeChoice.Pause)
@@ -148,49 +154,37 @@ class SmartActionsBriefViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    val isTutorialModeEnabled: Flow<Boolean> =
-        tutorialRepository.tutorialState.map { it is TutorialState.Started }
+    fun isGestureCaptureStarted(): Boolean =
+        visualizationState.value.isGestureCaptureStarted
 
-    fun startGestureCaptureState() {
-        briefVisualizationState.value = briefVisualizationState.value
-            .copy(gestureCaptureStarted = true)
+    fun startGestureCapture() {
+        visualizationState.update { state -> state.copy(isGestureCaptureStarted = true) }
     }
 
-    fun endGestureCaptureState(context: Context, gesture: RecordedGesture) {
-        val action = gesture.toAction(context)
+    /** Ends the capture, adding the recorded gesture as a new action if any was actually captured. */
+    fun endGestureCapture(context: Context, gesture: RecordedGesture?) {
+        visualizationState.update { state -> state.copy(isGestureCaptureStarted = false) }
+
+        gesture ?: return
         editionRepository.apply {
-            startActionEdition(action)
+            startActionEdition(gesture.toAction(context))
             upsertEditedAction()
         }
     }
 
-    fun cancelGestureCaptureState() {
-        briefVisualizationState.value = briefVisualizationState.value
-            .copy(gestureCaptureStarted = false)
+    fun cancelGestureCapture() {
+        visualizationState.update { state -> state.copy(isGestureCaptureStarted = false) }
     }
 
     fun setFocusedActionIndex(index: Int) {
-        briefVisualizationState.value = BriefVisualizationState(
-            focusedIndex = index,
-            gestureCaptureStarted = false,
-        )
+        visualizationState.update { state -> state.copy(focusedIndex = index) }
     }
 
     override fun getActionTypeChoices(): List<ActionTypeChoice> =
         actionTypeChoices.value
 
-    override fun createAction(context: Context, choice: ActionTypeChoice): Action = when (choice) {
-        ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
-        ActionTypeChoice.Gesture -> editionRepository.editedItemsBuilder.createNewGesture(context)
-        ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
-        ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
-        ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
-        ActionTypeChoice.ChangeCounter -> editionRepository.editedItemsBuilder.createNewChangeCounter(context)
-        ActionTypeChoice.Notification -> editionRepository.editedItemsBuilder.createNewNotification(context)
-        ActionTypeChoice.System -> editionRepository.editedItemsBuilder.createNewSystemAction(context)
-        ActionTypeChoice.SetText -> editionRepository.editedItemsBuilder.createNewSetText(context)
-        ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
-    }
+    override fun createAction(context: Context, choice: ActionTypeChoice): Action =
+        editionRepository.createNewAction(context, choice)
 
     override fun startActionEdition(action: Action) {
         editionRepository.startActionEdition(action)
@@ -247,9 +241,6 @@ class SmartActionsBriefViewModel @Inject constructor(
 
         editionRepository.updateActionsOrder(actions)
     }
-
-    fun updateActionOrder(actionsBrief: List<ItemBrief>) =
-        editionRepository.updateActionsOrder(actionsBrief.map { brief -> (brief.data as UiAction).action })
 
     fun deleteAction(index: Int) {
         val actions = editionRepository.editionState.getEditedEventActions<Action>()?.toMutableList() ?: return
@@ -395,5 +386,5 @@ class SmartActionsBriefViewModel @Inject constructor(
 
 private data class BriefVisualizationState(
     val focusedIndex: Int,
-    val gestureCaptureStarted: Boolean,
+    val isGestureCaptureStarted: Boolean,
 )
