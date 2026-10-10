@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.text.InputType
 import android.util.Log
@@ -36,38 +34,38 @@ import com.buzbuz.smartautoclicker.core.common.actions.GESTURE_DURATION_MAX_VALU
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
-import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.MultiStateButtonConfig
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setLabel
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnTextChangedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setText
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setError
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setButtonConfig
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setEnabled
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setIconBitmap
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setImageDrawable
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckedListener
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnCheckboxClickedListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setupDescriptions
+import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionClickBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.offset.ClickOffsetDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.bindings.bindCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.bindings.enableClearCounterOnType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.bindings.setPositionValue
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.offset.GestureOffsetDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.UiGesturePosition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getOffsetDescription
 
 class ClickDialog(
     private val listener: OnActionConfigCompleteListener,
@@ -83,6 +81,8 @@ class ClickDialog(
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionClickBinding
+    /** Loading of the bitmap of the condition to click on, if any. */
+    private var conditionBitmapLoadingJob: Job? = null
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionClickBinding.inflate(LayoutInflater.from(context)).apply {
@@ -118,26 +118,40 @@ class ClickDialog(
             }
             hideSoftInputOnFocusLoss(fieldPressDuration.textField)
 
-            fieldClickType.apply {
-                setTitle(context.getString(R.string.field_click_type_title))
-                setupDescriptions(
-                    listOf(
-                        context.getString(R.string.field_click_type_desc_on_position),
-                        context.getString(R.string.field_click_type_desc_on_condition),
-                    )
+            fieldPosition.fieldX.apply {
+                setup(
+                    label = R.string.field_title_position_x,
+                    icon = R.drawable.ic_append_counter,
+                    disableInputWithCheckbox = false,
                 )
-                setButtonConfig(
-                    MultiStateButtonConfig(
-                        icons = listOf(R.drawable.ic_click_on_condition, R.drawable.ic_condition),
-                        singleSelection = true,
-                        selectionRequired = true,
-                    )
+                enableClearCounterOnType()
+                setOnTextChangedListener { viewModel.setPositionX(it.toString()) }
+                setOnCheckboxClickedListener {
+                    showCounterSelectionDialog(viewModel::setPositionXCounter)
+                }
+            }
+            hideSoftInputOnFocusLoss(fieldPosition.fieldX.textField)
+
+            fieldPosition.fieldY.apply {
+                setup(
+                    label = R.string.field_title_position_y,
+                    icon = R.drawable.ic_append_counter,
+                    disableInputWithCheckbox = false,
                 )
-                setOnCheckedListener { checkedId ->
-                    viewModel.setClickOnCondition(
-                        if (checkedId == 0) Click.PositionType.USER_SELECTED
-                        else Click.PositionType.ON_DETECTED_CONDITION
-                    )
+                enableClearCounterOnType()
+                setOnTextChangedListener { viewModel.setPositionY(it.toString()) }
+                setOnCheckboxClickedListener {
+                    showCounterSelectionDialog(viewModel::setPositionYCounter)
+                }
+            }
+            hideSoftInputOnFocusLoss(fieldPosition.fieldY.textField)
+
+            fieldPosition.buttonSelectPosition.setDebouncedOnClickListener { showPositionSelector() }
+            fieldPosition.buttonSelectCondition.setDebouncedOnClickListener { onSelectConditionClicked() }
+            fieldPosition.conditionSplash.conditionCard.setDebouncedOnClickListener {
+                val position = viewModel.uiState.value?.positionState?.position
+                if (position is UiGesturePosition.Condition && position.condition != null && !position.inError) {
+                    showConditionSelector()
                 }
             }
 
@@ -166,8 +180,8 @@ class ClickDialog(
     override fun onStart() {
         super.onStart()
         viewModel.monitorViews(
-            onConditionTypeView = viewBinding.fieldClickType.multiStateButton.buttonMiddle,
-            selectPositionFieldView = viewBinding.fieldClickSelection.root,
+            selectConditionButton = viewBinding.fieldPosition.buttonSelectCondition,
+            selectPositionButton = viewBinding.fieldPosition.buttonSelectPosition,
             saveButton = viewBinding.layoutTopBar.buttonSave,
         )
     }
@@ -218,42 +232,50 @@ class ClickDialog(
     private fun updateClickPositionUiState(state: ClickPositionUiState?) {
         state ?: return
 
-        viewBinding.fieldClickType.apply {
-            val checkIndex = if (state.positionType == Click.PositionType.USER_SELECTED) 0 else 1
-            setChecked(checkIndex)
-            setDescription(checkIndex)
+        viewBinding.fieldPosition.apply {
+            buttonSelectCondition.isVisible = state.isConditionSelectionVisible
 
-            root.isVisible = state.isTypeFieldVisible
-            viewBinding.dividerClickTypeBottom.isVisible = state.isTypeFieldVisible
-        }
+            when (val position = state.position) {
+                is UiGesturePosition.Condition -> {
+                    buttonSelectCondition.setText(R.string.button_title_condition_remove)
+                    buttonSelectCondition.setIconResource(R.drawable.ic_cancel)
 
-        viewBinding.fieldClickSelection.apply {
-            setTitle(state.selectorTitle)
-            setDescription(state.selectorDescription)
-            setEnabled(state.isSelectorEnabled)
-            setError(state.isSelectorInError)
+                    conditionBitmapLoadingJob?.cancel()
+                    conditionBitmapLoadingJob = conditionSplash.bindCondition(
+                        condition = position.condition,
+                        inError = position.inError,
+                        bitmapProvider = { condition, onBitmapLoaded ->
+                            viewModel.getConditionBitmap(condition, onBitmapLoaded)
+                        },
+                    )
+                }
 
-            when (val visualization = state.selectorVisualization) {
-                is Drawable -> setImageDrawable(visualization)
-                is Bitmap -> setIconBitmap(visualization)
-                else -> setImageDrawable(null)
-            }
-
-            when (state.positionType) {
-                Click.PositionType.USER_SELECTED ->
-                    setOnClickListener { debounceUserInteraction { showPositionSelector() } }
-                Click.PositionType.ON_DETECTED_CONDITION ->
-                    setOnClickListener { debounceUserInteraction { showConditionSelector() } }
+                is UiGesturePosition.Position -> {
+                    conditionSplash.root.isVisible = false
+                    buttonSelectCondition.setText(R.string.button_title_condition_pick)
+                    buttonSelectCondition.setIconResource(R.drawable.ic_screen_event)
+                    fieldX.setPositionValue(position.xValue)
+                    fieldY.setPositionValue(position.yValue)
+                }
             }
         }
 
         viewBinding.fieldClickOffset.apply {
-            setEnabled(state.isClickOffsetEnabled)
             setDescription(state.clickOffsetDescription)
 
             root.isVisible = state.isClickOffsetVisible
             viewBinding.dividerClickOffset.isVisible = state.isClickOffsetVisible
         }
+    }
+
+    private fun onSelectConditionClicked() {
+        if (viewModel.uiState.value?.positionState?.position is UiGesturePosition.Condition) {
+            viewModel.removeClickOnCondition()
+            return
+        }
+
+        if (viewModel.shouldSelectCondition()) showConditionSelector()
+        else viewModel.setClickOnDetectedCondition()
     }
 
     private fun showPositionSelector() {
@@ -263,7 +285,7 @@ class ClickDialog(
                 newOverlay = PositionSelectorMenu(
                     tutorialMonitoringTag = MonitoredOverlayType.CLICK_POSITION.name,
                     itemBriefDescription = ClickDescription(
-                        position = click.position?.toPointF(),
+                        position = click.getLiteralPosition()?.toPointF(),
                         pressDurationMs = click.pressDuration ?: 1L,
                     ),
                     onConfirm = { description ->
@@ -287,10 +309,20 @@ class ClickDialog(
             hideCurrent = false,
         )
 
+    private fun showCounterSelectionDialog(onCounterSelected: (String) -> Unit) =
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = CounterSelectionDialog(onCounterSelected),
+            hideCurrent = false,
+        )
+
     private fun showClickOffsetDialog() =
         overlayManager.navigateTo(
             context = context,
-            newOverlay = ClickOffsetDialog(),
+            newOverlay = GestureOffsetDialog(
+                currentOffset = viewModel.getClickOffset(),
+                onNewOffset = viewModel::setClickOffset,
+            ),
             hideCurrent = false,
         )
 

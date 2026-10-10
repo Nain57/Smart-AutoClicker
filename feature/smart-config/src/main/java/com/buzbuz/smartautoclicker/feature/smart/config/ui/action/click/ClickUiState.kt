@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click
 
-import com.buzbuz.smartautoclicker.core.domain.model.action.Click
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.UiGesturePosition
 
 data class ClickUiState(
     val canBeSaved: Boolean,
@@ -27,18 +27,13 @@ data class ClickUiState(
     val pressDuration: String?,
     val pressDurationError: Boolean,
     val positionState: ClickPositionUiState?,
-    val availableConditions: List<UiScreenCondition>,
+    val availableConditions: List<ScreenCondition>,
 )
 
 data class ClickPositionUiState(
-    val positionType: Click.PositionType,
-    val isTypeFieldVisible: Boolean,
+    val position: UiGesturePosition,
+    /** False when the parent event has no screen condition to click on, forcing the click on a position. */
+    val isConditionSelectionVisible: Boolean,
     val isClickOffsetVisible: Boolean,
-    val isClickOffsetEnabled: Boolean,
     val clickOffsetDescription: String? = null,
-    val isSelectorEnabled: Boolean,
-    val isSelectorInError: Boolean,
-    val selectorTitle: String,
-    val selectorDescription: String?,
-    val selectorVisualization: Any? = null,
 )
