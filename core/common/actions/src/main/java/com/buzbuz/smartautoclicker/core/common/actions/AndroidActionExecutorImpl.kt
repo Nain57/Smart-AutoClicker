@@ -80,6 +80,15 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         }
     }
 
+    override suspend fun dispatchGestureChain(gestureDescriptions: List<GestureDescription>) {
+        val service = accessibilityService ?: return
+
+        if (!gestureExecutor.dispatchGestures(service, gestureDescriptions)) {
+            Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
+            delay(500)
+        }
+    }
+
     override fun performGlobalAction(globalAction: Int) {
         val service = accessibilityService ?: return
 

@@ -111,6 +111,55 @@ class GestureExecutorTests {
         assertTrue(nextResult.await())
     }
 
+    @Test
+    fun dispatchGestures_dispatchesWholeChainBeforeAwaitingResults() = runTest {
+        val service = mock(AccessibilityService::class.java)
+        val executor = GestureExecutor()
+        val callbackCaptor = ArgumentCaptor.forClass(GestureResultCallback::class.java)
+
+        val result = async { executor.dispatchGestures(service, listOf(gesture(), gesture(), gesture())) }
+        runCurrent()
+
+        // The whole chain must be handed to the system in one go: waiting for a result in between would freeze the
+        // fingers on the screen until the next gesture is scheduled.
+        verify(service, times(3)).dispatchGesture(any(), callbackCaptor.capture(), any())
+        assertFalse(result.isCompleted)
+
+        callbackCaptor.allValues.forEach { callback -> callback.onCompleted(null) }
+
+        assertTrue(result.await())
+    }
+
+    @Test
+    fun dispatchGestures_oneCancelledCallback_returnsFalse() = runTest {
+        val service = mock(AccessibilityService::class.java)
+        val executor = GestureExecutor()
+        val callbackCaptor = ArgumentCaptor.forClass(GestureResultCallback::class.java)
+
+        val result = async { executor.dispatchGestures(service, listOf(gesture(), gesture())) }
+        runCurrent()
+        verify(service, times(2)).dispatchGesture(any(), callbackCaptor.capture(), any())
+
+        callbackCaptor.allValues.first().onCompleted(null)
+        callbackCaptor.allValues.last().onCancelled(null)
+
+        assertFalse(result.await())
+    }
+
+    @Test
+    fun dispatchGestures_dispatchException_skipsRemainingGestures() = runTest {
+        val service = mock(AccessibilityService::class.java)
+        doThrow(IllegalStateException("Accessibility service is unavailable"))
+            .`when`(service)
+            .dispatchGesture(any(), any(), any())
+
+        val result = GestureExecutor().dispatchGestures(service, listOf(gesture(), gesture(), gesture()))
+
+        // Once the chain is broken, the remaining gestures would continue pointers that are no longer down.
+        assertFalse(result)
+        verify(service, times(1)).dispatchGesture(any(), any(), any())
+    }
+
     private fun gesture(): GestureDescription = GestureDescription.Builder()
         .addStroke(
             GestureDescription.StrokeDescription(
