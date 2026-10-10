@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.changecounter.ChangeCounterDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.click.ClickDialog
@@ -52,6 +53,19 @@ internal interface ActionConfigurator {
     fun upsertEditedAction()
     fun removeEditedAction()
     fun dismissEditedAction()
+}
+
+internal fun EditionRepository.createNewAction(context: Context, choice: ActionTypeChoice): Action = when (choice) {
+    ActionTypeChoice.Click -> editedItemsBuilder.createNewClick(context)
+    ActionTypeChoice.Gesture -> editedItemsBuilder.createNewGesture(context)
+    ActionTypeChoice.Pause -> editedItemsBuilder.createNewPause(context)
+    ActionTypeChoice.Intent -> editedItemsBuilder.createNewIntent(context)
+    ActionTypeChoice.ToggleEvent -> editedItemsBuilder.createNewToggleEvent(context)
+    ActionTypeChoice.ChangeCounter -> editedItemsBuilder.createNewChangeCounter(context)
+    ActionTypeChoice.Notification -> editedItemsBuilder.createNewNotification(context)
+    ActionTypeChoice.System -> editedItemsBuilder.createNewSystemAction(context)
+    ActionTypeChoice.SetText -> editedItemsBuilder.createNewSetText(context)
+    ActionTypeChoice.Copy -> throw IllegalArgumentException("Unsupported action type for creation $choice")
 }
 
 internal fun BaseOverlay.showActionTypeSelectionDialog(configurator: ActionConfigurator) {

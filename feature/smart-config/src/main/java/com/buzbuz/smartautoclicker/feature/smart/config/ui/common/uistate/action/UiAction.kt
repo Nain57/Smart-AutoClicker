@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.actio
 
 import android.content.Context
 import androidx.annotation.DrawableRes
+import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -29,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 
 
 data class UiAction(
@@ -47,6 +49,11 @@ internal fun Action.toUiAction(context: Context, parent: Event? = null, inError:
         description = getActionDescription(context, parent, inError),
         haveError = inError,
     )
+
+internal fun EditedListState<Action>.toItemBriefs(context: Context, parent: Event): List<ItemBrief> =
+    value?.mapIndexed { index, action ->
+        ItemBrief(action.id, action.toUiAction(context, parent, inError = !itemValidity[index]))
+    } ?: emptyList()
 
 @DrawableRes
 internal fun Action.getIconRes(): Int = when (this) {

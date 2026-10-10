@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.Gestur
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.editor.GestureEditorViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.offset.GestureOffsetViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.IntentViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.legacy.SmartActionsLegacyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.activities.ActivitySelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.component.ComponentSelectionModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.intent.extras.ExtraConfigModel
@@ -124,6 +125,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun screenConditionTypeSelectionViewModel(): ScreenConditionTypeSelectionViewModel
     fun setTextViewModel(): SetTextViewModel
     fun smartActionsBriefViewModel(): SmartActionsBriefViewModel
+    fun smartActionsLegacyViewModel(): SmartActionsLegacyViewModel
     fun systemActionViewModel(): SystemActionViewModel
     fun textConditionViewModel(): TextConditionViewModel
     fun timerReachedConditionViewModel(): TimerReachedConditionViewModel

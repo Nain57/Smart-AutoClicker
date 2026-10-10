@@ -20,6 +20,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,12 +31,12 @@ import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.Mo
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
@@ -62,17 +63,16 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
      */
     private var keyDownHandled: Boolean = false
 
+    /** Last mode applied to the menu; overlay visibility must only be touched on actual mode transitions. */
+    private var currentMode: SmartActionsBriefMode? = null
+
 
     override fun onCreate() {
         super.onCreate()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isGestureCaptureStarted.collect(::updateRecordingState) }
-                launch { viewModel.actionBriefList.collect(::updateItemList) }
-                launch { viewModel.actionVisualization.collect(::updateActionVisualisation) }
-                launch { viewModel.isTutorialModeEnabled.collect(::updateTutorialModeState) }
-                launch { viewModel.isTestingAction.collect(::updateReplayingState) }
+                viewModel.uiState.filterNotNull().collect(::updateUiState)
             }
         }
     }
@@ -103,6 +103,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     override fun onStop() {
         super.onStop()
         viewModel.stopAllViewMonitoring()
+        currentMode = null
     }
 
     override fun onItemBriefClicked(index: Int, item: ItemBrief) {
@@ -141,7 +142,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
 
     override fun onScreenOverlayVisibilityChanged(isVisible: Boolean) {
         super.onScreenOverlayVisibilityChanged(isVisible)
-        setMenuItemViewEnabled(viewBinding.btnRecord, isVisible)
+        updateRecordButtonState(isOverlayVisible = isVisible)
     }
 
     override fun onMoveItemClicked(from: Int, to: Int) {
@@ -162,8 +163,8 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     }
 
     private fun onBackClicked() {
-        if (isGestureCaptureStarted()) {
-            viewModel.cancelGestureCaptureState()
+        if (viewModel.isGestureCaptureStarted()) {
+            viewModel.cancelGestureCapture()
             stopGestureCapture()
             return
         }
@@ -172,12 +173,12 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     }
 
     private fun onRecordClicked() {
-        if (isGestureCaptureStarted()) return
+        if (viewModel.isGestureCaptureStarted()) return
 
-        viewModel.startGestureCaptureState()
+        viewModel.startGestureCapture()
         startGestureCapture { gesture, isFinished ->
-            if (gesture == null || !isFinished) return@startGestureCapture
-            viewModel.endGestureCaptureState(context, gesture)
+            if (!isFinished) return@startGestureCapture
+            viewModel.endGestureCapture(context, gesture)
         }
     }
 
@@ -186,37 +187,39 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
         viewModel.setFocusedActionIndex(index)
     }
 
-    private fun updateRecordingState(isRecording: Boolean) {
-        if (isRecording) {
-            setMenuItemViewEnabled(viewBinding.btnBack, true)
-            setMenuItemViewEnabled(viewBinding.btnAddOther, false)
-            setMenuItemViewEnabled(viewBinding.btnHideOverlay, false)
-            setMenuItemViewEnabled(viewBinding.btnMove, true)
-            setMenuItemViewEnabled(viewBinding.btnRecord, false)
-        } else {
-            setMenuItemViewEnabled(viewBinding.btnBack, true)
-            setMenuItemViewEnabled(viewBinding.btnAddOther, true)
-            setMenuItemViewEnabled(viewBinding.btnHideOverlay, true)
-            setMenuItemViewEnabled(viewBinding.btnMove, true)
-            setMenuItemViewEnabled(viewBinding.btnRecord, true)
-        }
+    private fun updateUiState(uiState: SmartActionsBriefUiState) {
+        updateItemList(uiState.actionBriefs)
+        updateMode(uiState.mode)
+        briefViewBinding.viewBrief.setDescription(uiState.focusedActionDescription, true)
+        setBriefPanelAutoHide(uiState.isBriefPanelAutoHideEnabled)
     }
 
-    private fun updateReplayingState(isReplaying: Boolean) {
-        setOverlayViewVisibility(!isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnBack, !isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnAddOther, !isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnHideOverlay, !isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnMove, !isReplaying)
-        setMenuItemViewEnabled(viewBinding.btnRecord, !isReplaying)
+    private fun updateMode(mode: SmartActionsBriefMode) {
+        val previousMode = currentMode
+        if (mode == previousMode) return
+        currentMode = mode
+
+        val isTesting = mode == SmartActionsBriefMode.ACTION_TESTING
+        val isIdle = mode == SmartActionsBriefMode.IDLE
+
+        setMenuItemViewEnabled(viewBinding.btnBack, !isTesting)
+        setMenuItemViewEnabled(viewBinding.btnMove, !isTesting)
+        setMenuItemViewEnabled(viewBinding.btnAddOther, isIdle)
+        setMenuItemViewEnabled(viewBinding.btnHideOverlay, isIdle)
+
+        // Showing the overlay also re-shows the brief panel, which must stay hidden while capturing a gesture.
+        // Only touch it when the testing state changes (or on a restart), the record button is refreshed either way.
+        val isTestingTransition = isTesting || previousMode == SmartActionsBriefMode.ACTION_TESTING
+        if (isTestingTransition || previousMode == null) setOverlayViewVisibility(!isTesting)
+        else updateRecordButtonState(isOverlayVisible = screenOverlayView?.isVisible == true)
     }
 
-    private fun updateActionVisualisation(visualization: ItemBriefDescription?) {
-        briefViewBinding.viewBrief.setDescription(visualization, true)
-    }
-
-    private fun updateTutorialModeState(isTutorialEnabled: Boolean) {
-        setBriefPanelAutoHide(!isTutorialEnabled)
+    /** Recording needs both an idle menu and a visible overlay, whichever of the two changed last. */
+    private fun updateRecordButtonState(isOverlayVisible: Boolean) {
+        setMenuItemViewEnabled(
+            viewBinding.btnRecord,
+            isOverlayVisible && currentMode == SmartActionsBriefMode.IDLE,
+        )
     }
 
     private fun showMoveToDialog(index: Int, itemCount: Int) {

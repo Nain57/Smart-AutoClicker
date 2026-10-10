@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief
+package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.legacy
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -42,10 +42,13 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogSmartActionsLegacyBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionLegacyBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.showActionConfigDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.showActionCopyDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.brief.showActionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.util.Collections
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
@@ -57,9 +60,9 @@ class SmartActionsLegacyDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
 
 
     /** View model for this content. */
-    private val viewModel: SmartActionsBriefViewModel by viewModels(
+    private val viewModel: SmartActionsLegacyViewModel by viewModels(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
-        creator = { smartActionsBriefViewModel() }
+        creator = { smartActionsLegacyViewModel() }
     )
 
     /** TouchHelper applied to [actionAdapter] allowing to drag and drop the items. */
@@ -107,22 +110,13 @@ class SmartActionsLegacyDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.canCopyActions.collect(::updateCopyButtonVisibility) }
-                launch { viewModel.actionBriefList.collect(::updateActionList) }
+                viewModel.uiState.filterNotNull().collect(::updateUiState)
             }
         }
     }
 
     private fun onCreateButtonClicked() {
-        overlayManager.navigateTo(
-            context = context,
-            newOverlay = ActionTypeSelectionDialog(
-                choices = viewModel.actionTypeChoices.value,
-                onChoiceSelectedListener = { choiceClicked ->
-                    showActionConfigDialog(viewModel, viewModel.createAction(context, choiceClicked))
-                },
-            ),
-        )
+        showActionTypeSelectionDialog(viewModel)
     }
 
     private fun onCopyButtonClicked() {
@@ -133,12 +127,13 @@ class SmartActionsLegacyDialog : OverlayDialog(R.style.ScenarioConfigTheme) {
         debounceUserInteraction { showActionConfigDialog(viewModel, (item.data as UiAction).action) }
     }
 
-    private fun updateCopyButtonVisibility(isVisible: Boolean) {
-        viewBinding.buttonCopy.visibility = if (isVisible) View.VISIBLE else View.GONE
+    private fun updateUiState(uiState: SmartActionsLegacyUiState) {
+        viewBinding.buttonCopy.visibility = if (uiState.isCopyButtonVisible) View.VISIBLE else View.GONE
+        updateActionList(uiState.actionBriefs)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun updateActionList(newItems: List<ItemBrief>?) {
+    private fun updateActionList(newItems: List<ItemBrief>) {
         viewBinding.layoutLoadableList.apply {
             updateState(newItems)
             (list.adapter as ListAdapter<ItemBrief, RecyclerView.ViewHolder>).submitList(newItems)
