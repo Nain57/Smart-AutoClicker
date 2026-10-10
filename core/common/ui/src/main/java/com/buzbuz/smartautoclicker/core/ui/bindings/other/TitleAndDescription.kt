@@ -36,11 +36,11 @@ import com.google.android.material.color.MaterialColors
 
 
 
-internal fun IncludeTitleAndDescriptionBinding.setTitle(titleText: String) {
+fun IncludeTitleAndDescriptionBinding.setTitle(titleText: String) {
     title.setTextOrGone(titleText)
 }
 
-internal fun IncludeTitleAndDescriptionBinding.setupDescriptions(descriptions: List<String>) {
+fun IncludeTitleAndDescriptionBinding.setupDescriptions(descriptions: List<String>) {
     if (descriptions.isEmpty()) {
         description.setTextOrGone(null)
         return
@@ -66,11 +66,11 @@ internal fun IncludeTitleAndDescriptionBinding.setupDescriptions(descriptions: L
     }
 }
 
-internal fun IncludeTitleAndDescriptionBinding.setDescription(text: String?) {
+fun IncludeTitleAndDescriptionBinding.setDescription(text: String?) {
     description.setTextOrGone(text)
 }
 
-internal fun IncludeTitleAndDescriptionBinding.setDescription(index: Int) {
+fun IncludeTitleAndDescriptionBinding.setDescription(index: Int) {
     val state = description.tag as? DescriptionsState
     if (state == null) {
         description.tag = DescriptionsState(emptyList(), index, null)
@@ -84,7 +84,7 @@ internal fun IncludeTitleAndDescriptionBinding.setDescription(index: Int) {
     description.tag = state.copy(displayedIndex = index)
 }
 
-internal fun IncludeTitleAndDescriptionBinding.setError(inError: Boolean) {
+fun IncludeTitleAndDescriptionBinding.setError(inError: Boolean) {
     title.setLeftCompoundDrawable(if (inError) R.drawable.ic_badge_error else null)
     description.setTextColor(
         if (inError) MaterialColors.getColor(root, AppCompatR.attr.colorError)

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/include_field_text_input_with_checkbox"
+        android:id="@+id/field_x"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_extra_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/field_y"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <include layout="@layout/include_field_text_input_with_checkbox"
+        android:id="@+id/field_y"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginBottom="@dimen/margin_vertical_extra_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/field_x"
+        app:layout_constraintBottom_toTopOf="@id/button_select_position"/>
+
+    <include
+        layout="@layout/include_card_gesture_on_condition"
+        android:id="@+id/condition_splash"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_select_position"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_select_position"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="@dimen/margin_horizontal_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_select_condition"
+        app:layout_constraintTop_toBottomOf="@id/field_y"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:icon="@drawable/ic_position"
+        android:text="@string/button_title_position"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_select_condition"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_horizontal_small"
+        android:layout_marginEnd="@dimen/margin_horizontal_default"
+        app:layout_constraintStart_toEndOf="@id/button_select_position"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/button_select_position"
+        app:layout_constraintBottom_toBottomOf="@id/button_select_position"
+        app:icon="@drawable/ic_screen_event"
+        tools:text="@string/button_title_condition_pick"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
