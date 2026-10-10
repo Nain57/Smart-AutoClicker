@@ -26,10 +26,13 @@ import androidx.room.Update
 
 import com.buzbuz.smartautoclicker.core.database.ACTION_TABLE
 import com.buzbuz.smartautoclicker.core.database.EVENT_TOGGLE_TABLE
+import com.buzbuz.smartautoclicker.core.database.GESTURE_FINGER_TABLE
 import com.buzbuz.smartautoclicker.core.database.INTENT_EXTRA_TABLE
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 
 import kotlinx.coroutines.flow.Flow
@@ -140,4 +143,26 @@ abstract class ActionDao {
      */
     @Delete
     abstract suspend fun deleteEventToggles(eventToggles: List<EventToggleEntity>)
+
+    /**
+     * Delete all gesture fingers for a given action. Cascades to their motions.
+     * @param actionId the identifier of the gesture action.
+     */
+    @Query("DELETE FROM $GESTURE_FINGER_TABLE WHERE action_id=:actionId")
+    abstract suspend fun deleteFingersByActionId(actionId: Long)
+
+    /**
+     * Add a gesture finger to the database.
+     * @param finger the finger to be added.
+     * @return the database id of the inserted finger.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun addFinger(finger: GestureFingerEntity): Long
+
+    /**
+     * Add a list of gesture finger motions to the database.
+     * @param motions the motions to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun addMotions(motions: List<GestureFingerMotionEntity>): List<Long>
 }

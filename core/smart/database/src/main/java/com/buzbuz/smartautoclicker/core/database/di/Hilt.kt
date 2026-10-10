@@ -25,6 +25,7 @@ import com.buzbuz.smartautoclicker.core.database.migrations.Migration12to13
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration19to20
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration21to22
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration1to2
+import com.buzbuz.smartautoclicker.core.database.migrations.Migration23to24
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration2to3
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration3to4
 import com.buzbuz.smartautoclicker.core.database.migrations.Migration4to5
@@ -63,6 +64,7 @@ internal object SmartDatabaseModule {
             Migration12to13,
             Migration19to20,
             Migration21to22,
+            Migration23to24,
         ).build()
 
 }

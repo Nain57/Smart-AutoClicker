@@ -238,3 +238,52 @@ fun getInsertV10Condition(id: Long, eventId: Long, name: String, path: String, l
 
 fun getV11Scenarios() = "SELECT * FROM scenario_table"
 fun getV11Actions() = "SELECT * FROM action_table"
+
+
+// ----- Utils for Database V23 -----
+
+fun getV23Actions() = "SELECT * FROM action_table"
+
+fun getInsertV23Swipe(id: Long, eventId: Long, name: String, fromX: Int, fromY: Int, toX: Int, toY: Int, swipeDuration: Long, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, fromX, fromY, toX, toY, swipeDuration)
+        VALUES ($id, $eventId, $priority, "$name", "SWIPE", $fromX, $fromY, $toX, $toY, $swipeDuration)
+    """.trimIndent()
+
+fun getInsertV23EmptyAction(id: Long, eventId: Long, name: String, type: String, priority: Int) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type)
+        VALUES ($id, $eventId, $priority, "$name", "$type")
+    """.trimIndent()
+
+fun getInsertV23Click(
+    id: Long,
+    eventId: Long,
+    name: String,
+    priority: Int,
+    clickPositionType: String,
+    pressDuration: Long?,
+    x: Int? = null,
+    y: Int? = null,
+    clickOnConditionId: Long? = null,
+    clickOffsetX: Int? = null,
+    clickOffsetY: Int? = null,
+) =
+    """
+        INSERT INTO action_table (id, eventId, priority, name, type, clickPositionType, x, y, clickOnConditionId,
+            pressDuration, clickOffsetX, clickOffsetY)
+        VALUES ($id, $eventId, $priority, "$name", "CLICK", "$clickPositionType", ${x.orNull()}, ${y.orNull()},
+            ${clickOnConditionId.orNull()}, ${pressDuration.orNull()}, ${clickOffsetX.orNull()},
+            ${clickOffsetY.orNull()})
+    """.trimIndent()
+
+private fun Any?.orNull(): String = this?.toString() ?: "NULL"
+
+
+// ----- Utils for Database V24 -----
+
+fun getV24Actions() = "SELECT * FROM action_table"
+fun getV24GestureFingers() = "SELECT * FROM gesture_finger_table ORDER BY id"
+fun getV24GestureFingerMotions() = "SELECT * FROM gesture_finger_motion_table ORDER BY id"
+fun getV24GestureFingersForAction(actionId: Long) = "SELECT * FROM gesture_finger_table WHERE action_id = $actionId ORDER BY `index`"
+fun getV24GestureFingerMotionsForFinger(fingerId: Long) = "SELECT * FROM gesture_finger_motion_table WHERE finger_id = $fingerId ORDER BY `index`"

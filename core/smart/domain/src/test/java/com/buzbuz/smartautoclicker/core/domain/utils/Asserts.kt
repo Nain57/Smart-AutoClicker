@@ -18,9 +18,9 @@ package com.buzbuz.smartautoclicker.core.domain.utils
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -77,7 +77,7 @@ private fun assertSameConditionNoIdCheck(expected: ScreenCondition, actual: Scre
 private fun assertSameActionNoIdCheck(expected: Action, actual: Action) {
     when {
         expected is Click && actual is Click -> assertSameClickNoIdCheck(expected, actual)
-        expected is Swipe && actual is Swipe -> assertSameSwipeNoIdCheck(expected, actual)
+        expected is Gesture && actual is Gesture -> assertSameGestureNoIdCheck(expected, actual)
         expected is Pause && actual is Pause -> assertSamePauseNoIdCheck(expected, actual)
         expected is Intent && actual is Intent -> assertSameIntentNoIdCheck(expected, actual)
         expected is ToggleEvent && actual is ToggleEvent -> assertSameToggleEventNoIdCheck(expected, actual)
@@ -89,20 +89,14 @@ private fun assertSameClickNoIdCheck(expected: Click, actual: Click) = assertTru
     "Clicks are not the same",
     expected.name == actual.name
             && expected.pressDuration == actual.pressDuration
-            && expected.positionType == actual.positionType
-            && expected.position?.x == actual.position?.x
-            && expected.position?.y == actual.position?.y
-            && expected.clickOnConditionId == actual.clickOnConditionId
+            && expected.position == actual.position
+            && expected.offset == actual.offset
 )
 
-private fun assertSameSwipeNoIdCheck(expected: Swipe, actual: Swipe) = assertTrue(
-    "Swipes are not the same",
+private fun assertSameGestureNoIdCheck(expected: Gesture, actual: Gesture) = assertTrue(
+    "Gestures are not the same",
     expected.name == actual.name
-            && expected.swipeDuration == actual.swipeDuration
-            && expected.from?.x == actual.from?.x
-            && expected.from?.y == actual.from?.y
-            && expected.to?.x == actual.to?.x
-            && expected.to?.y == actual.to?.y
+            && expected.fingers.size == actual.fingers.size
 )
 
 private fun assertSamePauseNoIdCheck(expected: Pause, actual: Pause) = assertTrue(

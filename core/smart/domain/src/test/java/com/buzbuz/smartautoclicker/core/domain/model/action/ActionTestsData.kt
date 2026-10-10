@@ -23,14 +23,23 @@ import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ChangeCounterOperationType
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraType
 import com.buzbuz.smartautoclicker.core.database.entity.SystemActionType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue.Literal
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.EventTestsData
@@ -47,6 +56,10 @@ internal object ActionTestsData {
     private const val CLICK_PRESS_DURATION = 250L
     private const val CLICK_X_POSITION = 24
     private const val CLICK_Y_POSITION = 87
+    const val CLICK_FINGER_ID = 70L
+    private const val CLICK_PRESS_MOTION_ID = 701L
+    private const val CLICK_WAIT_MOTION_ID = 702L
+    private const val CLICK_RELEASE_MOTION_ID = 703L
 
     fun getNewClickEntity(
         id: Long = CLICK_ID,
@@ -56,17 +69,71 @@ internal object ActionTestsData {
         x: Int? = CLICK_X_POSITION,
         y: Int? = CLICK_Y_POSITION,
         clickOnConditionId: Long? = null,
-        positionType: ClickPositionType =
-            if (x != null && y != null) ClickPositionType.USER_SELECTED
-            else ClickPositionType.ON_DETECTED_CONDITION,
+        motions: List<GestureFingerMotionEntity> = getNewClickMotionEntities(
+            pressDuration = pressDuration,
+            x = x,
+            y = y,
+            clickOnConditionId = clickOnConditionId,
+        ),
         eventId: Long,
     ) = CompleteActionEntity(
-        action = ActionEntity(id, eventId, priority, name, ActionType.CLICK, x = x, y = y,
-            clickOnConditionId = clickOnConditionId, clickPositionType = positionType,
-            pressDuration = pressDuration),
+        action = ActionEntity(id, eventId, priority, name, ActionType.CLICK),
+        gestureFingers = listOf(
+            GestureFingerWithMotions(
+                finger = GestureFingerEntity(CLICK_FINGER_ID, id, 0, 0),
+                motions = motions,
+            ),
+        ),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
+
+    /** A click is stored as a press on the click position, a wait for the press duration, and a release. */
+    fun getNewClickMotionEntities(
+        fingerId: Long = CLICK_FINGER_ID,
+        pressMotionId: Long = CLICK_PRESS_MOTION_ID,
+        waitMotionId: Long = CLICK_WAIT_MOTION_ID,
+        releaseMotionId: Long = CLICK_RELEASE_MOTION_ID,
+        pressDuration: Long = CLICK_PRESS_DURATION,
+        x: Int? = CLICK_X_POSITION,
+        y: Int? = CLICK_Y_POSITION,
+        clickOnConditionId: Long? = null,
+        offsetX: Int? = null,
+        offsetY: Int? = null,
+    ): List<GestureFingerMotionEntity> {
+        val isOnCondition = x == null && y == null
+
+        return listOf(
+            GestureFingerMotionEntity(
+                id = pressMotionId,
+                fingerId = fingerId,
+                index = 0,
+                motionType = GestureFingerMotionType.PRESS,
+                xCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else CoordinatesType.LITERAL,
+                yCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else CoordinatesType.LITERAL,
+                conditionId = clickOnConditionId,
+                xLiteral = x,
+                yLiteral = y,
+                xOffsetCoordinateType = offsetX?.let { CoordinatesType.LITERAL },
+                yOffsetCoordinateType = offsetY?.let { CoordinatesType.LITERAL },
+                xOffsetLiteral = offsetX,
+                yOffsetLiteral = offsetY,
+            ),
+            GestureFingerMotionEntity(
+                id = waitMotionId,
+                fingerId = fingerId,
+                index = 1,
+                motionType = GestureFingerMotionType.WAIT,
+                durationMs = pressDuration,
+            ),
+            GestureFingerMotionEntity(
+                id = releaseMotionId,
+                fingerId = fingerId,
+                index = 2,
+                motionType = GestureFingerMotionType.RELEASE,
+            ),
+        )
+    }
 
     fun getNewClick(
         id: Long = CLICK_ID,
@@ -76,56 +143,89 @@ internal object ActionTestsData {
         x: Int? = CLICK_X_POSITION,
         y: Int? = CLICK_Y_POSITION,
         clickOnConditionId: Long? = null,
-        positionType: Click.PositionType =
-            if (x != null && y != null) Click.PositionType.USER_SELECTED
-            else Click.PositionType.ON_DETECTED_CONDITION,
+        position: GesturePosition? =
+            if (x != null && y != null) GesturePosition.Coordinates(Literal(x), Literal(y))
+            else GesturePosition.Condition(clickOnConditionId?.let { Identifier(databaseId = it) }),
+        offset: GesturePosition? = null,
         eventId: Long,
-    ) = Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, positionType,
-        if (x != null && y != null) Point(x, y) else null,
-        clickOnConditionId?.let { Identifier(databaseId = clickOnConditionId) },
-    )
+    ) = Click(id.asIdentifier(), eventId.asIdentifier(), name, priority, pressDuration, position, offset)
 
 
-    /* ------- Swipe Action Data ------- */
+    /* ------- Gesture Action Data ------- */
 
-    private const val SWIPE_ID = 8L
-    private const val SWIPE_NAME = "Swipe name"
-    private const val SWIPE_DURATION = 1000L
-    private const val SWIPE_FROM_X_POSITION = 42
-    private const val SWIPE_FROM_Y_POSITION = 78
-    private const val SWIPE_TO_X_POSITION = 789
-    private const val SWIPE_TO_Y_POSITION = 1445
+    private const val GESTURE_ID = 8L
+    private const val GESTURE_NAME = "Gesture name"
+    private const val GESTURE_FINGER_ID = 80L
+    private const val GESTURE_PRESS_MOTION_ID = 801L
+    private const val GESTURE_RELEASE_MOTION_ID = 802L
+    private const val GESTURE_FINGER_START_TIME_MS = 0L
+    private const val GESTURE_PRESS_X = 42
+    private const val GESTURE_PRESS_Y = 78
 
-    fun getNewSwipeEntity(
-        id: Long = SWIPE_ID,
-        name: String = SWIPE_NAME,
+    fun getNewGestureEntity(
+        id: Long = GESTURE_ID,
+        name: String = GESTURE_NAME,
         priority: Int = 0,
-        swipeDuration: Long = SWIPE_DURATION,
-        fromX: Int = SWIPE_FROM_X_POSITION,
-        fromY: Int = SWIPE_FROM_Y_POSITION,
-        toX: Int = SWIPE_TO_X_POSITION,
-        toY: Int = SWIPE_TO_Y_POSITION,
         eventId: Long,
     ) = CompleteActionEntity(
-        action = ActionEntity(id, eventId, priority, name, ActionType.SWIPE, fromX = fromX, fromY = fromY, toX = toX,
-            toY = toY, swipeDuration = swipeDuration),
+        action = ActionEntity(id, eventId, priority, name, ActionType.GESTURE),
+        gestureFingers = listOf(
+            GestureFingerWithMotions(
+                finger = GestureFingerEntity(GESTURE_FINGER_ID, id, 0, GESTURE_FINGER_START_TIME_MS),
+                motions = listOf(
+                    GestureFingerMotionEntity(
+                        id = GESTURE_PRESS_MOTION_ID,
+                        fingerId = GESTURE_FINGER_ID,
+                        index = 0,
+                        motionType = GestureFingerMotionType.PRESS,
+                        xCoordinateType = CoordinatesType.LITERAL,
+                        yCoordinateType = CoordinatesType.LITERAL,
+                        xLiteral = GESTURE_PRESS_X,
+                        yLiteral = GESTURE_PRESS_Y,
+                        xOffsetCoordinateType = CoordinatesType.LITERAL,
+                        yOffsetCoordinateType = CoordinatesType.LITERAL,
+                        xOffsetLiteral = 0,
+                        yOffsetLiteral = 0,
+                    ),
+                    GestureFingerMotionEntity(
+                        id = GESTURE_RELEASE_MOTION_ID,
+                        fingerId = GESTURE_FINGER_ID,
+                        index = 1,
+                        motionType = GestureFingerMotionType.RELEASE,
+                    ),
+                ),
+            ),
+        ),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
 
-    fun getNewSwipe(
-        id: Long = SWIPE_ID,
-        name: String? = SWIPE_NAME,
+    fun getNewGesture(
+        id: Long = GESTURE_ID,
+        name: String? = GESTURE_NAME,
         priority: Int = 0,
-        swipeDuration: Long? = SWIPE_DURATION,
-        fromX: Int? = SWIPE_FROM_X_POSITION,
-        fromY: Int? = SWIPE_FROM_Y_POSITION,
-        toX: Int? = SWIPE_TO_X_POSITION,
-        toY: Int? = SWIPE_TO_Y_POSITION,
         eventId: Long,
-    ) : Swipe = Swipe(id.asIdentifier(), eventId.asIdentifier(), name, priority, swipeDuration,
-        if (fromX != null && fromY != null) Point(fromX, fromY) else null,
-        if (toX != null && toY != null) Point(toX, toY) else null,
+    ) = Gesture(
+        id = id.asIdentifier(),
+        eventId = eventId.asIdentifier(),
+        name = name,
+        priority = priority,
+        fingers = listOf(
+            GestureFinger(
+                id = GESTURE_FINGER_ID.asIdentifier(),
+                startTimeMs = GESTURE_FINGER_START_TIME_MS,
+                motions = listOf(
+                    GestureFingerMotion.Press(
+                        id = GESTURE_PRESS_MOTION_ID.asIdentifier(),
+                        position = GesturePosition.Coordinates(Literal(GESTURE_PRESS_X), Literal(GESTURE_PRESS_Y)),
+                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                    ),
+                    GestureFingerMotion.Release(
+                        id = GESTURE_RELEASE_MOTION_ID.asIdentifier(),
+                    ),
+                ),
+            ),
+        ),
     )
 
 
@@ -143,6 +243,7 @@ internal object ActionTestsData {
         eventId: Long,
     ) = CompleteActionEntity(
         action = ActionEntity(id, eventId, priority, name, ActionType.PAUSE, pauseDuration = pauseDuration),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
@@ -172,15 +273,16 @@ internal object ActionTestsData {
         name: String = INTENT_NAME,
         priority: Int = 0,
         isAdvanced: Boolean = INTENT_IS_ADVANCED,
-        isBroadcast: Boolean = INTENT_IS_BROADCAST,
+        isBroadcast: Boolean? = INTENT_IS_BROADCAST,
         action: String = INTENT_ACTION,
-        componentName: String = INTENT_COMPONENT_NAME_STRING,
+        componentName: String? = INTENT_COMPONENT_NAME_STRING,
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         intentExtras: List<IntentExtraEntity> = emptyList()
     ) = CompleteActionEntity(
         action = ActionEntity(id, eventId, priority, name, ActionType.INTENT, isAdvanced = isAdvanced,
             isBroadcast = isBroadcast, intentAction = action, componentName = componentName, flags = flags),
+        gestureFingers = emptyList(),
         intentExtras = intentExtras,
         eventsToggle = emptyList(),
     )
@@ -192,7 +294,7 @@ internal object ActionTestsData {
         isAdvanced: Boolean = INTENT_IS_ADVANCED,
         isBroadcast: Boolean = INTENT_IS_BROADCAST,
         action: String = INTENT_ACTION,
-        componentName: ComponentName = INTENT_COMPONENT_NAME!!,
+        componentName: ComponentName? = INTENT_COMPONENT_NAME,
         flags: Int = INTENT_FLAGS,
         eventId: Long,
         intentExtras: MutableList<IntentExtra<out Any>> = mutableListOf()
@@ -233,12 +335,13 @@ internal object ActionTestsData {
         id: Long = TOGGLE_EVENT_ID,
         name: String = TOGGLE_EVENT_NAME,
         priority: Int = 0,
-        toggleAll: Boolean = TOGGLE_EVENT_TOGGLE_ALL,
-        toggleType: ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
+        toggleAll: Boolean? = TOGGLE_EVENT_TOGGLE_ALL,
+        toggleType: ToggleEvent.ToggleType? = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
         eventToggles: List<EventToggleEntity> = emptyList(),
         eventId: Long,
     ) = CompleteActionEntity(
-        action = ActionEntity(id, eventId, priority, name, ActionType.TOGGLE_EVENT, toggleAll = toggleAll, toggleAllType = toggleType.toEntity()),
+        action = ActionEntity(id, eventId, priority, name, ActionType.TOGGLE_EVENT, toggleAll = toggleAll, toggleAllType = toggleType?.toEntity()),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = eventToggles,
     )
@@ -248,7 +351,7 @@ internal object ActionTestsData {
         name: String? = TOGGLE_EVENT_NAME,
         priority: Int = 0,
         toggleAll: Boolean = TOGGLE_EVENT_TOGGLE_ALL,
-        toggleType: ToggleEvent.ToggleType = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
+        toggleType: ToggleEvent.ToggleType? = TOGGLE_EVENT_TOGGLE_ALL_TYPE,
         eventToggle: MutableList<EventToggle> = mutableListOf(),
         eventId: Long,
     ) = ToggleEvent(id.asIdentifier(), eventId.asIdentifier(), name, priority, toggleAll, toggleType, eventToggle)
@@ -282,16 +385,21 @@ internal object ActionTestsData {
         priority: Int = 0,
         counterName: String = CHANGE_COUNTER_COUNTER_NAME,
         operation: ChangeCounter.OperationType = CHANGE_COUNTER_OPERATION,
-        operationValue: Double = CHANGE_COUNTER_VALUE,
+        operationValue: CounterOperationValue = CounterOperationValue.Number(CHANGE_COUNTER_VALUE),
         eventId: Long,
     ) = CompleteActionEntity(
         action = ActionEntity(
             id, eventId, priority, name, ActionType.CHANGE_COUNTER,
             counterName = counterName,
             counterOperation = ChangeCounterOperationType.valueOf(operation.name),
-            counterOperationValueType = CounterOperationValueType.NUMBER,
-            counterOperationValue = operationValue,
+            counterOperationValueType = when (operationValue) {
+                is CounterOperationValue.Number -> CounterOperationValueType.NUMBER
+                is CounterOperationValue.Counter -> CounterOperationValueType.COUNTER
+            },
+            counterOperationValue = (operationValue as? CounterOperationValue.Number)?.value,
+            counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.value,
         ),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
@@ -327,6 +435,7 @@ internal object ActionTestsData {
             notificationMessageText = messageText,
             notificationImportance = channelImportance,
         ),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
@@ -358,6 +467,7 @@ internal object ActionTestsData {
             id, eventId, priority, name, ActionType.SYSTEM,
             systemActionType = SystemActionType.valueOf(type.name),
         ),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )
@@ -382,8 +492,8 @@ internal object ActionTestsData {
         id: Long = SET_TEXT_ID,
         name: String = SET_TEXT_NAME,
         priority: Int = 0,
-        text: String = SET_TEXT_VALUE,
-        validateInput: Boolean = SET_TEXT_VALIDATE_INPUT,
+        text: String? = SET_TEXT_VALUE,
+        validateInput: Boolean? = SET_TEXT_VALIDATE_INPUT,
         eventId: Long,
     ) = CompleteActionEntity(
         action = ActionEntity(
@@ -391,6 +501,7 @@ internal object ActionTestsData {
             textValue = text,
             textValidateInput = validateInput,
         ),
+        gestureFingers = emptyList(),
         intentExtras = emptyList(),
         eventsToggle = emptyList(),
     )

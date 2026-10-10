@@ -22,8 +22,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 
-internal class KotlinDeserializer : Deserializer {
+internal class KotlinDeserializer : Deserializer() {
 
-    override fun deserializeCompleteScenario(jsonCompleteScenario: JsonObject): CompleteScenario =
+    override fun deserialize(jsonCompleteScenario: JsonObject): CompleteScenario =
         Json.decodeFromJsonElement(jsonCompleteScenario)
 }

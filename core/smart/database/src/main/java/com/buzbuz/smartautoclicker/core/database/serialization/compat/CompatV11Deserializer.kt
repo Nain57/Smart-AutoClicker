@@ -18,10 +18,7 @@ package com.buzbuz.smartautoclicker.core.database.serialization.compat
 
 import com.buzbuz.smartautoclicker.core.base.extensions.getBoolean
 import com.buzbuz.smartautoclicker.core.base.extensions.getInt
-import com.buzbuz.smartautoclicker.core.base.extensions.getLong
-import com.buzbuz.smartautoclicker.core.base.extensions.getString
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
-import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 
@@ -43,42 +40,22 @@ internal open class CompatV11Deserializer : CompatV13Deserializer() {
         eventConditions: List<ConditionEntity>,
         conditionsOperator: Int,
     ): ActionEntity? {
-
-        val id = jsonClick.getLong("id", true) ?: return null
-        val eventId = jsonClick.getLong("eventId", true) ?: return null
         val clickOnCondition = jsonClick.getBoolean("clickOnCondition") ?: return null
 
-        val x: Int?
-        val y: Int?
-        val clickOnConditionId: Long?
-        val clickPositionType: ClickPositionType
-
-        if (clickOnCondition) {
-            x = null
-            y = null
-            clickOnConditionId = eventConditions.find { it.shouldBeDetected == true }?.id
-            clickPositionType = ClickPositionType.ON_DETECTED_CONDITION
+        return if (clickOnCondition) {
+            deserializeLegacyClick(
+                jsonClick = jsonClick,
+                positionType = ClickPositionType.ON_DETECTED_CONDITION,
+                clickOnConditionId = eventConditions.find { it.shouldBeDetected == true }?.id,
+            )
         } else {
-            x = jsonClick.getInt("x", true) ?: return null
-            y = jsonClick.getInt("y", true) ?: return null
-            clickOnConditionId = null
-            clickPositionType = ClickPositionType.USER_SELECTED
+            deserializeLegacyClick(
+                jsonClick = jsonClick,
+                positionType = ClickPositionType.USER_SELECTED,
+                x = jsonClick.getInt("x", true) ?: return null,
+                y = jsonClick.getInt("y", true) ?: return null,
+            )
         }
-
-        return ActionEntity(
-            id = id,
-            eventId = eventId,
-            name = jsonClick.getString("name") ?: "",
-            priority = jsonClick.getInt("priority")?.coerceAtLeast(0) ?: 0,
-            type = ActionType.CLICK,
-            clickPositionType = clickPositionType,
-            clickOnConditionId = clickOnConditionId,
-            x = x,
-            y = y,
-            pressDuration = jsonClick.getLong("pressDuration")
-                ?.coerceIn(DURATION_LOWER_BOUND..DURATION_GESTURE_UPPER_BOUND)
-                ?: DEFAULT_CLICK_DURATION,
-        )
     }
 
 }

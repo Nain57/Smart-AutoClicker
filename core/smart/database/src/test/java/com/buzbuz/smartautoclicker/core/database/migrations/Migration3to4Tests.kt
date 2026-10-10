@@ -418,7 +418,7 @@ class Migration3to4Tests {
             eventId = swipeId,
             priority = 0,
             name = swipeName,
-            type = ActionType.SWIPE.toString(),
+            type = "SWIPE",
             x1 = swipeX1,
             y1 = swipeY1,
             x2 = swipeX2,

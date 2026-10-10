@@ -24,6 +24,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventEntity
 import com.buzbuz.smartautoclicker.core.database.entity.EventToggleEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
@@ -42,6 +44,8 @@ import javax.inject.Singleton
         EventToggleEntity::class,
         ScenarioStatsEntity::class,
         CountersEntity::class,
+        GestureFingerEntity::class,
+        GestureFingerMotionEntity::class,
     ],
     version = DATABASE_VERSION,
     exportSchema = true,

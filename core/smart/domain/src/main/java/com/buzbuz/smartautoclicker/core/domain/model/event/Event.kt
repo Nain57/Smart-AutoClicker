@@ -27,6 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 
@@ -123,8 +124,7 @@ data class TriggerEvent(
         if (!isComplete()) return false
 
         return when (this) {
-            is Click -> positionType == Click.PositionType.USER_SELECTED
-                    && clickOnConditionId == null
+            is Click -> position is GesturePosition.Coordinates
 
             else -> true
         }

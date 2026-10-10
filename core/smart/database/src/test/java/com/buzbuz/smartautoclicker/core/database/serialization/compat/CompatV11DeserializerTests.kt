@@ -20,9 +20,12 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
+import com.buzbuz.smartautoclicker.core.database.entity.CompleteActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
+import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioEntity
 import com.buzbuz.smartautoclicker.core.database.serialization.DeserializerFactory
 import com.buzbuz.smartautoclicker.core.database.utils.encodeToJsonObject
@@ -48,19 +51,28 @@ class CompatV11DeserializerTests {
         private const val VERSION_MAXIMUM = 10
     }
 
-    private fun createJsonClick(clickOnCondition: Boolean, x: Int? = null, y: Int? = null): JsonObject = JsonObject(
-        mapOf(
-            "id" to JsonPrimitive(1L),
-            "eventId" to JsonPrimitive(1L),
-            "name" to JsonPrimitive("toto"),
-            "priority" to JsonPrimitive(1L),
-            "type" to JsonPrimitive(ActionType.CLICK.name),
-            "clickOnCondition" to JsonPrimitive(clickOnCondition),
-            "x" to JsonPrimitive(x),
-            "y" to JsonPrimitive(y),
-            "pressDuration" to JsonPrimitive(1),
+    private fun createJsonCompleteClick(clickOnCondition: Boolean, x: Int? = null, y: Int? = null): JsonObject =
+        JsonObject(
+            mapOf(
+                "action" to JsonObject(
+                    mapOf(
+                        "id" to JsonPrimitive(1L),
+                        "eventId" to JsonPrimitive(1L),
+                        "name" to JsonPrimitive("toto"),
+                        "priority" to JsonPrimitive(1L),
+                        "type" to JsonPrimitive(ActionType.CLICK.name),
+                        "clickOnCondition" to JsonPrimitive(clickOnCondition),
+                        "x" to JsonPrimitive(x),
+                        "y" to JsonPrimitive(y),
+                        "pressDuration" to JsonPrimitive(1),
+                    )
+                ),
+            )
         )
-    )
+
+    /** The position of a click is now defined by the press motion of its single gesture finger. */
+    private fun CompleteActionEntity.getPressMotion(): GestureFingerMotionEntity =
+        gestureFingers.first().motions.first { it.motionType == GestureFingerMotionType.PRESS }
 
     private fun getDefaultImageCondition(shouldBeDetected: Boolean): ConditionEntity = ConditionEntity(
         id = 1L, eventId = 1L, name = "toto", type = ConditionType.ON_IMAGE_DETECTED, path = "/toto",
@@ -97,67 +109,96 @@ class CompatV11DeserializerTests {
         // Given
         val x = 10
         val y = 20
-        val jsonClick = createJsonClick(clickOnCondition = false, x, y)
+        val jsonClick = createJsonCompleteClick(clickOnCondition = false, x, y)
 
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, emptyList(), 1)
+            .deserializeCompleteAction(jsonClick, emptyList(), emptyList(), 1)
 
         // Then
         assertNotNull(decodedClick)
-        assertEquals(ClickPositionType.USER_SELECTED, decodedClick!!.clickPositionType)
-        assertEquals(x, decodedClick.x)
-        assertEquals(y, decodedClick.y)
-        assertNull(decodedClick.clickOnConditionId)
+        assertEquals(ActionType.CLICK, decodedClick!!.action.type)
+        decodedClick.getPressMotion().let { pressMotion ->
+            assertEquals(CoordinatesType.LITERAL, pressMotion.xCoordinateType)
+            assertEquals(CoordinatesType.LITERAL, pressMotion.yCoordinateType)
+            assertEquals(x, pressMotion.xLiteral)
+            assertEquals(y, pressMotion.yLiteral)
+            assertNull(pressMotion.conditionId)
+        }
     }
 
     @Test
     fun deserialization_action_click_on_condition_valid_condition() {
         // Given
-        val jsonClick = createJsonClick(clickOnCondition = true)
+        val jsonClick = createJsonCompleteClick(clickOnCondition = true)
         val condition = getDefaultImageCondition(true)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, listOf(condition), 1)
+            .deserializeCompleteAction(jsonClick, emptyList(), listOf(condition), 1)
 
         // Then
         assertNotNull(decodedClick)
-        assertEquals(ClickPositionType.ON_DETECTED_CONDITION, decodedClick!!.clickPositionType)
-        assertEquals(condition.id, decodedClick.clickOnConditionId)
-        assertNull(decodedClick.x)
-        assertNull(decodedClick.y)
+        decodedClick!!.getPressMotion().let { pressMotion ->
+            assertEquals(CoordinatesType.CONDITION, pressMotion.xCoordinateType)
+            assertEquals(CoordinatesType.CONDITION, pressMotion.yCoordinateType)
+            assertEquals(condition.id, pressMotion.conditionId)
+            assertNull(pressMotion.xLiteral)
+            assertNull(pressMotion.yLiteral)
+        }
     }
 
     @Test
     fun deserialization_action_click_on_condition_no_conditions() {
         // Given
-        val jsonClick = createJsonClick(clickOnCondition = true)
+        val jsonClick = createJsonCompleteClick(clickOnCondition = true)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, emptyList(), 1)
+            .deserializeCompleteAction(jsonClick, emptyList(), emptyList(), 1)
 
         // Then
         assertNotNull(decodedClick)
-        assertEquals(ClickPositionType.ON_DETECTED_CONDITION, decodedClick!!.clickPositionType)
-        assertNull(decodedClick.clickOnConditionId)
-        assertNull(decodedClick.x)
-        assertNull(decodedClick.y)
+        decodedClick!!.getPressMotion().let { pressMotion ->
+            assertEquals(CoordinatesType.CONDITION, pressMotion.xCoordinateType)
+            assertNull(pressMotion.conditionId)
+            assertNull(pressMotion.xLiteral)
+            assertNull(pressMotion.yLiteral)
+        }
     }
 
     @Test
     fun deserialization_action_click_on_condition_invalid_conditions() {
         // Given
-        val jsonClick = createJsonClick(clickOnCondition = true)
+        val jsonClick = createJsonCompleteClick(clickOnCondition = true)
         val condition = getDefaultImageCondition(shouldBeDetected = false)
         // When
         val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
-            .deserializeAction(jsonClick, listOf(condition), 1)
+            .deserializeCompleteAction(jsonClick, emptyList(), listOf(condition), 1)
 
         // Then
         assertNotNull(decodedClick)
-        assertEquals(ClickPositionType.ON_DETECTED_CONDITION, decodedClick!!.clickPositionType)
-        assertNull(decodedClick.clickOnConditionId)
-        assertNull(decodedClick.x)
-        assertNull(decodedClick.y)
+        decodedClick!!.getPressMotion().let { pressMotion ->
+            assertEquals(CoordinatesType.CONDITION, pressMotion.xCoordinateType)
+            assertNull(pressMotion.conditionId)
+            assertNull(pressMotion.xLiteral)
+            assertNull(pressMotion.yLiteral)
+        }
+    }
+
+    @Test
+    fun deserialization_action_click_press_duration_in_wait_motion() {
+        // Given
+        val jsonClick = createJsonCompleteClick(clickOnCondition = false, x = 10, y = 20)
+
+        // When
+        val decodedClick = (DeserializerFactory.create(VERSION_MAXIMUM) as CompatV11Deserializer)
+            .deserializeCompleteAction(jsonClick, emptyList(), emptyList(), 1)
+
+        // Then
+        assertNotNull(decodedClick)
+        val motions = decodedClick!!.gestureFingers.first().motions
+        assertEquals(3, motions.size)
+        assertEquals(GestureFingerMotionType.WAIT, motions[1].motionType)
+        assertEquals(1L, motions[1].durationMs)
+        assertEquals(GestureFingerMotionType.RELEASE, motions[2].motionType)
     }
 }

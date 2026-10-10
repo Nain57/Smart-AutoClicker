@@ -51,6 +51,7 @@ class DeserializerTests {
                                 isAdvanced = false, isBroadcast = false, intentAction = "org.action", flags = 0,
                                 componentName = "org.action/org.action.TOTO",
                             ),
+                            gestureFingers = emptyList(),
                             intentExtras = listOf(
                                 IntentExtraEntity(1, 1, IntentExtraType.BOOLEAN, "ExtraKey", "true")
                             ),

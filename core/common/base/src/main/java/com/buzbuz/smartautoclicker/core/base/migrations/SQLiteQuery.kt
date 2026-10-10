@@ -56,6 +56,8 @@ class SQLiteQueryResult internal constructor(
 
         fun getBoolean(columnName: String): Boolean = cursor.getInt(getColumnIndex(columnName)) != 0
 
+        fun isNull(columnName: String): Boolean = cursor.isNull(getColumnIndex(columnName))
+
         inline fun <reified ColumnType : Any> getValue(column: SQLiteColumn<ColumnType>): ColumnType? =
             when (column) {
                 is SQLiteColumn.Boolean -> getBoolean(column.name)
@@ -66,6 +68,13 @@ class SQLiteQueryResult internal constructor(
                 is SQLiteColumn.Long -> getLong(column.name)
                 is SQLiteColumn.Double -> getDouble(column.name)
             } as ColumnType?
+
+        /**
+         * [getValue] returns 0 for a null numeric column; use this instead when the column is nullable and the
+         * difference between null and 0 matters.
+         */
+        inline fun <reified ColumnType : Any> getNullableValue(column: SQLiteColumn<ColumnType>): ColumnType? =
+            if (isNull(column.name)) null else getValue(column)
 
         private fun getColumnIndex(columnName: String): Int =
             columnsNamesToInfo[columnName]?.second

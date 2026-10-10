@@ -36,12 +36,21 @@ import com.buzbuz.smartautoclicker.core.database.entity.IntentExtraEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioStatsEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ScenarioWithEvents
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
+import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toFingerEntity
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toMotionEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toEntity
+import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toGestureFingerEntity
+import com.buzbuz.smartautoclicker.core.domain.model.action.mapper.toGestureMotionEntities
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toEntity
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -374,10 +383,7 @@ internal class ScenarioDataSource @Inject constructor(
             currentEntities = currentActionsEntities,
             newItems = newActions,
             mappingClosure = { actionInEvent ->
-                actionInEvent.toEntity().apply {
-                    eventId = eventDbId
-                    clickOnConditionId = scenarioUpdateState.getClickOnConditionDatabaseId(actionInEvent)
-                }
+                actionInEvent.toEntity().apply { eventId = eventDbId }
             }
         )
         Log.d(TAG, "Actions updater: $updater")
@@ -404,6 +410,20 @@ internal class ScenarioDataSource @Inject constructor(
     private suspend fun updateActionsChildren(actions: List<Action>) {
         actions.forEach { action ->
             when (action) {
+                is Click -> {
+                    updateClickGesture(
+                        actionDbId = scenarioUpdateState.getActionDbId(action.id),
+                        click = action,
+                    )
+                }
+
+                is Gesture -> {
+                    updateGestureFingers(
+                        actionDbId = scenarioUpdateState.getActionDbId(action.id),
+                        newFingers = action.fingers,
+                    )
+                }
+
                 is Intent -> {
                     action.extras?.let { extras ->
                         updateIntentExtras(
@@ -422,6 +442,35 @@ internal class ScenarioDataSource @Inject constructor(
 
                 else -> Unit
             }
+        }
+    }
+
+    private suspend fun updateClickGesture(actionDbId: Long, click: Click) {
+        val dao = database.actionDao()
+        dao.deleteFingersByActionId(actionDbId)
+
+        val fingerDbId = dao.addFinger(click.toGestureFingerEntity(actionId = actionDbId))
+        dao.addMotions(
+            click.toGestureMotionEntities(
+                fingerId = fingerDbId,
+                clickOnConditionDbId = click.getClickOnConditionId()?.let(scenarioUpdateState::getConditionDbId),
+            )
+        )
+    }
+
+    private suspend fun updateGestureFingers(actionDbId: Long, newFingers: List<GestureFinger>) {
+        val dao = database.actionDao()
+        dao.deleteFingersByActionId(actionDbId)
+
+        newFingers.forEachIndexed { fingerIndex, finger ->
+            val fingerDbId = dao.addFinger(finger.toFingerEntity(actionId = actionDbId, index = fingerIndex))
+            dao.addMotions(
+                finger.motions.mapIndexed { motionIndex, motion ->
+                    motion.toMotionEntity(fingerId = fingerDbId, index = motionIndex).apply {
+                        conditionId = motion.getConditionIdentifier()?.let(scenarioUpdateState::getConditionDbId)
+                    }
+                }
+            )
         }
     }
 
@@ -506,6 +555,10 @@ internal class ScenarioDataSource @Inject constructor(
             }
         }
 }
+
+/** @return the identifier of the condition this motion is positioned on, if any. */
+private fun GestureFingerMotion.getConditionIdentifier(): Identifier? =
+    ((this as? GestureFingerMotion.Positionable)?.position as? GesturePosition.Condition)?.conditionId
 
 /** Tag for logs. */
 private const val TAG = "ScenarioDataSource"
