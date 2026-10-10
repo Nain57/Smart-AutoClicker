@@ -30,6 +30,9 @@ import androidx.appcompat.R as AppCompatR
 fun IncludeButtonFingerSelectorBinding.setFingerCount(fingerCount: Int) {
     if (fingerCount !in 1..5) return
 
+    toggleButton.isSelectionRequired = true
+    toggleButton.isSingleSelection = true
+
     var currentCount = 1
     if (fingerTwo.isVisible) currentCount++
     if (fingerThree.isVisible) currentCount++
@@ -41,10 +44,7 @@ fun IncludeButtonFingerSelectorBinding.setFingerCount(fingerCount: Int) {
     fingerThree.isVisible = fingerCount >= 3
     fingerFour.isVisible = fingerCount >= 4
     fingerFive.isVisible = fingerCount >= 5
-
     fingerAdd.isVisible = !fingerFive.isVisible
-    toggleButton.isSelectionRequired = true
-    toggleButton.isSingleSelection = true
 
     toggleButton.post { applyPositionalShapes() }
 }

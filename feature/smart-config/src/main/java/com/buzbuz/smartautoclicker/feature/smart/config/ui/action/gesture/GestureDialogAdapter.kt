@@ -232,10 +232,12 @@ private object GestureMotionItemDiffCallback : DiffUtil.ItemCallback<GestureDial
                     oldItem.isCollapsed == newItem.isCollapsed -> TEXT_FIELD_CHANGED
 
             is GestureDialogUiStateItem.Header if newItem is GestureDialogUiStateItem.Header &&
-                    oldItem.actionName == newItem.actionName &&
                     oldItem.fingerIndex == newItem.fingerIndex &&
                     oldItem.fingerCount == newItem.fingerCount &&
-                    oldItem.maxFingerGestureDurationsMs == newItem.maxFingerGestureDurationsMs -> HEADER_FINGER_DESC_CHANGED
+                    oldItem.maxFingerGestureDurationsMs == newItem.maxFingerGestureDurationsMs ->
+                if (oldItem.actionName == newItem.actionName &&
+                    oldItem.fingerErrorState == newItem.fingerErrorState) HEADER_FINGER_DESC_CHANGED
+                else TEXT_FIELD_CHANGED
 
             else -> null
         }
