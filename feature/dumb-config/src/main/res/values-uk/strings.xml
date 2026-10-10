@@ -38,7 +38,6 @@
     <string name="item_desc_dumb_action_duration">Протягом %1$s</string>
     <string name="item_desc_dumb_click">Клікніть десь на екрані</string>
     <string name="item_desc_dumb_click_details">Протягом %1$s в [%2$d, %3$d]</string>
-    <string name="item_desc_dumb_click_on_position">Натисніть у точці %1$d, %2$d</string>
     <string name="item_desc_dumb_pause">Призупинити виконання</string>
     <string name="item_desc_dumb_pause_details">Протягом %1$s</string>
     <string name="item_desc_dumb_swipe_details">Протягом %1$s з [%2$d, %3$d] до [%4$d, %5$d]</string>

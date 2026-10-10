@@ -32,10 +32,10 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.toDumbActionDetails
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.gesture.toGestureDescription
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -101,8 +101,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
     }
 
     fun endGestureCaptureState(context: Context, gesture: RecordedGesture) {
-        val action = gesture.toDumbAction(context) ?: return
-        dumbEditionRepository.addNewDumbAction(action)
+        dumbEditionRepository.addNewDumbAction(gesture.toDumbAction(context))
     }
 
     fun cancelGestureCaptureState() {
@@ -141,6 +140,9 @@ class DumbScenarioBriefViewModel @Inject constructor(
 
     fun createNewDumbPause(context: Context, ): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(context)
+
+    fun createNewDumbGesture(context: Context): DumbAction.DumbGesture =
+        dumbEditionRepository.dumbActionBuilder.createNewDumbGesture(context)
 
     fun createDumbActionCopy(actionToCopy: DumbAction): DumbAction =
         dumbEditionRepository.dumbActionBuilder.createNewDumbActionFrom(actionToCopy)
@@ -185,15 +187,15 @@ class DumbScenarioBriefViewModel @Inject constructor(
         dumbEditionRepository.deleteDumbAction(action)
     }
 
-    /** Multi finger gestures are not supported by the dumb scenarios. */
-    private fun RecordedGesture.toDumbAction(context: Context): DumbAction? =
+    private fun RecordedGesture.toDumbAction(context: Context): DumbAction =
         when (this) {
             is RecordedGesture.Click -> createNewDumbClick(
                 context = context,
                 position = position.toPoint(),
             )
 
-            is RecordedGesture.Gesture -> null
+            is RecordedGesture.Gesture -> dumbEditionRepository.dumbActionBuilder
+                .createNewDumbGesture(context, fingers)
         }
 
     private fun DumbAction.toBriefDescription(): ItemBriefDescription =
@@ -203,8 +205,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
                 pressDurationMs = pressDurationMs,
             )
 
-            // TODO: Map to a GestureDescription once the dumb gesture brief mapper exists.
-            is DumbAction.DumbGesture -> DefaultDescription()
+            is DumbAction.DumbGesture -> toGestureDescription()
 
             is DumbAction.DumbPause -> PauseDescription(
                 pauseDurationMs = pauseDurationMs,

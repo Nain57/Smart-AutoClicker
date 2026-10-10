@@ -40,7 +40,6 @@
     <string name="item_desc_dumb_action_duration">Durante %1$s</string>
     <string name="item_desc_dumb_click">Fare clic in qualche punto dello schermo</string>
     <string name="item_desc_dumb_click_details">Durante %1$s a [%2$d, %3$d]</string>
-    <string name="item_desc_dumb_click_on_position">Fare clic in corrispondenza di %1$d, %2$d</string>
     <string name="item_desc_dumb_pause">Sospendere l\'esecuzione</string>
     <string name="item_desc_dumb_pause_details">Durante %1$s</string>
     <string name="item_desc_dumb_repeat_count">Ripetere %1$d volte</string>

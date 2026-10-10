@@ -22,6 +22,8 @@
     <string name="default_dumb_swipe_name">Swipe</string>
     <integer name="default_dumb_swipe_duration">500</integer>
 
+    <string name="default_dumb_gesture_name">Gesture</string>
+
     <string name="default_dumb_pause_name">Wait</string>
     <integer name="default_dumb_pause_duration">50</integer>
 </resources>

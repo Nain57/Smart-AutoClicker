@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.feature.dumb.config.domain
 
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -38,6 +39,7 @@ import javax.inject.Singleton
 @Singleton
 class DumbEditionRepository @Inject constructor(
     private val dumbRepository: IDumbRepository,
+    displayConfigManager: DisplayConfigManager,
 ) {
 
     private val _editedDumbScenario: MutableStateFlow<DumbScenario?> = MutableStateFlow(null)
@@ -60,7 +62,7 @@ class DumbEditionRepository @Inject constructor(
     /** Tells if the editions made on the scenario are synchronized with the database values. */
     val isEditionSynchronized: Flow<Boolean> = editedDumbScenario.map { it == null }
 
-    val dumbActionBuilder: EditedDumbActionsBuilder = EditedDumbActionsBuilder()
+    val dumbActionBuilder: EditedDumbActionsBuilder = EditedDumbActionsBuilder(displayConfigManager)
 
     /** Set the scenario to be configured. */
     suspend fun startEdition(scenarioId: Long): Boolean {

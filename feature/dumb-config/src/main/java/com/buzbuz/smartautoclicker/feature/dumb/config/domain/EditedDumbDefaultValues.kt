@@ -51,6 +51,9 @@ internal fun Context.getDefaultDumbSwipeRepeatCount(): Int = getDumbConfigPrefer
 internal fun Context.getDefaultDumbSwipeRepeatDelay(): Long = getDumbConfigPreferences()
     .getSwipeRepeatDelayConfig(0)
 
+internal fun Context.getDefaultDumbGestureName(): String =
+    getString(R.string.default_dumb_gesture_name)
+
 internal fun Context.getDefaultDumbPauseName(): String =
     getString(R.string.default_dumb_pause_name)
 

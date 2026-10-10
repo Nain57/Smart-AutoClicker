@@ -357,31 +357,15 @@
 
 
     <!-- Dialog Action Gesture ======================================================================================= -->
+    <!-- Smart specific keys for gesture. Base keys are shared with dumb, in core:ui module -->
 
-    <string name="dialog_title_gesture">Gesture</string>
-
-    <string name="item_header_finger_title">Finger #%1$d</string>
-    <string name="item_header_finger_desc">%1$dms / %2$dms</string>
-    <string name="item_header_button_capture">Capture</string>
-    <string name="item_header_finger_start_at">Start at (ms)</string>
-
-    <string name="item_title_gesture_press">Press</string>
-    <string name="item_desc_gesture_press_value">Press at [%1$s, %2$s]</string>
     <string name="item_desc_gesture_press_condition">Press on [%1$s]</string>
     <string name="item_desc_gesture_press_condition_or">Press on first detected condition</string>
     <string name="item_desc_gesture_press_condition_error">No condition to press on</string>
 
-    <string name="item_title_gesture_move">Move</string>
-    <string name="item_desc_gesture_move_value">Move at [%1$s, %2$s]</string>
     <string name="item_desc_gesture_move_condition">Move on [%1$s]</string>
     <string name="item_desc_gesture_move_condition_or">Move on first detected condition</string>
     <string name="item_desc_gesture_move_condition_error">No condition to move on</string>
-
-    <string name="item_title_gesture_wait">Wait</string>
-    <string name="item_desc_gesture_wait">Wait for %1$d ms</string>
-
-    <string name="item_title_gesture_release">Release</string>
-    <string name="item_desc_gesture_release">Release the finger from the screen</string>
 
     <string name="message_title_gesture_on_condition_and">Click on a condition</string>
     <string name="message_desc_gesture_on_condition_and">%1$s</string>
@@ -390,13 +374,6 @@
     <string name="message_title_gesture_on_condition_error">No condition selected</string>
     <string name="message_desc_gesture_on_condition_error">You need a condition to execute the gesture on</string>
 
-    <string name="item_title_gesture_add">Add</string>
-
-    <string name="field_title_position_x">X</string>
-    <string name="field_title_position_y">Y</string>
-    <string name="field_title_duration_ms">Duration (ms)</string>
-
-    <string name="button_title_position">Pick position</string>
     <string name="button_title_condition_pick">Pick condition</string>
     <string name="button_title_condition_remove">Remove condition</string>
 

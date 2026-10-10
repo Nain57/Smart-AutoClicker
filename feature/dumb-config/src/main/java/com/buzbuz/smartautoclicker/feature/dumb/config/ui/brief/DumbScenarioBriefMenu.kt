@@ -84,6 +84,7 @@ class DumbScenarioBriefMenu(
         dumbActionCreator = DumbActionCreator(
             createNewDumbClick = { position -> viewModel.createNewDumbClick(context, position) },
             createNewDumbPause = { viewModel.createNewDumbPause(context) },
+            createNewDumbGesture = { viewModel.createNewDumbGesture(context) },
             createDumbActionCopy = viewModel::createDumbActionCopy,
         )
         createCopyActionUiFlowListener = DumbActionUiFlowListener(

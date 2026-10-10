@@ -49,9 +49,6 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setup
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.PositionSelectorMenu
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
-import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setTitle
 import com.buzbuz.smartautoclicker.core.ui.utils.MinMaxInputFilter
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
@@ -138,10 +135,19 @@ class DumbClickDialog(
             }
             hideSoftInputOnFocusLoss(fieldRepeatDelay.textField)
 
-            fieldSelectionPosition.apply {
-                setTitle(context.getString(R.string.field_click_position_title))
-                setOnClickListener { debounceUserInteraction { onPositionCardClicked() } }
+            fieldPositionX.apply {
+                setLabel(R.string.field_title_position_x)
+                setOnTextChangedListener { viewModel.setPositionX(it.toString()) }
             }
+            hideSoftInputOnFocusLoss(fieldPositionX.textField)
+
+            fieldPositionY.apply {
+                setLabel(R.string.field_title_position_y)
+                setOnTextChangedListener { viewModel.setPositionY(it.toString()) }
+            }
+            hideSoftInputOnFocusLoss(fieldPositionY.textField)
+
+            buttonSelectPosition.setDebouncedOnClickListener { onSelectPositionClicked() }
         }
 
         return viewBinding.root
@@ -150,17 +156,7 @@ class DumbClickDialog(
     override fun onDialogCreated(dialog: BottomSheetDialog) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isValidDumbClick.collect(::updateSaveButton) }
-                launch { viewModel.name.collect(viewBinding.fieldName::setText) }
-                launch { viewModel.nameError.collect(viewBinding.fieldName::setError)}
-                launch { viewModel.pressDuration.collect(::updateDumbClickPressDuration) }
-                launch { viewModel.pressDurationError.collect(viewBinding.fieldDuration::setError)}
-                launch { viewModel.repeatCount.collect(viewBinding.fieldRepeat::setNumericValue) }
-                launch { viewModel.repeatCountError.collect(viewBinding.fieldRepeat::setError) }
-                launch { viewModel.repeatInfiniteState.collect(viewBinding.fieldRepeat::setChecked) }
-                launch { viewModel.repeatDelay.collect(::updateDumbClickRepeatDelay) }
-                launch { viewModel.repeatDelayError.collect(viewBinding.fieldRepeatDelay::setError)}
-                launch { viewModel.clickPositionText.collect(::updateFieldPosition) }
+                launch { viewModel.uiState.collect(::updateUiState) }
             }
         }
     }
@@ -185,23 +181,37 @@ class DumbClickDialog(
         back()
     }
 
-    private fun updateDumbClickPressDuration(duration: String) {
-        viewBinding.fieldDuration.setText(duration, InputType.TYPE_CLASS_NUMBER)
+    private fun updateUiState(state: DumbClickDialogUiState) {
+        viewBinding.apply {
+            layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, state.canBeSaved)
+
+            fieldName.apply {
+                setText(state.name)
+                setError(state.nameError)
+            }
+
+            fieldDuration.apply {
+                setText(state.pressDurationMs.toString(), InputType.TYPE_CLASS_NUMBER)
+                setError(state.pressDurationError)
+            }
+
+            fieldRepeat.apply {
+                setNumericValue(state.repeatCount.toString())
+                setChecked(state.isRepeatInfinite)
+                setError(state.repeatCountError)
+            }
+
+            fieldRepeatDelay.apply {
+                setText(state.repeatDelayMs.toString(), InputType.TYPE_CLASS_NUMBER)
+                setError(state.repeatDelayError)
+            }
+
+            fieldPositionX.setText(state.position.x.toString(), InputType.TYPE_CLASS_NUMBER)
+            fieldPositionY.setText(state.position.y.toString(), InputType.TYPE_CLASS_NUMBER)
+        }
     }
 
-    private fun updateDumbClickRepeatDelay(delay: String) {
-        viewBinding.fieldRepeatDelay.setText(delay, InputType.TYPE_CLASS_NUMBER)
-    }
-
-    private fun updateSaveButton(isValidCondition: Boolean) {
-        viewBinding.layoutTopBar.setButtonEnabledState(DialogNavigationButton.SAVE, isValidCondition)
-    }
-
-    private fun updateFieldPosition(positionText: String) {
-        viewBinding.fieldSelectionPosition.setDescription(positionText)
-    }
-
-    private fun onPositionCardClicked() {
+    private fun onSelectPositionClicked() {
         viewModel.getEditedDumbClick()?.let { dumbClick ->
             overlayManager.navigateTo(
                 context = context,

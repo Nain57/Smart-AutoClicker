@@ -40,7 +40,6 @@
     <string name="item_desc_dumb_action_duration">Длительность: %1$s</string>
     <string name="item_desc_dumb_click">Нажимать на любою точку на экране</string>
     <string name="item_desc_dumb_click_details">Нажимает %1$s на точку [%2$d, %3$d]</string>
-    <string name="item_desc_dumb_click_on_position">Нажать в точке %1$d, %2$d</string>
     <string name="item_desc_dumb_pause">Приостановить выполнение</string>
     <string name="item_desc_dumb_pause_details">Длительность: %1$s</string>
     <string name="item_desc_dumb_repeat_count">Всего повторений: %1$d</string>

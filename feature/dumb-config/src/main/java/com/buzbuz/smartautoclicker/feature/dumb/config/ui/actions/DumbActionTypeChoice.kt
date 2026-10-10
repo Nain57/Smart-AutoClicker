@@ -43,6 +43,14 @@ sealed class DumbActionTypeChoice(
         R.string.item_desc_dumb_click,
         R.drawable.ic_click,
     )
+
+    /** Gesture Action choice. */
+    data object Gesture : DumbActionTypeChoice(
+        R.string.item_title_dumb_gesture,
+        R.string.item_desc_dumb_gesture,
+        R.drawable.ic_gesture,
+    )
+
     /** Pause Action choice. */
     data object Pause : DumbActionTypeChoice(
         R.string.item_title_dumb_pause,
@@ -54,5 +62,6 @@ sealed class DumbActionTypeChoice(
 fun allDumbActionChoices() = listOf(
     DumbActionTypeChoice.Copy,
     DumbActionTypeChoice.Click,
+    DumbActionTypeChoice.Gesture,
     DumbActionTypeChoice.Pause,
 )

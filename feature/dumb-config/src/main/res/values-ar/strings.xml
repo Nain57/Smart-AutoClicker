@@ -40,7 +40,6 @@
     <string name="item_desc_dumb_action_duration">خلال %1$s</string>
     <string name="item_desc_dumb_click">انقر في مكان ما على الشاشة</string>
     <string name="item_desc_dumb_click_details">خلال %1$s في [%2$d، %3$d]</string>
-    <string name="item_desc_dumb_click_on_position">انقر على %1$d، %2$d</string>
     <string name="item_desc_dumb_pause">وقفة التنفيذ</string>
     <string name="item_desc_dumb_pause_details">خلال %1$s</string>
     <string name="item_desc_dumb_repeat_count">كرر %1$d مرات</string>
