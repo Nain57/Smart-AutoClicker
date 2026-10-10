@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
@@ -85,10 +86,8 @@ class DumbScenarioBriefViewModel @Inject constructor(
 
     private val focusedAction: Flow<Pair<DumbAction?, Boolean>> =
         combine(briefVisualizationState, dumbEditionRepository.editedDumbScenario) { visualizationState, scenario ->
-            val filterUpdates = visualizationState.gestureCaptureStarted
-            val actionList = scenario?.dumbActions ?: return@combine null to filterUpdates
-            if (visualizationState.focusedIndex !in actionList.indices) return@combine null to filterUpdates
-            actionList[visualizationState.focusedIndex] to filterUpdates
+            val focusedAction = scenario?.dumbActions?.getOrNull(visualizationState.focusedIndex)
+            focusedAction to visualizationState.isRecordedGestureDisplayed(focusedAction)
         }
 
     val dumbActionVisualization: Flow<ItemBriefDescription?> = focusedAction
@@ -97,22 +96,32 @@ class DumbScenarioBriefViewModel @Inject constructor(
 
     fun startGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value
-            .copy(gestureCaptureStarted = true)
+            .copy(gestureCaptureStarted = true, pendingRecordedActionId = null)
     }
 
-    fun endGestureCaptureState(context: Context, gesture: RecordedGesture) {
-        dumbEditionRepository.addNewDumbAction(gesture.toDumbAction(context))
+    /** Ends the capture, adding the recorded gesture as a new action if any was actually captured. */
+    fun endGestureCaptureState(context: Context, gesture: RecordedGesture?) {
+        val action = gesture?.toDumbAction(context)
+        briefVisualizationState.value = briefVisualizationState.value
+            .copy(gestureCaptureStarted = false, pendingRecordedActionId = action?.id)
+
+        action ?: return
+        dumbEditionRepository.addNewDumbAction(action)
     }
 
     fun cancelGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value
-            .copy(gestureCaptureStarted = false)
+            .copy(gestureCaptureStarted = false, pendingRecordedActionId = null)
     }
 
     fun setFocusedDumbActionIndex(index: Int) {
-        briefVisualizationState.value = BriefVisualizationState(
+        val state = briefVisualizationState.value
+        val actions = dumbEditionRepository.editedDumbScenario.value?.dumbActions
+        val isRecordedActionInserted = actions?.any { it.id == state.pendingRecordedActionId } == true
+
+        briefVisualizationState.value = state.copy(
             focusedIndex = index,
-            gestureCaptureStarted = false,
+            pendingRecordedActionId = if (isRecordedActionInserted) null else state.pendingRecordedActionId,
         )
     }
 
@@ -216,4 +225,15 @@ class DumbScenarioBriefViewModel @Inject constructor(
 private data class BriefVisualizationState(
     val focusedIndex: Int,
     val gestureCaptureStarted: Boolean,
-)
+    /** Action created from the last recorded gesture, until the brief list focuses it. */
+    val pendingRecordedActionId: Identifier? = null,
+) {
+
+    /**
+     * The brief view keeps the recorded gesture description until its action is focused, otherwise the previously
+     * focused action would flash while the list inserts and scrolls to the new one.
+     */
+    fun isRecordedGestureDisplayed(focusedAction: DumbAction?): Boolean =
+        gestureCaptureStarted ||
+                (pendingRecordedActionId != null && pendingRecordedActionId != focusedAction?.id)
+}

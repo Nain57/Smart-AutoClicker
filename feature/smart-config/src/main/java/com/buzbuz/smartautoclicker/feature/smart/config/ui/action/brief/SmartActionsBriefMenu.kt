@@ -182,6 +182,10 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
         }
     }
 
+    override fun onGestureCaptureCancelled() {
+        viewModel.cancelGestureCapture()
+    }
+
     override fun onFocusedItemChanged(index: Int) {
         super.onFocusedItemChanged(index)
         viewModel.setFocusedActionIndex(index)
@@ -190,7 +194,9 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
     private fun updateUiState(uiState: SmartActionsBriefUiState) {
         updateItemList(uiState.actionBriefs)
         updateMode(uiState.mode)
-        briefViewBinding.viewBrief.setDescription(uiState.focusedActionDescription, true)
+        if (!uiState.isRecordedGestureDisplayed) {
+            briefViewBinding.viewBrief.setDescription(uiState.focusedActionDescription, true)
+        }
         setBriefPanelAutoHide(uiState.isBriefPanelAutoHideEnabled)
     }
 

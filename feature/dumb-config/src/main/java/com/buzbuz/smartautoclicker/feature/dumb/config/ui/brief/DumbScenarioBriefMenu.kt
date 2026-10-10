@@ -187,9 +187,13 @@ class DumbScenarioBriefMenu(
 
         viewModel.startGestureCaptureState()
         startGestureCapture { gesture, isFinished ->
-            if (gesture == null || !isFinished) return@startGestureCapture
+            if (!isFinished) return@startGestureCapture
             viewModel.endGestureCaptureState(context, gesture)
         }
+    }
+
+    override fun onGestureCaptureCancelled() {
+        viewModel.cancelGestureCaptureState()
     }
 
     private fun onCreateDumbActionClicked() {

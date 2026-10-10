@@ -21,8 +21,10 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 
 data class SmartActionsBriefUiState(
     val actionBriefs: List<ItemBrief>,
-    /** Null when no action is focused, or while the gesture recorder is drawing its own live capture. */
+    /** Null when no action is focused, or while [isRecordedGestureDisplayed]. */
     val focusedActionDescription: ItemBriefDescription?,
+    /** The brief view displays the gesture being recorded, or the recorded one until its action is focused. */
+    val isRecordedGestureDisplayed: Boolean,
     val mode: SmartActionsBriefMode,
     val isBriefPanelAutoHideEnabled: Boolean,
 )

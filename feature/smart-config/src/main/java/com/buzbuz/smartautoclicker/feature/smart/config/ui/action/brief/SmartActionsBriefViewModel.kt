@@ -26,6 +26,7 @@ import androidx.core.graphics.toPointF
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
@@ -82,6 +83,7 @@ import kotlinx.coroutines.launch
 
 import java.util.Collections
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 
 class SmartActionsBriefViewModel @Inject constructor(
@@ -104,13 +106,19 @@ class SmartActionsBriefViewModel @Inject constructor(
     private val actionBriefs: Flow<List<ItemBrief>> =
         combine(editedEvent, editedActions) { event, actions -> actions.toItemBriefs(context, event) }
 
-    private val focusedActionDescription: Flow<ItemBriefDescription?> =
+    private val focusedActionBrief: Flow<FocusedActionBrief> =
         combine(visualizationState, editedActions) { state, actions ->
-            if (state.isGestureCaptureStarted) null
-            else actions.value?.getOrNull(state.focusedIndex)
+            val focusedAction = actions.value?.getOrNull(state.focusedIndex)
+            if (state.isRecordedGestureDisplayed(focusedAction)) null to true
+            else focusedAction to false
         }
             .distinctUntilChanged()
-            .map { action -> action?.toActionDescription(context) }
+            .map { (action, isRecordedGestureDisplayed) ->
+                FocusedActionBrief(
+                    description = action?.toActionDescription(context),
+                    isRecordedGestureDisplayed = isRecordedGestureDisplayed,
+                )
+            }
 
     private val mode: Flow<SmartActionsBriefMode> = combine(
         visualizationState,
@@ -128,13 +136,14 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     val uiState: StateFlow<SmartActionsBriefUiState?> = combine(
         actionBriefs,
-        focusedActionDescription,
+        focusedActionBrief,
         mode,
         isTutorialModeEnabled,
-    ) { briefs, description, mode, isTutorialEnabled ->
+    ) { briefs, focusedBrief, mode, isTutorialEnabled ->
         SmartActionsBriefUiState(
             actionBriefs = briefs,
-            focusedActionDescription = description,
+            focusedActionDescription = focusedBrief.description,
+            isRecordedGestureDisplayed = focusedBrief.isRecordedGestureDisplayed,
             mode = mode,
             isBriefPanelAutoHideEnabled = !isTutorialEnabled,
         )
@@ -160,26 +169,40 @@ class SmartActionsBriefViewModel @Inject constructor(
         visualizationState.value.isGestureCaptureStarted
 
     fun startGestureCapture() {
-        visualizationState.update { state -> state.copy(isGestureCaptureStarted = true) }
+        visualizationState.update { state ->
+            state.copy(isGestureCaptureStarted = true, pendingRecordedActionId = null)
+        }
     }
 
     /** Ends the capture, adding the recorded gesture as a new action if any was actually captured. */
     fun endGestureCapture(context: Context, gesture: RecordedGesture?) {
-        visualizationState.update { state -> state.copy(isGestureCaptureStarted = false) }
+        val action = gesture?.toAction(context)
+        visualizationState.update { state ->
+            state.copy(isGestureCaptureStarted = false, pendingRecordedActionId = action?.id)
+        }
 
-        gesture ?: return
+        action ?: return
         editionRepository.apply {
-            startActionEdition(gesture.toAction(context))
+            startActionEdition(action)
             upsertEditedAction()
         }
     }
 
     fun cancelGestureCapture() {
-        visualizationState.update { state -> state.copy(isGestureCaptureStarted = false) }
+        visualizationState.update { state ->
+            state.copy(isGestureCaptureStarted = false, pendingRecordedActionId = null)
+        }
     }
 
     fun setFocusedActionIndex(index: Int) {
-        visualizationState.update { state -> state.copy(focusedIndex = index) }
+        val actions = editionRepository.editionState.getEditedEventActions<Action>()
+        visualizationState.update { state ->
+            val isRecordedActionInserted = actions?.any { it.id == state.pendingRecordedActionId } == true
+            state.copy(
+                focusedIndex = index,
+                pendingRecordedActionId = if (isRecordedActionInserted) null else state.pendingRecordedActionId,
+            )
+        }
     }
 
     override fun getActionTypeChoices(): List<ActionTypeChoice> =
@@ -210,7 +233,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         if (scenario == null || actions == null || index !in actions.indices) return
 
         viewModelScope.launch {
-            delay(500)
+            delay(500.milliseconds)
             smartProcessingRepository.tryAction(context, scenario, actions[index])
         }
     }
@@ -395,4 +418,20 @@ class SmartActionsBriefViewModel @Inject constructor(
 private data class BriefVisualizationState(
     val focusedIndex: Int,
     val isGestureCaptureStarted: Boolean,
+    /** Action created from the last recorded gesture, until the brief list focuses it. */
+    val pendingRecordedActionId: Identifier? = null,
+) {
+
+    /**
+     * The brief view keeps the recorded gesture description until its action is focused, otherwise the previously
+     * focused action would flash while the list inserts and scrolls to the new one.
+     */
+    fun isRecordedGestureDisplayed(focusedAction: Action?): Boolean =
+        isGestureCaptureStarted ||
+                (pendingRecordedActionId != null && pendingRecordedActionId != focusedAction?.id)
+}
+
+private data class FocusedActionBrief(
+    val description: ItemBriefDescription?,
+    val isRecordedGestureDisplayed: Boolean,
 )
