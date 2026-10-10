@@ -99,9 +99,6 @@ internal class UserTouchWatcher @Inject constructor() {
 
     @VisibleForTesting
     internal fun onWatcherTouchEvent(event: MotionEvent) {
-        Log.d(TAG, "DEBUG watcher event: action=${MotionEvent.actionToString(event.action)}, " +
-                "deviceId=${event.deviceId}, source=0x${Integer.toHexString(event.source)}, " +
-                "toolType=${event.getToolType(0)}, eventTime=${event.eventTime}")
         if (!event.isFromUser()) return
 
         when (event.actionMasked) {

@@ -463,7 +463,7 @@
     <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string> <!-- Toto = Tata -->
     <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string> <!-- Toto = Toto + Tata -->
 
-    <string name="field_counter_operation_condition_value">%1$s (%2$s)</string> <!-- MyCondition (Left) -->
+    <string name="field_counter_operation_condition_value" translatable="false">%1$s (%2$s)</string> <!-- MyCondition (Left) -->
     <string name="field_counter_operation_condition_selection_title_empty">No condition selected</string>
     <string name="field_counter_operation_condition_selection_desc_empty">Click here to select a condition</string>
     <string name="field_counter_operation_condition_selection_desc">If detected, its position on screen will be used as value</string>
