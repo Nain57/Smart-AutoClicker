@@ -61,6 +61,20 @@ data class DebugReportImageEventFilterUiState(
     val filteredIdsText: String,
 )
 
+/** Ui state for the gesture hold filter in the debug report timeline filter dialog. */
+data class DebugReportHoldFilterUiState(
+
+    /** State of the checkbox telling if the gesture hold verifications should be shown or not. */
+    val holdChecksCheckboxState: Boolean,
+    /** Secondary text explaining current effect of the hold verifications checkbox. */
+    val holdChecksCheckboxDescId: Int,
+
+    /** State of the checkbox telling if the gesture releases should be shown or not. */
+    val releasesCheckboxState: Boolean,
+    /** Secondary text explaining current effect of the releases checkbox. */
+    val releasesCheckboxDescId: Int,
+)
+
 /** Ui state for the Trigger Events filter in the debug report timeline filter dialog. */
 data class DebugReportTriggerEventFilterUiState(
 

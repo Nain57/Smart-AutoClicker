@@ -23,6 +23,11 @@
     <color name="event_state_color">#05a142</color>
     <color name="event_test_color">#ffffff</color>
 
+    <color name="debug_timeline_base_color">#ffffff</color>
+    <color name="debug_timeline_event_color">#718df5</color>
+    <color name="debug_timeline_hold_color">#FFAB91</color>
+    <color name="debug_timeline_release_color">#ed666a</color>
+
     <color name="gesture_add_color">#ffffff</color>
 
     <color name="fade_background_color">#BB000000</color>

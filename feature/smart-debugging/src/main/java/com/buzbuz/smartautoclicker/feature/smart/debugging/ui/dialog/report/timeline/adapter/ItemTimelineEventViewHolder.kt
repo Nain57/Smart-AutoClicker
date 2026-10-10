@@ -17,8 +17,10 @@
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ItemTimelineEventOccurrenceBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineEventOccurrenceItem
 
@@ -44,11 +46,24 @@ class ItemTimelineEventViewHolder private constructor(
         onItemClicked: (DebugReportTimelineEventOccurrenceItem) -> Unit,
     ) {
         viewBinding.apply {
-            root.setOnClickListener { onItemClicked(item) }
-            eventNameText.text = item.eventName
+            root.apply {
+                strokeColor = context.getColor(item.cardColorRes)
+                if (item.hasDetails) setOnClickListener { onItemClicked(item) }
+                else setOnClickListener(null)
+                isClickable = item.hasDetails
+            }
+            chevron.visibility = if (item.hasDetails) View.VISIBLE else View.GONE
+            eventNameText.apply {
+                text = item.eventName
+                setLeftCompoundDrawable(item.eventNameIconRes)
+            }
             timeText.text = item.timeText
             occurrenceText.text = item.occurrenceText
-            conditionsText.text = item.conditionsText
+            conditionsText.apply {
+                text = item.conditionsText
+                visibility = if (item.conditionsText.isEmpty()) View.GONE else View.VISIBLE
+            }
+            actions.visibility = if (item.actions.isEmpty()) View.GONE else View.VISIBLE
         }
 
         actionsAdapter.submitList(item.actions)

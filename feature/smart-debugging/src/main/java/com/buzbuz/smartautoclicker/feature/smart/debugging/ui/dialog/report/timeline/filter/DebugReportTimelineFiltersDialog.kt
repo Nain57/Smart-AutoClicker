@@ -91,7 +91,7 @@ class DebugReportTimelineFiltersDialog(
                         context.getString(R.string.field_debug_filter_image_events_show_desc_off),
                     )
                 )
-                setOnClickListener { viewModel.toggleShowImageEvents() }
+                setOnClickListener { viewModel.toggleShowImageEvents(context) }
             }
             fieldSelectImageEvents.apply {
                 setTitle(context.getString(R.string.field_debug_filter_events_show_title))
@@ -109,13 +109,35 @@ class DebugReportTimelineFiltersDialog(
                         context.getString(R.string.field_debug_filter_trigger_events_show_desc_off),
                     )
                 )
-                setOnClickListener { viewModel.toggleShowTriggerEvents() }
+                setOnClickListener { viewModel.toggleShowTriggerEvents(context) }
             }
             fieldSelectTriggerEvents.apply {
                 setTitle(context.getString(R.string.field_debug_filter_events_show_title))
                 setOnClickListener {
                     showEventSelectionDialog(viewModel.getTriggerEventsFilter())
                 }
+            }
+
+            // Gesture hold filter
+            fieldShowHoldChecks.apply {
+                setTitle(context.getString(R.string.field_debug_filter_hold_checks_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_debug_filter_hold_checks_show_desc_on),
+                        context.getString(R.string.field_debug_filter_hold_checks_show_desc_off),
+                    )
+                )
+                setOnClickListener { viewModel.toggleShowHoldChecks() }
+            }
+            fieldShowReleases.apply {
+                setTitle(context.getString(R.string.field_debug_filter_releases_title))
+                setupDescriptions(
+                    listOf(
+                        context.getString(R.string.field_debug_filter_releases_show_desc_on),
+                        context.getString(R.string.field_debug_filter_releases_show_desc_off),
+                    )
+                )
+                setOnClickListener { viewModel.toggleShowReleases() }
             }
         }
 
@@ -129,6 +151,7 @@ class DebugReportTimelineFiltersDialog(
                 launch { viewModel.timeUiState.collect(::updateTimeFilterUiState) }
                 launch { viewModel.imageEventsUiState.collect(::updateImageEventFilterUiState) }
                 launch { viewModel.triggerEventsUiState.collect(::updateTriggerEventFilterUiState) }
+                launch { viewModel.holdUiState.collect(::updateHoldFilterUiState) }
             }
         }
     }
@@ -182,6 +205,20 @@ class DebugReportTimelineFiltersDialog(
         viewBinding.fieldSelectTriggerEvents.apply {
             setEnabled(uiState.filteredIdsSelectorState)
             setDescription(uiState.filteredIdsText)
+        }
+    }
+
+    private fun updateHoldFilterUiState(uiState: DebugReportHoldFilterUiState?) {
+        uiState ?: return
+
+        viewBinding.fieldShowHoldChecks.apply {
+            setChecked(uiState.holdChecksCheckboxState)
+            setDescription(uiState.holdChecksCheckboxDescId)
+        }
+
+        viewBinding.fieldShowReleases.apply {
+            setChecked(uiState.releasesCheckboxState)
+            setDescription(uiState.releasesCheckboxDescId)
         }
     }
 

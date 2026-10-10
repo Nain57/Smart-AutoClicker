@@ -34,7 +34,7 @@ message HeldEventCheckMessage {
     /** The type of the event holding the pointer. */
     EventType eventType = 2;
 
-    /** Tells if the conditions are still fulfilled and the pointer is kept held, or if it has been released. */
+    /** Tells if the pointer is kept held, or why it has been released. */
     HoldState holdState = 3;
 
     /** The duration since the pointer is held, in milliseconds. */
@@ -56,12 +56,22 @@ message HeldEventCheckMessage {
         EVENT_TYPE_TRIGGER = 2;
     }
 
-    /** The state of the hold after the check. */
+    /** The state of the hold after the check. Released states tells the reason of the release. */
     enum HoldState {
         HOLD_STATE_UNSPECIFIED = 0;
         /** The event conditions are still fulfilled, the pointer is kept held. */
         HOLD_STATE_HELD = 1;
         /** The event conditions are no longer fulfilled, the pointer is released. */
-        HOLD_STATE_RELEASED = 2;
+        HOLD_STATE_RELEASED_UNFULFILLED = 2;
+        /** The pointer has been lifted outside of the scenario, most likely by a user interaction. */
+        HOLD_STATE_RELEASED_INTERRUPTED = 3;
+        /** The held event has been disabled. */
+        HOLD_STATE_RELEASED_EVENT_DISABLED = 4;
+        /** The gesture of another event has taken over or ended the hold. */
+        HOLD_STATE_RELEASED_OTHER_EVENT = 5;
+        /** The screen orientation has changed. */
+        HOLD_STATE_RELEASED_SCREEN_ROTATION = 6;
+        /** The scenario has been stopped. */
+        HOLD_STATE_RELEASED_SCENARIO_STOPPED = 7;
     }
 }

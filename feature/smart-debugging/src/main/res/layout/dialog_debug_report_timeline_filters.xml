@@ -44,7 +44,9 @@
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_large">
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:strokeColor="@color/debug_timeline_base_color"
+                app:strokeWidth="2dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -126,7 +128,9 @@
                 style="@style/AppTheme.Widget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_large">
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:strokeColor="@color/debug_timeline_event_color"
+                app:strokeWidth="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -151,27 +155,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_vertical_small"/>
 
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/AppTheme.Widget.Card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_vertical_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                    android:layout_marginVertical="@dimen/margin_vertical_default">
+                    <com.google.android.material.divider.MaterialDivider
+                        style="@style/AppTheme.Widget.Divider.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/margin_vertical_small"/>
 
                     <include layout="@layout/include_field_switch"
                         android:id="@+id/field_show_trigger_events"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_vertical_small"/>
 
                     <com.google.android.material.divider.MaterialDivider
                         style="@style/AppTheme.Widget.Divider.Horizontal"
@@ -185,6 +179,40 @@
                         android:layout_marginTop="@dimen/margin_vertical_small"/>
 
                 </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:strokeColor="@color/debug_timeline_hold_color"
+                app:strokeWidth="2dp">
+
+                <include layout="@layout/include_field_switch"
+                    android:id="@+id/field_show_hold_checks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppTheme.Widget.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                app:strokeColor="@color/debug_timeline_release_color"
+                app:strokeWidth="2dp">
+
+                <include layout="@layout/include_field_switch"
+                    android:id="@+id/field_show_releases"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                    android:layout_marginVertical="@dimen/margin_vertical_default" />
 
             </com.google.android.material.card.MaterialCardView>
 

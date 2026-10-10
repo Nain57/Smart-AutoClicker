@@ -19,11 +19,13 @@ package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.tim
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.DebugReportTimelineEventOccurrenceItem
 
 
 class DebugReportTimelineAdapter(
     private val onItemClicked: (DebugReportTimelineEventOccurrenceItem) -> Unit,
+    private val onHeldEventCheckItemClicked: (DebugReportTimelineEventOccurrenceItem) -> Unit,
 ) : ListAdapter<DebugReportTimelineEventOccurrenceItem, ItemTimelineEventViewHolder>(
     EventOccurrenceItemDiffUtilCallback
 ) {
@@ -32,7 +34,13 @@ class DebugReportTimelineAdapter(
         ItemTimelineEventViewHolder(parent)
 
     override fun onBindViewHolder(holder: ItemTimelineEventViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClicked)
+        val item = getItem(position)
+        holder.bind(
+            item = item,
+            onItemClicked =
+                if (item.occurrence is DebugReportEventOccurrence.HeldEventCheck) onHeldEventCheckItemClicked
+                else onItemClicked,
+        )
     }
 }
 

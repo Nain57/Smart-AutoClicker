@@ -36,6 +36,9 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
     private val _triggerEventsUiState: MutableStateFlow<DebugReportTriggerEventFilterUiState?> = MutableStateFlow(null)
     val triggerEventsUiState: StateFlow<DebugReportTriggerEventFilterUiState?> = _triggerEventsUiState
 
+    private val _holdUiState: MutableStateFlow<DebugReportHoldFilterUiState?> = MutableStateFlow(null)
+    val holdUiState: StateFlow<DebugReportHoldFilterUiState?> = _holdUiState
+
 
     fun setupUserValues(context: Context, reportDurationMs: Long, filters: List<DebugReportTimelineFilter>) {
         _timeUiState.update {
@@ -58,6 +61,12 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
                 context = context,
                 userFilter = filters.find { it is DebugReportTimelineFilter.Events.Trigger }
                         as? DebugReportTimelineFilter.Events.Trigger,
+            )
+        }
+
+        _holdUiState.update {
+            buildHoldFilterUiState(
+                userFilter = filters.find { it is DebugReportTimelineFilter.Hold } as? DebugReportTimelineFilter.Hold,
             )
         }
     }
@@ -85,20 +94,42 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun toggleShowImageEvents() {
+    fun toggleShowImageEvents(context: Context) {
         _imageEventsUiState.update { previous ->
             previous?.copy(
                 checkboxState = !previous.checkboxState,
+                checkboxDescId = if (previous.checkboxState) 1 else 0,
                 filteredIdsSelectorState = !previous.checkboxState,
+                filteredIdsText = previous.filteredIds.getDisplayText(context, !previous.checkboxState),
             )
         }
     }
 
-    fun toggleShowTriggerEvents() {
+    fun toggleShowTriggerEvents(context: Context) {
         _triggerEventsUiState.update { previous ->
             previous?.copy(
                 checkboxState = !previous.checkboxState,
+                checkboxDescId = if (previous.checkboxState) 1 else 0,
                 filteredIdsSelectorState = !previous.checkboxState,
+                filteredIdsText = previous.filteredIds.getDisplayText(context, !previous.checkboxState),
+            )
+        }
+    }
+
+    fun toggleShowHoldChecks() {
+        _holdUiState.update { previous ->
+            previous?.copy(
+                holdChecksCheckboxState = !previous.holdChecksCheckboxState,
+                holdChecksCheckboxDescId = if (previous.holdChecksCheckboxState) 1 else 0,
+            )
+        }
+    }
+
+    fun toggleShowReleases() {
+        _holdUiState.update { previous ->
+            previous?.copy(
+                releasesCheckboxState = !previous.releasesCheckboxState,
+                releasesCheckboxDescId = if (previous.releasesCheckboxState) 1 else 0,
             )
         }
     }
@@ -157,6 +188,12 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
                     filteredIds = state.filteredIds,
                 ))
             }
+            _holdUiState.value?.let { state ->
+                add(DebugReportTimelineFilter.Hold(
+                    showHoldChecks = state.holdChecksCheckboxState,
+                    showReleases = state.releasesCheckboxState,
+                ))
+            }
         }
 
     private fun buildTimeFilterUiState(
@@ -207,6 +244,17 @@ class DebugReportTimelineFiltersViewModel @Inject constructor() : ViewModel() {
             filteredIdsSelectorState = showEvents,
             filteredIds = filteredIds,
             filteredIdsText = filteredIds.getDisplayText(context, showEvents),
+        )
+    }
+
+    private fun buildHoldFilterUiState(userFilter: DebugReportTimelineFilter.Hold?): DebugReportHoldFilterUiState {
+        val showHoldChecks = userFilter?.showHoldChecks ?: true
+        val showReleases = userFilter?.showReleases ?: true
+        return DebugReportHoldFilterUiState(
+            holdChecksCheckboxState = showHoldChecks,
+            holdChecksCheckboxDescId = if (showHoldChecks) 0 else 1,
+            releasesCheckboxState = showReleases,
+            releasesCheckboxDescId = if (showReleases) 0 else 1,
         )
     }
 }

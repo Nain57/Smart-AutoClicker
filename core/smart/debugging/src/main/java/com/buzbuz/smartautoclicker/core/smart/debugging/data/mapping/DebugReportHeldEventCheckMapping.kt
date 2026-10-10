@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportHoldReleaseReason
 import com.buzbuz.smartautoclicker.core.smart.debugging.heldEventCheckMessage
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.HeldEventCheckMessage as ProtoHeldEventCheckMessage
@@ -27,9 +28,7 @@ internal fun DebugReportEventOccurrence.HeldEventCheck.toHeldEventCheckProtobuf(
         val check = this@toHeldEventCheckProtobuf
 
         eventId = check.eventId
-        holdState =
-            if (check.isHeld) ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD
-            else ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED
+        holdState = check.releaseReason.toProtoHoldState()
         holdDurationMs = check.holdDurationMs
 
         when (check) {
@@ -47,9 +46,14 @@ internal fun DebugReportEventOccurrence.HeldEventCheck.toHeldEventCheckProtobuf(
     }
 
 internal fun ProtoHeldEventCheckMessage.toDomain(relativeTimestamp: Long): DebugReportEventOccurrence.HeldEventCheck? {
-    val isHeld = when (holdState) {
-        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD -> true
-        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED -> false
+    val releaseReason = when (holdState) {
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD -> null
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_UNFULFILLED -> DebugReportHoldReleaseReason.UNFULFILLED
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_INTERRUPTED -> DebugReportHoldReleaseReason.INTERRUPTED
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_EVENT_DISABLED -> DebugReportHoldReleaseReason.EVENT_DISABLED
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_OTHER_EVENT -> DebugReportHoldReleaseReason.OTHER_EVENT
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_SCREEN_ROTATION -> DebugReportHoldReleaseReason.SCREEN_ROTATION
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_SCENARIO_STOPPED -> DebugReportHoldReleaseReason.SCENARIO_STOPPED
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_UNSPECIFIED,
         ProtoHeldEventCheckMessage.HoldState.UNRECOGNIZED -> return null
     }
@@ -60,7 +64,7 @@ internal fun ProtoHeldEventCheckMessage.toDomain(relativeTimestamp: Long): Debug
                 eventId = eventId,
                 relativeTimestampMs = relativeTimestamp,
                 conditionsResults = imageConditionResultsList.map { result -> result.toDomain() },
-                isHeld = isHeld,
+                releaseReason = releaseReason,
                 holdDurationMs = holdDurationMs,
                 frameNumber = frameNumber,
             )
@@ -70,7 +74,7 @@ internal fun ProtoHeldEventCheckMessage.toDomain(relativeTimestamp: Long): Debug
                 eventId = eventId,
                 relativeTimestampMs = relativeTimestamp,
                 conditionsResults = triggerConditionResultsList.map { result -> result.toDomain() },
-                isHeld = isHeld,
+                releaseReason = releaseReason,
                 holdDurationMs = holdDurationMs,
             )
 
@@ -78,3 +82,14 @@ internal fun ProtoHeldEventCheckMessage.toDomain(relativeTimestamp: Long): Debug
         ProtoHeldEventCheckMessage.EventType.UNRECOGNIZED -> null
     }
 }
+
+private fun DebugReportHoldReleaseReason?.toProtoHoldState(): ProtoHeldEventCheckMessage.HoldState =
+    when (this) {
+        null -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD
+        DebugReportHoldReleaseReason.UNFULFILLED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_UNFULFILLED
+        DebugReportHoldReleaseReason.INTERRUPTED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_INTERRUPTED
+        DebugReportHoldReleaseReason.EVENT_DISABLED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_EVENT_DISABLED
+        DebugReportHoldReleaseReason.OTHER_EVENT -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_OTHER_EVENT
+        DebugReportHoldReleaseReason.SCREEN_ROTATION -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_SCREEN_ROTATION
+        DebugReportHoldReleaseReason.SCENARIO_STOPPED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_SCENARIO_STOPPED
+    }

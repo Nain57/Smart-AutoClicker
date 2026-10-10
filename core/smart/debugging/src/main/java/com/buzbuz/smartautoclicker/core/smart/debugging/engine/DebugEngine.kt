@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
+import com.buzbuz.smartautoclicker.core.processing.domain.HoldReleaseReason
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
@@ -36,6 +37,7 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugL
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveHeldEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportHoldReleaseReason
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.CounterValuesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugReportOverviewRecorder
@@ -127,7 +129,7 @@ internal class DebugEngine @Inject constructor(
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            overviewRecorder.onFrameProcessingStarted()
+            overviewRecorder.onFrameProcessingStarted(eventType)
         }
     }
 
@@ -228,12 +230,23 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
+    override fun onHeldEventReleased(event: Event, reason: HoldReleaseReason) {
+        // Already written in the report by the held event check, along with its conditions results
+        if (reason == HoldReleaseReason.Unfulfilled) return
+
+        val timestampMs = System.currentTimeMillis()
+        coroutineScopeIo.launch {
+            if (!shouldWriteReport) return@launch
+            writeHeldEventReleaseToReport(event, reason.toReportReleaseReason(), timestampMs)
+        }
+    }
+
     // Processing ended on current frame
     override fun onEventsProcessingCompleted(eventType: EventType) {
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            overviewRecorder.onFrameProcessingStopped()
+            overviewRecorder.onFrameProcessingStopped(eventType)
         }
     }
 
@@ -241,7 +254,7 @@ internal class DebugEngine @Inject constructor(
         coroutineScopeIo.launch {
             if (!shouldWriteReport) return@launch
 
-            overviewRecorder.onFrameProcessingStopped()
+            overviewRecorder.onFrameProcessingStopped(null)
             screenConditionOccurrenceRecorder.reset()
             eventOccurrencesRecorder.reset()
         }
@@ -381,7 +394,7 @@ internal class DebugEngine @Inject constructor(
                 frameNumber = overviewRecorder.frameCount,
                 relativeTimestampMs = overviewRecorder.sessionDurationMs,
                 conditionsResults = screenConditionOccurrenceRecorder.screenConditionResults.toList(),
-                isHeld = held,
+                releaseReason = if (held) null else DebugReportHoldReleaseReason.UNFULFILLED,
                 holdDurationMs = heldEventRecorder.getHoldDurationMs(event, timestampMs),
             )
         )
@@ -398,9 +411,41 @@ internal class DebugEngine @Inject constructor(
                 eventId = event.id.databaseId,
                 relativeTimestampMs = overviewRecorder.sessionDurationMs,
                 conditionsResults = results.toReportConditionResults(),
-                isHeld = held,
+                releaseReason = if (held) null else DebugReportHoldReleaseReason.UNFULFILLED,
                 holdDurationMs = heldEventRecorder.getHoldDurationMs(event, timestampMs),
             )
+        )
+    }
+
+    /** Write the release of a hold that ended without any condition check. */
+    private suspend fun writeHeldEventReleaseToReport(
+        event: Event,
+        releaseReason: DebugReportHoldReleaseReason,
+        timestampMs: Long,
+    ) {
+        val holdDurationMs = heldEventRecorder.getHoldDurationMs(event, timestampMs)
+        debugReportLocalDataSource.writeEventOccurrenceToReport(
+            occurrence = when (event) {
+                is ScreenEvent -> DebugReportEventOccurrence.HeldEventCheck.Screen(
+                    eventId = event.id.databaseId,
+                    // TODO: Remove the +1 once the ScenarioProcessor loop is rewritten. A release outside of a frame
+                    //  processing (user touch, event disabled) is detected before the next frame starts.
+                    frameNumber =
+                        if (overviewRecorder.isProcessingFrame) overviewRecorder.frameCount
+                        else overviewRecorder.frameCount + 1,
+                    relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                    conditionsResults = emptyList(),
+                    releaseReason = releaseReason,
+                    holdDurationMs = holdDurationMs,
+                )
+                is TriggerEvent -> DebugReportEventOccurrence.HeldEventCheck.Trigger(
+                    eventId = event.id.databaseId,
+                    relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                    conditionsResults = emptyList(),
+                    releaseReason = releaseReason,
+                    holdDurationMs = holdDurationMs,
+                )
+            }
         )
     }
 }
@@ -450,3 +495,12 @@ private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
         pos.y + halfSize.height,
     )
 }
+private fun HoldReleaseReason.toReportReleaseReason(): DebugReportHoldReleaseReason =
+    when (this) {
+        HoldReleaseReason.Unfulfilled -> DebugReportHoldReleaseReason.UNFULFILLED
+        HoldReleaseReason.Interrupted -> DebugReportHoldReleaseReason.INTERRUPTED
+        HoldReleaseReason.EventDisabled -> DebugReportHoldReleaseReason.EVENT_DISABLED
+        HoldReleaseReason.OtherEvent -> DebugReportHoldReleaseReason.OTHER_EVENT
+        HoldReleaseReason.ScreenRotation -> DebugReportHoldReleaseReason.SCREEN_ROTATION
+        HoldReleaseReason.ScenarioStopped -> DebugReportHoldReleaseReason.SCENARIO_STOPPED
+    }

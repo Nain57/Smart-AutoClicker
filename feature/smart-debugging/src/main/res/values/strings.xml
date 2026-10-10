@@ -36,7 +36,17 @@
     <string name="item_event_occurrence_frame_number">Frame #%1$d</string>
     <string name="item_event_occurrence_trigger">Trigger</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Fulfilled: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">Unfulfilled: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d conditions processed</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">Hold duration %1$.1fs</string>
+    <string name="item_event_occurrence_released">Released: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">Unfulfilled</string>
+    <string name="item_event_occurrence_release_reason_interrupted">Interrupted</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">Event disabled</string>
+    <string name="item_event_occurrence_release_reason_other_event">Another event</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">Screen rotation</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">Scenario stopped</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +60,13 @@
     <string name="field_debug_filter_trigger_events_title">Trigger Events</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">Show Trigger Events occurrences in timeline</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">Hide all Trigger Events occurrences in timeline</string>
+
+    <string name="field_debug_filter_hold_checks_title">Show gesture hold verification</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">Show the verifications keeping a gesture held in the timeline</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">Hide the verifications keeping a gesture held in the timeline</string>
+    <string name="field_debug_filter_releases_title">Show gesture release</string>
+    <string name="field_debug_filter_releases_show_desc_on">Show the releases of held gestures in the timeline</string>
+    <string name="field_debug_filter_releases_show_desc_off">Hide the releases of held gestures in the timeline</string>
 
     <string name="field_debug_filter_events_show_title">Filters</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d events</string>
