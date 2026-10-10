@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsScreenEventCopyAvailableUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.toUiImageEvent
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull

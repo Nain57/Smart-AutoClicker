@@ -16,8 +16,8 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.counter
 
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiStaticOrCounterSelection
 
 data class CounterReachedConditionUiState(
     val canBeSaved: Boolean,

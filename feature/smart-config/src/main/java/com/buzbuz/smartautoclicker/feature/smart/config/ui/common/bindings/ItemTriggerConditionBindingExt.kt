@@ -18,7 +18,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiTriggerCondition
 
 /**
  * Bind this view holder as a condition item.

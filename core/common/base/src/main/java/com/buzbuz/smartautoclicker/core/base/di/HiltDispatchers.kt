@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.base.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +36,15 @@ object DispatchersModule {
     @Provides
     @Dispatcher(HiltCoroutineDispatchers.Main)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Main
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface DispatchersEntryPoint {
+    @Dispatcher(HiltCoroutineDispatchers.IO)
+    fun ioDispatcher(): CoroutineDispatcher
+    @Dispatcher(HiltCoroutineDispatchers.Main)
+    fun mainDispatcher(): CoroutineDispatcher
 }
 
 @Qualifier

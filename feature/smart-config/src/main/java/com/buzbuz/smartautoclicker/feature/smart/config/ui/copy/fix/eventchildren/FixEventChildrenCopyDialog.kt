@@ -149,7 +149,7 @@ class FixEventChildrenCopyDialog(
             context = context,
             hideCurrent = true,
             newOverlay = ScreenConditionSelectionDialog(
-                conditionList = viewModel.getScreenConditionReplacementCandidates(context),
+                conditionList = viewModel.getScreenConditionReplacementCandidates(),
                 onConditionSelected = onScreenConditionSelected,
             ),
         )

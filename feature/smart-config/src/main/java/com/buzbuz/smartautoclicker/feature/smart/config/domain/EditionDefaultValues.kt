@@ -21,8 +21,8 @@ import android.content.Context
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
-import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getClickPressDurationConfig
@@ -51,8 +51,6 @@ internal class EditionDefaultValues {
         context.getString(R.string.default_click_name)
     fun clickPressDuration(context: Context): Long =
         context.getEventConfigPreferences().getClickPressDurationConfig(context)
-    fun clickPositionType(): Click.PositionType =
-        Click.PositionType.USER_SELECTED
 
     fun swipeName(context: Context): String =
         context.getString(R.string.default_swipe_name)

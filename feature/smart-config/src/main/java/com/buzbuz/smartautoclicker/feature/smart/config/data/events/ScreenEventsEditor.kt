@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
@@ -42,15 +43,16 @@ internal class ScreenEventsEditor(
                     action !is Click -> return@forEach
 
                     // Nothing to do on user selected position
-                    action.positionType == Click.PositionType.USER_SELECTED -> return@forEach
+                    action.position !is GesturePosition.Condition -> return@forEach
 
                     // Condition was referenced and used by an action, delete it
-                    editedEvent.conditionOperator == AND && conditions.find { action.clickOnConditionId == it.id } == null ->
+                    editedEvent.conditionOperator == AND && conditions.find { action.getClickOnConditionId() == it.id } == null ->
                         newActions.remove(action)
 
                     // Condition was referenced but not used by an action, delete the reference
-                    editedEvent.conditionOperator == OR && action.clickOnConditionId != null ->
-                        newActions[newActions.indexOf(action)] = action.copy(clickOnConditionId = null)
+                    editedEvent.conditionOperator == OR && action.getClickOnConditionId() != null ->
+                        newActions[newActions.indexOf(action)] =
+                            action.copy(position = GesturePosition.Condition(conditionId = null))
                 }
             }
 

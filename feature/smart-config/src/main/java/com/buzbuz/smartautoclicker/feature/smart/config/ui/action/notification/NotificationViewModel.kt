@@ -20,11 +20,9 @@ import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.common.actions.text.appendCounterReference
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
 
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.map

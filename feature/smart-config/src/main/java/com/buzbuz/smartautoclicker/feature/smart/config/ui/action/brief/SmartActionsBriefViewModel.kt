@@ -28,11 +28,16 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.ext.getConditionBitmap
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger as DomainGestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion as DomainGestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingRepository
@@ -44,19 +49,21 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepositor
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.state.TutorialState
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.ui.utils.createColorIndicatorDrawable
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFingerMotion
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsActionCopyAvailableUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeChoice
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toGestureDescription
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -67,7 +74,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -82,6 +88,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     isActionCopyAvailableUseCase: IsActionCopyAvailableUseCase,
     private val bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
+    private val displayConfigManager: DisplayConfigManager,
     private val smartProcessingRepository: SmartProcessingRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     tutorialRepository: TutorialRepository,
@@ -130,7 +137,7 @@ class SmartActionsBriefViewModel @Inject constructor(
             buildList {
                 if (!legacyEnabled && canCopy) add(ActionTypeChoice.Copy)
                 add(ActionTypeChoice.Click)
-                add(ActionTypeChoice.Swipe)
+                add(ActionTypeChoice.Gesture)
                 add(ActionTypeChoice.Pause)
                 add(ActionTypeChoice.SetText)
                 add(ActionTypeChoice.System)
@@ -149,8 +156,8 @@ class SmartActionsBriefViewModel @Inject constructor(
             .copy(gestureCaptureStarted = true)
     }
 
-    fun endGestureCaptureState(context: Context, gesture: ItemBriefDescription) {
-        val action = gesture.toAction(context) ?: return
+    fun endGestureCaptureState(context: Context, gesture: RecordedGesture) {
+        val action = gesture.toAction(context)
         editionRepository.apply {
             startActionEdition(action)
             upsertEditedAction()
@@ -174,7 +181,7 @@ class SmartActionsBriefViewModel @Inject constructor(
 
     override fun createAction(context: Context, choice: ActionTypeChoice): Action = when (choice) {
         ActionTypeChoice.Click -> editionRepository.editedItemsBuilder.createNewClick(context)
-        ActionTypeChoice.Swipe -> editionRepository.editedItemsBuilder.createNewSwipe(context)
+        ActionTypeChoice.Gesture -> editionRepository.editedItemsBuilder.createNewGesture(context)
         ActionTypeChoice.Pause -> editionRepository.editedItemsBuilder.createNewPause(context)
         ActionTypeChoice.Intent -> editionRepository.editedItemsBuilder.createNewIntent(context)
         ActionTypeChoice.ToggleEvent -> editionRepository.editedItemsBuilder.createNewToggleEvent(context)
@@ -281,36 +288,84 @@ class SmartActionsBriefViewModel @Inject constructor(
         }
     }
 
-    private fun ItemBriefDescription.toAction(context: Context): Action? =
+    private fun RecordedGesture.toAction(context: Context): Action =
         when (this) {
-            is ClickDescription -> editionRepository.editedItemsBuilder.createNewClick(context)
-                .copy(
-                    position = position?.toPoint(),
-                    pressDuration = pressDurationMs,
-                    positionType = Click.PositionType.USER_SELECTED,
-                )
+            is RecordedGesture.Click -> {
+                val pt = position.toPoint()
+                editionRepository.editedItemsBuilder.createNewClick(context)
+                    .copy(
+                        position = GesturePosition.Coordinates(
+                            x = GestureCoordinatesValue.Literal(pt.x),
+                            y = GestureCoordinatesValue.Literal(pt.y),
+                        ),
+                        pressDuration = durationMs,
+                    )
+            }
 
-            is SwipeDescription -> editionRepository.editedItemsBuilder.createNewSwipe(context)
-                .copy(
-                    from = from?.toPoint(),
-                    to = to?.toPoint(),
-                    swipeDuration = swipeDurationMs,
+            is RecordedGesture.Gesture -> {
+                val builder = editionRepository.editedItemsBuilder
+                val gestureStartMs = fingers.minOfOrNull { it.pressedAtMs } ?: 0L
+                builder.createNewGesture(context).copy(
+                    fingers = fingers.map { uiFinger ->
+                        DomainGestureFinger(
+                            id = builder.newFingerIdentifier(),
+                            startTimeMs = uiFinger.pressedAtMs - gestureStartMs,
+                            motions = uiFinger.motions.map { uiMotion ->
+                                when (uiMotion) {
+                                    is RecordedGestureFingerMotion.Press -> {
+                                        val pt = uiMotion.position.toPoint()
+                                        DomainGestureFingerMotion.Press(
+                                            id = builder.newMotionIdentifier(),
+                                            position = GesturePosition.Coordinates(
+                                                x = GestureCoordinatesValue.Literal(pt.x),
+                                                y = GestureCoordinatesValue.Literal(pt.y),
+                                            ),
+                                            offset = GesturePosition.Coordinates(
+                                                x = GestureCoordinatesValue.Literal(0),
+                                                y = GestureCoordinatesValue.Literal(0),
+                                            ),
+                                        )
+                                    }
+                                    is RecordedGestureFingerMotion.Move -> {
+                                        val pt = uiMotion.moveToPosition.toPoint()
+                                        DomainGestureFingerMotion.Move(
+                                            id = builder.newMotionIdentifier(),
+                                            position = GesturePosition.Coordinates(
+                                                x = GestureCoordinatesValue.Literal(pt.x),
+                                                y = GestureCoordinatesValue.Literal(pt.y),
+                                            ),
+                                            offset = GesturePosition.Coordinates(
+                                                x = GestureCoordinatesValue.Literal(0),
+                                                y = GestureCoordinatesValue.Literal(0),
+                                            ),
+                                            durationMs = uiMotion.moveToDurationMs,
+                                        )
+                                    }
+                                    is RecordedGestureFingerMotion.Wait -> DomainGestureFingerMotion.Wait(
+                                        id = builder.newMotionIdentifier(),
+                                        durationMs = uiMotion.waitDurationMs,
+                                    )
+                                    RecordedGestureFingerMotion.Release -> DomainGestureFingerMotion.Release(
+                                        id = builder.newMotionIdentifier(),
+                                    )
+                                }
+                            }
+                        )
+                    }
                 )
-
-            else -> null
+            }
         }
 
     private suspend fun Action.toActionDescription(context: Context): ItemBriefDescription = when (this) {
         is Click -> ClickDescription(
-            position = position?.toPointF(),
+            position = getLiteralPosition()?.toPointF(),
             pressDurationMs = pressDuration ?: 1,
             imageConditionBitmap = findClickOnConditionBitmap(context),
         )
 
-        is Swipe -> SwipeDescription(
-            from = from?.toPointF(),
-            to = to?.toPointF(),
-            swipeDurationMs = swipeDuration ?: 1,
+        is Gesture -> toGestureDescription(
+            conditions = editionRepository.editionState.getEditedEventConditions() ?: emptyList(),
+            screenSize = displayConfigManager.displayConfig.sizePx,
         )
 
         is Pause -> PauseDescription(
@@ -323,10 +378,10 @@ class SmartActionsBriefViewModel @Inject constructor(
     }
 
     private suspend fun Click.findClickOnConditionBitmap(context: Context): Bitmap? {
-        if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return null
+        val conditionId = getClickOnConditionId() ?: return null
 
         return editionRepository.editionState.getEditedEventConditions<ScreenCondition>()
-            ?.find { it.id == clickOnConditionId }
+            ?.find { it.id == conditionId }
             ?.let { condition ->
                 when (condition) {
                     is ScreenCondition.Color -> context.createColorIndicatorDrawable(condition.color)?.toBitmap()

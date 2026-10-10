@@ -43,7 +43,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogSmartA
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionLegacyBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection.ActionTypeSelectionDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch

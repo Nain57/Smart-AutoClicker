@@ -27,7 +27,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 
 import dagger.hilt.android.qualifiers.ApplicationContext

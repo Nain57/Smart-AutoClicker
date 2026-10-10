@@ -39,6 +39,15 @@
     <color name="event_state_color">#007e2b</color>
     <color name="event_test_color">#000000</color>
 
+    <color name="gesture_press_color">#2196F3</color>
+    <color name="gesture_release_color">#F44336</color>
+    <color name="gesture_move_color">#4CAF50</color>
+    <color name="gesture_wait_color">#FF9800</color>
+    <color name="gesture_add_color">#000000</color>
+
+    <color name="fade_background_color">#BBFFFFFF</color>
+
+
     <!-- Material 3 Theme colors -->
     <color name="seed">#006688</color>
     <color name="md_theme_light_primary">#006688</color>

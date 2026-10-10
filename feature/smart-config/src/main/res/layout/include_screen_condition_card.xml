@@ -22,35 +22,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/condition_image"
+    <include layout="@layout/include_screen_condition_visualization"
+        android:id="@+id/condition_visualization"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginVertical="@dimen/margin_vertical_mini"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        android:background="?attr/colorSurfaceVariant"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/content_desc_image_condition"
-        tools:src="@drawable/ic_condition" />
-
-    <TextView
-        android:id="@+id/condition_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginVertical="@dimen/margin_vertical_mini"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_mini"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        android:background="?attr/colorSurfaceVariant"
-        android:gravity="center"
-        android:visibility="gone"
-        tools:src="@drawable/ic_condition"
-        tools:text="Hello world"/>
+        app:layout_constraintBottom_toTopOf="@id/divider"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"

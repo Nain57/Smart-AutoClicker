@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenEventBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiImageEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.setIconTintColor
 
 /**

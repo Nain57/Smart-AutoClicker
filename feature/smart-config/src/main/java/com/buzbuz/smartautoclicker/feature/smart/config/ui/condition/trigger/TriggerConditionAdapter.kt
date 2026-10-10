@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerConditionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiTriggerCondition
 
 /**
  * Adapter displaying the conditions for the event displayed by the dialog.

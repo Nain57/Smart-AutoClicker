@@ -22,13 +22,16 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -60,6 +63,7 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         val missingReferences = when (action) {
             is ChangeCounter -> action.getMissingReferences()
             is Click -> action.getMissingReferences(copyResultEvents)
+            is Gesture -> action.getMissingReferences(copyResultEvents)
             is Notification -> action.getMissingReferences()
             is SetText -> action.getMissingReferences()
             is ToggleEvent -> action.getMissingReferences(copyResultEvents)
@@ -67,7 +71,6 @@ class GetActionMissingReferencesUseCase @Inject constructor(
             // Nothing is referenced in those actions
             is Intent,
             is Pause,
-            is Swipe,
             is SystemAction -> emptyList()
         }
 
@@ -92,15 +95,66 @@ class GetActionMissingReferencesUseCase @Inject constructor(
         }
 
     private suspend fun Click.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> {
-        if (positionType != Click.PositionType.ON_DETECTED_CONDITION) return emptyList()
+        val clickPosition = position ?: return emptyList()
 
-        val conditionId = clickOnConditionId ?: return emptyList()
-        val isFound = copyResultEvents[eventId]?.conditions
-            ?.find { condition -> condition.id == conditionId } != null
-        if (isFound) return emptyList()
+        val result = mutableListOf<MissingCopyReference>()
+        result.addAll(clickPosition.getMissingReference(copyResultEvents, eventId))
 
-        val name = smartRepository.getConditionName(conditionId) ?: return emptyList()
-        return listOf(MissingCopyReference.ScreenConditionReference(name = name, conditionId = conditionId))
+        // The offset is only applied when clicking on a condition
+        if (clickPosition is GesturePosition.Condition) {
+            offset?.let { result.addAll(it.getMissingReference(copyResultEvents, eventId)) }
+        }
+
+        return result
+    }
+
+    private suspend fun Gesture.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> {
+        val result = mutableListOf<MissingCopyReference>()
+        fingers.forEach { finger ->
+            finger.motions.forEach { motion ->
+                val positions: List<GesturePosition> = when (motion) {
+                    is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
+                    is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
+                    is GestureFingerMotion.Wait,
+                    is GestureFingerMotion.Release -> emptyList()
+                }
+
+                positions.forEach { position ->
+                    result.addAll(position.getMissingReference(copyResultEvents, eventId))
+                }
+            }
+        }
+
+        return result
+    }
+
+    private suspend fun GesturePosition.getMissingReference(
+        copyResultEvents: Map<Identifier, Event>,
+        eventId: Identifier,
+    ): List<MissingCopyReference> {
+        when (this) {
+            is GesturePosition.Condition -> {
+                val condId = conditionId ?: return emptyList()
+                val isFound = copyResultEvents[eventId]?.conditions?.any { it.id == condId } == true
+                if (isFound) return emptyList()
+                val name = smartRepository.getConditionName(condId) ?: return emptyList()
+
+                return listOf(MissingCopyReference.ScreenConditionReference(name = name, conditionId = condId))
+            }
+
+            is GesturePosition.Coordinates -> {
+                val result = mutableListOf<MissingCopyReference>()
+                listOf(x, y).forEach { coordinatesValue ->
+                    if (coordinatesValue is GestureCoordinatesValue.Counter) {
+                        if (editionRepository.editionState.getCounter(coordinatesValue.counterName) == null) {
+                            result.add(MissingCopyReference.CounterReference(coordinatesValue.counterName))
+                        }
+                    }
+                }
+
+                return result
+            }
+        }
     }
 
     private fun Notification.getMissingReferences(): List<MissingCopyReference> =

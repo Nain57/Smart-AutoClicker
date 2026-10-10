@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/AppTheme.Dialog.BackgroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+        android:layout_marginBottom="@dimen/margin_vertical_default">
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_extra_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/field_finger_selector"/>
+
+        <include layout="@layout/include_button_finger_selector"
+            android:id="@+id/field_finger_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_name"
+            app:layout_constraintBottom_toTopOf="@id/button_capture"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/finger_title"
+            style="@style/AppTheme.Field.TitleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_capture"
+            app:layout_constraintTop_toTopOf="@id/button_capture"
+            app:layout_constraintBottom_toTopOf="@id/finger_desc"
+            tools:text="Finger #1"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/finger_desc"
+            style="@style/AppTheme.Field.SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginEnd="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_capture"
+            app:layout_constraintTop_toBottomOf="@id/finger_title"
+            app:layout_constraintBottom_toBottomOf="@id/button_capture"
+            tools:text="Duration: "/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_capture"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_extra_large"
+            app:layout_constraintStart_toEndOf="@id/finger_title"
+            app:layout_constraintEnd_toStartOf="@id/button_delete"
+            app:layout_constraintTop_toBottomOf="@id/field_finger_selector"
+            app:layout_constraintBottom_toTopOf="@id/field_start_time"
+            app:iconPadding="@dimen/margin_horizontal_small"
+            android:paddingEnd="@dimen/margin_horizontal_default"
+            android:text="@string/item_header_button_capture"
+            app:icon="@drawable/ic_position"
+            tools:ignore="RtlSymmetry" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/button_capture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/button_capture"
+            app:layout_constraintBottom_toBottomOf="@id/button_capture"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:icon="@drawable/ic_delete" />
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_capture"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        style="@style/Widget.Material3.MaterialDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_vertical_default"/>
+
+</LinearLayout>

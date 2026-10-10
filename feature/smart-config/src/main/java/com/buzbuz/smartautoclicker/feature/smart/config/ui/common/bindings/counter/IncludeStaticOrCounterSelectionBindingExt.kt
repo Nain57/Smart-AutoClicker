@@ -31,9 +31,9 @@ import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeStaticOrCounterSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiOperandType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiStaticOrCounterSelection
 
 
 fun IncludeStaticOrCounterSelectionBinding.setup(

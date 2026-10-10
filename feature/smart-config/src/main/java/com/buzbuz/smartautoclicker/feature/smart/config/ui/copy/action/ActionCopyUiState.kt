@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.action
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 
 data class ActionCopyUiState(
     val items: List<ActionCopyItem>,

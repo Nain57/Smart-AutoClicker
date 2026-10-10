@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_card"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_vertical_default"
+    app:strokeColor="@color/gesture_press_color"
+    app:strokeWidth="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_vertical_default">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/motion_title"
+            style="@style/AppTheme.TextAppearance.ListItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
+            app:layout_constraintTop_toTopOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toTopOf="@id/motion_desc"
+            android:text="@string/item_title_gesture_press"
+            android:drawablePadding="@dimen/margin_horizontal_small"
+            tools:drawableStart="@drawable/ic_badge_error"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/motion_desc"
+            style="@style/AppTheme.TextAppearance.ListItemSubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
+            app:layout_constraintTop_toBottomOf="@id/motion_title"
+            app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
+            android:gravity="center_vertical"
+            tools:text="Press at [128; 512]"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_expand_collapse"
+            style="@style/AppTheme.Widget.IconButton"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/motion_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider_top"
+            app:icon="@drawable/ic_chevron_up"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toTopOf="@id/field_position"/>
+
+        <include layout="@layout/include_field_position_selector"
+            android:id="@+id/field_position"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_top"
+            app:layout_constraintBottom_toTopOf="@id/divider_middle" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_position"
+            app:layout_constraintBottom_toTopOf="@id/field_offset"/>
+
+        <include layout="@layout/include_field_selector"
+            android:id="@+id/field_offset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_small"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_middle"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

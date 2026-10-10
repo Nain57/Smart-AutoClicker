@@ -25,11 +25,11 @@ import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
@@ -182,7 +182,7 @@ class DebugReportTimelineViewModel @Inject constructor(
     private fun Action.getDebugIconRes(): Int =
         when (this) {
             is Click -> R.drawable.ic_click
-            is Swipe -> R.drawable.ic_swipe
+            is Gesture -> R.drawable.ic_gesture
             is Pause -> R.drawable.ic_wait
             is Intent -> R.drawable.ic_intent
             is ToggleEvent ->  R.drawable.ic_toggle_event

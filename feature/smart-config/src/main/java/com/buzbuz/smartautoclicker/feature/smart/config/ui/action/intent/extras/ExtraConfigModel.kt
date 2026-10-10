@@ -26,7 +26,7 @@ import com.buzbuz.smartautoclicker.core.ui.utils.NumberInputFilter
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentExtraTypeDisplayName
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIntentExtraTypeDisplayName
 import kotlinx.coroutines.FlowPreview
 
 import kotlinx.coroutines.flow.Flow

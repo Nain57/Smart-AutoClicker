@@ -20,7 +20,7 @@ import com.buzbuz.smartautoclicker.core.base.extensions.setLeftCompoundDrawable
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeCounterSelectionBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiStaticOrCounterSelection
 
 import androidx.appcompat.R as AppCompatR
 import com.google.android.material.R as MaterialR

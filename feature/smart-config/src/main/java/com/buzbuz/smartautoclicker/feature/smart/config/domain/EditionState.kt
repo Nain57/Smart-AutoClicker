@@ -248,7 +248,7 @@ internal class EditionState internal constructor(
         val actions = editor.currentEventEditor.value?.actionsEditor?.editedList?.value ?: return false
 
         return actions.find { action ->
-            action is Click && action.clickOnConditionId == condition.id
+            action is Click && action.getClickOnConditionId() == condition.id
         } != null
     }
 }

@@ -47,7 +47,7 @@ sealed class DumbActionTypeChoice(
     data object Swipe : DumbActionTypeChoice(
         R.string.item_title_dumb_swipe,
         R.string.item_desc_dumb_swipe,
-        R.drawable.ic_swipe,
+        R.drawable.ic_gesture,
     )
     /** Pause Action choice. */
     data object Pause : DumbActionTypeChoice(

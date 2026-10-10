@@ -16,12 +16,21 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references
 
+import android.os.Build
+
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
@@ -38,7 +47,12 @@ import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
+import org.robolectric.annotation.Config
+
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.Q])
 class ReplaceMissingCounterReferenceUseCaseTest {
 
     private lateinit var useCase: ReplaceMissingCounterReferenceUseCase
@@ -120,6 +134,64 @@ class ReplaceMissingCounterReferenceUseCaseTest {
         val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
         val updatedAction = result.actions[0] as SetText
         assertEquals("Value: {$NEW_COUNTER}", updatedAction.text)
+    }
+
+    // endregion
+
+    // region Gesture action replacement
+
+    @Test
+    fun `replace counter x coordinate in gesture press position`() {
+        val action = gesture(finger(pressMotion(GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0),
+        ))))
+        val event = triggerEventWithActions(listOf(action))
+        val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
+        val missingRef = MissingCopyReference.CounterReference(OLD_COUNTER)
+
+        val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
+        val updatedGesture = result.actions[0] as Gesture
+        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
+        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
+    }
+
+    @Test
+    fun `replace counter y coordinate in gesture press position`() {
+        val action = gesture(finger(pressMotion(GesturePosition.Coordinates(
+            GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Counter(OLD_COUNTER),
+        ))))
+        val event = triggerEventWithActions(listOf(action))
+        val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
+        val missingRef = MissingCopyReference.CounterReference(OLD_COUNTER)
+
+        val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
+        val updatedGesture = result.actions[0] as Gesture
+        val updatedCoords = (updatedGesture.fingers[0].motions[0] as GestureFingerMotion.Press).position as GesturePosition.Coordinates
+        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.y)
+    }
+
+    @Test
+    fun `replace counter coordinate in gesture move position`() {
+        val press = GestureFingerMotion.Press(
+            id = Identifier(databaseId = 51L),
+            position = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+        )
+        val move = GestureFingerMotion.Move(
+            id = Identifier(databaseId = 52L),
+            position = GesturePosition.Coordinates(GestureCoordinatesValue.Counter(OLD_COUNTER), GestureCoordinatesValue.Literal(0)),
+            offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            durationMs = 100L,
+        )
+        val action = gesture(finger(press, move))
+        val event = triggerEventWithActions(listOf(action))
+        val item = ItemWithMissingReferences.ActionItem(item = action, missingReferences = emptyList())
+        val missingRef = MissingCopyReference.CounterReference(OLD_COUNTER)
+
+        val result = useCase(event, item, missingRef, NEW_COUNTER) as TriggerEvent
+        val updatedGesture = result.actions[0] as Gesture
+        val updatedCoords = (updatedGesture.fingers[0].motions[1] as GestureFingerMotion.Move).position as GesturePosition.Coordinates
+        assertEquals(GestureCoordinatesValue.Counter(NEW_COUNTER), updatedCoords.x)
     }
 
     // endregion
@@ -237,6 +309,25 @@ class ReplaceMissingCounterReferenceUseCaseTest {
         conditionOperator = AND,
         actions = emptyList(),
         conditions = conditions,
+    )
+
+    private fun gesture(vararg fingers: GestureFinger) = Gesture(
+        id = ACTION_ID,
+        eventId = EVENT_ID,
+        priority = 0,
+        fingers = fingers.toList(),
+    )
+
+    private fun finger(vararg motions: GestureFingerMotion) = GestureFinger(
+        id = Identifier(databaseId = 50L),
+        startTimeMs = 0L,
+        motions = motions.toList(),
+    )
+
+    private fun pressMotion(position: GesturePosition) = GestureFingerMotion.Press(
+        id = Identifier(databaseId = 51L),
+        position = position,
+        offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
     )
 
     private fun changeCounter(counterName: String, operationValue: CounterOperationValue) = ChangeCounter(

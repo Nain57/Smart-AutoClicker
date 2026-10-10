@@ -20,13 +20,16 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -111,11 +114,42 @@ class GetCounterReadReferencesUseCase @Inject constructor(
                         }
                     }
 
-                    is Click,
+                    is Click -> {
+                        listOfNotNull(action.position, action.offset).forEach { position ->
+                            if (position !is GesturePosition.Coordinates) return@forEach
+                            listOf(position.x, position.y).forEach { coordValue ->
+                                if (coordValue is GestureCoordinatesValue.Counter) {
+                                    addReference(event, coordValue.counterName, action)
+                                }
+                            }
+                        }
+                    }
+
+                    is Gesture -> {
+                        action.fingers.forEach { finger ->
+                            finger.motions.forEach { motion ->
+                                val positions: List<GesturePosition> = when (motion) {
+                                    is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
+                                    is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
+                                    is GestureFingerMotion.Wait,
+                                    is GestureFingerMotion.Release -> emptyList()
+                                }
+                                positions.forEach { position ->
+                                    if (position is GesturePosition.Coordinates) {
+                                        listOf(position.x, position.y).forEach { coordValue ->
+                                            if (coordValue is GestureCoordinatesValue.Counter) {
+                                                addReference(event, coordValue.counterName, action)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     is Intent,
                     is Pause,
                     is SystemAction,
-                    is Swipe,
                     is ToggleEvent -> Unit
                 }
             }

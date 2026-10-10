@@ -18,10 +18,9 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix
 
 import androidx.annotation.StringRes
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ItemWithMissingReferences
-import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiEvent
 
 data class FixEventsCopyUiState(
     val canBeCopied: Boolean,

@@ -20,13 +20,16 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -122,12 +125,67 @@ class ReplaceCounterUseCase @Inject constructor(
                 }
             }
 
-            is Click,
+            is Click -> {
+                val newClick = copy(
+                    position = position?.replaceCounter(from, to),
+                    offset = offset?.replaceCounter(from, to),
+                )
+
+                if (newClick != this) {
+                    editionRepository.startActionEdition(this)
+                    editionRepository.updateEditedAction(newClick)
+                    editionRepository.upsertEditedAction()
+                }
+            }
+
+            is Gesture -> {
+                val newGesture = copy(fingers = fingers.map { finger ->
+                    finger.copy(motions = finger.motions.map { motion ->
+                        when (motion) {
+                            is GestureFingerMotion.Press -> motion.copy(
+                                position = motion.position.replaceCounter(from, to),
+                                offset = motion.offset.replaceCounter(from, to),
+                            )
+                            is GestureFingerMotion.Move -> motion.copy(
+                                position = motion.position.replaceCounter(from, to),
+                                offset = motion.offset.replaceCounter(from, to),
+                            )
+                            is GestureFingerMotion.Wait,
+                            is GestureFingerMotion.Release -> motion
+                        }
+                    })
+                })
+
+                if (newGesture != this) {
+                    editionRepository.startActionEdition(this)
+                    editionRepository.updateEditedAction(newGesture)
+                    editionRepository.upsertEditedAction()
+                }
+            }
+
             is Intent,
             is Pause,
             is SystemAction,
-            is Swipe,
             is ToggleEvent -> Unit
         }
     }
+
+    private fun GesturePosition.replaceCounter(from: Counter, to: Counter): GesturePosition =
+        when (this) {
+            is GesturePosition.Condition -> this
+            is GesturePosition.Coordinates -> replaceCounter(from, to)
+        }
+
+    private fun GesturePosition.Coordinates.replaceCounter(from: Counter, to: Counter): GesturePosition.Coordinates =
+        copy(
+            x = x.replaceCounter(from, to),
+            y = y.replaceCounter(from, to),
+        )
+
+    private fun GestureCoordinatesValue.replaceCounter(from: Counter, to: Counter): GestureCoordinatesValue =
+        when (this) {
+            is GestureCoordinatesValue.Literal -> this
+            is GestureCoordinatesValue.Counter ->
+                if (counterName == from.counterName) GestureCoordinatesValue.Counter(to.counterName) else this
+        }
 }

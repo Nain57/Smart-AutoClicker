@@ -21,6 +21,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.domain
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.IntentExtra
@@ -47,13 +48,16 @@ import javax.inject.Singleton
 class EditionRepository @Inject constructor(
     private val repository: IRepository,
     private val bitmapRepository: BitmapRepository,
+    private val displayConfigManager: DisplayConfigManager,
 ) {
 
     /** Keep tracks of all changes in the currently edited scenario. */
     private val scenarioEditor: ScenarioEditor = ScenarioEditor()
 
     /** Provides creators for all elements in an edited scenario. */
-    val editedItemsBuilder: EditedItemsBuilder = EditedItemsBuilder(bitmapRepository, scenarioEditor)
+    val editedItemsBuilder: EditedItemsBuilder =
+        EditedItemsBuilder(displayConfigManager, bitmapRepository, scenarioEditor)
+
     /** Provides the states of all elements in the edited scenario. */
     val editionState: IEditionState = EditionState(scenarioEditor)
 

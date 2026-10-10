@@ -22,17 +22,12 @@ import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
-import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetActionsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.ActionsForCopy
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsActionRelatedToUnreachableItemUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyDialog
 
 import dagger.hilt.android.qualifiers.ApplicationContext

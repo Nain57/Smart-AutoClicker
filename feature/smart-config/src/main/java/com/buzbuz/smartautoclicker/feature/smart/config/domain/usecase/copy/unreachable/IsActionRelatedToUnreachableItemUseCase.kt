@@ -21,13 +21,16 @@ import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReference
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
@@ -48,14 +51,14 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         return when (action) {
             is ChangeCounter -> action.isRelatedToUnreachableItem()
             is Click -> action.isRelatedToUnreachableItem(copyResultEvents)
+            is Gesture -> action.isRelatedToUnreachableItem(copyResultEvents)
             is Notification -> action.isRelatedToUnreachableItem()
             is SetText -> action.isRelatedToUnreachableItem()
             is ToggleEvent -> action.isRelatedToUnreachableItem(copyResultEvents)
 
             // Nothing is referenced in those actions
-            is Pause,
-            is Swipe,
             is Intent,
+            is Pause,
             is SystemAction -> false
         }
     }
@@ -70,11 +73,9 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
     }
 
     private fun Click.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
-        if (positionType == Click.PositionType.ON_DETECTED_CONDITION) {
-            clickOnConditionId?.let { conditionId ->
-                return copyResultEvents[eventId]?.conditions
-                    ?.find { condition -> condition.id == conditionId } == null
-            }
+        (position as? GesturePosition.Condition)?.conditionId?.let { conditionId ->
+            return copyResultEvents[eventId]?.conditions
+                ?.find { condition -> condition.id == conditionId } == null
         }
 
         return false
@@ -93,6 +94,37 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
             if (editionRepository.counterIsUnreachable(counterName)) return true
         }
 
+        return false
+    }
+
+    private fun Gesture.isRelatedToUnreachableItem(copyResultEvents: Map<Identifier, Event>): Boolean {
+        for (finger in fingers) {
+            for (motion in finger.motions) {
+                val positions: List<GesturePosition> = when (motion) {
+                    is GestureFingerMotion.Press -> listOf(motion.position, motion.offset)
+                    is GestureFingerMotion.Move -> listOf(motion.position, motion.offset)
+                    is GestureFingerMotion.Wait,
+                    is GestureFingerMotion.Release -> emptyList()
+                }
+
+                for (position in positions) {
+                    when (position) {
+                        is GesturePosition.Condition -> {
+                            position.conditionId?.let { conditionId ->
+                                if (copyResultEvents[eventId]?.conditions?.any { it.id == conditionId } != true) return true
+                            }
+                        }
+                        is GesturePosition.Coordinates -> {
+                            for (coordValue in listOf(position.x, position.y)) {
+                                if (coordValue is GestureCoordinatesValue.Counter) {
+                                    if (editionRepository.counterIsUnreachable(coordValue.counterName)) return true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return false
     }
 

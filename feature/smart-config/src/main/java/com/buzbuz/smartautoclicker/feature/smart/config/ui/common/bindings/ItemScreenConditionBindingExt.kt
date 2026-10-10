@@ -17,18 +17,11 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.view.View
 
-import androidx.core.content.ContextCompat
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
-
-import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.IncludeScreenConditionCardBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.core.ui.utils.setColorIndicatorDrawable
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
 
 import kotlinx.coroutines.Job
 
@@ -46,52 +39,15 @@ fun IncludeScreenConditionCardBinding.bind(
     conditionShouldBeDetected.setImageResource(uiCondition.shouldBeVisibleIconRes)
     conditionThreshold.text = uiCondition.thresholdText
 
-    return when (val condition = uiCondition.condition) {
-        is ScreenCondition.Color -> {
-            conditionDetectionType.visibility = View.GONE
-            conditionImage.visibility = View.VISIBLE
-            conditionText.visibility = View.GONE
-
-            conditionImage.setColorIndicatorDrawable(condition.color)
-            null
-        }
-        is ScreenCondition.Image -> {
-            conditionDetectionType.visibility = View.VISIBLE
-            conditionImage.visibility = View.VISIBLE
-            conditionText.visibility = View.GONE
-
-            conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
-            bitmapProvider.invoke(condition) { bitmap ->
-                if (bitmap != null) {
-                    conditionImage.setImageBitmap(bitmap)
-                } else {
-                    conditionImage.setImageDrawable(
-                        ContextCompat.getDrawable(root.context, R.drawable.ic_cancel)?.apply {
-                            setTint(Color.RED)
-                        }
-                    )
-                }
-            }
-        }
-
-        is ScreenCondition.Number -> {
-            conditionDetectionType.visibility = View.GONE
-            conditionImage.visibility = View.GONE
-            conditionText.visibility = View.VISIBLE
-
-            conditionText.text = condition.comparisonOperation
-                .toEffectDescription(root.context, operand = condition.counterValue.toNaturalDisplayString())
-            null
-        }
-
-        is ScreenCondition.Text ->  {
-            conditionDetectionType.visibility = View.GONE
-            conditionImage.visibility = View.GONE
-            conditionText.visibility = View.VISIBLE
-
-            conditionText.text = condition.text
-            null
-        }
+    val condition = uiCondition.condition
+    if (condition is ScreenCondition.Image) {
+        conditionDetectionType.visibility = View.VISIBLE
+        conditionDetectionType.setImageResource(uiCondition.detectionTypeIconRes)
+    } else {
+        conditionDetectionType.visibility = View.GONE
     }
+
+    val bitmapJob = conditionVisualization.setCondition(condition, bitmapProvider)
+    return bitmapJob
 }
 
