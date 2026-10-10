@@ -105,7 +105,7 @@ private fun GestureFinger.toFingerPath(
             }
 
             is GestureFingerMotion.Release -> {
-                isHeld = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && motion.holdUntilUnfulfilled
+                isHeld = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && motion.hold != GestureFingerMotion.Release.Hold.None
             }
         }
     }

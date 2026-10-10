@@ -110,7 +110,7 @@ internal class FingerResolver(
                 is GestureFingerMotion.Wait ->
                     fingerBuilder.wait(motion.durationMs)
                 is GestureFingerMotion.Release ->
-                    fingerBuilder.release(hold = motion.holdUntilUnfulfilled)
+                    fingerBuilder.release(hold = motion.hold != GestureFingerMotion.Release.Hold.None)
             }
         }
 

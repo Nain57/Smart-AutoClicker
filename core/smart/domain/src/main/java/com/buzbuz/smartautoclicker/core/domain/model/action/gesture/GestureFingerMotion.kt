@@ -90,15 +90,54 @@ sealed interface GestureFingerMotion : Identifiable, Completable {
     /**
      * The finger leaves the screen at its current position. Must be the last motion of a finger.
      *
+     * Keeping the finger pressed once the gesture is over relies on stroke continuation from the accessibility API,
+     * which is only available from Android 8, and only the first finger of a gesture can be held. In all other cases,
+     * [hold] is ignored at execution and the finger is released right away.
+     *
      * @param id the unique identifier for the motion.
-     * @param holdUntilUnfulfilled if true, the finger stays pressed on the screen until the conditions of its event
-     * are no longer fulfilled, and is only released at that point.
+     * @param hold how long the finger stays pressed on the screen once the gesture is over.
      */
     data class Release(
         override val id: Identifier,
-        @RequiresApi(Build.VERSION_CODES.O) val holdUntilUnfulfilled: Boolean = false,
+        @RequiresApi(Build.VERSION_CODES.O) val hold: Hold = Hold.None,
     ): GestureFingerMotion {
 
-        override fun isComplete(): Boolean = true
+        override fun isComplete(): Boolean = hold.isComplete()
+
+        /** How long a released finger stays pressed on the screen once its gesture is over. */
+        sealed interface Hold : Completable {
+
+            /** The finger is lifted as soon as the gesture is over. */
+            data object None : Hold {
+                override fun isComplete(): Boolean = true
+            }
+
+            /** The finger stays pressed until the conditions of its event are no longer fulfilled. */
+            data object UntilUnfulfilled : Hold {
+                override fun isComplete(): Boolean = true
+            }
+
+            /** The finger stays pressed until all the actions of its event have been executed. */
+            data object UntilActionsEnd : Hold {
+                override fun isComplete(): Boolean = true
+            }
+
+            /**
+             * The finger stays pressed for a custom time defined by the user.
+             *
+             * The hold starts once the gesture is over, so it is not part of the gesture duration and is not bound by
+             * [Gesture.GESTURE_MAXIMUM_DURATION_MS]. It is bound by [MAXIMUM_DURATION_MS] instead.
+             *
+             * @param durationMs the time in milliseconds the finger stays pressed once the gesture is over.
+             */
+            data class ForDuration(val durationMs: Long) : Hold {
+                override fun isComplete(): Boolean = durationMs in 1..MAXIMUM_DURATION_MS
+
+                companion object {
+                    /** The maximum hold duration, 24 hours. */
+                    const val MAXIMUM_DURATION_MS: Long = 86_400_000L
+                }
+            }
+        }
     }
 }

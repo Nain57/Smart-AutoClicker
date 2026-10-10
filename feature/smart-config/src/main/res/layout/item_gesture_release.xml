@@ -18,6 +18,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_card"
     style="@style/AppTheme.Widget.Card"
     android:layout_width="match_parent"
@@ -88,7 +89,56 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_top"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/field_hold_duration"/>
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_hold_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_when"
+            app:layout_constraintBottom_toTopOf="@id/card_hold_info"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_hold_info"
+            style="@style/Widget.Material3.CardView.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_hold_duration"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/margin_horizontal_default"
+                android:paddingVertical="@dimen/margin_vertical_default">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_release_desc"
+                    style="@style/AppTheme.TextAppearance.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/field_gesture_release_desc_now"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/text_hold_behaviour"
+                    style="@style/AppTheme.TextAppearance.BodySmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_vertical_default"
+                    android:text="@string/field_gesture_release_hold_behaviour"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

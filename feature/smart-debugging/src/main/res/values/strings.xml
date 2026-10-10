@@ -42,6 +42,8 @@
     <string name="item_event_occurrence_hold_duration">Hold duration %1$.1fs</string>
     <string name="item_event_occurrence_released">Released: %1$s</string>
     <string name="item_event_occurrence_release_reason_unfulfilled">Unfulfilled</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">Actions completed</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">Duration elapsed</string>
     <string name="item_event_occurrence_release_reason_interrupted">Interrupted</string>
     <string name="item_event_occurrence_release_reason_event_disabled">Event disabled</string>
     <string name="item_event_occurrence_release_reason_other_event">Another event</string>

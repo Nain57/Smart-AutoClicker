@@ -76,8 +76,10 @@ import kotlinx.serialization.Serializable
  * @param yOffsetCounter the name of the counter containing the value of y offset in pixels. Only defined when
  * [yOffsetCoordinateType] is [CoordinatesType.COUNTER].
  *
- * @param holdUntilUnfulfilled true if the finger should stay pressed on the screen until the conditions of its
- * event are no longer fulfilled. Only defined for [GestureFingerMotionType.RELEASE].
+ * @param releaseHoldType how long the finger stays pressed on the screen once the gesture is over. Only defined for
+ * [GestureFingerMotionType.RELEASE]; null when the finger is released right away.
+ * @param holdDurationMs the time in milliseconds the finger stays pressed once the gesture is over. Only defined when
+ * [releaseHoldType] is [GestureReleaseHoldType.FOR_DURATION]. It is not part of the gesture duration.
  */
 @SuppressLint("UnsafeOptInUsageError")
 @Entity(
@@ -116,5 +118,6 @@ data class GestureFingerMotionEntity(
     @ColumnInfo(name = "y_offset_literal") val yOffsetLiteral: Int? = null,
     @ColumnInfo(name = "y_offset_counter") val yOffsetCounter: String? = null,
 
-    @ColumnInfo(name = "hold_until_unfulfilled") val holdUntilUnfulfilled: Boolean? = null,
+    @ColumnInfo(name = "release_hold_type") val releaseHoldType: GestureReleaseHoldType? = null,
+    @ColumnInfo(name = "hold_duration_ms") val holdDurationMs: Long? = null,
 ) : EntityWithId

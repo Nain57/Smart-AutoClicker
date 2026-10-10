@@ -76,6 +76,7 @@ class GestureDialog(
         onMoveMotionDownClicked = { item -> viewModel.moveMotionDown(item) },
         onDurationChanged = { item, newValue -> viewModel.setItemDurationMs(item, newValue) },
         onReleaseWhenSelected = { item, whenItem -> viewModel.setItemReleaseWhen(item, whenItem) },
+        onReleaseHoldDurationChanged = { item, newValue -> viewModel.setItemReleaseHoldDurationMs(item, newValue) },
         onXValueChanged = { item, newValue -> viewModel.setItemXPosition(item, newValue) },
         onYValueChanged = { item, newValue -> viewModel.setItemYPosition(item, newValue) },
         onSetCounterXClicked = { item ->

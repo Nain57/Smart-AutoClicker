@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
+import com.buzbuz.smartautoclicker.core.database.entity.GestureReleaseHoldType
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue.Literal
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
@@ -229,7 +230,7 @@ class GestureFingerMapperTests {
                 fingerId = fingerId.databaseId,
                 index = 3,
                 motionType = GestureFingerMotionType.RELEASE,
-                holdUntilUnfulfilled = false,
+                releaseHoldType = null,
             ),
             release.toMotionEntity(fingerId = fingerId.databaseId, index = 3),
         )
@@ -237,7 +238,35 @@ class GestureFingerMapperTests {
 
     @Test
     fun releaseMotion_holdUntilUnfulfilled_toEntity() {
-        val release = GestureFingerMotion.Release(id = releaseMotionId, holdUntilUnfulfilled = true)
+        assertReleaseToEntity(
+            hold = GestureFingerMotion.Release.Hold.UntilUnfulfilled,
+            expectedHoldType = GestureReleaseHoldType.UNTIL_UNFULFILLED,
+        )
+    }
+
+    @Test
+    fun releaseMotion_holdUntilActionsEnd_toEntity() {
+        assertReleaseToEntity(
+            hold = GestureFingerMotion.Release.Hold.UntilActionsEnd,
+            expectedHoldType = GestureReleaseHoldType.UNTIL_ACTIONS_END,
+        )
+    }
+
+    @Test
+    fun releaseMotion_holdForDuration_toEntity() {
+        assertReleaseToEntity(
+            hold = GestureFingerMotion.Release.Hold.ForDuration(durationMs = 1500L),
+            expectedHoldType = GestureReleaseHoldType.FOR_DURATION,
+            expectedHoldDurationMs = 1500L,
+        )
+    }
+
+    private fun assertReleaseToEntity(
+        hold: GestureFingerMotion.Release.Hold,
+        expectedHoldType: GestureReleaseHoldType,
+        expectedHoldDurationMs: Long? = null,
+    ) {
+        val release = GestureFingerMotion.Release(id = releaseMotionId, hold = hold)
 
         assertEquals(
             GestureFingerMotionEntity(
@@ -245,7 +274,8 @@ class GestureFingerMapperTests {
                 fingerId = fingerId.databaseId,
                 index = 3,
                 motionType = GestureFingerMotionType.RELEASE,
-                holdUntilUnfulfilled = true,
+                holdDurationMs = expectedHoldDurationMs,
+                releaseHoldType = expectedHoldType,
             ),
             release.toMotionEntity(fingerId = fingerId.databaseId, index = 3),
         )
@@ -390,6 +420,42 @@ class GestureFingerMapperTests {
 
     @Test
     fun fingerWithMotions_releaseHoldUntilUnfulfilled_toDomain() {
+        assertReleaseToDomain(
+            holdType = GestureReleaseHoldType.UNTIL_UNFULFILLED,
+            expectedHold = GestureFingerMotion.Release.Hold.UntilUnfulfilled,
+        )
+    }
+
+    @Test
+    fun fingerWithMotions_releaseHoldUntilActionsEnd_toDomain() {
+        assertReleaseToDomain(
+            holdType = GestureReleaseHoldType.UNTIL_ACTIONS_END,
+            expectedHold = GestureFingerMotion.Release.Hold.UntilActionsEnd,
+        )
+    }
+
+    @Test
+    fun fingerWithMotions_releaseHoldForDuration_toDomain() {
+        assertReleaseToDomain(
+            holdType = GestureReleaseHoldType.FOR_DURATION,
+            holdDurationMs = 1500L,
+            expectedHold = GestureFingerMotion.Release.Hold.ForDuration(durationMs = 1500L),
+        )
+    }
+
+    @Test
+    fun fingerWithMotions_releaseNoHold_toDomain() {
+        assertReleaseToDomain(
+            holdType = null,
+            expectedHold = GestureFingerMotion.Release.Hold.None,
+        )
+    }
+
+    private fun assertReleaseToDomain(
+        holdType: GestureReleaseHoldType?,
+        expectedHold: GestureFingerMotion.Release.Hold,
+        holdDurationMs: Long? = null,
+    ) {
         val fingerWithMotions = GestureFingerWithMotions(
             finger = GestureFingerEntity(fingerId.databaseId, actionId, fingerIndex, startTimeMs),
             motions = listOf(
@@ -404,7 +470,8 @@ class GestureFingerMapperTests {
                 GestureFingerMotionEntity(
                     id = releaseMotionId.databaseId, fingerId = fingerId.databaseId, index = 1,
                     motionType = GestureFingerMotionType.RELEASE,
-                    holdUntilUnfulfilled = true,
+                    holdDurationMs = holdDurationMs,
+                    releaseHoldType = holdType,
                 ),
             ),
         )
@@ -419,7 +486,7 @@ class GestureFingerMapperTests {
                         position = Position.Coordinates(Literal(pressX), Literal(pressY)),
                         offset = Position.Coordinates(Literal(0), Literal(0)),
                     ),
-                    GestureFingerMotion.Release(id = releaseMotionId, holdUntilUnfulfilled = true),
+                    GestureFingerMotion.Release(id = releaseMotionId, hold = expectedHold),
                 ),
             ),
             fingerWithMotions.toDomainGestureFinger(),

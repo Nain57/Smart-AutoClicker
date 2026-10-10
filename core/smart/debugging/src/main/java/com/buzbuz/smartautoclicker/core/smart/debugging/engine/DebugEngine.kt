@@ -498,6 +498,8 @@ private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
 private fun HoldReleaseReason.toReportReleaseReason(): DebugReportHoldReleaseReason =
     when (this) {
         HoldReleaseReason.Unfulfilled -> DebugReportHoldReleaseReason.UNFULFILLED
+        HoldReleaseReason.ActionsCompleted -> DebugReportHoldReleaseReason.ACTIONS_COMPLETED
+        HoldReleaseReason.DurationElapsed -> DebugReportHoldReleaseReason.DURATION_ELAPSED
         HoldReleaseReason.Interrupted -> DebugReportHoldReleaseReason.INTERRUPTED
         HoldReleaseReason.EventDisabled -> DebugReportHoldReleaseReason.EVENT_DISABLED
         HoldReleaseReason.OtherEvent -> DebugReportHoldReleaseReason.OTHER_EVENT

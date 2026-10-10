@@ -49,6 +49,8 @@ internal fun ProtoHeldEventCheckMessage.toDomain(relativeTimestamp: Long): Debug
     val releaseReason = when (holdState) {
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD -> null
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_UNFULFILLED -> DebugReportHoldReleaseReason.UNFULFILLED
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_ACTIONS_COMPLETED -> DebugReportHoldReleaseReason.ACTIONS_COMPLETED
+        ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_DURATION_ELAPSED -> DebugReportHoldReleaseReason.DURATION_ELAPSED
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_INTERRUPTED -> DebugReportHoldReleaseReason.INTERRUPTED
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_EVENT_DISABLED -> DebugReportHoldReleaseReason.EVENT_DISABLED
         ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_OTHER_EVENT -> DebugReportHoldReleaseReason.OTHER_EVENT
@@ -87,6 +89,8 @@ private fun DebugReportHoldReleaseReason?.toProtoHoldState(): ProtoHeldEventChec
     when (this) {
         null -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_HELD
         DebugReportHoldReleaseReason.UNFULFILLED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_UNFULFILLED
+        DebugReportHoldReleaseReason.ACTIONS_COMPLETED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_ACTIONS_COMPLETED
+        DebugReportHoldReleaseReason.DURATION_ELAPSED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_DURATION_ELAPSED
         DebugReportHoldReleaseReason.INTERRUPTED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_INTERRUPTED
         DebugReportHoldReleaseReason.EVENT_DISABLED -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_EVENT_DISABLED
         DebugReportHoldReleaseReason.OTHER_EVENT -> ProtoHeldEventCheckMessage.HoldState.HOLD_STATE_RELEASED_OTHER_EVENT

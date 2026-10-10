@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.actions
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent as AndroidIntent
-import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
@@ -34,6 +33,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Release.Hold
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
@@ -54,12 +55,14 @@ import kotlin.time.Duration.Companion.milliseconds
  * @param androidExecutor the executor for the actions requiring an interaction with Android.
  * @param processingState the state of the current processing (counters, enabled events...).
  * @param randomize true to randomize the actions values a bit (positions, timers...), false to be precise.
+ * @param currentTimeMs provides the current time in milliseconds, used to time the [Hold.ForDuration].
  */
 internal class ActionExecutor(
     private val androidExecutor: AndroidActionExecutor,
     private val processingState: ProcessingState,
     randomize: Boolean,
     private val unblockWorkaroundEnabled: Boolean = false,
+    private val currentTimeMs: () -> Long = System::currentTimeMillis,
 ) {
 
     init { androidExecutor.resetState() }
@@ -82,12 +85,28 @@ internal class ActionExecutor(
         }
     }
 
-    suspend fun executeActions(event: Event, results: ConditionsResults? = null) {
+    /**
+     * Execute all the actions of an event.
+     *
+     * A [Hold.ForDuration] can elapse while the actions are executed. The executor doesn't release it by itself, it
+     * only tells when it is time to, through [onHoldDurationElapsed]: before each action, and during a pause.
+     *
+     * @param event the event to execute the actions of.
+     * @param results the results of the conditions detection for this event, if any.
+     * @param onHoldDurationElapsed called when the time of the [Hold.ForDuration] of the held pointer has elapsed.
+     */
+    suspend fun executeActions(
+        event: Event,
+        results: ConditionsResults? = null,
+        onHoldDurationElapsed: suspend () -> Unit = {},
+    ) {
         event.actions.forEach { action ->
+            if (isHeldDurationElapsed()) onHoldDurationElapsed()
+
             when (action) {
                 is Click -> executeClick(event, action, results)
                 is Gesture -> executeGesture(event, action, results)
-                is Pause -> executePause(action)
+                is Pause -> executePause(action, onHoldDurationElapsed)
                 is Intent -> executeIntent(action)
                 is ToggleEvent -> executeToggleEvent(action)
                 is ChangeCounter -> executeChangeCounter(action)
@@ -105,10 +124,21 @@ internal class ActionExecutor(
      * dropped by the system after a cancelled gesture, or released.
      */
     fun getHeldEvent(): Event? =
-        androidExecutor.getHeldPointer()?.owner as? Event
+        getHeldGesture()?.event
 
     fun isEventHeld(event: Event): Boolean =
         getHeldEvent()?.id == event.id
+
+    /** The hold of the pointer currently held on the screen, or null if there is none. */
+    fun getHeldGesture(): GestureHold? =
+        androidExecutor.getHeldPointer()?.owner as? GestureHold
+
+    /** @return true if the pointer currently held is a [Hold.ForDuration] whose time has elapsed. */
+    fun isHeldDurationElapsed(): Boolean =
+        getHeldDurationRemainingMs() == 0L
+
+    private fun getHeldDurationRemainingMs(): Long? =
+        getHeldGesture()?.getRemainingDurationMs(currentTimeMs())
 
     /**
      * Verify the pointer a gesture is holding on the screen, if any, has not been lifted by the system.
@@ -138,11 +168,19 @@ internal class ActionExecutor(
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
         val resolvedClickFinger = fingerResolver.resolve(click, event, results) ?: return
-        dispatchResolvedFingers(listOf(resolvedClickFinger), click.name, event)
+        dispatchResolvedFingers(listOf(resolvedClickFinger), click.name, GestureHold(event, Hold.None))
     }
 
     private suspend fun executeGesture(event: Event, gesture: Gesture, results: ConditionsResults?) {
-        dispatchResolvedFingers(fingerResolver.resolve(gesture, event, results), gesture.name, event)
+        // Only the first finger of a gesture can be held
+        val hold = (gesture.fingers.firstOrNull()?.motions?.lastOrNull() as? GestureFingerMotion.Release)?.hold
+            ?: Hold.None
+
+        dispatchResolvedFingers(
+            fingers = fingerResolver.resolve(gesture, event, results),
+            gestureName = gesture.name,
+            gestureHold = GestureHold(event, hold),
+        )
     }
 
     /**
@@ -154,25 +192,46 @@ internal class ActionExecutor(
      * The builder adds it as an extra finger: a gesture using all of its own fingers while one is held puts six
      * pointers down at the same time.
      *
-     * A pointer held by this gesture is owned by [event], see [getHeldEvent]. The held pointer is checked again first: a
-     * gesture continuing a pointer lifted by the user would be refused, or silently misplayed on recent Android versions.
+     * A pointer held by this gesture is owned by [gestureHold], see [getHeldGesture]. Its hold starts once the gesture
+     * is fully dispatched. The held pointer is checked again first: a gesture continuing a pointer lifted by the user
+     * would be refused, or silently misplayed on recent Android versions.
      */
-    private suspend fun dispatchResolvedFingers(fingers: List<ResolvedFinger>, gestureName: String?, event: Event) {
+    private suspend fun dispatchResolvedFingers(
+        fingers: List<ResolvedFinger>,
+        gestureName: String?,
+        gestureHold: GestureHold,
+    ) {
         checkHeldFinger()
         val builtGesture = gestureBuilder
-            .build(fingers, gestureName, androidExecutor.getHeldPointer(), event) ?: return
+            .build(fingers, gestureName, androidExecutor.getHeldPointer(), gestureHold) ?: return
 
         withContext(Dispatchers.Main) {
             androidExecutor.dispatchBuiltGesture(builtGesture)
         }
+
+        if (getHeldGesture() === gestureHold) gestureHold.onHoldStarted(currentTimeMs())
     }
 
     /**
      * Execute the provided pause.
+     *
+     * A [Hold.ForDuration] elapsing during the pause is notified on time through [onHoldDurationElapsed], instead of
+     * once the pause is over.
+     *
      * @param pause the pause to be executed.
      */
-    private suspend fun executePause(pause: Pause) {
-        delay(pause.pauseDuration!!.getPauseDurationMs(random).milliseconds)
+    private suspend fun executePause(pause: Pause, onHoldDurationElapsed: suspend () -> Unit) {
+        val pauseDurationMs = pause.pauseDuration!!.getPauseDurationMs(random)
+        val holdRemainingMs = getHeldDurationRemainingMs()
+
+        if (holdRemainingMs == null || holdRemainingMs >= pauseDurationMs) {
+            delay(pauseDurationMs.milliseconds)
+            return
+        }
+
+        delay(holdRemainingMs.milliseconds)
+        onHoldDurationElapsed()
+        delay((pauseDurationMs - holdRemainingMs).milliseconds)
     }
 
     /**
@@ -302,8 +361,6 @@ internal class ActionExecutor(
     }
 }
 
-/** Tag for logs. */
-private const val TAG = "ActionExecutor"
 /** Waiting delay after a start activity to avoid overflowing the system. */
 private const val INTENT_START_ACTIVITY_DELAY = 1000L
 /** Waiting delay after a broadcast to avoid overflowing the system. */

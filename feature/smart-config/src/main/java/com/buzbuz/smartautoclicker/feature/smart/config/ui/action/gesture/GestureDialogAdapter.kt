@@ -66,6 +66,7 @@ class GestureDialogAdapter(
     private val onYValueChanged: (GestureDialogUiStateItem, String) -> Unit,
     private val onDurationChanged: (GestureDialogUiStateItem, String) -> Unit,
     private val onReleaseWhenSelected: (GestureDialogUiStateItem, ReleaseWhenDropdownItem) -> Unit,
+    private val onReleaseHoldDurationChanged: (GestureDialogUiStateItem, String) -> Unit,
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<GestureDialogUiStateItem, BaseGestureViewHolder<*>>(GestureMotionItemDiffCallback) {
 
@@ -137,6 +138,7 @@ class GestureDialogAdapter(
                 ItemGestureReleaseBinding.inflate(inflater, parent, false),
                 onCollapseClicked = onExpandCollapseClicked,
                 onWhenItemSelected = onReleaseWhenSelected,
+                onHoldDurationChanged = onReleaseHoldDurationChanged,
             )
 
             R.layout.item_gesture_add -> GestureAddViewHolder(

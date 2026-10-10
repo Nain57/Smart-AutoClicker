@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.detection.ImageDetector
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion.Release.Hold
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -44,6 +45,7 @@ import kotlinx.coroutines.yield
  * @param screenEvents the list of scenario events to be detected.
  * @param bitmapSupplier provides the conditions bitmaps.
  * @param androidExecutor execute the actions requiring an interaction with Android.
+ * @param currentTimeMs provides the current time in milliseconds, used to time the gestures holds.
  * @param onStopRequested called when an end condition of the scenario have been reached or all events are disabled.
  * @param progressListener the object to notify for detection progress. Can be null if not required.
  * @param processingState handle the processing state of the scenario.
@@ -60,6 +62,7 @@ internal class ScenarioProcessor(
     counters: List<Counter>,
     androidExecutor: AndroidActionExecutor,
     unblockWorkaroundEnabled: Boolean = false,
+    currentTimeMs: () -> Long = System::currentTimeMillis,
     private val bitmapSupplier: suspend (String, Int, Int) -> Bitmap?,
     private val onStopRequested: () -> Unit,
     private val progressListener: SmartProcessingListener?,
@@ -81,6 +84,7 @@ internal class ScenarioProcessor(
         processingState = processingState,
         randomize = randomize,
         unblockWorkaroundEnabled = unblockWorkaroundEnabled,
+        currentTimeMs = currentTimeMs,
     ),
 ) {
 
@@ -116,6 +120,7 @@ internal class ScenarioProcessor(
 
         // If there is a held event that has been disabled, release the held finger. Otherwise, verify the user didn't
         // lift it by touching the screen: the system already released it, only its cooldown remains to be started.
+        // Finally, release it if it was held for a duration that has elapsed.
         val heldEvent = actionExecutor.getHeldEvent()
         if (heldEvent != null) {
             if (!processingState.isEventEnabled(heldEvent.id.databaseId)) {
@@ -123,6 +128,8 @@ internal class ScenarioProcessor(
                 releaseHeldEvent(HoldReleaseReason.EventDisabled, cooldown = false)
             } else if (!actionExecutor.checkHeldFinger()) {
                 onHeldEventInterrupted(heldEvent)
+            } else {
+                releaseHeldEventIfDurationElapsed()
             }
         }
         notifyHeldEventChangeIfNeeded(actionExecutor.getHeldEvent(), HoldReleaseReason.Interrupted)
@@ -233,6 +240,9 @@ internal class ScenarioProcessor(
      *
      * A gesture of the event holding a finger takes the hold over from the previously held event, if any. For an event
      * left holding a finger, cooldown starts only once the finger is released.
+     *
+     * A finger held until the end of the actions is released once they are all executed, and a finger held for a
+     * duration is released as soon as it has elapsed, even in the middle of the actions.
      */
     private suspend fun executeEventActions(event: Event, results: ConditionsResults) {
         // The user may have touched the screen while this frame was detected
@@ -241,13 +251,24 @@ internal class ScenarioProcessor(
         }
 
         val previousHeldEvent = actionExecutor.getHeldEvent()
+        var isPreviousHoldReleased = false
         val executionStartTimeMs = System.currentTimeMillis()
 
         // The system may have dropped the held pointer since the last notification: notify it before this event
         // holds again, or a new hold by the same event would be seen as the continuation of the lost one.
         notifyHeldEventChangeIfNeeded(previousHeldEvent, HoldReleaseReason.Interrupted)
 
-        actionExecutor.executeActions(event, results)
+        actionExecutor.executeActions(
+            event = event,
+            results = results,
+            onHoldDurationElapsed = {
+                // Released while still held: its cooldown is started by the release, not by the loss of its hold
+                if (previousHeldEvent != null && actionExecutor.isEventHeld(previousHeldEvent)) {
+                    isPreviousHoldReleased = true
+                }
+                releaseHeldEventIfDurationElapsed()
+            },
+        )
         progressListener?.onEventActionsExecuted(
             event = event,
             results = when (event) {
@@ -258,18 +279,38 @@ internal class ScenarioProcessor(
 
         // The previously held event lost its hold to this one, its cooldown started with the execution
         val heldEvent = actionExecutor.getHeldEvent()
-        if (previousHeldEvent is Event && heldEvent?.id != previousHeldEvent.id) {
+        if (previousHeldEvent != null && !isPreviousHoldReleased && heldEvent?.id != previousHeldEvent.id) {
             startHeldEventCooldown(previousHeldEvent, executionStartTimeMs)
         }
 
         // New held pointer, delay cooldown to release time (no cooldown on trigger)
         notifyHeldEventChangeIfNeeded(heldEvent, HoldReleaseReason.OtherEvent)
 
+        if (actionExecutor.getHeldGesture()?.hold == Hold.UntilActionsEnd) {
+            Log.d(TAG, "Held event ${heldEvent?.name} actions are completed, releasing it")
+            releaseHeldEvent(HoldReleaseReason.ActionsCompleted)
+        }
+
         if (event !is ScreenEvent || (heldEvent?.id != previousHeldEvent?.id && heldEvent?.id == event.id)) return
         startHeldEventCooldown(event)
     }
 
+    /** Release the held event if it is held for a duration that has elapsed. */
+    private suspend fun releaseHeldEventIfDurationElapsed() {
+        if (!actionExecutor.isHeldDurationElapsed()) return
+
+        // The hold may have started during the actions being executed, and not have been notified yet
+        val heldEvent = actionExecutor.getHeldEvent()
+        notifyHeldEventChangeIfNeeded(heldEvent, HoldReleaseReason.OtherEvent)
+
+        Log.d(TAG, "Held event ${heldEvent?.name} hold duration has elapsed, releasing it")
+        releaseHeldEvent(HoldReleaseReason.DurationElapsed)
+    }
+
+    /** Release the held event if it is held until unfulfilled, and its conditions are no longer fulfilled. */
     private suspend fun releaseHeldEventIfUnfulfilled(heldEvent: Event) {
+        if (actionExecutor.getHeldGesture()?.hold != Hold.UntilUnfulfilled) return
+
         progressListener?.onEventProcessingStarted(heldEvent)
         val results = conditionsVerifier.verifyConditions(
             operator = heldEvent.conditionOperator,

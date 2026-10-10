@@ -22,6 +22,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
+import com.buzbuz.smartautoclicker.core.database.entity.GestureReleaseHoldType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerWithMotions
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
@@ -100,8 +101,17 @@ internal fun GestureFingerMotion.toMotionEntity(fingerId: Long, index: Int): Ges
             fingerId = fingerId,
             index = index,
             motionType = GestureFingerMotionType.RELEASE,
-            holdUntilUnfulfilled = holdUntilUnfulfilled,
+            holdDurationMs = (hold as? GestureFingerMotion.Release.Hold.ForDuration)?.durationMs,
+            releaseHoldType = hold.toReleaseHoldType(),
         )
+    }
+
+private fun GestureFingerMotion.Release.Hold.toReleaseHoldType(): GestureReleaseHoldType? =
+    when (this) {
+        GestureFingerMotion.Release.Hold.None -> null
+        GestureFingerMotion.Release.Hold.UntilUnfulfilled -> GestureReleaseHoldType.UNTIL_UNFULFILLED
+        GestureFingerMotion.Release.Hold.UntilActionsEnd -> GestureReleaseHoldType.UNTIL_ACTIONS_END
+        is GestureFingerMotion.Release.Hold.ForDuration -> GestureReleaseHoldType.FOR_DURATION
     }
 
 
@@ -134,8 +144,16 @@ private fun GestureFingerMotionEntity.toDomainGestureMotion(cleanIds: Boolean = 
         )
         GestureFingerMotionType.RELEASE -> GestureFingerMotion.Release(
             id = Identifier(id, asTemporary = cleanIds),
-            holdUntilUnfulfilled = holdUntilUnfulfilled == true,
+            hold = toDomainReleaseHold(),
         )
+    }
+
+private fun GestureFingerMotionEntity.toDomainReleaseHold(): GestureFingerMotion.Release.Hold =
+    when (releaseHoldType) {
+        null -> GestureFingerMotion.Release.Hold.None
+        GestureReleaseHoldType.UNTIL_UNFULFILLED -> GestureFingerMotion.Release.Hold.UntilUnfulfilled
+        GestureReleaseHoldType.UNTIL_ACTIONS_END -> GestureFingerMotion.Release.Hold.UntilActionsEnd
+        GestureReleaseHoldType.FOR_DURATION -> GestureFingerMotion.Release.Hold.ForDuration(holdDurationMs ?: 0L)
     }
 
 private fun GestureFingerMotionEntity.toGesturePosition(): Position =
