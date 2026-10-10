@@ -34,7 +34,6 @@
       -  * Error have the same space as desc
       -->
     <string name="field_click_position_title">Місце кліку</string>
-    <string name="field_swipe_positions_title">Місце свайпу</string>
     <string name="item_title_try_element">Перевірте ваш %1$s</string>
     <string name="item_error_action_invalid_generic">Ця дія недійсна</string>
 
@@ -69,7 +68,6 @@
     <string name="input_field_label_name">Ім\'я</string>
     <string name="input_field_label_pause_duration">Тривалість паузи</string>
     <string name="input_field_label_scenario_name">Назва сценарію</string>
-    <string name="input_field_label_swipe_duration">Тривалість свайпу (мс)</string>
     <string name="input_field_error_required">Обов\'язково</string>
 
 
@@ -99,8 +97,6 @@
       -->
     <string name="toast_denied_screen_sharing_permission">Користувач відхилив дозвіл на спільне використання екрана</string>
     <string name="toast_configure_single_click">Торкніться позиції для кліку</string>
-    <string name="toast_configure_swipe_from">Торкніться позиції для початку свайпу</string>
-    <string name="toast_configure_swipe_to">Торкніться позиції для завершення свайпу</string>
 
 
     <!--

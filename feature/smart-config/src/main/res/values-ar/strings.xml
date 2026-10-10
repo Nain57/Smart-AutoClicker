@@ -57,9 +57,6 @@
     <string name="item_click_details_on_condition">خلال %1$s على %2$s</string>
     <string name="item_click_details_at_position">خلال %1$s</string>
 
-    <string name="item_swipe_title">انتقد</string>
-    <string name="item_swipe_desc">اسحب من موضع على الشاشة إلى آخر</string>
-    <string name="item_swipe_details">خلال %1$s</string>
 
     <string name="item_pause_title">انتظر</string>
     <string name="item_pause_desc">إيقاف تنفيذ الكشف مؤقتًا</string>
@@ -251,10 +248,7 @@
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
-    <string name="dialog_title_swipe">انتقد</string>
 
-    <string name="field_swipe_positions_title">انتقاد المواقف</string>
-    <string name="field_swipe_positions_desc">اسحب من %1$d، %2$d إلى %3$d، %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

@@ -57,9 +57,6 @@
     <string name="item_click_details_on_condition">Durante %1$s el %2$s</string>
     <string name="item_click_details_at_position">Durante %1$s</string>
 
-    <string name="item_swipe_title">Golpe fuerte</string>
-    <string name="item_swipe_desc">Deslizar de una posición en la pantalla a otra</string>
-    <string name="item_swipe_details">Durante %1$s</string>
 
     <string name="item_pause_title">Esperar</string>
     <string name="item_pause_desc">Pausar la ejecución de la detección</string>
@@ -251,10 +248,7 @@
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
-    <string name="dialog_title_swipe">Golpe fuerte</string>
 
-    <string name="field_swipe_positions_title">Posiciones de deslizamiento</string>
-    <string name="field_swipe_positions_desc">Desliza desde %1$d, %2$d a %3$d, %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

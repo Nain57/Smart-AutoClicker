@@ -10,7 +10,6 @@
 <resources>
     <string name="default_event_name">既定のイベント</string>
     <string name="default_click_name">クリック</string>
-    <string name="default_swipe_name">スワイプ</string>
     <string name="default_pause_name">待機</string>
     <string name="default_intent_name">インテント</string>
     <string name="default_toggle_event_name">イベントの切り替え</string>

@@ -9,6 +9,5 @@
 -->
 <resources>
     <string name="default_dumb_click_name">Нажатие</string>
-    <string name="default_dumb_swipe_name">Свайп</string>
     <string name="default_dumb_pause_name">Ожидание</string>
 </resources>

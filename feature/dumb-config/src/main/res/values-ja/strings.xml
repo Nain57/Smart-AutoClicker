@@ -11,12 +11,8 @@
     <string name="item_desc_dumb_pause_details">%1$s 間</string>
     <string name="item_desc_dumb_repeat_count">%1$d 回繰り返す</string>
     <string name="item_desc_dumb_repeat_infinite">無限に繰り返す</string>
-    <string name="item_desc_dumb_swipe">画面上の一点から別の点へスワイプします</string>
-    <string name="item_desc_dumb_swipe_details">[%2$d, %3$d] から [%4$d, %5$d] へ %1$s 間</string>
-    <string name="item_desc_dumb_swipe_positions">%1$d, %2$d から %3$d, %4$d へスワイプ</string>
     <string name="item_title_dumb_click">タップ</string>
     <string name="item_title_dumb_pause">待機</string>
-    <string name="item_title_dumb_swipe">スワイプ</string>
     <string name="item_title_no_dumb_actions">操作なし</string>
     <string name="item_title_dumb_action_copy">コピー</string>
     <string name="item_desc_dumb_action_copy">任意のシナリオから既存の操作をコピーします</string>

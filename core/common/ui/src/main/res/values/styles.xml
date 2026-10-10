@@ -264,7 +264,7 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
-    <!-- Style for the click/swipe position(s) overlay selector view. -->
+    <!-- Style for the click position overlay selector view. -->
     <style name="AppTheme.Overlay.PositionSelector">
         <item name="colorBackground">@color/overlayActionsBriefBackground</item>
         <item name="radius">@dimen/overlay_click_selector_radius</item>

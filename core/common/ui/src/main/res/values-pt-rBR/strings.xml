@@ -34,7 +34,6 @@
       -  * Error have the same space as desc
       -->
     <string name="field_click_position_title">Posição do clique</string>
-    <string name="field_swipe_positions_title">Posições do swipe</string>
     <string name="item_title_try_element">Teste seu %1$s</string>
     <string name="item_error_action_invalid_generic">Esta ação é inválida</string>
 
@@ -68,7 +67,6 @@
     <string name="input_field_label_name">Nome</string>
     <string name="input_field_label_pause_duration">Duração da pausa</string>
     <string name="input_field_label_scenario_name">Nome do cenário</string>
-    <string name="input_field_label_swipe_duration">Duração do swipe (ms)</string>
     <string name="input_field_error_required">Obrigatório</string>
 
 
@@ -98,8 +96,6 @@
       -->
     <string name="toast_denied_screen_sharing_permission">Permissão de compartilhamento de tela negada pelo usuário</string>
     <string name="toast_configure_single_click">Toque na posição para clicar</string>
-    <string name="toast_configure_swipe_from">Toque na posição para iniciar o swipe</string>
-    <string name="toast_configure_swipe_to">Toque na posição para terminar o swipe</string>
 
     <!--
       - Content description texts.

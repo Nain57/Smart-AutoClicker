@@ -56,9 +56,6 @@
     <string name="item_click_details_on_condition">Durante %1$s no %2$s</string>
     <string name="item_click_details_at_position">Durante %1$s</string>
 
-    <string name="item_swipe_title">Swipe</string>
-    <string name="item_swipe_desc">Swipe de uma posição na tela para outra</string>
-    <string name="item_swipe_details">Durante %1$s</string>
 
     <string name="item_pause_title">Aguardar</string>
     <string name="item_pause_desc">Pausar a execução da detecção</string>
@@ -251,10 +248,7 @@
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
-    <string name="dialog_title_swipe">Swipe</string>
 
-    <string name="field_swipe_positions_title">Posições de swipe</string>
-    <string name="field_swipe_positions_desc">Swipe de %1$d, %2$d para %3$d, %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

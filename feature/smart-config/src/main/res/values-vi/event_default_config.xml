@@ -19,7 +19,6 @@
 
     <string name="default_event_name">Sự kiện mặc định</string>
     <string name="default_click_name">Nhấp chuột</string>
-    <string name="default_swipe_name">Vuốt</string>
     <string name="default_pause_name">Chờ đợi</string>
     <string name="default_intent_name">Ý định</string>
     <string name="default_toggle_event_name">Chuyển đổi Sự kiện</string>

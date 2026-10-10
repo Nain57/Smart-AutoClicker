@@ -29,7 +29,6 @@
     <string name="dialog_title_condition_selection">Seleziona una condizione</string>
     <string name="dialog_title_pause">Attendi</string>
     <string name="dialog_title_scenario_config">Scenario</string>
-    <string name="dialog_title_swipe">Scorri</string>
     <string name="dialog_title_toggle_event">Stato evento</string>
     <string name="dialog_title_events_toggle">Tocchi per gli eventi</string>
     <string name="dialog_title_change_counter">"Modifica contatore "</string>
@@ -73,9 +72,6 @@
     <string name="item_pause_desc">Sospendi l\'esecuzione</string>
     <string name="item_pause_details">Durante %1$s</string>
     <string name="generic_select_the_position">Seleziona la posizione</string>
-    <string name="item_swipe_desc">Scorri da una posizione sullo schermo all\'altra</string>
-    <string name="item_swipe_details">Durante %1$s</string>
-    <string name="field_swipe_positions_desc">Scorri da %1$d, %2$d a %3$d, %4$d</string>
     <string name="item_toggle_event_desc">Cambia lo stato di abilitazione di un evento</string>
     <string name="field_change_all_desc_manual">Definire gli eventi da modificare manualmente</string>
     <string name="field_change_all_desc_enable_all">Abilitare tutti gli eventi in questo scenario</string>
@@ -109,7 +105,6 @@
     <string name="field_detection_type_desc_screen">Rilevamento su tutto lo schermo</string>
     <string name="item_intent_title">Intento</string>
     <string name="item_pause_title">Attendi</string>
-    <string name="item_swipe_title">Scorri</string>
     <string name="item_toggle_event_title">Cambia stato evento</string>
     <string name="item_counter_reached_title">Sul bancone raggiunto</string>
     <string name="item_timer_reached_title">Al raggiungimento del timer</string>
@@ -132,7 +127,6 @@
       -  * Desc can have more space to describe the title (3~4 lines max)
      -->
     <string name="field_select_detection_area_title">Area di rilevamento</string>
-    <string name="field_swipe_positions_title">Posizioni di scorrimento</string>
     <string name="field_show_debug_report_title">Mostra il rapporto</string>
     <string name="field_application_selection_desc">Avviare un\'applicazione quando viene eseguita questa azione</string>
     <string name="field_timer_restart_desc_on">Una volta raggiunto, il timer si riavvia, consentendo di soddisfare nuovamente questa condizione.</string>

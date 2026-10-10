@@ -11,12 +11,8 @@
     <string name="item_desc_dumb_pause_details">持续 %1$s</string>
     <string name="item_desc_dumb_repeat_count">重复 %1$d 次</string>
     <string name="item_desc_dumb_repeat_infinite">无限重复</string>
-    <string name="item_desc_dumb_swipe">从屏幕上一点滑动至另一点</string>
-    <string name="item_desc_dumb_swipe_details">自 [%2$d, %3$d] 至 [%4$d, %5$d]，持续 %1$s</string>
-    <string name="item_desc_dumb_swipe_positions">自 %1$d, %2$d 滑动至 %3$d, %4$d</string>
     <string name="item_title_dumb_click">点击</string>
     <string name="item_title_dumb_pause">等待</string>
-    <string name="item_title_dumb_swipe">滑动</string>
     <string name="item_title_no_dumb_actions">无操作</string>
     <string name="item_title_dumb_action_copy">复制</string>
     <string name="item_desc_dumb_action_copy">从任意场景复制已有操作</string>

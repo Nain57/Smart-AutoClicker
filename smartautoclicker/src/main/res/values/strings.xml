@@ -65,7 +65,7 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_desc_dumb_scenario">The regular auto clicker experience.\nSimply place clicks and swipes on the screen.</string>
+    <string name="item_desc_dumb_scenario">The regular auto clicker experience.\nSimply place clicks and gestures on the screen.</string>
     <string name="item_desc_dumb_scenario_max_duration">Stop after %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">No max duration</string>
     <string name="item_desc_dumb_scenario_repeat_count">Repeat %1$d times</string>

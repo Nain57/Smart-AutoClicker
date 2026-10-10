@@ -28,12 +28,8 @@
     <string name="item_desc_dumb_pause_details">Trong %1$s</string>
     <string name="item_desc_dumb_repeat_count">Lặp lại %1$d lần</string>
     <string name="item_desc_dumb_repeat_infinite">Lặp lại vô hạn</string>
-    <string name="item_desc_dumb_swipe">Vuốt từ vị trí trên màn hình sang vị trí khác</string>
-    <string name="item_desc_dumb_swipe_details">Trong %1$s từ [%2$d, %3$d] đến [%4$d, %5$d]</string>
-    <string name="item_desc_dumb_swipe_positions">Vuốt từ %1$d, %2$d sang %3$d, %4$d</string>
     <string name="item_title_dumb_click">Nhấp chuột</string>
     <string name="item_title_dumb_pause">Chờ đợi</string>
-    <string name="item_title_dumb_swipe">Vuốt</string>
     <string name="item_title_no_dumb_actions">Không có hành động</string>
     <string name="item_title_dumb_action_copy">Sao chép</string>
     <string name="item_desc_dumb_action_copy">Sao chép Hành động hiện có từ bất kỳ Kịch bản nào</string>

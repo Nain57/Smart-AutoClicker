@@ -44,14 +44,8 @@
     <string name="item_desc_dumb_pause_details">Длительность: %1$s</string>
     <string name="item_desc_dumb_repeat_count">Всего повторений: %1$d</string>
     <string name="item_desc_dumb_repeat_infinite">Повторяется бесконечно</string>
-    <string name="item_desc_dumb_swipe">Смахивать с одной позиции на экране до другой</string>
-    <string name="item_desc_dumb_swipe_details">Движется %1$s из точки [%2$d, %3$d] 
-        в точку [%4$d, %5$d]</string>
-    <string name="item_desc_dumb_swipe_positions">Смахивает с точки [%1$d, %2$d] 
-        до точки [%3$d, %4$d]</string>
     <string name="item_title_dumb_click">Нажатие</string>
     <string name="item_title_dumb_pause">Бездействие</string>
-    <string name="item_title_dumb_swipe">Смахивание</string>
     <string name="item_title_no_dumb_actions">Действий нет</string>
     <string name="item_title_dumb_action_copy">Копировать</string>
     <string name="item_desc_dumb_action_copy">Копирование существующего действия из любого сценария</string>

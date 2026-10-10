@@ -54,9 +54,6 @@
     <string name="item_click_details_on_condition">Trong %1$s trên %2$s</string>
     <string name="item_click_details_on_condition_unknown">Trong %1$s bấm vào điều kiện</string>
     <string name="item_click_details_at_position">Trong %1$s</string>
-    <string name="item_swipe_title">Vuốt</string>
-    <string name="item_swipe_desc">Vuốt từ vị trí trên màn hình sang vị trí khác</string>
-    <string name="item_swipe_details">Trong %1$s</string>
     <string name="item_pause_title">Chờ đợi</string>
     <string name="item_pause_desc">Tạm dừng thực hiện phát hiện</string>
     <string name="item_pause_details">Trong %1$s</string>
@@ -224,9 +221,6 @@
     <string name="field_click_position_desc">Nhấp vào %1$d, %2$d</string>
     <string name="field_click_offset_title">Tọa độ lệch khi nhấp</string>
     <string name="field_click_offset_desc_none">Không có</string>
-    <string name="dialog_title_swipe">Vuốt</string>
-    <string name="field_swipe_positions_title">Vuốt vị trí</string>
-    <string name="field_swipe_positions_desc">Vuốt từ %1$d, %2$d sang %3$d, %4$d</string>
     <string name="dialog_title_pause">Chờ đợi</string>
     <string name="dialog_title_application_selection">Chọn một ứng dụng</string>
     <string name="menu_item_title_advanced">Trình độ cao</string>

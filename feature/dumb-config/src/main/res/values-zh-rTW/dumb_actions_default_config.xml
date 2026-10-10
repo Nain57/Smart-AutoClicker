@@ -9,6 +9,5 @@
 -->
 <resources>
     <string name="default_dumb_click_name">點擊</string>
-    <string name="default_dumb_swipe_name">滑動</string>
     <string name="default_dumb_pause_name">等待</string>
 </resources>

@@ -57,9 +57,6 @@
     <string name="item_click_details_on_condition">During %1$s on %2$s</string>
     <string name="item_click_details_at_position">During %1$s</string>
 
-    <string name="item_swipe_title">Свайп</string>
-    <string name="item_swipe_desc">Провести пальцем из одной точки экрана в другую</string>
-    <string name="item_swipe_details">During %1$s</string>
 
     <string name="item_pause_title">Пауза</string>
     <string name="item_pause_desc">Приостановить выполнение обнаружения</string>
@@ -251,10 +248,7 @@
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
-    <string name="dialog_title_swipe">Свайп</string>
 
-    <string name="field_swipe_positions_title">Позиции свайпа</string>
-    <string name="field_swipe_positions_desc">Свайп от %1$d, %2$d до %3$d, %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

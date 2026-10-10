@@ -44,12 +44,8 @@
     <string name="item_desc_dumb_pause_details">Durante %1$s</string>
     <string name="item_desc_dumb_repeat_count">Repetir %1$d vezes</string>
     <string name="item_desc_dumb_repeat_infinite">Repetição infinita</string>
-    <string name="item_desc_dumb_swipe">Deslize de uma posição na tela para outra</string>
-    <string name="item_desc_dumb_swipe_details">Durante %1$s de [%2$d, %3$d] para [%4$d, %5$d]</string>
-    <string name="item_desc_dumb_swipe_positions">Deslize de %1$d, %2$d para %3$d, %4$d</string>
     <string name="item_title_dumb_click">Clique</string>
     <string name="item_title_dumb_pause">Aguarde</string>
-    <string name="item_title_dumb_swipe">Deslize</string>
     <string name="item_title_no_dumb_actions">Sem Ações</string>
     <string name="item_title_dumb_action_copy">Cópia</string>
     <string name="item_desc_dumb_action_copy">Copiar uma ação existente de qualquer cenário</string>

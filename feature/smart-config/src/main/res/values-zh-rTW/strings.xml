@@ -29,7 +29,6 @@
     <string name="dialog_title_condition_selection">選擇條件</string>
     <string name="dialog_title_pause">等待</string>
     <string name="dialog_title_scenario_config">情境</string>
-    <string name="dialog_title_swipe">滑動</string>
     <string name="dialog_title_toggle_event">事件狀態</string>
     <string name="dialog_title_events_toggle">事件切換</string>
     <string name="dialog_title_change_counter">修改計數器</string>
@@ -73,9 +72,6 @@
     <string name="item_pause_desc">延遲一段時間執行</string>
     <string name="item_pause_details">延遲 %1$s</string>
     <string name="generic_select_the_position">選擇一個坐標</string>
-    <string name="item_swipe_desc">從A點滑動到B點</string>
-    <string name="item_swipe_details">延遲 %1$s</string>
-    <string name="field_swipe_positions_desc">從 (%1$d, %2$d) 滑動到 (%3$d, %4$d)</string>
     <string name="item_toggle_event_desc">啟用或禁用某情境</string>
     <string name="field_change_all_desc_manual">定義要手動更改的事件</string>
     <string name="field_change_all_desc_enable_all">啟用此情境中的所有事件</string>
@@ -107,7 +103,6 @@
     <string name="field_detection_type_desc_screen">全屏檢測</string>
     <string name="item_intent_title">意圖</string>
     <string name="item_pause_title">等待</string>
-    <string name="item_swipe_title">滑動</string>
     <string name="item_toggle_event_title">變更事件狀態</string>
     <string name="field_select_toggle_events_title_empty">無變化</string>
     <string name="field_select_toggle_events_title">%1$d 變化</string>
@@ -131,7 +126,6 @@
       -  * Desc can have more space to describe the title (3~4 lines max)
      -->
     <string name="field_select_detection_area_title">檢測區域</string>
-    <string name="field_swipe_positions_title">滑動位置</string>
     <string name="field_show_debug_report_title">顯示報告</string>
     <string name="field_application_selection_desc">執行該操作時啟動應用程式</string>
     <string name="field_timer_restart_desc_on">一旦達到這一條件，計時器將重新啟動，允許再次滿足這一條件</string>

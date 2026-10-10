@@ -6,7 +6,6 @@
     <string name="dialog_overlay_title_warning">警告</string>
     <string name="dialog_title_tutorial">教程</string>
     <string name="field_click_position_title">点击位置</string>
-    <string name="field_swipe_positions_title">滑动位置</string>
     <string name="item_title_try_element">测试您的 %1$s</string>
     <string name="item_error_action_invalid_generic">此操作无效</string>
     <string name="message_empty_copy">没有可复制的内容</string>
@@ -19,7 +18,6 @@
     <string name="input_field_label_name">名称</string>
     <string name="input_field_label_pause_duration">暂停时长</string>
     <string name="input_field_label_scenario_name">场景名称</string>
-    <string name="input_field_label_swipe_duration">滑动时长（毫秒）</string>
     <string name="input_field_error_required">必填</string>
     <string name="dropdown_item_title_anti_detection_enabled">启用</string>
     <string name="dropdown_item_title_anti_detection_disabled">关闭</string>
@@ -32,8 +30,6 @@
     <string name="dropdown_label_time_unit">时间单位</string>
     <string name="toast_denied_screen_sharing_permission">用户已拒绝屏幕共享权限</string>
     <string name="toast_configure_single_click">请触摸要点击的位置</string>
-    <string name="toast_configure_swipe_from">请触摸滑动起点</string>
-    <string name="toast_configure_swipe_to">请触摸滑动终点</string>
     <string name="content_desc_action_icon">表示操作类型的图标</string>
     <string name="content_desc_add_button">用于新建元素的按钮</string>
     <string name="content_desc_copy_button">从已有元素创建副本的按钮</string>

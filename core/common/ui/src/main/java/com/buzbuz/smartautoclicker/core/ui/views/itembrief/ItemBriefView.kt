@@ -39,8 +39,6 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRenderer
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionBriefRenderer
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionDescription
 import dagger.hilt.EntryPoints
@@ -83,7 +81,6 @@ class ItemBriefView @JvmOverloads constructor(
         if (!keepRenderer) {
             renderer = when (description) {
                 is ClickDescription -> ClickBriefRenderer(this, style.clickStyle)
-                is SwipeDescription -> SwipeBriefRenderer(this, style.swipeStyle)
                 is GestureDescription -> GestureBriefRenderer(this, style.gestureStyle)
                 is PauseDescription -> PauseBriefRenderer(this, style.pauseStyle)
                 is ImageConditionDescription -> ImageConditionBriefRenderer(

@@ -23,9 +23,6 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.data.getClickRepeatCountC
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.getClickRepeatDelayConfig
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.getDumbConfigPreferences
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.getPauseDurationConfig
-import com.buzbuz.smartautoclicker.feature.dumb.config.data.getSwipeDurationConfig
-import com.buzbuz.smartautoclicker.feature.dumb.config.data.getSwipeRepeatCountConfig
-import com.buzbuz.smartautoclicker.feature.dumb.config.data.getSwipeRepeatDelayConfig
 
 internal fun Context.getDefaultDumbClickName(): String =
     getString(R.string.default_dumb_click_name)
@@ -38,18 +35,6 @@ internal fun Context.getDefaultDumbClickRepeatCount(): Int = getDumbConfigPrefer
 
 internal fun Context.getDefaultDumbClickRepeatDelay(): Long = getDumbConfigPreferences()
     .getClickRepeatDelayConfig(0)
-
-internal fun Context.getDefaultDumbSwipeName(): String =
-    getString(R.string.default_dumb_swipe_name)
-
-internal fun Context.getDefaultDumbSwipeDurationMs(): Long = getDumbConfigPreferences()
-    .getSwipeDurationConfig(resources.getInteger(R.integer.default_dumb_swipe_duration).toLong())
-
-internal fun Context.getDefaultDumbSwipeRepeatCount(): Int = getDumbConfigPreferences()
-    .getSwipeRepeatCountConfig(1)
-
-internal fun Context.getDefaultDumbSwipeRepeatDelay(): Long = getDumbConfigPreferences()
-    .getSwipeRepeatDelayConfig(0)
 
 internal fun Context.getDefaultDumbGestureName(): String =
     getString(R.string.default_dumb_gesture_name)

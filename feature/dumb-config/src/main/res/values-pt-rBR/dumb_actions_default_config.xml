@@ -9,6 +9,5 @@
 -->
 <resources>
     <string name="default_dumb_click_name">Clique</string>
-    <string name="default_dumb_swipe_name">Deslizar</string>
     <string name="default_dumb_pause_name">Aguardar</string>
 </resources>

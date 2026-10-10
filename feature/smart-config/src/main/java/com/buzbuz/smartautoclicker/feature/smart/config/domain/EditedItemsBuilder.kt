@@ -333,7 +333,7 @@ class EditedItemsBuilder internal constructor(
         Gesture(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = getEditedEventIdOrThrow(),
-            name = defaultValues.swipeName(context),
+            name = defaultValues.gestureName(context),
             priority = 0,
             fingers = listOf(createNewGestureFinger())
         )
