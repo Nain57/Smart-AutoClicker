@@ -20,13 +20,14 @@ import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.TRIAL_SESSION_DURATION_DURATION
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.AdState
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.ProModeInfo
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseState
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 import com.buzbuz.smartautoclicker.feature.revenue.R
-import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.domain.TRIAL_SESSION_DURATION_DURATION
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.AdState
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.ProModeInfo
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
+
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -38,7 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AdsLoadingViewModel @Inject constructor(
     @ApplicationContext appContext: Context,
-    private val revenueRepository: InternalRevenueRepository,
+    private val revenueRepository: IRevenueRepository,
 ) : ViewModel() {
 
     val dialogState: Flow<DialogState> = combine(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,19 @@
  */
 package com.buzbuz.smartautoclicker.feature.revenue.di
 
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.domain.RevenueRepository
-
+import com.buzbuz.smartautoclicker.core.common.navigation.RevenueNavigator
+import com.buzbuz.smartautoclicker.feature.revenue.navigation.RevenueNavigatorImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object BillingHiltModule {
+internal abstract class RevenueNavigationModule {
 
-    @Provides
+    @Binds
     @Singleton
-    internal fun providesRevenueRepository(revenueRepository: RevenueRepository): IRevenueRepository =
-        revenueRepository
+    abstract fun bindRevenueNavigator(impl: RevenueNavigatorImpl): RevenueNavigator
 }

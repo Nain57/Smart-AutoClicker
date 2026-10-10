@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.feature.revenue.ui.purchase
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 
-import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class PurchaseProModeViewModel @Inject constructor(
-    private val revenueRepository: InternalRevenueRepository,
+    private val revenueRepository: IRevenueRepository,
 ) : ViewModel() {
 
     val dialogState: Flow<PurchaseDialogState> =

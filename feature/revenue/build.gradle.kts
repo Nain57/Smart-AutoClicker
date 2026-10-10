@@ -16,8 +16,6 @@
  */
 
 import com.buzbuz.gradle.convention.extensions.playStore
-import com.buzbuz.gradle.convention.extensions.buildConfigField
-import com.buzbuz.gradle.convention.extensions.manifestPlaceholders
 
 plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
@@ -35,17 +33,8 @@ android {
             dimension = "version"
 
             buildFeatures {
-                buildConfig = true
                 viewBinding = true
             }
-
-            buildConfigField(buildParameters.consentTestDevicesIds)
-            buildConfigField(buildParameters.consentTestGeography)
-            buildConfigField(buildParameters.adsUnitId)
-            buildConfigField(buildParameters.adsTestDevicesIds)
-            buildConfigField(buildParameters.billingPublicKey)
-
-            manifestPlaceholders(buildParameters.adsApplicationId)
         }
     }
 }
@@ -54,7 +43,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(project(":core:common:base"))
+    implementation(project(":core:common:navigation"))
     implementation(project(":core:common:quality"))
+    implementation(project(":core:common:revenue"))
     implementation(project(":core:common:ui"))
 
     playStoreImplementation(libs.androidx.appCompat)
@@ -62,13 +53,5 @@ dependencies {
     playStoreImplementation(libs.androidx.fragment.ktx)
     playStoreImplementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    playStoreImplementation(libs.android.billingClient)
-    playStoreImplementation(libs.android.billingClient.ktx)
-
-    playStoreImplementation(libs.google.userMessaging)
-    playStoreImplementation(libs.google.gms.ads)
-
     playStoreImplementation(libs.google.material)
-
-    testPlayStoreImplementation(libs.kotlinx.coroutines.test)
 }
