@@ -32,6 +32,10 @@ import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTes
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.release
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.resolve
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.wait
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCompat24
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCurrent
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedSegment
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -43,7 +47,7 @@ import org.robolectric.annotation.Config
 
 import kotlin.random.Random
 
-/** Tests the placement of a finger on the gesture timeline by [ResolvedFingerBuilder]. */
+/** Tests the placement of a finger on the gesture timeline by [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.ResolvedFingerBuilder]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class ResolvedFingerBuilderTests {

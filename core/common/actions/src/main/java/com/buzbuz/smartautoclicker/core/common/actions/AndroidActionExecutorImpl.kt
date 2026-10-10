@@ -17,16 +17,15 @@
 package com.buzbuz.smartautoclicker.core.common.actions
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.AndroidRuntimeException
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureExecutor
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.notification.NotificationRequestExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.text.TextExecutor
 
@@ -77,24 +76,6 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         accessibilityServiceRef = null
     }
 
-    override suspend fun dispatchGesture(gestureDescription: GestureDescription) {
-        val service = accessibilityService ?: return
-
-        if (!gestureExecutor.dispatchGesture(service, gestureDescription)) {
-            Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
-            delay(500.milliseconds)
-        }
-    }
-
-    override suspend fun dispatchGestureChain(gestureDescriptions: List<GestureDescription>) {
-        val service = accessibilityService ?: return
-
-        if (!gestureExecutor.dispatchGestures(service, gestureDescriptions)) {
-            Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
-            delay(500.milliseconds)
-        }
-    }
-
     override suspend fun dispatchBuiltGesture(gesture: BuiltGesture) {
         val service = accessibilityService ?: return
 
@@ -104,12 +85,27 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         }
     }
 
+    override suspend fun checkHeldPointer() {
+        val service = accessibilityService ?: return
+
+        if (!gestureExecutor.checkHeldPointer(service)) {
+            Log.i(TAG, "Held pointer has been lifted by the system")
+        }
+    }
+
     override suspend fun releaseHeldPointer() {
         val service = accessibilityService ?: return
 
         if (!gestureExecutor.releaseHeldPointer(service)) {
             Log.w(TAG, "System did not release the held pointer properly")
         }
+    }
+
+    override suspend fun dispatchPixelWorkaroundGestureIfNeeded() {
+        val service = accessibilityService ?: return
+
+        Log.i(TAG, "Dispatching workaround gesture")
+        gestureExecutor.dispatchPixelWorkaroundGestureIfNeeded(service)
     }
 
     override fun performGlobalAction(globalAction: Int) {

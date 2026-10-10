@@ -19,9 +19,9 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor.actions
 import android.graphics.Point
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.FIRST_FINGER_INDEX
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.FIRST_FINGER_INDEX
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click

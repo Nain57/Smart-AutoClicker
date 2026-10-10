@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTes
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.newTapFinger
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.press
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.release
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCurrent
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -41,7 +42,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-/** Tests how [AndroidGestureBuilderCurrent] holds a pointer down, and carries it along the next gestures. */
+/** Tests how [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCurrent] holds a pointer down, and carries it along the next gestures. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class AndroidGestureBuilderHeldPointerTests {

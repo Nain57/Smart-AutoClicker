@@ -25,7 +25,8 @@ import android.os.Build
 // A workaround is to inject a multi tap to unblock to InputDispatcher
 
 fun isImpactedByInputBlock(): Boolean =
-    Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+            && Build.VERSION.SDK_INT <= Build.VERSION_CODES.BAKLAVA
             && Build.BRAND == GOOGLE_DEVICE_BRAND
             && Build.MODEL.lowercase().contains(GOGGLE_MODE_PIXEL)
 

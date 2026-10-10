@@ -18,12 +18,21 @@ package com.buzbuz.smartautoclicker.core.dumb.engine
 
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.FIRST_FINGER_INDEX
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFinger
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFingerMotion
 
+
+/** Place the single finger of a click on the timeline of [gestureBuilder]. */
+internal fun DumbAction.DumbClick.toResolvedFinger(gestureBuilder: AndroidGestureBuilder): ResolvedFinger? =
+    gestureBuilder
+        .newFinger(index = FIRST_FINGER_INDEX, startTimeMs = 0L)
+        .press(position = position, holdMs = pressDurationMs)
+        .release()
+        .build()
 
 /** Place the fingers of a gesture on the timeline of [gestureBuilder]. A finger that can't be resolved is skipped. */
 internal fun DumbAction.DumbGesture.toResolvedFingers(gestureBuilder: AndroidGestureBuilder): List<ResolvedFinger> =

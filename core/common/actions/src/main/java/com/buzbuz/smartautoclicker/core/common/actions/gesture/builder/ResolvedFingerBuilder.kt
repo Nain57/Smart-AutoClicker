@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Kevin Buzeau
+ * Copyright (C) 2026 Kevin Buzeau
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,10 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.actions.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.gesture.builder
 
 import android.graphics.Point
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.randomizedDurationMs
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.randomizedPosition
+import com.buzbuz.smartautoclicker.core.common.actions.model.FIRST_FINGER_INDEX
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedSegment
 
 import kotlin.random.Random
 
@@ -58,11 +63,11 @@ class ResolvedFingerBuilder internal constructor(
             return@apply
         }
 
-        val pressPosition = position.randomizedPosition(random)
+        val pressPosition = random.randomizedPosition(position)
         currentPosition = pressPosition
         if (holdMs <= 0L) return@apply
 
-        val resolvedDurationMs = holdMs.toResolvedDurationMs()
+        val resolvedDurationMs = random.randomizedDurationMs(holdMs)
         segments.add(ResolvedSegment(currentTimeMs, currentTimeMs + resolvedDurationMs, pressPosition, pressPosition))
         currentTimeMs += resolvedDurationMs
     }
@@ -70,8 +75,8 @@ class ResolvedFingerBuilder internal constructor(
     /** The finger slides from its current position to [position] in [durationMs]. */
     fun move(position: Point, durationMs: Long): ResolvedFingerBuilder = apply {
         val from = currentPositionOrInvalidate() ?: return@apply
-        val to = position.randomizedPosition(random)
-        val resolvedDurationMs = durationMs.toResolvedDurationMs()
+        val to = random.randomizedPosition(position)
+        val resolvedDurationMs = random.randomizedDurationMs(durationMs)
 
         segments.add(ResolvedSegment(currentTimeMs, currentTimeMs + resolvedDurationMs, from, to))
         currentTimeMs += resolvedDurationMs
@@ -89,7 +94,7 @@ class ResolvedFingerBuilder internal constructor(
             return@apply
         }
 
-        val resolvedDurationMs = durationMs.toResolvedDurationMs()
+        val resolvedDurationMs = random.randomizedDurationMs(durationMs)
 
         segments.add(ResolvedSegment(currentTimeMs, currentTimeMs + resolvedDurationMs, position, position))
         currentTimeMs += resolvedDurationMs
@@ -149,13 +154,8 @@ class ResolvedFingerBuilder internal constructor(
         if (!isInvalid) Log.i(TAG, "Can't resolve finger $index, $reason")
         isInvalid = true
     }
-
-    private fun Long.toResolvedDurationMs(): Long =
-        randomizedDurationMs(random).coerceAtLeast(MINIMUM_MOTION_DURATION_MS)
 }
 
-/** A motion can't be shorter than that, a stroke duration must be strictly positive. */
-private const val MINIMUM_MOTION_DURATION_MS = 1L
 /** Duration of a finger pressing and releasing without moving. Matches the platform tap timeout. */
 private const val TAP_DURATION_MS = 100L
 

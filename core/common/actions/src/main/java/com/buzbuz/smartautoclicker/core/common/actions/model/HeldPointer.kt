@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.actions.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.model
 
-import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Point
-
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
 
 /**
  * A pointer left down on the screen by a gesture holding its first finger.
@@ -40,18 +39,6 @@ class HeldPointer internal constructor(
     internal val stroke: StrokeDescription,
     internal val position: Point,
     val owner: Any?,
-)
-
-/**
- * A gesture resolved into what has to be dispatched to the system.
- *
- * @param chains the gestures to dispatch, in order. The gestures of a same chain must be dispatched in one go.
- * @param heldPointer the pointer left down on the screen once the whole gesture is played, or null when the gesture
- * leaves nothing behind.
- */
-class BuiltGesture internal constructor(
-    val chains: List<List<GestureDescription>>,
-    val heldPointer: HeldPointer?,
 )
 
 /**
