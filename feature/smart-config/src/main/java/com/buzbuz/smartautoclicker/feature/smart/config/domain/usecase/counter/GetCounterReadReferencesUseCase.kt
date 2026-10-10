@@ -69,7 +69,7 @@ class GetCounterReadReferencesUseCase @Inject constructor(
                     is ScreenCondition.Number -> {
                         val counterValue = condition.counterValue
                         if (counterValue is CounterOperationValue.Counter) {
-                            addReference(event, counterValue.value, condition)
+                            addReference(event, counterValue.counterName, condition)
                         }
                     }
 
@@ -78,7 +78,7 @@ class GetCounterReadReferencesUseCase @Inject constructor(
 
                         val operationValue = condition.counterValue
                         if (operationValue is CounterOperationValue.Counter) {
-                            addReference(event, operationValue.value, condition)
+                            addReference(event, operationValue.counterName, condition)
                         }
                     }
 
@@ -110,7 +110,7 @@ class GetCounterReadReferencesUseCase @Inject constructor(
                     is ChangeCounter -> {
                         val operationValue = action.operationValue
                         if (operationValue is CounterOperationValue.Counter) {
-                            addReference(event, operationValue.value, action)
+                            addReference(event, operationValue.counterName, action)
                         }
                     }
 

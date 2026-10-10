@@ -18,8 +18,8 @@ package com.buzbuz.smartautoclicker.core.domain.model.counter
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.CounterComparisonOperation
+import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.CountersEntity
-
 
 internal fun Counter.toEntity(): CountersEntity =
     CountersEntity(
@@ -37,6 +37,12 @@ internal fun ComparisonOperation.toEntity(): CounterComparisonOperation =
         ComparisonOperation.GREATER_OR_EQUALS -> CounterComparisonOperation.GREATER_OR_EQUALS
     }
 
+internal fun CounterOperationValue.toEntityType(): CounterOperationValueType =
+    when (this) {
+        is CounterOperationValue.Counter -> CounterOperationValueType.COUNTER
+        is CounterOperationValue.Number -> CounterOperationValueType.NUMBER
+    }
+
 internal fun CountersEntity.toDomain(): Counter =
     Counter(
         counterName = name,
@@ -52,3 +58,12 @@ internal fun CounterComparisonOperation.toDomain(): ComparisonOperation =
         CounterComparisonOperation.GREATER -> ComparisonOperation.GREATER
         CounterComparisonOperation.GREATER_OR_EQUALS -> ComparisonOperation.GREATER_OR_EQUALS
     }
+
+internal fun getDomainCounterOperationValue(
+    type: CounterOperationValueType?,
+    numberValue: Double?,
+    counterName: String?,
+) = when (type ?: CounterOperationValueType.NUMBER) {
+    CounterOperationValueType.COUNTER -> CounterOperationValue.Counter(counterName ?: "")
+    CounterOperationValueType.NUMBER -> CounterOperationValue.Number(numberValue ?: 0.0)
+}

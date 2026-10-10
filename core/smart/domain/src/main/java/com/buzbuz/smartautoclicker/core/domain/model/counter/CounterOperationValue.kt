@@ -17,29 +17,15 @@
 package com.buzbuz.smartautoclicker.core.domain.model.counter
 
 import com.buzbuz.smartautoclicker.core.base.interfaces.Completable
-import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 
 sealed class CounterOperationValue : Completable {
 
-    abstract val value: Any
-
-    data class Number(override val value: Double): CounterOperationValue() {
+    data class Number(val value: Double): CounterOperationValue() {
         override fun isComplete(): Boolean = value >= 0
     }
 
-    data class Counter(override val value: String): CounterOperationValue() {
-        override fun isComplete(): Boolean = value.isNotEmpty()
+    data class Counter(val counterName: String): CounterOperationValue() {
+        override fun isComplete(): Boolean = counterName.isNotEmpty()
     }
 
-    internal companion object {
-
-        fun getCounterOperationValue(
-            type: CounterOperationValueType?,
-            numberValue: Double?,
-            counterName: String?,
-        ) = when (type ?: CounterOperationValueType.NUMBER) {
-            CounterOperationValueType.COUNTER -> Counter(counterName ?: "")
-            CounterOperationValueType.NUMBER -> Number(numberValue ?: 0.0)
-        }
-    }
 }

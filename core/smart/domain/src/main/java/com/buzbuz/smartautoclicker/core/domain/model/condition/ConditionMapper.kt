@@ -21,11 +21,12 @@ import com.buzbuz.smartautoclicker.code.smart.detectionmodels.text.domain.OCRAlp
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ConditionType
-import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.NumberFormatType as DbNumberFormatType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
+import com.buzbuz.smartautoclicker.core.domain.model.counter.getDomainCounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toDomain
 import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntity
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntityType
 
 internal fun Condition.toEntity() = when (this) {
     is ScreenCondition.Color -> toColorConditionEntity()
@@ -73,10 +74,8 @@ private fun ScreenCondition.Image.toImageConditionEntity() = ConditionEntity(
     detectionAreaBottom = detectionArea?.bottom,
 )
 
-private fun ScreenCondition.Number.toNumberConditionEntity(): ConditionEntity {
-    val isNumberValue = counterValue is CounterOperationValue.Number
-
-    return ConditionEntity(
+private fun ScreenCondition.Number.toNumberConditionEntity(): ConditionEntity =
+    ConditionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
         name = name,
@@ -89,12 +88,11 @@ private fun ScreenCondition.Number.toNumberConditionEntity(): ConditionEntity {
         detectionAreaRight = detectionArea.right,
         detectionAreaBottom = detectionArea.bottom,
         numberCounterComparisonOperation = comparisonOperation.toEntity(),
-        numberCounterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
-        numberCounterValue = if (isNumberValue) counterValue.value else null,
-        numberCounterOperationCounterName = if (isNumberValue) null else counterValue.value as String,
+        numberCounterOperationValueType = counterValue.toEntityType(),
+        numberCounterValue = (counterValue as? CounterOperationValue.Number)?.value,
+        numberCounterOperationCounterName = (counterValue as? CounterOperationValue.Counter)?.counterName,
         numberFormatType = numberFormatType.toEntity(),
     )
-}
 
 private fun ScreenCondition.Text.toTextConditionEntity() = ConditionEntity(
     id = id.databaseId,
@@ -122,22 +120,19 @@ private fun TriggerCondition.OnBroadcastReceived.toBroadcastReceivedEntity(): Co
         priority = 0,
     )
 
-private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): ConditionEntity {
-    val isNumberValue = counterValue is CounterOperationValue.Number
-
-    return ConditionEntity(
+private fun TriggerCondition.OnCounterCountReached.toCounterReachedEntity(): ConditionEntity =
+    ConditionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
         name = name,
         type = ConditionType.ON_COUNTER_REACHED,
         counterName = counterName,
         counterComparisonOperation = comparisonOperation.toEntity(),
-        counterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
-        counterValue = if (isNumberValue) counterValue.value else null,
-        counterOperationCounterName = if (isNumberValue) null else counterValue.value as String,
+        counterOperationValueType = counterValue.toEntityType(),
+        counterValue = (counterValue as? CounterOperationValue.Number)?.value,
+        counterOperationCounterName = (counterValue as? CounterOperationValue.Counter)?.counterName,
         priority = 0,
     )
-}
 
 private fun TriggerCondition.OnTimerReached.toTimerReachedEntity(): ConditionEntity =
     ConditionEntity(
@@ -197,7 +192,7 @@ private fun ConditionEntity.toDomainNumberCondition(cleanIds: Boolean = false): 
         threshold = threshold!!,
         detectionArea = getDetectionArea()!!,
         comparisonOperation = numberCounterComparisonOperation!!.toDomain(),
-        counterValue = CounterOperationValue.getCounterOperationValue(
+        counterValue = getDomainCounterOperationValue(
             type = numberCounterOperationValueType,
             numberValue = numberCounterValue,
             counterName = numberCounterOperationCounterName,
@@ -233,7 +228,7 @@ private fun ConditionEntity.toDomainCounterReached(cleanIds: Boolean = false): T
         name = name,
         counterName = counterName!!,
         comparisonOperation = counterComparisonOperation!!.toDomain(),
-        counterValue = CounterOperationValue.getCounterOperationValue(
+        counterValue = getDomainCounterOperationValue(
             type = counterOperationValueType,
             numberValue = counterValue,
             counterName = counterOperationCounterName,

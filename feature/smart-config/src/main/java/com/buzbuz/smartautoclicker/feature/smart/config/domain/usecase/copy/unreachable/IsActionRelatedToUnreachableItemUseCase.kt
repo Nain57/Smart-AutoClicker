@@ -67,7 +67,7 @@ class IsActionRelatedToUnreachableItemUseCase @Inject constructor(
         if (editionRepository.counterIsUnreachable(counterName)) return true
 
         return when (val ctnValue = operationValue) {
-            is CounterOperationValue.Counter -> editionRepository.counterIsUnreachable(ctnValue.value)
+            is CounterOperationValue.Counter -> editionRepository.counterIsUnreachable(ctnValue.counterName)
             is CounterOperationValue.Number -> false
         }
     }

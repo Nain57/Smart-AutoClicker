@@ -58,7 +58,7 @@ class GetConditionMissingReferencesUseCase @Inject constructor(
     private fun ScreenCondition.Number.getMissingReferences(): List<MissingCopyReference> =
         buildList {
             if (counterValue is CounterOperationValue.Counter) {
-                val counterName = (counterValue as CounterOperationValue.Counter).value
+                val counterName = (counterValue as CounterOperationValue.Counter).counterName
                 if (editionRepository.editionState.getCounter(counterName) == null) {
                     add(MissingCopyReference.CounterReference(counterName))
                 }
@@ -72,7 +72,7 @@ class GetConditionMissingReferencesUseCase @Inject constructor(
             }
 
             if (counterValue is CounterOperationValue.Counter) {
-                val valueCounterName = (counterValue as CounterOperationValue.Counter).value
+                val valueCounterName = (counterValue as CounterOperationValue.Counter).counterName
                 if (editionRepository.editionState.getCounter(valueCounterName) == null) {
                     add(MissingCopyReference.CounterReference(valueCounterName))
                 }

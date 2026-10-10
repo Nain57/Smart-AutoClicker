@@ -395,7 +395,7 @@ internal object ActionTestsData {
                 is CounterOperationValue.Counter -> CounterOperationValueType.COUNTER
             },
             counterOperationValue = (operationValue as? CounterOperationValue.Number)?.value,
-            counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.value,
+            counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.counterName,
         ),
         gestureFingers = emptyList(),
         intentExtras = emptyList(),
