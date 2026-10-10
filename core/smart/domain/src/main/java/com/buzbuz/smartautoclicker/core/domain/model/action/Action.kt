@@ -45,10 +45,10 @@ sealed class Action : Identifiable, Completable, Prioritizable {
     ): Action =
         when (this) {
             is Click -> copy(id = id, eventId = eventId, name = name, priority = priority)
+            is Gesture -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is ChangeCounter -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Intent -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Pause -> copy(id = id, eventId = eventId, name = name, priority = priority)
-            is Swipe -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is ToggleEvent -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is Notification -> copy(id = id, eventId = eventId, name = name, priority = priority)
             is SystemAction -> copy(id = id, eventId = eventId, name = name, priority = priority)

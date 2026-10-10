@@ -17,8 +17,6 @@
 package com.buzbuz.smartautoclicker.core.domain.data
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.domain.model.action.Action
-import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 
 internal class ScenarioUpdateState {
 
@@ -49,11 +47,7 @@ internal class ScenarioUpdateState {
         conditionsDomainToDbIdMap[domainId] = dbId
     }
 
-    fun getClickOnConditionDatabaseId(action: Action): Long? =
-        if (action is Click) action.clickOnConditionId?.let { getConditionDbId(it) }
-        else null
-
-    private fun getConditionDbId(identifier: Identifier?): Long = when {
+    fun getConditionDbId(identifier: Identifier?): Long = when {
         identifier != null && identifier.tempId == null && identifier.databaseId != 0L -> identifier.databaseId
         identifier != null -> conditionsDomainToDbIdMap[identifier.tempId]
             ?: throw IllegalStateException("Identifier is not found in condition map for $identifier")
