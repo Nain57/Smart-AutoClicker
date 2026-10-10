@@ -113,23 +113,27 @@ internal class ActionExecutor(
     /**
      * Verify the pointer a gesture is holding on the screen, if any, has not been lifted by the system.
      *
-     * Called on every frame while a pointer is held: the executor only compares the start of the hold with the last
-     * user touch, so it stays on the processing thread.
+     * Called on every frame while a pointer is held, and again right before the pointer is used: the user can touch the
+     * screen while the frame is being detected. The executor only compares the start of the hold with the last user
+     * touch, so it stays on the processing thread.
      *
      * @return true if it is still held, false if it has been lost or if nothing was held.
      */
-    fun checkHeldFinger(): Boolean {
-        if (androidExecutor.getHeldPointer() == null) return false
+    fun checkHeldFinger(): Boolean =
+        androidExecutor.getHeldPointer() != null && androidExecutor.checkHeldPointer()
 
-        androidExecutor.checkHeldPointer()
-        return androidExecutor.getHeldPointer() != null
-    }
+    /**
+     * Lift the pointer a gesture is holding on the screen, if any. A pointer lifted by the user is already up.
+     *
+     * @return true if a pointer was released, false if it has been lost or if nothing was held.
+     */
+    suspend fun releaseHeldFinger(): Boolean {
+        if (!checkHeldFinger()) return false
 
-    /** Lift the pointer a gesture is holding on the screen, if any. */
-    suspend fun releaseHeldFinger() {
         withContext(Dispatchers.Main) {
             androidExecutor.releaseHeldPointer()
         }
+        return true
     }
 
     private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
@@ -150,9 +154,11 @@ internal class ActionExecutor(
      * The builder adds it as an extra finger: a gesture using all of its own fingers while one is held puts six
      * pointers down at the same time.
      *
-     * A pointer held by this gesture is owned by [event], see [getHeldEvent].
+     * A pointer held by this gesture is owned by [event], see [getHeldEvent]. The held pointer is checked again first: a
+     * gesture continuing a pointer lifted by the user would be refused, or silently misplayed on recent Android versions.
      */
     private suspend fun dispatchResolvedFingers(fingers: List<ResolvedFinger>, gestureName: String?, event: Event) {
+        checkHeldFinger()
         val builtGesture = gestureBuilder
             .build(fingers, gestureName, androidExecutor.getHeldPointer(), event) ?: return
 

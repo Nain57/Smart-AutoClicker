@@ -72,7 +72,7 @@ internal class ProcessingState(
             if (condition is TriggerCondition.OnTimerReached) timersState.setTimerToDisabled(condition.getValidId())
         }
 
-        if (event is ScreenEvent) cooldownState.removeCooldown(event)
+        cooldownState.removeCooldown(event)
         progressListener?.onEventStateChanged(event = event, newValue = false)
     }
 }

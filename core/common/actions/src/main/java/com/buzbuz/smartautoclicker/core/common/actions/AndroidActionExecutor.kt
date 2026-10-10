@@ -70,8 +70,10 @@ interface AndroidActionExecutor: Dumpable {
      * The system lifts it without notice when the user touches the screen. Once lost, [getHeldPointer] returns null.
      * Nothing is dispatched to the system, the user touches being watched while a pointer is held, so it can be called
      * on every frame from any thread.
+     *
+     * @return true if a pointer is still held, false if it has been lost or if nothing was held.
      */
-    fun checkHeldPointer()
+    fun checkHeldPointer(): Boolean
 
     /**
      * Lift the pointer left down on the screen by a gesture holding its first finger, if any.

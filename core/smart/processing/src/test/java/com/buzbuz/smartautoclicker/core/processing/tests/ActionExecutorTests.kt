@@ -365,6 +365,7 @@ class ActionExecutorTests {
     @Test
     fun checkHeldFinger_pointerStillHeld_returnsTrue() = runTest {
         mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).thenReturn(true)
 
         assertTrue(actionExecutor.checkHeldFinger())
         verify(mockAndroidExecutor).checkHeldPointer()
@@ -372,12 +373,52 @@ class ActionExecutorTests {
 
     @Test
     fun checkHeldFinger_pointerLifted_returnsFalse() = runTest {
-        var heldPointer: HeldPointer? = mock<HeldPointer>()
-        mockWhen(mockAndroidExecutor.getHeldPointer()).doAnswer { heldPointer }
-        mockWhen(mockAndroidExecutor.checkHeldPointer()).doAnswer { heldPointer = null; Unit }
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).thenReturn(false)
 
         assertFalse(actionExecutor.checkHeldFinger())
         verify(mockAndroidExecutor).checkHeldPointer()
+    }
+
+    @Test
+    fun execute_click_pointerLiftedByUser_newGestureDoesNotContinueIt() = runTest {
+        var heldPointer: HeldPointer? = mock<HeldPointer>()
+        mockWhen(mockAndroidExecutor.getHeldPointer()).doAnswer { heldPointer }
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).doAnswer { heldPointer = null; false }
+
+        actionExecutor.executeActions(getNewDefaultEvent(actions = listOf(getNewDefaultClickUserPos(1))), ConditionsResults())
+
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).checkHeldPointer()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
+        assertActionGesture(gestureCaptor.lastValue)
+    }
+
+    @Test
+    fun execute_click_nothingHeld_pointerNotChecked() = runTest {
+        actionExecutor.executeActions(getNewDefaultEvent(actions = listOf(getNewDefaultClickUserPos(1))), ConditionsResults())
+
+        verify(mockAndroidExecutor, never()).checkHeldPointer()
+    }
+
+    @Test
+    fun releaseHeldFinger_pointerStillHeld_isReleased() = runTest {
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).thenReturn(true)
+
+        actionExecutor.releaseHeldFinger()
+
+        verify(mockAndroidExecutor).releaseHeldPointer()
+    }
+
+    @Test
+    fun releaseHeldFinger_pointerLiftedByUser_nothingReleased() = runTest {
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).thenReturn(false)
+
+        actionExecutor.releaseHeldFinger()
+
+        verify(mockAndroidExecutor, never()).releaseHeldPointer()
     }
 
     @Test
