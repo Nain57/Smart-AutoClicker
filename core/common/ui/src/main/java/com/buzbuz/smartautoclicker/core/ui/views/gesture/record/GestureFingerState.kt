@@ -179,12 +179,8 @@ internal class GestureFingerState(
 }
 
 
-/**
- * Distance threshold in dp between two events to consider the finger still (not moving).
- * Chosen so that the derived pixel value stays close to the original hard-coded 8 px that worked well
- * on common 2–3× density devices: 3 dp → ~6 px at ×2, ~9 px at ×3.
- */
-private const val STILL_THRESHOLD_DP = 5f
+/** Distance threshold in dp between two events to consider the finger still (not moving). */
+private const val STILL_THRESHOLD_DP = 10f
 
 /**
  * Distance in dp from the segment reference point at which the direction is considered reliable enough
