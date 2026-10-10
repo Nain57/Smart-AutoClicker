@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
 import com.buzbuz.smartautoclicker.core.common.revenue.data.ads.sdk.IAdsSdk
 import com.buzbuz.smartautoclicker.core.common.revenue.BuildConfig
 import com.buzbuz.smartautoclicker.core.common.revenue.data.getAdsDebugTestDevicesIds
@@ -38,6 +39,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -75,6 +77,10 @@ internal class InterstitialAdsDataSource @Inject constructor(
 
     init {
         loadAdRequestConsumerFlow(context, _remoteAdState, pendingLoadRequest)
+            .launchIn(coroutineScopeMain)
+
+        _remoteAdState
+            .onEach { adState -> setCrashKey(KEY_AD_STATE, adState.toString()) }
             .launchIn(coroutineScopeMain)
 
         if (BuildConfig.DEBUG) {
@@ -227,3 +233,4 @@ internal class InterstitialAdsDataSource @Inject constructor(
 @VisibleForTesting internal const val MAX_LOADING_RETRIES = 5
 private const val RETRY_INCREMENTAL_DELAY_MS = 500L
 private const val TAG = "InterstitialAdsDataSource"
+private const val KEY_AD_STATE = "ad_state"

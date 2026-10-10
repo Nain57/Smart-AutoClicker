@@ -20,9 +20,17 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 fun logCrashBreadcrumb(message: String) {
-    FirebaseCrashlytics.getInstance().log(message)
+    getCrashlyticsOrNull()?.log(message)
 }
 
 fun setCrashKey(key: String, value: String) {
-    FirebaseCrashlytics.getInstance().setCustomKey(key, value)
+    getCrashlyticsOrNull()?.setCustomKey(key, value)
 }
+
+/** Breadcrumbs must never crash the caller, e.g. in unit tests where Firebase is not initialized. */
+private fun getCrashlyticsOrNull(): FirebaseCrashlytics? =
+    try {
+        FirebaseCrashlytics.getInstance()
+    } catch (_: IllegalStateException) {
+        null
+    }
