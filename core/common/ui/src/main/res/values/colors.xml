@@ -50,6 +50,18 @@
     <color name="gesture_wait_color">#FF9800</color>
     <color name="gesture_add_color">#000000</color>
 
+    <color name="gesture_finger_1_color">#FFFFFF</color>
+    <color name="gesture_finger_2_color">#2196F3</color>
+    <color name="gesture_finger_3_color">#4CAF50</color>
+    <color name="gesture_finger_4_color">#FFEB3B</color>
+    <color name="gesture_finger_5_color">#673AB7</color>
+    <color name="gesture_finger_held_color">#F44336</color>
+    <color name="gesture_finger_1_label_text_color">#000000</color>
+    <color name="gesture_finger_2_label_text_color">#FFFFFF</color>
+    <color name="gesture_finger_3_label_text_color">#FFFFFF</color>
+    <color name="gesture_finger_4_label_text_color">#000000</color>
+    <color name="gesture_finger_5_label_text_color">#FFFFFF</color>
+
     <color name="fade_background_color">#BBFFFFFF</color>
 
 

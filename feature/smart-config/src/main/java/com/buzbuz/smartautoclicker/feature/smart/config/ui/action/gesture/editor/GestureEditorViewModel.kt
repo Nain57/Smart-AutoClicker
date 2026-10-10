@@ -16,11 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture.editor
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
@@ -29,8 +32,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFinger as RecordedGestureFinger
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGestureFingerMotion as RecordedGestureFingerMotion
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureWaypointCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toGestureDescription
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.mapper.toWaypointConditions
+
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlin.math.roundToInt
 
@@ -46,6 +53,8 @@ import javax.inject.Inject
 
 
 class GestureEditorViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    bitmapRepository: BitmapRepository,
     private val editionRepository: EditionRepository,
     private val displayConfigManager: DisplayConfigManager,
 ) : ViewModel() {
@@ -58,12 +67,28 @@ class GestureEditorViewModel @Inject constructor(
         editionRepository.editionState.editedEventScreenConditionsState
             .map { state -> state.value ?: emptyList() }
 
+    private val conditionOperator: Flow<Int> =
+        editionRepository.editionState.editedEventState
+            .map { state -> state.value?.conditionOperator ?: AND }
+
+    private val conditionsWithDisplays: Flow<Pair<List<ScreenCondition>, Map<Identifier, GestureWaypointCondition>>> =
+        screenConditions.map { conditions -> conditions to conditions.toWaypointConditions(context, bitmapRepository) }
+
     val uiState: StateFlow<GestureDescription?> = combine(
         localGesture,
-        screenConditions,
+        conditionOperator,
+        conditionsWithDisplays,
+        editionRepository.editionState.allEditedCountersFlow,
         targetMotionId,
-    ) { gesture, conditions, motionId ->
-        gesture?.toGestureDescription(conditions, displayConfigManager.displayConfig.sizePx, motionId)
+    ) { gesture, operator, (conditions, conditionDisplays), counters, motionId ->
+        gesture?.toGestureDescription(
+            conditionOperator = operator,
+            conditions = conditions,
+            counters = counters,
+            screenSize = displayConfigManager.displayConfig.sizePx,
+            singleEditableMotionId = motionId,
+            conditionDisplays = conditionDisplays,
+        )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     fun setInitialGesture(gesture: Gesture) {

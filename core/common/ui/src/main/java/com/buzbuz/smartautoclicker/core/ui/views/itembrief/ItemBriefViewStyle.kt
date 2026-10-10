@@ -33,6 +33,9 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageCondit
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionBriefRendererStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureConditionLabelStyle
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureFingerColors
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureHeldColor
 
 
 internal class ItemBriefViewStyle(
@@ -84,6 +87,9 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
                 linePaint = newFillPaint(innerColor, innerRadius / 2f),
                 outerRadiusPx = outerRadius,
                 innerRadiusPx = innerRadius,
+                fingerColors = getGestureFingerColors(),
+                heldColor = getGestureHeldColor(),
+                conditionLabelStyle = getGestureConditionLabelStyle(),
             ),
             pauseStyle = PauseBriefRendererStyle(
                 backgroundColor = backgroundColor,
