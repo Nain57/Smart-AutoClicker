@@ -166,10 +166,10 @@
         вы хотите подождать этого момента, прежде чем Klick\'r снова начнёт анализировать экран.\n\nПауза между
         двумя действиями тоже уместна, но добавление паузы в конец списка обычно важнее.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Действие «Свайп»</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Узнайте, как выполняется жест свайпа</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">Действие «Свайп» выполняет жест перетаскивания по
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Действие «Свайп»</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Узнайте, как выполняется жест свайпа</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Действие «Свайп» выполняет жест перетаскивания по
         прямой линии из начальной точки в конечную. Обе координаты фиксированы и задаются в настройках
         действия.\n\nДлительность определяет время, которое занимает жест от начала до конца: меньшая
         длительность даёт более быстрый свайп, большая — более медленный и плавный.</string>

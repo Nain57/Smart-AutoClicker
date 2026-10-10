@@ -25,7 +25,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actio
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.intent.getIntentActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.notification.getNotificationActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.pause.getPauseActionCategory
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.swipe.getSwipeActionCategory
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.gesture.getGestureActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.system.getSystemActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.writetext.getWriteTextActionCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.getBasicsCategory
@@ -63,7 +63,7 @@ internal fun TutorialCategory.Type.toTutorialCategory(): TutorialCategory =
         PAUSE_ACTION -> getPauseActionCategory()
         ROOT -> getRootCategory()
         SCREEN_CONDITIONS -> getScreenConditionsCategory()
-        SWIPE_ACTION -> getSwipeActionCategory()
+        GESTURE_ACTION -> getGestureActionCategory()
         SYSTEM_ACTION -> getSystemActionCategory()
         TEXT_CONDITION -> getTextConditionsCategory()
         TRIGGER_CONDITIONS -> getTriggerConditionsCategory()

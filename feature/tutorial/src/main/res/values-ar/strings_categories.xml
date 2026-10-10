@@ -106,9 +106,9 @@
         صورة تم اكتشافه. يمكنك ضبط مدة الضغط لمحاكاة الضغط المطوّل.\n\n تعلّم هنا كيفية استخدامه للتفاعل مع
         شاشتك.</string>
 
-    <string name="tutorial_category_swipe_action_name">السحب</string>
-    <string name="tutorial_category_swipe_action_desc_short">اسحب من نقطة إلى أخرى على الشاشة</string>
-    <string name="tutorial_category_swipe_action_desc_long">يحاكي إجراء السحب إيماءة سحب من إحداثية البداية إلى
+    <string name="tutorial_category_gesture_action_name">السحب</string>
+    <string name="tutorial_category_gesture_action_desc_short">اسحب من نقطة إلى أخرى على الشاشة</string>
+    <string name="tutorial_category_gesture_action_desc_long">يحاكي إجراء السحب إيماءة سحب من إحداثية البداية إلى
         إحداثية النهاية. يمكنك ضبط مدة السحب للتحكم في سرعة الإيماءة.\n\n تعلّم هنا كيفية استخدامه للتمرير أو
         سحب العناصر على شاشتك.</string>
 

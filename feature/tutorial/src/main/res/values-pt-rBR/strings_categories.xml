@@ -112,9 +112,9 @@
         no centro de uma Condição de imagem detectada. Você pode configurar a duração do toque para simular pressões
         longas.\n\n Aprenda aqui a usá-la para interagir com sua tela.</string>
 
-    <string name="tutorial_category_swipe_action_name">Deslizar</string>
-    <string name="tutorial_category_swipe_action_desc_short">Deslize de um ponto a outro na tela</string>
-    <string name="tutorial_category_swipe_action_desc_long">Uma Ação Deslizar simula um gesto de arrastar de uma
+    <string name="tutorial_category_gesture_action_name">Deslizar</string>
+    <string name="tutorial_category_gesture_action_desc_short">Deslize de um ponto a outro na tela</string>
+    <string name="tutorial_category_gesture_action_desc_long">Uma Ação Deslizar simula um gesto de arrastar de uma
         coordenada inicial até uma coordenada final. Você pode configurar a duração do deslizamento para controlar a
         velocidade do gesto.\n\n Aprenda aqui a usá-la para rolar ou arrastar elementos na sua tela.</string>
 

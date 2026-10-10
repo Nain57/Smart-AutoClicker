@@ -166,10 +166,10 @@
         aguardar esse momento antes que o Klick\'r volte a analisar a tela.\n\nUma espera entre duas ações também é
         válida, mas adicionar uma ao final da lista costuma ser a necessidade mais importante.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Ação Deslizar</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Aprenda como o gesto de deslizamento é realizado</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">Uma Ação Deslizar realiza um gesto de arrastar em
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Ação Deslizar</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Aprenda como o gesto de deslizamento é realizado</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Uma Ação Deslizar realiza um gesto de arrastar em
         linha reta de uma posição inicial até uma posição final. Ambas as coordenadas são fixas e definidas na
         configuração da ação.\n\nA duração controla quanto tempo o gesto leva do início ao fim: uma duração menor
         produz um deslizamento mais rápido, enquanto uma maior produz um mais lento e controlado.</string>

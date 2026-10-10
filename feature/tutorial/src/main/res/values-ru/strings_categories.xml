@@ -116,9 +116,9 @@
         координате или в центре обнаруженного условия изображения. Можно настроить длительность нажатия для
         имитации долгих нажатий.\n\n Узнайте здесь, как использовать его для взаимодействия с экраном.</string>
 
-    <string name="tutorial_category_swipe_action_name">Свайп</string>
-    <string name="tutorial_category_swipe_action_desc_short">Проведите пальцем от одной точки к другой</string>
-    <string name="tutorial_category_swipe_action_desc_long">Действие «Свайп» имитирует жест перетаскивания от
+    <string name="tutorial_category_gesture_action_name">Свайп</string>
+    <string name="tutorial_category_gesture_action_desc_short">Проведите пальцем от одной точки к другой</string>
+    <string name="tutorial_category_gesture_action_desc_long">Действие «Свайп» имитирует жест перетаскивания от
         начальной координаты до конечной. Можно настроить длительность свайпа для управления скоростью жеста.
         \n\n Узнайте здесь, как использовать его для прокрутки или перетаскивания элементов на экране.</string>
 

@@ -52,9 +52,9 @@
     <string name="tutorial_category_click_action_name">Nhấp chuột</string>
     <string name="tutorial_category_click_action_desc_short">Nhấn vào một vị trí cố định hoặc vào một điều kiện phù hợp</string>
     <string name="tutorial_category_click_action_desc_long">Hành động nhấp chuột mô phỏng một lần nhấn tại tọa độ cố định hoặc ở giữa Điều kiện phù hợp. Bạn có thể định cấu hình thời lượng nhấn để mô phỏng các lần nhấn dài.\n\nTìm hiểu ở đây cách sử dụng nó để tương tác với màn hình của bạn.</string>
-    <string name="tutorial_category_swipe_action_name">Vuốt</string>
-    <string name="tutorial_category_swipe_action_desc_short">Trượt từ điểm này sang điểm khác trên màn hình</string>
-    <string name="tutorial_category_swipe_action_desc_long">Hành động vuốt mô phỏng cử chỉ kéo từ tọa độ bắt đầu đến tọa độ kết thúc. Bạn có thể định cấu hình thời lượng vuốt để kiểm soát tốc độ của cử chỉ.\n\nTìm hiểu ở đây cách sử dụng nó để cuộn hoặc kéo các phần tử trên màn hình của bạn.</string>
+    <string name="tutorial_category_gesture_action_name">Vuốt</string>
+    <string name="tutorial_category_gesture_action_desc_short">Trượt từ điểm này sang điểm khác trên màn hình</string>
+    <string name="tutorial_category_gesture_action_desc_long">Hành động vuốt mô phỏng cử chỉ kéo từ tọa độ bắt đầu đến tọa độ kết thúc. Bạn có thể định cấu hình thời lượng vuốt để kiểm soát tốc độ của cử chỉ.\n\nTìm hiểu ở đây cách sử dụng nó để cuộn hoặc kéo các phần tử trên màn hình của bạn.</string>
     <string name="tutorial_category_pause_action_name">Tắt</string>
     <string name="tutorial_category_pause_action_desc_short">Đợi một lúc trước khi thực hiện hành động tiếp theo</string>
     <string name="tutorial_category_pause_action_desc_long">Hành động tạm dừng sẽ trì hoãn việc thực thi trong một khoảng thời gian được định cấu hình. Sẽ rất hữu ích khi chèn khoảng thời gian chờ giữa hai hành động khi ứng dụng cần thời gian để phản ứng.\n\nTìm hiểu ở đây cách sử dụng nó để tăng tốc các tập lệnh tự động hóa của bạn.</string>
