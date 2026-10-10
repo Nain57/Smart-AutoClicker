@@ -89,7 +89,7 @@ class DumbScenarioViewHolder(
             executionCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.startCount)
             lastExecution.text = root.context.getTimeSinceString(scenarioItem.lastStartTimestamp)
             clickCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.clickCount)
-            swipeCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.swipeCount)
+            swipeCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.gestureCount)
             pauseCount.text = String.format(Locale.getDefault(), "%d", scenarioItem.pauseCount)
 
             repeatLimit.text = scenarioItem.repeatText

@@ -57,9 +57,10 @@ interface DumbScenarioDao {
     @Query("SELECT * FROM dumb_scenario_table WHERE id=:dbId")
     fun getDumbScenariosWithActionFlow(dbId: Long): Flow<DumbScenarioWithActions?>
 
-    /** Get the dumb actions for a scenario, ordered by their priority. */
+    /** Get the dumb actions and their relations for all scenarios except the provided one. */
+    @Transaction
     @Query("SELECT * FROM dumb_action_table WHERE dumb_scenario_id!=:dumbScenarioId")
-    fun getAllDumbActionsExcept(dumbScenarioId: Long): Flow<List<DumbActionEntity>>
+    fun getAllDumbActionsExcept(dumbScenarioId: Long): Flow<List<DumbActionWithFingers>>
 
     /** Get the dumb actions for a scenario, ordered by their priority. */
     @Query("SELECT * FROM dumb_action_table WHERE dumb_scenario_id=:dumbScenarioId ORDER BY priority ASC")
@@ -112,6 +113,31 @@ interface DumbScenarioDao {
      */
     @Delete
     suspend fun deleteDumbActions(dumbActions: List<DumbActionEntity>)
+
+    /**
+     * Delete all gesture fingers for a given dumb action. Cascades to their motions.
+     *
+     * @param dumbActionId the identifier of the gesture action.
+     */
+    @Query("DELETE FROM $DUMB_GESTURE_FINGER_TABLE WHERE dumb_action_id=:dumbActionId")
+    suspend fun deleteGestureFingersByActionId(dumbActionId: Long)
+
+    /**
+     * Add a gesture finger to the database.
+     *
+     * @param finger the finger to be added.
+     * @return the database id of the inserted finger.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addGestureFinger(finger: DumbGestureFingerEntity): Long
+
+    /**
+     * Add a list of gesture finger motions to the database.
+     *
+     * @param motions the motions to be added.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addGestureFingerMotions(motions: List<DumbGestureFingerMotionEntity>): List<Long>
 
     /**
      * Get a scenario stats

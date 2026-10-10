@@ -21,7 +21,6 @@ import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenuModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.click.DumbClickViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionCopyModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.pause.DumbPauseViewModel
-import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.swipe.DumbSwipeViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.brief.DumbScenarioBriefViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.DumbScenarioViewModel
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.scenario.actionlist.DumbActionListViewModel
@@ -41,5 +40,4 @@ interface DumbConfigViewModelsEntryPoint {
     fun dumbScenarioBriefViewModel(): DumbScenarioBriefViewModel
     fun dumbScenarioViewModel(): DumbScenarioViewModel
     fun dumbScenarioConfigContentViewModel(): DumbScenarioConfigContentViewModel
-    fun dumbSwipeViewModel(): DumbSwipeViewModel
 }

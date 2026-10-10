@@ -32,8 +32,8 @@ import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
 import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
+import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 import com.buzbuz.smartautoclicker.feature.dumb.config.domain.DumbEditionRepository
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.toDumbActionDetails
 
@@ -55,14 +55,12 @@ import kotlinx.coroutines.launch
 import java.util.Collections
 import javax.inject.Inject
 
-
 class DumbScenarioBriefViewModel @Inject constructor(
     @ApplicationContext context: Context,
     @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
     private val dumbEditionRepository: DumbEditionRepository,
     private val dumbEngine: DumbEngine,
 ) : ViewModel() {
-
 
     private val briefVisualizationState: MutableStateFlow<BriefVisualizationState> =
         MutableStateFlow(BriefVisualizationState(0, false))
@@ -96,7 +94,6 @@ class DumbScenarioBriefViewModel @Inject constructor(
     val dumbActionVisualization: Flow<ItemBriefDescription?> = focusedAction
         .filter { !it.second }
         .map { (action, _) -> action?.toBriefDescription() }
-
 
     fun startGestureCaptureState() {
         briefVisualizationState.value = briefVisualizationState.value
@@ -141,9 +138,6 @@ class DumbScenarioBriefViewModel @Inject constructor(
 
     fun createNewDumbClick(context: Context, position: Point): DumbAction.DumbClick =
         dumbEditionRepository.dumbActionBuilder.createNewDumbClick(context, position)
-
-    fun createNewDumbSwipe(context: Context, from: Point, to: Point): DumbAction.DumbSwipe =
-        dumbEditionRepository.dumbActionBuilder.createNewDumbSwipe(context, from, to)
 
     fun createNewDumbPause(context: Context, ): DumbAction.DumbPause =
         dumbEditionRepository.dumbActionBuilder.createNewDumbPause(context)
@@ -209,11 +203,8 @@ class DumbScenarioBriefViewModel @Inject constructor(
                 pressDurationMs = pressDurationMs,
             )
 
-            is DumbAction.DumbSwipe -> SwipeDescription(
-                from = fromPosition.toPointF(),
-                to = toPosition.toPointF(),
-                swipeDurationMs = swipeDurationMs,
-            )
+            // TODO: Map to a GestureDescription once the dumb gesture brief mapper exists.
+            is DumbAction.DumbGesture -> DefaultDescription()
 
             is DumbAction.DumbPause -> PauseDescription(
                 pauseDurationMs = pauseDurationMs,

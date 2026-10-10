@@ -22,20 +22,28 @@ import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.base.identifier.IdentifierCreator
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFinger
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFingerMotion
 
 class EditedDumbActionsBuilder {
 
     private val dumbActionsIdCreator = IdentifierCreator()
+    private val gestureFingerIdCreator = IdentifierCreator()
+    private val gestureMotionIdCreator = IdentifierCreator()
 
     private var dumbScenarioId: Identifier? = null
 
     internal fun startEdition(scenarioId: Identifier) {
         dumbActionsIdCreator.resetIdCount()
+        gestureFingerIdCreator.resetIdCount()
+        gestureMotionIdCreator.resetIdCount()
         dumbScenarioId = scenarioId
     }
 
     internal fun clearState() {
         dumbActionsIdCreator.resetIdCount()
+        gestureFingerIdCreator.resetIdCount()
+        gestureMotionIdCreator.resetIdCount()
         dumbScenarioId = null
     }
 
@@ -49,19 +57,6 @@ class EditedDumbActionsBuilder {
             repeatCount = context.getDefaultDumbClickRepeatCount(),
             isRepeatInfinite = false,
             repeatDelayMs = context.getDefaultDumbClickRepeatDelay(),
-        )
-
-    fun createNewDumbSwipe(context: Context, from: Point, to: Point): DumbAction.DumbSwipe =
-        DumbAction.DumbSwipe(
-            id = dumbActionsIdCreator.generateNewIdentifier(),
-            scenarioId = getEditedScenarioIdOrThrow(),
-            name = context.getDefaultDumbSwipeName(),
-            fromPosition = from,
-            toPosition = to,
-            swipeDurationMs = context.getDefaultDumbSwipeDurationMs(),
-            repeatCount = context.getDefaultDumbSwipeRepeatCount(),
-            isRepeatInfinite = false,
-            repeatDelayMs = context.getDefaultDumbSwipeRepeatDelay(),
         )
 
     fun createNewDumbPause(context: Context): DumbAction.DumbPause =
@@ -78,15 +73,29 @@ class EditedDumbActionsBuilder {
                 id = dumbActionsIdCreator.generateNewIdentifier(),
                 scenarioId = getEditedScenarioIdOrThrow(),
             )
-            is DumbAction.DumbSwipe -> from.copy(
-                id = dumbActionsIdCreator.generateNewIdentifier(),
-                scenarioId = getEditedScenarioIdOrThrow(),
-            )
             is DumbAction.DumbPause -> from.copy(
                 id = dumbActionsIdCreator.generateNewIdentifier(),
                 scenarioId = getEditedScenarioIdOrThrow(),
             )
+            is DumbAction.DumbGesture -> from.copy(
+                id = dumbActionsIdCreator.generateNewIdentifier(),
+                scenarioId = getEditedScenarioIdOrThrow(),
+                fingers = from.fingers.map { finger -> createNewDumbGestureFingerFrom(finger) },
+            )
         }
+
+    private fun createNewDumbGestureFingerFrom(from: DumbGestureFinger): DumbGestureFinger =
+        from.copy(
+            id = gestureFingerIdCreator.generateNewIdentifier(),
+            motions = from.motions.map { motion ->
+                when (motion) {
+                    is DumbGestureFingerMotion.Press -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
+                    is DumbGestureFingerMotion.Move -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
+                    is DumbGestureFingerMotion.Wait -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
+                    is DumbGestureFingerMotion.Release -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
+                }
+            },
+        )
 
     private fun getEditedScenarioIdOrThrow(): Identifier = dumbScenarioId
         ?: throw IllegalStateException("Can't create items without an edited dumb scenario")

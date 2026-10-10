@@ -32,7 +32,7 @@ internal fun DumbScenarioWithActions.toDomain(asDomain: Boolean = false): DumbSc
         isDurationInfinite = scenario.isDurationInfinite,
         randomize = scenario.randomize,
         dumbActions = dumbActions
-            .sortedBy { it.priority }
+            .sortedBy { it.action.priority }
             .map { dumbAction -> dumbAction.toDomain(asDomain) },
         stats = stats.toDomain(),
     )

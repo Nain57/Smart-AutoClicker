@@ -1,0 +1,363 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "4bc78dfef9144d0a88748f8ea1922414",
+    "entities": [
+      {
+        "tableName": "dumb_scenario_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `repeat_count` INTEGER NOT NULL, `is_repeat_infinite` INTEGER NOT NULL, `max_duration_minutes` INTEGER NOT NULL, `is_duration_infinite` INTEGER NOT NULL, `randomize` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repeatCount",
+            "columnName": "repeat_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRepeatInfinite",
+            "columnName": "is_repeat_infinite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxDurationMin",
+            "columnName": "max_duration_minutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDurationInfinite",
+            "columnName": "is_duration_infinite",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "randomize",
+            "columnName": "randomize",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "dumb_action_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dumb_scenario_id` INTEGER NOT NULL, `priority` INTEGER NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `repeat_count` INTEGER, `is_repeat_infinite` INTEGER, `repeat_delay` INTEGER, `press_duration` INTEGER, `x` INTEGER, `y` INTEGER, `pause_duration` INTEGER, FOREIGN KEY(`dumb_scenario_id`) REFERENCES `dumb_scenario_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dumbScenarioId",
+            "columnName": "dumb_scenario_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repeatCount",
+            "columnName": "repeat_count",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "isRepeatInfinite",
+            "columnName": "is_repeat_infinite",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "repeatDelay",
+            "columnName": "repeat_delay",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "pressDuration",
+            "columnName": "press_duration",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "pauseDuration",
+            "columnName": "pause_duration",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_dumb_action_table_dumb_scenario_id",
+            "unique": false,
+            "columnNames": [
+              "dumb_scenario_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dumb_action_table_dumb_scenario_id` ON `${TABLE_NAME}` (`dumb_scenario_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "dumb_scenario_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "dumb_scenario_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "dumb_scenario_stats_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dumb_scenario_id` INTEGER NOT NULL, `last_start_timestamp_ms` INTEGER NOT NULL, `start_count` INTEGER NOT NULL, FOREIGN KEY(`dumb_scenario_id`) REFERENCES `dumb_scenario_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scenarioId",
+            "columnName": "dumb_scenario_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastStartTimestampMs",
+            "columnName": "last_start_timestamp_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startCount",
+            "columnName": "start_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_dumb_scenario_stats_table_dumb_scenario_id",
+            "unique": false,
+            "columnNames": [
+              "dumb_scenario_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dumb_scenario_stats_table_dumb_scenario_id` ON `${TABLE_NAME}` (`dumb_scenario_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "dumb_scenario_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "dumb_scenario_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "dumb_gesture_finger_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dumb_action_id` INTEGER NOT NULL, `index` INTEGER NOT NULL, `start_time_ms` INTEGER NOT NULL, FOREIGN KEY(`dumb_action_id`) REFERENCES `dumb_action_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dumbActionId",
+            "columnName": "dumb_action_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "index",
+            "columnName": "index",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startTimeMs",
+            "columnName": "start_time_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_dumb_gesture_finger_table_dumb_action_id",
+            "unique": false,
+            "columnNames": [
+              "dumb_action_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dumb_gesture_finger_table_dumb_action_id` ON `${TABLE_NAME}` (`dumb_action_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "dumb_action_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "dumb_action_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "dumb_gesture_finger_motion_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `finger_id` INTEGER NOT NULL, `index` INTEGER NOT NULL, `motion_type` TEXT NOT NULL, `duration_ms` INTEGER, `x` INTEGER, `y` INTEGER, FOREIGN KEY(`finger_id`) REFERENCES `dumb_gesture_finger_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fingerId",
+            "columnName": "finger_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "index",
+            "columnName": "index",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "motionType",
+            "columnName": "motion_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMs",
+            "columnName": "duration_ms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "x",
+            "columnName": "x",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "y",
+            "columnName": "y",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_dumb_gesture_finger_motion_table_finger_id",
+            "unique": false,
+            "columnNames": [
+              "finger_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_dumb_gesture_finger_motion_table_finger_id` ON `${TABLE_NAME}` (`finger_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "dumb_gesture_finger_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "finger_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4bc78dfef9144d0a88748f8ea1922414')"
+    ]
+  }
+}

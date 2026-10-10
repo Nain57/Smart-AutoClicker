@@ -19,8 +19,8 @@ package com.buzbuz.smartautoclicker.core.dumb.engine
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction.DumbClick
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction.DumbGesture
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction.DumbPause
-import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction.DumbSwipe
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 
 internal fun DumbAction.toDumbScenarioTry(): DumbScenario {
@@ -44,7 +44,7 @@ private fun DumbAction.toFiniteDumbAction(scenarioId: Identifier): DumbAction =
             scenarioId = scenarioId,
             isRepeatInfinite = false,
         )
-        is DumbSwipe -> copy(
+        is DumbGesture -> copy(
             scenarioId = scenarioId,
             isRepeatInfinite = false,
         )

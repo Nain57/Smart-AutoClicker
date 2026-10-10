@@ -26,6 +26,7 @@ import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
@@ -48,7 +49,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosit
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.GestureResolver
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlinx.coroutines.Dispatchers
@@ -75,6 +76,9 @@ internal class ActionExecutor(
 
     private val random: Random? =
         if (randomize) Random(System.currentTimeMillis()) else null
+
+    private val gestureBuilder: AndroidGestureBuilder = AndroidGestureBuilder.createNewBuilder(random)
+    private val gestureResolver: GestureResolver = GestureResolver(processingState, gestureBuilder)
 
     private val unblockGestureScheduler: UnblockGestureScheduler? =
         if (unblockWorkaroundEnabled) UnblockGestureScheduler()
@@ -180,9 +184,8 @@ internal class ActionExecutor(
     }
 
     private suspend fun executeGesture(event: Event, gesture: Gesture, results: ConditionsResults?) {
-        val gestureChains = AndroidGestureBuilder
-            .createNewBuilder(processingState, random)
-            .build(gesture, event, results) ?: return
+        val gestureChains = gestureBuilder
+            .build(gestureResolver.resolve(gesture, event, results), gesture.name) ?: return
 
         withContext(Dispatchers.Main) {
             gestureChains.forEach { chain -> androidExecutor.dispatchGestureChain(chain) }

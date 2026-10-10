@@ -115,7 +115,7 @@ class FilteredScenarioListUseCase @Inject constructor(
         else ScenarioListUiState.Item.ScenarioItem.Valid.Dumb(
             scenario = this,
             clickCount = dumbActions.count { it is DumbAction.DumbClick },
-            swipeCount = dumbActions.count { it is DumbAction.DumbSwipe },
+            gestureCount = dumbActions.count { it is DumbAction.DumbGesture },
             pauseCount = dumbActions.count { it is DumbAction.DumbPause },
             repeatText = getRepeatDisplayText(context),
             maxDurationText = getMaxDurationDisplayText(context),

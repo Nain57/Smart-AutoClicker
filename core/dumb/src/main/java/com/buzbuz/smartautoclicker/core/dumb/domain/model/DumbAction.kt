@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.domain.model
 
+import android.accessibilityservice.GestureDescription
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.interfaces.Identifiable
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
@@ -35,7 +36,7 @@ sealed class DumbAction : Identifiable {
         when (this) {
             is DumbClick -> copy(scenarioId = scenarioId)
             is DumbPause -> copy(scenarioId = scenarioId)
-            is DumbSwipe -> copy(scenarioId = scenarioId)
+            is DumbGesture -> copy(scenarioId = scenarioId)
         }
 
     data class DumbClick(
@@ -54,7 +55,15 @@ sealed class DumbAction : Identifiable {
             name.isNotEmpty() && pressDurationMs > 0 && isRepeatCountValid() && isRepeatDelayValid()
     }
 
-    data class DumbSwipe(
+    /**
+     * A multitouch interaction described as a set of [fingers], each one following its own timeline of motions on
+     * the screen. All fingers share the same time origin: the gesture starts at 0ms and each finger touches the
+     * screen at its own [DumbGestureFinger.startTimeMs], allowing fingers to be sequenced (double tap) or overlapped
+     * (pinch).
+     *
+     * @param fingers the fingers composing the gesture, between 1 and [GESTURE_MAXIMUM_FINGER_COUNT].
+     */
+    data class DumbGesture(
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
@@ -62,12 +71,25 @@ sealed class DumbAction : Identifiable {
         override val repeatCount: Int,
         override val isRepeatInfinite: Boolean,
         override val repeatDelayMs: Long,
-        val fromPosition: Point,
-        val toPosition: Point,
-        val swipeDurationMs: Long,
+        val fingers: List<DumbGestureFinger>,
     ) : DumbAction(), RepeatableWithDelay {
+
+        companion object {
+            /** The maximum number of fingers a gesture can contain. */
+            const val GESTURE_MAXIMUM_FINGER_COUNT = 5
+            /** The maximum total duration of a gesture in milliseconds, as allowed by the Android accessibility API. */
+            val GESTURE_MAXIMUM_DURATION_MS: Long = GestureDescription.getMaxGestureDuration()
+        }
+
         override fun isValid(): Boolean =
-            name.isNotEmpty() && swipeDurationMs > 0 && isRepeatCountValid() && isRepeatDelayValid()
+            name.isNotEmpty()
+                    && fingers.isNotEmpty() && fingers.size <= GESTURE_MAXIMUM_FINGER_COUNT
+                    && fingers.all { finger -> finger.isValid() }
+                    && isRepeatCountValid() && isRepeatDelayValid()
+
+        /** @return the total duration of the gesture in milliseconds, from its start to the release of the last finger. */
+        fun getDurationMs(): Long =
+            fingers.maxOfOrNull { finger -> finger.getDurationMs() } ?: 0L
     }
 
     data class DumbPause(
