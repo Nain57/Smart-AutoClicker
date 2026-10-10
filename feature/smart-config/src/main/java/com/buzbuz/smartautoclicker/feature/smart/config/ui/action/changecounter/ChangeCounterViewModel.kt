@@ -152,7 +152,7 @@ class ChangeCounterViewModel @Inject constructor(
     private fun CounterOperationValue.toUiStaticOrCounterSelection(): UiStaticOrCounterSelection =
         when (this) {
             is CounterOperationValue.Counter ->
-                UiStaticOrCounterSelection.CounterValue(editionRepository.editionState.getCounter(value))
+                UiStaticOrCounterSelection.CounterValue(editionRepository.editionState.getCounter(counterName))
 
             is CounterOperationValue.Number ->
                 UiStaticOrCounterSelection.StaticValue(value)

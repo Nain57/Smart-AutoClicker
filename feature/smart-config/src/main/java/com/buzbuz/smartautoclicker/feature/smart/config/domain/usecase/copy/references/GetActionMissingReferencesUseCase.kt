@@ -87,7 +87,7 @@ class GetActionMissingReferencesUseCase @Inject constructor(
             }
 
             if (operationValue is CounterOperationValue.Counter) {
-                val valueCounterName = (operationValue as CounterOperationValue.Counter).value
+                val valueCounterName = (operationValue as CounterOperationValue.Counter).counterName
                 if (editionRepository.editionState.getCounter(valueCounterName) == null) {
                     add(MissingCopyReference.CounterReference(valueCounterName))
                 }

@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.toDomainGest
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.toDomainIntentExtra
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.toDomain
+import com.buzbuz.smartautoclicker.core.domain.model.counter.getDomainCounterOperationValue
 
 /** Convert an Action entity into a Domain Action. */
 internal fun CompleteActionEntity.toDomain(cleanIds: Boolean = false): Action = when (action.type) {
@@ -128,7 +129,7 @@ private fun CompleteActionEntity.toDomainChangeCounter(cleanIds: Boolean = false
     priority = action.priority,
     counterName = action.counterName!!,
     operation = action.counterOperation!!.toDomain(),
-    operationValue = CounterOperationValue.getCounterOperationValue(
+    operationValue = getDomainCounterOperationValue(
         type = action.counterOperationValueType,
         numberValue = action.counterOperationValue,
         counterName = action.counterOperationCounterName,

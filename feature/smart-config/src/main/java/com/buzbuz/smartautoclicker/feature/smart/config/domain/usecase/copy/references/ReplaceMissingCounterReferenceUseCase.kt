@@ -135,7 +135,7 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
         copy(
             counterName = if (counterName == oldName) newName else counterName,
             operationValue =
-                if ((operationValue as? CounterOperationValue.Counter)?.value != oldName) operationValue
+                if ((operationValue as? CounterOperationValue.Counter)?.counterName != oldName) operationValue
                 else CounterOperationValue.Counter(newName),
         )
 
@@ -216,7 +216,7 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
         copy(
             counterName = if (counterName == oldName) newName else counterName,
             counterValue =
-                if ((counterValue as? CounterOperationValue.Counter)?.value != oldName) counterValue
+                if ((counterValue as? CounterOperationValue.Counter)?.counterName != oldName) counterValue
                 else CounterOperationValue.Counter(newName),
         )
 
@@ -226,7 +226,7 @@ class ReplaceMissingCounterReferenceUseCase @Inject constructor() {
     ): ScreenCondition.Number =
         copy(
             counterValue =
-                if ((counterValue as? CounterOperationValue.Counter)?.value != oldName) counterValue
+                if ((counterValue as? CounterOperationValue.Counter)?.counterName != oldName) counterValue
                 else CounterOperationValue.Counter(newName),
         )
 }

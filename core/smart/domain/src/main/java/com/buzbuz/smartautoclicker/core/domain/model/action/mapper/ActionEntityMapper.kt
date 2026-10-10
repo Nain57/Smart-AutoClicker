@@ -20,7 +20,6 @@ import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
-import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
@@ -37,6 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.CoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
+import com.buzbuz.smartautoclicker.core.domain.model.counter.toEntityType
 
 
 internal fun Action.toEntity(): ActionEntity {
@@ -165,10 +165,8 @@ private fun ToggleEvent.toToggleEventEntity(): ActionEntity =
         toggleAll = toggleAll,
     )
 
-private fun ChangeCounter.toChangeCounterEntity(): ActionEntity {
-    val isNumberValue = operationValue is CounterOperationValue.Number
-
-    return ActionEntity(
+private fun ChangeCounter.toChangeCounterEntity(): ActionEntity =
+    ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
         priority = priority,
@@ -176,11 +174,10 @@ private fun ChangeCounter.toChangeCounterEntity(): ActionEntity {
         type = ActionType.CHANGE_COUNTER,
         counterName = counterName,
         counterOperation = operation.toEntity(),
-        counterOperationValueType = if (isNumberValue) CounterOperationValueType.NUMBER else CounterOperationValueType.COUNTER,
-        counterOperationValue = if (isNumberValue) operationValue.value else null,
-        counterOperationCounterName = if (isNumberValue) null else operationValue.value as String,
+        counterOperationValueType = operationValue.toEntityType(),
+        counterOperationValue = (operationValue as? CounterOperationValue.Number)?.value,
+        counterOperationCounterName = (operationValue as? CounterOperationValue.Counter)?.counterName,
     )
-}
 
 private fun Notification.toNotificationEntity(): ActionEntity =
     ActionEntity(

@@ -243,7 +243,7 @@ class DebugConditionContentViewModel @Inject constructor(
 
     private fun CounterOperationValue.toNaturalDisplayString(): String =
         when (this) {
-            is CounterOperationValue.Counter -> value
+            is CounterOperationValue.Counter -> counterName
             is CounterOperationValue.Number -> value.toNaturalDisplayString()
         }
 }

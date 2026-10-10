@@ -54,7 +54,8 @@ class ReplaceCounterUseCase @Inject constructor(
     private fun Condition.replaceCounter(from: Counter, to: Counter) {
         when (this) {
             is ScreenCondition.Number -> {
-                if (counterValue is CounterOperationValue.Counter && counterValue.value == from.counterName) {
+                val counterOperation = (counterValue as? CounterOperationValue.Counter)
+                if (counterOperation != null && counterOperation.counterName == from.counterName) {
                     editionRepository.startConditionEdition(this)
                     editionRepository.updateEditedCondition(
                         this.copy(counterValue = CounterOperationValue.Counter(to.counterName))
@@ -68,7 +69,9 @@ class ReplaceCounterUseCase @Inject constructor(
                 if (counterName == from.counterName) {
                     newCondition = newCondition.copy(counterName = to.counterName)
                 }
-                if (counterValue is CounterOperationValue.Counter && counterValue.value == from.counterName) {
+
+                val counterOperation = (counterValue as? CounterOperationValue.Counter)
+                if (counterOperation != null && counterOperation.counterName == from.counterName) {
                     newCondition = newCondition.copy(counterValue = CounterOperationValue.Counter(to.counterName))
                 }
 
@@ -94,7 +97,9 @@ class ReplaceCounterUseCase @Inject constructor(
                 if (counterName == from.counterName) {
                     newAction = newAction.copy(counterName = to.counterName)
                 }
-                if (operationValue is CounterOperationValue.Counter && operationValue.value == from.counterName) {
+
+                val counterOperation = (operationValue as? CounterOperationValue.Counter)
+                if (counterOperation != null && counterOperation.counterName == from.counterName) {
                     newAction = newAction.copy(operationValue = CounterOperationValue.Counter(to.counterName))
                 }
 
