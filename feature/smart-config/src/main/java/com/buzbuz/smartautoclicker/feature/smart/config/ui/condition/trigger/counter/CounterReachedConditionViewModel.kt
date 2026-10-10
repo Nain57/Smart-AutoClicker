@@ -27,12 +27,12 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toComparisonOperation
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toCounterOperatorDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toDisplayValue
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiOperandType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toDisplayValue
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 

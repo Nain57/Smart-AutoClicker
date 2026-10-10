@@ -18,15 +18,15 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.selection
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.DialogChoice
 import com.buzbuz.smartautoclicker.feature.smart.config.R
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getChangeCounterIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getClickIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIntentIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getNotificationIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getPauseIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSetTextIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSwipeIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getSystemActionIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getToggleEventIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getChangeCounterIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getClickIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIntentIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getNotificationIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getPauseIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getSetTextIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getGestureIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getSystemActionIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getToggleEventIconRes
 
 
 /** Choices for the action type selection dialog. */
@@ -53,10 +53,10 @@ sealed class ActionTypeChoice(
         getClickIconRes(),
     )
     /** Swipe Action choice. */
-    data object Swipe : ActionTypeChoice(
+    data object Gesture : ActionTypeChoice(
         R.string.item_swipe_title,
         R.string.item_swipe_desc,
-        getSwipeIconRes(),
+        getGestureIconRes(),
     )
     /** Pause Action choice. */
     data object Pause : ActionTypeChoice(

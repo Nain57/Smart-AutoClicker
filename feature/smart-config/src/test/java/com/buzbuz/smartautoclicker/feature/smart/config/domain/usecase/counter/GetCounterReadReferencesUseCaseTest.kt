@@ -16,11 +16,20 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter
 
+import android.os.Build
+
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -43,7 +52,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
+import org.robolectric.annotation.Config
+
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.Q])
 class GetCounterReadReferencesUseCaseTest {
 
     private val mockEditionState: IEditionState = mockk()
@@ -164,6 +178,30 @@ class GetCounterReadReferencesUseCaseTest {
     }
 
     @Test
+    fun `Gesture with Counter coordinate creates read reference`() = runTest {
+        val action = gestureAction(GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(COUNTER_A), GestureCoordinatesValue.Literal(0),
+        ))
+        mockEvents(listOf(event(actions = listOf(action))))
+
+        val result = useCase().first()
+
+        assertEquals(setOf(COUNTER_A), result.keys)
+        val ref = result[COUNTER_A]?.first() as? CounterReference.ActionElement
+        assertEquals(action, ref?.action)
+    }
+
+    @Test
+    fun `Gesture with Literal coordinate creates no read reference`() = runTest {
+        val action = gestureAction(GesturePosition.Coordinates(
+            GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+        ))
+        mockEvents(listOf(event(actions = listOf(action))))
+
+        assertTrue(useCase().first().isEmpty())
+    }
+
+    @Test
     fun `ChangeCounter with Counter operationValue creates read reference`() = runTest {
         val action = changeCounterAction(
             counterName = COUNTER_A,
@@ -207,6 +245,22 @@ class GetCounterReadReferencesUseCaseTest {
         every { this@mockk.actions } returns actions
         every { this@mockk.conditions } returns conditions
     }
+
+    private fun gestureAction(pressPosition: GesturePosition): Gesture = Gesture(
+        id = Identifier(databaseId = 4L),
+        eventId = Identifier(databaseId = 1L),
+        name = "Gesture",
+        priority = 0,
+        fingers = listOf(GestureFinger(
+            id = Identifier(databaseId = 50L),
+            startTimeMs = 0L,
+            motions = listOf(GestureFingerMotion.Press(
+                id = Identifier(databaseId = 51L),
+                position = pressPosition,
+                offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            )),
+        )),
+    )
 
     private fun counterReachedCondition(
         counterName: String,

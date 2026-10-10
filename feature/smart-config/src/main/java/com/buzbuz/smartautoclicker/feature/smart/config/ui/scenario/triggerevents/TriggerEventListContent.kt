@@ -35,7 +35,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event.EventCopyDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiTriggerEvent
 
 import kotlinx.coroutines.launch
 

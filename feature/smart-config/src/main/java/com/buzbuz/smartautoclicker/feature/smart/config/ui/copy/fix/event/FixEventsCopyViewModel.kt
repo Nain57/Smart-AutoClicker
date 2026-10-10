@@ -25,9 +25,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsEventRelatedToUnreachableItemUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.toUiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.toUiTriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsCopyUiState
 

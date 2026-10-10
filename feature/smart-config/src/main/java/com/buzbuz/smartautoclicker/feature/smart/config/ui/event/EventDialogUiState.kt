@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.event
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.TimeUnitDropDownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
 
 sealed class EventDialogUiState {
 

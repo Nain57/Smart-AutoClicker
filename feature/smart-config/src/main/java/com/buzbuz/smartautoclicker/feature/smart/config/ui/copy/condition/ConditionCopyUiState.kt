@@ -17,9 +17,9 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiTriggerCondition
 
 data class ConditionCopyUiState(
     val items: List<ConditionCopyItem>,

@@ -23,21 +23,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiNumberFormatDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toDropdownItem
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toNumberFormatType
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiNumberFormatDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toNumberFormatType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiCounterOperatorDropdownItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toAreaDisplayText
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiOperandType
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.UiStaticOrCounterSelection
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toComparisonOperation
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.toCounterOperatorDropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiOperandType
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.UiStaticOrCounterSelection
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toComparisonOperation
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.toCounterOperatorDropdownItem
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview

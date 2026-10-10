@@ -34,10 +34,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.refe
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingCounterReferenceUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingEventToggleReferenceUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references.ReplaceMissingScreenConditionReferenceUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsChildrenCopyUiState
 
@@ -74,15 +72,11 @@ class FixEventChildrenCopyViewModel @Inject constructor(
     }
 
     /** Get the list of possible replacements for a */
-    fun getScreenConditionReplacementCandidates(context: Context): List<UiScreenCondition> {
+    fun getScreenConditionReplacementCandidates(): List<ScreenCondition> {
         val event = itemsToCopy.value?.parent
         if (event == null || event !is ScreenEvent) return emptyList()
 
-        val conditions = event.conditions
-
-        return conditions.map { condition ->
-            condition.toUiScreenCondition(context = context, shortThreshold = true, inError = false)
-        }
+        return event.conditions
     }
 
     fun startActionEdition(action: Action) {

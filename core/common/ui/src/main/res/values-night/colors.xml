@@ -23,4 +23,8 @@
     <color name="event_state_color">#05a142</color>
     <color name="event_test_color">#ffffff</color>
 
+    <color name="gesture_add_color">#ffffff</color>
+
+    <color name="fade_background_color">#BB000000</color>
+
 </resources>

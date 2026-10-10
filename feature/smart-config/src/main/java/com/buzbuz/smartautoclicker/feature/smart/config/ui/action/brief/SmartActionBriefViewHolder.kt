@@ -28,7 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brie
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefViewHolder
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefLandBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemSmartActionBriefPortBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.UiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.UiAction
 import com.google.android.material.card.MaterialCardView
 
 

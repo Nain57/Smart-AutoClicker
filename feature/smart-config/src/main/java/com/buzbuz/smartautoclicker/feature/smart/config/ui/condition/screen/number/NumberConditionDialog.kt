@@ -53,8 +53,8 @@ import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setItems
 import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.setSelectedItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteConditionsWithAssociatedActionsDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.allNumberFormatDropdownItems
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterComparisonOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.allNumberFormatDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.allCounterComparisonOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.areaselector.ConditionAreaSelectorMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.image.MAX_THRESHOLD

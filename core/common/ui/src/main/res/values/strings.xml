@@ -113,6 +113,12 @@
     <string name="comparison_operator_equals" translatable="false">=</string>
     <string name="comparison_operator_lower_or_equals" translatable="false">≤</string>
     <string name="comparison_operator_lower" translatable="false"><![CDATA[<]]></string>
+    <string name="finger_index_1" translatable="false">1</string>
+    <string name="finger_index_2" translatable="false">2</string>
+    <string name="finger_index_3" translatable="false">3</string>
+    <string name="finger_index_4" translatable="false">4</string>
+    <string name="finger_index_5" translatable="false">5</string>
+
 
     <!--
       - Content description texts.

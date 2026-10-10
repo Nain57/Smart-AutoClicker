@@ -44,7 +44,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.count
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterComparisonOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.allCounterComparisonOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.OnConditionConfigCompleteListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 

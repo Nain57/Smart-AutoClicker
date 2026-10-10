@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.engine.DumbEngine
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseDescription
@@ -102,7 +103,7 @@ class DumbScenarioBriefViewModel @Inject constructor(
             .copy(gestureCaptureStarted = true)
     }
 
-    fun endGestureCaptureState(context: Context, gesture: ItemBriefDescription) {
+    fun endGestureCaptureState(context: Context, gesture: RecordedGesture) {
         val action = gesture.toDumbAction(context) ?: return
         dumbEditionRepository.addNewDumbAction(action)
     }
@@ -190,20 +191,15 @@ class DumbScenarioBriefViewModel @Inject constructor(
         dumbEditionRepository.deleteDumbAction(action)
     }
 
-    private fun ItemBriefDescription.toDumbAction(context: Context): DumbAction? =
+    /** Multi finger gestures are not supported by the dumb scenarios. */
+    private fun RecordedGesture.toDumbAction(context: Context): DumbAction? =
         when (this) {
-            is ClickDescription -> createNewDumbClick(
+            is RecordedGesture.Click -> createNewDumbClick(
                 context = context,
-                position = position?.toPoint() ?: Point(0, 0),
+                position = position.toPoint(),
             )
 
-            is SwipeDescription -> createNewDumbSwipe(
-                context = context,
-                from = from?.toPoint() ?: Point(0, 0),
-                to = to?.toPoint() ?: Point(0, 0),
-            )
-
-            else -> null
+            is RecordedGesture.Gesture -> null
         }
 
     private fun DumbAction.toBriefDescription(): ItemBriefDescription =

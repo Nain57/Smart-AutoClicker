@@ -27,8 +27,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemMessageHeaderBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerEventBinding
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiTriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
 

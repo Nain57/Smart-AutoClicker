@@ -20,6 +20,7 @@ import android.os.Build
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
+import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
@@ -96,7 +97,11 @@ class CounterCreationViewModelTests {
             coEvery { getCounters(scenario.id.databaseId) } returns counters
         }
 
-        return EditionRepository(repository, mockk<BitmapRepository>(relaxed = true)).also {
+        return EditionRepository(
+            repository,
+            mockk<BitmapRepository>(relaxed = true),
+            mockk<DisplayConfigManager>(relaxed = true),
+        ).also {
             check(it.startEdition(scenario.id.databaseId))
         }
     }

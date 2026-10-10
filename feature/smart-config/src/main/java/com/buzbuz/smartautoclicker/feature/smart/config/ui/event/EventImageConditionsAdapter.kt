@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
 
 import kotlinx.coroutines.Job
 

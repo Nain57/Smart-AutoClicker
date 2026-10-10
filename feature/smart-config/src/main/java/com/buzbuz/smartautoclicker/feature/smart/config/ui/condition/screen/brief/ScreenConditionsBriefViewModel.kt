@@ -52,7 +52,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedListState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toEffectDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.formatters.toNaturalDisplayString
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 

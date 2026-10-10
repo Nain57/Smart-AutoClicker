@@ -75,7 +75,7 @@ private fun DumbAction.DumbClick.toClickDetails(context: Context, withPositions:
 
 private fun DumbAction.DumbSwipe.toSwipeDetails(context: Context, withPositions: Boolean, inError: Boolean): DumbActionDetails =
     DumbActionDetails(
-        icon = R.drawable.ic_swipe,
+        icon = R.drawable.ic_gesture,
         name = name,
         detailsText = when {
             inError -> context.getString(R.string.item_error_action_invalid_generic)

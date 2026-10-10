@@ -37,9 +37,9 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsMan
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -70,7 +70,7 @@ class ActionTypeSelectionDialog(
             ActionTypeChoice.Notification,
             ActionTypeChoice.Pause,
             ActionTypeChoice.SetText,
-            ActionTypeChoice.Swipe,
+            ActionTypeChoice.Gesture,
             ActionTypeChoice.System -> Unit
         }
         if (choice !is ActionTypeChoice.Click) return

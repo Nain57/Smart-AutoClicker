@@ -26,8 +26,8 @@ import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.availability.IsTriggerConditionCopyAvailableUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiTriggerCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.selection.TriggerConditionTypeChoice
 import dagger.hilt.android.qualifiers.ApplicationContext
 

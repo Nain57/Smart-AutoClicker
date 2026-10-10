@@ -45,7 +45,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.count
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setValueInfo
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.counter.allCounterAffectationOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.allCounterAffectationOperatorDropdownItems
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog

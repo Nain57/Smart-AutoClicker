@@ -29,9 +29,9 @@ import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetS
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.GetTriggerEventsForCopyUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.EventsForCopy
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.unreachable.IsEventRelatedToUnreachableItemUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiImageEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.toUiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.toUiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.toUiTriggerEvent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

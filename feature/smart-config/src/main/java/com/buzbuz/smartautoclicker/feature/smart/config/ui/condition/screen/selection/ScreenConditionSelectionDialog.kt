@@ -20,6 +20,9 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -36,16 +39,17 @@ import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseLi
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemScreenConditionGridBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.UiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import kotlinx.coroutines.Job
 import kotlin.getValue
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
+import kotlinx.coroutines.launch
 
 class ScreenConditionSelectionDialog(
-    private val conditionList: List<UiScreenCondition>,
+    private val conditionList: List<ScreenCondition>,
     private val onConditionSelected: (ScreenCondition) -> Unit,
 ): OverlayDialog(R.style.ScenarioConfigTheme) {
 
@@ -63,6 +67,8 @@ class ScreenConditionSelectionDialog(
     private lateinit var conditionsAdapter: ScreenConditionsAdapter
 
     override fun onCreateView(): ViewGroup {
+        viewModel.setSelectableConditions(conditionList)
+
         viewBinding = DialogBaseListBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
                 dialogTitle.setText(R.string.dialog_title_condition_selection)
@@ -92,8 +98,16 @@ class ScreenConditionSelectionDialog(
     }
 
     override fun onDialogCreated(dialog: BottomSheetDialog) {
-        viewBinding.layoutLoadableList.updateState(conditionList)
-        conditionsAdapter.submitList(conditionList)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiConditions.collect(::onConditionListUpdated) }
+            }
+        }
+    }
+
+    private fun onConditionListUpdated(conditions: List<UiScreenCondition>?) {
+        viewBinding.layoutLoadableList.updateState(conditions)
+        conditionsAdapter.submitList(conditions)
     }
 
     private fun onConditionClicked(condition: ScreenCondition) {

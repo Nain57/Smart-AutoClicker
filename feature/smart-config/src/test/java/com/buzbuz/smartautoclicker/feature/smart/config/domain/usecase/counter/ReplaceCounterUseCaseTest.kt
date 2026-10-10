@@ -22,8 +22,13 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFinger
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
@@ -237,6 +242,38 @@ class ReplaceCounterUseCaseTest {
     }
 
     @Test
+    fun `Gesture with matching Counter coordinate is updated`() {
+        val pressPos = GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(FROM_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        )
+        val action = gestureAction(pressPos)
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
+
+        useCase(FROM_COUNTER, TO_COUNTER)
+
+        val updatedPos = GesturePosition.Coordinates(
+            GestureCoordinatesValue.Counter(TO_COUNTER_NAME), GestureCoordinatesValue.Literal(0),
+        )
+        verifyOrder {
+            mockEditionRepository.startActionEdition(action)
+            mockEditionRepository.updateEditedAction(gestureAction(updatedPos))
+            mockEditionRepository.upsertEditedAction()
+        }
+    }
+
+    @Test
+    fun `Gesture with no matching counter coordinate is not updated`() {
+        val action = gestureAction(GesturePosition.Coordinates(
+            GestureCoordinatesValue.Literal(100), GestureCoordinatesValue.Literal(200),
+        ))
+        every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
+
+        useCase(FROM_COUNTER, TO_COUNTER)
+
+        verify(exactly = 0) { mockEditionRepository.startActionEdition(any()) }
+    }
+
+    @Test
     fun `SetText with counter reference in text is updated`() {
         val action = setTextAction(text = "Value: {$FROM_COUNTER_NAME}")
         every { mockEditionState.getAllEditedEvents() } returns listOf(event(actions = listOf(action)))
@@ -253,6 +290,22 @@ class ReplaceCounterUseCaseTest {
     }
 
     // region helpers
+
+    private fun gestureAction(pressPosition: GesturePosition): Gesture = Gesture(
+        id = Identifier(databaseId = 4L),
+        eventId = Identifier(databaseId = 1L),
+        name = "Gesture",
+        priority = 0,
+        fingers = listOf(GestureFinger(
+            id = Identifier(databaseId = 50L),
+            startTimeMs = 0L,
+            motions = listOf(GestureFingerMotion.Press(
+                id = Identifier(databaseId = 51L),
+                position = pressPosition,
+                offset = GesturePosition.Coordinates(GestureCoordinatesValue.Literal(0), GestureCoordinatesValue.Literal(0)),
+            )),
+        )),
+    )
 
     private fun event(
         actions: List<Action> = emptyList(),

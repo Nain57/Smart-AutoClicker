@@ -28,10 +28,10 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterReadReferencesUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.model.CounterReference
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.counter.GetCounterWriteReferencesUseCase
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.getIconRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.action.toUiAction
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.condition.toUiTriggerCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.toUiAction
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiTriggerCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.reference.CounterReferenceDialog.ReferencesType.*
 
 import dagger.hilt.android.qualifiers.ApplicationContext

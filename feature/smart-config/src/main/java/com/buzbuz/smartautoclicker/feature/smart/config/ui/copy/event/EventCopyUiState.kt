@@ -17,9 +17,9 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event
 
 import androidx.annotation.StringRes
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiImageEvent
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiImageEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiTriggerEvent
 
 /** Types of items in the event copy list. */
 sealed class EventCopyItem {

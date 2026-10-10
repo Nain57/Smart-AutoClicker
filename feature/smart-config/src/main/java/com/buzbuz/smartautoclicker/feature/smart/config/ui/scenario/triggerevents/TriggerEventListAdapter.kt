@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ItemTriggerEventBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.bind
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.model.event.UiTriggerEvent
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.event.UiTriggerEvent
 
 /**
  * Adapter displaying a list of trigger events.

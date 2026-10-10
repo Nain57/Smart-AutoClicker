@@ -19,15 +19,16 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -65,7 +67,7 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
                 }
 
                 emit(results)
-                delay(results.getDisplayDurationMs(minDisplayDuration))
+                delay(results.getDisplayDurationMs(minDisplayDuration).milliseconds)
                 emit(null)
             }
 
@@ -78,7 +80,7 @@ class GetDebugLiveDetectionResultUseCase @Inject constructor(
         fold(initial = 0) { acc, action ->
             acc + when (action) {
                 is Click -> action.pressDuration ?: 0
-                is Swipe -> action.swipeDuration ?: 0
+                is Gesture -> action.getDurationMs()
                 is Pause -> action.pauseDuration ?: 0
                 is ChangeCounter,
                 is Intent,
