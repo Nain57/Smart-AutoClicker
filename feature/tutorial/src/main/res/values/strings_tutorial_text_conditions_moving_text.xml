@@ -70,33 +70,31 @@
         need to click on the button, so choose Click to create a new Click Action.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Since the \"Hello\" is moving, we cannot use a
-        fixed position. Change the \"Click on\" setting to \"Condition\" to click on the detection Condition.</string>
+        fixed position.\n\nPress the \"Pick condition\" button to click wherever the detected Condition is
+        found.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Click on the Condition selector to choose which detected Condition to
-        click on.\n\nWe need to specify it because an Event can have multiple Conditions.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">For our use case it is easy, we only have one Condition, the \"Hello\" text.
+    <string name="message_tutorial_text_conditions_moving_text_step_15">For our use case it is easy, we only have one Condition, the \"Hello\" text.
         \n\nSelect it to click on this Condition position when it is detected on your screen.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">That\'s it!\nYour Click Action is now correctly configured to beat the
+    <string name="message_tutorial_text_conditions_moving_text_step_16">That\'s it!\nYour Click Action is now correctly configured to beat the
         game.\n\nClick on the save button to register it and return to the Actions list.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Close the Actions list to return to the Event configuration.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Close the Actions list to return to the Event configuration.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Your Event now has a Condition and an Action, which means it knows what
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Your Event now has a Condition and an Action, which means it knows what
         to execute and when to execute it.\n\nClick on the save button to register it and return to the Scenario dialog.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">The only requirement for a Scenario is to have at least one Event.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">The only requirement for a Scenario is to have at least one Event.\n
         As our Event already cover how to win the game, we don\'t need anything else.\n\nClick on the save button to
         save the Scenario in database and close the configuration dialogs.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">As you can see, the play button is now available, meaning that your
+    <string name="message_tutorial_text_conditions_moving_text_step_20">As you can see, the play button is now available, meaning that your
         Scenario is valid and can be used for detection.\n\nClick on it to start the detection.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
+    <string name="message_tutorial_text_conditions_moving_text_step_21">It\'s playing but nothing happens?\n\nThat\'s normal, it will click only
         when the button displays \"Hello\", remember? While keeping the scenario running, press the start game button
         and just watch as Klick\'r will beat it for you!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">Congratulations!\n\nYou now know how to detect a moving text displayed on the
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Congratulations!\n\nYou now know how to detect a moving text displayed on the
         screen.\nTake a look at the other tutorials to discover more use cases.</string>
 </resources>

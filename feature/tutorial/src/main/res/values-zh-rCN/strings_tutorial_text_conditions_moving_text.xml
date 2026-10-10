@@ -68,31 +68,28 @@
         点击按钮，所以选择点击来创建新的点击操作。</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">由于"Hello"在移动，我们无法使用
-        固定位置。将"点击位置"设置更改为"条件"，以点击检测到的条件位置。</string>
+        固定位置。\n\n点击"选择条件"按钮，以在检测到条件的位置进行点击。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">点击条件选择器以选择要点击的检测条件。
-        \n\n我们需要指定它，因为一个事件可以有多个条件。</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">对于我们的用例来说很容易，我们只有一个条件，即文字"Hello"。
+    <string name="message_tutorial_text_conditions_moving_text_step_15">对于我们的用例来说很容易，我们只有一个条件，即文字"Hello"。
         \n\n选择它以在屏幕上检测到此条件时单击它。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">就是这样！\n你的点击操作现在已经正确配置以打赢比赛。\n\n单击保存按钮注册并返回操作列表。</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_16">就是这样！\n你的点击操作现在已经正确配置以打赢比赛。\n\n单击保存按钮注册并返回操作列表。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">关闭操作列表，返回事件配置。</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">关闭操作列表，返回事件配置。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">你的事件现在有一个条件和一个操作，这意味着它知道何时执行什么。
+    <string name="message_tutorial_text_conditions_moving_text_step_18">你的事件现在有一个条件和一个操作，这意味着它知道何时执行什么。
         \n\n点击保存按钮以保存它并返回场景对话框。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">场景的唯一要求是至少有一个事件。\n由于我们的事件已经涵盖了如何赢得比赛，
+    <string name="message_tutorial_text_conditions_moving_text_step_19">场景的唯一要求是至少有一个事件。\n由于我们的事件已经涵盖了如何赢得比赛，
         我们不需要其他任何东西。\n\n点击保存按钮以将场景保存在数据库中并关闭配置对话框。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">正如你所看到的，播放按钮现在可用，这意味着你的场景有效并且可以用于检测。
+    <string name="message_tutorial_text_conditions_moving_text_step_20">正如你所看到的，播放按钮现在可用，这意味着你的场景有效并且可以用于检测。
         \n\n点击它以开始检测。</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">正在运行但什么都没发生？\n\n这是正常的，它只会在
+    <string name="message_tutorial_text_conditions_moving_text_step_21">正在运行但什么都没发生？\n\n这是正常的，它只会在
         按钮显示"Hello"时才点击，还记得吗？在保持场景运行的同时，按下开始游戏按钮
         然后看Klick\'r替你赢得比赛！</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">恭喜！\n\n你现在知道如何检测屏幕上显示的移动文字了。
+    <string name="message_tutorial_text_conditions_moving_text_step_22">恭喜！\n\n你现在知道如何检测屏幕上显示的移动文字了。
         \n查看其他教程以发现更多用例。</string>
 </resources>

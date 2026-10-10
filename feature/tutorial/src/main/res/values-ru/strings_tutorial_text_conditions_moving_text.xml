@@ -69,33 +69,30 @@
         просто кликнуть на кнопку, поэтому выберите Клик для создания нового Действия клика.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Поскольку «Hello» перемещается, мы не можем использовать
-        фиксированную позицию. Измените параметр «Кликнуть на» на «Условие», чтобы кликать на обнаруженное Условие.</string>
+        фиксированную позицию.\n\nНажмите кнопку «Выбрать условие», чтобы кликать там, где найдено обнаруженное Условие.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Кликните на селектор Условия, чтобы выбрать, на какое обнаруженное Условие кликать.
-        \n\nНам нужно это указать, поскольку событие может иметь несколько Условий.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">Для нашего случая использования это легко — у нас есть только одно Условие, текст «Hello».
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Для нашего случая использования это легко — у нас есть только одно Условие, текст «Hello».
         \n\nВыберите его, чтобы кликать на это Условие, когда оно обнаружено на вашем экране.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">Вот и всё!\nВаше Действие клика теперь правильно настроено для победы в
+    <string name="message_tutorial_text_conditions_moving_text_step_16">Вот и всё!\nВаше Действие клика теперь правильно настроено для победы в
         игре.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться в список Действий.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Закройте список Действий, чтобы вернуться к настройке События.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Закройте список Действий, чтобы вернуться к настройке События.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Ваше Событие теперь имеет Условие и Действие, что означает, что оно знает, что
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Ваше Событие теперь имеет Условие и Действие, что означает, что оно знает, что
         выполнять и когда.\n\nКликните на кнопку сохранения, чтобы зарегистрировать его и вернуться к диалогу Сценария.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">Единственное требование для Сценария — иметь хотя бы одно Событие.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">Единственное требование для Сценария — иметь хотя бы одно Событие.\n
         Поскольку наше Событие уже охватывает, как выиграть игру, нам больше ничего не нужно.\n\nКликните на кнопку сохранения, чтобы
         сохранить Сценарий в базе данных и закрыть диалоги настройки.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">Как вы видите, кнопка воспроизведения теперь доступна, что означает, что ваш
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Как вы видите, кнопка воспроизведения теперь доступна, что означает, что ваш
         Сценарий действителен и может использоваться для обнаружения.\n\nКликните на неё, чтобы начать обнаружение.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">Воспроизводится, но ничего не происходит?\n\nЭто нормально, он будет кликать только
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Воспроизводится, но ничего не происходит?\n\nЭто нормально, он будет кликать только
         когда кнопка показывает «Hello», помните? Не останавливая сценарий, нажмите кнопку начать игру
         и просто наблюдайте, как Klick\'r побеждает за вас!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">Поздравляем!\n\nТеперь вы знаете, как обнаружить движущийся текст, отображаемый на
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Поздравляем!\n\nТеперь вы знаете, как обнаружить движущийся текст, отображаемый на
         экране.\nОзнакомьтесь с другими уроками, чтобы узнать о других сценариях использования.</string>
 </resources>

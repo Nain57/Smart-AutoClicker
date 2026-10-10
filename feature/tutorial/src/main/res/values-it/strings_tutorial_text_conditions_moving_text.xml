@@ -70,33 +70,30 @@
         semplicemente cliccare sul pulsante, quindi scegli Clicca per creare una nuova Azione di Clicca.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Poiché \"Hello\" è in movimento, non possiamo usare
-        una posizione fissa. Cambia l\'impostazione \"Clicca su\" in \"Condizione\" per cliccare sulla Condizione rilevata.</string>
+        una posizione fissa.\n\nPremi il pulsante \"Scegli condizione\" per cliccare dove viene trovata la Condizione rilevata.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Clicca sul selettore di Condizione per scegliere su quale Condizione rilevata
-        cliccare.\n\nDobbiamo specificarlo perché un Evento può avere più Condizioni.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, il testo \"Hello\".
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, il testo \"Hello\".
         \n\nSelezionala per cliccare su questa Condizione quando viene rilevata sullo schermo.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">È fatta!\nLa tua Azione di Clicca è ora correttamente configurata per battere il
+    <string name="message_tutorial_text_conditions_moving_text_step_16">È fatta!\nLa tua Azione di Clicca è ora correttamente configurata per battere il
         gioco.\n\nFare clic sul pulsante Salva per registrarla e tornare alla lista delle Azioni.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Chiudere la lista delle Azioni per tornare alla configurazione dell\'Evento.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Chiudere la lista delle Azioni per tornare alla configurazione dell\'Evento.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che sa cosa
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che sa cosa
         eseguire e quando eseguirlo.\n\nFare clic sul pulsante Salva per registrarlo e tornare alla finestra di dialogo dello Scenario.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
         Poiché il nostro Evento copre già come vincere il gioco, non abbiamo bisogno di altro.\n\nFai clic sul pulsante Salva per
         salvare lo Scenario nel database e chiudere le finestre di dialogo di configurazione.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il
         tuo Scenario è valido e può essere utilizzato per il rilevamento.\n\nFai clic su di esso per avviare il rilevamento.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">Sta funzionando ma non succede nulla?\n\nÈ normale, cliccherà solo
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Sta funzionando ma non succede nulla?\n\nÈ normale, cliccherà solo
         quando il pulsante mostra \"Hello\", ricordi? Tenendo lo scenario in esecuzione, premi il pulsante avvia gioco
         e guarda come Klick\'r lo batte al posto tuo!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">Congratulazioni!\n\nOra sai come rilevare un testo in movimento visualizzato sullo
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Congratulazioni!\n\nOra sai come rilevare un testo in movimento visualizzato sullo
         schermo.\nDai un\'occhiata agli altri tutorial per scoprire altri casi d\'uso.</string>
 </resources>

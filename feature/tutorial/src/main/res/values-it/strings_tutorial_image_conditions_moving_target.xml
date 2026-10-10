@@ -87,30 +87,27 @@
         cliccare sul personaggio blu, quindi scegli Clicca per creare una nuova Azione di Clicca.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">Un\'Azione di Clicca è definita da una posizione e una durata della pressione.\n\nPoiché il
-        personaggio blu si muove, non possiamo usare una posizione fissa. Cambia l\'impostazione "Clicca su" in "Condizione"
-        per cliccare dove viene trovata una Condizione rilevata.\n\nSelezionala per utilizzarla nella tua Azione.</string>
+        personaggio blu si muove, non possiamo usare una posizione fissa.\n\nPremi il pulsante "Scegli condizione"
+        per cliccare dove viene trovata una Condizione rilevata.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Clicca sul selettore di Condizione per scegliere su quale Condizione rilevata cliccare.
-        \n\nDobbiamo specificarlo perché un Evento può avere più Condizioni.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, il personaggio blu.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Per il nostro caso d\'uso è semplice, abbiamo solo una Condizione, il personaggio blu.
         \n\nSelezionala per cliccare su questa Condizione quando viene rilevata sullo schermo.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">È fatta!\nLa tua Azione di Clicca è ora correttamente configurata per battere il
+    <string name="message_tutorial_screen_condition_moving_target_step_21">È fatta!\nLa tua Azione di Clicca è ora correttamente configurata per battere il
         gioco.\n\nFare clic sul pulsante Salva per registrarla e tornare all\'elenco delle Azioni.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Chiudere l\'elenco Azioni per tornare alla configurazione degli eventi.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che sa cosa
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Il tuo Evento ora ha una Condizione e un\'Azione, il che significa che sa cosa
         eseguire e quando eseguirlo.\n\nFare clic sul pulsante Salva per registrarlo e tornare alla finestra di dialogo dello Scenario.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">L\'unico requisito per uno Scenario è avere almeno un Evento.\n
         Poiché il nostro Evento già copre come vincere il gioco, non abbiamo bisogno di altro.\n\nFai clic sul pulsante Salva per
         salvare lo Scenario nel database e chiudere le finestre di dialogo di configurazione.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il
+    <string name="message_tutorial_screen_condition_moving_target_step_25">Come puoi vedere, il pulsante di riproduzione è ora disponibile, il che significa che il
         tuo Scenario è valido e può essere utilizzato per il rilevamento.\n\nFai clic su di esso per avviare il rilevamento e poi inizia il gioco.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">Congratulazioni!\n\nOra sai come tracciare un bersaglio in movimento usando il tipo di
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Congratulazioni!\n\nOra sai come tracciare un bersaglio in movimento usando il tipo di
         rilevamento "Tutto lo schermo" e la funzione "Clicca su Condizione"!</string>
 </resources>

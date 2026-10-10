@@ -88,30 +88,27 @@
         إلى النقر على الحرف الأزرق، لذا اختر "انقر" لإنشاء إجراء نقر جديد.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">يتم تحديد إجراء النقر من خلال الموضع ومدة الضغط.\n\nنظرًا لأن
-        الحرف الأزرق يتحرك، لا يمكننا استخدام موضع ثابت. غيّر إعداد "النقر على" إلى "الشرط"
-        للنقر حيث يوجد شرط مكتشف.\n\nحدده لاستخدامه في إجراءك.</string>
+        الحرف الأزرق يتحرك، لا يمكننا استخدام موضع ثابت.\n\nاضغط على زر "اختيار شرط"
+        للنقر حيث يوجد شرط مكتشف.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">انقر فوق محدد الشرط لاختيار الشرط المكتشف الذي تريد النقر عليه.
-        \n\nنحتاج إلى تحديده لأن الحدث يمكن أن يحتوي على شروط متعددة.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، وهو الحرف الأزرق.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">بالنسبة لحالة الاستخدام الخاصة بنا، الأمر سهل، لدينا شرط واحد فقط، وهو الحرف الأزرق.
         \n\nحدده للنقر على هذا الشرط عندما يتم اكتشافه على شاشتك.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">هذا كل شيء!\nتم الآن تكوين إجراء النقر بشكل صحيح للتغلب على
+    <string name="message_tutorial_screen_condition_moving_target_step_21">هذا كل شيء!\nتم الآن تكوين إجراء النقر بشكل صحيح للتغلب على
         اللعبة.\n\nانقر على زر الحفظ لتسجيله والعودة إلى قائمة الإجراءات.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">أغلق قائمة الإجراءات للعودة إلى تكوين الحدث.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">أصبح لحدثك الآن شرط وإجراء، مما يعني أنه يعرف ماذا يُنفذ ومتى يُنفذ.
+    <string name="message_tutorial_screen_condition_moving_target_step_23">أصبح لحدثك الآن شرط وإجراء، مما يعني أنه يعرف ماذا يُنفذ ومتى يُنفذ.
         \n\nانقر فوق زر الحفظ لتسجيله والعودة إلى مربع حوار السيناريو.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">الشرط الوحيد للسيناريو هو أن يكون هناك حدث واحد على الأقل.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">الشرط الوحيد للسيناريو هو أن يكون هناك حدث واحد على الأقل.\n
         نظرًا لأن حدثنا يغطي بالفعل كيفية الفوز باللعبة، فلا نحتاج إلى أي شيء آخر.\n\nانقر فوق زر الحفظ
         لحفظ السيناريو في قاعدة البيانات وإغلاق مربعات حوار التكوين.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">كما ترون، أصبح زر التشغيل متاحًا الآن، مما يعني أن السيناريو الخاص بك
+    <string name="message_tutorial_screen_condition_moving_target_step_25">كما ترون، أصبح زر التشغيل متاحًا الآن، مما يعني أن السيناريو الخاص بك
         صالح ويمكن استخدامه للكشف.\n\nانقر عليه لبدء الكشف ثم ابدأ اللعبة.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">تهانينا!\n\nأنت تعرف الآن كيفية تتبع هدف متحرك باستخدام نوع الاكتشاف
+    <string name="message_tutorial_screen_condition_moving_target_step_26">تهانينا!\n\nأنت تعرف الآن كيفية تتبع هدف متحرك باستخدام نوع الاكتشاف
         "الشاشة بأكملها" وميزة "النقر على الشرط"!</string>
 </resources>

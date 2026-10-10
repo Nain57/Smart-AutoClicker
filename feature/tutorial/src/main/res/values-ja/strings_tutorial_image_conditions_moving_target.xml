@@ -59,21 +59,19 @@
 
     <string name="message_tutorial_screen_condition_moving_target_step_18">まず、アクションのタイプを選択する必要があります。\n\nこのゲームでは青いキャラクターをクリックする必要があるため、クリックを選択して新しいクリックアクションを作成してください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_19">クリックアクションは位置と押下時間で定義されます。\n\n青いキャラクターは動いているため、固定位置は使えません。「クリック対象」の設定を「条件」に変更して、検出された条件が見つかった場所をクリックするようにしてください。\n\nアクションで使用するためにそれを選択してください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_19">クリックアクションは位置と押下時間で定義されます。\n\n青いキャラクターは動いているため、固定位置は使えません。\n\n「条件を選択」ボタンを押して、検出された条件が見つかった場所をクリックするようにしてください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">条件セレクターをクリックして、クリックする検出条件を選択してください。\n\nイベントには複数の条件が含まれる場合があるため、指定する必要があります。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_20">今回の使用例では簡単です。条件は1つだけ、青いキャラクターです。\n\nそれを選択して、画面上でこの条件が検出されたときにクリックするようにしてください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_21">今回の使用例では簡単です。条件は1つだけ、青いキャラクターです。\n\nそれを選択して、画面上でこの条件が検出されたときにクリックするようにしてください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_21">以上です！\nクリックアクションがゲームに勝つよう正しく設定されました。\n\n保存ボタンをクリックして登録し、アクションリストに戻ってください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">以上です！\nクリックアクションがゲームに勝つよう正しく設定されました。\n\n保存ボタンをクリックして登録し、アクションリストに戻ってください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">アクションリストを閉じてイベント設定に戻ってください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">アクションリストを閉じてイベント設定に戻ってください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_23">イベントに条件とアクションが設定されました。これにより、何をいつ実行するかが分かります。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ってください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">イベントに条件とアクションが設定されました。これにより、何をいつ実行するかが分かります。\n\n保存ボタンをクリックして登録し、シナリオダイアログに戻ってください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_24">シナリオの唯一の要件は、少なくとも1つのイベントを持つことです。\nイベントがゲームに勝つ方法をすでにカバーしているため、他に必要なものはありません。\n\n保存ボタンをクリックして、シナリオをデータベースに保存し、設定ダイアログを閉じてください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">シナリオの唯一の要件は、少なくとも1つのイベントを持つことです。\nイベントがゲームに勝つ方法をすでにカバーしているため、他に必要なものはありません。\n\n保存ボタンをクリックして、シナリオをデータベースに保存し、設定ダイアログを閉じてください。</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_25">ご覧のとおり、再生ボタンが利用可能になりました。これはシナリオが有効で検出に使用できることを意味します。\n\nそれをクリックして検出を開始し、ゲームを開始してください。</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">ご覧のとおり、再生ボタンが利用可能になりました。これはシナリオが有効で検出に使用できることを意味します。\n\nそれをクリックして検出を開始し、ゲームを開始してください。</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_27">おめでとうございます！\n\n「画面全体」検出タイプと「条件をクリック」機能を使って動いているターゲットを追跡する方法を学びました！</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_26">おめでとうございます！\n\n「画面全体」検出タイプと「条件をクリック」機能を使って動いているターゲットを追跡する方法を学びました！</string>
 </resources>

@@ -197,20 +197,12 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                         MonitoredOverlayType.CLICK,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION,
-                    ),
-                ),
-                // Select a condition for the click
-                TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_15,
-                    stepStartCondition = TutorialStepStartCondition.Immediate,
-                    stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CLICK_DIALOG_FIELD_SELECT_POSITION_OR_CONDITION,
+                        MonitoredViewType.CLICK_DIALOG_BUTTON_CONDITION,
                     ),
                 ),
                 // Pick blue character
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_16,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_15,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.SCREEN_CONDITION_SELECTION,
                     ),
@@ -220,7 +212,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Save click
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_17,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_16,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.CLICK,
                     ),
@@ -230,7 +222,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Close action list
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_18,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_17,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.SMART_ACTIONS_BRIEF_MENU,
                     ),
@@ -240,7 +232,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Save event
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_19,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_18,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.EVENT,
                     ),
@@ -250,7 +242,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Save scenario
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_20,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_19,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.SCENARIO,
                     ),
@@ -260,7 +252,7 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Play scenario
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_21,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_20,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.MAIN_MENU,
                     ),
@@ -270,13 +262,13 @@ object TextConditionsMovingTextTutorial : TutorialItem {
                 ),
                 // Start game
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_22,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_21,
                     stepStartCondition = TutorialStepStartCondition.Immediate,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),
                 // Game won
                 TutorialStep.TutorialOverlay(
-                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_23,
+                    contentTextResId = R.string.message_tutorial_text_conditions_moving_text_step_22,
                     stepStartCondition = TutorialStepStartCondition.GameWon,
                     stepEndCondition = TutorialStepEndCondition.NextButton,
                 ),

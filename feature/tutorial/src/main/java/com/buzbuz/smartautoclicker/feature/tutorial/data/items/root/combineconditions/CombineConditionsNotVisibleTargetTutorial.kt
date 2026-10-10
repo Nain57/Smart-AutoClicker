@@ -132,14 +132,14 @@ object CombineConditionsNotVisibleTargetTutorial : TutorialItem {
                         MonitoredViewType.EVENT_DIALOG_FIELD_ACTIONS,
                     ),
                 ),
-                // Click Dialog: Select "click on condition"
+                // Click Dialog: Select "Pick condition"
                 TutorialStep.TutorialOverlay(
                     contentTextResId = R.string.message_tutorial_combine_conditions_not_visible_target_step_9,
                     stepStartCondition = TutorialStepStartCondition.MonitoredOverlayDisplayed(
                         MonitoredOverlayType.CLICK,
                     ),
                     stepEndCondition = TutorialStepEndCondition.MonitoredViewClicked(
-                        MonitoredViewType.CLICK_DIALOG_FIELD_POSITION_TYPE_ITEM_ON_CONDITION,
+                        MonitoredViewType.CLICK_DIALOG_BUTTON_CONDITION,
                     ),
                 ),
                 // Scenario saved, start it and start the game

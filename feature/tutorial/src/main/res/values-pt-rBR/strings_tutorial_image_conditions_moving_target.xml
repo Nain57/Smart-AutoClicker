@@ -88,30 +88,27 @@
         precisamos clicar no personagem azul, então escolha Clique para criar uma nova Ação de Clique.</string>
 
     <string name="message_tutorial_screen_condition_moving_target_step_19">Uma Ação de Clique é definida por uma posição e uma duração de pressão.\n\n
-        Como o personagem azul está se movendo, não podemos usar uma posição fixa. Altere a configuração "Clique em" para "Condição"
-        para clicar onde uma Condição detectada for encontrada.\n\nSelecione-a para usá-la em sua Ação.</string>
+        Como o personagem azul está se movendo, não podemos usar uma posição fixa.\n\nPressione o botão "Escolher condição"
+        para clicar onde uma Condição detectada for encontrada.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_20">Clique no seletor de Condição para escolher em qual Condição detectada clicar.
-        \n\nPrecisamos especificá-la porque um Evento pode ter várias Condições.</string>
-
-    <string name="message_tutorial_screen_condition_moving_target_step_21">Para nosso caso de uso é fácil, temos apenas uma Condição, o personagem azul.
+    <string name="message_tutorial_screen_condition_moving_target_step_20">Para nosso caso de uso é fácil, temos apenas uma Condição, o personagem azul.
         \n\nSelecione-a para clicar nesta Condição quando ela for detectada na sua tela.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_22">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
+    <string name="message_tutorial_screen_condition_moving_target_step_21">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
         o jogo.\n\nClique no botão Salvar para registrá-la e retornar à lista de Ações.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_23">Feche a lista de Ações para retornar à configuração do Evento.</string>
+    <string name="message_tutorial_screen_condition_moving_target_step_22">Feche a lista de Ações para retornar à configuração do Evento.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_24">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele sabe o que
+    <string name="message_tutorial_screen_condition_moving_target_step_23">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele sabe o que
         executar e quando executá-lo.\n\nClique no botão de salvar para registrá-lo e retornar à caixa de diálogo de Cenário.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_25">O único requisito para um Cenário é ter pelo menos um Evento.\n
+    <string name="message_tutorial_screen_condition_moving_target_step_24">O único requisito para um Cenário é ter pelo menos um Evento.\n
         Como nosso Evento já cobre como vencer o jogo, não precisamos de mais nada.\n\nClique no botão de salvar para
         salvar o Cenário no banco de dados e fechar as caixas de diálogo de configuração.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_26">Como você pode ver, o botão de reprodução agora está disponível, o que significa que
+    <string name="message_tutorial_screen_condition_moving_target_step_25">Como você pode ver, o botão de reprodução agora está disponível, o que significa que
         seu Cenário é válido e pode ser usado para detecção.\n\nClique nele para iniciar a detecção e depois inicie o jogo.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_27">Parabéns!\n\nAgora você sabe como rastrear um alvo em movimento usando o tipo de
+    <string name="message_tutorial_screen_condition_moving_target_step_26">Parabéns!\n\nAgora você sabe como rastrear um alvo em movimento usando o tipo de
         detecção "Tela inteira" e o recurso "Clicar em Condição"!</string>
 </resources>

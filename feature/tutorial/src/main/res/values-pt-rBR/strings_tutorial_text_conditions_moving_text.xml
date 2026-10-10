@@ -70,33 +70,30 @@
         precisamos clicar no botão, então escolha Clique para criar uma nova Ação de Clique.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Como \"Hello\" está em movimento, não podemos usar
-        uma posição fixa. Altere a configuração \"Clique em\" para \"Condição\" para clicar na Condição detectada.</string>
+        uma posição fixa.\n\nPressione o botão \"Escolher condição\" para clicar onde a Condição detectada for encontrada.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Clique no seletor de Condição para escolher em qual Condição detectada
-        clicar.\n\nPrecisamos especificá-la porque um Evento pode ter várias Condições.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">Para nosso caso de uso é fácil, temos apenas uma Condição, o texto \"Hello\".
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Para nosso caso de uso é fácil, temos apenas uma Condição, o texto \"Hello\".
         \n\nSelecione-a para clicar nesta Condição quando ela for detectada na sua tela.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
+    <string name="message_tutorial_text_conditions_moving_text_step_16">É isso aí!\nSua Ação de Clique agora está corretamente configurada para vencer
         o jogo.\n\nClique no botão salvar para registrá-la e retornar à lista de Ações.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Feche a lista de Ações para retornar à configuração do Evento.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Feche a lista de Ações para retornar à configuração do Evento.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele sabe o que
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Seu Evento agora tem uma Condição e uma Ação, o que significa que ele sabe o que
         executar e quando executá-lo.\n\nClique no botão salvar para registrá-lo e retornar à caixa de diálogo do Cenário.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">O único requisito para um Cenário é ter pelo menos um Evento.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">O único requisito para um Cenário é ter pelo menos um Evento.\n
         Como nosso Evento já cobre como vencer o jogo, não precisamos de mais nada.\n\nClique no botão salvar para
         salvar o Cenário no banco de dados e fechar as caixas de diálogo de configuração.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">Como você pode ver, o botão de reprodução agora está disponível, o que significa que
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Como você pode ver, o botão de reprodução agora está disponível, o que significa que
         seu Cenário é válido e pode ser usado para detecção.\n\nClique nele para iniciar a detecção.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">Está funcionando mas nada acontece?\n\nIsto é normal, ele só clicará
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Está funcionando mas nada acontece?\n\nIsto é normal, ele só clicará
         quando o botão mostrar \"Hello\", lembra? Mantendo o cenário em execução, pressione o botão iniciar jogo
         e observe como o Klick\'r vence por você!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">Parabéns!\n\nAgora você sabe como detectar um texto em movimento exibido na
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Parabéns!\n\nAgora você sabe como detectar um texto em movimento exibido na
         tela.\nDê uma olhada nos outros tutoriais para descobrir mais casos de uso.</string>
 </resources>

@@ -69,33 +69,30 @@
         просто клікнути на кнопку, тому виберіть Клік для створення нової Дії кліку.</string>
 
     <string name="message_tutorial_text_conditions_moving_text_step_14">Оскільки «Hello» переміщується, ми не можемо використовувати
-        фіксовану позицію. Змініть параметр «Клікнути на» на «Умова», щоб клікати на виявлену Умову.</string>
+        фіксовану позицію.\n\nНатисніть кнопку «Вибрати умову», щоб клікати там, де знайдено виявлену Умову.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_15">Клікніть на селектор Умови, щоб вибрати, на яку виявлену Умову клікати.
-        \n\nНам потрібно це вказати, оскільки подія може мати кілька Умов.</string>
-
-    <string name="message_tutorial_text_conditions_moving_text_step_16">Для нашого випадку використання це легко — у нас є лише одна Умова, текст «Hello».
+    <string name="message_tutorial_text_conditions_moving_text_step_15">Для нашого випадку використання це легко — у нас є лише одна Умова, текст «Hello».
         \n\nВиберіть її, щоб клікати на цю Умову, коли вона виявлена на вашому екрані.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_17">Ось і все!\nВаша Дія кліку тепер правильно налаштована для перемоги в
+    <string name="message_tutorial_text_conditions_moving_text_step_16">Ось і все!\nВаша Дія кліку тепер правильно налаштована для перемоги в
         грі.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до списку Дій.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_18">Закрийте список Дій, щоб повернутися до налаштування Події.</string>
+    <string name="message_tutorial_text_conditions_moving_text_step_17">Закрийте список Дій, щоб повернутися до налаштування Події.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_19">Ваша Подія тепер має Умову та Дію, що означає, що вона знає, що виконувати та
+    <string name="message_tutorial_text_conditions_moving_text_step_18">Ваша Подія тепер має Умову та Дію, що означає, що вона знає, що виконувати та
         коли.\n\nКлікніть на кнопку збереження, щоб зареєструвати її та повернутися до діалогу Сценарію.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_20">Єдина вимога для Сценарію — мати принаймні одну Подію.\n
+    <string name="message_tutorial_text_conditions_moving_text_step_19">Єдина вимога для Сценарію — мати принаймні одну Подію.\n
         Оскільки наша Подія вже охоплює, як виграти гру, нам більше нічого не потрібно.\n\nКлікніть на кнопку збереження, щоб
         зберегти Сценарій в базі даних та закрити діалоги налаштування.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_21">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
+    <string name="message_tutorial_text_conditions_moving_text_step_20">Як ви бачите, кнопка відтворення тепер доступна, що означає, що ваш
         Сценарій дійсний і може використовуватися для виявлення.\n\nКлікніть на неї, щоб почати виявлення.</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_22">Відтворюється, але нічого не відбувається?\n\nЦе нормально, він буде клікати лише
+    <string name="message_tutorial_text_conditions_moving_text_step_21">Відтворюється, але нічого не відбувається?\n\nЦе нормально, він буде клікати лише
         коли кнопка показує «Hello», пам\'ятаєте? Не зупиняючи сценарій, натисніть кнопку почати гру
         і просто спостерігайте, як Klick\'r перемагає за вас!</string>
 
-    <string name="message_tutorial_text_conditions_moving_text_step_23">Вітаємо!\n\nТепер ви знаєте, як виявляти рухомий текст, що відображається на
+    <string name="message_tutorial_text_conditions_moving_text_step_22">Вітаємо!\n\nТепер ви знаєте, як виявляти рухомий текст, що відображається на
         екрані.\nОзнайомтеся з іншими уроками, щоб дізнатися про інші сценарії використання.</string>
 </resources>
