@@ -18,7 +18,6 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.graphics.Point
 import android.os.SystemClock
 import android.util.Log
 
@@ -30,14 +29,26 @@ import javax.inject.Singleton
 
 
 @Singleton
-internal class HeldPointerManager @Inject constructor () {
+internal class HeldPointerManager @Inject constructor (
+    private val userTouchWatcher: UserTouchWatcher,
+) {
 
     /** The pointer the last dispatched gesture left down on the screen, if any. */
     var heldPointer: HeldPointer? = null
         private set
 
-    /** Called when the pointer holding the finger have changed its gesture. Null if not pointer is being held. */
-    fun onHeldPointerContinuationChanged(pointer: HeldPointer?) {
+    /** Uptime of the start of the dispatch of the gesture that put [heldPointer] down. */
+    private var heldSinceMs: Long = 0L
+
+    /**
+     * Called when the pointer holding the finger have changed its gesture. Null if not pointer is being held.
+     *
+     * @param dispatchStartMs the uptime of the start of the dispatch of the gesture leaving [pointer] down. It becomes
+     * the start of the hold only if no pointer was held before: a continuation keeps the original start, so a user
+     * touch made while it was dispatched is still detected.
+     */
+    fun onHeldPointerContinuationChanged(pointer: HeldPointer?, dispatchStartMs: Long = SystemClock.uptimeMillis()) {
+        if (heldPointer == null) heldSinceMs = dispatchStartMs
         heldPointer = pointer
     }
 
@@ -50,32 +61,17 @@ internal class HeldPointerManager @Inject constructor () {
      * Verify the pointer left down on the screen, if any, is still held by the system.
      *
      * The system silently lifts a held pointer when the user touches the screen: the gesture that left it down has
-     * already completed, so there is no callback to be notified. The only way to know is to continue its stroke, the
-     * system refusing a continuation of a pointer that is no longer down. The probe keeps the pointer down, and becomes
-     * the stroke to continue afterwards.
-     *
-     * The system also refuses a gesture emitting no motion event, which is the case of a pointer continuing without
-     * moving. The probe moves it by one pixel, back and forth between two positions, to stay below any touch slop.
+     * already completed, so there is no callback to be notified. Any user touch made since the start of the hold
+     * therefore means the pointer is lost, and it is dropped: the next gesture must start a new stroke instead of
+     * continuing a pointer that is no longer down.
      *
      * @return true if the pointer is still held or if there was none, false if it has been lost.
      */
-    suspend fun checkHeldPointer(dispatcher: suspend (GestureDescription) -> Boolean): Boolean {
-        Log.d(TAG, "Check held pointer state")
-        val pointer = heldPointer ?: return true
-        val probePosition = pointer.position.toProbePosition()
-        val probeStroke = pointer.stroke.toContinuation(pointer.position, probePosition, willContinue = true) ?: let {
-            heldPointer = null
-            return false
-        }
+    fun checkHeldPointer(): Boolean {
+        if (heldPointer == null || !userTouchWatcher.hasUserTouchedSince(heldSinceMs)) return true
 
-        heldPointer = HeldPointer(probeStroke, probePosition, pointer.owner)
-
-        val startNs = SystemClock.elapsedRealtimeNanos()
-        val isHeld = dispatcher(GestureDescription.Builder().addStroke(probeStroke).build())
-        Log.d(TAG, "Held pointer probe: held=$isHeld, duration=${(SystemClock.elapsedRealtimeNanos() - startNs) / 1_000}µs")
-
-        if (!isHeld) heldPointer = null
-        return isHeld
+        heldPointer = null
+        return false
     }
 
     /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
@@ -134,9 +130,5 @@ private fun HeldPointer.toReleaseGesture(): GestureDescription? {
         null
     }
 }
-
-/** The position a probe moves a held pointer to: one pixel aside, alternating between two positions. */
-private fun Point.toProbePosition(): Point =
-    Point(if (x % 2 == 0) x + 1 else x - 1, y)
 
 private const val TAG = "HeldPointerManager"

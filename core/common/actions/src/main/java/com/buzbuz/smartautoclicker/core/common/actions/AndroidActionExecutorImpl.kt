@@ -85,11 +85,9 @@ internal class AndroidActionExecutorImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkHeldPointer() {
-        val service = accessibilityService ?: return
-
-        if (!gestureExecutor.checkHeldPointer(service)) {
-            Log.i(TAG, "Held pointer has been lifted by the system")
+    override fun checkHeldPointer() {
+        if (!gestureExecutor.checkHeldPointer()) {
+            Log.i(TAG, "Held pointer has been lifted by a user touch")
         }
     }
 

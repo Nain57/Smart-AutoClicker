@@ -27,14 +27,12 @@ import android.os.Build
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -44,11 +42,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.isNull
-import org.mockito.MockedConstruction
 import org.mockito.Mockito.doThrow
+import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.mockConstruction
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -64,22 +62,18 @@ import kotlin.time.Duration.Companion.milliseconds
 class GestureExecutorTests {
 
     private lateinit var service: AccessibilityService
+    private lateinit var userTouchWatcher: UserTouchWatcher
     private lateinit var heldPointerManager: HeldPointerManager
     private lateinit var executor: GestureExecutor
-    private var debouncerConstruction: MockedConstruction<GestureDebouncer>? = null
     private lateinit var callbackCaptor: ArgumentCaptor<GestureResultCallback>
 
     @Before
     fun setUp() {
         service = mock(AccessibilityService::class.java)
-        heldPointerManager = HeldPointerManager()
-        executor = GestureExecutor(heldPointerManager, Dispatchers.Unconfined)
+        userTouchWatcher = mock(UserTouchWatcher::class.java)
+        heldPointerManager = HeldPointerManager(userTouchWatcher)
+        executor = GestureExecutor(heldPointerManager, userTouchWatcher)
         callbackCaptor = ArgumentCaptor.forClass(GestureResultCallback::class.java)
-    }
-
-    @After
-    fun tearDown() {
-        debouncerConstruction?.close()
     }
 
     @Test
@@ -244,46 +238,95 @@ class GestureExecutorTests {
     }
 
     @Test
-    fun checkHeldPointer_nothingHeld_returnsTrueWithoutDispatching() = runTest {
-        assertTrue(executor.checkHeldPointer(service))
-        verifyNoInteractions(service)
-    }
-
-    @Test
-    fun checkHeldPointer_tooCloseToCreation_assumesStillHeldWithoutProbing() = runTest {
-        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
-
-        assertTrue(executor.checkHeldPointer(service))
-        verifyNoInteractions(service)
-        assertEquals(OWNER, executor.getHeldPointer()?.owner)
-    }
-
-    @Test
-    fun checkHeldPointer_probeCompleted_returnsTrue_andKeepsPointer() = runTest {
-        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
-        allowProbe()
-
-        val result = async { executor.checkHeldPointer(service) }
+    fun dispatchBuiltGesture_leavingPointerHeld_watchesUserTouchesBeforeDispatching() = runTest {
+        val result = async {
+            executor.dispatchBuiltGesture(service, builtGesture(listOf(gesture()), held = heldPointer()))
+        }
         runCurrent()
         verify(service).dispatchGesture(any(), callbackCaptor.capture(), any())
         callbackCaptor.value.onCompleted(null)
 
         assertTrue(result.await())
-        assertEquals(OWNER, executor.getHeldPointer()?.owner)
+        // A user touch interrupting the gesture leaving the pointer down must be noticed too
+        inOrder(userTouchWatcher, service).apply {
+            verify(userTouchWatcher).start(service)
+            verify(service).dispatchGesture(any(), any(), any())
+        }
+        verify(userTouchWatcher, never()).stop()
     }
 
     @Test
-    fun checkHeldPointer_probeCancelled_returnsFalse_andDropsPointer() = runTest {
-        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
-        allowProbe()
+    fun dispatchBuiltGesture_withoutHeldPointer_doesNotWatchUserTouches() = runTest {
+        val result = async { executor.dispatchBuiltGesture(service, builtGesture(listOf(gesture()))) }
+        runCurrent()
+        verify(service).dispatchGesture(any(), callbackCaptor.capture(), any())
+        callbackCaptor.value.onCompleted(null)
 
-        val result = async { executor.checkHeldPointer(service) }
+        assertTrue(result.await())
+        verify(userTouchWatcher, never()).start(service)
+    }
+
+    @Test
+    fun dispatchBuiltGesture_releasingHeldPointer_stopsWatchingUserTouches() = runTest {
+        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
+
+        val result = async { executor.dispatchBuiltGesture(service, builtGesture(listOf(gesture()))) }
+        runCurrent()
+        verify(service).dispatchGesture(any(), callbackCaptor.capture(), any())
+        callbackCaptor.value.onCompleted(null)
+
+        assertTrue(result.await())
+        verify(userTouchWatcher).stop()
+    }
+
+    @Test
+    fun dispatchBuiltGesture_cancelled_stopsWatchingUserTouches() = runTest {
+        val result = async {
+            executor.dispatchBuiltGesture(service, builtGesture(listOf(gesture()), held = heldPointer()))
+        }
         runCurrent()
         verify(service).dispatchGesture(any(), callbackCaptor.capture(), any())
         callbackCaptor.value.onCancelled(null)
 
         assertFalse(result.await())
+        verify(userTouchWatcher).stop()
+    }
+
+    @Test
+    fun checkHeldPointer_nothingHeld_returnsTrue() {
+        assertTrue(executor.checkHeldPointer())
+        verifyNoInteractions(service)
+    }
+
+    @Test
+    fun checkHeldPointer_noUserTouch_returnsTrue_andKeepsPointer() {
+        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
+
+        assertTrue(executor.checkHeldPointer())
+        verifyNoInteractions(service)
+        verify(userTouchWatcher, never()).stop()
+        assertEquals(OWNER, executor.getHeldPointer()?.owner)
+    }
+
+    @Test
+    fun checkHeldPointer_userTouched_returnsFalse_dropsPointer_andKeepsWatching() {
+        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
+        mockWhen(userTouchWatcher.hasUserTouchedSince(anyLong())).thenReturn(true)
+
+        assertFalse(executor.checkHeldPointer())
+        verifyNoInteractions(service)
+        // The event is often held again right away, the window must not be removed and added back meanwhile
+        verify(userTouchWatcher, never()).stop()
         assertNull(executor.getHeldPointer())
+    }
+
+    @Test
+    fun releaseHeldPointer_held_stopsWatchingUserTouches() = runTest {
+        heldPointerManager.onHeldPointerContinuationChanged(heldPointer())
+
+        executor.releaseHeldPointer(null)
+
+        verify(userTouchWatcher).stop()
     }
 
     @Test
@@ -320,6 +363,7 @@ class GestureExecutorTests {
         executor.clear(service)
 
         verify(service).dispatchGesture(any(), isNull(), isNull())
+        verify(userTouchWatcher).stop()
         assertNull(executor.getHeldPointer())
     }
 
@@ -328,17 +372,6 @@ class GestureExecutorTests {
         executor.dispatchPixelWorkaroundGestureIfNeeded(service)
 
         verify(service, never()).dispatchGesture(any(), any(), any())
-    }
-
-    /**
-     * The held pointer is probed at most once per second, starting one second after the executor creation. The
-     * debouncer reads the real clock, so the executor is recreated with debouncers letting the probe through.
-     */
-    private fun allowProbe() {
-        debouncerConstruction = mockConstruction(GestureDebouncer::class.java) { debouncer, _ ->
-            mockWhen(debouncer.shouldTrigger()).thenReturn(true)
-        }
-        executor = GestureExecutor(heldPointerManager, Dispatchers.Unconfined)
     }
 
     private fun builtGesture(vararg chains: List<GestureDescription>, held: HeldPointer? = null): BuiltGesture =

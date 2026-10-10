@@ -113,12 +113,12 @@ internal class ActionExecutor(
     /**
      * Verify the pointer a gesture is holding on the screen, if any, has not been lifted by the system.
      *
-     * Called on every frame while a pointer is held, so it stays on the processing thread: the executor only switches
-     * to the main thread when it actually probes the pointer.
+     * Called on every frame while a pointer is held: the executor only compares the start of the hold with the last
+     * user touch, so it stays on the processing thread.
      *
      * @return true if it is still held, false if it has been lost or if nothing was held.
      */
-    suspend fun checkHeldFinger(): Boolean {
+    fun checkHeldFinger(): Boolean {
         if (androidExecutor.getHeldPointer() == null) return false
 
         androidExecutor.checkHeldPointer()
