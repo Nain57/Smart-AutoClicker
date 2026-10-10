@@ -16,9 +16,12 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.action.gesture
 
+import androidx.annotation.StringRes
+
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.ui.bindings.dropdown.DropdownItem
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.UiGesturePosition
 
 data class GestureDialogUiState(
@@ -44,8 +47,12 @@ sealed interface GestureDialogUiStateItem {
     ) : GestureDialogUiStateItem
 
     data class Release(
+        override val id: Identifier,
+        override val isCollapsed: Boolean,
         val fingerIndex: Int,
-    ) : GestureDialogUiStateItem
+        val isWhenFieldVisible: Boolean,
+        val whenItem: ReleaseWhenDropdownItem,
+    ) : Collapsable
 
     data class Press(
         override val id: Identifier,
@@ -82,3 +89,11 @@ sealed interface GestureDialogUiStateItem {
         val moveableDown: Boolean
     }
 }
+
+sealed class ReleaseWhenDropdownItem(@StringRes title: Int) : DropdownItem(title) {
+    data object Now : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_now)
+    data object OnceUnfulfilled : ReleaseWhenDropdownItem(R.string.field_gesture_release_when_item_once_unfulfilled)
+}
+
+val releaseWhenDropdownItems: List<ReleaseWhenDropdownItem> =
+    listOf(ReleaseWhenDropdownItem.Now, ReleaseWhenDropdownItem.OnceUnfulfilled)

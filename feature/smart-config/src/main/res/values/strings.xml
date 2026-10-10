@@ -377,6 +377,10 @@
     <string name="button_title_condition_pick">Pick condition</string>
     <string name="button_title_condition_remove">Remove condition</string>
 
+    <string name="field_gesture_release_when_title">When</string>
+    <string name="field_gesture_release_when_item_now">Now</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Once unfulfilled</string>
+
 
 
     <!-- TODO: delete -->
