@@ -243,7 +243,7 @@
 
     <string name="field_click_position_desc">Haga clic en %1$d, %2$d</string>
 
-    <string name="field_click_offset_title">Haga clic en desplazamiento</string>
+    <string name="field_click_offset_title">Desplazamiento</string>
     <string name="field_click_offset_desc_none">Ninguno</string>
 
     <!-- Dialog Action Swipe ======================================================================================= -->

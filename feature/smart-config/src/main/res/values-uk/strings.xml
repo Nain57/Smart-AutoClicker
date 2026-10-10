@@ -245,7 +245,7 @@
 
     <string name="field_click_position_desc">Клікнути на %1$d, %2$d</string>
 
-    <string name="field_click_offset_title">Зміщення кліка</string>
+    <string name="field_click_offset_title">Зміщення</string>
     <string name="field_click_offset_desc_none">Немає</string>
 
 

@@ -219,7 +219,7 @@
     <string name="field_condition_selection_title_or_operator">Nhấp vào Sự kiện được phát hiện đầu tiên</string>
     <string name="field_condition_selection_desc_or_operator">Điều kiện của Sự kiện được đặt thành \"HOẶC\", nhấp chuột sẽ xảy ra ở điều kiện được phát hiện đầu tiên</string>
     <string name="field_click_position_desc">Nhấp vào %1$d, %2$d</string>
-    <string name="field_click_offset_title">Tọa độ lệch khi nhấp</string>
+    <string name="field_click_offset_title">Độ lệch</string>
     <string name="field_click_offset_desc_none">Không có</string>
     <string name="dialog_title_pause">Chờ đợi</string>
     <string name="dialog_title_application_selection">Chọn một ứng dụng</string>

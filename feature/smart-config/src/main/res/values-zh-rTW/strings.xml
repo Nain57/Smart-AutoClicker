@@ -252,7 +252,7 @@
     <string name="field_click_type_desc_on_condition">點擊條件滿足的對應位置坐標</string>
     <string name="field_click_type_desc_on_position">點擊自訂坐標位置</string>
 
-    <string name="field_click_offset_title">點擊偏移</string>
+    <string name="field_click_offset_title">偏移</string>
     <string name="field_click_offset_desc_none">無</string>
 
     <!-- Dropdown field for selecting the intent sending type. -->
