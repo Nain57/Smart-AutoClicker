@@ -20,6 +20,7 @@ option java_multiple_files = true;
 package com.buzbuz.smartautoclicker.core.smart.debugging;
 
 import "CountersInitMessage.proto";
+import "HeldEventCheckMessage.proto";
 import "ImageEventMessage.proto";
 import "TriggerEventMessage.proto";
 
@@ -40,5 +41,8 @@ message DebugReportMessage {
 
         /** Initial value for counters. */
         CountersInitMessage countersInitMessage = 4;
+
+        /** The conditions of an event holding a pointer on the screen have been verified. */
+        HeldEventCheckMessage heldEventCheckMessage = 5;
     }
 }

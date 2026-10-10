@@ -33,6 +33,7 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditi
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveHeldEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
@@ -41,14 +42,20 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.DebugRep
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventOccurrencesRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.EventStateRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping.toCountersInitProtobuf
+import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.HeldEventRecorder
 import com.buzbuz.smartautoclicker.core.smart.debugging.engine.recorder.ScreenConditionOccurrenceRecorder
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -68,6 +75,7 @@ internal class DebugEngine @Inject constructor(
     private val screenConditionOccurrenceRecorder: ScreenConditionOccurrenceRecorder,
     private val counterValuesRecorder: CounterValuesRecorder,
     private val eventStateRecorder: EventStateRecorder,
+    private val heldEventRecorder: HeldEventRecorder,
 ) : SmartProcessingListener {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -85,6 +93,12 @@ internal class DebugEngine @Inject constructor(
 
     private val _lastEventProcessed: MutableStateFlow<DebugLiveEventOccurrence?> = MutableStateFlow(null)
     val lastEventProcessed: StateFlow<DebugLiveEventOccurrence?> = _lastEventProcessed
+
+    private val _liveHold: MutableStateFlow<LiveHold?> = MutableStateFlow(null)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val heldEvent: Flow<DebugLiveHeldEvent?> = _liveHold.flatMapLatest { hold ->
+        hold?.toLiveHeldEventTicker() ?: flowOf(null)
+    }
 
 
     override fun onSessionStarted(
@@ -129,7 +143,17 @@ internal class DebugEngine @Inject constructor(
         }
     }
 
-    override fun onEventProcessingCompleted(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult>) {
+    override fun onEventProcessingCompleted(
+        event: Event,
+        fulfilled: Boolean,
+        results: List<ProcessedConditionResult>,
+        isHeld: Boolean,
+    ) {
+        if (isHeld) {
+            onHeldEventChecked(event, fulfilled, results)
+            return
+        }
+
         coroutineScopeIo.launch {
             if (fulfilled) eventOccurrencesRecorder.onEventFulfilled(event)
             if (!shouldGenerateLiveEvents) return@launch
@@ -168,6 +192,38 @@ internal class DebugEngine @Inject constructor(
 
                 is TriggerEvent ->
                     writeTriggerEventToReport(event, results as List<ProcessedConditionResult.Trigger>)
+            }
+        }
+    }
+
+    override fun onHeldEventChanged(heldEvent: Event?) {
+        val timestampMs = System.currentTimeMillis()
+        coroutineScopeIo.launch {
+            heldEventRecorder.onHeldEventChanged(heldEvent, timestampMs)
+            if (!shouldGenerateLiveEvents) return@launch
+
+            _liveHold.value = heldEvent?.let { LiveHold(event = it, startTimestampMs = timestampMs) }
+        }
+    }
+
+    private fun onHeldEventChecked(event: Event, held: Boolean, results: List<ProcessedConditionResult>) {
+        val timestampMs = System.currentTimeMillis()
+        coroutineScopeIo.launch {
+            if (!shouldWriteReport) return@launch
+
+            @Suppress("UNCHECKED_CAST")
+            when (event) {
+                is ScreenEvent -> {
+                    writeScreenHeldEventCheckToReport(event, held, timestampMs)
+                    screenConditionOccurrenceRecorder.reset()
+                }
+
+                is TriggerEvent -> writeTriggerHeldEventCheckToReport(
+                    event = event,
+                    held = held,
+                    timestampMs = timestampMs,
+                    results = results as List<ProcessedConditionResult.Trigger>,
+                )
             }
         }
     }
@@ -245,7 +301,9 @@ internal class DebugEngine @Inject constructor(
 
             eventOccurrencesRecorder.reset()
             screenConditionOccurrenceRecorder.reset()
+            heldEventRecorder.reset()
             _lastEventProcessed.value = null
+            _liveHold.value = null
             _isDebuggingSession.value = false
             isReportEnabled = false
             shouldGenerateLiveEvents = false
@@ -311,16 +369,64 @@ internal class DebugEngine @Inject constructor(
                 relativeTimestampMs = overviewRecorder.sessionDurationMs,
                 counterChanges = counterValuesRecorder.eventCounterChanges.toList(),
                 eventStateChanges = eventStateRecorder.changes.toList(),
-                conditionsResults = results.map { result ->
-                    DebugReportConditionResult.TriggerCondition(
-                        conditionId = result.condition.id.databaseId,
-                        isFulFilled = result.isFulfilled,
-                    )
-                }
+                conditionsResults = results.toReportConditionResults(),
+            )
+        )
+    }
+
+    private suspend fun writeScreenHeldEventCheckToReport(event: ScreenEvent, held: Boolean, timestampMs: Long) {
+        debugReportLocalDataSource.writeEventOccurrenceToReport(
+            occurrence = DebugReportEventOccurrence.HeldEventCheck.Screen(
+                eventId = event.id.databaseId,
+                frameNumber = overviewRecorder.frameCount,
+                relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                conditionsResults = screenConditionOccurrenceRecorder.screenConditionResults.toList(),
+                isHeld = held,
+                holdDurationMs = heldEventRecorder.getHoldDurationMs(event, timestampMs),
+            )
+        )
+    }
+
+    private suspend fun writeTriggerHeldEventCheckToReport(
+        event: TriggerEvent,
+        held: Boolean,
+        timestampMs: Long,
+        results: List<ProcessedConditionResult.Trigger>,
+    ) {
+        debugReportLocalDataSource.writeEventOccurrenceToReport(
+            occurrence = DebugReportEventOccurrence.HeldEventCheck.Trigger(
+                eventId = event.id.databaseId,
+                relativeTimestampMs = overviewRecorder.sessionDurationMs,
+                conditionsResults = results.toReportConditionResults(),
+                isHeld = held,
+                holdDurationMs = heldEventRecorder.getHoldDurationMs(event, timestampMs),
             )
         )
     }
 }
+
+/** An event holding a pointer, as displayed by the live debugging. */
+private data class LiveHold(
+    val event: Event,
+    val startTimestampMs: Long,
+)
+
+/** Emits the hold duration each time a new second of hold is reached. */
+private fun LiveHold.toLiveHeldEventTicker(): Flow<DebugLiveHeldEvent> = flow {
+    while (true) {
+        val holdDurationMs = (System.currentTimeMillis() - startTimestampMs).coerceAtLeast(0L)
+        emit(DebugLiveHeldEvent(event = event, holdDurationS = holdDurationMs / 1_000L))
+        delay((1_000L - holdDurationMs % 1_000L).milliseconds)
+    }
+}
+
+private fun List<ProcessedConditionResult.Trigger>.toReportConditionResults(): List<DebugReportConditionResult.TriggerCondition> =
+    map { result ->
+        DebugReportConditionResult.TriggerCondition(
+            conditionId = result.condition.id.databaseId,
+            isFulFilled = result.isFulfilled,
+        )
+    }
 
 private fun ProcessedConditionResult.Screen.getDetectionArea(): Rect? {
     val pos = position ?: return null

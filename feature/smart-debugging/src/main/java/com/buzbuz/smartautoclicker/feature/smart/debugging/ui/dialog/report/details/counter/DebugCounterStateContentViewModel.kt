@@ -70,8 +70,10 @@ class DebugCounterStateContentViewModel @Inject constructor(
     fun setOccurrence(scenarioId: Long, occurrence: DebugReportEventOccurrence) {
         viewModelScope.launch {
             val event = when (occurrence) {
-                is DebugReportEventOccurrence.ScreenEvent -> smartRepository.getScreenEvents(scenarioId)
-                is DebugReportEventOccurrence.TriggerEvent -> smartRepository.getTriggerEvents(scenarioId)
+                is DebugReportEventOccurrence.ScreenEvent,
+                is DebugReportEventOccurrence.HeldEventCheck.Screen -> smartRepository.getScreenEvents(scenarioId)
+                is DebugReportEventOccurrence.TriggerEvent,
+                is DebugReportEventOccurrence.HeldEventCheck.Trigger -> smartRepository.getTriggerEvents(scenarioId)
             }.findWithId(occurrence.eventId) ?: return@launch
 
             eventOccurrence.update { event to occurrence }

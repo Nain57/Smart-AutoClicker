@@ -46,6 +46,17 @@ interface SmartProcessingListener {
     /** The processing of the [ScreenEvent] list on a new screen frame has begun. */
     fun onEventsListProcessingStarted(eventType: EventType) = Unit
 
+    /**
+     * The event holding a pointer on the screen has changed.
+     * This is called when a hold starts, when it is taken over by another event, and when the pointer is released,
+     * whatever the reason (conditions unfulfilled, event disabled, lifted by the user, dropped by the system...).
+     *
+     * @param heldEvent the event now holding the pointer, or null if nothing is held anymore.
+     */
+    fun onHeldEventChanged(heldEvent: Event?) = Unit
+
+
+
     /** The processing of an [Event] on the current screen frame has begun. */
     fun onEventProcessingStarted(event: Event) = Unit
 
@@ -55,8 +66,15 @@ interface SmartProcessingListener {
      * @param event the event fulfilled
      * @param fulfilled true if event conditions are fulfilled, false if not.
      * @param results the results for each Condition processed for the event
+     * @param isHeld true if the event is holding a pointer on the screen and this processing is the verification of
+     * its hold. In this case, [fulfilled] tells if the pointer is kept held, or if it is released.
      */
-    fun onEventProcessingCompleted(event: Event, fulfilled: Boolean, results: List<ProcessedConditionResult>)
+    fun onEventProcessingCompleted(
+        event: Event,
+        fulfilled: Boolean,
+        results: List<ProcessedConditionResult>,
+        isHeld: Boolean = false,
+    )
 
     /**
      * A [Event] have been fulfilled and its actions are done being executed..

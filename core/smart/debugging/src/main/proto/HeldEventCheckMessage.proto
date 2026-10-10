@@ -1,0 +1,67 @@
+/*
+ * Copyright (C) 2026 Kevin Buzeau
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+syntax = "proto3";
+option java_multiple_files = true;
+
+package com.buzbuz.smartautoclicker.core.smart.debugging;
+
+import "ImageEventMessage.proto";
+import "TriggerEventMessage.proto";
+
+/**
+ * Details about the verification of the conditions of an event holding a pointer on the screen.
+ * Sent each time the held event conditions have been verified, telling if the pointer is kept held or released.
+ */
+message HeldEventCheckMessage {
+
+    /** The unique identifier of the event holding the pointer. */
+    int64 eventId = 1;
+
+    /** The type of the event holding the pointer. */
+    EventType eventType = 2;
+
+    /** Tells if the conditions are still fulfilled and the pointer is kept held, or if it has been released. */
+    HoldState holdState = 3;
+
+    /** The duration since the pointer is held, in milliseconds. */
+    int64 holdDurationMs = 4;
+
+    /** The frame number in the current detection session. Only set for screen events. */
+    int64 frameNumber = 5;
+
+    /** The list of results for the conditions verified, if the event is a screen event. */
+    repeated ImageEventMessage.ImageConditionResult imageConditionResults = 6;
+
+    /** The list of results for the conditions verified, if the event is a trigger event. */
+    repeated TriggerEventMessage.TriggerConditionResult triggerConditionResults = 7;
+
+    /** The type of event holding the pointer. */
+    enum EventType {
+        EVENT_TYPE_UNSPECIFIED = 0;
+        EVENT_TYPE_SCREEN = 1;
+        EVENT_TYPE_TRIGGER = 2;
+    }
+
+    /** The state of the hold after the check. */
+    enum HoldState {
+        HOLD_STATE_UNSPECIFIED = 0;
+        /** The event conditions are still fulfilled, the pointer is kept held. */
+        HOLD_STATE_HELD = 1;
+        /** The event conditions are no longer fulfilled, the pointer is released. */
+        HOLD_STATE_RELEASED = 2;
+    }
+}
