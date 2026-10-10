@@ -23,7 +23,9 @@ import android.content.Intent
 import android.util.AndroidRuntimeException
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.notification.NotificationRequestExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.text.TextExecutor
@@ -33,6 +35,7 @@ import java.io.PrintWriter
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @Singleton
@@ -56,13 +59,16 @@ internal class AndroidActionExecutorImpl @Inject constructor(
             }
         }
 
+    override fun getHeldPointer(): HeldPointer? =
+        gestureExecutor.getHeldPointer()
+
     override fun init(service: AccessibilityService) {
         accessibilityServiceRef = WeakReference(service)
         notificationRequestExecutor.init(service)
     }
 
     override fun resetState() {
-        gestureExecutor.clear()
+        gestureExecutor.clear(accessibilityServiceRef?.get())
         notificationRequestExecutor.clear()
     }
 
@@ -76,7 +82,7 @@ internal class AndroidActionExecutorImpl @Inject constructor(
 
         if (!gestureExecutor.dispatchGesture(service, gestureDescription)) {
             Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
-            delay(500)
+            delay(500.milliseconds)
         }
     }
 
@@ -85,7 +91,24 @@ internal class AndroidActionExecutorImpl @Inject constructor(
 
         if (!gestureExecutor.dispatchGestures(service, gestureDescriptions)) {
             Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
-            delay(500)
+            delay(500.milliseconds)
+        }
+    }
+
+    override suspend fun dispatchBuiltGesture(gesture: BuiltGesture) {
+        val service = accessibilityService ?: return
+
+        if (!gestureExecutor.dispatchBuiltGesture(service, gesture)) {
+            Log.w(TAG, "System did not execute the gesture properly, delaying processing to avoid spamming slow system")
+            delay(500.milliseconds)
+        }
+    }
+
+    override suspend fun releaseHeldPointer() {
+        val service = accessibilityService ?: return
+
+        if (!gestureExecutor.releaseHeldPointer(service)) {
+            Log.w(TAG, "System did not release the held pointer properly")
         }
     }
 

@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.common.actions.gesture
 
 import android.accessibilityservice.GestureDescription
+import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Path
 
 import kotlin.random.Random
@@ -33,9 +34,13 @@ internal class AndroidGestureBuilderCompat24(
     random: Random?,
 ) : AndroidGestureBuilder(random) {
 
-    override val supportsWaitMotions: Boolean = false
+    override val supportsStrokeContinuation: Boolean = false
 
-    override fun buildSlices(fingers: List<ResolvedFinger>): List<AndroidGestureSlice> {
+    /** Without stroke continuation there is nothing to continue and nothing can be left down, so both maps stay empty. */
+    override fun buildSlices(
+        fingers: List<ResolvedFinger>,
+        initialHeldStrokes: Map<Int, StrokeDescription>,
+    ): AndroidGestureSlices {
         val builder = GestureDescription.Builder()
 
         fingers.forEach { finger ->
@@ -56,6 +61,6 @@ internal class AndroidGestureBuilderCompat24(
             )
         }
 
-        return listOf(AndroidGestureSlice(builder.build(), continuesPreviousSlice = false))
+        return AndroidGestureSlices(listOf(AndroidGestureSlice(builder.build(), continuesPreviousSlice = false)))
     }
 }

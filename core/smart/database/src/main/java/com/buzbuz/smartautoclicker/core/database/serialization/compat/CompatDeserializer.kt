@@ -738,6 +738,7 @@ internal open class CompatDeserializer : Deserializer() {
             xOffsetCounter = jsonMotion.getString("xOffsetCounter"),
             yOffsetLiteral = jsonMotion.getInt("yOffsetLiteral"),
             yOffsetCounter = jsonMotion.getString("yOffsetCounter"),
+            holdUntilUnfulfilled = jsonMotion.getBoolean("holdUntilUnfulfilled"),
         )
 
     // ======================= COMPAT METHODS

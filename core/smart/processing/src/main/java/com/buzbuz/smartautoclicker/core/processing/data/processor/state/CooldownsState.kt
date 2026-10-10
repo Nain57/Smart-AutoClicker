@@ -20,7 +20,14 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 
 interface ICooldownsState {
 
-    fun startCooldownIfNeeded(screenEvent: ScreenEvent)
+    /**
+     * Start the cooldown of the event, if it has one.
+     *
+     * @param screenEvent the event to start the cooldown of.
+     * @param startTimeMs the timestamp the cooldown starts from. Can be in the past, the cooldown duration is then
+     * reduced by the elapsed time.
+     */
+    fun startCooldownIfNeeded(screenEvent: ScreenEvent, startTimeMs: Long = System.currentTimeMillis())
     fun removeCooldown(screenEvent: ScreenEvent)
     fun isCooldownRunning(screenEvent: ScreenEvent): Boolean
 }
@@ -30,9 +37,9 @@ internal class CooldownsState : ICooldownsState {
     /** Map of screen event ids to their cooldown end timestamps in ms. */
     private val activeCooldowns: MutableMap<Long, Long> = mutableMapOf()
 
-    override fun startCooldownIfNeeded(screenEvent: ScreenEvent) {
+    override fun startCooldownIfNeeded(screenEvent: ScreenEvent, startTimeMs: Long) {
         if (screenEvent.cooldownMs <= 0) return
-        activeCooldowns[screenEvent.id.databaseId] = System.currentTimeMillis() + screenEvent.cooldownMs
+        activeCooldowns[screenEvent.id.databaseId] = startTimeMs + screenEvent.cooldownMs
     }
 
     override fun removeCooldown(screenEvent: ScreenEvent) {

@@ -36,7 +36,7 @@ class ResolvedFingerBuilder internal constructor(
     private val index: Int,
     startTimeMs: Long,
     private val random: Random?,
-    private val supportsWaitMotions: Boolean,
+    private val supportsStrokeContinuation: Boolean,
 ) {
 
     private val segments = mutableListOf<ResolvedSegment>()
@@ -44,15 +44,27 @@ class ResolvedFingerBuilder internal constructor(
     private var currentPosition: Point? = null
     private var isReleased: Boolean = false
     private var isInvalid: Boolean = false
+    private var isHeld: Boolean = false
 
-    /** The finger touches the screen at [position]. Must be called first, and only once. */
-    fun press(position: Point): ResolvedFingerBuilder = apply {
+    /**
+     * The finger touches the screen at [position] and stays there for [holdMs]. Must be called first, and only once.
+     *
+     * Unlike [wait], this initial hold does not need stroke continuation: it is the duration of the very first stroke
+     * of the finger, so it is honoured on every Android version.
+     */
+    fun press(position: Point, holdMs: Long = 0L): ResolvedFingerBuilder = apply {
         if (currentPosition != null || isReleased) {
             invalidate("it presses more than once")
             return@apply
         }
 
-        currentPosition = position.randomizedPosition(random)
+        val pressPosition = position.randomizedPosition(random)
+        currentPosition = pressPosition
+        if (holdMs <= 0L) return@apply
+
+        val resolvedDurationMs = holdMs.toResolvedDurationMs()
+        segments.add(ResolvedSegment(currentTimeMs, currentTimeMs + resolvedDurationMs, pressPosition, pressPosition))
+        currentTimeMs += resolvedDurationMs
     }
 
     /** The finger slides from its current position to [position] in [durationMs]. */
@@ -72,7 +84,7 @@ class ResolvedFingerBuilder internal constructor(
      */
     fun wait(durationMs: Long): ResolvedFingerBuilder = apply {
         val position = currentPositionOrInvalidate() ?: return@apply
-        if (!supportsWaitMotions) {
+        if (!supportsStrokeContinuation) {
             Log.i(TAG, "Skipping wait motion of finger $index, not supported on this Android version")
             return@apply
         }
@@ -83,10 +95,26 @@ class ResolvedFingerBuilder internal constructor(
         currentTimeMs += resolvedDurationMs
     }
 
-    /** The finger leaves the screen at its current position. Must be called last, and only once. */
-    fun release(): ResolvedFingerBuilder = apply {
+    /**
+     * The finger leaves the screen at its current position. Must be called last, and only once.
+     *
+     * @param hold true to keep the pointer down on the screen once the gesture is over instead of lifting it. Holding
+     * requires stroke continuation, and only the first finger of a gesture can be held: the request is dropped
+     * otherwise, and the finger is released as usual.
+     */
+    fun release(hold: Boolean = false): ResolvedFingerBuilder = apply {
         if (currentPositionOrInvalidate() == null) return@apply
         isReleased = true
+        if (!hold) return@apply
+
+        when {
+            !supportsStrokeContinuation ->
+                Log.i(TAG, "Skipping hold of finger $index, not supported on this Android version")
+            index != FIRST_FINGER_INDEX ->
+                Log.i(TAG, "Skipping hold of finger $index, only the first finger of a gesture can be held")
+            else ->
+                isHeld = true
+        }
     }
 
     /** @return the finger placed on the timeline, or null if its motions are not a valid touch sequence. */
@@ -104,7 +132,7 @@ class ResolvedFingerBuilder internal constructor(
             )
         }
 
-        return ResolvedFinger(index, segments.toList())
+        return ResolvedFinger(index, segments.toList(), isHeld)
     }
 
     private fun currentPositionOrInvalidate(): Point? {

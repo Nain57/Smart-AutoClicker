@@ -90,6 +90,7 @@ internal fun GestureFingerMotion.toMotionEntity(fingerId: Long, index: Int): Ges
             fingerId = fingerId,
             index = index,
             motionType = GestureFingerMotionType.RELEASE,
+            holdUntilUnfulfilled = holdUntilUnfulfilled,
         )
     }
 
@@ -151,6 +152,7 @@ private fun GestureFingerMotionEntity.toDomainGestureMotion(cleanIds: Boolean = 
         )
         GestureFingerMotionType.RELEASE -> GestureFingerMotion.Release(
             id = Identifier(id, asTemporary = cleanIds),
+            holdUntilUnfulfilled = holdUntilUnfulfilled == true,
         )
     }
 

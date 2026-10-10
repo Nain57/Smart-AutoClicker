@@ -37,7 +37,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.state.Processi
 import com.buzbuz.smartautoclicker.core.processing.domain.model.ProcessedConditionResult
 
 /** Builds the domain objects consumed by the gesture resolver. */
-internal object GestureResolverTestData {
+internal object FingerResolverTestData {
 
     const val COUNTER_NAME = "counter"
     const val COUNTER_VALUE = 300

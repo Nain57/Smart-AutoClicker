@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityService.GestureResultCallback
 import android.accessibilityservice.GestureDescription
+import android.graphics.Path
+import android.os.Build
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
@@ -39,11 +41,76 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
     private var cancelledGestures: Long = 0L
     private var errorGestures: Long = 0L
 
+    /** The pointer the last dispatched gesture left down on the screen, if any. */
+    private var heldPointer: HeldPointer? = null
 
-    fun clear() {
+
+    fun clear(service: AccessibilityService?) {
+        releaseHeldPointerNow(service)
         completedGestures = 0L
         cancelledGestures = 0L
         errorGestures = 0L
+    }
+
+    fun getHeldPointer(): HeldPointer? = heldPointer
+
+    /**
+     * Dispatch a gesture built by an [AndroidGestureBuilder], and record the pointer it leaves down on the screen.
+     *
+     * A cancelled or timed out dispatch means the system has torn down whatever this service had down, so the held
+     * pointer is dropped: continuing its stroke afterwards would only get the next gesture refused.
+     */
+    suspend fun dispatchBuiltGesture(service: AccessibilityService, gesture: BuiltGesture): Boolean {
+        for (chain in gesture.chains) {
+            if (dispatchGestures(service, chain)) continue
+
+            heldPointer = null
+            return false
+        }
+
+        heldPointer = gesture.heldPointer
+        return true
+    }
+
+    /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
+    suspend fun releaseHeldPointer(service: AccessibilityService?): Boolean {
+        val release = heldPointer?.toReleaseGesture() ?: let {
+            heldPointer = null
+            return true
+        }
+        heldPointer = null
+
+        if (service == null) {
+            Log.w(TAG, "Can't release the held pointer, service is not available anymore")
+            return false
+        }
+
+        return dispatchGesture(service, release)
+    }
+
+    /**
+     * Lift the pointer left down on the screen without waiting for the system.
+     *
+     * A pointer left down freezes the touch screen of the user, so the shutdown paths must be able to let go of it
+     * even when they can't suspend.
+     */
+    fun releaseHeldPointerNow(service: AccessibilityService?) {
+        val release = heldPointer?.toReleaseGesture() ?: let {
+            heldPointer = null
+            return
+        }
+        heldPointer = null
+
+        if (service == null) {
+            Log.w(TAG, "Can't release the held pointer, service is not available anymore")
+            return
+        }
+
+        try {
+            service.dispatchGesture(release, null, null)
+        } catch (rEx: RuntimeException) {
+            Log.w(TAG, "Can't release the held pointer, system is not responsive", rEx)
+        }
     }
 
     suspend fun dispatchGesture(service: AccessibilityService, gesture: GestureDescription): Boolean =
@@ -110,7 +177,35 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
             append(contentPrefix).append("Completed=$completedGestures").println()
             append(contentPrefix).append("Cancelled=$cancelledGestures").println()
             append(contentPrefix).append("Error=$errorGestures").println()
+            append(contentPrefix).append("HeldPointer=${heldPointer != null}, owner=${heldPointer?.owner}").println()
         }
+    }
+}
+
+/**
+ * The gesture lifting a held pointer: a continuation of its stroke, as short as possible, ending the touch sequence
+ * where the pointer was resting.
+ */
+private fun HeldPointer.toReleaseGesture(): GestureDescription? {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
+
+    return try {
+        GestureDescription.Builder()
+            .addStroke(
+                stroke.continueWith(
+                    path = Path().apply { hold(position) },
+                    startTimeMs = 0L,
+                    durationMs = HELD_POINTER_RELEASE_DURATION_MS,
+                    willContinue = false,
+                )
+            )
+            .build()
+    } catch (ex: IllegalArgumentException) {
+        Log.w(TAG, "Can't build the gesture releasing the held pointer", ex)
+        null
+    } catch (ex: IllegalStateException) {
+        Log.w(TAG, "Can't build the gesture releasing the held pointer", ex)
+        null
     }
 }
 

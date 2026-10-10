@@ -16,7 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.tests
 
-import android.accessibilityservice.GestureDescription
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -31,12 +30,20 @@ import com.buzbuz.smartautoclicker.core.domain.model.DetectionType
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
+import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureFingerMotion
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.condition.TriggerCondition
+import com.buzbuz.smartautoclicker.core.domain.model.counter.ComparisonOperation
+import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
@@ -44,6 +51,9 @@ import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionS
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newFinger
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newGesture
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.press
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newCondition
 import com.buzbuz.smartautoclicker.core.processing.utils.ProcessingData.newEvent
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
@@ -64,9 +74,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.atLeast
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
+import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
@@ -96,6 +110,8 @@ class ScenarioProcessorTests {
 
         private val TEST_DETECTION_OK = DetectionResult(true)
         private val TEST_DETECTION_KO = DetectionResult(false)
+
+        private const val TEST_COOLDOWN_MS = 60_000L
 
         private fun newDefaultClickAction(duration: Long = 1) =
             Click(
@@ -155,9 +171,14 @@ class ScenarioProcessorTests {
 
     /** */
     private suspend fun assertActionGesture(expectedDuration: Long) {
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
-        val gesture = gestureCaptor.lastValue
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
+
+        // A click is a single finger pressing and lifting, so it is built as one chain holding one gesture.
+        val chains = gestureCaptor.lastValue.chains
+        Assert.assertEquals("Click should be built as a single chain", 1, chains.size)
+        Assert.assertEquals("Click chain should contains only one gesture", 1, chains.first().size)
+        val gesture = chains.first().first()
 
         Assert.assertEquals("Gesture should contains only one stroke", 1, gesture.strokeCount)
         gesture.getStroke(0).let { stroke ->
@@ -170,6 +191,7 @@ class ScenarioProcessorTests {
     private fun createNewScenarioProcessor(
         events: List<ScreenEvent>,
         triggerEvent: List<TriggerEvent>,
+        counters: List<Counter> = emptyList(),
     ) : ScenarioProcessor {
         val processor = ScenarioProcessor(
             processingTag = "",
@@ -178,7 +200,7 @@ class ScenarioProcessorTests {
             randomize = false,
             screenEvents = events,
             triggerEvents = triggerEvent,
-            counters = emptyList(),
+            counters = counters,
             bitmapSupplier = mockBitmapSupplier::getBitmap,
             androidExecutor = mockAndroidExecutor,
             onStopRequested = mockEndListener::onStopRequested,
@@ -201,7 +223,45 @@ class ScenarioProcessorTests {
 
         mockWhen(mockScalingManager.scaleUpDetectionResult(anyNotNull()))
             .doAnswer { invocation -> invocation.getArgument(0) }
+
+        // Emulates the pointer held on the screen, like the real executor does
+        heldPointer = null
+        areGesturesCancelled = false
+        mockWhen(mockAndroidExecutor.getHeldPointer()).doAnswer { heldPointer }
+        runBlocking {
+            mockWhen(mockAndroidExecutor.dispatchBuiltGesture(anyNotNull())).doAnswer { invocation ->
+                heldPointer =
+                    if (areGesturesCancelled) null
+                    else invocation.getArgument<BuiltGesture>(0).heldPointer
+                Unit
+            }
+            mockWhen(mockAndroidExecutor.releaseHeldPointer()).doAnswer { heldPointer = null; Unit }
+        }
     }
+
+    /** The pointer the mocked android executor is holding, if any. */
+    private var heldPointer: HeldPointer? = null
+    /** True to have the gestures dispatched by the mocked android executor cancelled by the system. */
+    private var areGesturesCancelled: Boolean = false
+
+    private fun newHoldGestureAction(): Gesture =
+        newGesture(newFinger(0L, press(10, 10), GestureFingerMotion.Release(Identifier(databaseId = 3L), holdUntilUnfulfilled = true)))
+
+    /** Verify no action was executed. The held pointer can still be read, it is the held event source of truth. */
+    private fun assertNoActionExecuted() {
+        verify(mockAndroidExecutor, atLeast(0)).getHeldPointer()
+        verifyNoMoreInteractions(mockAndroidExecutor)
+    }
+
+    private fun createHeldTestCondition(isDetected: Boolean): ScreenCondition.Image =
+        createTestCondition(
+            TEST_CONDITION_PATH_1,
+            TEST_CONDITION_AREA_1,
+            TEST_CONDITION_THRESHOLD_1,
+            EXACT,
+            isDetected = isDetected,
+            shouldBeOnScreen = true,
+        )
 
     @After
     fun tearDown() {
@@ -215,7 +275,8 @@ class ScenarioProcessorTests {
 
 
         verify(mockEndListener).onStopRequested()
-        verifyNoInteractions(mockBitmapSupplier, mockAndroidExecutor, mockImageDetector)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockBitmapSupplier, mockImageDetector)
     }
 
     @Test
@@ -229,7 +290,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockBitmapSupplier, mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockBitmapSupplier, mockEndListener)
     }
 
     @Test
@@ -253,7 +315,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -326,7 +389,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -348,7 +412,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -420,7 +485,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -460,7 +526,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -499,7 +566,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -580,7 +648,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -705,7 +774,8 @@ class ScenarioProcessorTests {
 
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -745,7 +815,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -995,7 +1066,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -1032,7 +1104,8 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
     }
 
     @Test
@@ -1178,6 +1251,203 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
 
         verify(mockImageDetector).setScreenBitmap(mockScreenBitmap, "")
-        verifyNoInteractions(mockAndroidExecutor, mockEndListener)
+        assertNoActionExecuted()
+        verifyNoInteractions(mockEndListener)
+    }
+
+    @Test
+    fun heldEvent_conditionsFulfilled_isNotExecutedAgain() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).dispatchBuiltGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).releaseHeldPointer()
+        Assert.assertEquals("The event should hold the pointer", event, heldPointer?.owner)
+    }
+
+    @Test
+    fun heldEvent_conditionsUnfulfilled_isReleased() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        mockWhen(mockImageDetector.detectImage(anyNotNull(), anyInt(), anyInt(), anyNotNull(), anyInt()))
+            .thenReturn(TEST_DETECTION_KO)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).releaseHeldPointer()
+        Assert.assertNull("The pointer should have been released", heldPointer)
+    }
+
+    @Test
+    fun heldEvent_pointerDroppedBySystem_isExecutedAgain() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        heldPointer = null
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).releaseHeldPointer()
+    }
+
+    @Test
+    fun holdingGesture_cancelled_eventIsExecutedAgain() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        areGesturesCancelled = true
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(anyNotNull())
+    }
+
+    @Test
+    fun heldEvent_takenOverByAnotherEvent_isExecutedAgain() = runTest {
+        val condition = createHeldTestCondition(isDetected = true)
+        val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+        val event2 = newEvent(id = 2L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
+
+        // Event1 holds, then event2 is the only one detected and takes the hold over
+        scenarioProcessor.process(mockScreenBitmap)
+        Assert.assertEquals("Event1 should hold the pointer", event1, heldPointer?.owner)
+        scenarioProcessor.process(mockScreenBitmap)
+        Assert.assertEquals("Event2 should have taken the hold over", event2, heldPointer?.owner)
+
+        // Event1 is no longer held, it is detected again
+        scenarioProcessor.process(mockScreenBitmap)
+        Assert.assertEquals("Event1 should have taken the hold back", event1, heldPointer?.owner)
+        verify(mockAndroidExecutor, times(3)).dispatchBuiltGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).releaseHeldPointer()
+    }
+
+    @Test
+    fun heldEvent_carriedByAnotherEvent_staysHeld() = runTest {
+        val condition = createHeldTestCondition(isDetected = true)
+        val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+        val event2 = newEvent(id = 2L, conditions = listOf(condition), actions = listOf(newDefaultClickAction()))
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        Assert.assertEquals("Event1 should still hold the pointer", event1, heldPointer?.owner)
+        verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(anyNotNull())
+    }
+
+    @Test
+    fun heldTriggerEvent_releasedWhenConditionsUnfulfilled() = runTest {
+        val counterName = "counter"
+        val triggerEvent = TriggerEvent(
+            id = Identifier(databaseId = 10L),
+            scenarioId = Identifier(databaseId = 1L),
+            name = "Trigger",
+            conditionOperator = AND,
+            actions = listOf(newHoldGestureAction()),
+            conditions = listOf(
+                TriggerCondition.OnCounterCountReached(
+                    id = Identifier(databaseId = 11L),
+                    eventId = Identifier(databaseId = 10L),
+                    name = "Counter reached",
+                    counterName = counterName,
+                    comparisonOperation = ComparisonOperation.EQUALS,
+                    counterValue = CounterOperationValue.Number(1.0),
+                )
+            ),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(
+            events = emptyList(),
+            triggerEvent = listOf(triggerEvent),
+            counters = listOf(Counter(counterName, 1.0, Identifier(databaseId = 1L))),
+        )
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).dispatchBuiltGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).releaseHeldPointer()
+        Assert.assertEquals("The trigger event should hold the pointer", triggerEvent, heldPointer?.owner)
+
+        scenarioProcessor.processingState.setCounterValue(counterName, 0.0)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).releaseHeldPointer()
+        Assert.assertNull("The pointer should have been released", heldPointer)
+    }
+
+    @Test
+    fun heldEvent_released_startsCooldown() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        ).copy(cooldownMs = TEST_COOLDOWN_MS)
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        // Conditions are no longer fulfilled, the finger is released
+        mockWhen(mockImageDetector.detectImage(anyNotNull(), anyInt(), anyInt(), anyNotNull(), anyInt()))
+            .thenReturn(TEST_DETECTION_KO)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        // Conditions are fulfilled again, but the event is under cooldown
+        mockWhen(mockImageDetector.detectImage(anyNotNull(), anyInt(), anyInt(), anyNotNull(), anyInt()))
+            .thenReturn(TEST_DETECTION_OK)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).dispatchBuiltGesture(anyNotNull())
+        verify(mockAndroidExecutor, times(1)).releaseHeldPointer()
+    }
+
+    @Test
+    fun heldEvent_takenOver_startsCooldown() = runTest {
+        val condition = createHeldTestCondition(isDetected = true)
+        val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+            .copy(cooldownMs = TEST_COOLDOWN_MS)
+        val event2 = newEvent(id = 2L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+        // Event1 lost its hold to event2 and is under cooldown, event2 is held: nothing is executed
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(anyNotNull())
+        Assert.assertEquals("Event2 should hold the pointer", event2, heldPointer?.owner)
+    }
+
+    @Test
+    fun notHoldingEvent_startsCooldown() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newDefaultClickAction()),
+        ).copy(cooldownMs = TEST_COOLDOWN_MS)
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockAndroidExecutor, times(1)).dispatchBuiltGesture(anyNotNull())
     }
 }

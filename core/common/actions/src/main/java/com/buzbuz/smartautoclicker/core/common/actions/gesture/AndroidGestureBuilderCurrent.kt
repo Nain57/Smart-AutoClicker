@@ -39,15 +39,18 @@ internal class AndroidGestureBuilderCurrent(
     random: Random?,
 ) : AndroidGestureBuilder(random) {
 
-    override val supportsWaitMotions: Boolean = true
+    override val supportsStrokeContinuation: Boolean = true
 
-    override fun buildSlices(fingers: List<ResolvedFinger>): List<AndroidGestureSlice>? {
+    override fun buildSlices(
+        fingers: List<ResolvedFinger>,
+        initialHeldStrokes: Map<Int, StrokeDescription>,
+    ): AndroidGestureSlices? {
         val boundaries = fingers.toSliceBoundaries()
         if (boundaries.size < 2) return null
 
         val slices = mutableListOf<AndroidGestureSlice>()
         /** Last stroke built for a finger still touching the screen, indexed by finger index. */
-        val heldStrokes = mutableMapOf<Int, StrokeDescription>()
+        val heldStrokes = initialHeldStrokes.toMutableMap()
         /** Position at which the last stroke of a finger ended, indexed by finger index. */
         val heldPositions = mutableMapOf<Int, Point>()
         /** Time not consumed by the previous slices, to delay the next one with. */
@@ -65,7 +68,7 @@ internal class AndroidGestureBuilderCurrent(
                     continuedStroke = heldStrokes[finger.index],
                     from = heldPositions[finger.index] ?: segment.from,
                     to = segment.positionAt(sliceEndMs),
-                    willContinue = finger.upMs > sliceEndMs,
+                    willContinue = finger.upMs > sliceEndMs || finger.heldAfterRelease,
                 )
             }
 
@@ -128,7 +131,8 @@ internal class AndroidGestureBuilderCurrent(
             pendingDelayMs = if (advancesTime) 0L else sliceDurationMs
         }
 
-        return slices.ifEmpty { null }
+        if (slices.isEmpty()) return null
+        return AndroidGestureSlices(slices, heldStrokes.toMap(), heldPositions.toMap())
     }
 
     /**
