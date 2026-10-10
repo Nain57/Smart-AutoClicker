@@ -109,8 +109,19 @@ class QSTileService : TileService() {
             Tile.STATE_ACTIVE ->
                 qsTileRepository.stopScenarios()
             Tile.STATE_INACTIVE ->
-                startActivityAndCollapseCompat(QSTileLauncherActivity.getStartIntent(this, scenarioId, isSmart))
+                startLauncherActivity(scenarioId, isSmart)
         }
+    }
+
+    private fun startLauncherActivity(scenarioId: Long, isSmart: Boolean) {
+        val startActivity = {
+            startActivityAndCollapseCompat(QSTileLauncherActivity.getStartIntent(this, scenarioId, isSmart))
+        }
+
+        // An activity started behind the keyguard is stopped, then restarted once the device is unlocked. This
+        // transition can desync the activity lifecycle with the system, so unlock the device first.
+        if (isLocked) unlockAndRun { startActivity() }
+        else startActivity()
     }
 
     // Called when the user removes your tile.

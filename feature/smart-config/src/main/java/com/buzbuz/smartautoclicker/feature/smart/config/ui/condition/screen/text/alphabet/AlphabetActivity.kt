@@ -70,6 +70,13 @@ class AlphabetActivity : AppCompatActivity() {
         }
     }
 
+    // Replaces android:noHistory, which lets the system finish the activity while it is stopping and can desync its
+    // lifecycle. Finishing once stopped also ensures the overlays visibility is restored when the user leaves.
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations) finish()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         overlayManager.restoreVisibility()
