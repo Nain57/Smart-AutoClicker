@@ -53,6 +53,7 @@ dependencies {
     playStoreImplementation(libs.android.billingClient.ktx)
     playStoreImplementation(libs.google.userMessaging)
     playStoreImplementation(libs.google.gms.ads)
+    playStoreImplementation(libs.androidx.datastore)
 
     implementation(project(":core:common:base"))
     implementation(project(":core:common:quality"))

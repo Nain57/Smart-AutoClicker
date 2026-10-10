@@ -26,6 +26,8 @@ import com.android.billingclient.api.Purchase
 
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
+import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssue
+import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssueReporter
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,6 +44,7 @@ import kotlin.time.Duration.Companion.milliseconds
 internal class BillingServiceConnection @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @Dispatcher(Main) dispatcherMain: CoroutineDispatcher,
+    private val issueReporter: BillingIssueReporter,
 ) {
 
     private val coroutineScopeMain: CoroutineScope =
@@ -106,6 +109,7 @@ internal class BillingServiceConnection @Inject constructor(
                 connectionListener?.invoke(clientProxy)
             }
             else -> {
+                issueReporter.report(BillingIssue.SETUP_FAILED, responseCode, debugMessage)
                 retryBillingServiceConnectionWithExponentialBackoff()
             }
         }

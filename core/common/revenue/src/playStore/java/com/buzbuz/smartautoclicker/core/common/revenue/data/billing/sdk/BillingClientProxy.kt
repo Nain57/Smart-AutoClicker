@@ -110,26 +110,30 @@ internal class BillingClientProxy(
         return billingUiFlowState
     }
 
-    suspend fun fetchInAppPurchases(): Purchase? {
+    suspend fun fetchInAppPurchases(): PurchasesQueryResult {
         if (!client.isReady) {
             Log.w(TAG, "Cannot refresh purchases, client is not ready.")
-            return null
+            return PurchasesQueryResult.Failure(
+                responseCode = BillingClient.BillingResponseCode.SERVICE_DISCONNECTED,
+                debugMessage = "Client is not ready",
+            )
         }
 
         Log.i(TAG, "Refreshing purchases")
 
         val result = client.queryPurchasesAsync(inAppProductsPurchasesQueryParams())
-        if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            Log.i(TAG, "fetchInAppPurchases:  OK")
-            val purchase = result.purchasesList.findProductPurchase(productId)
-            if (purchase != null) return purchase
-
-            Log.d(TAG, "fetchInAppPurchases: Null Purchase List Returned from OK response!")
-        } else {
-            Log.i(TAG, "fetchInAppPurchases error: ${result.billingResult.toLogString()}")
+        if (result.billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
+            Log.w(TAG, "fetchInAppPurchases error: ${result.billingResult.toLogString()}")
+            return PurchasesQueryResult.Failure(
+                responseCode = result.billingResult.responseCode,
+                debugMessage = result.billingResult.debugMessage,
+            )
         }
 
-        return null
+        val purchase = result.purchasesList.findProductPurchase(productId)
+        Log.i(TAG, "fetchInAppPurchases: OK, product purchase ${if (purchase != null) "found" else "not found"}")
+
+        return PurchasesQueryResult.Success(purchase)
     }
 
     suspend fun fetchInAppProductDetails(): Pair<Boolean, InAppProduct?> {

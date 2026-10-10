@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.common.revenue.domain
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 
@@ -34,11 +35,12 @@ import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseStat
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 
 import org.junit.Before
 import org.junit.Test
@@ -62,6 +64,7 @@ class RevenueRepositoryTests {
     private val testDispatcher = StandardTestDispatcher()
 
     @Mock private lateinit var mockContext: Context
+    @Mock private lateinit var mockActivity: Activity
     @Mock private lateinit var mockBillingDataSource: BillingDataSource
     @Mock private lateinit var mockUserConsentDataSource: UserConsentDataSource
     @Mock private lateinit var mockAdsDataSource: InterstitialAdsDataSource
@@ -192,29 +195,47 @@ class RevenueRepositoryTests {
     }
 
     @Test
-    fun `paywall ui flow in progress`() {
-        testedBillingRepository.startPaywallUiFlow(mockContext)
+    fun `play store billing ui flow when not purchased`() {
+        product.value = InAppProduct.Debug()
+        purchaseState.value = InAppPurchaseState.NOT_PURCHASED
         testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(testedBillingRepository.isBillingFlowInProgress.value)
+        testedBillingRepository.startPlayStoreBillingUiFlow(mockActivity)
 
-        testedBillingRepository.setBillingActivityDestroyed()
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        assertFalse(testedBillingRepository.isBillingFlowInProgress.value)
+        verify(mockBillingDataSource, times(1)).launchBillingFlow(mockActivity)
     }
 
     @Test
-    fun `purchase ui flow in progress`() {
-        testedBillingRepository.startPurchaseUiFlow(mockContext)
+    fun `play store billing ui flow when already purchased`() {
+        product.value = InAppProduct.Debug()
+        purchaseState.value = InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED
         testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(testedBillingRepository.isBillingFlowInProgress.value)
+        testedBillingRepository.startPlayStoreBillingUiFlow(mockActivity)
 
-        testedBillingRepository.setBillingActivityDestroyed()
+        verify(mockBillingDataSource, never()).launchBillingFlow(mockActivity)
+    }
+
+    @Test
+    fun `play store billing ui flow when product is unavailable`() {
+        purchaseState.value = InAppPurchaseState.NOT_PURCHASED
         testDispatcher.scheduler.advanceUntilIdle()
 
-        assertFalse(testedBillingRepository.isBillingFlowInProgress.value)
+        testedBillingRepository.startPlayStoreBillingUiFlow(mockActivity)
+
+        verify(mockBillingDataSource, never()).launchBillingFlow(mockActivity)
+    }
+
+    @Test
+    fun `paywall finished notification`() = runTest(testDispatcher) {
+        var paywallFinishedCount = 0
+        backgroundScope.launch { testedBillingRepository.paywallFinished.collect { paywallFinishedCount++ } }
+        runCurrent()
+
+        testedBillingRepository.notifyPaywallFinished()
+        runCurrent()
+
+        assertEquals(1, paywallFinishedCount)
     }
 
     @Test

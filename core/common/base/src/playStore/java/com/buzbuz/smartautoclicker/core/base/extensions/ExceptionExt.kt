@@ -26,3 +26,7 @@ fun Exception.throwWithKeys(keys: Map<String, String>) {
     }
     throw this
 }
+
+fun Exception.recordNonFatal() {
+    FirebaseCrashlytics.getInstance().recordException(this)
+}

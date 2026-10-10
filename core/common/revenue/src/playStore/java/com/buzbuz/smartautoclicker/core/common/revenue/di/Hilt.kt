@@ -18,6 +18,8 @@ package com.buzbuz.smartautoclicker.core.common.revenue.di
 
 import com.buzbuz.smartautoclicker.core.common.revenue.data.ads.sdk.GoogleAdsSdk
 import com.buzbuz.smartautoclicker.core.common.revenue.data.ads.sdk.IAdsSdk
+import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.PurchaseCache
+import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.PurchaseCacheDataSource
 
 import dagger.Module
 import dagger.Provides
@@ -35,4 +37,8 @@ internal object PlayStoreBillingHiltModule {
     internal fun providesAdsSdk(googleAdsSdk: GoogleAdsSdk): IAdsSdk =
         googleAdsSdk
 
+    @Provides
+    @Singleton
+    internal fun providesPurchaseCache(purchaseCacheDataSource: PurchaseCacheDataSource): PurchaseCache =
+        purchaseCacheDataSource
 }
