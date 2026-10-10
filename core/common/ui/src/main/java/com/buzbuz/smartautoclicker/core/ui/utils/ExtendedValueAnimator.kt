@@ -48,6 +48,7 @@ class ExtendedValueAnimator private constructor(): ValueAnimator() {
     override fun start() {
         endRequested = false
         currentRepeatCount = 0
+        handler.removeCallbacksAndMessages(null)
         startAnimation(startDelay)
     }
 
@@ -63,6 +64,7 @@ class ExtendedValueAnimator private constructor(): ValueAnimator() {
 
     private fun stop() {
         endRequested = true
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun onAnimationEnded() {

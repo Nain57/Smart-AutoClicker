@@ -32,8 +32,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.OverlayMenu
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
-import com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.toActionDescription
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.RecordedGesture
+import com.buzbuz.smartautoclicker.core.ui.views.gesture.record.toActionDescription
 import androidx.core.view.isVisible
 
 abstract class ItemBriefMenu(
@@ -202,7 +202,7 @@ abstract class ItemBriefMenu(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    protected fun startGestureCapture(onNewAction: (gesture: ItemBriefDescription?, isFinished: Boolean) -> Unit) {
+    protected fun startGestureCapture(onNewAction: (gesture: RecordedGesture?, isFinished: Boolean) -> Unit) {
         briefPanelAnimationController.hide()
 
         blinkingAnimator.setTarget(briefViewBinding.recordingIcon)
@@ -216,7 +216,7 @@ abstract class ItemBriefMenu(
 
             var isCaptureStarted = false
             gestureCaptureListener = { gesture, isFinished ->
-                if (gesture != null && !isCaptureStarted){
+                if (gesture != null && !isCaptureStarted) {
                     isCaptureStarted = true
                     instructionsAnimationController.hide()
                 }
@@ -227,7 +227,7 @@ abstract class ItemBriefMenu(
 
                 if (isFinished) {
                     stopGestureCapture()
-                    onNewAction(gesture?.toActionDescription(), true)
+                    onNewAction(gesture, true)
                 }
             }
         }

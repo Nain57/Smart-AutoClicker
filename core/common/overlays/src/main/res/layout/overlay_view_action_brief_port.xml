@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="bottom">
 
-    <com.buzbuz.smartautoclicker.core.ui.views.gesturerecord.GestureRecordView
+    <com.buzbuz.smartautoclicker.core.ui.views.gesture.record.GestureRecordView
         android:id="@+id/view_record"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

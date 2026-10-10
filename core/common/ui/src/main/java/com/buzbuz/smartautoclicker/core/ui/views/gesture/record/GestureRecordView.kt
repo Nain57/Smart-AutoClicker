@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.ui.views.gesturerecord
+package com.buzbuz.smartautoclicker.core.ui.views.gesture.record
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -48,11 +48,17 @@ class GestureRecordView @JvmOverloads constructor(
         .obtainStyledAttributes(null, R.styleable.GestureRecordView, R.attr.gestureRecordStyle, 0)
         .use { ta -> ta.getGestureRecorderStyle()}
 
-    private val gestureRecorder = GestureRecorder { gesture, isFinished ->
+    private val gestureRecorder = GestureRecorder(
+        displayDensity = context.resources.displayMetrics.density,
+    ) { gesture, isFinished ->
         gestureCaptureListener?.invoke(gesture, isFinished)
     }
 
     var gestureCaptureListener: ((gesture: RecordedGesture?, isFinished: Boolean) -> Unit)? = null
+
+    var maxDurationMs: Long
+        get() = gestureRecorder.maxDurationMs
+        set(value) { gestureRecorder.maxDurationMs = value }
 
     override val viewComponents: List<ViewComponent> = listOf(
         DisplayBorderComponent(
