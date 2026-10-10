@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.common.revenue.data
 import android.app.Activity
 import android.util.Log
 
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
+
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
@@ -64,7 +66,9 @@ internal class UserConsentDataSource @Inject constructor() {
 
     fun showPrivacyOptionsForm(activity: Activity) {
         Log.d(TAG, "Showing privacy options form")
+        setCrashKey(KEY_CONSENT_FORM_STATE, "privacy_options_form")
         UserMessagingPlatform.showPrivacyOptionsForm(activity) { formError ->
+            setCrashKey(KEY_CONSENT_FORM_STATE, "closed")
             formError?.let {
                 Log.w(TAG, "User consent failure: [${formError.errorCode}] ${formError.message}")
             }
@@ -76,7 +80,9 @@ internal class UserConsentDataSource @Inject constructor() {
     private fun onUserConsentInfoUpdated(activity: Activity, consentInfo: ConsentInformation) {
         Log.d(TAG, "User content info updated, load and show consent form if required...")
 
+        setCrashKey(KEY_CONSENT_FORM_STATE, "consent_form_if_required")
         UserMessagingPlatform.loadAndShowConsentFormIfRequired(activity) { error ->
+            setCrashKey(KEY_CONSENT_FORM_STATE, "closed")
             if (error != null) {
                 Log.w(TAG, "User consent failure: [${error.errorCode}] ${error.message}")
             }
@@ -99,3 +105,4 @@ internal class UserConsentDataSource @Inject constructor() {
 }
 
 private const val TAG = "UserConsentDataSource"
+private const val KEY_CONSENT_FORM_STATE = "consent_form_state"

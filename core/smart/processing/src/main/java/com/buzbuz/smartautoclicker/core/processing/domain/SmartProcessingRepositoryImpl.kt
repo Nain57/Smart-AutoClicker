@@ -29,6 +29,7 @@ import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.dumpWithTimeout
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.domain.IRepository
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
@@ -128,6 +129,10 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
 
     init {
         shouldKeepScreenOn.onEach(::updateWakeLockState).launchIn(coroutineScopeIo)
+        detectionState
+            .distinctUntilChanged()
+            .onEach { state -> setCrashKey(KEY_DETECTION_STATE, state.name) }
+            .launchIn(coroutineScopeIo)
     }
 
     override fun setScenarioId(identifier: Identifier, markAsUsed: Boolean) {
@@ -257,6 +262,7 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
 }
 
 private const val TAG = "SmartProcessingRepository"
+private const val KEY_DETECTION_STATE = "detection_state"
 
 /** The minimum detection quality for the algorithm. */
 const val DETECTION_QUALITY_MIN = com.buzbuz.smartautoclicker.core.detection.DETECTION_QUALITY_MIN
