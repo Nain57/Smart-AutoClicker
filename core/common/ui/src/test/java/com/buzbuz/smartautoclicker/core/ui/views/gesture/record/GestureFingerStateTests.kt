@@ -31,7 +31,7 @@ import org.robolectric.annotation.Config
  * Tests for [GestureFingerState].
  *
  * Unless stated otherwise, tests use a display density of 1 so that the dp thresholds translate directly to pixels:
- * a finger is still within 5px of its reference, a move direction is locked past 16px from the segment start, a
+ * a finger is still within 10px of its reference, a move direction is locked past 16px from the segment start, a
  * pause must last 200ms to become a wait and a direction change must exceed 10°.
  */
 @RunWith(RobolectricTestRunner::class)
@@ -84,7 +84,7 @@ class GestureFingerStateTests {
     fun moveExactlyAtStillThreshold_isStill() {
         val state = newState(x = 0f, y = 0f, timeMs = 0L)
 
-        state.move(5f, 0f, timeMs = 20L)
+        state.move(10f, 0f, timeMs = 20L)
 
         assertEquals(listOf(press(0f, 0f)), state.motions)
     }
@@ -93,9 +93,9 @@ class GestureFingerStateTests {
     fun moveJustPastStillThreshold_isMove() {
         val state = newState(x = 0f, y = 0f, timeMs = 0L)
 
-        state.move(6f, 0f, timeMs = 20L)
+        state.move(11f, 0f, timeMs = 20L)
 
-        assertEquals(listOf(press(0f, 0f), moveTo(6f, 0f, durationMs = 20L)), state.motions)
+        assertEquals(listOf(press(0f, 0f), moveTo(11f, 0f, durationMs = 20L)), state.motions)
         assertFalse(state.isStationary)
     }
 
@@ -103,11 +103,11 @@ class GestureFingerStateTests {
     fun stillThreshold_scalesWithDisplayDensity() {
         val state = newState(x = 0f, y = 0f, timeMs = 0L, displayDensity = 2f)
 
-        state.move(8f, 0f, timeMs = 20L)
+        state.move(16f, 0f, timeMs = 20L)
         assertEquals(listOf(press(0f, 0f)), state.motions)
 
-        state.move(11f, 0f, timeMs = 40L)
-        assertEquals(listOf(press(0f, 0f), moveTo(11f, 0f, durationMs = 40L)), state.motions)
+        state.move(21f, 0f, timeMs = 40L)
+        assertEquals(listOf(press(0f, 0f), moveTo(21f, 0f, durationMs = 40L)), state.motions)
     }
 
     @Test
@@ -249,10 +249,10 @@ class GestureFingerStateTests {
     fun turnBeforeAngleLockDistance_merges() {
         val state = newState(x = 0f, y = 0f, timeMs = 0L)
 
-        state.move(10f, 0f, timeMs = 20L)
-        state.move(10f, 10f, timeMs = 40L)
+        state.move(12f, 0f, timeMs = 20L)
+        state.move(12f, 12f, timeMs = 40L)
 
-        assertEquals(listOf(press(0f, 0f), moveTo(10f, 10f, durationMs = 40L)), state.motions)
+        assertEquals(listOf(press(0f, 0f), moveTo(12f, 12f, durationMs = 40L)), state.motions)
     }
 
     @Test
@@ -272,10 +272,10 @@ class GestureFingerStateTests {
     fun angleLockDistance_scalesWithDisplayDensity() {
         val state = newState(x = 0f, y = 0f, timeMs = 0L, displayDensity = 2f)
 
-        state.move(20f, 0f, timeMs = 20L)
-        state.move(20f, 20f, timeMs = 40L)
+        state.move(24f, 0f, timeMs = 20L)
+        state.move(24f, 24f, timeMs = 40L)
 
-        assertEquals(listOf(press(0f, 0f), moveTo(20f, 20f, durationMs = 40L)), state.motions)
+        assertEquals(listOf(press(0f, 0f), moveTo(24f, 24f, durationMs = 40L)), state.motions)
     }
 
     @Test
@@ -324,9 +324,9 @@ class GestureFingerStateTests {
         val state = newState(x = 0f, y = 0f, timeMs = 0L)
         state.move(100f, 0f, timeMs = 50L)
 
-        state.move(96f, 4f, timeMs = 100L)
+        state.move(95f, 12f, timeMs = 100L)
 
-        assertEquals(listOf(press(0f, 0f), moveTo(96f, 4f, durationMs = 100L)), state.motions)
+        assertEquals(listOf(press(0f, 0f), moveTo(95f, 12f, durationMs = 100L)), state.motions)
     }
 
     @Test
@@ -334,10 +334,10 @@ class GestureFingerStateTests {
         val state = newState(x = 0f, y = 0f, timeMs = 0L)
         state.move(100f, 0f, timeMs = 50L)
 
-        state.move(90f, 0f, timeMs = 100L)
+        state.move(85f, 0f, timeMs = 100L)
 
         assertEquals(
-            listOf(press(0f, 0f), moveTo(100f, 0f, durationMs = 50L), moveTo(90f, 0f, durationMs = 50L)),
+            listOf(press(0f, 0f), moveTo(100f, 0f, durationMs = 50L), moveTo(85f, 0f, durationMs = 50L)),
             state.motions,
         )
     }

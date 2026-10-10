@@ -59,7 +59,7 @@ internal class GestureFingerState(
      */
     private var currentSegmentDirection: PointF? = null
 
-    /** Start position of the current*/
+    /** Start position of the current Move segment, reference for its direction and travelled distance. */
     private var moveStartPosition: PointF = initialPosition
     private var moveDistanceFromStart: Float = 0f
 
@@ -180,6 +180,10 @@ internal class GestureFingerState(
 
 
 /** Distance threshold in dp between two events to consider the finger still (not moving). */
+/**
+ * Distance threshold in dp from the still reference position to consider the finger still (not moving). Also the
+ * backwards distance tolerated within a Move segment before it is split. Converted to pixels at construction time.
+ */
 private const val STILL_THRESHOLD_DP = 10f
 
 /**
@@ -195,7 +199,7 @@ private const val MOVE_ANGLE_LOCK_DISTANCE_THRESHOLD_DP = 16f
 private const val MIN_WAIT_DURATION_MS = 200L
 /**
  * Minimum dot product between two unit-vectors for them to be considered the same direction.
- * Equals cos(maxAngle), so the allowed deviation from the segment's start direction is arccos of this value:
+ * Equals cos(maxAngle), so the allowed deviation from the segment's start direction is arccos of this value: 10°.
  */
 private const val DIRECTION_SIMILARITY_THRESHOLD = 0.9848f
 
