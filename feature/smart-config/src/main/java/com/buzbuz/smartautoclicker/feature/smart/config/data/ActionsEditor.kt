@@ -59,6 +59,7 @@ internal class ActionsEditor<Parent>(
 
     override fun stopItemEdition() {
         intentExtraEditor.stopEdition()
+        eventToggleEditor.stopEdition()
         super.stopItemEdition()
     }
 

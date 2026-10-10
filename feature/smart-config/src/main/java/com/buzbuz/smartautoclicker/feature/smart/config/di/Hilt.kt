@@ -55,6 +55,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.tim
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.action.ActionCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.condition.ConditionCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.event.EventCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.action.FixActionsCopyViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.condition.FixConditionsCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.eventchildren.FixEventChildrenCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.event.FixEventsCopyViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config.CountersConfigViewModel
@@ -96,6 +98,8 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel
     fun extraConfigViewModel(): ExtraConfigModel
+    fun fixActionsCopyViewModel(): FixActionsCopyViewModel
+    fun fixConditionsCopyViewModel(): FixConditionsCopyViewModel
     fun fixEventChildrenCopyViewModel(): FixEventChildrenCopyViewModel
     fun fixEventsCopyViewModel(): FixEventsCopyViewModel
     fun flagsSelectionViewModel(): FlagsSelectionViewModel

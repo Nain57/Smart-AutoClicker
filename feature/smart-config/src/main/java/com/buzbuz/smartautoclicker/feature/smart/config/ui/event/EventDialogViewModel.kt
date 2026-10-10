@@ -22,7 +22,6 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
 import com.buzbuz.smartautoclicker.core.domain.model.ConditionOperator
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
@@ -37,10 +36,10 @@ import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsMan
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -62,7 +61,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(FlowPreview::class)
 class EventDialogViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val bitmapRepository: BitmapRepository,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val editionRepository: EditionRepository,
     private val monitoredViewsManager: MonitoredViewsManager,
     private val settingsRepository: SettingsRepository,
@@ -112,7 +111,7 @@ class EventDialogViewModel @Inject constructor(
     }
 
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     fun setEventName(newName: String) {
         updateEditedEvent { oldValue -> oldValue.copyBase(name = newName) }

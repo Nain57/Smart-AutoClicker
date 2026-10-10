@@ -21,13 +21,14 @@ import android.graphics.Bitmap
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.buzbuz.smartautoclicker.core.bitmaps.BitmapRepository
+
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.UiScreenCondition
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.condition.toUiScreenCondition
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getImageConditionBitmap
+
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +43,7 @@ import kotlin.collections.map
 
 class ScreenConditionSelectionViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val bitmapRepository: BitmapRepository,
+    private val getImageConditionBitmapJobUseCase: GetImageConditionBitmapJobUseCase,
     private val monitoredViewsManager: MonitoredViewsManager
 ) : ViewModel() {
 
@@ -64,7 +65,7 @@ class ScreenConditionSelectionViewModel @Inject constructor(
      * @param onBitmapLoaded the callback notified upon completion.
      */
     fun getConditionBitmap(condition: ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit): Job =
-        getImageConditionBitmap(bitmapRepository, condition, onBitmapLoaded)
+        getImageConditionBitmapJobUseCase(viewModelScope, condition, onBitmapLoaded)
 
     fun monitorFirstConditionItemView(itemView: View) {
         monitoredViewsManager.attach(MonitoredViewType.CONDITION_SELECTOR_DIALOG_ITEM_FIRST, itemView)

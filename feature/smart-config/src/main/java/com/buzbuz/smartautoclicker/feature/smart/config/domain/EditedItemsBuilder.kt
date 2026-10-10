@@ -89,6 +89,8 @@ class EditedItemsBuilder internal constructor(
         actionsIdCreator.resetIdCount()
         intentExtrasIdCreator.resetIdCount()
         endConditionsIdCreator.resetIdCount()
+        gestureFingerIdCreator.resetIdCount()
+        gestureMotionIdCreator.resetIdCount()
         eventCopyConditionIdMap.clear()
         _newImageConditionsPaths.clear()
     }
@@ -437,19 +439,13 @@ class EditedItemsBuilder internal constructor(
         is SetText -> createNewSetTextFrom(from, eventId)
     }
 
-    private fun createNewClickFrom(from: Click, eventId: Identifier): Click {
-        val position = (from.position as? GesturePosition.Condition)?.let { condition ->
-            val mappedId = condition.conditionId?.let { eventCopyConditionIdMap[it] }
-            condition.copy(conditionId = mappedId ?: condition.conditionId)
-        }
-
-        return from.copy(
+    private fun createNewClickFrom(from: Click, eventId: Identifier): Click =
+        from.copy(
             id = actionsIdCreator.generateNewIdentifier(),
             eventId = eventId,
             name = "" + from.name,
-            position = position ?: from.position,
+            position = from.position?.toCopiedConditionPosition(),
         )
-    }
 
     private fun createNewGestureFrom(from: Gesture, eventId: Identifier): Gesture =
         from.copy(
@@ -514,8 +510,16 @@ class EditedItemsBuilder internal constructor(
             id = gestureFingerIdCreator.generateNewIdentifier(),
             motions = from.motions.mapNotNull { motion ->
                 when (motion) {
-                    is Move -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
-                    is Press -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
+                    is Move -> motion.copy(
+                        id = gestureMotionIdCreator.generateNewIdentifier(),
+                        position = motion.position.toCopiedConditionPosition(),
+                        offset = motion.offset.toCopiedConditionPosition(),
+                    )
+                    is Press -> motion.copy(
+                        id = gestureMotionIdCreator.generateNewIdentifier(),
+                        position = motion.position.toCopiedConditionPosition(),
+                        offset = motion.offset.toCopiedConditionPosition(),
+                    )
                     is Release -> motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
                     is Wait ->
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) motion.copy(id = gestureMotionIdCreator.generateNewIdentifier())
@@ -523,6 +527,16 @@ class EditedItemsBuilder internal constructor(
                 }
             }
         )
+
+    /**
+     * When copying a whole event, the conditions are copied first and get new identifiers. A position targeting one
+     * of them must follow to the copied condition instead of pointing back at the original event.
+     */
+    private fun GesturePosition.toCopiedConditionPosition(): GesturePosition {
+        if (this !is GesturePosition.Condition) return this
+        val mappedId = conditionId?.let { eventCopyConditionIdMap[it] } ?: return this
+        return copy(conditionId = mappedId)
+    }
 
     private fun createNewPauseFrom(from: Pause, eventId: Identifier): Pause =
         from.copy(

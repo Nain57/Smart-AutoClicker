@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.references
 
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
 import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
@@ -32,15 +33,10 @@ class ReplaceMissingEventToggleReferenceUseCase @Inject constructor() {
         missingReference: MissingCopyReference.EventToggleReference,
         replacement: List<EventToggle>,
     ): Event {
+        val newAction = invoke(itemToEdit.item, missingReference, replacement)
+            ?: return event
 
-        val actionToEdit =
-            if (itemToEdit.item is ToggleEvent) itemToEdit.item
-            else {
-                Log.e(TAG, "Can't replace, action is not a ToggleEvent action.")
-                return event
-            }
-
-        val actionIndex = event.actions.indexOf(actionToEdit)
+        val actionIndex = event.actions.indexOf(itemToEdit.item)
         if (actionIndex !in event.actions.indices) {
             Log.e(TAG, "Can't find action to edit in provided event.")
             return event
@@ -48,9 +44,23 @@ class ReplaceMissingEventToggleReferenceUseCase @Inject constructor() {
 
         return event.copyBase(
             actions = event.actions.toMutableList().apply {
-                set(actionIndex, actionToEdit.copy(eventToggles = replacement))
+                set(actionIndex, newAction)
             }
         )
+    }
+
+    /** Returns null if the action is not a [ToggleEvent]. */
+    operator fun invoke(
+        action: Action,
+        missingReference: MissingCopyReference.EventToggleReference,
+        replacement: List<EventToggle>,
+    ): Action? {
+        if (action !is ToggleEvent) {
+            Log.e(TAG, "Can't replace, action is not a ToggleEvent action.")
+            return null
+        }
+
+        return action.copy(eventToggles = replacement)
     }
 }
 

@@ -25,9 +25,8 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
-import com.buzbuz.smartautoclicker.core.domain.model.action.toggleevent.EventToggle
-import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.DialogNavigationButton
 import com.buzbuz.smartautoclicker.core.ui.bindings.dialogs.setButtonEnabledState
@@ -37,18 +36,20 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogBaseListBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.copy.model.MissingCopyReference
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.toggleevent.EventTogglesDialog
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixCopyUiItem
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.FixEventsChildrenCopyUiState
-import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.showReplaceCounterDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.showReplaceEventToggleDialog
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.copy.fix.showReplaceScreenConditionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
-import kotlin.getValue
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
+/**
+ * Dialog allowing the user to fix the missing references of all the conditions and actions of an event being copied.
+ * The event is not the currently edited one, so this dialog starts its own event edition when needed.
+ */
 class FixEventChildrenCopyDialog(
     private val dialogArguments: Arguments,
     private val onFixConfirmed: (Event) -> Unit,
@@ -59,7 +60,6 @@ class FixEventChildrenCopyDialog(
     data class Arguments(
         val resultingEventList: List<Event>,
         val parent: Event,
-        val showHelpMessage: Boolean,
     )
 
     /** View model for this content. */
@@ -129,57 +129,28 @@ class FixEventChildrenCopyDialog(
                 val action = (item as? FixCopyUiItem.Item.EventChildren.ActionItem)?.uiAction?.action ?: return
                 if (action !is ToggleEvent) return
 
-                showReplaceEventToggleDialog(action) { replacement ->
-                    viewModel.updateEventToggles(item, reference, replacement)
-                }
+                viewModel.startActionEdition(action)
+                showReplaceEventToggleDialog(
+                    scenarioEvents = dialogArguments.resultingEventList,
+                    action = action,
+                    onEventTogglesSelected = { replacement ->
+                        viewModel.stopActionEdition()
+                        viewModel.updateEventToggles(item, reference, replacement)
+                    },
+                    onDismissed = { viewModel.stopActionEdition() },
+                )
             }
 
-            is MissingCopyReference.ScreenConditionReference -> showReplaceScreenConditionDialog { replacement ->
-                viewModel.updateScreenCondition(item, reference, replacement)
-            }
+            is MissingCopyReference.ScreenConditionReference -> showReplaceScreenConditionDialog(
+                candidates = viewModel.getScreenConditionReplacementCandidates(),
+                onScreenConditionSelected = { replacement ->
+                    viewModel.updateScreenCondition(item, reference, replacement)
+                },
+            )
 
             is MissingCopyReference.CounterReference -> showReplaceCounterDialog { replacement ->
                 viewModel.updateCounter(item, reference, replacement)
             }
         }
-    }
-
-    private fun showReplaceScreenConditionDialog(onScreenConditionSelected: (ScreenCondition) -> Unit) {
-        overlayManager.navigateTo(
-            context = context,
-            hideCurrent = true,
-            newOverlay = ScreenConditionSelectionDialog(
-                conditionList = viewModel.getScreenConditionReplacementCandidates(),
-                onConditionSelected = onScreenConditionSelected,
-            ),
-        )
-    }
-
-    private fun showReplaceEventToggleDialog(action: ToggleEvent, onEventTogglesSelected: (List<EventToggle>) -> Unit) {
-        viewModel.startActionEdition(action)
-
-        overlayManager.navigateTo(
-            context = context,
-            hideCurrent = true,
-            newOverlay = EventTogglesDialog(
-                scenarioEvents = dialogArguments.resultingEventList,
-                toggleEventAction = action,
-                onConfirmClicked = { toggles ->
-                    viewModel.stopActionEdition()
-                    onEventTogglesSelected(toggles)
-                },
-                onDismissed = { viewModel.stopActionEdition() }
-            ),
-        )
-    }
-
-    private fun showReplaceCounterDialog(onCounterSelected: (String) -> Unit) {
-        overlayManager.navigateTo(
-            context = context,
-            hideCurrent = true,
-            newOverlay = CounterSelectionDialog(
-                onCounterSelected = onCounterSelected,
-            ),
-        )
     }
 }

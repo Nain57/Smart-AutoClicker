@@ -94,19 +94,10 @@ class GetActionMissingReferencesUseCase @Inject constructor(
             }
         }
 
-    private suspend fun Click.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> {
-        val clickPosition = position ?: return emptyList()
-
-        val result = mutableListOf<MissingCopyReference>()
-        result.addAll(clickPosition.getMissingReference(copyResultEvents, eventId))
-
-        // The offset is only applied when clicking on a condition
-        if (clickPosition is GesturePosition.Condition) {
-            offset?.let { result.addAll(it.getMissingReference(copyResultEvents, eventId)) }
+    private suspend fun Click.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> =
+        listOfNotNull(position, offset).flatMap { clickPosition ->
+            clickPosition.getMissingReference(copyResultEvents, eventId)
         }
-
-        return result
-    }
 
     private suspend fun Gesture.getMissingReferences(copyResultEvents: Map<Identifier, Event>): List<MissingCopyReference> {
         val result = mutableListOf<MissingCopyReference>()
@@ -137,7 +128,12 @@ class GetActionMissingReferencesUseCase @Inject constructor(
                 val condId = conditionId ?: return emptyList()
                 val isFound = copyResultEvents[eventId]?.conditions?.any { it.id == condId } == true
                 if (isFound) return emptyList()
-                val name = smartRepository.getConditionName(condId) ?: return emptyList()
+
+                // The referenced condition can belong to another edited event not yet saved in database
+                val name = copyResultEvents.values
+                    .firstNotNullOfOrNull { event -> event.conditions.find { it.id == condId }?.name }
+                    ?: smartRepository.getConditionName(condId)
+                    ?: "Unknown"
 
                 return listOf(MissingCopyReference.ScreenConditionReference(name = name, conditionId = condId))
             }

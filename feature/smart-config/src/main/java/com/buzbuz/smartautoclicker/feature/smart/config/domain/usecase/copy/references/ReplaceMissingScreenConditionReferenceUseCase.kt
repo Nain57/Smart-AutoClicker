@@ -46,8 +46,7 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
         missingReference: MissingCopyReference.ScreenConditionReference,
         replacement: ScreenCondition,
     ): Event {
-
-        val newAction = itemToEdit.item.replaceScreenConditionReference(missingReference, replacement)
+        val newAction = invoke(itemToEdit.item, missingReference, replacement)
             ?: return event
 
         val actionIndex = event.actions.indexOf(itemToEdit.item)
@@ -63,6 +62,13 @@ class ReplaceMissingScreenConditionReferenceUseCase @Inject constructor() {
             }
         )
     }
+
+    /** Returns null if the action type can't reference a screen condition, or if the reference isn't found. */
+    operator fun invoke(
+        action: Action,
+        missingReference: MissingCopyReference.ScreenConditionReference,
+        replacement: ScreenCondition,
+    ): Action? = action.replaceScreenConditionReference(missingReference, replacement)
 
     private fun Action.replaceScreenConditionReference(
         missingReference: MissingCopyReference.ScreenConditionReference,
