@@ -23,11 +23,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.getDebuggingNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -46,10 +48,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.imag
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.number.NumberConditionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionTypeSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.TextConditionDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionOverlayMenu
 
 import kotlinx.coroutines.launch
-import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
 
 class ScreenConditionsBriefMenu(
@@ -161,16 +161,13 @@ class ScreenConditionsBriefMenu(
         val condition = (focusedItem.data as? UiScreenCondition)?.condition ?: return
 
         viewModel.getEditedScenario()?.let { scenario ->
-            overlayManager.navigateTo(
+            context.getDebuggingNavigator().showTryConditionOverlayMenu(
                 context = context,
-                newOverlay = TryImageConditionOverlayMenu(
-                    scenario = scenario,
-                    imageCondition = condition,
-                    onNewThresholdSelected = { threshold ->
-                        viewModel.updateConditionThreshold(threshold)
-                    }
-                ),
-                hideCurrent = true,
+                scenario = scenario,
+                imageCondition = condition,
+                onNewThresholdSelected = { threshold ->
+                    viewModel.updateConditionThreshold(threshold)
+                }
             )
         }
     }
