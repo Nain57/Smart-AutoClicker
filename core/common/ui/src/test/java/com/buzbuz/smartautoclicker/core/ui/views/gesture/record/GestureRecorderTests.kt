@@ -397,6 +397,62 @@ class GestureRecorderTests {
         )
     }
 
+    @Test
+    fun fingerReleasedAndPressedAgain_recordedAsNewFinger() {
+        down(id = 0, x = 10f, y = 10f, timeMs = 0L)
+        down(id = 1, x = 200f, y = 200f, timeMs = 10L)
+        up(id = 1, timeMs = 50L)
+        down(id = 1, x = 300f, y = 300f, timeMs = 100L)
+        up(id = 1, timeMs = 150L)
+        up(id = 0, timeMs = 200L)
+
+        assertEquals(
+            gesture(
+                finger(0L, press(10f, 10f), wait(durationMs = 200L), release()),
+                finger(10L, press(200f, 200f), release()),
+                finger(100L, press(300f, 300f), release()),
+            ),
+            lastGesture(),
+        )
+    }
+
+    @Test
+    fun fingerPressedAgain_movesOnlyAppliedToNewFinger() {
+        down(id = 0, x = 10f, y = 10f, timeMs = 0L)
+        down(id = 1, x = 200f, y = 200f, timeMs = 10L)
+        up(id = 1, timeMs = 50L)
+        down(id = 1, x = 300f, y = 300f, timeMs = 100L)
+        move(id = 1, x = 300f, y = 400f, timeMs = 150L)
+        up(id = 1, timeMs = 160L)
+        up(id = 0, timeMs = 200L)
+
+        assertEquals(
+            gesture(
+                finger(0L, press(10f, 10f), wait(durationMs = 200L), release()),
+                finger(10L, press(200f, 200f), release()),
+                finger(100L, press(300f, 300f), moveTo(300f, 400f, durationMs = 50L), release()),
+            ),
+            lastGesture(),
+        )
+    }
+
+    @Test
+    fun releasedFingers_countTowardsMaxFingers() {
+        down(id = 0, x = 0f, y = 0f, timeMs = 0L)
+        (1..5).forEach { i ->
+            down(id = 1, x = i * 10f, y = 0f, timeMs = i * 10L)
+            up(id = 1, timeMs = i * 10L + 5L)
+        }
+        up(id = 0, timeMs = 100L)
+
+        val fingers = (lastGesture() as RecordedGesture.Gesture).fingers
+        assertEquals(5, fingers.size)
+        assertEquals(
+            (0 until 5).map { i -> press(i * 10f, 0f) },
+            fingers.map { it.motions.first() },
+        )
+    }
+
     // --- Cancellation ---
 
     @Test

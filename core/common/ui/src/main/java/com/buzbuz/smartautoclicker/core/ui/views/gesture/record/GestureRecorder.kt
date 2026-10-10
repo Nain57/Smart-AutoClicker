@@ -28,7 +28,10 @@ internal class GestureRecorder(
     private val onNewCapturedGesture: (gesture: RecordedGesture?, isFinished: Boolean) -> Unit,
 ) {
 
-    private val activeFingers = LinkedHashMap<Int, GestureFingerState>()
+    /** All fingers recorded for the current gesture, in press order. */
+    private val recordedFingers = mutableListOf<GestureFingerState>()
+    /** Fingers currently pressed, by pointer id. Android recycles ids, so a re-press must not replace a recorded finger. */
+    private val activeFingers = HashMap<Int, GestureFingerState>()
 
     /** Maximum allowed gesture duration in ms. Recording stops automatically when reached. */
     var maxDurationMs: Long = Long.MAX_VALUE
@@ -40,8 +43,7 @@ internal class GestureRecorder(
         val releaseEventTime = firstFingerEventTime + maxDurationMs
         for (finger in activeFingers.values) finger.addRelease(releaseEventTime)
         notifyListener(isFinished = true)
-        activeFingers.clear()
-        firstFingerEventTime = 0L
+        resetFingers()
     }
 
     fun processEvent(event: MotionEvent): Boolean {
@@ -49,7 +51,7 @@ internal class GestureRecorder(
             MotionEvent.ACTION_DOWN ->
                 handleFingerDown(event = event, pointerIndex = 0)
             MotionEvent.ACTION_POINTER_DOWN ->
-                if (activeFingers.size < MAX_FINGERS) handleFingerDown(event = event, pointerIndex = event.actionIndex)
+                if (recordedFingers.size < MAX_FINGERS) handleFingerDown(event = event, pointerIndex = event.actionIndex)
             MotionEvent.ACTION_MOVE ->
                 handleMove(event = event)
             MotionEvent.ACTION_POINTER_UP ->
@@ -67,6 +69,11 @@ internal class GestureRecorder(
     fun clearCapture() {
         Log.d(TAG, "Clear capture")
         handler.removeCallbacks(timeoutRunnable)
+        resetFingers()
+    }
+
+    private fun resetFingers() {
+        recordedFingers.clear()
         activeFingers.clear()
         firstFingerEventTime = 0L
     }
@@ -74,17 +81,19 @@ internal class GestureRecorder(
     private fun handleFingerDown(event: MotionEvent, pointerIndex: Int) {
         Log.d(TAG, "Handle finger down #$pointerIndex: $event")
 
-        if (activeFingers.isEmpty()) {
+        if (recordedFingers.isEmpty()) {
             firstFingerEventTime = event.eventTime
             if (maxDurationMs < Long.MAX_VALUE) handler.postDelayed(timeoutRunnable, maxDurationMs)
         }
 
         val pointerId = event.getPointerId(pointerIndex)
-        activeFingers[pointerId] = GestureFingerState(
+        val finger = GestureFingerState(
             initialPosition = PointF(event.getX(pointerIndex), event.getY(pointerIndex)),
             initialEventTime = event.eventTime,
             displayDensity = displayDensity,
         )
+        recordedFingers.add(finger)
+        activeFingers[pointerId] = finger
         notifyListener(isFinished = false)
     }
 
@@ -105,24 +114,23 @@ internal class GestureRecorder(
         Log.d(TAG, "Handle finger up (isLast=$isLast) #$pointerIndex: $event")
 
         val pointerId = event.getPointerId(pointerIndex)
-        activeFingers[pointerId]?.addRelease(event.eventTime)
+        activeFingers.remove(pointerId)?.addRelease(event.eventTime)
 
         if (isLast) {
             handler.removeCallbacks(timeoutRunnable)
             notifyListener(isFinished = true)
-            activeFingers.clear()
-            firstFingerEventTime = 0L
+            resetFingers()
         } else {
             notifyListener(isFinished = false)
         }
     }
 
     private fun notifyListener(isFinished: Boolean) {
-        if (activeFingers.isEmpty()) {
+        if (recordedFingers.isEmpty()) {
             onNewCapturedGesture(null, isFinished)
             return
         }
-        onNewCapturedGesture(activeFingers.values.toRecordedGesture(), isFinished)
+        onNewCapturedGesture(recordedFingers.toRecordedGesture(), isFinished)
     }
 
     /** A lone finger that never moved is a click, anything else is a gesture. */
