@@ -121,14 +121,16 @@ internal class ScenarioProcessor(
         // After the triggers to let them handle changes, before the image processing to start capturing values before
         processingState.clearIterationState()
 
-        // If there is a held event, verify the user didn't lift the held finger by touching the screen, and if it has
-        // been disabled, release the held finger
+        // If there is a held event that has been disabled, release the held finger. Otherwise, verify the user didn't
+        // lift it by touching the screen: the system already released it, only its cooldown remains to be started.
         val heldEvent = actionExecutor.getHeldEvent()
-        println("TOTO: heldEvent $heldEvent")
         if (heldEvent != null) {
-            if (!processingState.isEventEnabled(heldEvent.id.databaseId) || !actionExecutor.checkHeldFinger()) {
-                Log.d(TAG, "Held event ${heldEvent.name} is disabled or its finger has been lifted, releasing it")
-                releaseHeldEvent()
+            if (!processingState.isEventEnabled(heldEvent.id.databaseId)) {
+                Log.d(TAG, "Held event ${heldEvent.name} is disabled, releasing it")
+                releaseHeldEvent(cooldown = false)
+            } else if (!actionExecutor.checkHeldFinger()) {
+                Log.d(TAG, "Held event ${heldEvent.name} finger has been lifted by the user")
+                startHeldEventCooldown(heldEvent)
             }
         }
 
@@ -251,19 +253,19 @@ internal class ScenarioProcessor(
     }
 
     private suspend fun releaseHeldEventIfUnfulfilled(heldEvent: Event) {
-        //progressListener?.onEventProcessingStarted(heldEvent)
+        progressListener?.onEventProcessingStarted(heldEvent)
         val results = conditionsVerifier.verifyConditions(
             operator = heldEvent.conditionOperator,
             conditions = heldEvent.conditions,
         )
-        /*progressListener?.onEventProcessingCompleted(
+        progressListener?.onEventProcessingCompleted(
             event = heldEvent,
             fulfilled = results.fulfilled == true,
             results = when (heldEvent) {
                 is ScreenEvent -> results.getAllScreenConditionsResults()
                 is TriggerEvent -> results.getAllTriggerConditionsResults()
             },
-        )*/
+        )
 
         if (results.fulfilled != true) {
             Log.d(TAG, "Held event ${heldEvent.name} is unfulfilled, releasing it; results=$results")
@@ -271,11 +273,15 @@ internal class ScenarioProcessor(
         }
     }
 
-    private suspend fun releaseHeldEvent() {
+    private suspend fun releaseHeldEvent(cooldown: Boolean = true) {
         val heldEvent = actionExecutor.getHeldEvent() ?: return
         actionExecutor.releaseHeldFinger()
 
-        // Cooldown of an event holding a finger starts once it is released
+        if (cooldown) startHeldEventCooldown(heldEvent)
+    }
+
+    /** Cooldown of an event holding a finger starts once it is released. */
+    private fun startHeldEventCooldown(heldEvent: Event) {
         if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent)
     }
 }

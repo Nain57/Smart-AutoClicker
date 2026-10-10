@@ -25,7 +25,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -351,5 +352,62 @@ class ActionExecutorTests {
 
             assertTrue("Action execution have not completed yet", isCompleted)
         }.join()
+    }
+
+    @Test
+    fun checkHeldFinger_nothingHeld_returnsFalseWithoutChecking() = runTest {
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(null)
+
+        assertFalse(actionExecutor.checkHeldFinger())
+        verify(mockAndroidExecutor, never()).checkHeldPointer()
+    }
+
+    @Test
+    fun checkHeldFinger_pointerStillHeld_returnsTrue() = runTest {
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+
+        assertTrue(actionExecutor.checkHeldFinger())
+        verify(mockAndroidExecutor).checkHeldPointer()
+    }
+
+    @Test
+    fun checkHeldFinger_pointerLifted_returnsFalse() = runTest {
+        var heldPointer: HeldPointer? = mock<HeldPointer>()
+        mockWhen(mockAndroidExecutor.getHeldPointer()).doAnswer { heldPointer }
+        mockWhen(mockAndroidExecutor.checkHeldPointer()).doAnswer { heldPointer = null; Unit }
+
+        assertFalse(actionExecutor.checkHeldFinger())
+        verify(mockAndroidExecutor).checkHeldPointer()
+    }
+
+    @Test
+    fun onScenarioLoopFinished_workaroundDisabled_nothingDispatched() = runTest {
+        actionExecutor.onScenarioLoopFinished()
+
+        verify(mockAndroidExecutor, never()).dispatchPixelWorkaroundGestureIfNeeded()
+    }
+
+    @Test
+    fun onScenarioLoopFinished_workaroundEnabled_workaroundDispatched() = runTest {
+        actionExecutor = ActionExecutor(
+            mockAndroidExecutor, mockProcessingState, randomize = false, unblockWorkaroundEnabled = true,
+        )
+
+        actionExecutor.onScenarioLoopFinished()
+
+        verify(mockAndroidExecutor).dispatchPixelWorkaroundGestureIfNeeded()
+    }
+
+    @Test
+    fun onScenarioLoopFinished_workaroundEnabled_pointerHeld_nothingDispatched() = runTest {
+        actionExecutor = ActionExecutor(
+            mockAndroidExecutor, mockProcessingState, randomize = false, unblockWorkaroundEnabled = true,
+        )
+        mockWhen(mockAndroidExecutor.getHeldPointer()).thenReturn(mock<HeldPointer>())
+
+        actionExecutor.onScenarioLoopFinished()
+
+        // The workaround gesture continues nothing, dispatching it would cancel the held pointer
+        verify(mockAndroidExecutor, never()).dispatchPixelWorkaroundGestureIfNeeded()
     }
 }

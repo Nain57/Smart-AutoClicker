@@ -18,18 +18,16 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.accessibilityservice.GestureDescription.StrokeDescription
-import android.graphics.Path
 import android.graphics.Point
-import android.os.Build
 import android.os.SystemClock
 import android.util.Log
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.continueWith
-import com.buzbuz.smartautoclicker.core.common.actions.model.HELD_POINTER_RELEASE_DURATION_MS
+
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.ktx.toContinuation
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 @Singleton
 internal class HeldPointerManager @Inject constructor () {
@@ -133,26 +131,6 @@ private fun HeldPointer.toReleaseGesture(): GestureDescription? {
         null
     } catch (ex: IllegalStateException) {
         Log.w(TAG, "Can't build the gesture releasing the held pointer", ex)
-        null
-    }
-}
-
-/** A continuation of this stroke, as short as possible, from where the pointer rests to [to]. */
-private fun StrokeDescription.toContinuation(from: Point, to: Point, willContinue: Boolean): StrokeDescription? {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
-
-    return try {
-        continueWith(
-            path = Path().apply { if (from == to) hold(from) else line(from, to) },
-            startTimeMs = 0L,
-            durationMs = HELD_POINTER_RELEASE_DURATION_MS,
-            willContinue = willContinue,
-        )
-    } catch (ex: IllegalArgumentException) {
-        Log.w(TAG, "Can't build the continuation of the held pointer stroke", ex)
-        null
-    } catch (ex: IllegalStateException) {
-        Log.w(TAG, "Can't build the continuation of the held pointer stroke", ex)
         null
     }
 }

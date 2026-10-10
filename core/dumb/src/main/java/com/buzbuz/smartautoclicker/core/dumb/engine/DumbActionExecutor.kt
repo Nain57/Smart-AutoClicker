@@ -16,8 +16,6 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.engine
 
-import android.util.Log
-
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
 import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
@@ -50,7 +48,6 @@ class DumbActionExecutor @Inject constructor(
     suspend fun onScenarioLoopFinished() {
         if (unblockWorkaroundEnabled) {
             withContext(Dispatchers.Main) {
-                Log.i(TAG, "Injecting unblock gesture")
                 androidExecutor.dispatchPixelWorkaroundGestureIfNeeded()
             }
         }
@@ -97,4 +94,3 @@ class DumbActionExecutor @Inject constructor(
     }
 }
 
-private const val TAG = "DumbActionExecutor"

@@ -44,23 +44,5 @@ private fun createUnblockClickStroke(posX: Float, posY: Float): GestureDescripti
         1L,
     )
 
-
-class UnblockGestureScheduler {
-
-    private var lastUnblockTimeMs = System.currentTimeMillis()
-
-    fun shouldTrigger(): Boolean {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime >= (lastUnblockTimeMs + UNBLOCK_GESTURE_DELAY_MS)) {
-            lastUnblockTimeMs = currentTime
-            return true
-        }
-
-        return false
-    }
-}
-
 private const val GOOGLE_DEVICE_BRAND = "google"
 private const val GOGGLE_MODE_PIXEL = "pixel"
-
-private const val UNBLOCK_GESTURE_DELAY_MS = 10000L

@@ -23,7 +23,6 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
-import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
@@ -41,7 +40,20 @@ internal class GestureExecutor @Inject constructor(
     private val heldPointerManager: HeldPointerManager,
 ) : Dumpable {
 
-    private val unblockGestureScheduler: UnblockGestureScheduler = UnblockGestureScheduler()
+    /**
+     * Unblock gesture can be annoying when automating, and the pixel issue isn't occurring every minutes so
+     * it is safe to debounce.
+     */
+    private val unblockGestureDebouncer: GestureDebouncer =
+        GestureDebouncer(UNBLOCK_GESTURE_DELAY_MS)
+
+    /**
+     * Check if the finger is still held. Hold can be lost if something else has interacted with the screen, most of the
+     * time from a user input on the screen. Probing on every frame would flood the system with gestures, so the pointer
+     * is assumed to still be held between two probes.
+     */
+    private val holdProbeDebouncer: GestureDebouncer =
+        GestureDebouncer(PROBE_GESTURE_DELAY_MS)
 
     private var completedGestures: Long = 0L
     private var cancelledGestures: Long = 0L
@@ -58,7 +70,8 @@ internal class GestureExecutor @Inject constructor(
     fun getHeldPointer(): HeldPointer? = heldPointerManager.heldPointer
 
     /**
-     * Dispatch a gesture built by an [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder], and record the pointer it leaves down on the screen.
+     * Dispatch a gesture built by an [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder],
+     * and record the pointer it leaves down on the screen.
      *
      * A cancelled or timed out dispatch means the system has torn down whatever this service had down, so the held
      * pointer is dropped: continuing its stroke afterwards would only get the next gesture refused.
@@ -81,16 +94,21 @@ internal class GestureExecutor @Inject constructor(
      * injecting this gesture, it will avoid spamming it by skipping unblock requests to close to the previous one.
      */
     suspend fun dispatchPixelWorkaroundGestureIfNeeded(service: AccessibilityService) {
-        if (unblockGestureScheduler.shouldTrigger()) {
+        if (heldPointerManager.heldPointer != null) return
+
+        if (unblockGestureDebouncer.shouldTrigger()) {
             Log.i(TAG, "Injecting unblock gesture")
             dispatchGesture(service, GestureDescription.Builder().buildUnblockGesture())
         }
     }
 
-    suspend fun checkHeldPointer(service: AccessibilityService): Boolean =
-        heldPointerManager.checkHeldPointer { heldGesture ->
+    suspend fun checkHeldPointer(service: AccessibilityService): Boolean {
+        if (heldPointerManager.heldPointer == null || !holdProbeDebouncer.shouldTrigger()) return true
+
+        return heldPointerManager.checkHeldPointer { heldGesture ->
             dispatchGesture(service, heldGesture)
         }
+    }
 
 
     /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
@@ -202,5 +220,7 @@ private fun List<GestureDescription>.timeoutDurationMs(): Long =
 private const val GESTURE_CALLBACK_TIMEOUT_MIN_MS = 100L
 private const val GESTURE_CALLBACK_TIMEOUT_MAX_MS = 65_000L
 private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 2
+private const val UNBLOCK_GESTURE_DELAY_MS = 10000L
+private const val PROBE_GESTURE_DELAY_MS = 1000L
 
 private const val TAG = "GestureExecutor"

@@ -72,16 +72,13 @@ internal class ActionExecutor(
 
 
     suspend fun onScenarioLoopFinished() {
-        // The unblock gesture continues nothing, so the system would cancel the held pointer to dispatch it.
-        if (androidExecutor.getHeldPointer() != null) {
-            Log.i(TAG, "Skipping unblock gesture injection, a gesture is holding a finger on the screen")
-            return
-        }
+        if (!unblockWorkaroundEnabled) return
 
-        if (unblockWorkaroundEnabled) {
-            withContext(Dispatchers.Main) {
-                androidExecutor.dispatchPixelWorkaroundGestureIfNeeded()
-            }
+        // The unblock gesture continues nothing, so the system would cancel the held pointer to dispatch it.
+        if (androidExecutor.getHeldPointer() != null) return
+
+        withContext(Dispatchers.Main) {
+            androidExecutor.dispatchPixelWorkaroundGestureIfNeeded()
         }
     }
 
@@ -118,8 +115,6 @@ internal class ActionExecutor(
      * @return true if it is still held, false if it has been lost or if nothing was held.
      */
     suspend fun checkHeldFinger(): Boolean {
-        Log.d(TAG, "Check held pointer state")
-
         if (androidExecutor.getHeldPointer() == null) return false
 
         withContext(Dispatchers.Main) {
