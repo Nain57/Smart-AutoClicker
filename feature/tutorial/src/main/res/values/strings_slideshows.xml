@@ -331,9 +331,10 @@
     <string name="tutorial_slideshow_actions_list_desc">Learn how the action list is executed</string>
 
     <string name="tutorial_slideshow_actions_list_step_1_text">Actions are executed in order, one after the other.
-        You can change the order of an action using the &lt;&lt; and &gt;&gt; buttons, or by tapping directly on
-        its index box.\n\nTry to keep your action lists short. A regular autoclicker taps one place per event;
-        that\'s the model to follow. If you find yourself adding many actions to a single event, it is usually a
+        You can visualize the next/previous action by swiping left/right anywhere on your screen.\n\nYou can change
+        the order of an action using the &lt;&lt; and &gt;&gt; buttons, or by tapping directly on the index box.</string>
+    <string name="tutorial_slideshow_actions_list_step_2_text">Try to keep your action lists short.
+        A regular autoclicker taps one place per event; that\'s the model to follow. If you find yourself adding many actions to a single event, it is usually a
         sign that the work should be split across several events, each reacting to what is actually on the screen.
         This is the see-and-act philosophy of Klick\'r: detect first, then act.</string>
 

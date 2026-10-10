@@ -194,8 +194,10 @@
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">動作清單</string>
     <string name="tutorial_slideshow_actions_list_desc">了解動作清單的執行方式</string>
-    <string name="tutorial_slideshow_actions_list_step_1_text">動作按順序依次執行。您可以使用 &lt;&lt; 和 &gt;&gt;
-        按鈕更改動作的順序，或直接點擊其索引編號。\n\n請盡量保持動作清單簡短。一般自動點擊器每個事件只執行一個動作——這就是
+    <string name="tutorial_slideshow_actions_list_step_1_text">動作按順序依次執行。
+        在螢幕任意位置向左/向右滑動即可查看下一個/上一個動作。\n\n您可以使用 &lt;&lt; 和 &gt;&gt;
+        按鈕更改動作的順序，或直接點擊其索引框。</string>
+    <string name="tutorial_slideshow_actions_list_step_2_text">請盡量保持動作清單簡短。一般自動點擊器每個事件只執行一個動作——這就是
         應該遵循的模式。如果您發現自己在單一事件中添加了很多動作，通常表示應該將工作拆分為多個事件，每個事件回應螢幕上
         實際顯示的內容。這就是 Klick\'r 的「看見即行動」理念：先偵測，再行動。</string>
 

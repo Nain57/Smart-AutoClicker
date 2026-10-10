@@ -26,10 +26,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.base.isStopScenarioKey
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
+import com.buzbuz.smartautoclicker.core.common.navigation.getTutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.MoveToDialog
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBrief
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.brief.ItemBriefMenu
+import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.OverlayActionsBriefMenuBinding
@@ -54,6 +57,10 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
         entryPoint = ScenarioConfigViewModelsEntryPoint::class.java,
         creator = { smartActionsBriefViewModel() }
     )
+
+    private val tutorialNavigator: TutorialNavigator by lazy {
+        context.getTutorialNavigator()
+    }
 
     private lateinit var viewBinding: OverlayActionsBriefMenuBinding
 
@@ -137,6 +144,7 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
             R.id.btn_back -> onBackClicked()
             R.id.btn_record -> onRecordClicked()
             R.id.btn_add_other -> showNewActionDialog()
+            R.id.btn_help -> showHelpDialog()
         }
     }
 
@@ -249,5 +257,9 @@ class SmartActionsBriefMenu(initialItemIndex: Int) : ItemBriefMenu(
 
     private fun showActionConfigDialog(action: Action) {
         showActionConfigDialog(viewModel, action)
+    }
+
+    private fun showHelpDialog() {
+        tutorialNavigator.showTipDialog(context, Tip.ACTIONS_BRIEF)
     }
 }

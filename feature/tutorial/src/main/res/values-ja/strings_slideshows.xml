@@ -221,8 +221,10 @@
     <!-- Actions List slideshow -->
     <string name="tutorial_slideshow_actions_list_title">アクションリスト</string>
     <string name="tutorial_slideshow_actions_list_desc">アクションリストの実行方法を学ぶ</string>
-    <string name="tutorial_slideshow_actions_list_step_1_text">アクションは順番に、一つずつ実行されます。&lt;&lt; と
-        &gt;&gt; ボタンを使うか、インデックス番号を直接タップしてアクションの順序を変更できます。\n\nアクションリストは
+    <string name="tutorial_slideshow_actions_list_step_1_text">アクションは順番に、一つずつ実行されます。
+        画面上のどこでも左/右にスワイプすると、次/前のアクションを表示できます。\n\n&lt;&lt; と &gt;&gt;
+        ボタンを使うか、インデックスボックスを直接タップしてアクションの順序を変更できます。</string>
+    <string name="tutorial_slideshow_actions_list_step_2_text">アクションリストは
         短く保つようにしましょう。通常のオートクリッカーはイベントごとに一か所をタップします——それが従うべきモデルです。一つの
         イベントに多くのアクションを追加していると感じたら、それは作業を複数のイベントに分割すべきサインです。各イベントが
         実際に画面に表示されているものに反応するようにしましょう。これが Klick\'r の「見て動く」哲学です：まず検出、それから
