@@ -23,7 +23,12 @@ import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputWith
 import kotlin.text.indexOf
 
 fun IncludeFieldTextInputWithCheckboxBinding.setPositionValue(value: String) {
-    setNumericValue(value, value.isCounterValue())
+    if (textField.text?.toString() == value) return
+
+    val isCounter = value.isCounterValue()
+    // A focused field forwards text changes as user input, which would overwrite the counter with a literal.
+    if (isCounter) textField.clearFocus()
+    setNumericValue(value, isCounter)
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.enableClearCounterOnType() {
@@ -31,7 +36,9 @@ fun IncludeFieldTextInputWithCheckboxBinding.enableClearCounterOnType() {
         private var hadCounterBefore = false
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            hadCounterBefore = s?.startsWith(COUNTER_PREFIX) == true
+            // A whole text replacement comes from setText (e.g. a new counter being bound), not from user typing.
+            val isWholeTextReplaced = start == 0 && count == s?.length
+            hadCounterBefore = s?.startsWith(COUNTER_PREFIX) == true && !isWholeTextReplaced
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
