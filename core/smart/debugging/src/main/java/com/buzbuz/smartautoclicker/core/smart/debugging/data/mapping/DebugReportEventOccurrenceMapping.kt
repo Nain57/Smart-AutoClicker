@@ -54,6 +54,7 @@ internal fun DebugReportEventOccurrence.toProtobuf(): ProtoDebugReportMessage =
         when (this@toProtobuf) {
             is DebugReportEventOccurrence.ScreenEvent -> imageEventMessage = this@toProtobuf.toImageEventProtobuf()
             is DebugReportEventOccurrence.TriggerEvent -> triggerEventMessage = this@toProtobuf.toTriggerEventProtobuf()
+            is DebugReportEventOccurrence.HeldEventCheck -> heldEventCheckMessage = this@toProtobuf.toHeldEventCheckProtobuf()
         }
     }
 
@@ -97,6 +98,8 @@ internal fun ProtoDebugReportMessage.toDomain(): DebugReportEventOccurrence? =
             imageEventMessage.toDomain(relativeTimestampMs)
         ProtoDebugReportMessage.MessageTypeCase.TRIGGEREVENTMESSAGE ->
             triggerEventMessage.toDomain(relativeTimestampMs)
+        ProtoDebugReportMessage.MessageTypeCase.HELDEVENTCHECKMESSAGE ->
+            heldEventCheckMessage.toDomain(relativeTimestampMs)
         ProtoDebugReportMessage.MessageTypeCase.COUNTERSINITMESSAGE -> null
         ProtoDebugReportMessage.MessageTypeCase.MESSAGETYPE_NOT_SET -> {
             Log.e(LOG_TAG, "Can't read DebugReportEventOccurrence from protobuf")

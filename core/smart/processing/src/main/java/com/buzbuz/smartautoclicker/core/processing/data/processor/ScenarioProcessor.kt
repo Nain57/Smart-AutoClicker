@@ -83,6 +83,9 @@ internal class ScenarioProcessor(
     ),
 ) {
 
+    /** The last held event notified to the [progressListener]. */
+    private var notifiedHeldEvent: Event? = null
+
     fun onScenarioStart(context: Context) {
         processingState.onProcessingStarted(context)
     }
@@ -110,17 +113,6 @@ internal class ScenarioProcessor(
             return
         }
 
-        // Handle all trigger events enabled during previous processing
-        if (!processingState.areAllTriggerEventsDisabled()) {
-            progressListener?.onEventsListProcessingStarted(EventType.Trigger)
-            processTriggerEvents()
-            progressListener?.onEventsProcessingCompleted(EventType.Trigger)
-        }
-
-        // Reset any values that needs to be reset for each iteration
-        // After the triggers to let them handle changes, before the image processing to start capturing values before
-        processingState.clearIterationState()
-
         // If there is a held event that has been disabled, release the held finger. Otherwise, verify the user didn't
         // lift it by touching the screen: the system already released it, only its cooldown remains to be started.
         val heldEvent = actionExecutor.getHeldEvent()
@@ -133,6 +125,18 @@ internal class ScenarioProcessor(
                 startHeldEventCooldown(heldEvent)
             }
         }
+        notifyHeldEventChangeIfNeeded(heldEvent)
+
+        // Handle all trigger events enabled during previous processing
+        if (!processingState.areAllTriggerEventsDisabled()) {
+            progressListener?.onEventsListProcessingStarted(EventType.Trigger)
+            processTriggerEvents()
+            progressListener?.onEventsProcessingCompleted(EventType.Trigger)
+        }
+
+        // Reset any values that needs to be reset for each iteration
+        // After the triggers to let them handle changes, before the image processing to start capturing values before
+        processingState.clearIterationState()
 
         // Handle the image detection
         if (!processingState.areAllScreenEventsDisabled()) {
@@ -243,13 +247,15 @@ internal class ScenarioProcessor(
 
         // The previously held event lost its hold to this one, its cooldown started with the execution
         val heldEvent = actionExecutor.getHeldEvent()
-        if (previousHeldEvent is ScreenEvent && heldEvent?.id != previousHeldEvent.id) {
-            processingState.startCooldownIfNeeded(previousHeldEvent, executionStartTimeMs)
+        if (previousHeldEvent is Event && heldEvent?.id != previousHeldEvent.id) {
+            startHeldEventCooldown(previousHeldEvent, executionStartTimeMs)
         }
 
         // New held pointer, delay cooldown to release time (no cooldown on trigger)
+        notifyHeldEventChangeIfNeeded(heldEvent)
+
         if (event !is ScreenEvent || (heldEvent?.id != previousHeldEvent?.id && heldEvent?.id == event.id)) return
-        processingState.startCooldownIfNeeded(event)
+        startHeldEventCooldown(event)
     }
 
     private suspend fun releaseHeldEventIfUnfulfilled(heldEvent: Event) {
@@ -265,6 +271,7 @@ internal class ScenarioProcessor(
                 is ScreenEvent -> results.getAllScreenConditionsResults()
                 is TriggerEvent -> results.getAllTriggerConditionsResults()
             },
+            isHeld = true,
         )
 
         if (results.fulfilled != true) {
@@ -278,11 +285,20 @@ internal class ScenarioProcessor(
         actionExecutor.releaseHeldFinger()
 
         if (cooldown) startHeldEventCooldown(heldEvent)
+        notifyHeldEventChangeIfNeeded(null)
     }
 
     /** Cooldown of an event holding a finger starts once it is released. */
-    private fun startHeldEventCooldown(heldEvent: Event) {
-        if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent)
+    private fun startHeldEventCooldown(heldEvent: Event, startTimeMs: Long = System.currentTimeMillis()) {
+        if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent, startTimeMs)
+    }
+
+    /** Notify the held event to the [progressListener] if it has changed since the last notification. */
+    private fun notifyHeldEventChangeIfNeeded(heldEvent: Event?) {
+        if (heldEvent?.id == notifiedHeldEvent?.id) return
+
+        notifiedHeldEvent = heldEvent
+        progressListener?.onHeldEventChanged(heldEvent)
     }
 }
 

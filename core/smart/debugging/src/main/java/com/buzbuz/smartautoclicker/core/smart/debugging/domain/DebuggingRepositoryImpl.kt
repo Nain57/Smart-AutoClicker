@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.IO
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugConfigurationLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.data.DebugReportLocalDataSource
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveHeldEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
@@ -56,6 +57,9 @@ internal class DebuggingRepositoryImpl @Inject constructor(
 
     override val lastImageEventProcessed: Flow<DebugLiveEventOccurrence?> =
         debugEngine.lastEventProcessed
+
+    override val heldEvent: Flow<DebugLiveHeldEvent?> =
+        debugEngine.heldEvent
 
     override val isDebugReportAvailable: StateFlow<Boolean> =
         debugReportDataSource.isReportAvailable

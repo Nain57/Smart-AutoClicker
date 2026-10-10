@@ -135,6 +135,7 @@ class DebugReportTimelineViewModel @Inject constructor(
             val event = when (occurrence) {
                 is DebugReportEventOccurrence.ScreenEvent -> screenEvents.findWithId(occurrence.eventId)
                 is DebugReportEventOccurrence.TriggerEvent -> trigEvents.findWithId(occurrence.eventId)
+                is DebugReportEventOccurrence.HeldEventCheck -> return@mapIndexedNotNull null
             } ?: return@mapIndexedNotNull null
 
             DebugReportTimelineEventOccurrenceItem(
@@ -161,7 +162,10 @@ class DebugReportTimelineViewModel @Inject constructor(
         when (this) {
             is DebugReportEventOccurrence.ScreenEvent ->
                 context.getString(R.string.item_event_occurrence_frame_number, frameNumber)
-            is DebugReportEventOccurrence.TriggerEvent ->
+            is DebugReportEventOccurrence.HeldEventCheck.Screen ->
+                context.getString(R.string.item_event_occurrence_frame_number, frameNumber)
+            is DebugReportEventOccurrence.TriggerEvent,
+            is DebugReportEventOccurrence.HeldEventCheck.Trigger ->
                 context.getString(R.string.item_event_occurrence_trigger)
         }
 

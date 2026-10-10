@@ -17,6 +17,7 @@
 package com.buzbuz.smartautoclicker.core.smart.debugging.domain
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveHeldEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportCounterInitialValue
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportOverview
@@ -31,6 +32,9 @@ interface DebuggingRepository {
 
     /** The last event that has been matched, with all interpreted conditions results. */
     val lastImageEventProcessed: Flow<DebugLiveEventOccurrence?>
+
+    /** The event currently holding a pointer on the screen, updated each second of hold. Null if nothing is held. */
+    val heldEvent: Flow<DebugLiveHeldEvent?>
 
     /** Tells if a debug report is available. */
     val isDebugReportAvailable: StateFlow<Boolean>

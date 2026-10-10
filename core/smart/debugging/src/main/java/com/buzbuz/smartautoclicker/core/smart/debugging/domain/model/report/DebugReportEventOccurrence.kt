@@ -52,4 +52,44 @@ sealed class DebugReportEventOccurrence {
         override val eventStateChanges: List<DebugReportActionResult.EventStateChange>,
         val frameNumber: Long,
     ) : DebugReportEventOccurrence()
+
+    /**
+     * The conditions of an event holding a pointer on the screen have been verified.
+     * No actions are executed by this check, so there is never any counter or event state changes.
+     */
+    sealed class HeldEventCheck : DebugReportEventOccurrence() {
+
+        /** True if the conditions are still fulfilled and the pointer is kept held, false if it is released. */
+        abstract val isHeld: Boolean
+        /** The duration since the pointer is held, in milliseconds. */
+        abstract val holdDurationMs: Long
+
+        override val counterChanges: List<DebugReportActionResult.CounterChange>
+            get() = emptyList()
+        override val eventStateChanges: List<DebugReportActionResult.EventStateChange>
+            get() = emptyList()
+
+        /** The held event is a TriggerEvent. */
+        data class Trigger(
+            override val eventId: Long,
+            override val relativeTimestampMs: Long,
+            override val conditionsResults: List<DebugReportConditionResult.TriggerCondition>,
+            override val isHeld: Boolean,
+            override val holdDurationMs: Long,
+        ) : HeldEventCheck()
+
+        /**
+         * The held event is a ScreenEvent.
+         *
+         * @param frameNumber the number of the frame in the current detection session.
+         */
+        data class Screen(
+            override val eventId: Long,
+            override val relativeTimestampMs: Long,
+            override val conditionsResults: List<DebugReportConditionResult.ScreenCondition>,
+            override val isHeld: Boolean,
+            override val holdDurationMs: Long,
+            val frameNumber: Long,
+        ) : HeldEventCheck()
+    }
 }

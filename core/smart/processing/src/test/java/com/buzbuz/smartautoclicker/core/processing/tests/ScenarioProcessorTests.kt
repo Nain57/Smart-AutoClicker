@@ -72,6 +72,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.atLeast
 import org.mockito.Mockito.mock
@@ -84,6 +85,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.inOrder
 import org.robolectric.annotation.Config
 import org.mockito.Mockito.`when` as mockWhen
 
@@ -1515,6 +1517,179 @@ class ScenarioProcessorTests {
 
         verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(anyNotNull())
         Assert.assertEquals("Event2 should hold the pointer", event2, heldPointer?.owner)
+    }
+
+    @Test
+    fun heldEvent_holdStarted_notifiesHeldEventChangedOnce() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockProgressListener, times(1)).onHeldEventChanged(event)
+        verify(mockProgressListener, never()).onHeldEventChanged(null)
+    }
+
+    @Test
+    fun heldEvent_conditionsFulfilled_notifiesHeldCheckOnly() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        // Only the first detection, before the hold, is notified as an event processing
+        verify(mockProgressListener, times(1)).onEventProcessingCompleted(eq(event), anyBoolean(), anyNotNull(), eq(false))
+        verify(mockProgressListener, times(2)).onEventProcessingCompleted(eq(event), eq(true), anyNotNull(), eq(true))
+        verify(mockProgressListener, never()).onEventProcessingCompleted(eq(event), eq(false), anyNotNull(), eq(true))
+    }
+
+    @Test
+    fun heldEvent_conditionsUnfulfilled_notifiesReleasedCheckBeforeRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        mockWhen(mockImageDetector.detectImage(anyNotNull(), anyInt(), anyInt(), anyNotNull(), anyInt()))
+            .thenReturn(TEST_DETECTION_KO)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventChanged(event)
+            verify(mockProgressListener).onEventProcessingCompleted(eq(event), eq(false), anyNotNull(), eq(true))
+            verify(mockProgressListener).onHeldEventChanged(null)
+        }
+    }
+
+    @Test
+    fun heldTriggerEvent_conditionsUnfulfilled_notifiesReleasedCheck() = runTest {
+        val counterName = "counter"
+        val triggerEvent = TriggerEvent(
+            id = Identifier(databaseId = 10L),
+            scenarioId = Identifier(databaseId = 1L),
+            name = "Trigger",
+            conditionOperator = AND,
+            actions = listOf(newHoldGestureAction()),
+            conditions = listOf(
+                TriggerCondition.OnCounterCountReached(
+                    id = Identifier(databaseId = 11L),
+                    eventId = Identifier(databaseId = 10L),
+                    name = "Counter reached",
+                    counterName = counterName,
+                    comparisonOperation = ComparisonOperation.EQUALS,
+                    counterValue = CounterOperationValue.Number(1.0),
+                )
+            ),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(
+            events = emptyList(),
+            triggerEvent = listOf(triggerEvent),
+            counters = listOf(Counter(counterName, 1.0, Identifier(databaseId = 1L))),
+        )
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.processingState.setCounterValue(counterName, 0.0)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventChanged(triggerEvent)
+            verify(mockProgressListener).onEventProcessingCompleted(eq(triggerEvent), eq(true), anyNotNull(), eq(true))
+            verify(mockProgressListener).onEventProcessingCompleted(eq(triggerEvent), eq(false), anyNotNull(), eq(true))
+            verify(mockProgressListener).onHeldEventChanged(null)
+        }
+    }
+
+    @Test
+    fun heldEvent_pointerLiftedByUser_notifiesRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        ).copy(cooldownMs = TEST_COOLDOWN_MS)
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        isPointerLiftedByUser = true
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockProgressListener).onHeldEventChanged(null)
+        verify(mockProgressListener, never()).onEventProcessingCompleted(anyNotNull(), anyBoolean(), anyNotNull(), eq(true))
+    }
+
+    @Test
+    fun heldEvent_disabled_notifiesReleaseWithoutCheck() = runTest {
+        val condition = createHeldTestCondition(isDetected = true)
+        val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+        val event2 = newEvent(id = 2L, conditions = listOf(condition), actions = listOf(newDefaultClickAction()))
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.processingState.disableEvent(event1.id.databaseId)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockProgressListener).onHeldEventChanged(null)
+        verify(mockProgressListener, never()).onEventProcessingCompleted(anyNotNull(), anyBoolean(), anyNotNull(), eq(true))
+    }
+
+    @Test
+    fun heldEvent_pointerDroppedBySystem_notifiesRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        ).copy(cooldownMs = TEST_COOLDOWN_MS)
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        heldPointer = null
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockProgressListener).onHeldEventChanged(null)
+    }
+
+    @Test
+    fun heldEvent_takenOver_notifiesNewHeldEvent() = runTest {
+        val condition = createHeldTestCondition(isDetected = true)
+        val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+        val event2 = newEvent(id = 2L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event1, event2), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventChanged(event1)
+            verify(mockProgressListener).onHeldEventChanged(event2)
+        }
+        verify(mockProgressListener, never()).onHeldEventChanged(null)
+    }
+
+    @Test
+    fun heldEvent_scenarioEnd_notifiesRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.onScenarioEnd()
+
+        verify(mockProgressListener).onHeldEventChanged(null)
     }
 
     @Test
