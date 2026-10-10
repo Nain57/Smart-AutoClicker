@@ -31,7 +31,7 @@
         Il contient les paramètres de détection généraux et une liste d\'événements décrivant ce qui sera exécuté lors de l\'exécution
         de votre scénario.\n\nCliquez sur le bouton de création d\'événement pour créer votre premier événement.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">Un événement décrit les actions (clic, swipe…) à exécuter lorsque certaines
+    <string name="message_tutorial_screen_condition_moving_target_step_5">Un événement décrit les actions (clic, geste…) à exécuter lorsque certaines
         conditions sont remplies.\n\nPour battre ce jeu, nous devons détecter le personnage bleu qui se déplace sur l\'écran.
         \n\nCliquez sur le champ "Conditions" pour afficher la liste des conditions.</string>
 

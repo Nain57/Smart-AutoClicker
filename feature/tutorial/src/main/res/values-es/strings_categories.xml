@@ -106,7 +106,7 @@
     <string name="tutorial_category_action_name">Acciones</string>
     <string name="tutorial_category_action_desc_short">Ejecuta algo una vez que se cumplan tus condiciones</string>
     <string name="tutorial_category_action_desc_long">Una Acción se ejecuta cuando se cumplen las Condiciones de un
-        Evento. Las Acciones van desde gestos (Click, Swipe) hasta control de flujo (ToggleEvent, ChangeCounter, Wait)
+        Evento. Las Acciones van desde gestos (Click, Gesture) hasta control de flujo (ToggleEvent, ChangeCounter, Wait)
         e interacciones del sistema (Intent, Notification, SystemAction, SetText).\n\n Aprende aquí a usar cada tipo de
         Acción para crear tus scripts de automatización.</string>
 
@@ -116,12 +116,9 @@
         o en el centro de una Condición de imagen detectada. Puedes configurar la duración de la pulsación para simular
         pulsaciones largas.\n\n Aprende aquí a usarla para interactuar con tu pantalla.</string>
 
-    <string name="tutorial_category_gesture_action_name">Deslizamiento</string>
-    <string name="tutorial_category_gesture_action_desc_short">Desliza de un punto a otro en la pantalla</string>
-    <string name="tutorial_category_gesture_action_desc_long">Una Acción Deslizamiento simula un gesto de arrastrar desde
-        una coordenada de inicio hasta una coordenada de fin. Puedes configurar la duración del deslizamiento para
-        controlar la velocidad del gesto.\n\n Aprende aquí a usarla para desplazar o arrastrar elementos en tu
-        pantalla.</string>
+    <string name="tutorial_category_gesture_action_name">Gesto</string>
+    <string name="tutorial_category_gesture_action_desc_short">Realiza un gesto complejo en la pantalla</string>
+    <string name="tutorial_category_gesture_action_desc_long">Una Acción Gesto simula los movimientos de uno o varios dedos en la pantalla. Puedes configurar hasta cinco dedos actuando al mismo tiempo.\n\n Aprende aquí a usarla para interactuar con tu pantalla.</string>
 
     <string name="tutorial_category_pause_action_name">Esperar</string>
     <string name="tutorial_category_pause_action_desc_short">Espera una duración antes de ejecutar la siguiente acción</string>

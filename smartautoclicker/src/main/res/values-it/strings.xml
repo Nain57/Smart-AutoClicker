@@ -67,7 +67,7 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_desc_dumb_scenario">L\'esperienza regolare del cliccatore automatico.\nÈ sufficiente posizionare i clic e i passaggi sullo schermo.</string>
+    <string name="item_desc_dumb_scenario">L\'esperienza regolare del cliccatore automatico.\nÈ sufficiente posizionare i clic e i gesti sullo schermo.</string>
     <string name="item_desc_dumb_scenario_max_duration">Interrompere dopo %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">Nessuna durata massima</string>
     <string name="item_desc_dumb_scenario_repeat_count">Ripetere %1$d volte</string>

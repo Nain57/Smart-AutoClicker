@@ -109,7 +109,7 @@
     <string name="tutorial_category_action_name">Azioni</string>
     <string name="tutorial_category_action_desc_short">Esegui qualcosa quando le condizioni sono soddisfatte</string>
     <string name="tutorial_category_action_desc_long">Un\'Azione viene eseguita quando le Condizioni di un Evento sono
-        soddisfatte. Le Azioni spaziano dai gesti (Click, Swipe) al controllo del flusso (ToggleEvent, ChangeCounter,
+        soddisfatte. Le Azioni spaziano dai gesti (Click, Gesture) al controllo del flusso (ToggleEvent, ChangeCounter,
         Wait) e alle interazioni di sistema (Intent, Notification, SystemAction, SetText).\n\n Impara qui a usare ogni
         tipo di Azione per creare i tuoi script di automazione.</string>
 
@@ -119,11 +119,9 @@
         centro di una Condizione immagine rilevata. Puoi configurare la durata della pressione per simulare pressioni
         prolungate.\n\n Impara qui a usarla per interagire con lo schermo.</string>
 
-    <string name="tutorial_category_gesture_action_name">Scorrimento</string>
-    <string name="tutorial_category_gesture_action_desc_short">Scorri da un punto all\'altro sullo schermo</string>
-    <string name="tutorial_category_gesture_action_desc_long">Un\'Azione Scorrimento simula un gesto di trascinamento da
-        una coordinata di partenza a una di arrivo. Puoi configurare la durata dello scorrimento per controllare la
-        velocità del gesto.\n\n Impara qui a usarla per scorrere o trascinare elementi sullo schermo.</string>
+    <string name="tutorial_category_gesture_action_name">Gesto</string>
+    <string name="tutorial_category_gesture_action_desc_short">Esegui un gesto complesso sullo schermo</string>
+    <string name="tutorial_category_gesture_action_desc_long">Un\'Azione Gesto simula i movimenti di una o più dita sullo schermo. Puoi configurare fino a cinque dita che agiscono contemporaneamente.\n\n Impara qui a usarla per interagire con lo schermo.</string>
 
     <string name="tutorial_category_pause_action_name">Attendi</string>
     <string name="tutorial_category_pause_action_desc_short">Attendi una durata prima di eseguire l\'azione successiva</string>

@@ -106,7 +106,7 @@
     <string name="tutorial_category_action_name">Действия</string>
     <string name="tutorial_category_action_desc_short">Выполняйте что-то, когда условия выполнены</string>
     <string name="tutorial_category_action_desc_long">Действие выполняется, когда условия события выполнены. Действия
-        варьируются от жестов (Click, Swipe) до управления потоком (ToggleEvent, ChangeCounter, Wait) и системных
+        варьируются от жестов (Click, Gesture) до управления потоком (ToggleEvent, ChangeCounter, Wait) и системных
         взаимодействий (Intent, Notification, SystemAction, SetText).\n\n Узнайте здесь, как использовать каждый тип
         действия для создания скриптов автоматизации.</string>
 
@@ -116,11 +116,9 @@
         координате или в центре обнаруженного условия изображения. Можно настроить длительность нажатия для
         имитации долгих нажатий.\n\n Узнайте здесь, как использовать его для взаимодействия с экраном.</string>
 
-    <string name="tutorial_category_gesture_action_name">Свайп</string>
-    <string name="tutorial_category_gesture_action_desc_short">Проведите пальцем от одной точки к другой</string>
-    <string name="tutorial_category_gesture_action_desc_long">Действие «Свайп» имитирует жест перетаскивания от
-        начальной координаты до конечной. Можно настроить длительность свайпа для управления скоростью жеста.
-        \n\n Узнайте здесь, как использовать его для прокрутки или перетаскивания элементов на экране.</string>
+    <string name="tutorial_category_gesture_action_name">Жест</string>
+    <string name="tutorial_category_gesture_action_desc_short">Выполните сложный жест на экране</string>
+    <string name="tutorial_category_gesture_action_desc_long">Действие «Жест» имитирует движения одного или нескольких пальцев по экрану. Можно настроить до пяти пальцев, действующих одновременно.\n\n Узнайте здесь, как использовать его для взаимодействия с экраном.</string>
 
     <string name="tutorial_category_pause_action_name">Пауза</string>
     <string name="tutorial_category_pause_action_desc_short">Ожидание перед выполнением следующего действия</string>

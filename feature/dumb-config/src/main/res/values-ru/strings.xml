@@ -39,12 +39,14 @@
       -->
     <string name="item_desc_dumb_action_duration">Длительность: %1$s</string>
     <string name="item_desc_dumb_click">Нажимать на любою точку на экране</string>
+    <string name="item_desc_dumb_gesture">Выполнить сложный жест на экране</string>
     <string name="item_desc_dumb_click_details">Нажимает %1$s на точку [%2$d, %3$d]</string>
     <string name="item_desc_dumb_pause">Приостановить выполнение</string>
     <string name="item_desc_dumb_pause_details">Длительность: %1$s</string>
     <string name="item_desc_dumb_repeat_count">Всего повторений: %1$d</string>
     <string name="item_desc_dumb_repeat_infinite">Повторяется бесконечно</string>
     <string name="item_title_dumb_click">Нажатие</string>
+    <string name="item_title_dumb_gesture">Жест</string>
     <string name="item_title_dumb_pause">Бездействие</string>
     <string name="item_title_no_dumb_actions">Действий нет</string>
     <string name="item_title_dumb_action_copy">Копировать</string>

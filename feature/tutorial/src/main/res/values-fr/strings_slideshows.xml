@@ -170,13 +170,10 @@
         souvent le besoin le plus important.</string>
 
     <!-- Gesture Action slideshow -->
-    <string name="tutorial_slideshow_gesture_action_title">Action Glissement</string>
-    <string name="tutorial_slideshow_gesture_action_desc">Apprenez comment le geste de glissement est effectué</string>
-    <string name="tutorial_slideshow_gesture_action_step_1_text">Une Action Glissement effectue un geste de glisser en
-        ligne droite d\'une position de départ à une position d\'arrivée. Les deux coordonnées sont fixes et définies
-        lors de la configuration de l\'action.\n\nLa durée du glissement contrôle le temps que met le geste pour
-        parcourir le trajet : une durée plus courte produit un glissement plus rapide, tandis qu\'une durée plus
-        longue produit un glissement plus lent et plus contrôlé.</string>
+    <string name="tutorial_slideshow_gesture_action_title">Action Geste</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Apprenez comment le geste est effectué</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Une Action Geste reproduit un tracé que vous avez enregistré ou configuré manuellement, pour un maximum de cinq doigts en même temps.\n\nUn tracé commence toujours par un appui et se termine par un relâchement, avec des déplacements et des pauses entre les deux. La durée totale d\'un geste est limitée à 60 secondes.\n\nVous pouvez ainsi recréer facilement des glissements, des zooms à deux doigts et d\'autres gestes complexes. Essayez le bouton d\'enregistrement de la liste des actions pour en capturer un directement sur l\'écran !\n\nRemarque : les pauses dans un geste ne sont disponibles qu\'à partir d\'Android 8.</string>
+    <string name="tutorial_slideshow_gesture_action_step_2_text">Vous pouvez garder le premier doigt appuyé à la fin d\'un geste et continuer l\'exécution du scénario pendant ce maintien. Dépliez l\'étape Relâchement du geste et choisissez quand le doigt doit être relâché : immédiatement, une fois toutes les actions de l\'événement exécutées, dès que l\'événement n\'est plus rempli, ou après une durée.\n\nÀ savoir :\n• Un seul maintien à la fois est possible : en démarrer un autre relâchera le précédent.\n• Tant qu\'un doigt est maintenu, l\'événement associé ne sera plus déclenché avant que le doigt soit relâché.\n• Si vous appuyez vous-même sur l\'écran, le maintien sera interrompu.\n• La durée maximale de maintien dépend de votre système et de l\'application automatisée. Certains systèmes autorisent une durée infinie, d\'autres non.</string>
 
     <!-- Click Action Offset slideshow -->
     <string name="tutorial_slideshow_click_action_offset_title">Décalage du clic</string>

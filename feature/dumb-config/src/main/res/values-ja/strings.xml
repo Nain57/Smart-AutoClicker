@@ -6,12 +6,14 @@
     <string name="menu_item_title_dumb_config">設定</string>
     <string name="item_desc_dumb_action_duration">%1$s 間</string>
     <string name="item_desc_dumb_click">画面上の任意の位置をタップします</string>
+    <string name="item_desc_dumb_gesture">画面上で複雑なジェスチャーを実行します</string>
     <string name="item_desc_dumb_click_details">[%2$d, %3$d] で %1$s 間</string>
     <string name="item_desc_dumb_pause">実行を一時停止します</string>
     <string name="item_desc_dumb_pause_details">%1$s 間</string>
     <string name="item_desc_dumb_repeat_count">%1$d 回繰り返す</string>
     <string name="item_desc_dumb_repeat_infinite">無限に繰り返す</string>
     <string name="item_title_dumb_click">タップ</string>
+    <string name="item_title_dumb_gesture">ジェスチャー</string>
     <string name="item_title_dumb_pause">待機</string>
     <string name="item_title_no_dumb_actions">操作なし</string>
     <string name="item_title_dumb_action_copy">コピー</string>

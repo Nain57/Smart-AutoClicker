@@ -19,6 +19,7 @@
     <string name="default_event_name">الحدث الافتراضي</string>
 
     <string name="default_click_name">انقر</string>
+    <string name="default_gesture_name">إيماءة</string>
     <integer name="default_click_press_duration">1</integer>
 
     <string name="default_pause_name">انتظر</string>

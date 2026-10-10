@@ -57,6 +57,14 @@
     <string name="item_click_desc">Клікнути десь на екрані</string>
     <string name="item_click_details_on_condition">Протягом %1$s на %2$s</string>
     <string name="item_click_details_at_position">Протягом %1$s</string>
+    <string name="item_gesture_title">Жест</string>
+    <string name="item_gesture_desc">Виконати складний жест на екрані</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">%1$d палець протягом %2$s</item>
+        <item quantity="few">%1$d пальці протягом %2$s</item>
+        <item quantity="many">%1$d пальців протягом %2$s</item>
+        <item quantity="other">%1$d пальця протягом %2$s</item>
+    </plurals>
 
 
     <string name="item_pause_title">Чекати</string>
@@ -154,7 +162,7 @@
     <string name="message_empty_trigger_condition_list_title">Немає умов!</string>
     <string name="message_empty_trigger_condition_list_desc">Умова - це користувацький критерій для запуску дії.</string>
     <string name="message_empty_action_list_title">Немає дій!</string>
-    <string name="message_empty_action_list_desc">Дія - це взаємодія (клік, проведення…) з вашим телефоном, що запускається при виконанні створених умов.</string>
+    <string name="message_empty_action_list_desc">Дія - це взаємодія (клік, жест…) з вашим телефоном, що запускається при виконанні створених умов.</string>
 
     <string name="menu_item_title_conditions">Умови</string>
     <string name="menu_item_title_actions">Дії</string>
@@ -247,6 +255,35 @@
 
     <string name="field_click_offset_title">Зміщення</string>
     <string name="field_click_offset_desc_none">Немає</string>
+    <string name="item_desc_gesture_press_condition">Натиснути на [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">Натиснути на першу виявлену умову</string>
+    <string name="item_desc_gesture_press_condition_error">Немає умови для натискання</string>
+    <string name="item_desc_gesture_move_condition">Перемістити на [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">Перемістити на першу виявлену умову</string>
+    <string name="item_desc_gesture_move_condition_error">Немає умови для переміщення</string>
+    <string name="message_title_gesture_on_condition_and">Клікнути на умову</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">Оператор умови OR</string>
+    <string name="message_desc_gesture_on_condition_or">Позиція першої виявленої умови</string>
+    <string name="message_title_gesture_on_condition_error">Умову не вибрано</string>
+    <string name="message_desc_gesture_on_condition_error">Потрібно вибрати умову, на якій буде виконано жест</string>
+    <string name="button_title_condition_pick">Вибрати умову</string>
+    <string name="button_title_condition_remove">Прибрати умову</string>
+    <string name="field_gesture_release_when_title">Коли</string>
+    <string name="field_gesture_release_when_item_now">Одразу</string>
+    <string name="field_gesture_release_when_item_until_actions_end">Після всіх дій</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Подію не виконано</string>
+    <string name="field_gesture_release_when_item_for_duration">Через певний час</string>
+    <string name="field_gesture_release_hold_duration_title">Тривалість утримання (мс)</string>
+    <string name="field_gesture_release_desc_now">Відпустити палець одразу.</string>
+    <string name="field_gesture_release_desc_until_actions_end">Відпустити палець після виконання всіх дій цієї події. Те саме, що «Одразу», якщо ця дія остання в списку.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">Відпустити палець, коли ця подія перестане виконуватися.</string>
+    <string name="field_gesture_release_desc_for_duration">Відпустити палець через %1$d мс.</string>
+    <string name="item_desc_gesture_release_now">Відпустити одразу</string>
+    <string name="item_desc_gesture_release_until_actions_end">Відпустити після всіх дій</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">Відпустити, коли подію не виконано</string>
+    <string name="item_desc_gesture_release_for_duration">Відпустити через %1$d мс</string>
+    <string name="field_gesture_release_hold_behaviour">• Одночасно можна утримувати лише один палець: нове утримання відпустить поточне.\n• Поки палець утримується, пов\'язана подія не спрацьовуватиме, доки палець не буде відпущено.\n• Якщо ви самі торкнетеся екрана, утримання перерветься.\n• Максимальна тривалість утримання залежить від вашої системи та застосунку, що автоматизується. Деякі системи дозволяють утримувати нескінченно, інші — ні.</string>
 
 
     <!-- Dialog Action Swipe ======================================================================================= -->

@@ -108,7 +108,7 @@
     <string name="tutorial_category_action_name">Actions</string>
     <string name="tutorial_category_action_desc_short">Exécutez quelque chose une fois vos conditions remplies</string>
     <string name="tutorial_category_action_desc_long">Une Action est exécutée lorsque les Conditions d\'un Événement
-        sont remplies. Les Actions vont des gestes (Click, Swipe) au contrôle de flux (ToggleEvent, ChangeCounter,
+        sont remplies. Les Actions vont des gestes (Click, Gesture) au contrôle de flux (ToggleEvent, ChangeCounter,
         Wait) et aux interactions système (Intent, Notification, SystemAction, SetText).\n\n Apprenez ici à utiliser
         chaque type d\'Action pour créer vos scripts d\'automatisation.</string>
 
@@ -118,12 +118,9 @@
         centre d\'une Condition d\'image détectée. Vous pouvez configurer la durée de pression pour simuler des appuis
         longs.\n\n Apprenez ici à l\'utiliser pour interagir avec votre écran.</string>
 
-    <string name="tutorial_category_gesture_action_name">Glissement</string>
-    <string name="tutorial_category_gesture_action_desc_short">Faites glisser d\'un point à un autre sur l\'écran</string>
-    <string name="tutorial_category_gesture_action_desc_long">Une Action Glissement simule un geste de glisser d\'une
-        coordonnée de départ à une coordonnée d\'arrivée. Vous pouvez configurer la durée du glissement pour contrôler
-        la vitesse du geste.\n\n Apprenez ici à l\'utiliser pour faire défiler ou déplacer des éléments sur votre
-        écran.</string>
+    <string name="tutorial_category_gesture_action_name">Geste</string>
+    <string name="tutorial_category_gesture_action_desc_short">Effectuez un geste complexe sur l\'écran</string>
+    <string name="tutorial_category_gesture_action_desc_long">Une Action Geste simule les mouvements d\'un ou plusieurs doigts sur l\'écran. Vous pouvez configurer jusqu\'à cinq doigts agissant en même temps.\n\n Apprenez ici à l\'utiliser pour interagir avec votre écran.</string>
 
     <string name="tutorial_category_pause_action_name">Pause</string>
     <string name="tutorial_category_pause_action_desc_short">Attendre une durée avant d\'exécuter l\'action suivante</string>

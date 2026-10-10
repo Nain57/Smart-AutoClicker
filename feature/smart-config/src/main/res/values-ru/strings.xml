@@ -56,6 +56,14 @@
     <string name="item_click_desc">Нажать где-нибудь на экране</string>
     <string name="item_click_details_on_condition">During %1$s on %2$s</string>
     <string name="item_click_details_at_position">During %1$s</string>
+    <string name="item_gesture_title">Жест</string>
+    <string name="item_gesture_desc">Выполнить сложный жест на экране</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">%1$d палец в течение %2$s</item>
+        <item quantity="few">%1$d пальца в течение %2$s</item>
+        <item quantity="many">%1$d пальцев в течение %2$s</item>
+        <item quantity="other">%1$d пальца в течение %2$s</item>
+    </plurals>
 
 
     <string name="item_pause_title">Пауза</string>
@@ -153,7 +161,7 @@
     <string name="message_empty_trigger_condition_list_title">Нет условий!</string>
     <string name="message_empty_trigger_condition_list_desc">Условие — это пользовательский критерий для запуска действия.</string>
     <string name="message_empty_action_list_title">Нет действий!</string>
-    <string name="message_empty_action_list_desc">Действие — это взаимодействие (нажатие, свайп…) с телефоном, запускаемое при выполнении созданных условий.</string>
+    <string name="message_empty_action_list_desc">Действие — это взаимодействие (нажатие, жест…) с телефоном, запускаемое при выполнении созданных условий.</string>
 
     <string name="menu_item_title_conditions">Условия</string>
     <string name="menu_item_title_actions">Действия</string>
@@ -245,6 +253,35 @@
 
     <string name="field_click_offset_title">Смещение</string>
     <string name="field_click_offset_desc_none">Никто</string>
+    <string name="item_desc_gesture_press_condition">Нажать на [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">Нажать на первое обнаруженное условие</string>
+    <string name="item_desc_gesture_press_condition_error">Нет условия для нажатия</string>
+    <string name="item_desc_gesture_move_condition">Переместить на [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">Переместить на первое обнаруженное условие</string>
+    <string name="item_desc_gesture_move_condition_error">Нет условия для перемещения</string>
+    <string name="message_title_gesture_on_condition_and">Нажать на условие</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">Оператор условия OR</string>
+    <string name="message_desc_gesture_on_condition_or">Позиция первого обнаруженного условия</string>
+    <string name="message_title_gesture_on_condition_error">Условие не выбрано</string>
+    <string name="message_desc_gesture_on_condition_error">Нужно выбрать условие, на котором будет выполнен жест</string>
+    <string name="button_title_condition_pick">Выбрать условие</string>
+    <string name="button_title_condition_remove">Убрать условие</string>
+    <string name="field_gesture_release_when_title">Когда</string>
+    <string name="field_gesture_release_when_item_now">Сразу</string>
+    <string name="field_gesture_release_when_item_until_actions_end">После всех действий</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Событие не выполнено</string>
+    <string name="field_gesture_release_when_item_for_duration">Через время</string>
+    <string name="field_gesture_release_hold_duration_title">Длительность удержания (мс)</string>
+    <string name="field_gesture_release_desc_now">Отпустить палец сразу.</string>
+    <string name="field_gesture_release_desc_until_actions_end">Отпустить палец после выполнения всех действий этого события. То же, что «Сразу», если это действие последнее в списке.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">Отпустить палец, когда это событие перестанет выполняться.</string>
+    <string name="field_gesture_release_desc_for_duration">Отпустить палец через %1$d мс.</string>
+    <string name="item_desc_gesture_release_now">Отпустить сразу</string>
+    <string name="item_desc_gesture_release_until_actions_end">Отпустить после всех действий</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">Отпустить, когда событие не выполнено</string>
+    <string name="item_desc_gesture_release_for_duration">Отпустить через %1$d мс</string>
+    <string name="field_gesture_release_hold_behaviour">• Одновременно можно удерживать только один палец: новое удержание отпустит текущее.\n• Пока палец удерживается, связанное событие не будет срабатывать, пока палец не будет отпущен.\n• Если вы сами коснётесь экрана, удержание прервётся.\n• Максимальная длительность удержания зависит от вашей системы и автоматизируемого приложения. Некоторые системы позволяют удерживать бесконечно, другие — нет.</string>
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 

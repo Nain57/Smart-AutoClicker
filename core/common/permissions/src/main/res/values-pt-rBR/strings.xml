@@ -34,7 +34,7 @@
         sobre os aplicativos que você deseja automatizar, permitindo que você configure seu cenário sem interromper
         o outro aplicativo.</string>
     <string name="message_permission_desc_accessibility">A permissão do serviço de acessibilidade permite que o Klick\'r
-        execute gestos na tela do seu dispositivo. Essa permissão é necessária para executar os cliques e deslizes
+        execute gestos na tela do seu dispositivo. Essa permissão é necessária para executar os cliques e gestos
         que você criará em seus cenários de automação.\n\nNenhum dado é coletado pelo Klick\'r\n\nPara conceder a permissão do serviço de acessibilidade,
         clique no botão abaixo.</string>
     <string name="message_permission_desc_notification">Opcional: Mostra a notificação enquanto o aplicativo está em execução para

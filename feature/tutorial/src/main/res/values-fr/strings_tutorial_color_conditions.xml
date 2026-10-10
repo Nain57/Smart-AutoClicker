@@ -62,7 +62,7 @@
         champ Actions pour afficher la liste des Actions.</string>
 
     <string name="message_tutorial_color_conditions_step_12">Une Action est quelque chose qui s\'exécute une fois que les Conditions de
-        son Événement sont remplies.\n\nCela peut être un clic, un swipe, une pause, un Intent (une interaction avec une autre
+        son Événement sont remplies.\n\nCela peut être un clic, un geste, une pause, un Intent (une interaction avec une autre
         application) ou un changement dans l\'exécution du Scénario. Plusieurs Actions peuvent être définies pour le même
         Événement.\n\nAppuyez sur le bouton Créer une Action pour créer votre première Action.</string>
 

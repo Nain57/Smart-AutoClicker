@@ -9,5 +9,6 @@
 -->
 <resources>
     <string name="default_dumb_click_name">点击</string>
+    <string name="default_dumb_gesture_name">手势</string>
     <string name="default_dumb_pause_name">等待</string>
 </resources>

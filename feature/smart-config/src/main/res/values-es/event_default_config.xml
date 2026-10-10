@@ -19,6 +19,7 @@
     <string name="default_event_name">Evento predeterminado</string>
 
     <string name="default_click_name">Hacer clic</string>
+    <string name="default_gesture_name">Gesto</string>
     <integer name="default_click_press_duration">1</integer>
 
     <string name="default_pause_name">Esperar</string>

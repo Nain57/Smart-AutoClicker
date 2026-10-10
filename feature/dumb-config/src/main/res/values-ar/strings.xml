@@ -39,12 +39,14 @@
       -->
     <string name="item_desc_dumb_action_duration">خلال %1$s</string>
     <string name="item_desc_dumb_click">انقر في مكان ما على الشاشة</string>
+    <string name="item_desc_dumb_gesture">تنفيذ إيماءة معقدة على الشاشة</string>
     <string name="item_desc_dumb_click_details">خلال %1$s في [%2$d، %3$d]</string>
     <string name="item_desc_dumb_pause">وقفة التنفيذ</string>
     <string name="item_desc_dumb_pause_details">خلال %1$s</string>
     <string name="item_desc_dumb_repeat_count">كرر %1$d مرات</string>
     <string name="item_desc_dumb_repeat_infinite">تكرار لا نهاية له</string>
     <string name="item_title_dumb_click">انقر</string>
+    <string name="item_title_dumb_gesture">إيماءة</string>
     <string name="item_title_dumb_pause">انتظر</string>
     <string name="item_title_no_dumb_actions">لا توجد إجراءات</string>
     <string name="item_title_dumb_action_copy">ينسخ</string>

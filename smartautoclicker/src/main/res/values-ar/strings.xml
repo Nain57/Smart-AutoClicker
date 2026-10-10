@@ -73,7 +73,7 @@
       -  * Desc can have more space to describe the title
       -  * Error have the same space as desc
       -->
-    <string name="item_desc_dumb_scenario">تجربة النقر التلقائي العادية.\nقم ببساطة بوضع النقرات والسحبات على الشاشة.</string>
+    <string name="item_desc_dumb_scenario">تجربة النقر التلقائي العادية.\nقم ببساطة بوضع النقرات والإيماءات على الشاشة.</string>
     <string name="item_desc_dumb_scenario_max_duration">توقف بعد %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">لا توجد مدة قصوى</string>
     <string name="item_desc_dumb_scenario_repeat_count">كرر %1$d مرات</string>

@@ -36,7 +36,19 @@
     <string name="item_event_occurrence_frame_number">Marco #%1$d</string>
     <string name="item_event_occurrence_trigger">Desencadenar</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Cumplido: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">No cumplido: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d condiciones procesadas</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">Mantenido %1$.1fs</string>
+    <string name="item_event_occurrence_released">Soltado: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">No cumplido</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">Acciones terminadas</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">Tiempo agotado</string>
+    <string name="item_event_occurrence_release_reason_interrupted">Interrumpido</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">Evento desactivado</string>
+    <string name="item_event_occurrence_release_reason_other_event">Otro evento</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">Rotación de pantalla</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">Escenario detenido</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +62,12 @@
     <string name="field_debug_filter_trigger_events_title">Eventos desencadenantes</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">Mostrar ocurrencias de eventos desencadenantes en la línea de tiempo</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">Ocultar todas las ocurrencias de eventos desencadenantes en la línea de tiempo</string>
+    <string name="field_debug_filter_hold_checks_title">Mostrar comprobaciones de gestos mantenidos</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">Mostrar en la línea de tiempo las comprobaciones que mantienen un gesto pulsado</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">Ocultar en la línea de tiempo las comprobaciones que mantienen un gesto pulsado</string>
+    <string name="field_debug_filter_releases_title">Mostrar gestos soltados</string>
+    <string name="field_debug_filter_releases_show_desc_on">Mostrar en la línea de tiempo cuándo se sueltan los gestos mantenidos</string>
+    <string name="field_debug_filter_releases_show_desc_off">Ocultar en la línea de tiempo cuándo se sueltan los gestos mantenidos</string>
 
     <string name="field_debug_filter_events_show_title">Filtros</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d eventos</string>

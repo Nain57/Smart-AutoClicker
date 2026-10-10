@@ -36,7 +36,19 @@
     <string name="item_event_occurrence_frame_number">Fotogramma #%1$d</string>
     <string name="item_event_occurrence_trigger">Innesco</string>
     <string name="item_event_occurrence_one_condition_fulfilled">Soddisfatto: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">Non soddisfatto: %1$s</string>
     <string name="item_event_occurrence_several_condition_processed">%1$d condizioni elaborate</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">Premuto da %1$.1fs</string>
+    <string name="item_event_occurrence_released">Rilasciato: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">Non soddisfatto</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">Azioni completate</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">Tempo scaduto</string>
+    <string name="item_event_occurrence_release_reason_interrupted">Interrotto</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">Evento disattivato</string>
+    <string name="item_event_occurrence_release_reason_other_event">Un altro evento</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">Rotazione dello schermo</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">Scenario interrotto</string>
 
 
     <!-- Debug Report Timeline filters dialog ====================================================================== -->
@@ -50,6 +62,12 @@
     <string name="field_debug_filter_trigger_events_title">Eventi scatenanti</string>
     <string name="field_debug_filter_trigger_events_show_desc_on">Mostra le occorrenze degli eventi di attivazione nella cronologia</string>
     <string name="field_debug_filter_trigger_events_show_desc_off">Nascondi tutte le occorrenze degli eventi trigger nella timeline</string>
+    <string name="field_debug_filter_hold_checks_title">Mostra verifiche dei gesti mantenuti</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">Mostra nella cronologia le verifiche che mantengono premuto un gesto</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">Nascondi nella cronologia le verifiche che mantengono premuto un gesto</string>
+    <string name="field_debug_filter_releases_title">Mostra rilasci dei gesti</string>
+    <string name="field_debug_filter_releases_show_desc_on">Mostra nella cronologia i rilasci dei gesti mantenuti</string>
+    <string name="field_debug_filter_releases_show_desc_off">Nascondi nella cronologia i rilasci dei gesti mantenuti</string>
 
     <string name="field_debug_filter_events_show_title">Filtri</string>
     <string name="field_debug_filter_events_show_select_desc">%1$d eventi</string>

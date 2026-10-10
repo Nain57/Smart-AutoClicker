@@ -167,12 +167,10 @@
         válida, mas adicionar uma ao final da lista costuma ser a necessidade mais importante.</string>
 
     <!-- Gesture Action slideshow -->
-    <string name="tutorial_slideshow_gesture_action_title">Ação Deslizar</string>
-    <string name="tutorial_slideshow_gesture_action_desc">Aprenda como o gesto de deslizamento é realizado</string>
-    <string name="tutorial_slideshow_gesture_action_step_1_text">Uma Ação Deslizar realiza um gesto de arrastar em
-        linha reta de uma posição inicial até uma posição final. Ambas as coordenadas são fixas e definidas na
-        configuração da ação.\n\nA duração controla quanto tempo o gesto leva do início ao fim: uma duração menor
-        produz um deslizamento mais rápido, enquanto uma maior produz um mais lento e controlado.</string>
+    <string name="tutorial_slideshow_gesture_action_title">Ação Gesto</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Aprenda como o gesto é realizado</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Uma Ação Gesto reproduz um trajeto que você gravou ou configurou manualmente, com até cinco dedos ao mesmo tempo.\n\nUm trajeto sempre começa com um toque e termina soltando o dedo, com movimentos e esperas entre eles. A duração total máxima de um gesto é de 60 segundos.\n\nCom isso, você pode recriar facilmente deslizes, zoom com dois dedos e outros gestos complexos. Experimente o botão de gravar na lista de ações para capturar um diretamente na tela!\n\nObservação: as esperas dentro de um gesto só estão disponíveis a partir do Android 8.</string>
+    <string name="tutorial_slideshow_gesture_action_step_2_text">Você pode manter o primeiro dedo pressionado no fim de um gesto e continuar a execução do cenário enquanto isso. Expanda a etapa Soltar do gesto e escolha quando o dedo deve ser solto: imediatamente, quando todas as ações do evento forem executadas, quando o evento deixar de ser atendido ou após um tempo.\n\nLembre-se de que:\n• Só é possível manter um dedo pressionado por vez: iniciar outro soltará o anterior.\n• Enquanto um dedo estiver pressionado, o evento relacionado não será mais acionado até que o dedo seja solto.\n• Se você tocar na tela manualmente, o dedo pressionado será solto.\n• O tempo máximo depende do seu sistema e do aplicativo que está sendo automatizado. Alguns sistemas permitem tempo ilimitado, outros não.</string>
 
     <!-- Click Action Offset slideshow -->
     <string name="tutorial_slideshow_click_action_offset_title">Deslocamento do clique</string>

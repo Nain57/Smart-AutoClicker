@@ -169,12 +169,10 @@
         importante.</string>
 
     <!-- Gesture Action slideshow -->
-    <string name="tutorial_slideshow_gesture_action_title">Acción Deslizamiento</string>
-    <string name="tutorial_slideshow_gesture_action_desc">Aprende cómo se realiza el gesto de deslizamiento</string>
-    <string name="tutorial_slideshow_gesture_action_step_1_text">Una Acción Deslizamiento realiza un gesto de arrastrar
-        en línea recta desde una posición de inicio hasta una posición de fin. Ambas coordenadas son fijas y se
-        establecen al configurar la acción.\n\nLa duración controla cuánto tiempo tarda el gesto: una duración más
-        corta produce un deslizamiento más rápido, mientras que una más larga produce uno más lento y controlado.</string>
+    <string name="tutorial_slideshow_gesture_action_title">Acción Gesto</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Aprende cómo se realiza el gesto</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Una Acción Gesto reproduce un recorrido que has grabado o configurado manualmente, con hasta cinco dedos al mismo tiempo.\n\nUn recorrido siempre empieza con una pulsación y termina soltando el dedo, con movimientos y esperas entre medias. La duración total máxima de un gesto es de 60 segundos.\n\nAsí puedes recrear fácilmente deslizamientos, zoom con dos dedos y otros gestos complejos. ¡Prueba el botón de grabar de la lista de acciones para capturar uno directamente en la pantalla!\n\nNota: las esperas dentro de un gesto solo están disponibles a partir de Android 8.</string>
+    <string name="tutorial_slideshow_gesture_action_step_2_text">Puedes mantener pulsado el primer dedo al final de un gesto y seguir ejecutando el escenario mientras tanto. Despliega el paso Soltar del gesto y elige cuándo debe soltarse el dedo: inmediatamente, cuando se hayan ejecutado todas las acciones del evento, cuando el evento deje de cumplirse o tras un tiempo.\n\nTen en cuenta que:\n• Solo se puede mantener una pulsación a la vez: iniciar otra soltará la anterior.\n• Mientras un dedo se mantiene pulsado, el evento relacionado no se volverá a activar hasta que se suelte.\n• Si tocas la pantalla manualmente, la pulsación mantenida se interrumpirá.\n• La duración máxima depende de tu sistema y de la aplicación que se está automatizando. Algunos sistemas permiten una duración ilimitada, otros no.</string>
 
     <!-- Click Action Offset slideshow -->
     <string name="tutorial_slideshow_click_action_offset_title">Desplazamiento del clic</string>

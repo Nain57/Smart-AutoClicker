@@ -13,7 +13,7 @@
     <string name="message_backup_import_completed">匯入已完成\n已匯入 %1$d 個情境</string>
     <string name="message_backup_import_completed_with_error">匯入已完成\n已匯入 %1$d 個情境\n錯誤 %2$d 項</string>
     <string name="message_backup_import_error">發生錯誤，已取消備份匯入</string>
-    <string name="message_backup_import_compatibility">部分匯入的情境來自螢幕規格不同的裝置，可能影響偵測與操作座標。\n\n請重新擷取條件影像，並更新點擊／滑動位置。</string>
+    <string name="message_backup_import_compatibility">部分匯入的情境來自螢幕規格不同的裝置，可能影響偵測與操作座標。\n\n請重新擷取條件影像，並更新點擊／手勢位置。</string>
     <string name="message_backup_error_no_zip_app">裝置上未找到可處理 Zip 檔案儲存／讀取的應用程式。</string>
     <string name="content_desc_backup_state">備份狀態</string>
 </resources>

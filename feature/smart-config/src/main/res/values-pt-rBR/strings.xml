@@ -55,6 +55,13 @@
     <string name="item_click_desc">Clique em algum lugar da tela</string>
     <string name="item_click_details_on_condition">Durante %1$s no %2$s</string>
     <string name="item_click_details_at_position">Durante %1$s</string>
+    <string name="item_gesture_title">Gesto</string>
+    <string name="item_gesture_desc">Executar um gesto complexo na tela</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">Com %1$d dedo durante %2$s</item>
+        <item quantity="many">Com %1$d dedos durante %2$s</item>
+        <item quantity="other">Com %1$d dedos durante %2$s</item>
+    </plurals>
 
 
     <string name="item_pause_title">Aguardar</string>
@@ -151,7 +158,7 @@
     <string name="message_empty_trigger_condition_list_title">Sem condições !</string>
     <string name="message_empty_trigger_condition_list_desc">Uma condição é um critério personalizado para iniciar uma ação.</string>
     <string name="message_empty_action_list_title">Sem ações !</string>
-    <string name="message_empty_action_list_desc">Uma ação é uma interação (clicar, swipe…) com seu telefone ativada quando as condições criadas são atendidas.</string>
+    <string name="message_empty_action_list_desc">Uma ação é uma interação (clicar, gesto…) com seu telefone ativada quando as condições criadas são atendidas.</string>
 
     <string name="menu_item_title_conditions">Condições</string>
     <string name="menu_item_title_actions">Ações</string>
@@ -244,6 +251,35 @@
 
     <string name="field_click_offset_title">Deslocamento</string>
     <string name="field_click_offset_desc_none">Nenhum</string>
+    <string name="item_desc_gesture_press_condition">Pressionar em [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">Pressionar na primeira condição detectada</string>
+    <string name="item_desc_gesture_press_condition_error">Nenhuma condição para pressionar</string>
+    <string name="item_desc_gesture_move_condition">Mover para [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">Mover para a primeira condição detectada</string>
+    <string name="item_desc_gesture_move_condition_error">Nenhuma condição para onde mover</string>
+    <string name="message_title_gesture_on_condition_and">Clicar em uma condição</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">Operador de condição OR</string>
+    <string name="message_desc_gesture_on_condition_or">Posição da primeira condição detectada</string>
+    <string name="message_title_gesture_on_condition_error">Nenhuma condição selecionada</string>
+    <string name="message_desc_gesture_on_condition_error">Você precisa de uma condição para executar o gesto</string>
+    <string name="button_title_condition_pick">Escolher condição</string>
+    <string name="button_title_condition_remove">Remover condição</string>
+    <string name="field_gesture_release_when_title">Quando</string>
+    <string name="field_gesture_release_when_item_now">Agora</string>
+    <string name="field_gesture_release_when_item_until_actions_end">Fim das ações</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">Evento não atendido</string>
+    <string name="field_gesture_release_when_item_for_duration">Após um tempo</string>
+    <string name="field_gesture_release_hold_duration_title">Tempo pressionado (ms)</string>
+    <string name="field_gesture_release_desc_now">Soltar o dedo imediatamente.</string>
+    <string name="field_gesture_release_desc_until_actions_end">Soltar o dedo quando todas as ações deste evento forem executadas. O mesmo que \"Agora\" se esta ação for a última da lista.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">Soltar o dedo quando este evento deixar de ser atendido.</string>
+    <string name="field_gesture_release_desc_for_duration">Soltar o dedo após %1$d ms.</string>
+    <string name="item_desc_gesture_release_now">Soltar imediatamente</string>
+    <string name="item_desc_gesture_release_until_actions_end">Soltar ao fim das ações</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">Soltar quando o evento não for mais atendido</string>
+    <string name="item_desc_gesture_release_for_duration">Soltar após %1$d ms</string>
+    <string name="field_gesture_release_hold_behaviour">• Só é possível manter um dedo pressionado por vez: iniciar outro soltará este.\n• Enquanto um dedo estiver pressionado, o evento relacionado não será mais acionado até que o dedo seja solto.\n• Se você tocar na tela manualmente, o dedo pressionado será solto.\n• O tempo máximo depende do seu sistema e do aplicativo que está sendo automatizado. Alguns sistemas permitem tempo ilimitado, outros não.</string>
 
 
     <!-- Dialog Action Swipe ======================================================================================= -->

@@ -18,6 +18,7 @@
 <resources>
     <string name="default_event_name">Evento Default</string>
     <string name="default_click_name">Clicca</string>
+    <string name="default_gesture_name">Gesto</string>
     <string name="default_pause_name">Attendi</string>
     <string name="default_intent_name">Intento</string>
     <string name="default_toggle_event_name">Cambia Evento</string>

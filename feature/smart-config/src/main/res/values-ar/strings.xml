@@ -56,6 +56,16 @@
     <string name="item_click_desc">انقر في مكان ما على الشاشة</string>
     <string name="item_click_details_on_condition">خلال %1$s على %2$s</string>
     <string name="item_click_details_at_position">خلال %1$s</string>
+    <string name="item_gesture_title">إيماءة</string>
+    <string name="item_gesture_desc">تنفيذ إيماءة معقدة على الشاشة</string>
+    <plurals name="item_gesture_details">
+        <item quantity="zero">بدون أصابع خلال %2$s</item>
+        <item quantity="one">بإصبع واحد خلال %2$s</item>
+        <item quantity="two">بإصبعين خلال %2$s</item>
+        <item quantity="few">بـ %1$d أصابع خلال %2$s</item>
+        <item quantity="many">بـ %1$d إصبعًا خلال %2$s</item>
+        <item quantity="other">بـ %1$d إصبع خلال %2$s</item>
+    </plurals>
 
 
     <string name="item_pause_title">انتظر</string>
@@ -153,7 +163,7 @@
     <string name="message_empty_trigger_condition_list_title">لا توجد شروط!</string>
     <string name="message_empty_trigger_condition_list_desc">الشرط هو معايير مخصصة لبدء الإجراء.</string>
     <string name="message_empty_action_list_title">لا توجد إجراءات!</string>
-    <string name="message_empty_action_list_desc">الإجراء هو تفاعل (نقر، تمرير…) مع هاتفك يتم تشغيله عند استيفاء الشروط التي تم إنشاؤها.</string>
+    <string name="message_empty_action_list_desc">الإجراء هو تفاعل (نقر، إيماءة…) مع هاتفك يتم تشغيله عند استيفاء الشروط التي تم إنشاؤها.</string>
 
     <string name="menu_item_title_conditions">شروط</string>
     <string name="menu_item_title_actions">الإجراءات</string>
@@ -245,6 +255,35 @@
 
     <string name="field_click_offset_title">الإزاحة</string>
     <string name="field_click_offset_desc_none">لا أحد</string>
+    <string name="item_desc_gesture_press_condition">الضغط على [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">الضغط على أول شرط يتم اكتشافه</string>
+    <string name="item_desc_gesture_press_condition_error">لا يوجد شرط للضغط عليه</string>
+    <string name="item_desc_gesture_move_condition">التحريك إلى [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">التحريك إلى أول شرط يتم اكتشافه</string>
+    <string name="item_desc_gesture_move_condition_error">لا يوجد شرط للتحريك إليه</string>
+    <string name="message_title_gesture_on_condition_and">النقر على شرط</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">عامل الشرط OR</string>
+    <string name="message_desc_gesture_on_condition_or">موضع أول شرط يتم اكتشافه</string>
+    <string name="message_title_gesture_on_condition_error">لم يتم تحديد أي شرط</string>
+    <string name="message_desc_gesture_on_condition_error">تحتاج إلى شرط لتنفيذ الإيماءة عليه</string>
+    <string name="button_title_condition_pick">اختيار شرط</string>
+    <string name="button_title_condition_remove">إزالة الشرط</string>
+    <string name="field_gesture_release_when_title">متى</string>
+    <string name="field_gesture_release_when_item_now">الآن</string>
+    <string name="field_gesture_release_when_item_until_actions_end">انتهاء الإجراءات</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">الحدث غير مستوفى</string>
+    <string name="field_gesture_release_when_item_for_duration">بعد مدة</string>
+    <string name="field_gesture_release_hold_duration_title">مدة الإبقاء (مللي ثانية)</string>
+    <string name="field_gesture_release_desc_now">رفع الإصبع فورًا.</string>
+    <string name="field_gesture_release_desc_until_actions_end">رفع الإصبع بعد تنفيذ جميع إجراءات هذا الحدث. مماثل لـ \"الآن\" إذا كان هذا الإجراء هو الأخير في القائمة.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">رفع الإصبع عندما لا يعود هذا الحدث مستوفى.</string>
+    <string name="field_gesture_release_desc_for_duration">رفع الإصبع بعد %1$d مللي ثانية.</string>
+    <string name="item_desc_gesture_release_now">الرفع فورًا</string>
+    <string name="item_desc_gesture_release_until_actions_end">الرفع عند انتهاء الإجراءات</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">الرفع عندما يصبح الحدث غير مستوفى</string>
+    <string name="item_desc_gesture_release_for_duration">الرفع بعد %1$d مللي ثانية</string>
+    <string name="field_gesture_release_hold_behaviour">• يمكن إبقاء إصبع واحد فقط مضغوطًا في كل مرة، وبدء إبقاء آخر سيرفع هذا الإصبع.\n• أثناء إبقاء الإصبع مضغوطًا، لن يتم تشغيل الحدث المرتبط به حتى يتم رفع الإصبع.\n• إذا لمست الشاشة بنفسك، فسيتم إيقاف الإبقاء.\n• تعتمد أقصى مدة للإبقاء على نظامك والتطبيق الذي تتم أتمتته. بعض الأنظمة تسمح بمدة غير محدودة، وبعضها لا يسمح.</string>
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 

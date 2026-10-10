@@ -30,7 +30,7 @@
     <string name="item_scenario_filter_by_recent">Gần đây</string>
     <string name="item_scenario_filter_by_most_used">Công dụng</string>
     <string name="item_scenario_last_used_never">Chưa bao giờ sử dụng</string>
-    <string name="item_desc_dumb_scenario">Trải nghiệm clicker tự động thông thường.\nChỉ cần nhấp chuột và vuốt trên màn hình.</string>
+    <string name="item_desc_dumb_scenario">Trải nghiệm clicker tự động thông thường.\nChỉ cần đặt các lần nhấp và cử chỉ trên màn hình.</string>
     <string name="item_desc_dumb_scenario_max_duration">Dừng sau %1$s</string>
     <string name="item_desc_dumb_scenario_max_duration_infinite">Không có thời lượng tối đa</string>
     <string name="item_desc_dumb_scenario_repeat_count">Lặp lại %1$d lần</string>
