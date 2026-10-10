@@ -34,6 +34,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class AutoHideAnimationController {
 
@@ -90,14 +91,19 @@ class AutoHideAnimationController {
         resetHideCountdown()
     }
 
-    fun hide() {
-        if (viewToAnimate?.visibility == View.GONE) return
+    fun hide(immediately: Boolean = false) {
+        if (viewToAnimate?.visibility == View.GONE) {
+            // A pending show animation would make the view visible on its first frame, drop it.
+            viewToAnimate?.clearAnimation()
+            return
+        }
         Log.d(TAG, "hiding view $viewToAnimate")
 
         hideJob?.cancel()
         hideJob = null
 
-        viewToAnimate?.startAnimation(hideAnimation)
+        if (immediately) viewToAnimate?.visibility = View.GONE
+        else viewToAnimate?.startAnimation(hideAnimation)
     }
 
     fun setAutoHideEnabled(isEnabled: Boolean) {
@@ -126,7 +132,7 @@ class AutoHideAnimationController {
 
         animationScope?.let { scope ->
             hideJob = scope.launch {
-                delay(AUTO_HIDE_TIMER_MS)
+                delay(AUTO_HIDE_TIMER_MS.milliseconds)
                 Log.d(TAG, "hiding view after timeout $viewToAnimate")
                 viewToAnimate?.startAnimation(hideAnimation)
                 hideJob = null
