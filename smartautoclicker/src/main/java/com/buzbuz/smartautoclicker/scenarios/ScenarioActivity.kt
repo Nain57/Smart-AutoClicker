@@ -28,11 +28,11 @@ import com.buzbuz.smartautoclicker.R
 import com.buzbuz.smartautoclicker.scenarios.list.ScenarioListFragment
 import com.buzbuz.smartautoclicker.scenarios.list.model.ScenarioListUiState
 import com.buzbuz.smartautoclicker.core.base.extensions.delayDrawUntil
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.UserConsentState
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
 import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
-import com.buzbuz.smartautoclicker.feature.revenue.UserConsentState
 import com.buzbuz.smartautoclicker.scenarios.viewmodel.ScenarioViewModel
 
 import dagger.hilt.android.AndroidEntryPoint

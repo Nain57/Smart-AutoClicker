@@ -18,25 +18,22 @@ package com.buzbuz.smartautoclicker.feature.revenue.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseState
 
-import com.buzbuz.smartautoclicker.feature.revenue.domain.InternalRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.domain.model.PurchaseState
 
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
-
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
-
-import kotlinx.coroutines.flow.transformLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class BillingActivityViewModel@Inject constructor(
-    private val revenueRepository: InternalRevenueRepository,
+    private val revenueRepository: IRevenueRepository,
 ) : ViewModel() {
 
     init {
@@ -56,8 +53,8 @@ internal class BillingActivityViewModel@Inject constructor(
         revenueRepository.refreshPurchases()
     }
 
-    fun setBillingActivityDestroyed() {
-        revenueRepository.setBillingActivityDestroyed()
+    fun notifyPaywallFinished() {
+        revenueRepository.notifyPaywallFinished()
     }
 }
 

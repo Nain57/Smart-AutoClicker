@@ -17,15 +17,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
-
     <application>
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="${adsApplicationId}"/>
 
         <activity
             android:name="com.buzbuz.smartautoclicker.feature.revenue.ui.BillingActivity"

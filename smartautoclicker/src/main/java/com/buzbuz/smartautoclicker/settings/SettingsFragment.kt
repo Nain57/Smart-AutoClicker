@@ -27,6 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.R
+import com.buzbuz.smartautoclicker.core.common.navigation.getRevenueNavigator
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setChecked
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setDescription
 import com.buzbuz.smartautoclicker.core.ui.bindings.fields.setOnClickListener
@@ -88,7 +89,10 @@ class SettingsFragment : Fragment() {
 
         viewBinding.fieldRemoveAds.apply {
             setTitle(requireContext().getString(R.string.field_remove_ads))
-            setOnClickListener { viewModel.showPurchaseActivity(requireActivity()) }
+            setOnClickListener {
+                requireContext().getRevenueNavigator()
+                    .startPurchaseActivity(requireContext())
+            }
         }
 
         viewBinding.fieldTroubleshooting.apply {

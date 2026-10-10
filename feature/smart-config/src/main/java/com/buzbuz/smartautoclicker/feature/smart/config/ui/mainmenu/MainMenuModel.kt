@@ -22,6 +22,9 @@ import android.view.View
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzbuz.smartautoclicker.core.common.navigation.getRevenueNavigator
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.UserBillingState
 
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.Tip
@@ -31,8 +34,6 @@ import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingReposito
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
 import com.buzbuz.smartautoclicker.core.common.tutorial.impl.monitoring.ViewPositioningType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.alphabet.AreRequiredAlphabetModelsInstalledUseCase
 
@@ -40,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -48,7 +50,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -76,8 +80,8 @@ class MainMenuModel @Inject constructor(
     private var paywallResultJob: Job? = null
 
     /** Tells if the paywall is currently displayed. */
-    val paywallIsVisible: Flow<Boolean> =
-        revenueRepository.isBillingFlowInProgress
+    private val _paywallIsVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val paywallIsVisible: StateFlow<Boolean> = _paywallIsVisible
 
     val shouldShowStopWithVolumeDownTip: StateFlow<Boolean> = tutorialRepository
         .shouldShowTip(Tip.STOP_WITH_VOLUME_DOWN)
@@ -153,17 +157,18 @@ class MainMenuModel @Inject constructor(
                 !tutorialRepository.isTutorialStarted()
 
     private fun startPaywall(context: Context) {
-        revenueRepository.startPaywallUiFlow(context)
+        context.getRevenueNavigator().startPaywallActivity(context)
+        _paywallIsVisible.value = true
 
-        paywallResultJob = combine(revenueRepository.isBillingFlowInProgress, revenueRepository.userBillingState) { inProgress, state ->
-            if (inProgress) return@combine
-
-            Log.d(TAG, "onPaywall finished")
-
-            if (!state.isAdRequested()) startDetection(context)
-            paywallResultJob?.cancel()
-            paywallResultJob = null
-        }.launchIn(viewModelScope)
+        paywallResultJob = revenueRepository.paywallFinished
+            .take(1)
+            .onEach {
+                Log.d(TAG, "onPaywall finished")
+                _paywallIsVisible.value = false
+                if (!revenueRepository.userBillingState.value.isAdRequested()) startDetection(context)
+                paywallResultJob = null
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun startDetection(context: Context) {

@@ -25,6 +25,9 @@ import android.view.KeyEvent
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.common.accessibility.domain.LocalAccessibilityService
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
+import com.buzbuz.smartautoclicker.core.common.navigation.getRevenueNavigator
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.UserBillingState
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.TutorialRepository
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
@@ -37,8 +40,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.MainMenu
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.DumbMainMenu
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationController
 import com.buzbuz.smartautoclicker.feature.notifications.ServiceNotificationListener
-import com.buzbuz.smartautoclicker.feature.revenue.IRevenueRepository
-import com.buzbuz.smartautoclicker.feature.revenue.UserBillingState
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class LocalService(
     private val context: Context,
@@ -118,7 +121,7 @@ class LocalService(
         onStart(dumbScenario.id.databaseId, false, null)
 
         startJob = serviceScope.launch {
-            delay(500)
+            delay(500.milliseconds)
 
             dumbEngine.init(dumbScenario)
 
@@ -229,15 +232,15 @@ class LocalService(
                 !tutorialRepository.isTutorialStarted()
 
     private fun startPaywall() {
-        revenueRepository.startPaywallUiFlow(context)
+        context.getRevenueNavigator().startPaywallActivity(context)
 
-        paywallResultJob = combine(revenueRepository.isBillingFlowInProgress, revenueRepository.userBillingState) { inProgress, state ->
-            if (inProgress) return@combine
-
-            if (state != UserBillingState.AD_REQUESTED) startSmartScenario()
-            paywallResultJob?.cancel()
-            paywallResultJob = null
-        }.launchIn(serviceScope)
+        paywallResultJob = revenueRepository.paywallFinished
+            .take(1)
+            .onEach {
+                if (revenueRepository.userBillingState.value != UserBillingState.AD_REQUESTED) startSmartScenario()
+                paywallResultJob = null
+            }
+            .launchIn(serviceScope)
     }
 
     private fun startSmartScenario() {

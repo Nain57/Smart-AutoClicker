@@ -81,7 +81,7 @@ internal class BillingActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.setBillingActivityDestroyed()
+        viewModel.notifyPaywallFinished()
     }
 }
 
