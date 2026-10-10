@@ -54,7 +54,7 @@ object Migration5to6 : Migration(5, 6) {
                 forEachRow(null, columnA = actionIdColumn, columnB = actionTypeColumn) { actionId, actionType ->
                     if (actionId == null || actionType == null) return@forEachRow
 
-                    if (ActionType.valueOf(actionType) == ActionType.CLICK)
+                    if (actionType == ActionType.CLICK.name)
                         updateClickOnCondition(actionId, 0)
                 }
             }

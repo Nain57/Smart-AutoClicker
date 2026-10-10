@@ -123,7 +123,7 @@ class Migration5to6Tests {
     fun migrateActions_clickOnConditionColumn_swipe() {
         // Insert in V5 and close
         helper.createDatabase(dbPath, 5).apply {
-            execSQL(getInsertV5Swipe(24L, 1L, "", ActionType.SWIPE.toString(), 0, 0, 0, 0, 0, 0))
+            execSQL(getInsertV5Swipe(24L, 1L, "", "SWIPE", 0, 0, 0, 0, 0, 0))
             close()
         }
 

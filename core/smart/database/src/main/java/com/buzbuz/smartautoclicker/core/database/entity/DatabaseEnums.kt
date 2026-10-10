@@ -37,8 +37,8 @@ enum class EventType {
 enum class ActionType {
     /** A single tap on the screen. */
     CLICK,
-    /** A swipe on the screen. */
-    SWIPE,
+    /** A complex gesture to execute on the screen. */
+    GESTURE,
     /** A pause, waiting before the next action. */
     PAUSE,
     /** An Android Intent, allowing to interact with other applications. */
@@ -56,21 +56,18 @@ enum class ActionType {
 }
 
 
-/**
- * Type of click position for a [ActionType.CLICK].
- * Indicates how to click on the screen for the action.
- */
-enum class ClickPositionType {
-    /** The user must manually select a position to be clicked. */
-    USER_SELECTED,
-    /**
-     * Click on the detected condition.
-     * When the condition operator is AND, click on the condition specified by the user.
-     * When the condition operator is OR, click on the condition detected condition.
-     */
-    ON_DETECTED_CONDITION,
+enum class GestureFingerMotionType {
+    MOVE,
+    PRESS,
+    RELEASE,
+    WAIT,
 }
 
+enum class CoordinatesType {
+    CONDITION,
+    COUNTER,
+    LITERAL,
+}
 
 /**
  * Type of [ConditionEntity].
@@ -185,4 +182,19 @@ enum class NumberFormatType {
 enum class NotificationMessageType {
     TEXT,
     COUNTER_VALUE;
+}
+
+/**
+ * DELETED but kept because referenced in migrations/deserialization.
+ * The position of a [ActionType.CLICK] is now defined by its press [GestureFingerMotionEntity].
+ */
+enum class ClickPositionType {
+    /** The user must manually select a position to be clicked. */
+    USER_SELECTED,
+    /**
+     * Click on the detected condition.
+     * When the condition operator is AND, click on the condition specified by the user.
+     * When the condition operator is OR, click on the condition detected condition.
+     */
+    ON_DETECTED_CONDITION,
 }

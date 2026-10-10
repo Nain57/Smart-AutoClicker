@@ -69,7 +69,7 @@ class Migration9to10Tests {
                 id,
                 1L,
                 "toto",
-                ActionType.SWIPE.toString(),
+                "SWIPE",
                 79, 97,
                 12, 45,
                 durationMs,

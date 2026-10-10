@@ -16,9 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.core.domain.model.action.mapper
 
+import com.buzbuz.smartautoclicker.core.base.identifier.DATABASE_ID_INSERTION
 import com.buzbuz.smartautoclicker.core.database.entity.ActionEntity
 import com.buzbuz.smartautoclicker.core.database.entity.ActionType
+import com.buzbuz.smartautoclicker.core.database.entity.CoordinatesType
 import com.buzbuz.smartautoclicker.core.database.entity.CounterOperationValueType
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionEntity
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.core.domain.model.action.ChangeCounter
@@ -28,9 +33,10 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
-import com.buzbuz.smartautoclicker.core.domain.model.action.Swipe
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
 import com.buzbuz.smartautoclicker.core.domain.model.action.ToggleEvent
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 
 
 internal fun Action.toEntity(): ActionEntity {
@@ -38,7 +44,7 @@ internal fun Action.toEntity(): ActionEntity {
 
     return when (this) {
         is Click -> toClickEntity()
-        is Swipe -> toSwipeEntity()
+        is Gesture -> toGestureEntity()
         is Pause -> toPauseEntity()
         is Intent -> toIntentEntity()
         is ToggleEvent -> toToggleEventEntity()
@@ -57,27 +63,72 @@ private fun Click.toClickEntity(): ActionEntity =
         priority = priority,
         name = name!!,
         type = ActionType.CLICK,
-        pressDuration = pressDuration,
-        clickPositionType = positionType.toEntity(),
-        x = position?.x,
-        y = position?.y,
-        clickOnConditionId = clickOnConditionId?.databaseId,
-        clickOffsetX = clickOffset?.x,
-        clickOffsetY = clickOffset?.y,
     )
 
-private fun Swipe.toSwipeEntity(): ActionEntity =
+/**
+ * A click is stored the same way a gesture is: one finger pressing on the click position, waiting for the press
+ * duration, and releasing.
+ */
+internal fun Click.toGestureFingerEntity(actionId: Long): GestureFingerEntity =
+    GestureFingerEntity(
+        id = DATABASE_ID_INSERTION,
+        actionId = actionId,
+        index = 0,
+        startTimeMs = 0,
+    )
+
+/**
+ * @param fingerId the database identifier of the finger created with [toGestureFingerEntity].
+ * @param clickOnConditionDbId the database identifier of the condition to click on, if any.
+ */
+internal fun Click.toGestureMotionEntities(fingerId: Long, clickOnConditionDbId: Long?): List<GestureFingerMotionEntity> {
+    val isOnCondition = position is GesturePosition.Condition
+    val coordinates = position as? GesturePosition.Coordinates
+    val offsetCoordinates = offset as? GesturePosition.Coordinates
+
+    return listOf(
+        GestureFingerMotionEntity(
+            id = DATABASE_ID_INSERTION,
+            fingerId = fingerId,
+            index = 0,
+            motionType = GestureFingerMotionType.PRESS,
+            xCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else coordinates?.x?.toCoordinatesType(),
+            yCoordinateType = if (isOnCondition) CoordinatesType.CONDITION else coordinates?.y?.toCoordinatesType(),
+            conditionId = clickOnConditionDbId,
+            xLiteral = (coordinates?.x as? GestureCoordinatesValue.Literal)?.value,
+            yLiteral = (coordinates?.y as? GestureCoordinatesValue.Literal)?.value,
+            xCounter = (coordinates?.x as? GestureCoordinatesValue.Counter)?.counterName,
+            yCounter = (coordinates?.y as? GestureCoordinatesValue.Counter)?.counterName,
+            xOffsetCoordinateType = offsetCoordinates?.x?.toCoordinatesType(),
+            yOffsetCoordinateType = offsetCoordinates?.y?.toCoordinatesType(),
+            xOffsetLiteral = (offsetCoordinates?.x as? GestureCoordinatesValue.Literal)?.value,
+            yOffsetLiteral = (offsetCoordinates?.y as? GestureCoordinatesValue.Literal)?.value,
+            xOffsetCounter = (offsetCoordinates?.x as? GestureCoordinatesValue.Counter)?.counterName,
+            yOffsetCounter = (offsetCoordinates?.y as? GestureCoordinatesValue.Counter)?.counterName,
+        ),
+        GestureFingerMotionEntity(
+            id = DATABASE_ID_INSERTION,
+            fingerId = fingerId,
+            index = 1,
+            motionType = GestureFingerMotionType.WAIT,
+            durationMs = pressDuration,
+        ),
+        GestureFingerMotionEntity(
+            id = DATABASE_ID_INSERTION,
+            fingerId = fingerId,
+            index = 2,
+            motionType = GestureFingerMotionType.RELEASE,
+        ),
+    )
+}
+
+private fun Gesture.toGestureEntity(): ActionEntity =
     ActionEntity(
         id = id.databaseId,
         eventId = eventId.databaseId,
         priority = priority,
         name = name!!,
-        type = ActionType.SWIPE,
-        swipeDuration = swipeDuration,
-        fromX = from?.x,
-        fromY = from?.y,
-        toX = to?.x,
-        toY = to?.y,
+        type = ActionType.GESTURE,
     )
 
 private fun Pause.toPauseEntity(): ActionEntity =
@@ -163,3 +214,9 @@ private fun SetText.toSetTextEntity(): ActionEntity =
         textValue = text,
         textValidateInput = validateInput,
     )
+
+private fun GestureCoordinatesValue.toCoordinatesType(): CoordinatesType =
+    when (this) {
+        is GestureCoordinatesValue.Literal -> CoordinatesType.LITERAL
+        is GestureCoordinatesValue.Counter -> CoordinatesType.COUNTER
+    }

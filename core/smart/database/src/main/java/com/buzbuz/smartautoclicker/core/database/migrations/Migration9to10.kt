@@ -53,9 +53,9 @@ object Migration9to10 : Migration(9, 10) {
         db.getSQLiteTableReference(ACTION_TABLE).apply {
             forEachClicksAndSwipes { id, type, pressDuration, swipeDuration ->
                 if (id == null || type == null || pressDuration == null || swipeDuration == null) return@forEachClicksAndSwipes
-                when (ActionType.valueOf(type)) {
-                    ActionType.CLICK -> updateClickPressDuration(id, pressDuration.toLimitedDuration())
-                    ActionType.SWIPE -> updateSwipeDuration(id, swipeDuration.toLimitedDuration())
+                when (type) {
+                    ActionType.CLICK.name -> updateClickPressDuration(id, pressDuration.toLimitedDuration())
+                    "SWIPE" -> updateSwipeDuration(id, swipeDuration.toLimitedDuration())
                     else -> throw IllegalArgumentException("It should be a click or a swipe")
                 }
             }
@@ -64,7 +64,7 @@ object Migration9to10 : Migration(9, 10) {
 
     private fun SQLiteTable.forEachClicksAndSwipes(closure: (Long?, String?, Long?, Long?) -> Unit) {
         forEachRow(
-            extraClause = "WHERE `type` = \"${ActionType.CLICK}\" OR `type` = \"${ActionType.SWIPE}\"",
+            extraClause = "WHERE `type` = \"${ActionType.CLICK}\" OR `type` = \"SWIPE\"",
             columnA = actionIdColumn,
             columnB = actionTypeColumn,
             columnC = actionPressDurationColumn,

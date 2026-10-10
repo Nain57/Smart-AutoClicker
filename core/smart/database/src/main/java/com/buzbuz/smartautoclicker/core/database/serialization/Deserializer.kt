@@ -16,14 +16,18 @@
  */
 package com.buzbuz.smartautoclicker.core.database.serialization
 
+import android.os.Build
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.database.DATABASE_VERSION
+import com.buzbuz.smartautoclicker.core.database.entity.ActionType
 import com.buzbuz.smartautoclicker.core.database.entity.CompleteScenario
+import com.buzbuz.smartautoclicker.core.database.entity.GestureFingerMotionType
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatDeserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV11Deserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV13Deserializer
 import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV20Deserializer
+import com.buzbuz.smartautoclicker.core.database.serialization.compat.CompatV24Deserializer
 
 import kotlinx.serialization.json.JsonObject
 
@@ -40,6 +44,7 @@ object DeserializerFactory {
             databaseVersion < VERSION_DETECTION_QUALITY_UPDATE -> CompatV11Deserializer()
             databaseVersion < VERSION_ADVANCED_AUTOMATION_UPDATE -> CompatV13Deserializer()
             databaseVersion < VERSION_COUNTER_TYPE_UPDATE -> CompatV20Deserializer()
+            databaseVersion < VERSION_GESTURE_UPDATE -> CompatV24Deserializer()
             databaseVersion < VERSION_UP_TO_DATE -> CompatDeserializer()
             databaseVersion == VERSION_UP_TO_DATE -> KotlinDeserializer()
 
@@ -51,6 +56,8 @@ object DeserializerFactory {
 
     /** Maximum json object version supported. */
     private const val VERSION_UP_TO_DATE = DATABASE_VERSION
+    /** Multitouch gesture version. */
+    private const val VERSION_GESTURE_UPDATE = 24
     /** Number & Text detection update. */
     private const val VERSION_COUNTER_TYPE_UPDATE = 20
     /** Trigger events update version. */
@@ -64,6 +71,48 @@ object DeserializerFactory {
     private const val TAG = "ScenarioDeserializerFactory"
 }
 
-interface Deserializer {
-    fun deserializeCompleteScenario(jsonCompleteScenario: JsonObject): CompleteScenario
+abstract class Deserializer {
+
+    /** Deserialize a complete scenario, and remove from it everything the device can't execute. */
+    fun deserializeCompleteScenario(jsonCompleteScenario: JsonObject): CompleteScenario {
+        val completeScenario = deserialize(jsonCompleteScenario)
+
+        // Holding a finger still requires stroke continuation, only available from Android O.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            Log.w(TAG, "Removing all gesture finger wait motions, not supported on this Android version.")
+            return completeScenario.withoutGestureWaitMotions()
+        }
+
+        return completeScenario
+    }
+
+    /** Deserialize a complete scenario from a json of the versions handled by this deserializer. */
+    protected abstract fun deserialize(jsonCompleteScenario: JsonObject): CompleteScenario
+
+    private companion object {
+        /** Tag for logs. */
+        const val TAG = "Deserializer"
+    }
 }
+
+private fun CompleteScenario.withoutGestureWaitMotions(): CompleteScenario =
+    copy(
+        events = events.map { completeEvent ->
+            completeEvent.copy(
+                actions = completeEvent.actions.map { completeAction ->
+                    // A click wait motion is only there to hold its press duration, it is never continuing a stroke
+                    if (completeAction.action.type == ActionType.CLICK) return@map completeAction
+
+                    completeAction.copy(
+                        gestureFingers = completeAction.gestureFingers.map { fingerWithMotions ->
+                            fingerWithMotions.copy(
+                                motions = fingerWithMotions.motions.filter { motion ->
+                                    motion.motionType != GestureFingerMotionType.WAIT
+                                },
+                            )
+                        },
+                    )
+                },
+            )
+        },
+    )
