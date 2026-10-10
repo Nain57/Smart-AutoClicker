@@ -25,6 +25,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.domain.model.OR
@@ -35,7 +36,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosit
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.processing.data.processor.ActionExecutor
+import com.buzbuz.smartautoclicker.core.processing.data.processor.actions.ActionExecutor
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.utils.anyNotNull
@@ -101,7 +102,16 @@ class ActionExecutorTests {
 
     private lateinit var actionExecutor: ActionExecutor
 
-    private fun assertActionGesture(gesture: GestureDescription) {
+    /** A click is a single finger pressing and lifting, so it is built as one chain holding one gesture. */
+    private fun BuiltGesture.toClickGesture(): GestureDescription {
+        assertEquals("Click should be built as a single chain", 1, chains.size)
+        assertEquals("Click chain should contains only one gesture", 1, chains.first().size)
+        return chains.first().first()
+    }
+
+    private fun assertActionGesture(builtGesture: BuiltGesture) {
+        val gesture = builtGesture.toClickGesture()
+
         assertEquals("Gesture should contains only one stroke", 1, gesture.strokeCount)
         gesture.getStroke(0).let { stroke ->
             assertEquals("Gesture duration is invalid", TEST_DURATION, stroke.duration)
@@ -109,8 +119,8 @@ class ActionExecutorTests {
         }
     }
 
-    private fun assertClickPosition(gesture: GestureDescription, expectedX: Int, expectedY: Int) {
-        val point = shadowOf(gesture.getStroke(0).path).points.first()
+    private fun assertClickPosition(builtGesture: BuiltGesture, expectedX: Int, expectedY: Int) {
+        val point = shadowOf(builtGesture.toClickGesture().getStroke(0).path).points.first()
         assertEquals("Click x position is invalid", expectedX.toFloat(), point.x)
         assertEquals("Click y position is invalid", expectedY.toFloat(), point.y)
     }
@@ -132,7 +142,7 @@ class ActionExecutorTests {
     fun noActions() = runTest {
         val event = getNewDefaultEvent()
         actionExecutor.executeActions(event, ConditionsResults())
-        verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).dispatchBuiltGesture(anyNotNull())
     }
 
     @Test
@@ -142,8 +152,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, ConditionsResults())
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -160,8 +170,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, ConditionsResults())
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
         assertClickPosition(gestureCaptor.lastValue, TEST_X1 + TEST_OFFSET_X, TEST_Y1 + TEST_OFFSET_Y)
     }
@@ -179,8 +189,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, ConditionsResults())
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertClickPosition(gestureCaptor.lastValue, TEST_X1, TEST_Y1 + TEST_OFFSET_Y)
     }
 
@@ -209,8 +219,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, results)
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
         assertClickPosition(gestureCaptor.lastValue, 15 + TEST_OFFSET_X, 15 + TEST_OFFSET_Y)
     }
@@ -241,8 +251,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, results)
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -283,8 +293,8 @@ class ActionExecutorTests {
 
         actionExecutor.executeActions(event, results)
 
-        val gestureCaptor = argumentCaptor<GestureDescription>()
-        verify(mockAndroidExecutor).dispatchGesture(gestureCaptor.capture())
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
+        verify(mockAndroidExecutor).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.lastValue)
     }
 
@@ -299,7 +309,7 @@ class ActionExecutorTests {
         )
 
         // Only a pause, there should be no gestures
-        verify(mockAndroidExecutor, never()).dispatchGesture(anyNotNull())
+        verify(mockAndroidExecutor, never()).dispatchBuiltGesture(anyNotNull())
     }
 
     @Test
@@ -307,7 +317,7 @@ class ActionExecutorTests {
         val click = getNewDefaultClickUserPos(1)
         val pause = getNewDefaultPause(2)
         val otherClick = getNewDefaultClickUserPos(3)
-        val gestureCaptor = argumentCaptor<GestureDescription>()
+        val gestureCaptor = argumentCaptor<BuiltGesture>()
 
         // Execute the actions.
         actionExecutor.executeActions(
@@ -316,7 +326,7 @@ class ActionExecutorTests {
         )
 
         // Verify the gestures executions
-        verify(mockAndroidExecutor, times(2)).dispatchGesture(gestureCaptor.capture())
+        verify(mockAndroidExecutor, times(2)).dispatchBuiltGesture(gestureCaptor.capture())
         assertActionGesture(gestureCaptor.firstValue)
         assertActionGesture(gestureCaptor.lastValue)
     }
@@ -325,7 +335,7 @@ class ActionExecutorTests {
     fun execute_click_delay() = runTest {
         val executionDurationMs = 10L
         var isCompleted = false
-        mockWhen(mockAndroidExecutor.dispatchGesture(anyNotNull())).doAnswer {
+        mockWhen(mockAndroidExecutor.dispatchBuiltGesture(anyNotNull())).doAnswer {
             runBlocking {
                 // The execution is set to 10ms, but we simulate an input lag for a worst case scenario
                 delay(executionDurationMs * 10)

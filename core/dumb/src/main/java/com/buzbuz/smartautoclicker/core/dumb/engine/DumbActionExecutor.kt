@@ -78,12 +78,12 @@ class DumbActionExecutor @Inject constructor(
 
     private suspend fun executeDumbGesture(dumbGesture: DumbAction.DumbGesture) {
         val gestureBuilder = AndroidGestureBuilder.createNewBuilder(if (randomize) random else null)
-        val gestureChains = gestureBuilder
+        val builtGesture = gestureBuilder
             .build(dumbGesture.toResolvedFingers(gestureBuilder), dumbGesture.name) ?: return
 
         dumbGesture.repeat {
             withContext(Dispatchers.Main) {
-                gestureChains.forEach { chain -> androidExecutor.dispatchGestureChain(chain) }
+                androidExecutor.dispatchBuiltGesture(builtGesture)
             }
         }
     }

@@ -21,6 +21,9 @@ import android.graphics.Point
 import kotlin.math.roundToInt
 
 
+/** Index of the first finger of a gesture, the only one that can be held once the gesture is over. */
+const val FIRST_FINGER_INDEX: Int = 0
+
 /**
  * A finger with all its positions and durations resolved into the gesture timeline.
  *
@@ -30,10 +33,13 @@ import kotlin.math.roundToInt
  *
  * @param index the position of the finger in its gesture, for logging and slicing purposes.
  * @param segments the ordered motions of the finger, from its press to its release.
+ * @param heldAfterRelease true when the finger keeps its pointer down on the screen once the gesture is over, instead
+ * of leaving it at [upMs]. Only the first finger of a gesture can be held.
  */
-data class ResolvedFinger internal constructor(
+data class ResolvedFinger(
     val index: Int,
     val segments: List<ResolvedSegment>,
+    val heldAfterRelease: Boolean = false,
 ) {
     /** Time at which the finger touches the screen, relative to the gesture start. */
     val downMs: Long get() = segments.first().startMs
@@ -53,7 +59,7 @@ data class ResolvedFinger internal constructor(
  * @param from the position of the finger when the motion starts.
  * @param to the position of the finger when the motion ends.
  */
-data class ResolvedSegment internal constructor(
+data class ResolvedSegment(
     val startMs: Long,
     val endMs: Long,
     val from: Point,

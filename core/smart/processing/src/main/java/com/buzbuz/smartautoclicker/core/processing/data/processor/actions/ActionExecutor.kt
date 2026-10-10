@@ -14,27 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.processing.data.processor
+package com.buzbuz.smartautoclicker.core.processing.data.processor.actions
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.content.Intent as AndroidIntent
-import android.graphics.Path
-import android.graphics.Point
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
 import com.buzbuz.smartautoclicker.core.domain.model.counter.CounterOperationValue
-import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Intent
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
 import com.buzbuz.smartautoclicker.core.domain.model.action.Pause
@@ -44,12 +40,9 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture
 import com.buzbuz.smartautoclicker.core.domain.model.action.Notification
 import com.buzbuz.smartautoclicker.core.domain.model.action.SetText
 import com.buzbuz.smartautoclicker.core.domain.model.action.SystemAction
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
-import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.action.intent.putDomainExtra
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
-import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.GestureResolver
+import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +71,7 @@ internal class ActionExecutor(
         if (randomize) Random(System.currentTimeMillis()) else null
 
     private val gestureBuilder: AndroidGestureBuilder = AndroidGestureBuilder.createNewBuilder(random)
-    private val gestureResolver: GestureResolver = GestureResolver(processingState, gestureBuilder)
+    private val fingerResolver: FingerResolver = FingerResolver(processingState, gestureBuilder)
 
     private val unblockGestureScheduler: UnblockGestureScheduler? =
         if (unblockWorkaroundEnabled) UnblockGestureScheduler()
@@ -86,13 +79,19 @@ internal class ActionExecutor(
 
 
     suspend fun onScenarioLoopFinished() {
-        if (unblockGestureScheduler?.shouldTrigger() == true) {
-            withContext(Dispatchers.Main) {
-                Log.i(TAG, "Injecting unblock gesture")
-                androidExecutor.dispatchGesture(
-                    GestureDescription.Builder().buildUnblockGesture()
-                )
-            }
+        if (unblockGestureScheduler?.shouldTrigger() != true) return
+
+        // The unblock gesture continues nothing, so the system would cancel the held pointer to dispatch it.
+        if (androidExecutor.getHeldPointer() != null) {
+            Log.i(TAG, "Skipping unblock gesture injection, a gesture is holding a finger on the screen")
+            return
+        }
+
+        withContext(Dispatchers.Main) {
+            Log.i(TAG, "Injecting unblock gesture")
+            androidExecutor.dispatchGesture(
+                GestureDescription.Builder().buildUnblockGesture()
+            )
         }
     }
 
@@ -112,83 +111,51 @@ internal class ActionExecutor(
         }
     }
 
-    private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
-        val basePosition = when (val position = click.position) {
-            is GesturePosition.Coordinates -> getUserSelectedClickPosition(position)
-            is GesturePosition.Condition -> getDetectedConditionClickPosition(event, position, results)
-            null -> null
-        } ?: return
+    /**
+     * The event owning the pointer currently held on the screen, or null if there is none.
+     *
+     * It is read from the held pointer itself, so it follows whatever happened to it: taken over by another event,
+     * dropped by the system after a cancelled gesture, or released.
+     */
+    fun getHeldEvent(): Event? =
+        androidExecutor.getHeldPointer()?.owner as? Event
 
-        val offset = getClickOffset(click.offset)
-        val clickPath = Path().apply {
-            moveTo(
-                position = Point(basePosition.x + offset.x, basePosition.y + offset.y),
-                random = random,
-            )
-        }
+    fun isEventHeld(event: Event): Boolean =
+        getHeldEvent()?.id == event.id
 
-        val clickGesture = GestureDescription.Builder().buildSingleStroke(
-            path = clickPath,
-            durationMs = click.pressDuration!!,
-            random = random,
-        )
-
+    /** Lift the pointer a gesture is holding on the screen, if any. */
+    suspend fun releaseHeldFinger() {
         withContext(Dispatchers.Main) {
-            androidExecutor.dispatchGesture(clickGesture)
+            androidExecutor.releaseHeldPointer()
         }
     }
 
-    private fun getUserSelectedClickPosition(position: GesturePosition.Coordinates): Point? {
-        val x = resolveCoordinateValue(position.x) ?: return null
-        val y = resolveCoordinateValue(position.y) ?: return null
-        return Point(x, y)
-    }
-
-    private fun resolveCoordinateValue(coordinatesValue: GestureCoordinatesValue): Int? =
-        when (coordinatesValue) {
-            is GestureCoordinatesValue.Literal ->
-                coordinatesValue.value
-            is GestureCoordinatesValue.Counter ->
-                processingState.getCounterValue(coordinatesValue.counterName)?.toInt()
-        }
-
-    private fun getDetectedConditionClickPosition(
-        event: Event,
-        position: GesturePosition.Condition,
-        results: ConditionsResults?,
-    ): Point? {
-        if (event !is ScreenEvent) return null
-
-        val conditionId = position.conditionId
-        val result = when {
-            event.conditionOperator == OR -> results?.getFirstScreenConditionDetectedResult()
-            conditionId != null -> results?.getScreenConditionResult(conditionId.databaseId)
-            else -> null
-        }
-
-        if (result == null) {
-            Log.w(TAG, "Click is invalid, can't execute")
-            return null
-        }
-
-        return Point(result.position?.x ?: 0, result.position?.y ?: 0)
-    }
-
-    /** An unresolvable offset axis (no offset, or a counter that doesn't exist) falls back to 0. */
-    private fun getClickOffset(clickOffset: GesturePosition?): Point {
-        val offset = clickOffset as? GesturePosition.Coordinates ?: return Point(0, 0)
-        return Point(
-            resolveCoordinateValue(offset.x) ?: 0,
-            resolveCoordinateValue(offset.y) ?: 0,
-        )
+    private suspend fun executeClick(event: Event, click: Click, results: ConditionsResults?) {
+        val resolvedClickFinger = fingerResolver.resolve(click, event, results) ?: return
+        dispatchResolvedFingers(listOf(resolvedClickFinger), click.name, event)
     }
 
     private suspend fun executeGesture(event: Event, gesture: Gesture, results: ConditionsResults?) {
-        val gestureChains = gestureBuilder
-            .build(gestureResolver.resolve(gesture, event, results), gesture.name) ?: return
+        dispatchResolvedFingers(fingerResolver.resolve(gesture, event, results), gesture.name, event)
+    }
+
+    /**
+     * Build and dispatch a gesture from its resolved fingers, carrying along the pointer a previous gesture is
+     * holding, if any.
+     *
+     * The system only honours a continuation when the first step of the dispatched gesture holds exactly one stroke
+     * for each pointer currently down, so the held pointer has to be part of every gesture executed while it is held.
+     * The builder adds it as an extra finger: a gesture using all of its own fingers while one is held puts six
+     * pointers down at the same time.
+     *
+     * A pointer held by this gesture is owned by [event], see [getHeldEvent].
+     */
+    private suspend fun dispatchResolvedFingers(fingers: List<ResolvedFinger>, gestureName: String?, event: Event) {
+        val builtGesture = gestureBuilder
+            .build(fingers, gestureName, androidExecutor.getHeldPointer(), event) ?: return
 
         withContext(Dispatchers.Main) {
-            gestureChains.forEach { chain -> androidExecutor.dispatchGestureChain(chain) }
+            androidExecutor.dispatchBuiltGesture(builtGesture)
         }
     }
 

@@ -228,6 +228,23 @@ class GestureFingerMapperTests {
                 fingerId = fingerId.databaseId,
                 index = 3,
                 motionType = GestureFingerMotionType.RELEASE,
+                holdUntilUnfulfilled = false,
+            ),
+            release.toMotionEntity(fingerId = fingerId.databaseId, index = 3),
+        )
+    }
+
+    @Test
+    fun releaseMotion_holdUntilUnfulfilled_toEntity() {
+        val release = GestureFingerMotion.Release(id = releaseMotionId, holdUntilUnfulfilled = true)
+
+        assertEquals(
+            GestureFingerMotionEntity(
+                id = releaseMotionId.databaseId,
+                fingerId = fingerId.databaseId,
+                index = 3,
+                motionType = GestureFingerMotionType.RELEASE,
+                holdUntilUnfulfilled = true,
             ),
             release.toMotionEntity(fingerId = fingerId.databaseId, index = 3),
         )
@@ -364,6 +381,44 @@ class GestureFingerMapperTests {
                         offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
                     ),
                     GestureFingerMotion.Release(id = releaseMotionId),
+                ),
+            ),
+            fingerWithMotions.toDomainGestureFinger(),
+        )
+    }
+
+    @Test
+    fun fingerWithMotions_releaseHoldUntilUnfulfilled_toDomain() {
+        val fingerWithMotions = GestureFingerWithMotions(
+            finger = GestureFingerEntity(fingerId.databaseId, actionId, fingerIndex, startTimeMs),
+            motions = listOf(
+                GestureFingerMotionEntity(
+                    id = pressMotionId.databaseId, fingerId = fingerId.databaseId, index = 0,
+                    motionType = GestureFingerMotionType.PRESS,
+                    xCoordinateType = CoordinatesType.LITERAL, yCoordinateType = CoordinatesType.LITERAL,
+                    xLiteral = pressX, yLiteral = pressY,
+                    xOffsetCoordinateType = CoordinatesType.LITERAL, yOffsetCoordinateType = CoordinatesType.LITERAL,
+                    xOffsetLiteral = 0, yOffsetLiteral = 0,
+                ),
+                GestureFingerMotionEntity(
+                    id = releaseMotionId.databaseId, fingerId = fingerId.databaseId, index = 1,
+                    motionType = GestureFingerMotionType.RELEASE,
+                    holdUntilUnfulfilled = true,
+                ),
+            ),
+        )
+
+        assertEquals(
+            GestureFinger(
+                id = fingerId,
+                startTimeMs = startTimeMs,
+                motions = listOf(
+                    GestureFingerMotion.Press(
+                        id = pressMotionId,
+                        position = GesturePosition.Coordinates(Literal(pressX), Literal(pressY)),
+                        offset = GesturePosition.Coordinates(Literal(0), Literal(0)),
+                    ),
+                    GestureFingerMotion.Release(id = releaseMotionId, holdUntilUnfulfilled = true),
                 ),
             ),
             fingerWithMotions.toDomainGestureFinger(),

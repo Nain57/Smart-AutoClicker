@@ -91,6 +91,24 @@ class CooldownsStateTests {
         assertTrue(cooldownsState.isCooldownRunning(eventWithLongCooldown))
     }
 
+    @Test
+    fun startCooldownIfNeeded_startTimeInPast_elapsedTimeDeducted() {
+        val event = newScreenEvent(id = 1L, cooldownMs = 1_000L)
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis() - 2_000L)
+
+        assertFalse(cooldownsState.isCooldownRunning(event))
+    }
+
+    @Test
+    fun startCooldownIfNeeded_startTimeInPast_remainingCooldownRunning() {
+        val event = newScreenEvent(id = 1L, cooldownMs = 10_000L)
+
+        cooldownsState.startCooldownIfNeeded(event, System.currentTimeMillis() - 2_000L)
+
+        assertTrue(cooldownsState.isCooldownRunning(event))
+    }
+
     // ---- isCooldownRunning ----
 
     @Test

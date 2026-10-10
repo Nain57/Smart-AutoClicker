@@ -31,21 +31,21 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoord
 import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ConditionsResults
-import com.buzbuz.smartautoclicker.core.processing.data.processor.gesture.GestureResolver
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.COUNTER_NAME
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.COUNTER_VALUE
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.coordinates
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.move
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newCondition
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newConditionsResults
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newFinger
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newGesture
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newProcessingState
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newScreenEvent
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newTapFinger
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.newTriggerEvent
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.press
-import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.GestureResolverTestData.release
+import com.buzbuz.smartautoclicker.core.processing.data.processor.actions.FingerResolver
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.COUNTER_NAME
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.COUNTER_VALUE
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.coordinates
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.move
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newCondition
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newConditionsResults
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newFinger
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newGesture
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newProcessingState
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newScreenEvent
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newTapFinger
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newTriggerEvent
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.press
+import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.release
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -54,16 +54,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-/** Tests the resolution of the gesture positions from the detection results and the counters by [GestureResolver]. */
+/** Tests the resolution of the gesture positions from the detection results and the counters by [FingerResolver]. */
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
-class GestureResolverTests {
+class FingerResolverTests {
 
-    private lateinit var resolver: GestureResolver
+    private lateinit var resolver: FingerResolver
 
     @Before
     fun setUp() {
-        resolver = GestureResolver(newProcessingState(), AndroidGestureBuilder.createNewBuilder(random = null))
+        resolver = FingerResolver(newProcessingState(), AndroidGestureBuilder.createNewBuilder(random = null))
     }
 
     private fun resolve(gesture: Gesture, event: Event = newScreenEvent(), results: ConditionsResults? = null): List<ResolvedFinger> =

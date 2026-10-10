@@ -293,6 +293,8 @@ class DetectorEngine @Inject constructor(
                 debuggingListener.onEventsProcessingCancelled()
             }
 
+            scenarioProcessor?.onScreenRotation()
+
             displayRecorder.resizeDisplay(
                 displaySize = scalingManager.refreshScaling(),
             )

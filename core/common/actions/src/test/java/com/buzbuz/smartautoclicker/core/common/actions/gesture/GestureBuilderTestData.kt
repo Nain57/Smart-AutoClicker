@@ -41,7 +41,7 @@ internal object GestureBuilderTestData {
         data class Press(val position: Point) : Motion
         data class Move(val position: Point, val durationMs: Long) : Motion
         data class Wait(val durationMs: Long) : Motion
-        data object Release : Motion
+        data class Release(val hold: Boolean) : Motion
     }
 
     class Finger(val startTimeMs: Long, val motions: List<Motion>)
@@ -66,8 +66,8 @@ internal object GestureBuilderTestData {
     fun wait(durationMs: Long): Motion.Wait =
         Motion.Wait(durationMs)
 
-    fun release(): Motion.Release =
-        Motion.Release
+    fun release(hold: Boolean = false): Motion.Release =
+        Motion.Release(hold)
 
     /** Resolve the fingers of a gesture with this builder, skipping the invalid ones. */
     fun AndroidGestureBuilder.resolve(gesture: Gesture): List<ResolvedFinger> =
@@ -80,14 +80,21 @@ internal object GestureBuilderTestData {
                 is Motion.Press -> fingerBuilder.press(motion.position)
                 is Motion.Move -> fingerBuilder.move(motion.position, motion.durationMs)
                 is Motion.Wait -> fingerBuilder.wait(motion.durationMs)
-                is Motion.Release -> fingerBuilder.release()
+                is Motion.Release -> fingerBuilder.release(motion.hold)
             }
         }
         return fingerBuilder.build()
     }
 
     fun AndroidGestureBuilder.build(gesture: Gesture): List<List<GestureDescription>>? =
-        build(resolve(gesture), "Gesture")
+        buildGesture(gesture)?.chains
+
+    fun AndroidGestureBuilder.buildGesture(
+        gesture: Gesture,
+        heldPointer: HeldPointer? = null,
+        owner: Any? = null,
+    ): BuiltGesture? =
+        build(resolve(gesture), "Gesture", heldPointer, owner)
 
     fun assertPointNear(expected: Point, actual: Point) {
         assertTrue(

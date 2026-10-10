@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 24,
-    "identityHash": "95bb40a14dacb3960e7241cc929cf77b",
+    "identityHash": "182cbeb7c3ec82674796869c8643aac7",
     "entities": [
       {
         "tableName": "action_table",
@@ -830,7 +830,7 @@
       },
       {
         "tableName": "gesture_finger_motion_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `finger_id` INTEGER NOT NULL, `index` INTEGER NOT NULL, `motion_type` TEXT NOT NULL, `duration_ms` INTEGER, `x_coordinate_type` TEXT, `y_coordinate_type` TEXT, `condition_id` INTEGER, `x_literal` INTEGER, `x_counter` TEXT, `y_literal` INTEGER, `y_counter` TEXT, `x_offset_coordinate_type` TEXT, `y_offset_coordinate_type` TEXT, `x_offset_literal` INTEGER, `x_offset_counter` TEXT, `y_offset_literal` INTEGER, `y_offset_counter` TEXT, FOREIGN KEY(`finger_id`) REFERENCES `gesture_finger_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `finger_id` INTEGER NOT NULL, `index` INTEGER NOT NULL, `motion_type` TEXT NOT NULL, `duration_ms` INTEGER, `x_coordinate_type` TEXT, `y_coordinate_type` TEXT, `condition_id` INTEGER, `x_literal` INTEGER, `x_counter` TEXT, `y_literal` INTEGER, `y_counter` TEXT, `x_offset_coordinate_type` TEXT, `y_offset_coordinate_type` TEXT, `x_offset_literal` INTEGER, `x_offset_counter` TEXT, `y_offset_literal` INTEGER, `y_offset_counter` TEXT, `hold_until_unfulfilled` INTEGER, FOREIGN KEY(`finger_id`) REFERENCES `gesture_finger_table`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -925,6 +925,11 @@
             "fieldPath": "yOffsetCounter",
             "columnName": "y_offset_counter",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "holdUntilUnfulfilled",
+            "columnName": "hold_until_unfulfilled",
+            "affinity": "INTEGER"
           }
         ],
         "primaryKey": {
@@ -961,7 +966,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '95bb40a14dacb3960e7241cc929cf77b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '182cbeb7c3ec82674796869c8643aac7')"
     ]
   }
 }

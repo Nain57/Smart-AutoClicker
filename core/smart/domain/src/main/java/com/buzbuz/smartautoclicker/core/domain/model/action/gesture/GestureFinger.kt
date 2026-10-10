@@ -142,9 +142,12 @@ sealed interface GestureFingerMotion : Identifiable, Completable {
      * The finger leaves the screen at its current position. Must be the last motion of a finger.
      *
      * @param id the unique identifier for the motion.
+     * @param holdUntilUnfulfilled if true, the finger stays pressed on the screen until the conditions of its event
+     * are no longer fulfilled, and is only released at that point.
      */
     data class Release(
         override val id: Identifier,
+        @RequiresApi(Build.VERSION_CODES.O) val holdUntilUnfulfilled: Boolean = false,
     ): GestureFingerMotion {
 
         override fun isComplete(): Boolean = true

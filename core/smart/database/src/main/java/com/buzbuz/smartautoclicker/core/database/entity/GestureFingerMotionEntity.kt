@@ -75,6 +75,9 @@ import kotlinx.serialization.Serializable
  * [CoordinatesType.LITERAL].
  * @param yOffsetCounter the name of the counter containing the value of y offset in pixels. Only defined when
  * [yOffsetCoordinateType] is [CoordinatesType.COUNTER].
+ *
+ * @param holdUntilUnfulfilled true if the finger should stay pressed on the screen until the conditions of its
+ * event are no longer fulfilled. Only defined for [GestureFingerMotionType.RELEASE].
  */
 @SuppressLint("UnsafeOptInUsageError")
 @Entity(
@@ -112,4 +115,6 @@ data class GestureFingerMotionEntity(
     @ColumnInfo(name = "x_offset_counter") val xOffsetCounter: String? = null,
     @ColumnInfo(name = "y_offset_literal") val yOffsetLiteral: Int? = null,
     @ColumnInfo(name = "y_offset_counter") val yOffsetCounter: String? = null,
+
+    @ColumnInfo(name = "hold_until_unfulfilled") val holdUntilUnfulfilled: Boolean? = null,
 ) : EntityWithId

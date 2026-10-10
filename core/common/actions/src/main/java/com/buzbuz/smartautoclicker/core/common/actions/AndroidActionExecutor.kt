@@ -20,6 +20,8 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import com.buzbuz.smartautoclicker.core.base.Dumpable
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 
 interface AndroidActionExecutor: Dumpable {
@@ -43,6 +45,15 @@ interface AndroidActionExecutor: Dumpable {
      * Should be called when the service is destroyed.
      */
     fun clear()
+
+    /**
+     * The pointer a gesture holding its first finger left down on the screen, or null when nothing is held.
+     *
+     * It must be given to AndroidGestureBuilder.build for every gesture dispatched while it is held: the system only
+     * honours a continuation when the first step of the dispatched gesture holds exactly one stroke for each pointer
+     * currently down, so a gesture built without it would have the hold cancelled.
+     */
+    fun getHeldPointer(): HeldPointer?
 
     /**
      * Dispatch a gesture to the touch screen.
@@ -74,6 +85,22 @@ interface AndroidActionExecutor: Dumpable {
      * @param gestureDescriptions the gestures to dispatch, in order.
      */
     suspend fun dispatchGestureChain(gestureDescriptions: List<GestureDescription>)
+
+    /**
+     * Dispatch a gesture built by an AndroidGestureBuilder, and keep track of the pointer it leaves down.
+     *
+     * Method will return only once the whole gesture is dispatched.
+     *
+     * @param gesture the gesture to dispatch.
+     */
+    suspend fun dispatchBuiltGesture(gesture: BuiltGesture)
+
+    /**
+     * Lift the pointer left down on the screen by a gesture holding its first finger, if any.
+     *
+     * Method will return only once the pointer is lifted.
+     */
+    suspend fun releaseHeldPointer()
 
     /**
      * Performs a global action.
