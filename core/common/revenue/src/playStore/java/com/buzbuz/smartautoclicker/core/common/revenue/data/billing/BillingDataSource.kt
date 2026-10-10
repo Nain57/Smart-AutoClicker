@@ -72,12 +72,9 @@ internal class BillingDataSource @Inject constructor(
     init {
         coroutineScopeIo.launch { purchaseManager.restoreCachedPurchase() }
 
-        billingServiceConnection.monitorConnection(
+        billingServiceConnection.connect(
             productId = PRODUCT_ID,
-            onConnectionChangedListener = { client ->
-                if (client != null) onBillingClientConnected(client)
-                else onBillingClientDisconnected()
-            },
+            onClientAvailable = ::onBillingClientAvailable,
             onNewPurchasesListener = ::onPurchaseUpdatedFromBillingUiFlow
         )
 
@@ -92,18 +89,13 @@ internal class BillingDataSource @Inject constructor(
         }
     }
 
-    private fun onBillingClientConnected(client: BillingClientProxy) {
+    private fun onBillingClientAvailable(client: BillingClientProxy) {
         billingClient = client
 
         coroutineScopeIo.launch {
             productDetailsManager.startMonitoring(client::fetchInAppProductDetails)
             refreshPurchases()
         }
-    }
-
-    private fun onBillingClientDisconnected() {
-        billingClient = null
-        productDetailsManager.stopMonitoring()
     }
 
     private fun onPurchaseUpdatedFromBillingUiFlow(purchase: Purchase?) {

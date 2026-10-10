@@ -72,11 +72,6 @@ internal class ProductDetailsManager @Inject constructor(
         refresh(refreshQuery)
     }
 
-    fun stopMonitoring() {
-        monitoringJob?.cancel()
-        monitoringJob = null
-    }
-
     private suspend fun refresh(refreshQuery: suspend () -> Pair<Boolean, InAppProduct?>) {
         val (success, product) = refreshQuery()
         if (success) {
