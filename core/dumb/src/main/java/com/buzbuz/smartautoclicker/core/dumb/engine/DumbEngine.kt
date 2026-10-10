@@ -20,9 +20,11 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
 import com.buzbuz.smartautoclicker.core.dumb.domain.IDumbRepository
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbScenario
+import com.buzbuz.smartautoclicker.core.dumb.domain.model.RepeatableWithDelay
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 
 import kotlinx.coroutines.CoroutineScope
@@ -126,6 +128,7 @@ class DumbEngine @Inject constructor(
         _isRunning.value = true
 
         Log.d(TAG, "startDumbScenario ${scenario.id} with ${scenario.dumbActions.size} actions")
+        setCrashKey(KEY_DUMB_SCENARIO, scenario.toCrashKeyValue())
 
         if (!scenario.isDurationInfinite) timeoutJob = startTimeoutJob(scenario.maxDurationMin)
         executionJob = startScenarioExecutionJob(scenario)
@@ -134,7 +137,7 @@ class DumbEngine @Inject constructor(
     private fun startTimeoutJob(timeoutDurationMinutes: Int): Job? =
         processingScope?.launch {
             Log.d(TAG, "startTimeoutJob: timeoutDurationMinutes=$timeoutDurationMinutes")
-            delay(timeoutDurationMinutes.minutes.inWholeMilliseconds)
+            delay(timeoutDurationMinutes.minutes)
 
             processingScope?.launch { stopDumbScenario() }
         }
@@ -166,4 +169,18 @@ class DumbEngine @Inject constructor(
     }
 }
 
+/** Describes what drives the gesture dispatch rate, and when the scenario was started. */
+private fun DumbScenario.toCrashKeyValue(): String {
+    val repeatables = dumbActions.filterIsInstance<RepeatableWithDelay>()
+
+    return "startedAtMs=${System.currentTimeMillis()}; actions=${dumbActions.size}; " +
+            "loop=${if (isRepeatInfinite) "infinite" else repeatCount}; " +
+            "duration=${if (isDurationInfinite) "infinite" else "${maxDurationMin}min"}; " +
+            "infiniteActions=${repeatables.count { it.isRepeatInfinite }}; " +
+            "minRepeatDelayMs=${repeatables.minOfOrNull { it.repeatDelayMs }}; " +
+            "minPressDurationMs=${dumbActions.filterIsInstance<DumbAction.DumbClick>().minOfOrNull { it.pressDurationMs }}; " +
+            "pauses=${dumbActions.count { it is DumbAction.DumbPause }}; randomize=$randomize"
+}
+
 private const val TAG = "DumbEngine"
+private const val KEY_DUMB_SCENARIO = "dumb_scenario"

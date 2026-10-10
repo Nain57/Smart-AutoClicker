@@ -24,6 +24,7 @@ import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
@@ -31,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.PrintWriter
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.milliseconds
@@ -53,6 +55,14 @@ internal class GestureExecutor @Inject constructor(
     private var cancelledGestures: Long = 0L
     private var errorGestures: Long = 0L
 
+    /**
+     * The system keeps each dispatched gesture and its callback until it sends back its result, which a dispatch
+     * failing with an exception never gets. Tracked to identify OOM causes.
+     */
+    private val unansweredGestures: AtomicLong = AtomicLong(0L)
+    private var dispatchExceptions: Long = 0L
+    private var lastDispatchException: String? = null
+
 
     fun clear(service: AccessibilityService?) {
         heldPointerManager.releaseHeldPointerNow(service)
@@ -60,6 +70,9 @@ internal class GestureExecutor @Inject constructor(
         completedGestures = 0L
         cancelledGestures = 0L
         errorGestures = 0L
+        unansweredGestures.set(0L)
+        dispatchExceptions = 0L
+        lastDispatchException = null
     }
 
     fun getHeldPointer(): HeldPointer? = heldPointerManager.heldPointer
@@ -153,13 +166,18 @@ internal class GestureExecutor @Inject constructor(
             }
 
             try {
-                service.dispatchGesture(
+                unansweredGestures.incrementAndGet()
+                val isDispatched = service.dispatchGesture(
                     /* gesture = */ gesture,
-                    /* callback = */ results[index].toGestureResultCallback(),
+                    /* callback = */ results[index].toGestureResultCallback { unansweredGestures.decrementAndGet() },
                     /* handler = */ null,
                 )
+                // Without a connection, the system returns before keeping the callback.
+                if (!isDispatched) unansweredGestures.decrementAndGet()
             } catch (rEx: RuntimeException) {
                 Log.w(TAG, "System is not responsive, the user might be spamming gesture too quickly", rEx)
+                dispatchExceptions++
+                lastDispatchException = rEx.toCrashKeyValue()
                 dispatchFailed = true
                 results[index].complete(false)
             }
@@ -172,17 +190,29 @@ internal class GestureExecutor @Inject constructor(
         if (allCompleted == null) {
             Log.w(TAG, "Gesture error, timeout or system error occurred.")
             errorGestures++
+            updateCrashKeys()
             return false
         }
 
         if (!allCompleted) {
             Log.w(TAG, "Gesture has been cancelled.")
             cancelledGestures++
+            updateCrashKeys()
             return false
         }
 
         completedGestures++
+        if (completedGestures % CRASH_KEYS_COMPLETED_GESTURES_INTERVAL == 0L) updateCrashKeys()
         return true
+    }
+
+    private fun updateCrashKeys() {
+        setCrashKey(
+            KEY_GESTURE_STATS,
+            "completed=$completedGestures; cancelled=$cancelledGestures; error=$errorGestures; " +
+                    "exceptions=$dispatchExceptions; unanswered=${unansweredGestures.get()}",
+        )
+        lastDispatchException?.let { setCrashKey(KEY_GESTURE_LAST_EXCEPTION, it) }
     }
 
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
@@ -193,22 +223,31 @@ internal class GestureExecutor @Inject constructor(
             append(contentPrefix).append("Completed=$completedGestures").println()
             append(contentPrefix).append("Cancelled=$cancelledGestures").println()
             append(contentPrefix).append("Error=$errorGestures").println()
+            append(contentPrefix).append("Exceptions=$dispatchExceptions").println()
+            append(contentPrefix).append("Unanswered=${unansweredGestures.get()}").println()
             append(contentPrefix).append("HeldPointer=${heldPointerManager.heldPointer != null}, " +
                     "owner=${heldPointerManager.heldPointer?.owner}").println()
         }
     }
 }
 
-private fun CompletableDeferred<Boolean>.toGestureResultCallback(): GestureResultCallback =
+private fun CompletableDeferred<Boolean>.toGestureResultCallback(onResultReceived: () -> Unit): GestureResultCallback =
     object : GestureResultCallback() {
         override fun onCompleted(gestureDescription: GestureDescription?) {
+            onResultReceived()
             complete(true)
         }
 
         override fun onCancelled(gestureDescription: GestureDescription?) {
+            onResultReceived()
             complete(false)
         }
     }
+
+private fun Throwable.toCrashKeyValue(): String =
+    generateSequence(this) { throwable -> throwable.cause }
+        .joinToString(separator = " <- ") { throwable -> "${throwable.javaClass.simpleName}: ${throwable.message}" }
+        .take(CRASH_KEY_MAX_LENGTH)
 
 private fun GestureDescription.durationMs(): Long {
     var maxEndTime = 0L
@@ -228,5 +267,9 @@ private const val GESTURE_CALLBACK_TIMEOUT_MIN_MS = 100L
 private const val GESTURE_CALLBACK_TIMEOUT_MAX_MS = 65_000L
 private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 2
 private const val UNBLOCK_GESTURE_DELAY_MS = 10000L
+private const val CRASH_KEYS_COMPLETED_GESTURES_INTERVAL = 1000L
+private const val CRASH_KEY_MAX_LENGTH = 512
+private const val KEY_GESTURE_STATS = "gesture_stats"
+private const val KEY_GESTURE_LAST_EXCEPTION = "gesture_last_exception"
 
 private const val TAG = "GestureExecutor"
