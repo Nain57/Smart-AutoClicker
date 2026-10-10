@@ -21,9 +21,6 @@
     <string name="default_click_name">Клік</string>
     <integer name="default_click_press_duration">1</integer>
 
-    <string name="default_swipe_name">Свайп</string>
-    <integer name="default_swipe_duration">500</integer>
-
     <string name="default_pause_name">Очікування</string>
     <integer name="default_pause_duration">50</integer>
 

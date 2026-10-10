@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.core.common.overlays.R
 import com.buzbuz.smartautoclicker.core.ui.utils.AutoHideAnimationController
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.ItemBriefDescription
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescription
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeDescription
 
 /**
  * [OverlayMenu] implementation for displaying the click area selection menu and its overlay view.
@@ -102,7 +101,6 @@ class PositionSelectorMenu(
     private fun setActionDescription(description: ItemBriefDescription) {
         when (description) {
             is ClickDescription -> setClickDescription(description)
-            is SwipeDescription -> setSwipeDescription(description)
         }
 
         instructionsAnimationController.showOrResetTimer()
@@ -122,50 +120,6 @@ class PositionSelectorMenu(
         }
         setCancelListener {
             dismiss()
-        }
-    }
-
-    private fun setSwipeDescription(description: SwipeDescription) {
-        if (description.from == null) {
-            toSelectSwipeFromState(description)
-        } else {
-            toSelectSwipeToState(description)
-        }
-    }
-
-    private fun toSelectSwipeFromState(description: SwipeDescription) {
-        selectorViewBinding.textInstructions.setText(R.string.toast_configure_swipe_from)
-        selectorViewBinding.positionSelector.apply {
-            setDescription(description)
-            onTouchListener = { position ->
-                toSelectSwipeFromState(description.copy(from = position))
-            }
-        }
-
-        setConfirmEnabledState(description.from != null) {
-            toSelectSwipeToState(description)
-            instructionsAnimationController.showOrResetTimer()
-        }
-        setCancelListener {
-            dismiss()
-        }
-    }
-
-    private fun toSelectSwipeToState(description: SwipeDescription) {
-        selectorViewBinding.textInstructions.setText(R.string.toast_configure_swipe_to)
-        selectorViewBinding.positionSelector.apply {
-            setDescription(description)
-            onTouchListener = { position ->
-                toSelectSwipeToState(description.copy(to = position))
-            }
-        }
-
-        setConfirmEnabledState(description.to != null) {
-            onPositionSelectionCompleted(description)
-        }
-        setCancelListener {
-            toSelectSwipeFromState(description.copy(to = null))
-            instructionsAnimationController.showOrResetTimer()
         }
     }
 

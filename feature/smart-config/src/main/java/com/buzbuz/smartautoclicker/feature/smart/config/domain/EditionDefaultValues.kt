@@ -28,7 +28,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.utils.getClickPressDurat
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getIntentIsAdvancedConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.utils.getPauseDurationConfig
-import com.buzbuz.smartautoclicker.feature.smart.config.utils.getSwipeDurationConfig
 
 internal class EditionDefaultValues {
 
@@ -51,10 +50,8 @@ internal class EditionDefaultValues {
     fun clickPressDuration(context: Context): Long =
         context.getEventConfigPreferences().getClickPressDurationConfig(context)
 
-    fun swipeName(context: Context): String =
-        context.getString(R.string.default_swipe_name)
-    fun swipeDuration(context: Context): Long =
-        context.getEventConfigPreferences().getSwipeDurationConfig(context)
+    fun gestureName(context: Context): String =
+        context.getString(R.string.default_gesture_name)
 
     fun pauseName(context: Context): String =
         context.getString(R.string.default_pause_name)

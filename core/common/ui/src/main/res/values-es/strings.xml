@@ -34,7 +34,6 @@
       -  * Error have the same space as desc
       -->
     <string name="field_click_position_title">Posición de clic</string>
-    <string name="field_swipe_positions_title">Posiciones de deslizamiento</string>
     <string name="item_title_try_element">Prueba tu %1$s</string>
     <string name="item_error_action_invalid_generic">Esta acción no es válida</string>
 
@@ -69,7 +68,6 @@
     <string name="input_field_label_name">Nombre</string>
     <string name="input_field_label_pause_duration">Duración de la pausa</string>
     <string name="input_field_label_scenario_name">Nombre del escenario</string>
-    <string name="input_field_label_swipe_duration">Duración del deslizamiento (ms)</string>
     <string name="input_field_error_required">Requerido</string>
 
 
@@ -99,8 +97,6 @@
       -->
     <string name="toast_denied_screen_sharing_permission">El usuario ha denegado el permiso de capturar pantalla</string>
     <string name="toast_configure_single_click">Toque la posición para hacer clic</string>
-    <string name="toast_configure_swipe_from">Toque la posición para iniciar el deslizamiento desde</string>
-    <string name="toast_configure_swipe_to">Toque la posición para finalizar el deslizamiento para</string>
 
     <!--
       - Content description texts.

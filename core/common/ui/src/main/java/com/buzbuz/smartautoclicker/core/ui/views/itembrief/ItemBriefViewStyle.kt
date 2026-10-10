@@ -31,7 +31,6 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.DefaultBrie
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.GestureBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ImageConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.PauseBriefRendererStyle
-import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.SwipeBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.TextConditionBriefRendererStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureConditionLabelStyle
 import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureFingerColors
@@ -40,7 +39,6 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.getGestureH
 
 internal class ItemBriefViewStyle(
     val clickStyle: ClickBriefRendererStyle,
-    val swipeStyle: SwipeBriefRendererStyle,
     val gestureStyle: GestureBriefRendererStyle,
     val pauseStyle: PauseBriefRendererStyle,
     val imageConditionStyle: ImageConditionBriefRendererStyle,
@@ -60,23 +58,12 @@ internal fun Context.getItemBriefStyle(attrs: AttributeSet, defStyleAttr: Int): 
         val innerColor = ta.getColor(R.styleable.ItemBriefView_colorInner, Color.WHITE)
         val backgroundColor = ta.getColor(R.styleable.ItemBriefView_colorBackground, Color.TRANSPARENT)
         val colorOutlinePrimary = ta.getColor(R.styleable.ItemBriefView_colorOutlinePrimary, Color.RED)
-        val colorOutlineSecondary = ta.getColor(R.styleable.ItemBriefView_colorOutlineSecondary, Color.GREEN)
 
         ItemBriefViewStyle(
             clickStyle = ClickBriefRendererStyle(
                 backgroundColor = backgroundColor,
                 outerPaint = newStrokePaint(colorOutlinePrimary, thickness),
                 innerPaint = newFillPaint(innerColor),
-                outerRadiusPx = outerRadius,
-                innerRadiusPx = innerRadius,
-            ),
-            swipeStyle = SwipeBriefRendererStyle(
-                backgroundColor = backgroundColor,
-                linePaint = newFillPaint(innerColor, innerRadius / 2f),
-                outerFromPaint = newStrokePaint(colorOutlinePrimary, thickness),
-                innerFromPaint = newFillPaint(innerColor),
-                outerToPaint = newStrokePaint(colorOutlineSecondary, thickness),
-                innerToPaint = newFillPaint(innerColor),
                 outerRadiusPx = outerRadius,
                 innerRadiusPx = innerRadius,
             ),

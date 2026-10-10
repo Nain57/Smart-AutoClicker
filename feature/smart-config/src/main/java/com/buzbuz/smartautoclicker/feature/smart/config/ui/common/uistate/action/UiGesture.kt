@@ -34,8 +34,10 @@ internal fun getGestureIconRes(): Int =
 internal fun Gesture.getDescription(context: Context, inError: Boolean): String = when {
     inError -> context.getString(R.string.item_error_action_invalid_generic)
 
-    else -> context.getString(
-        R.string.item_swipe_details,
+    else -> context.resources.getQuantityString(
+        R.plurals.item_gesture_details,
+        fingers.size,
+        fingers.size,
         formatDuration(getDurationMs()),
     )
 }

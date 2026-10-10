@@ -34,7 +34,6 @@
       -  * Error have the same space as desc
       -->
     <string name="field_click_position_title">انقر فوق الموضع</string>
-    <string name="field_swipe_positions_title">انتقاد المواقف</string>
     <string name="item_title_try_element">اختبر %1$s الخاص بك</string>
     <string name="item_error_action_invalid_generic">هذا الإجراء غير صالح</string>
 
@@ -68,7 +67,6 @@
     <string name="input_field_label_name">اسم</string>
     <string name="input_field_label_pause_duration">مدة الإيقاف المؤقت</string>
     <string name="input_field_label_scenario_name">اسم السيناريو</string>
-    <string name="input_field_label_swipe_duration">مدة التمرير (مللي ثانية)</string>
     <string name="input_field_error_required">مطلوب</string>
 
 
@@ -98,8 +96,6 @@
       -->
     <string name="toast_denied_screen_sharing_permission">رفض المستخدم إذن مشاركة الشاشة</string>
     <string name="toast_configure_single_click">المس الموضع للنقر عليه</string>
-    <string name="toast_configure_swipe_from">المس الموضع لبدء التمرير السريع منه</string>
-    <string name="toast_configure_swipe_to">المس الموضع لإنهاء التمرير السريع إليه</string>
 
     <!--
       - Content description texts.

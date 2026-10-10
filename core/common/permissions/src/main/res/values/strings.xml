@@ -34,7 +34,7 @@
         interface over the applications you want to automate, allowing you to configure your scenario without stopping
         the other application.</string>
     <string name="message_permission_desc_accessibility">The accessibility service permission allows Klick\'r
-        to perform gestures on your device screen. This permission is required in order to execute the clicks and swipes
+        to perform gestures on your device screen. This permission is required in order to execute the clicks and gestures
         you will create in your automations scenarios.\n\nNo data is collected by Klick\'r\n\nTo grant the Accessibility
         service permission, click on the button bellow.</string>
     <string name="message_permission_desc_notification">Optional: Shows the notification while the application is running in order

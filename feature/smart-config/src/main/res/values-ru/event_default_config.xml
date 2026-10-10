@@ -21,9 +21,6 @@
     <string name="default_click_name">Нажатие</string>
     <integer name="default_click_press_duration">1</integer>
 
-    <string name="default_swipe_name">Смахивание</string>
-    <integer name="default_swipe_duration">500</integer>
-
     <string name="default_pause_name">Бездействие</string>
     <integer name="default_pause_duration">50</integer>
 

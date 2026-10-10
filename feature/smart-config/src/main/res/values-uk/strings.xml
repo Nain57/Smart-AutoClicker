@@ -58,9 +58,6 @@
     <string name="item_click_details_on_condition">Протягом %1$s на %2$s</string>
     <string name="item_click_details_at_position">Протягом %1$s</string>
 
-    <string name="item_swipe_title">Провести</string>
-    <string name="item_swipe_desc">Провести від однієї позиції на екрані до іншої</string>
-    <string name="item_swipe_details">Протягом %1$s</string>
 
     <string name="item_pause_title">Чекати</string>
     <string name="item_pause_desc">Призупинити виконання виявлення</string>
@@ -254,10 +251,7 @@
 
     <!-- Dialog Action Swipe ======================================================================================= -->
 
-    <string name="dialog_title_swipe">Проведення</string>
 
-    <string name="field_swipe_positions_title">Позиції проведення</string>
-    <string name="field_swipe_positions_desc">Провести від %1$d, %2$d до %3$d, %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

@@ -29,7 +29,6 @@
     <string name="dialog_title_condition_selection">Choisir une condition</string>
     <string name="dialog_title_pause">Pause</string>
     <string name="dialog_title_scenario_config">Scénario</string>
-    <string name="dialog_title_swipe">Swipe</string>
     <string name="dialog_title_toggle_event">État d\'évènement</string>
     <string name="dialog_title_events_toggle">Changements d\'états</string>
     <string name="dialog_title_change_counter">Changer compteur</string>
@@ -73,9 +72,6 @@
     <string name="item_pause_desc">Faire une pause pendant la détection</string>
     <string name="item_pause_details">Pendant %1$s</string>
     <string name="generic_select_the_position">Choisir une position</string>
-    <string name="item_swipe_desc">Swiper d\'une position à une autre</string>
-    <string name="item_swipe_details">Pendant %1$s</string>
-    <string name="field_swipe_positions_desc">Swiper de %1$d, %2$d à %3$d, %4$d</string>
     <string name="item_toggle_event_desc">Changer l\'état d\'activation d\'un évènement</string>
     <string name="field_change_all_desc_manual">Choisissez manuellement les évènements à changer</string>
     <string name="field_change_all_desc_enable_all">Activer tous les évènements de ce scénario</string>
@@ -109,7 +105,6 @@
     <string name="field_detection_type_desc_screen">Détection sur tout l\'écran</string>
     <string name="item_intent_title">Intent</string>
     <string name="item_pause_title">Pause</string>
-    <string name="item_swipe_title">Swipe</string>
     <string name="item_toggle_event_title">État d\'évènement</string>
     <string name="item_counter_reached_title">Compteur atteint</string>
     <string name="item_timer_reached_title">Timer atteint</string>
@@ -133,7 +128,6 @@
       -  * Desc can have more space to describe the title (3~4 lines max)
      -->
     <string name="field_select_detection_area_title">Zone de détection</string>
-    <string name="field_swipe_positions_title">Positions de swipe</string>
     <string name="field_show_debug_report_title">Afficher le rapport</string>
     <string name="field_application_selection_desc">Démarrer une application lorsque cette action est exécutée</string>
     <string name="field_timer_restart_desc_on">Une fois atteinte, le timer redémarre, permettant à cette condition d\'être à nouveau remplie.</string>

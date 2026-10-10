@@ -40,8 +40,6 @@
     <string name="item_desc_dumb_click_details">Протягом %1$s в [%2$d, %3$d]</string>
     <string name="item_desc_dumb_pause">Призупинити виконання</string>
     <string name="item_desc_dumb_pause_details">Протягом %1$s</string>
-    <string name="item_desc_dumb_swipe_details">Протягом %1$s з [%2$d, %3$d] до [%4$d, %5$d]</string>
-    <string name="item_desc_dumb_swipe_positions">Свайпніть з %1$d, %2$d до %3$d, %4$d</string>
 
     <!--
       - Titles for dumb actions.
@@ -49,7 +47,6 @@
       -->
     <string name="item_title_dumb_click">Клік</string>
     <string name="item_title_dumb_pause">Очікувати</string>
-    <string name="item_title_dumb_swipe">Свайп</string>
     <string name="item_title_no_dumb_actions">Немає дій</string>
     <string name="item_title_dumb_action_copy">Скопіювати</string>
 
@@ -98,7 +95,6 @@
       - General description for swipe action.
       - Explain the gesture involved.
       -->
-    <string name="item_desc_dumb_swipe">Свайпніть пальцем з одного місця на екрані в інше</string>
 
     <!--
       - Content descriptions for accessibility.

@@ -34,7 +34,6 @@
       -  * Error have the same space as desc
       -->
     <string name="field_click_position_title">Позиция нажатия</string>
-    <string name="field_swipe_positions_title">Позиции смахивания</string>
     <string name="item_title_try_element">Опробовать %1$s</string>
     <string name="item_error_action_invalid_generic">Данное действие недопустимо</string>
 
@@ -70,7 +69,6 @@
     <string name="input_field_label_name">Название</string>
     <string name="input_field_label_pause_duration">Длительность бездействия</string>
     <string name="input_field_label_scenario_name">Название сценария</string>
-    <string name="input_field_label_swipe_duration">Длительность смахивания (в мс)</string>
     <string name="input_field_error_required">Обязательное поле</string>
 
 
@@ -100,8 +98,6 @@
       -->
     <string name="toast_denied_screen_sharing_permission">Разрешение на трансляцию экрана отклонено пользователем</string>
     <string name="toast_configure_single_click">Коснитесь там, где нужно расположить нажатие</string>
-    <string name="toast_configure_swipe_from">Коснитесь там, откуда должно начаться смахивание</string>
-    <string name="toast_configure_swipe_to">Коснитесь там, где смахивание должно окончиться</string>
 
     <!--
       - Content description texts.

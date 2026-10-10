@@ -27,9 +27,6 @@
     <string name="item_click_desc">画面上のどこかをクリックします</string>
     <string name="item_click_details_on_condition">%2$s の %1$s 中に</string>
     <string name="item_click_details_at_position">%1$s中</string>
-    <string name="item_swipe_title">スワイプ</string>
-    <string name="item_swipe_desc">画面上のある位置から別の位置にスワイプします</string>
-    <string name="item_swipe_details">%1$s中</string>
     <string name="item_pause_title">待機</string>
     <string name="item_pause_desc">検出の実行を一時停止する</string>
     <string name="item_pause_details">%1$s中</string>
@@ -146,9 +143,6 @@
     <string name="field_click_position_desc">%1$d、%2$d をクリックします</string>
     <string name="field_click_offset_title">クリックオフセット</string>
     <string name="field_click_offset_desc_none">なし</string>
-    <string name="dialog_title_swipe">スワイプ</string>
-    <string name="field_swipe_positions_title">スワイプ位置</string>
-    <string name="field_swipe_positions_desc">%1$d、%2$d から %3$d、%4$d までスワイプします</string>
     <string name="dialog_title_pause">待機</string>
     <string name="dialog_title_application_selection">アプリケーションを選択してください</string>
     <string name="menu_item_title_advanced">詳細</string>

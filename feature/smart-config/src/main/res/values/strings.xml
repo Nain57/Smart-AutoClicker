@@ -76,9 +76,12 @@
     <string name="item_click_details_on_condition_unknown">During %1$s on detected condition</string>
     <string name="item_click_details_at_position">During %1$s</string>
 
-    <string name="item_swipe_title">Swipe</string>
-    <string name="item_swipe_desc">Swipe from a position on the screen to another</string>
-    <string name="item_swipe_details">During %1$s</string>
+    <string name="item_gesture_title">Gesture</string>
+    <string name="item_gesture_desc">Execute a complex gesture on the screen</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">With %1$d finger during %2$s</item>
+        <item quantity="other">With %1$d fingers during %2$s</item>
+    </plurals>
 
     <string name="item_pause_title">Wait</string>
     <string name="item_pause_desc">Pause the detection execution</string>
@@ -191,7 +194,7 @@
     <string name="message_empty_trigger_condition_list_title">No conditions !</string>
     <string name="message_empty_trigger_condition_list_desc">A condition is a custom criteria for starting an action.</string>
     <string name="message_empty_action_list_title">No actions !</string>
-    <string name="message_empty_action_list_desc">An action is an interaction (click, swipe…) with your phone triggered when the created conditions are fulfilled.</string>
+    <string name="message_empty_action_list_desc">An action is an interaction (click, gesture…) with your phone triggered when the created conditions are fulfilled.</string>
 
     <string name="menu_item_title_conditions">Conditions</string>
     <string name="menu_item_title_actions">Actions</string>
@@ -392,13 +395,6 @@
     <string name="item_desc_gesture_release_once_unfulfilled">Release once event is unfulfilled</string>
     <string name="item_desc_gesture_release_for_duration">Release after %1$d ms</string>
     <string name="field_gesture_release_hold_behaviour">• Only one hold at a time is supported, starting another hold will release this one.\n• While a finger is holding, the related event will no longer be triggered until the held finger is released.\n• If you manually press the screen, the hold will be interrupted.\n• Maximum hold duration depends on your system and the current application being automated. Some systems allow infinite durations, some don\'t.</string>
-
-
-
-    <!-- TODO: delete -->
-    <string name="dialog_title_swipe">Swipe</string>
-    <string name="field_swipe_positions_title">Swipe positions</string>
-    <string name="field_swipe_positions_desc">Swipe from %1$d, %2$d to %3$d, %4$d</string>
 
 
     <!-- Dialog Action Pause ======================================================================================= -->

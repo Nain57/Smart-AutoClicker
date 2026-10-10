@@ -52,10 +52,10 @@ sealed class ActionTypeChoice(
         R.string.item_click_desc,
         getClickIconRes(),
     )
-    /** Swipe Action choice. */
+    /** Gesture Action choice. */
     data object Gesture : ActionTypeChoice(
-        R.string.item_swipe_title,
-        R.string.item_swipe_desc,
+        R.string.item_gesture_title,
+        R.string.item_gesture_desc,
         getGestureIconRes(),
     )
     /** Pause Action choice. */

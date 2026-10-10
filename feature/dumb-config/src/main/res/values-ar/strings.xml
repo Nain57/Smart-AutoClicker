@@ -44,12 +44,8 @@
     <string name="item_desc_dumb_pause_details">خلال %1$s</string>
     <string name="item_desc_dumb_repeat_count">كرر %1$d مرات</string>
     <string name="item_desc_dumb_repeat_infinite">تكرار لا نهاية له</string>
-    <string name="item_desc_dumb_swipe">اسحب من موضع على الشاشة إلى آخر</string>
-    <string name="item_desc_dumb_swipe_details">خلال %1$s من [%2$d، %3$d] إلى [%4$d، %5$d]</string>
-    <string name="item_desc_dumb_swipe_positions">اسحب من %1$d، %2$d إلى %3$d، %4$d</string>
     <string name="item_title_dumb_click">انقر</string>
     <string name="item_title_dumb_pause">انتظر</string>
-    <string name="item_title_dumb_swipe">انتقد</string>
     <string name="item_title_no_dumb_actions">لا توجد إجراءات</string>
     <string name="item_title_dumb_action_copy">ينسخ</string>
     <string name="item_desc_dumb_action_copy">انسخ إجراءً موجودًا من أي سيناريوهات</string>
