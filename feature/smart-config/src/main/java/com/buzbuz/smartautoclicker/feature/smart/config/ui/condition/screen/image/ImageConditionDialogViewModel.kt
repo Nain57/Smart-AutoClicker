@@ -149,7 +149,7 @@ class ImageConditionViewModel @Inject constructor(
     }
 
     fun isConditionRelatedToClick(): Boolean =
-        editionRepository.editionState.isEditedConditionReferencedByClick()
+        editionRepository.editionState.isEditedConditionReferencedByAction()
 
 
     fun monitorSaveButtonView(view: View) {

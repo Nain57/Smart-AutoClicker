@@ -96,7 +96,9 @@ class GetActionMissingReferencesUseCase @Inject constructor(
                 }
 
                 is CounterOperationValue.Condition ->
-                    getMissingConditionReference(copyResultEvents, eventId, value.conditionId)?.let(::add)
+                    value.conditionId?.let { conditionId ->
+                        getMissingConditionReference(copyResultEvents, eventId, conditionId)?.let(::add)
+                    }
 
                 is CounterOperationValue.Number -> Unit
             }

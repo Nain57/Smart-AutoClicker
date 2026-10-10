@@ -39,6 +39,8 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.DialogConfigActionChangeCounterBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.action.OnActionConfigCompleteListener
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.ConditionOperandConfig
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setConditionOperandAvailable
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setCounter
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setOnClickListener
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setSelectedOperator
@@ -46,10 +48,12 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.count
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.bindings.counter.setup
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCloseWithoutSavingDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.counter.allCounterAffectationOperatorDropdownItems
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.selection.ScreenConditionSelectionDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.selection.CounterSelectionDialog
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredOverlayType
 
@@ -66,6 +70,8 @@ class ChangeCounterDialog(
     )
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionChangeCounterBinding
+    /** Loading of the bitmap of the condition used as operand, if any. */
+    private var conditionBitmapLoadingJob: Job? = null
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionChangeCounterBinding.inflate(LayoutInflater.from(context)).apply {
@@ -111,6 +117,10 @@ class ChangeCounterDialog(
                             viewModel.setOperationValue(CounterOperationValue.Counter(counterSelected))
                         }
                     },
+                    conditionOperandConfig = ConditionOperandConfig(
+                        onOpenConditionSelectionClicked = ::showConditionSelectionDialog,
+                        onPositionTypeSelected = viewModel::setOperandConditionPositionType,
+                    ),
                 )
                 hideSoftInputOnFocusLoss(staticValueLayout.textField)
             }
@@ -178,7 +188,13 @@ class ChangeCounterDialog(
 
             counterToChange.setCounter(state.counter)
             editValueLayout.setSelectedOperator(state.operator)
-            editValueLayout.setValueInfo(state.operandValue)
+            editValueLayout.setConditionOperandAvailable(state.isConditionOperandAvailable)
+
+            conditionBitmapLoadingJob?.cancel()
+            conditionBitmapLoadingJob = editValueLayout.setValueInfo(
+                uiState = state.operandValue,
+                conditionBitmapProvider = viewModel::getConditionBitmap,
+            )
 
             effectDesc.text = state.actionEffectText
         }
@@ -189,6 +205,20 @@ class ChangeCounterDialog(
             context = context,
             newOverlay = CounterSelectionDialog(onCounterSelected),
             hideCurrent = true,
+        )
+    }
+
+    private fun showConditionSelectionDialog() {
+        val conditions = viewModel.uiState.value?.availableConditions
+        if (conditions.isNullOrEmpty()) return
+
+        overlayManager.navigateTo(
+            context = context,
+            newOverlay = ScreenConditionSelectionDialog(
+                conditionList = conditions,
+                onConditionSelected = viewModel::setOperandCondition,
+            ),
+            hideCurrent = false,
         )
     }
 

@@ -65,6 +65,27 @@
             android:layout_gravity="center_vertical"
             android:visibility="gone"/>
 
+        <LinearLayout
+            android:id="@+id/condition_value_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include layout="@layout/include_field_selector"
+                android:id="@+id/condition_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_vertical_default" />
+
+            <include layout="@layout/include_input_field_dropdown"
+                android:id="@+id/condition_position_type_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_default"/>
+
+        </LinearLayout>
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -86,8 +86,8 @@ interface IEditionState {
     fun isEditedEventReferencedByAction(): Boolean
 
     /**
-     * Check if the edited Condition is referenced by a Click Action in the edited event.
-     * If the edited event is set to OR, do not consider the reference as true.
+     * Check if the edited Condition is referenced by an Action in the edited event that will be deleted with it.
+     * Click references are ignored if the edited event is set to OR, ChangeCounter references are always considered.
      */
-    fun isEditedConditionReferencedByClick(): Boolean
+    fun isEditedConditionReferencedByAction(): Boolean
 }

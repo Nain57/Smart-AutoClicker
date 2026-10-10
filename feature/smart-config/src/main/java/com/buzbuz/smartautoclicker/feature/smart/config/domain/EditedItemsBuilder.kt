@@ -601,7 +601,8 @@ class EditedItemsBuilder internal constructor(
     /** Same as [toCopiedConditionPosition], for a counter operation value targeting a condition. */
     private fun CounterOperationValue.toCopiedConditionValue(): CounterOperationValue {
         if (this !is CounterOperationValue.Condition) return this
-        val mappedId = eventCopyConditionIdMap[conditionId] ?: return this
+        val id = conditionId ?: return this
+        val mappedId = eventCopyConditionIdMap[id] ?: return this
         return copy(conditionId = mappedId)
     }
 

@@ -74,7 +74,6 @@
 
     <string name="item_change_counter_title">تغيير العداد</string>
     <string name="item_change_counter_desc">قم بتغيير القيمة للتحقق منها لاحقًا</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">العداد غير صالح</string>
 
     <string name="item_toggle_event_title">تغيير حالة الحدث</string>
@@ -319,6 +318,24 @@
     <string name="dialog_title_change_counter">تغيير العداد</string>
 
     <string name="field_counter_operation_value_label">قيمة</string>
+    <string name="field_counter_operation_condition_selection_desc">في حال اكتشافه، سيتم استخدام موضعه على الشاشة كقيمة</string>
+    <string name="field_counter_operation_condition_selection_title_empty">لم يتم تحديد أي شرط</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">انقر هنا لتحديد شرط</string>
+    <string name="field_counter_operation_condition_selection_title_none">لا يوجد شرط متاح</string>
+    <string name="field_counter_operation_condition_selection_desc_none">أنشئ شرط شاشة يجب اكتشافه في هذا الحدث لاستخدام موضعه</string>
+    <string name="dropdown_condition_position_type_label">الموضع</string>
+    <string name="dropdown_condition_position_type_item_left">يسار</string>
+    <string name="dropdown_condition_position_type_item_left_desc">الإحداثي X للحافة اليسرى</string>
+    <string name="dropdown_condition_position_type_item_center_x">مركز X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">الإحداثي X للمركز</string>
+    <string name="dropdown_condition_position_type_item_right">يمين</string>
+    <string name="dropdown_condition_position_type_item_right_desc">الإحداثي X للحافة اليمنى</string>
+    <string name="dropdown_condition_position_type_item_top">أعلى</string>
+    <string name="dropdown_condition_position_type_item_top_desc">الإحداثي Y للحافة العلوية</string>
+    <string name="dropdown_condition_position_type_item_center_y">مركز Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">الإحداثي Y للمركز</string>
+    <string name="dropdown_condition_position_type_item_bottom">أسفل</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">الإحداثي Y للحافة السفلية</string>
 
     <string name="dropdown_counter_operation_label">عملية</string>
 

@@ -80,6 +80,14 @@ internal fun ChangeCounter.OperationType.toEffectDescription(context: Context, c
     }
 
 
+/** Display string of a counter operation value targeting a condition position, e.g. "MyCondition (Left)". */
+internal fun Context.getConditionOperandDisplayString(conditionName: String?, @StringRes positionTypeName: Int): String =
+    getString(
+        R.string.field_counter_operation_condition_value,
+        if (conditionName.isNullOrEmpty()) "?" else conditionName,
+        getString(positionTypeName),
+    )
+
 internal fun CounterOperationValue.toEffectDescription(context: Context, operation: ComparisonOperation): String =
     when (this) {
         is CounterOperationValue.Counter -> context.getString(

@@ -73,7 +73,7 @@ class TextConditionViewModel @Inject constructor(
         editedConditionHasChanged.value
 
     fun isConditionRelatedToClick(): Boolean =
-        editionRepository.editionState.isEditedConditionReferencedByClick()
+        editionRepository.editionState.isEditedConditionReferencedByAction()
 
     fun setName(name: String) {
         updateEditedCondition { it.copy(name = name) }

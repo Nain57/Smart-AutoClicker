@@ -89,7 +89,6 @@
 
     <string name="item_change_counter_title">Change counter</string>
     <string name="item_change_counter_desc">Change a value to verify it later</string>
-    <string name="item_change_counter_details">%1$s %2$s %3$s</string>
     <string name="item_change_counter_details_error">Counter is invalid</string>
 
     <string name="item_toggle_event_title">Change event state</string>
@@ -463,6 +462,27 @@
     <string name="field_change_counter_effect_title">Action effect</string>
     <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string> <!-- Toto = Tata -->
     <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string> <!-- Toto = Toto + Tata -->
+
+    <string name="field_counter_operation_condition_value">%1$s (%2$s)</string> <!-- MyCondition (Left) -->
+    <string name="field_counter_operation_condition_selection_title_empty">No condition selected</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">Click here to select a condition</string>
+    <string name="field_counter_operation_condition_selection_desc">If detected, its position on screen will be used as value</string>
+    <string name="field_counter_operation_condition_selection_title_none">No condition available</string>
+    <string name="field_counter_operation_condition_selection_desc_none">Create a screen condition that should be detected in this event to use its position</string>
+
+    <string name="dropdown_condition_position_type_label">Position</string>
+    <string name="dropdown_condition_position_type_item_left">Left</string>
+    <string name="dropdown_condition_position_type_item_left_desc">X coordinate of the left edge</string>
+    <string name="dropdown_condition_position_type_item_center_x">Center X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">X coordinate of the center</string>
+    <string name="dropdown_condition_position_type_item_right">Right</string>
+    <string name="dropdown_condition_position_type_item_right_desc">X coordinate of the right edge</string>
+    <string name="dropdown_condition_position_type_item_top">Top</string>
+    <string name="dropdown_condition_position_type_item_top_desc">Y coordinate of the top edge</string>
+    <string name="dropdown_condition_position_type_item_center_y">Center Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">Y coordinate of the center</string>
+    <string name="dropdown_condition_position_type_item_bottom">Bottom</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">Y coordinate of the bottom edge</string>
 
 
     <!-- Dialogs Action ToggleEvent ================================================================================ -->
