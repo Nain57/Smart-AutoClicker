@@ -22,12 +22,19 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.view.Display
 
+import androidx.lifecycle.Lifecycle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.buzbuz.smartautoclicker.core.common.overlays.base.Overlay
 import com.buzbuz.smartautoclicker.core.common.overlays.menu.implementation.common.OverlayMenuPositionDataSource
+import com.buzbuz.smartautoclicker.core.common.overlays.other.FullscreenOverlay
 import com.buzbuz.smartautoclicker.core.common.overlays.testutils.anyNotNull
 
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
+import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
+
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 import org.junit.Assert
 import org.junit.Before
@@ -40,6 +47,7 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.annotation.Config
 
 /** Test the [OverlayManager] class. */
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class OverlayManagerTests {
@@ -52,6 +60,12 @@ class OverlayManagerTests {
     @Mock private lateinit var mockOverlay1: Overlay
     @Mock private lateinit var mockOverlay2: Overlay
     @Mock private lateinit var mockOverlay3: Overlay
+    @Mock private lateinit var mockTopOverlay: FullscreenOverlay
+    @Mock private lateinit var mockKeyguardStateDataSource: KeyguardStateDataSource
+    @Mock private lateinit var mockSettingsRepository: SettingsRepository
+
+    private val keyguardVisibleFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private var showOnLockScreen: Boolean = false
 
     private lateinit var overlayManager: OverlayManager
 
@@ -75,12 +89,25 @@ class OverlayManagerTests {
         Mockito.`when`(mockSharedPrefsEditor.putInt(Mockito.anyString(), Mockito.anyInt())).thenReturn(mockSharedPrefsEditor)
         Mockito.`when`(mockDisplayManager.getDisplay(0)).thenReturn(mockDisplay)
 
+        Mockito.`when`(mockKeyguardStateDataSource.isKeyguardVisibleFlow).thenReturn(keyguardVisibleFlow)
+        Mockito.`when`(mockSettingsRepository.showOnLockScreen()).thenAnswer { showOnLockScreen }
+        Mockito.`when`(mockOverlay1.context).thenReturn(mockContext)
+
         overlayManager = OverlayManager(
+            mainDispatcher = UnconfinedTestDispatcher(),
             displayConfigManager = DisplayConfigManager(mockContext),
             menuPositionDataSource = OverlayMenuPositionDataSource(
                 mockContext
-            )
+            ),
+            keyguardStateDataSource = mockKeyguardStateDataSource,
+            settingsRepository = mockSettingsRepository,
         )
+    }
+
+    private fun Overlay.mockLifecycleState(state: Lifecycle.State) {
+        val lifecycle = Mockito.mock(Lifecycle::class.java)
+        Mockito.`when`(lifecycle.currentState).thenReturn(state)
+        Mockito.`when`(this.lifecycle).thenReturn(lifecycle)
     }
 
     @Test
@@ -233,5 +260,206 @@ class OverlayManagerTests {
             verify(mockOverlay1).resume()
         }
         Mockito.verifyNoMoreInteractions(mockOverlay1, mockOverlay2)
+    }
+
+    @Test
+    fun keyguard_visible_hidesStackFromTopToBottom() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.STARTED)
+        mockOverlay2.mockLifecycleState(Lifecycle.State.RESUMED)
+        Mockito.clearInvocations(mockOverlay1, mockOverlay2)
+
+        keyguardVisibleFlow.value = true
+
+        Mockito.inOrder(mockOverlay1, mockOverlay2).apply {
+            verify(mockOverlay2).hide()
+            verify(mockOverlay1).hide()
+        }
+    }
+
+    @Test
+    fun keyguard_dismissed_restoresStackStates() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.STARTED)
+        mockOverlay2.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+        Mockito.clearInvocations(mockOverlay1, mockOverlay2)
+
+        keyguardVisibleFlow.value = false
+
+        Mockito.inOrder(mockOverlay1, mockOverlay2).apply {
+            verify(mockOverlay1).start()
+            verify(mockOverlay2).resume()
+        }
+        Mockito.verify(mockOverlay1, Mockito.never()).resume()
+        Mockito.verify(mockOverlay2, Mockito.never()).start()
+    }
+
+    @Test
+    fun keyguard_visible_showOnLockScreenEnabled() {
+        showOnLockScreen = true
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        Mockito.clearInvocations(mockOverlay1)
+
+        keyguardVisibleFlow.value = true
+
+        Mockito.verify(mockOverlay1, Mockito.never()).hide()
+    }
+
+    @Test
+    fun keyguard_alreadyVisible_firstOverlayShown() {
+        keyguardVisibleFlow.value = true
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+
+        Mockito.verify(mockOverlay1).hide()
+    }
+
+    @Test
+    fun keyguard_visible_navigateTo_newOverlayNotStarted() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+
+        Mockito.verify(mockOverlay2).create(anyNotNull(), anyNotNull())
+        Mockito.verify(mockOverlay2, Mockito.never()).start()
+        Mockito.verify(mockOverlay2, Mockito.never()).resume()
+    }
+
+    @Test
+    fun keyguard_dismissed_navigatedWhileVisible_newOverlayResumed() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+        overlayManager.navigateTo(mockContext, mockOverlay2)
+
+        keyguardVisibleFlow.value = false
+
+        Mockito.verify(mockOverlay2).resume()
+    }
+
+    @Test
+    fun keyguard_visible_thenHideAll() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+        Mockito.clearInvocations(mockOverlay1)
+
+        overlayManager.hideAll()
+
+        Assert.assertTrue(overlayManager.isOverlayStackHidden())
+        Mockito.verify(mockOverlay1, Mockito.never()).hide()
+    }
+
+    @Test
+    fun keyguard_dismissed_afterHideAll_stackStaysHidden() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+        overlayManager.hideAll()
+        Mockito.clearInvocations(mockOverlay1)
+
+        keyguardVisibleFlow.value = false
+
+        Assert.assertTrue(overlayManager.isOverlayStackHidden())
+        Mockito.verify(mockOverlay1, Mockito.never()).resume()
+    }
+
+    @Test
+    fun keyguard_dismissed_afterHideAll_restoreVisibility() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+        overlayManager.hideAll()
+        keyguardVisibleFlow.value = false
+        Mockito.clearInvocations(mockOverlay1)
+
+        overlayManager.restoreVisibility()
+
+        Assert.assertFalse(overlayManager.isOverlayStackHidden())
+        Mockito.verify(mockOverlay1).resume()
+    }
+
+    @Test
+    fun hideAll_thenKeyguardVisible() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        overlayManager.hideAll()
+        Mockito.clearInvocations(mockOverlay1)
+
+        keyguardVisibleFlow.value = true
+
+        Mockito.verify(mockOverlay1, Mockito.never()).hide()
+    }
+
+    @Test
+    fun hideAll_restoreVisibility_whileKeyguardVisible() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        overlayManager.hideAll()
+        keyguardVisibleFlow.value = true
+        Mockito.clearInvocations(mockOverlay1)
+
+        overlayManager.restoreVisibility()
+
+        Assert.assertFalse(overlayManager.isOverlayStackHidden())
+        Mockito.verify(mockOverlay1, Mockito.never()).resume()
+    }
+
+    @Test
+    fun hideAll_restoreVisibility_whileKeyguardVisible_thenDismissed() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        overlayManager.hideAll()
+        keyguardVisibleFlow.value = true
+        overlayManager.restoreVisibility()
+        Mockito.clearInvocations(mockOverlay1)
+
+        keyguardVisibleFlow.value = false
+
+        Mockito.verify(mockOverlay1).resume()
+    }
+
+    @Test
+    fun keyguard_visible_hidesTopOverlay() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        overlayManager.setTopOverlay(mockTopOverlay)
+        Mockito.clearInvocations(mockTopOverlay)
+
+        keyguardVisibleFlow.value = true
+
+        Mockito.verify(mockTopOverlay).hide()
+    }
+
+    @Test
+    fun keyguard_dismissed_showsTopOverlay() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        overlayManager.setTopOverlay(mockTopOverlay)
+        keyguardVisibleFlow.value = true
+        Mockito.clearInvocations(mockTopOverlay)
+
+        keyguardVisibleFlow.value = false
+
+        Mockito.verify(mockTopOverlay).show()
+    }
+
+    @Test
+    fun keyguard_visible_setTopOverlay_notResumed() {
+        overlayManager.navigateTo(mockContext, mockOverlay1)
+        mockOverlay1.mockLifecycleState(Lifecycle.State.RESUMED)
+        keyguardVisibleFlow.value = true
+
+        overlayManager.setTopOverlay(mockTopOverlay)
+
+        Mockito.verify(mockTopOverlay).create(anyNotNull(), anyNotNull())
+        Mockito.verify(mockTopOverlay, Mockito.never()).resume()
     }
 }

@@ -36,6 +36,30 @@
             android:layout_marginVertical="@dimen/margin_vertical_default" />
 
         <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_force_entire_screen"
+            style="@style/AppTheme.Widget.Divider.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <include layout="@layout/include_field_switch"
+            android:id="@+id/field_force_entire_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_show_on_lock_screen"
+            style="@style/AppTheme.Widget.Divider.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <include layout="@layout/include_field_switch"
+            android:id="@+id/field_show_on_lock_screen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_vertical_default" />
+
+        <com.google.android.material.divider.MaterialDivider
             style="@style/AppTheme.Widget.Divider.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
@@ -56,18 +80,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_vertical_default"/>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_force_entire_screen"
-            style="@style/AppTheme.Widget.Divider.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
-        <include layout="@layout/include_field_switch"
-            android:id="@+id/field_force_entire_screen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_vertical_default" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_input_block_workaround"

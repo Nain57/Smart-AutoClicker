@@ -55,6 +55,9 @@
     <string name="field_legacy_notification_ui_desc">Sử dụng các nút hệ thống thay vì các nút biểu tượng trong thông báo.</string>
     <string name="field_force_entire_screen_title">Buộc toàn bộ màn hình</string>
     <string name="field_force_entire_screen_desc">Buộc bộ chọn chụp màn hình thành \"Toàn bộ màn hình\". Có thể không hoạt động tùy thuộc vào thiết bị của bạn</string>
+
+    <string name="field_show_on_lock_screen_title">Hiển thị trên màn hình khóa</string>
+    <string name="field_show_on_lock_screen_desc">Giữ menu nổi hiển thị khi thiết bị bị khóa.</string>
     <string name="field_input_block_workaround_title">Bỏ chặn màn hình cảm ứng</string>
     <string name="field_input_block_workaround_desc">Trên thiết bị Pixel chạy Android 15, việc sử dụng trình nhấp chuột tự động có thể chặn màn hình cảm ứng.\nĐể bỏ chặn, bạn cần chạm vào màn hình bằng nhiều ngón tay cùng lúc. Cài đặt này cố gắng mô phỏng điều này cứ sau 10 giây.</string>
     <string name="field_privacy">Cài đặt quyền riêng tư</string>

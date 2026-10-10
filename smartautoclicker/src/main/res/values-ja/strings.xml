@@ -81,6 +81,9 @@
     <string name="field_force_entire_screen_title">画面全体を強制</string>
     <string name="field_force_entire_screen_desc">画面キャプチャの選択を「画面全体」に固定します。端末により動作しない場合があります。</string>
 
+    <string name="field_show_on_lock_screen_title">ロック画面に表示</string>
+    <string name="field_show_on_lock_screen_desc">端末がロックされている間もフローティング メニューを表示したままにします。</string>
+
     <string name="field_input_block_workaround_title">タッチ画面のブロック解除</string>
     <string name="field_input_block_workaround_desc">Android 15 を搭載した一部の Pixel 端末では、自動タップの使用によりタッチが反応しなくなることがあります。\n複数指で画面に触れると回復します。本設定は 10 秒ごとにその操作を試みます。</string>
 

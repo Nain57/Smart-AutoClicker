@@ -81,6 +81,9 @@
     <string name="field_force_entire_screen_title">強制全螢幕</string>
     <string name="field_force_entire_screen_desc">將螢幕擷取選擇器固定為「整個螢幕」。視裝置而定，可能無法生效。</string>
 
+    <string name="field_show_on_lock_screen_title">在鎖定畫面上顯示</string>
+    <string name="field_show_on_lock_screen_desc">裝置鎖定時保持懸浮選單可見。</string>
+
     <string name="field_input_block_workaround_title">解除觸控阻塞</string>
     <string name="field_input_block_workaround_desc">於部分搭載 Android 15 的 Pixel 裝置上，使用自動點擊器可能導致觸控暫時無回應。\n可同時以多指觸碰螢幕以恢復。本設定將嘗試每 10 秒模擬該操作。</string>
 

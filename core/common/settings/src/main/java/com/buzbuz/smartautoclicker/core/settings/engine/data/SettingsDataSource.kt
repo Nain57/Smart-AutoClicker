@@ -53,6 +53,9 @@ internal class SettingsDataSource @Inject constructor(
             booleanPreferencesKey("forceEntireScreen")
         val KEY_INPUT_BLOCK_WORKAROUND: Preferences.Key<Boolean> =
             booleanPreferencesKey("inputBlockWorkaround")
+
+        val KEY_SHOW_ON_LOCKSCREEN: Preferences.Key<Boolean> =
+            booleanPreferencesKey("showOnLockScreen")
     }
 
     private val dataStore: PreferencesDataStore =
@@ -102,6 +105,15 @@ internal class SettingsDataSource @Inject constructor(
         if (!isImpactedByInputBlock()) return
         dataStore.edit { preferences ->
             preferences[KEY_INPUT_BLOCK_WORKAROUND] = !(preferences[KEY_INPUT_BLOCK_WORKAROUND] ?: false)
+        }
+    }
+
+    internal fun showOnLockScreen(): Flow<Boolean> =
+        dataStore.data.map { preferences -> preferences[KEY_SHOW_ON_LOCKSCREEN] ?: false }
+
+    internal suspend fun toggleShowOnLockScreen() {
+        dataStore.edit { preferences ->
+            preferences[KEY_SHOW_ON_LOCKSCREEN] = !(preferences[KEY_SHOW_ON_LOCKSCREEN] ?: false)
         }
     }
 }
