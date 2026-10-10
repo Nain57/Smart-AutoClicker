@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.withStarted
 
 import com.buzbuz.smartautoclicker.core.base.extensions.getThemeColor
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
@@ -180,7 +181,7 @@ internal class PaywallFragment : DialogFragment() {
 
         lifecycleScope.launch {
             delay(1.seconds)
-            dismiss()
+            withStarted { dismiss() }
         }
     }
 
