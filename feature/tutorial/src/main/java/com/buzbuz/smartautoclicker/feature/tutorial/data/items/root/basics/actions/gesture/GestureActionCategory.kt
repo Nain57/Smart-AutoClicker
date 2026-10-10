@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.swipe
+package com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.gesture
 
 import com.buzbuz.smartautoclicker.feature.tutorial.R
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialCategory
 import com.buzbuz.smartautoclicker.feature.tutorial.domain.model.TutorialSlideshow
 
-internal fun getSwipeActionCategory() =
+internal fun getGestureActionCategory() =
     TutorialCategory(
-        type = TutorialCategory.Type.SWIPE_ACTION,
-        nameRes = R.string.tutorial_category_swipe_action_name,
-        shortDescriptionRes = R.string.tutorial_category_swipe_action_desc_short,
-        longDescriptionRes = R.string.tutorial_category_swipe_action_desc_long,
+        type = TutorialCategory.Type.GESTURE_ACTION,
+        nameRes = R.string.tutorial_category_gesture_action_name,
+        shortDescriptionRes = R.string.tutorial_category_gesture_action_desc_short,
+        longDescriptionRes = R.string.tutorial_category_gesture_action_desc_long,
         iconRes = R.drawable.ic_gesture,
         content = listOf(
             TutorialCategory.Content.Divider,
-            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.SWIPE_ACTION),
+            TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.GESTURE_ACTION),
         ),
     )

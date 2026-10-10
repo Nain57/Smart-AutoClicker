@@ -169,10 +169,10 @@
         l\'écran.\n\nUne pause entre deux actions est également valide, mais en ajouter une à la fin de la liste est
         souvent le besoin le plus important.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Action Glissement</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Apprenez comment le geste de glissement est effectué</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">Une Action Glissement effectue un geste de glisser en
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Action Glissement</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Apprenez comment le geste de glissement est effectué</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Une Action Glissement effectue un geste de glisser en
         ligne droite d\'une position de départ à une position d\'arrivée. Les deux coordonnées sont fixes et définies
         lors de la configuration de l\'action.\n\nLa durée du glissement contrôle le temps que met le geste pour
         parcourir le trajet : une durée plus courte produit un glissement plus rapide, tandis qu\'une durée plus

@@ -31,7 +31,7 @@
         It contains the general detection settings and a list of Events describing what will be executed when running
         your Scenario.\n\nClick on the create event button to create your first Event.</string>
 
-    <string name="message_tutorial_screen_condition_moving_target_step_5">An Event describes what Actions (click, swipe…) to execute when certain
+    <string name="message_tutorial_screen_condition_moving_target_step_5">An Event describes what Actions (click, gesture…) to execute when certain
         Conditions are met.\n\nTo beat this game, we need to detect the blue character as it moves across the screen.
         \n\nClick on the Conditions field to display the Conditions list.</string>
 

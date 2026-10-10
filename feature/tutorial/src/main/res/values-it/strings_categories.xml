@@ -119,9 +119,9 @@
         centro di una Condizione immagine rilevata. Puoi configurare la durata della pressione per simulare pressioni
         prolungate.\n\n Impara qui a usarla per interagire con lo schermo.</string>
 
-    <string name="tutorial_category_swipe_action_name">Scorrimento</string>
-    <string name="tutorial_category_swipe_action_desc_short">Scorri da un punto all\'altro sullo schermo</string>
-    <string name="tutorial_category_swipe_action_desc_long">Un\'Azione Scorrimento simula un gesto di trascinamento da
+    <string name="tutorial_category_gesture_action_name">Scorrimento</string>
+    <string name="tutorial_category_gesture_action_desc_short">Scorri da un punto all\'altro sullo schermo</string>
+    <string name="tutorial_category_gesture_action_desc_long">Un\'Azione Scorrimento simula un gesto di trascinamento da
         una coordinata di partenza a una di arrivo. Puoi configurare la durata dello scorrimento per controllare la
         velocità del gesto.\n\n Impara qui a usarla per scorrere o trascinare elementi sullo schermo.</string>
 

@@ -169,10 +169,10 @@
         tra due azioni è ugualmente valida, ma aggiungerne una alla fine della lista è spesso la necessità più
         importante.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Azione Scorrimento</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Scopri come viene eseguito il gesto di scorrimento</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">Un\'Azione Scorrimento esegue un gesto di trascinamento
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Azione Scorrimento</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Scopri come viene eseguito il gesto di scorrimento</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Un\'Azione Scorrimento esegue un gesto di trascinamento
         in linea retta da una posizione iniziale a una finale. Entrambe le coordinate sono fisse e impostate nella
         configurazione.\n\nLa durata controlla quanto tempo impiega il gesto dall\'inizio alla fine: una durata
         minore produce uno scorrimento più rapido, mentre una maggiore produce uno scorrimento più lento e

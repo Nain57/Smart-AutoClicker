@@ -165,10 +165,10 @@
         перш ніж Klick\'r знову почне аналізувати екран.\n\nОчікування між двома діями теж доречне, але додавання
         очікування в кінець списку зазвичай важливіше.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Дія «Свайп»</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Дізнайтесь, як виконується жест свайпу</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">Дія «Свайп» виконує жест перетягування по прямій
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Дія «Свайп»</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Дізнайтесь, як виконується жест свайпу</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">Дія «Свайп» виконує жест перетягування по прямій
         лінії від початкової точки до кінцевої. Обидві координати фіксовані і задаються в налаштуваннях
         дії.\n\nТривалість визначає час, який займає жест від початку до кінця: менша тривалість дає швидший
         свайп, більша — повільніший і плавніший.</string>

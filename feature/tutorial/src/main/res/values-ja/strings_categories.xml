@@ -104,9 +104,9 @@
         シミュレートします。長押しをシミュレートするために押下時間を設定することもできます。\n\n ここで画面との操作方法を学び
         ましょう。</string>
 
-    <string name="tutorial_category_swipe_action_name">スワイプ</string>
-    <string name="tutorial_category_swipe_action_desc_short">画面上で一点から別の点へスワイプする</string>
-    <string name="tutorial_category_swipe_action_desc_long">スワイプアクションは、開始座標から終了座標へのドラッグジェスチャーを
+    <string name="tutorial_category_gesture_action_name">スワイプ</string>
+    <string name="tutorial_category_gesture_action_desc_short">画面上で一点から別の点へスワイプする</string>
+    <string name="tutorial_category_gesture_action_desc_long">スワイプアクションは、開始座標から終了座標へのドラッグジェスチャーを
         シミュレートします。スワイプ時間を設定してジェスチャーの速度を制御できます。\n\n ここで画面上の要素をスクロールまたは
         ドラッグする方法を学びましょう。</string>
 

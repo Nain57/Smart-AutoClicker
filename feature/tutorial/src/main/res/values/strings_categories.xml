@@ -99,7 +99,7 @@
     <string name="tutorial_category_action_name">Actions</string>
     <string name="tutorial_category_action_desc_short">Execute something once your conditions are fulfilled</string>
     <string name="tutorial_category_action_desc_long">An Action is executed when an Event\'s Conditions are fulfilled.
-        Actions range from gestures (Click, Swipe) to flow control (ToggleEvent, ChangeCounter, Wait) and system
+        Actions range from gestures (Click, Gesture) to flow control (ToggleEvent, ChangeCounter, Wait) and system
         interactions (Intent, Notification, SystemAction, SetText).\n\n Learn here how to use each Action type to
         build your automation scripts.</string>
 
@@ -109,11 +109,11 @@
         at the center of a matched Condition. You can configure the press duration to simulate long presses.
         \n\n Learn here how to use it to interact with your screen.</string>
 
-    <string name="tutorial_category_swipe_action_name">Swipe</string>
-    <string name="tutorial_category_swipe_action_desc_short">Slide from one point to another on the screen</string>
-    <string name="tutorial_category_swipe_action_desc_long">A Swipe Action simulates a drag gesture from a start
-        coordinate to an end coordinate. You can configure the swipe duration to control the speed of the gesture.
-        \n\n Learn here how to use it to scroll or drag elements on your screen.</string>
+    <string name="tutorial_category_gesture_action_name">Gesture</string>
+    <string name="tutorial_category_gesture_action_desc_short">Perform a complex gesture on the screen</string>
+    <string name="tutorial_category_gesture_action_desc_long">A Gesture Action simulates one or more fingers movements
+        on the screen. You can configure up to five fingers performing at the same time.
+        \n\n Learn here how to use it to interact with your screen.</string>
 
     <string name="tutorial_category_pause_action_name">Wait</string>
     <string name="tutorial_category_pause_action_desc_short">Wait for a duration before executing the next action</string>

@@ -158,10 +158,10 @@
         \n\n2つのアクションの間に待機を入れることも有効ですが、リストの末尾に追加することの方が重要なケースが
         多いです。</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">スワイプアクション</string>
-    <string name="tutorial_slideshow_swipe_action_desc">スワイプジェスチャーの実行方法を学ぶ</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">スワイプアクションは開始位置から終了位置まで直線的な
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">スワイプアクション</string>
+    <string name="tutorial_slideshow_gesture_action_desc">スワイプジェスチャーの実行方法を学ぶ</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">スワイプアクションは開始位置から終了位置まで直線的な
         ドラッグジェスチャーを実行します。両方の座標は固定されており、アクションの設定で指定します。\n\nデュレーション
         はジェスチャーが開始から終了まで要する時間を制御します。短いデュレーションはより速いスワイプを生み出し、長い
         デュレーションはよりゆっくりと制御されたスワイプを生み出します。</string>

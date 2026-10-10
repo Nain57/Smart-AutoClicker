@@ -115,9 +115,9 @@
         в центрі виявленої умови зображення. Можна налаштувати тривалість натискання для імітації довгих
         натискань.\n\n Дізнайтеся тут, як використовувати її для взаємодії з екраном.</string>
 
-    <string name="tutorial_category_swipe_action_name">Свайп</string>
-    <string name="tutorial_category_swipe_action_desc_short">Проведіть пальцем від однієї точки до іншої</string>
-    <string name="tutorial_category_swipe_action_desc_long">Дія «Свайп» імітує жест перетягування від початкової
+    <string name="tutorial_category_gesture_action_name">Свайп</string>
+    <string name="tutorial_category_gesture_action_desc_short">Проведіть пальцем від однієї точки до іншої</string>
+    <string name="tutorial_category_gesture_action_desc_long">Дія «Свайп» імітує жест перетягування від початкової
         координати до кінцевої. Можна налаштувати тривалість свайпу для керування швидкістю жесту.\n\n Дізнайтеся
         тут, як використовувати його для прокрутки або перетягування елементів на екрані.</string>
 

@@ -53,7 +53,7 @@ data class TutorialCategory(
         PAUSE_ACTION,
         ROOT,
         SCREEN_CONDITIONS,
-        SWIPE_ACTION,
+        GESTURE_ACTION,
         SYSTEM_ACTION,
         TEXT_CONDITION,
         TOGGLE_EVENT_ACTION,

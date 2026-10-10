@@ -21,7 +21,7 @@ import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actio
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.click.getClickActionOffsetSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.click.getClickActionTargetSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.pause.getPauseActionSlideshow
-import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.swipe.getSwipeActionSlideshow
+import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.gesture.getGestureActionSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.intent.getIntentActionSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.notification.getNotificationActionSlideshow
 import com.buzbuz.smartautoclicker.feature.tutorial.data.items.root.basics.actions.changeeventstate.getChangeEventStateActionSlideshow
@@ -65,7 +65,7 @@ internal fun TutorialSlideshow.Type.toTutorialSlideshow(): TutorialSlideshow =
         PAUSE_ACTION -> getPauseActionSlideshow()
         SCREEN_CONDITIONS_DETECTION_THRESHOLD -> getScreenConditionsThresholdSlideshow()
         SCREEN_CONDITIONS_TYPE -> getScreenConditionsTypeSlideshow()
-        SWIPE_ACTION -> getSwipeActionSlideshow()
+        GESTURE_ACTION -> getGestureActionSlideshow()
         SYSTEM_ACTION -> getSystemActionSlideshow()
         TOGGLE_EVENT_ACTION -> getChangeEventStateActionSlideshow()
         TEXT_CONDITION_DETECTION_AREA -> getTextConditionsDetectionAreaSlideshow()

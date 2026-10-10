@@ -138,10 +138,10 @@
         Klick\'r 重新开始分析屏幕。\n\n在两个动作之间添加等待也是有效的，但在列表末尾添加等待通常是更重要的
         需求。</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">滑动动作</string>
-    <string name="tutorial_slideshow_swipe_action_desc">了解滑动手势的执行方式</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">滑动动作沿直线从起始位置到结束位置执行拖动手势。
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">滑动动作</string>
+    <string name="tutorial_slideshow_gesture_action_desc">了解滑动手势的执行方式</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">滑动动作沿直线从起始位置到结束位置执行拖动手势。
         两个坐标都是固定的，在动作配置中设定。\n\n持续时间控制手势从开始到结束所需的时间：较短的持续时间产生
         更快的滑动，较长的持续时间产生更慢、更受控的滑动。</string>
 

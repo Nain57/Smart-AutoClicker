@@ -158,10 +158,10 @@
         لتحليل الشاشة.\n\nالانتظار بين إجراءين أيضًا صالح، لكن الإضافة في نهاية القائمة غالبًا ما
         تكون الأهم.</string>
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">إجراء السحب</string>
-    <string name="tutorial_slideshow_swipe_action_desc">تعلّم كيف يُنفَّذ إيماءة السحب</string>
-    <string name="tutorial_slideshow_swipe_action_step_1_text">يُنفِّذ إجراء السحب إيماءة سحب في خط مستقيم
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">إجراء السحب</string>
+    <string name="tutorial_slideshow_gesture_action_desc">تعلّم كيف يُنفَّذ إيماءة السحب</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">يُنفِّذ إجراء السحب إيماءة سحب في خط مستقيم
         من موضع البداية إلى موضع النهاية. كلتا الإحداثيتين ثابتتان ومحددتان في إعداد الإجراء.\n\nتتحكم
         المدة في الوقت الذي يستغرقه الإيماءة من البداية إلى النهاية: مدة أقصر تُنتج سحبًا أسرع، بينما
         مدة أطول تُنتج سحبًا أبطأ وأكثر تحكمًا.</string>

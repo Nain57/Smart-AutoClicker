@@ -32,7 +32,7 @@ internal fun getActionsCategory() =
             TutorialCategory.Content.Slideshow(TutorialSlideshow.Type.ACTIONS_LIST),
             TutorialCategory.Content.Divider,
             TutorialCategory.Content.Category(TutorialCategory.Type.CLICK_ACTION),
-            TutorialCategory.Content.Category(TutorialCategory.Type.SWIPE_ACTION),
+            TutorialCategory.Content.Category(TutorialCategory.Type.GESTURE_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.PAUSE_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.WRITE_TEXT_ACTION),
             TutorialCategory.Content.Category(TutorialCategory.Type.SYSTEM_ACTION),

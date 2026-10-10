@@ -195,14 +195,24 @@
         condition, whichever that turns out to be at runtime.</string>
 
 
-    <!-- Swipe Action slideshow -->
-    <string name="tutorial_slideshow_swipe_action_title">Swipe action</string>
-    <string name="tutorial_slideshow_swipe_action_desc">Learn how the swipe gesture is performed</string>
+    <!-- Gesture Action slideshow -->
+    <string name="tutorial_slideshow_gesture_action_title">Gesture action</string>
+    <string name="tutorial_slideshow_gesture_action_desc">Learn how the gesture is performed</string>
 
-    <string name="tutorial_slideshow_swipe_action_step_1_text">A Swipe Action performs a straight-line drag gesture
-        from a start position to an end position. Both coordinates are fixed and set when configuring the action.
-        \n\nThe swipe duration controls how long the gesture takes to travel from start to end: a shorter duration
-        produces a faster swipe, while a longer one produces a slower, more controlled drag.</string>
+    <string name="tutorial_slideshow_gesture_action_step_1_text">A Gesture Action performs a path you recorded or
+        manually configured for up to five fingers at the same time. \n\nA gesture path always starts with a press and
+        finishes with a release, with moves and waits between them. The maximum total gesture duration is 60 seconds. \n\n
+        With this, you can recreate swipes, pinch to zoom and other complex gestures easily. Try the record button on the
+        action list to capture one directly on the screen! \n\nNote: Wait in a gesture is only available on Android 8 and above.</string>
+
+    <string name="tutorial_slideshow_gesture_action_step_2_text">You can keep the first finger held at the end of a
+        gesture and continue the scenario execution while holding it. Expand the Release step of the gesture and
+        choose when the finger should be released: immediately, once all actions of the event have been executed,
+        once the event is no longer fulfilled, or after a duration.\n\nKeep in mind that:\n• Only one hold at a time
+        is supported, starting another hold will release the previous one.\n• While a finger is holding, the related
+        event will no longer be triggered until the held finger is released.\n• If you manually press the screen, the
+        hold will be interrupted.\n• Maximum hold duration depends on your system and the current application being
+        automated. Some systems allow infinite durations, some don\'t.</string>
 
 
     <!-- Pause Action slideshow -->
