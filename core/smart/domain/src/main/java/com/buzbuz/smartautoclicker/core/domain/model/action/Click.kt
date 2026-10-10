@@ -18,7 +18,8 @@ package com.buzbuz.smartautoclicker.core.domain.model.action
 
 import android.graphics.Point
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GestureCoordinatesValue
+import com.buzbuz.smartautoclicker.core.domain.model.action.gesture.GesturePosition
 
 /**
  * Click action.
@@ -27,11 +28,8 @@ import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
  * @param eventId the identifier of the event for this action.
  * @param name the name of the action.
  * @param pressDuration the duration between the click down and up in milliseconds.
- * @param positionType the type of click position.
- * @param position the position of the click. Not null only if [positionType] is [PositionType.USER_SELECTED].
- * @param clickOnConditionId the condition to click on. Not null only if [positionType] is [PositionType.ON_DETECTED_CONDITION].
- * @param clickOffset the offset in px from the detected condition center to apply when clicking. Not null only if
- * [positionType] is [PositionType.ON_DETECTED_CONDITION].
+ * @param position the position to click on, null if the user haven't selected it yet.
+ * @param offset the offset in px from the [position] to apply when clicking.
  */
 data class Click(
     override val id: Identifier,
@@ -39,42 +37,31 @@ data class Click(
     override val name: String? = null,
     override var priority: Int,
     val pressDuration: Long? = null,
-    val positionType: PositionType,
-    val position: Point? = null,
-    val clickOnConditionId: Identifier? = null,
-    val clickOffset: Point? = null,
+    val position: GesturePosition? = null,
+    val offset: GesturePosition? = null,
 ) : Action() {
 
-    /**
-     * Types of click positions a [Click].
-     * Keep the same names as the db ones.
-     */
-    enum class PositionType {
-        /** The user must manually select a position to be clicked. */
-        USER_SELECTED,
-        /**
-         * Click on the detected condition.
-         * When the condition operator is AND, click on the condition specified by the user.
-         * When the condition operator is OR, click on the condition detected condition.
-         */
-        ON_DETECTED_CONDITION;
-
-        fun toEntity(): ClickPositionType = ClickPositionType.valueOf(name)
-    }
-
     override fun isComplete(): Boolean =
-        super.isComplete() && pressDuration != null && isPositionValid()
+        super.isComplete() && pressDuration != null && position != null
 
     override fun hashCodeNoIds(): Int =
-        name.hashCode() + pressDuration.hashCode() + positionType.hashCode() + position.hashCode() +
-                clickOnConditionId.hashCode() + clickOffset.hashCode()
+        name.hashCode() + pressDuration.hashCode() + position.hashCode() + offset.hashCode()
 
 
     override fun deepCopy(): Click = copy(name = "" + name)
 
-    private fun isPositionValid(): Boolean =
-        (positionType == PositionType.USER_SELECTED && position != null) || positionType == PositionType.ON_DETECTED_CONDITION
+    /** The click position, or null if it is not a pair of literal coordinates. */
+    fun getLiteralPosition(): Point? {
+        val coordinates = position as? GesturePosition.Coordinates ?: return null
+        val literalX = coordinates.x as? GestureCoordinatesValue.Literal ?: return null
+        val literalY = coordinates.y as? GestureCoordinatesValue.Literal ?: return null
+        return Point(literalX.value, literalY.value)
+    }
+
+    /** The identifier of the condition to click on, or null if the click is not on a condition. */
+    fun getClickOnConditionId(): Identifier? =
+        (position as? GesturePosition.Condition)?.conditionId
 
     fun isClickOnConditionValid(): Boolean =
-        (positionType == PositionType.ON_DETECTED_CONDITION && clickOnConditionId != null) || positionType == PositionType.USER_SELECTED
+        position !is GesturePosition.Condition || position.conditionId != null
 }
