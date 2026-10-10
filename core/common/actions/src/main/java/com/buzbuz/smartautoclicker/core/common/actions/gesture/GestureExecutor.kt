@@ -19,12 +19,14 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityService.GestureResultCallback
 import android.accessibilityservice.GestureDescription
-import android.graphics.Path
-import android.os.Build
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
+import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
+import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.withTimeoutOrNull
@@ -35,85 +37,74 @@ import kotlin.time.Duration.Companion.milliseconds
 
 
 @Singleton
-internal class GestureExecutor @Inject constructor() : Dumpable {
+internal class GestureExecutor @Inject constructor(
+    private val heldPointerManager: HeldPointerManager,
+) : Dumpable {
+
+    private val unblockGestureScheduler: UnblockGestureScheduler = UnblockGestureScheduler()
 
     private var completedGestures: Long = 0L
     private var cancelledGestures: Long = 0L
     private var errorGestures: Long = 0L
 
-    /** The pointer the last dispatched gesture left down on the screen, if any. */
-    private var heldPointer: HeldPointer? = null
-
 
     fun clear(service: AccessibilityService?) {
-        releaseHeldPointerNow(service)
+        heldPointerManager.releaseHeldPointerNow(service)
         completedGestures = 0L
         cancelledGestures = 0L
         errorGestures = 0L
     }
 
-    fun getHeldPointer(): HeldPointer? = heldPointer
+    fun getHeldPointer(): HeldPointer? = heldPointerManager.heldPointer
 
     /**
-     * Dispatch a gesture built by an [AndroidGestureBuilder], and record the pointer it leaves down on the screen.
+     * Dispatch a gesture built by an [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder], and record the pointer it leaves down on the screen.
      *
      * A cancelled or timed out dispatch means the system has torn down whatever this service had down, so the held
      * pointer is dropped: continuing its stroke afterwards would only get the next gesture refused.
      */
     suspend fun dispatchBuiltGesture(service: AccessibilityService, gesture: BuiltGesture): Boolean {
         for (chain in gesture.chains) {
-            if (dispatchGestures(service, chain)) continue
-
-            heldPointer = null
-            return false
+            if (!dispatchGestures(service, chain)) {
+                heldPointerManager.onHeldPointerCancelled()
+                return false
+            }
         }
 
-        heldPointer = gesture.heldPointer
+        heldPointerManager.onHeldPointerContinuationChanged(gesture.heldPointer)
         return true
     }
 
-    /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
-    suspend fun releaseHeldPointer(service: AccessibilityService?): Boolean {
-        val release = heldPointer?.toReleaseGesture() ?: let {
-            heldPointer = null
-            return true
-        }
-        heldPointer = null
-
-        if (service == null) {
-            Log.w(TAG, "Can't release the held pointer, service is not available anymore")
-            return false
-        }
-
-        return dispatchGesture(service, release)
-    }
-
     /**
-     * Lift the pointer left down on the screen without waiting for the system.
-     *
-     * A pointer left down freezes the touch screen of the user, so the shutdown paths must be able to let go of it
-     * even when they can't suspend.
+     * Some pixel devices have an OS issue on Android 15 & 16.
+     * Injecting a double tap somewhere seems to fix the problem most of the time. This method will take care of
+     * injecting this gesture, it will avoid spamming it by skipping unblock requests to close to the previous one.
      */
-    fun releaseHeldPointerNow(service: AccessibilityService?) {
-        val release = heldPointer?.toReleaseGesture() ?: let {
-            heldPointer = null
-            return
-        }
-        heldPointer = null
-
-        if (service == null) {
-            Log.w(TAG, "Can't release the held pointer, service is not available anymore")
-            return
-        }
-
-        try {
-            service.dispatchGesture(release, null, null)
-        } catch (rEx: RuntimeException) {
-            Log.w(TAG, "Can't release the held pointer, system is not responsive", rEx)
+    suspend fun dispatchPixelWorkaroundGestureIfNeeded(service: AccessibilityService) {
+        if (unblockGestureScheduler.shouldTrigger()) {
+            Log.i(TAG, "Injecting unblock gesture")
+            dispatchGesture(service, GestureDescription.Builder().buildUnblockGesture())
         }
     }
 
-    suspend fun dispatchGesture(service: AccessibilityService, gesture: GestureDescription): Boolean =
+    suspend fun checkHeldPointer(service: AccessibilityService): Boolean =
+        heldPointerManager.checkHeldPointer { heldGesture ->
+            dispatchGesture(service, heldGesture)
+        }
+
+
+    /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
+    suspend fun releaseHeldPointer(service: AccessibilityService?): Boolean =
+        heldPointerManager.releaseHeldPointer { release ->
+            if (service == null) {
+                Log.w(TAG, "Can't release the held pointer, service is not available anymore")
+                false
+            } else {
+                dispatchGesture(service, release)
+            }
+        }
+
+    private suspend fun dispatchGesture(service: AccessibilityService, gesture: GestureDescription): Boolean =
         dispatchGestures(service, listOf(gesture))
 
     /**
@@ -123,7 +114,7 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
      * the pointers currently down to what it has already scheduled, which keeps the strokes of a finger seamless.
      * Waiting for each result instead would freeze the fingers on the screen between two of them.
      */
-    suspend fun dispatchGestures(service: AccessibilityService, gestures: List<GestureDescription>): Boolean {
+    private suspend fun dispatchGestures(service: AccessibilityService, gestures: List<GestureDescription>): Boolean {
         if (gestures.isEmpty()) return true
 
         val results = List(gestures.size) { CompletableDeferred<Boolean>() }
@@ -177,35 +168,9 @@ internal class GestureExecutor @Inject constructor() : Dumpable {
             append(contentPrefix).append("Completed=$completedGestures").println()
             append(contentPrefix).append("Cancelled=$cancelledGestures").println()
             append(contentPrefix).append("Error=$errorGestures").println()
-            append(contentPrefix).append("HeldPointer=${heldPointer != null}, owner=${heldPointer?.owner}").println()
+            append(contentPrefix).append("HeldPointer=${heldPointerManager.heldPointer != null}, " +
+                    "owner=${heldPointerManager.heldPointer?.owner}").println()
         }
-    }
-}
-
-/**
- * The gesture lifting a held pointer: a continuation of its stroke, as short as possible, ending the touch sequence
- * where the pointer was resting.
- */
-private fun HeldPointer.toReleaseGesture(): GestureDescription? {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
-
-    return try {
-        GestureDescription.Builder()
-            .addStroke(
-                stroke.continueWith(
-                    path = Path().apply { hold(position) },
-                    startTimeMs = 0L,
-                    durationMs = HELD_POINTER_RELEASE_DURATION_MS,
-                    willContinue = false,
-                )
-            )
-            .build()
-    } catch (ex: IllegalArgumentException) {
-        Log.w(TAG, "Can't build the gesture releasing the held pointer", ex)
-        null
-    } catch (ex: IllegalStateException) {
-        Log.w(TAG, "Can't build the gesture releasing the held pointer", ex)
-        null
     }
 }
 

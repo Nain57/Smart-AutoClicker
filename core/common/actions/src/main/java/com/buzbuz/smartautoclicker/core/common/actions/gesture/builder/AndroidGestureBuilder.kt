@@ -14,13 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.actions.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.gesture.builder
 
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Point
 import android.os.Build
 import android.util.Log
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HELD_POINTER_FINGER_INDEX
+import com.buzbuz.smartautoclicker.core.common.actions.model.HELD_POINTER_RELEASE_DURATION_MS
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedSegment
 
 import kotlin.random.Random
 

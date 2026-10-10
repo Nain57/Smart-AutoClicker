@@ -22,8 +22,9 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.FIRST_FINGER_INDEX
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFinger
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbGestureFingerMotion
@@ -90,5 +91,26 @@ class DumbGestureResolverTests {
         assertEquals(350L, segments[1].endMs)
         assertEquals(Point(100, 100), segments[2].to)
         assertEquals(650L, segments[2].endMs)
+    }
+
+    @Test
+    fun resolveClick_singleFingerPressedForPressDuration() {
+        val finger = DumbAction.DumbClick(
+            id = ID,
+            scenarioId = ID,
+            name = "Click",
+            repeatCount = 1,
+            isRepeatInfinite = false,
+            repeatDelayMs = 0L,
+            position = Point(10, 20),
+            pressDurationMs = 150L,
+        ).toResolvedFinger(AndroidGestureBuilder.createNewBuilder(random = null))
+
+        val segment = finger!!.segments.single()
+        assertEquals(FIRST_FINGER_INDEX, finger.index)
+        assertEquals(Point(10, 20), segment.from)
+        assertEquals(Point(10, 20), segment.to)
+        assertEquals(0L, segment.startMs)
+        assertEquals(150L, segment.endMs)
     }
 }

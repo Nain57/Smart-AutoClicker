@@ -33,6 +33,9 @@ import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTes
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.press
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.release
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.GestureBuilderTestData.wait
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCompat24
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilderCurrent
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -44,7 +47,7 @@ import org.robolectric.annotation.Config
 import kotlin.random.Random
 
 /**
- * Tests the behaviour shared by all [AndroidGestureBuilder] implementations: builder selection, error handling and
+ * Tests the behaviour shared by all [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder] implementations: builder selection, error handling and
  * the randomization applied to the fingers it creates.
  */
 @RunWith(AndroidJUnit4::class)

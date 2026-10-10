@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.buzbuz.smartautoclicker.core.common.actions.gesture
+package com.buzbuz.smartautoclicker.core.common.actions.model
 
 import android.graphics.Point
 
@@ -28,7 +28,7 @@ const val FIRST_FINGER_INDEX: Int = 0
  * A finger with all its positions and durations resolved into the gesture timeline.
  *
  * Randomization is already applied, those values are final. Instances can only be obtained from a
- * [ResolvedFingerBuilder], which guarantees that consecutive segments share their junction point: a continued stroke
+ * [com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.ResolvedFingerBuilder], which guarantees that consecutive segments share their junction point: a continued stroke
  * is refused by the system unless it starts exactly where the previous one ended.
  *
  * @param index the position of the finger in its gesture, for logging and slicing purposes.

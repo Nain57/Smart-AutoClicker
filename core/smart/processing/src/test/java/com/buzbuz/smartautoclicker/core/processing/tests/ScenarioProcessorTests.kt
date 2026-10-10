@@ -17,7 +17,6 @@
 package com.buzbuz.smartautoclicker.core.processing.tests
 
 import android.graphics.Bitmap
-import android.graphics.Point
 import android.graphics.Rect
 import android.os.Build
 
@@ -31,7 +30,6 @@ import com.buzbuz.smartautoclicker.core.domain.model.EXACT
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
 import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.WHOLE_SCREEN
 import com.buzbuz.smartautoclicker.core.domain.model.action.Click
@@ -236,6 +234,7 @@ class ScenarioProcessorTests {
                 Unit
             }
             mockWhen(mockAndroidExecutor.releaseHeldPointer()).doAnswer { heldPointer = null; Unit }
+            mockWhen(mockAndroidExecutor.checkHeldPointer()).doAnswer { Unit }
         }
     }
 

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data.processor
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
@@ -120,10 +121,15 @@ internal class ScenarioProcessor(
         // After the triggers to let them handle changes, before the image processing to start capturing values before
         processingState.clearIterationState()
 
-        // If there is a held event and if it has been disabled, release the held finger
+        // If there is a held event, verify the user didn't lift the held finger by touching the screen, and if it has
+        // been disabled, release the held finger
         val heldEvent = actionExecutor.getHeldEvent()
-        if (heldEvent != null && !processingState.isEventEnabled(heldEvent.id.databaseId)) {
-            releaseHeldEvent()
+        println("TOTO: heldEvent $heldEvent")
+        if (heldEvent != null) {
+            if (!processingState.isEventEnabled(heldEvent.id.databaseId) || !actionExecutor.checkHeldFinger()) {
+                Log.d(TAG, "Held event ${heldEvent.name} is disabled or its finger has been lifted, releasing it")
+                releaseHeldEvent()
+            }
         }
 
         // Handle the image detection
@@ -245,21 +251,24 @@ internal class ScenarioProcessor(
     }
 
     private suspend fun releaseHeldEventIfUnfulfilled(heldEvent: Event) {
-        progressListener?.onEventProcessingStarted(heldEvent)
+        //progressListener?.onEventProcessingStarted(heldEvent)
         val results = conditionsVerifier.verifyConditions(
             operator = heldEvent.conditionOperator,
             conditions = heldEvent.conditions,
         )
-        progressListener?.onEventProcessingCompleted(
+        /*progressListener?.onEventProcessingCompleted(
             event = heldEvent,
             fulfilled = results.fulfilled == true,
             results = when (heldEvent) {
                 is ScreenEvent -> results.getAllScreenConditionsResults()
                 is TriggerEvent -> results.getAllTriggerConditionsResults()
             },
-        )
+        )*/
 
-        if (results.fulfilled != true) releaseHeldEvent()
+        if (results.fulfilled != true) {
+            Log.d(TAG, "Held event ${heldEvent.name} is unfulfilled, releasing it; results=$results")
+            releaseHeldEvent()
+        }
     }
 
     private suspend fun releaseHeldEvent() {
@@ -270,3 +279,5 @@ internal class ScenarioProcessor(
         if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent)
     }
 }
+
+private const val TAG = "ScenarioProcessor"

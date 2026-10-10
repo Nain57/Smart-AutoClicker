@@ -22,8 +22,8 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.domain.model.AND
 import com.buzbuz.smartautoclicker.core.domain.model.OR
 import com.buzbuz.smartautoclicker.core.domain.model.action.Gesture

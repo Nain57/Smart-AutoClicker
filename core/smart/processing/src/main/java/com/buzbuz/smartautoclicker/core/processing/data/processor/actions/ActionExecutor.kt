@@ -17,15 +17,12 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor.actions
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
 import android.content.Intent as AndroidIntent
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
-import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.ResolvedFinger
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
 import com.buzbuz.smartautoclicker.core.common.actions.text.findCounterReferences
 import com.buzbuz.smartautoclicker.core.common.actions.text.replaceCounterReferences
@@ -62,7 +59,7 @@ internal class ActionExecutor(
     private val androidExecutor: AndroidActionExecutor,
     private val processingState: ProcessingState,
     randomize: Boolean,
-    unblockWorkaroundEnabled: Boolean = false,
+    private val unblockWorkaroundEnabled: Boolean = false,
 ) {
 
     init { androidExecutor.resetState() }
@@ -73,25 +70,18 @@ internal class ActionExecutor(
     private val gestureBuilder: AndroidGestureBuilder = AndroidGestureBuilder.createNewBuilder(random)
     private val fingerResolver: FingerResolver = FingerResolver(processingState, gestureBuilder)
 
-    private val unblockGestureScheduler: UnblockGestureScheduler? =
-        if (unblockWorkaroundEnabled) UnblockGestureScheduler()
-        else null
-
 
     suspend fun onScenarioLoopFinished() {
-        if (unblockGestureScheduler?.shouldTrigger() != true) return
-
         // The unblock gesture continues nothing, so the system would cancel the held pointer to dispatch it.
         if (androidExecutor.getHeldPointer() != null) {
             Log.i(TAG, "Skipping unblock gesture injection, a gesture is holding a finger on the screen")
             return
         }
 
-        withContext(Dispatchers.Main) {
-            Log.i(TAG, "Injecting unblock gesture")
-            androidExecutor.dispatchGesture(
-                GestureDescription.Builder().buildUnblockGesture()
-            )
+        if (unblockWorkaroundEnabled) {
+            withContext(Dispatchers.Main) {
+                androidExecutor.dispatchPixelWorkaroundGestureIfNeeded()
+            }
         }
     }
 
@@ -122,6 +112,21 @@ internal class ActionExecutor(
 
     fun isEventHeld(event: Event): Boolean =
         getHeldEvent()?.id == event.id
+
+    /**
+     * Verify the pointer a gesture is holding on the screen, if any, has not been lifted by the system.
+     * @return true if it is still held, false if it has been lost or if nothing was held.
+     */
+    suspend fun checkHeldFinger(): Boolean {
+        Log.d(TAG, "Check held pointer state")
+
+        if (androidExecutor.getHeldPointer() == null) return false
+
+        withContext(Dispatchers.Main) {
+            androidExecutor.checkHeldPointer()
+        }
+        return androidExecutor.getHeldPointer() != null
+    }
 
     /** Lift the pointer a gesture is holding on the screen, if any. */
     suspend fun releaseHeldFinger() {

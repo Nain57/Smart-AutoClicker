@@ -17,12 +17,12 @@
 package com.buzbuz.smartautoclicker.core.common.actions
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.GestureDescription
 import android.content.Intent
+
 import com.buzbuz.smartautoclicker.core.base.Dumpable
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.BuiltGesture
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.HeldPointer
 import com.buzbuz.smartautoclicker.core.common.actions.model.ActionNotificationRequest
+import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
+import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
 interface AndroidActionExecutor: Dumpable {
 
@@ -56,37 +56,6 @@ interface AndroidActionExecutor: Dumpable {
     fun getHeldPointer(): HeldPointer?
 
     /**
-     * Dispatch a gesture to the touch screen.
-     *
-     * Any gestures currently in progress, whether from the user, this service, or another service, will be cancelled.
-     * Method will return only once the gesture is dispatched.
-     *
-     * The gesture will be dispatched as if it were performed directly on the screen by a user, so the events may be
-     * affected by features such as magnification and explore by touch.
-     *
-     * <strong>Note:</strong> In order to dispatch gestures, your service must declare the capability by setting the
-     * android.R.styleable.AccessibilityService_canPerformGestures property in its meta-data. For more information,
-     * see SERVICE_META_DATA.
-     *
-     * @param gestureDescription The gesture to dispatch
-     */
-    suspend fun dispatchGesture(gestureDescription: GestureDescription)
-
-    /**
-     * Dispatch a chain of gestures, each one continuing the pointers left down by the previous one.
-     *
-     * A finger crossing several motions can't be described by a single GestureDescription: the system only honours a
-     * continued stroke when it is found in the first step of a separately dispatched gesture. Such a chain must be
-     * dispatched in one go, without waiting in between, otherwise the fingers would freeze on the screen between two
-     * of its gestures.
-     *
-     * Method will return only once the whole chain is dispatched.
-     *
-     * @param gestureDescriptions the gestures to dispatch, in order.
-     */
-    suspend fun dispatchGestureChain(gestureDescriptions: List<GestureDescription>)
-
-    /**
      * Dispatch a gesture built by an AndroidGestureBuilder, and keep track of the pointer it leaves down.
      *
      * Method will return only once the whole gesture is dispatched.
@@ -96,11 +65,28 @@ interface AndroidActionExecutor: Dumpable {
     suspend fun dispatchBuiltGesture(gesture: BuiltGesture)
 
     /**
+     * Verify the pointer left down on the screen by a gesture holding its first finger, if any, is still held.
+     *
+     * The system lifts it without notice when the user touches the screen. Once lost, [getHeldPointer] returns null.
+     * Method will return only once the system has answered.
+     */
+    suspend fun checkHeldPointer()
+
+    /**
      * Lift the pointer left down on the screen by a gesture holding its first finger, if any.
      *
      * Method will return only once the pointer is lifted.
      */
     suspend fun releaseHeldPointer()
+
+    /**
+     * Some pixel devices have an OS issue on Android 15 & 16.
+     * Injecting a double tap somewhere seems to fix the problem most of the time. This method will take care of
+     * injecting this gesture, it will avoid spamming it by skipping unblock requests to close to the previous one.
+     *
+     * @see [com.buzbuz.smartautoclicker.core.base.workarounds.isImpactedByInputBlock]
+     */
+    suspend fun dispatchPixelWorkaroundGestureIfNeeded()
 
     /**
      * Performs a global action.

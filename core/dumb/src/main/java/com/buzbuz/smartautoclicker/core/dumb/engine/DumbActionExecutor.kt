@@ -16,16 +16,11 @@
  */
 package com.buzbuz.smartautoclicker.core.dumb.engine
 
-import android.accessibilityservice.GestureDescription
-import android.graphics.Path
 import android.util.Log
 
-import com.buzbuz.smartautoclicker.core.base.workarounds.UnblockGestureScheduler
-import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.AndroidActionExecutor
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.AndroidGestureBuilder
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.buildSingleStroke
-import com.buzbuz.smartautoclicker.core.common.actions.gesture.moveTo
+import com.buzbuz.smartautoclicker.core.common.actions.gesture.builder.AndroidGestureBuilder
+import com.buzbuz.smartautoclicker.core.common.actions.model.ResolvedFinger
 import com.buzbuz.smartautoclicker.core.common.actions.utils.getPauseDurationMs
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.Repeatable
@@ -48,21 +43,15 @@ class DumbActionExecutor @Inject constructor(
 
     private var unblockWorkaroundEnabled: Boolean = false
 
-    private val unblockGestureScheduler: UnblockGestureScheduler? =
-        if (unblockWorkaroundEnabled) UnblockGestureScheduler()
-        else null
-
     fun setUnblockWorkaround(isEnabled: Boolean) {
         unblockWorkaroundEnabled = isEnabled
     }
 
     suspend fun onScenarioLoopFinished() {
-        if (unblockGestureScheduler?.shouldTrigger() == true) {
+        if (unblockWorkaroundEnabled) {
             withContext(Dispatchers.Main) {
                 Log.i(TAG, "Injecting unblock gesture")
-                androidExecutor.dispatchGesture(
-                    GestureDescription.Builder().buildUnblockGesture()
-                )
+                androidExecutor.dispatchPixelWorkaroundGestureIfNeeded()
             }
         }
     }
@@ -76,38 +65,35 @@ class DumbActionExecutor @Inject constructor(
         }
     }
 
-    private suspend fun executeDumbGesture(dumbGesture: DumbAction.DumbGesture) {
-        val gestureBuilder = AndroidGestureBuilder.createNewBuilder(if (randomize) random else null)
-        val builtGesture = gestureBuilder
-            .build(dumbGesture.toResolvedFingers(gestureBuilder), dumbGesture.name) ?: return
+    private suspend fun executeDumbClick(dumbClick: DumbAction.DumbClick) {
+        executeRepeatableGesture(dumbClick, dumbClick.name) { gestureBuilder ->
+            listOfNotNull(dumbClick.toResolvedFinger(gestureBuilder))
+        }
+    }
 
-        dumbGesture.repeat {
+    private suspend fun executeDumbGesture(dumbGesture: DumbAction.DumbGesture) {
+        executeRepeatableGesture(dumbGesture, dumbGesture.name) { gestureBuilder ->
+            dumbGesture.toResolvedFingers(gestureBuilder)
+        }
+    }
+
+    private suspend fun executeRepeatableGesture(
+        repeatable: Repeatable,
+        name: String,
+        resolveFingers: (AndroidGestureBuilder) -> List<ResolvedFinger>,
+    ) {
+        val gestureBuilder = AndroidGestureBuilder.createNewBuilder(if (randomize) random else null)
+        val builtGesture = gestureBuilder.build(resolveFingers(gestureBuilder), name) ?: return
+
+        repeatable.repeat {
             withContext(Dispatchers.Main) {
                 androidExecutor.dispatchBuiltGesture(builtGesture)
             }
         }
     }
 
-    private suspend fun executeDumbClick(dumbClick: DumbAction.DumbClick) {
-        val clickGesture = GestureDescription.Builder().buildSingleStroke(
-            path = Path().apply { moveTo(dumbClick.position, random) },
-            durationMs = dumbClick.pressDurationMs,
-            random = random,
-        )
-
-        executeRepeatableGesture(clickGesture, dumbClick)
-    }
-
     private suspend fun executeDumbPause(dumbPause: DumbAction.DumbPause) {
         delay(dumbPause.pauseDurationMs.getPauseDurationMs(random).milliseconds)
-    }
-
-    private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeatable) {
-        repeatable.repeat {
-            withContext(Dispatchers.Main) {
-                androidExecutor.dispatchGesture(gesture)
-            }
-        }
     }
 }
 
