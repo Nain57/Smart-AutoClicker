@@ -243,8 +243,10 @@
     <string name="tutorial_slideshow_actions_list_title">Lista de ações</string>
     <string name="tutorial_slideshow_actions_list_desc">Aprenda como a lista de ações é executada</string>
     <string name="tutorial_slideshow_actions_list_step_1_text">As ações são executadas em ordem, uma após a outra.
-        Você pode alterar a ordem de uma ação usando os botões &lt;&lt; e &gt;&gt;, ou tocando diretamente no seu
-        número de índice.\n\nTente manter suas listas de ações curtas. Um autoclicker comum realiza uma ação por evento
+        Você pode visualizar a ação seguinte/anterior deslizando para a esquerda/direita em qualquer lugar da
+        tela.\n\nVocê pode alterar a ordem de uma ação usando os botões &lt;&lt; e &gt;&gt;, ou tocando diretamente
+        na sua caixa de índice.</string>
+    <string name="tutorial_slideshow_actions_list_step_2_text">Tente manter suas listas de ações curtas. Um autoclicker comum realiza uma ação por evento
         — esse é o modelo a seguir. Se você se encontrar adicionando muitas ações a um único evento, geralmente é sinal
         de que o trabalho deve ser dividido em vários eventos, cada um reagindo ao que está realmente na tela. Essa é a
         filosofia ver-e-agir do Klick\'r: detectar primeiro, depois agir.</string>

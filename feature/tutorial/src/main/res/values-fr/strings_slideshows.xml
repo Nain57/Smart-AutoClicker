@@ -250,8 +250,10 @@
     <string name="tutorial_slideshow_actions_list_title">Liste d\'actions</string>
     <string name="tutorial_slideshow_actions_list_desc">Apprenez comment la liste d\'actions est exécutée</string>
     <string name="tutorial_slideshow_actions_list_step_1_text">Les actions sont exécutées dans l\'ordre, l\'une après
-        l\'autre. Vous pouvez modifier l\'ordre d\'une action à l\'aide des boutons &lt;&lt; et &gt;&gt;, ou en appuyant
-        directement sur son numéro d\'index.\n\nEssayez de garder vos listes d\'actions courtes. Un autoclicker classique
+        l\'autre. Vous pouvez visualiser l\'action suivante/précédente en balayant vers la gauche/droite n\'importe où
+        sur l\'écran.\n\nVous pouvez modifier l\'ordre d\'une action à l\'aide des boutons &lt;&lt; et &gt;&gt;, ou
+        en appuyant directement sur sa case d\'index.</string>
+    <string name="tutorial_slideshow_actions_list_step_2_text">Essayez de garder vos listes d\'actions courtes. Un autoclicker classique
         n\'effectue qu\'une action par événement — c\'est le modèle à suivre. Si vous vous retrouvez à ajouter beaucoup
         d\'actions à un seul événement, c\'est généralement le signe que le travail devrait être réparti sur plusieurs
         événements, chacun réagissant à ce qui est réellement affiché à l\'écran. C\'est la philosophie voir-et-agir

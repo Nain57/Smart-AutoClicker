@@ -30,5 +30,10 @@ internal fun getActionsListSlideshow() =
                 tutorialImage = R.drawable.tutorial_instructions_action_order,
                 tutorialImageFormat = TutorialSlideshow.ImageFormat.IMAGE_LARGE,
             ),
+            TutorialSlideshow.SlideshowItem(
+                tutorialTextRes = R.string.tutorial_slideshow_actions_list_step_2_text,
+                tutorialImage = R.drawable.ic_priority,
+                tutorialImageFormat = TutorialSlideshow.ImageFormat.ICON,
+            ),
         ),
     )
