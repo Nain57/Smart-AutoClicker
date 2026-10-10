@@ -125,7 +125,7 @@ internal class ScenarioProcessor(
                 startHeldEventCooldown(heldEvent)
             }
         }
-        notifyHeldEventChangeIfNeeded(heldEvent)
+        notifyHeldEventChangeIfNeeded(actionExecutor.getHeldEvent())
 
         // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
@@ -235,6 +235,10 @@ internal class ScenarioProcessor(
     private suspend fun executeEventActions(event: Event, results: ConditionsResults) {
         val previousHeldEvent = actionExecutor.getHeldEvent()
         val executionStartTimeMs = System.currentTimeMillis()
+
+        // The system may have dropped the held pointer since the last notification: notify it before this event
+        // holds again, or a new hold by the same event would be seen as the continuation of the lost one.
+        notifyHeldEventChangeIfNeeded(previousHeldEvent)
 
         actionExecutor.executeActions(event, results)
         progressListener?.onEventActionsExecuted(

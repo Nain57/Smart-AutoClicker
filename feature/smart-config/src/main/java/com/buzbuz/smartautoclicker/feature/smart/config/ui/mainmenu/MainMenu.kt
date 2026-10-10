@@ -94,6 +94,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     /** Adapter upon actions being executed while in live debugging. */
     private val debugLiveActionsAdapter: LiveDebuggingActionsAdapter = LiveDebuggingActionsAdapter()
 
+    /** The ui state currently displayed. Null if none has been applied since the menu was started. */
+    private var currentUiState: MainMenuUiState? = null
+
     /** The coroutine job for the observable used in debug mode. Null when not in debug mode. */
     private var debugObservableJob: Job? = null
 
@@ -135,12 +138,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.isStartButtonEnabled.collect(::updatePlayPauseButtonEnabledState) }
-                launch { viewModel.isMediaProjectionStarted.collect(::updateProjectionErrorBadge) }
-                launch { viewModel.detectionState.collect(::updateDetectionState) }
+                launch { viewModel.uiState.collect(::updateUiState) }
                 launch { viewModel.nativeLibError.collect(::showNativeLibErrorDialogIfNeeded) }
                 launch { viewModel.screenCaptureError.collect(::showScreenCaptureErrorDialogIfNeeded) }
-                launch { debuggingViewModel.isDebugging.collect(::updateDebugOverlayViewVisibility) }
             }
         }
     }
@@ -160,7 +160,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
     override fun onStop() {
         super.onStop()
         viewModel.stopViewMonitoring()
-        viewBinding.btnPlay.tag = null
+        currentUiState = null
     }
 
     override fun onDestroy() {
@@ -202,7 +202,7 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         val bgSize = super.getWindowMaximumSize(backgroundView)
         return Size(
             bgSize.width + context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_width),
-            bgSize.height,
+            maxOf(bgSize.height, context.resources.getDimensionPixelSize(R.dimen.overlay_debug_panel_height)),
         )
     }
 
@@ -243,45 +243,44 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         viewModel.toggleDetection(context)
     }
 
-    /** Refresh the play menu item according to the scenario state. */
-    private fun updatePlayPauseButtonEnabledState(canStartDetection: Boolean) =
-        setMenuItemViewEnabled(viewBinding.btnPlay, canStartDetection)
+    private fun updateUiState(uiState: MainMenuUiState?) {
+        uiState ?: return
 
-    /** Refresh the menu layout according to the detection state. */
-    private fun updateDetectionState(newState: UiState) {
-        val currentState = viewBinding.btnPlay.tag
-        if (currentState == newState) return
+        val previousUiState = currentUiState
+        if (previousUiState == uiState) return
+        currentUiState = uiState
 
-        viewBinding.btnPlay.tag = newState
-        when (newState) {
-            UiState.Idle -> {
-                if (currentState == null) {
-                    viewBinding.btnStop.isVisible = true
-                    viewBinding.btnClickList.isVisible = true
-                    playPauseButtonController.toState1(false)
-                } else {
-                    animateLayoutChanges {
-                        setMenuItemVisibility(viewBinding.btnStop, true)
-                        setMenuItemVisibility(viewBinding.btnClickList, true)
-                        playPauseButtonController.toState1(true)
-                    }
-                }
+        setMenuItemViewEnabled(viewBinding.btnPlay, uiState.isPlayButtonEnabled)
+        viewBinding.errorBadge.isVisible = uiState.isProjectionErrorVisible
+
+        when {
+            previousUiState == null -> {
+                viewBinding.btnStop.isVisible = !uiState.isDetecting
+                viewBinding.btnClickList.isVisible = !uiState.isDetecting
+                viewBinding.layoutDebug.isVisible = uiState.isDebugPanelVisible
+                if (uiState.isDetecting) playPauseButtonController.toState2(false)
+                else playPauseButtonController.toState1(false)
             }
 
-            UiState.Detecting -> {
-                if (currentState == null) {
-                    viewBinding.btnStop.isVisible = false
-                    viewBinding.btnClickList.isVisible = false
-                    playPauseButtonController.toState2(false)
-                } else {
-                    animateLayoutChanges {
-                        setMenuItemVisibility(viewBinding.btnStop, false)
-                        setMenuItemVisibility(viewBinding.btnClickList, false)
-                        playPauseButtonController.toState2(true)
-                    }
-                }
+            // The debug panel visibility must be changed in the same animation than the menu items, or the window
+            // resize will be computed on an outdated layout.
+            previousUiState.isDetecting != uiState.isDetecting -> animateLayoutChanges {
+                setMenuItemsVisibility(
+                    mapOf(
+                        viewBinding.btnStop to !uiState.isDetecting,
+                        viewBinding.btnClickList to !uiState.isDetecting,
+                        viewBinding.layoutDebug to uiState.isDebugPanelVisible,
+                    )
+                )
+                if (uiState.isDetecting) playPauseButtonController.toState2(true)
+                else playPauseButtonController.toState1(true)
             }
+
+            // Menu items are not changing, so there is no transitions to wait for: resize the window directly.
+            else -> setMenuItemVisibility(viewBinding.layoutDebug, uiState.isDebugPanelVisible)
         }
+
+        updateDebugValuesObservation(uiState.isDebugPanelVisible)
     }
 
     private fun updateVisibilityForPaywall(isHidden: Boolean) {
@@ -294,25 +293,20 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         }
     }
 
-    private fun updateProjectionErrorBadge(isProjectionStarted: Boolean) {
-        viewBinding.errorBadge.visibility = if (isProjectionStarted) View.GONE else View.VISIBLE
-    }
-
     /**
-     * Change the debug state of this UI.
-     * @param isVisible true when the debug view should be shown, false to hide it.
+     * Start or stop the observation of the live debugging values.
+     * @param isDebugging true when the debug panel is shown, false when it is hidden.
      */
-    private fun updateDebugOverlayViewVisibility(isVisible: Boolean) {
-        if (isVisible && debugObservableJob == null) {
-            viewBinding.layoutDebug.visibility = View.VISIBLE
+    private fun updateDebugValuesObservation(isDebugging: Boolean) {
+        if (isDebugging && debugObservableJob == null) {
             debugObservableJob = observeDebugValues()
 
-        } else if (!isVisible && debugObservableJob != null) {
+        } else if (!isDebugging && debugObservableJob != null) {
             debugObservableJob?.cancel()
             debugObservableJob = null
 
             updateLiveDebugUiState(null)
-            viewBinding.layoutDebug.visibility = View.GONE
+            updateHeldEvent(null)
         }
     }
 
@@ -324,6 +318,9 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch {
                 debuggingViewModel.debugLastPositive.collect(::updateLiveDebugUiState)
+            }
+            launch {
+                debuggingViewModel.debugHeldEvent.collect(::updateHeldEvent)
             }
         }
     }
@@ -346,6 +343,13 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             }
 
             debugLiveActionsAdapter.submitList(uiState?.actions)
+        }
+    }
+
+    private fun updateHeldEvent(heldEventText: String?) {
+        viewBinding.heldEvent.apply {
+            text = heldEventText
+            setLeftCompoundDrawable(if (heldEventText != null) R.drawable.ic_hold_touch else null)
         }
     }
 

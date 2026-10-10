@@ -87,17 +87,13 @@ class MainMenuModel @Inject constructor(
         .shouldShowTip(Tip.STOP_WITH_VOLUME_DOWN)
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
-    /** The current of the detection. */
-    val detectionState: StateFlow<UiState> = smartProcessingRepository.detectionState
-        .map { if (it == DetectionState.DETECTING) UiState.Detecting else UiState.Idle }
+    /** Tells if the detection is currently running. */
+    private val isDetecting: StateFlow<Boolean> = smartProcessingRepository.detectionState
+        .map { it == DetectionState.DETECTING }
         .distinctUntilChanged()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            UiState.Idle,
-        )
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
+    private val isMediaProjectionStarted: StateFlow<Boolean> = smartProcessingRepository.detectionState
         .map { it == DetectionState.RECORDING || it == DetectionState.DETECTING }
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
@@ -110,13 +106,28 @@ class MainMenuModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     /** Tells if the scenario can be started. Edited scenario must be synchronized and engine should allow it. */
-    val isStartButtonEnabled: Flow<Boolean> = combine(
+    private val isStartButtonEnabled: Flow<Boolean> = combine(
         smartProcessingRepository.canStartDetection,
         editionRepository.isEditionSynchronized,
         isMediaProjectionStarted
     ) { canStartDetection, isSynchronized, isProjectionStarted ->
         (canStartDetection || !isProjectionStarted) && isSynchronized
     }
+
+    /** The state of the menu. Null until all values are known. */
+    val uiState: StateFlow<MainMenuUiState?> = combine(
+        isDetecting,
+        isStartButtonEnabled,
+        isMediaProjectionStarted,
+        debuggingRepository.isLiveDebugging,
+    ) { isDetecting, isStartEnabled, isProjectionStarted, isLiveDebugging ->
+        MainMenuUiState(
+            isDetecting = isDetecting,
+            isPlayButtonEnabled = isStartEnabled,
+            isProjectionErrorVisible = !isProjectionStarted,
+            isDebugPanelVisible = isLiveDebugging,
+        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** Tells if the detector can't work due to a native library load error. */
     val nativeLibError: Flow<Boolean> = smartProcessingRepository.detectionState
@@ -135,18 +146,16 @@ class MainMenuModel @Inject constructor(
 
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context) {
-        when (detectionState.value) {
-            UiState.Detecting -> stopDetection()
-            UiState.Idle -> {
-                if (shouldStartPaywall()) startPaywall(context)
-                else startDetection(context)
-            }
+        when {
+            isDetecting.value -> stopDetection()
+            shouldStartPaywall() -> startPaywall(context)
+            else -> startDetection(context)
         }
     }
 
     /** Stop the detection. Returns true if it was started, false if not. */
     fun stopDetection(): Boolean {
-        if (detectionState.value !is UiState.Detecting) return false
+        if (!isDetecting.value) return false
 
         smartProcessingRepository.stopDetection()
         return true
@@ -231,15 +240,10 @@ class MainMenuModel @Inject constructor(
         !isMediaProjectionStarted.value
 
     fun shouldShowStopVolumeDownTutorialDialog(): Boolean =
-        detectionState.value == UiState.Idle && shouldShowStopWithVolumeDownTip.value
+        !isDetecting.value && shouldShowStopWithVolumeDownTip.value
 
     private fun UserBillingState.isAdRequested(): Boolean =
         this == UserBillingState.AD_REQUESTED
-}
-
-sealed class UiState {
-    data object Detecting: UiState()
-    data object Idle: UiState()
 }
 
 private const val TAG = "MainMenuViewModel"
