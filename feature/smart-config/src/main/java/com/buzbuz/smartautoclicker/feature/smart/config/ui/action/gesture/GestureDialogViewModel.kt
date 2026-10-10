@@ -358,6 +358,18 @@ class GestureDialogViewModel @Inject constructor(
         }
     }
 
+    fun setItemReleaseWhen(item: GestureDialogUiStateItem, whenItem: ReleaseWhenDropdownItem) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || selectedFinger.value != 0) return
+
+        updateMotionAtItem(item) { motion ->
+            when (motion) {
+                is GestureFingerMotion.Release ->
+                    motion.copy(holdUntilUnfulfilled = whenItem == ReleaseWhenDropdownItem.OnceUnfulfilled)
+                else -> motion
+            }
+        }
+    }
+
     private fun updateMotionMainPosition(
         item: GestureDialogUiStateItem,
         transform: (GesturePosition) -> GesturePosition,
@@ -456,7 +468,18 @@ class GestureDialogViewModel @Inject constructor(
 
                     is GestureFingerMotion.Release -> {
                         add(GestureDialogUiStateItem.Add(selectedFinger))
-                        add(GestureDialogUiStateItem.Release(selectedFinger))
+                        add(
+                            GestureDialogUiStateItem.Release(
+                                id = motion.id,
+                                isCollapsed = isCollapsed,
+                                fingerIndex = selectedFinger,
+                                isWhenFieldVisible = selectedFinger == 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O,
+                                whenItem =
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && motion.holdUntilUnfulfilled)
+                                        ReleaseWhenDropdownItem.OnceUnfulfilled
+                                    else ReleaseWhenDropdownItem.Now,
+                            )
+                        )
                     }
                 }
             }

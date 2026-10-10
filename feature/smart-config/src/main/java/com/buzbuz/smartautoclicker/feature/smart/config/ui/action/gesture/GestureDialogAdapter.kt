@@ -65,6 +65,7 @@ class GestureDialogAdapter(
     private val onXValueChanged: (GestureDialogUiStateItem, String) -> Unit,
     private val onYValueChanged: (GestureDialogUiStateItem, String) -> Unit,
     private val onDurationChanged: (GestureDialogUiStateItem, String) -> Unit,
+    private val onReleaseWhenSelected: (GestureDialogUiStateItem, ReleaseWhenDropdownItem) -> Unit,
     private val bitmapProvider: (ScreenCondition.Image, onBitmapLoaded: (Bitmap?) -> Unit) -> Job?,
 ) : ListAdapter<GestureDialogUiStateItem, BaseGestureViewHolder<*>>(GestureMotionItemDiffCallback) {
 
@@ -134,6 +135,8 @@ class GestureDialogAdapter(
 
             R.layout.item_gesture_release -> GestureReleaseViewHolder(
                 ItemGestureReleaseBinding.inflate(inflater, parent, false),
+                onCollapseClicked = onExpandCollapseClicked,
+                onWhenItemSelected = onReleaseWhenSelected,
             )
 
             R.layout.item_gesture_add -> GestureAddViewHolder(
@@ -171,9 +174,10 @@ class GestureDialogAdapter(
                 (getItem(position) as? GestureDialogUiStateItem.Press)?.let { holder.bind(it) }
             is GestureWaitViewHolder ->
                 (getItem(position) as? GestureDialogUiStateItem.Wait)?.let { holder.bind(it) }
+            is GestureReleaseViewHolder ->
+                (getItem(position) as? GestureDialogUiStateItem.Release)?.let { holder.bind(it) }
 
-            is GestureAddViewHolder,
-            is GestureReleaseViewHolder -> Unit
+            is GestureAddViewHolder -> Unit
         }
     }
 
@@ -205,9 +209,6 @@ private object GestureMotionItemDiffCallback : DiffUtil.ItemCallback<GestureDial
             is GestureDialogUiStateItem.Add ->
                 newItem is GestureDialogUiStateItem.Add && oldItem.fingerIndex == newItem.fingerIndex
 
-            is GestureDialogUiStateItem.Release ->
-                newItem is GestureDialogUiStateItem.Release && oldItem.fingerIndex == newItem.fingerIndex
-
             is GestureDialogUiStateItem.Header -> true
         }
 
@@ -229,6 +230,9 @@ private object GestureMotionItemDiffCallback : DiffUtil.ItemCallback<GestureDial
                      oldItem.position == newItem.position) -> TEXT_FIELD_CHANGED
 
             is GestureDialogUiStateItem.Wait if newItem is GestureDialogUiStateItem.Wait &&
+                    oldItem.isCollapsed == newItem.isCollapsed -> TEXT_FIELD_CHANGED
+
+            is GestureDialogUiStateItem.Release if newItem is GestureDialogUiStateItem.Release &&
                     oldItem.isCollapsed == newItem.isCollapsed -> TEXT_FIELD_CHANGED
 
             is GestureDialogUiStateItem.Header if newItem is GestureDialogUiStateItem.Header &&

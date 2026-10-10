@@ -30,7 +30,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginVertical="@dimen/margin_vertical_default">
 
         <com.google.android.material.textview.MaterialTextView
@@ -39,10 +38,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_vertical_small"
-            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/motion_desc"
             android:text="@string/item_title_gesture_release"/>
@@ -52,13 +51,44 @@
             style="@style/AppTheme.TextAppearance.ListItemSubText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
             app:layout_constraintTop_toBottomOf="@id/motion_title"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider_top"
             android:gravity="center_vertical"
             android:text="@string/item_desc_gesture_release"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_expand_collapse"
+            style="@style/AppTheme.Widget.IconButton"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/motion_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider_top"
+            app:icon="@drawable/ic_chevron_up"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toTopOf="@id/field_when"/>
+
+        <include layout="@layout/include_input_field_dropdown"
+            android:id="@+id/field_when"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginVertical="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_top"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
