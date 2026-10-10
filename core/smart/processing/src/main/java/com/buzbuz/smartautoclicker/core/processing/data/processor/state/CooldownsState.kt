@@ -17,7 +17,7 @@
 package com.buzbuz.smartautoclicker.core.processing.data.processor.state
 
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
-import kotlin.math.min
+import kotlin.math.max
 
 interface ICooldownsState {
 
@@ -39,7 +39,7 @@ internal class CooldownsState : ICooldownsState {
     private val activeCooldowns: MutableMap<Long, Long> = mutableMapOf()
 
     override fun startCooldownIfNeeded(screenEvent: ScreenEvent, startTimeMs: Long) {
-        activeCooldowns[screenEvent.id.databaseId] = min(1, startTimeMs + screenEvent.cooldownMs)
+        activeCooldowns[screenEvent.id.databaseId] = max(1, startTimeMs + screenEvent.cooldownMs)
     }
 
     override fun removeCooldown(screenEvent: ScreenEvent) {

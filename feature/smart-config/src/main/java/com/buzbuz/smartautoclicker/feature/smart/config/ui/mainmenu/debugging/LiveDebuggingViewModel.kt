@@ -26,6 +26,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.live.DebugLiveHeldEvent
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.usecase.GetDebugLiveDetectionResultUseCase
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.uistate.action.getIconRes
 import com.buzbuz.smartautoclicker.feature.smart.config.R
@@ -53,6 +54,10 @@ class LiveDebuggingViewModel @Inject constructor(
         .combine(isDebugging) { results, isDebugging -> if (isDebugging) results else null }
         .map { result -> result?.toLastPositiveDebugInfo(context) }
 
+    /** The text describing the event currently holding a pointer on the screen. Null if nothing is held. */
+    val debugHeldEvent: Flow<String?> = debuggingRepository.heldEvent
+        .combine(isDebugging) { heldEvent, isDebugging -> if (isDebugging) heldEvent else null }
+        .map { heldEvent -> heldEvent?.toHeldEventText(context) }
 }
 
 private fun DebugLiveEventOccurrence.toLastPositiveDebugInfo(context: Context): LiveDebuggingUiState =
@@ -70,6 +75,9 @@ private fun List<Action>.toActionItems(): List<LiveDebuggingActionsItem> =
         .map { action -> LiveDebuggingActionsItem(action.getIconRes()) }
         .toMutableList()
         .apply { add(LiveDebuggingActionsItem(R.drawable.ic_more)) }
+
+private fun DebugLiveHeldEvent.toHeldEventText(context: Context): String =
+    "${event.name} - $holdDurationS${context.getString(R.string.dropdown_label_time_unit_s)}"
 
 @DrawableRes
 private fun Event.getDebugIcon(): Int =

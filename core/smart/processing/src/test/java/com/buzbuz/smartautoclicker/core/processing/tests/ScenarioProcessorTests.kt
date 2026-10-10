@@ -1662,6 +1662,46 @@ class ScenarioProcessorTests {
     }
 
     @Test
+    fun heldEvent_pointerLiftedByUser_heldAgain_notifiesNewHold() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        isPointerLiftedByUser = true
+        scenarioProcessor.process(mockScreenBitmap)
+
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventChanged(event)
+            verify(mockProgressListener).onHeldEventChanged(null)
+            verify(mockProgressListener).onHeldEventChanged(event)
+        }
+    }
+
+    @Test
+    fun heldEvent_pointerDroppedBySystem_heldAgain_notifiesNewHold() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+
+        heldPointer = null
+        scenarioProcessor.process(mockScreenBitmap)
+
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventChanged(event)
+            verify(mockProgressListener).onHeldEventChanged(null)
+            verify(mockProgressListener).onHeldEventChanged(event)
+        }
+    }
+
+    @Test
     fun heldEvent_takenOver_notifiesNewHeldEvent() = runTest {
         val condition = createHeldTestCondition(isDetected = true)
         val event1 = newEvent(id = 1L, conditions = listOf(condition), actions = listOf(newHoldGestureAction()))

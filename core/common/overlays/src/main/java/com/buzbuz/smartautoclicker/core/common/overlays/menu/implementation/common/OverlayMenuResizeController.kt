@@ -132,18 +132,26 @@ internal class OverlayMenuResizeController(
 
         // Get the height of all children + the padding.
         // Use measuredHeight as fallback for views that are now visible but not yet laid out (height == 0).
-        val height = resizedContainer.children.fold(0) { acc, child ->
+        val itemsHeight = resizedContainer.children.fold(0) { acc, child ->
             acc + (if (child.isGone) 0 else maxOf(child.height, child.measuredHeight))
         } + resizedContainer.paddingTop + resizedContainer.paddingBottom
 
         val firstChild = (backgroundViewGroup.getChildAt(0) as? ViewGroup)
-        val width = if (firstChild == null || firstChild.id == resizedContainer.id) {
-            resizedContainer.width
-        } else {
-            firstChild.visibleHorizontalContentSpan()
+        if (firstChild == null || firstChild.id == resizedContainer.id) {
+            return Size(resizedContainer.width, itemsHeight)
         }
 
-        return Size(width, height)
+        // The menu items can be displayed next to other views (such as a debug panel) that can be bigger than them.
+        // Measured size is used as views that have just been made visible are not laid out yet.
+        firstChild.measure(
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+        )
+
+        return Size(
+            maxOf(firstChild.visibleHorizontalContentSpan(), firstChild.measuredWidth),
+            maxOf(itemsHeight, firstChild.measuredHeight),
+        )
     }
 }
 
