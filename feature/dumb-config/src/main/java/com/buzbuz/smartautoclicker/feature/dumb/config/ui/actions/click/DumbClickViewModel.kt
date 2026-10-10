@@ -21,76 +21,35 @@ import android.graphics.Point
 
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.dumb.domain.model.DumbAction
-import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.getDumbConfigPreferences
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.putClickPressDurationConfig
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.putClickRepeatCountConfig
 import com.buzbuz.smartautoclicker.feature.dumb.config.data.putClickRepeatDelayConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+
 import javax.inject.Inject
 
-class DumbClickViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-) : ViewModel() {
+class DumbClickViewModel @Inject constructor() : ViewModel() {
 
     private val _editedDumbClick: MutableStateFlow<DumbAction.DumbClick?> = MutableStateFlow(null)
-    private val editedDumbClick: Flow<DumbAction.DumbClick> = _editedDumbClick.filterNotNull()
 
-    /** Tells if the configured dumb click is valid and can be saved. */
-    val isValidDumbClick: Flow<Boolean> = _editedDumbClick
-        .map { it != null && it.isValid() }
-
-    /** The name of the click. */
-    val name: Flow<String> = editedDumbClick
-        .map { it.name }
-        .take(1)
-    /** Tells if the action name is valid or not. */
-    val nameError: Flow<Boolean> = editedDumbClick
-        .map { it.name.isEmpty() }
-
-    /** The duration between the press and release of the click in milliseconds. */
-    val pressDuration: Flow<String> = editedDumbClick
-        .map { it.pressDurationMs.toString() }
-        .take(1)
-    /** Tells if the press duration value is valid or not. */
-    val pressDurationError: Flow<Boolean> = editedDumbClick
-        .map { it.pressDurationMs <= 0 }
-
-    /** The number of times to repeat the action. */
-    val repeatCount: Flow<String> = editedDumbClick
-        .map { it.repeatCount.toString() }
-        .take(1)
-    /** Tells if the repeat count value is valid or not. */
-    val repeatCountError: Flow<Boolean> = editedDumbClick
-        .map { it.repeatCount <= 0 }
-    /** Tells if the action should be repeated infinitely. */
-    val repeatInfiniteState: Flow<Boolean> = editedDumbClick
-        .map { it.isRepeatInfinite }
-    /** The delay, in ms, between two repeats of the action. */
-    val repeatDelay: Flow<String> = editedDumbClick
-        .map { it.repeatDelayMs.toString() }
-        .take(1)
-    /** Tells if the delay is valid or not. */
-    val repeatDelayError: Flow<Boolean> = editedDumbClick
-        .map { !it.isRepeatDelayValid() }
-
-    /** Subtext for the position selector. */
-    val clickPositionText: Flow<String> = editedDumbClick
-        .map { dumbClick ->
-            context.getString(
-                R.string.item_desc_dumb_click_on_position,
-                dumbClick.position.x,
-                dumbClick.position.y,
-            )
-        }
+    /** UI state of the DumbClickDialog. */
+    val uiState: StateFlow<DumbClickDialogUiState> = _editedDumbClick
+        .map { click -> click?.toUiState() ?: DumbClickDialogUiState() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(3_000),
+            DumbClickDialogUiState(),
+        )
 
     fun setEditedDumbClick(click: DumbAction.DumbClick) {
         _editedDumbClick.value = click.copy()
@@ -100,29 +59,38 @@ class DumbClickViewModel @Inject constructor(
         _editedDumbClick.value
 
     fun setName(newName: String) {
-        _editedDumbClick.value = _editedDumbClick.value?.copy(name = newName)
+        _editedDumbClick.update { click -> click?.copy(name = newName) }
     }
 
     fun setPressDurationMs(durationMs: Long) {
-        _editedDumbClick.value = _editedDumbClick.value?.copy(pressDurationMs = durationMs)
+        _editedDumbClick.update { click -> click?.copy(pressDurationMs = durationMs) }
     }
 
     fun setRepeatCount(repeatCount: Int) {
-        _editedDumbClick.value = _editedDumbClick.value?.copy(repeatCount = repeatCount)
+        _editedDumbClick.update { click -> click?.copy(repeatCount = repeatCount) }
     }
 
     fun toggleInfiniteRepeat() {
-        val currentValue = _editedDumbClick.value?.isRepeatInfinite ?: return
-        _editedDumbClick.value = _editedDumbClick.value?.copy(isRepeatInfinite = !currentValue)
+        _editedDumbClick.update { click -> click?.copy(isRepeatInfinite = !click.isRepeatInfinite) }
     }
 
     fun setRepeatDelay(delayMs: Long) {
-        _editedDumbClick.value = _editedDumbClick.value?.copy(repeatDelayMs = delayMs)
+        _editedDumbClick.update { click -> click?.copy(repeatDelayMs = delayMs) }
     }
 
     fun setPosition(position: Point?) {
         position ?: return
-        _editedDumbClick.value = _editedDumbClick.value?.copy(position = position)
+        _editedDumbClick.update { click -> click?.copy(position = position) }
+    }
+
+    fun setPositionX(newXValue: String) {
+        val newX = newXValue.toIntOrNull() ?: 0
+        _editedDumbClick.update { click -> click?.copy(position = Point(newX, click.position.y)) }
+    }
+
+    fun setPositionY(newYValue: String) {
+        val newY = newYValue.toIntOrNull() ?: 0
+        _editedDumbClick.update { click -> click?.copy(position = Point(click.position.x, newY)) }
     }
 
     fun saveLastConfig(context: Context) {
@@ -134,4 +102,19 @@ class DumbClickViewModel @Inject constructor(
             }
         }
     }
+
+    private fun DumbAction.DumbClick.toUiState(): DumbClickDialogUiState =
+        DumbClickDialogUiState(
+            canBeSaved = isValid(),
+            name = name,
+            nameError = name.isEmpty(),
+            pressDurationMs = pressDurationMs,
+            pressDurationError = pressDurationMs <= 0,
+            repeatCount = repeatCount,
+            repeatCountError = repeatCount <= 0,
+            isRepeatInfinite = isRepeatInfinite,
+            repeatDelayMs = repeatDelayMs,
+            repeatDelayError = !isRepeatDelayValid(),
+            position = position,
+        )
 }

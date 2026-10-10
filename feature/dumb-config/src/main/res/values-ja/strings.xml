@@ -7,7 +7,6 @@
     <string name="item_desc_dumb_action_duration">%1$s 間</string>
     <string name="item_desc_dumb_click">画面上の任意の位置をタップします</string>
     <string name="item_desc_dumb_click_details">[%2$d, %3$d] で %1$s 間</string>
-    <string name="item_desc_dumb_click_on_position">%1$d, %2$d をタップ</string>
     <string name="item_desc_dumb_pause">実行を一時停止します</string>
     <string name="item_desc_dumb_pause_details">%1$s 間</string>
     <string name="item_desc_dumb_repeat_count">%1$d 回繰り返す</string>

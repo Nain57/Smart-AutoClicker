@@ -23,8 +23,8 @@ import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 
-import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputWithCheckboxBinding
 import com.buzbuz.smartautoclicker.core.ui.utils.OnAfterTextChangedListener
 
@@ -79,7 +79,17 @@ fun IncludeFieldTextInputWithCheckboxBinding.setButtonVisibility(isVisible: Bool
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.setError(isError: Boolean) {
-    setError(R.string.input_field_error_required, isError)
+    editTextFieldLayout.apply {
+        if (isError) {
+            isErrorEnabled = true
+            error = " "
+            findViewById<View>(com.google.android.material.R.id.textinput_error)?.isVisible = false
+        } else {
+            isErrorEnabled = false
+            error = null
+            findViewById<View>(com.google.android.material.R.id.textinput_error)?.isVisible = true
+        }
+    }
 }
 
 fun IncludeFieldTextInputWithCheckboxBinding.setError(@StringRes messageId: Int, isError: Boolean) {

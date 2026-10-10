@@ -19,11 +19,12 @@ package com.buzbuz.smartautoclicker.core.ui.bindings.fields
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
+import android.view.View
 import android.view.inputmethod.EditorInfo
 
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 
-import com.buzbuz.smartautoclicker.core.ui.R
 import com.buzbuz.smartautoclicker.core.ui.databinding.IncludeFieldTextInputBinding
 import com.buzbuz.smartautoclicker.core.ui.utils.OnAfterTextChangedListener
 
@@ -45,7 +46,17 @@ fun IncludeFieldTextInputBinding.setText(text: String?, type: Int = InputType.TY
 }
 
 fun IncludeFieldTextInputBinding.setError(isError: Boolean) {
-    setError(R.string.input_field_error_required, isError)
+    root.apply {
+        if (isError) {
+            isErrorEnabled = true
+            error = " "
+            findViewById<View>(com.google.android.material.R.id.textinput_error)?.isVisible = false
+        } else {
+            isErrorEnabled = false
+            error = null
+            findViewById<View>(com.google.android.material.R.id.textinput_error)?.isVisible = true
+        }
+    }
 }
 
 fun IncludeFieldTextInputBinding.setError(@StringRes messageId: Int, isError: Boolean) {

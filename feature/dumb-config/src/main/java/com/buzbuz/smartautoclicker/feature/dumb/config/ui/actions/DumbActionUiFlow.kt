@@ -30,6 +30,7 @@ import com.buzbuz.smartautoclicker.core.ui.views.itembrief.renderers.ClickDescri
 import com.buzbuz.smartautoclicker.feature.dumb.config.R
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.click.DumbClickDialog
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.copy.DumbActionCopyDialog
+import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.gesture.DumbGestureDialog
 import com.buzbuz.smartautoclicker.feature.dumb.config.ui.actions.pause.DumbPauseDialog
 
 internal fun OverlayManager.startDumbActionCreationUiFlow(
@@ -49,6 +50,11 @@ internal fun OverlayManager.startDumbActionCreationUiFlow(
                 when (choice) {
                     DumbActionTypeChoice.Copy -> onCopyDumbActionSelected(context, creator, listener)
                     DumbActionTypeChoice.Click -> onDumbClickCreationSelected(context, creator, listener)
+                    DumbActionTypeChoice.Gesture -> startDumbGestureEditionUiFlow(
+                        context,
+                        creator.createNewDumbGesture(),
+                        listener,
+                    )
                     DumbActionTypeChoice.Pause -> startDumbPauseEditionFlow(
                         context,
                         creator.createNewDumbPause(),
@@ -71,12 +77,27 @@ internal fun OverlayManager.startDumbActionEditionUiFlow(
     when (dumbAction) {
         is DumbAction.DumbClick -> startDumbClickEditionUiFlow(context, dumbAction, listener)
         is DumbAction.DumbPause -> startDumbPauseEditionFlow(context, dumbAction, listener)
-        is DumbAction.DumbGesture -> {
-            // TODO: Start the gesture edition flow once the dumb gesture dialog exists.
-            Log.w(TAG, "Dumb gesture edition is not supported yet")
-            listener.onDumbActionCreationCancelled()
-        }
+        is DumbAction.DumbGesture -> startDumbGestureEditionUiFlow(context, dumbAction, listener)
     }
+}
+
+private fun OverlayManager.startDumbGestureEditionUiFlow(
+    context: Context,
+    dumbGesture: DumbAction.DumbGesture,
+    listener: DumbActionUiFlowListener,
+) {
+    Log.d(TAG, "Starting dumb gesture edition ui flow: $dumbGesture")
+
+    navigateTo(
+        context = context,
+        newOverlay = DumbGestureDialog(
+            dumbGesture = dumbGesture,
+            onConfirmClicked = listener.onDumbActionSaved,
+            onDeleteClicked = listener.onDumbActionDeleted,
+            onDismissClicked = listener.onDumbActionCreationCancelled,
+        ),
+        hideCurrent = true,
+    )
 }
 
 private fun OverlayManager.startDumbClickEditionUiFlow(
@@ -180,6 +201,7 @@ internal class DumbActionUiFlowListener(
 internal class DumbActionCreator(
     val createNewDumbClick: (position: Point) -> DumbAction.DumbClick,
     val createNewDumbPause: () -> DumbAction.DumbPause,
+    val createNewDumbGesture: () -> DumbAction.DumbGesture,
     val createDumbActionCopy: ((DumbAction) -> DumbAction)? = null,
 )
 

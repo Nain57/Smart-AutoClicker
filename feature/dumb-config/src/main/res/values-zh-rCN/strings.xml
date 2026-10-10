@@ -7,7 +7,6 @@
     <string name="item_desc_dumb_action_duration">持续 %1$s</string>
     <string name="item_desc_dumb_click">在屏幕上某处点击</string>
     <string name="item_desc_dumb_click_details">于 [%2$d, %3$d] 持续 %1$s</string>
-    <string name="item_desc_dumb_click_on_position">于 %1$d, %2$d 点击</string>
     <string name="item_desc_dumb_pause">暂停执行</string>
     <string name="item_desc_dumb_pause_details">持续 %1$s</string>
     <string name="item_desc_dumb_repeat_count">重复 %1$d 次</string>

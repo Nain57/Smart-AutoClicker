@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_card"
+    style="@style/AppTheme.Widget.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+    android:layout_marginVertical="@dimen/margin_vertical_default"
+    app:strokeColor="@color/gesture_move_color"
+    app:strokeWidth="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/margin_vertical_default">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/motion_title"
+            style="@style/AppTheme.TextAppearance.ListItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            android:layout_marginBottom="@dimen/margin_vertical_small"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_delete"
+            app:layout_constraintTop_toTopOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toTopOf="@id/motion_desc"
+            android:text="@string/item_title_gesture_move"
+            android:drawablePadding="@dimen/margin_horizontal_small"
+            tools:drawableStart="@drawable/ic_badge_error"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/motion_desc"
+            style="@style/AppTheme.TextAppearance.ListItemSubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="@id/motion_title"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
+            app:layout_constraintTop_toBottomOf="@id/motion_title"
+            app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
+            android:gravity="center_vertical"
+            tools:text="Press at [128; 512]"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_expand_collapse"
+            style="@style/AppTheme.Widget.IconButton"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/button_move_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/divider_top"
+            app:icon="@drawable/ic_chevron_up"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_down"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/button_move_up"
+            app:layout_constraintEnd_toStartOf="@id/button_expand_collapse"
+            app:layout_constraintTop_toTopOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:icon="@drawable/ic_move_down"
+            android:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_move_up"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_mini"
+            app:layout_constraintStart_toEndOf="@id/button_delete"
+            app:layout_constraintEnd_toStartOf="@id/button_move_down"
+            app:layout_constraintTop_toTopOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:icon="@drawable/ic_move_up"
+            android:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_delete"
+            style="@style/Widget.Material3.Button.IconButton.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_mini"
+            app:layout_constraintStart_toEndOf="@id/motion_title"
+            app:layout_constraintEnd_toStartOf="@id/button_move_up"
+            app:layout_constraintTop_toTopOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:icon="@drawable/ic_delete"
+            android:visibility="visible" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_expand_collapse"
+            app:layout_constraintBottom_toTopOf="@id/field_move_duration"/>
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_move_duration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_top"
+            app:layout_constraintBottom_toTopOf="@id/field_move_position_x"/>
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_move_position_x"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            android:layout_marginStart="@dimen/margin_horizontal_default"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/field_move_position_y"
+            app:layout_constraintTop_toBottomOf="@id/field_move_duration"
+            app:layout_constraintBottom_toTopOf="@id/button_select_position"/>
+
+        <include layout="@layout/include_field_text_input"
+            android:id="@+id/field_move_position_y"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_horizontal_default"
+            app:layout_constraintStart_toEndOf="@id/field_move_position_x"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/field_move_position_x"
+            app:layout_constraintBottom_toBottomOf="@id/field_move_position_x"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_select_position"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="@dimen/margin_vertical_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_move_position_x"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:icon="@drawable/ic_position"
+            android:text="@string/button_title_position"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
