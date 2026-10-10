@@ -19,19 +19,16 @@ package com.buzbuz.smartautoclicker.core.common.actions.gesture
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityService.GestureResultCallback
 import android.accessibilityservice.GestureDescription
+import android.os.SystemClock
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.Dumpable
 import com.buzbuz.smartautoclicker.core.base.addDumpTabulationLvl
-import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
-import com.buzbuz.smartautoclicker.core.base.di.HiltCoroutineDispatchers.Main
 import com.buzbuz.smartautoclicker.core.base.workarounds.buildUnblockGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.BuiltGesture
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.PrintWriter
 import javax.inject.Inject
@@ -42,7 +39,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Singleton
 internal class GestureExecutor @Inject constructor(
     private val heldPointerManager: HeldPointerManager,
-    @param:Dispatcher(Main) private val mainDispatcher: CoroutineDispatcher,
+    private val userTouchWatcher: UserTouchWatcher,
 ) : Dumpable {
 
     /**
@@ -52,14 +49,6 @@ internal class GestureExecutor @Inject constructor(
     private val unblockGestureDebouncer: GestureDebouncer =
         GestureDebouncer(UNBLOCK_GESTURE_DELAY_MS)
 
-    /**
-     * Check if the finger is still held. Hold can be lost if something else has interacted with the screen, most of the
-     * time from a user input on the screen. Probing on every frame would flood the system with gestures, so the pointer
-     * is assumed to still be held between two probes.
-     */
-    private val holdProbeDebouncer: GestureDebouncer =
-        GestureDebouncer(PROBE_GESTURE_DELAY_MS)
-
     private var completedGestures: Long = 0L
     private var cancelledGestures: Long = 0L
     private var errorGestures: Long = 0L
@@ -67,6 +56,7 @@ internal class GestureExecutor @Inject constructor(
 
     fun clear(service: AccessibilityService?) {
         heldPointerManager.releaseHeldPointerNow(service)
+        userTouchWatcher.stop()
         completedGestures = 0L
         cancelledGestures = 0L
         errorGestures = 0L
@@ -80,16 +70,24 @@ internal class GestureExecutor @Inject constructor(
      *
      * A cancelled or timed out dispatch means the system has torn down whatever this service had down, so the held
      * pointer is dropped: continuing its stroke afterwards would only get the next gesture refused.
+     *
+     * The user touches are watched from the start of the dispatch of a gesture leaving a pointer down, so a touch
+     * interrupting the gesture itself is noticed, and until the pointer is no longer held.
      */
     suspend fun dispatchBuiltGesture(service: AccessibilityService, gesture: BuiltGesture): Boolean {
+        val dispatchStartMs = SystemClock.uptimeMillis()
+        if (gesture.heldPointer != null) userTouchWatcher.start(service)
+
         for (chain in gesture.chains) {
             if (!dispatchGestures(service, chain)) {
                 heldPointerManager.onHeldPointerCancelled()
+                userTouchWatcher.stop()
                 return false
             }
         }
 
-        heldPointerManager.onHeldPointerContinuationChanged(gesture.heldPointer)
+        heldPointerManager.onHeldPointerContinuationChanged(gesture.heldPointer, dispatchStartMs)
+        if (heldPointerManager.heldPointer == null) userTouchWatcher.stop()
         return true
     }
 
@@ -108,23 +106,20 @@ internal class GestureExecutor @Inject constructor(
     }
 
     /**
-     * Called on every processed frame while a pointer is held: the debouncing is checked from the calling thread, and
-     * only an actual probe switches to the main thread.
+     * Called on every processed frame while a pointer is held, from the processing thread. It only compares the start
+     * of the hold with the last user touch, there is nothing dispatched to the system.
+     *
+     * The watcher window is kept once the hold is lost: the event holding it is often detected again right away, and
+     * removing then adding back the window while the user is still touching the screen confuses the system.
      */
-    suspend fun checkHeldPointer(service: AccessibilityService): Boolean {
-        if (heldPointerManager.heldPointer == null || !holdProbeDebouncer.shouldTrigger()) return true
-
-        return withContext(mainDispatcher) {
-            heldPointerManager.checkHeldPointer { heldGesture ->
-                dispatchGesture(service, heldGesture)
-            }
-        }
-    }
-
+    fun checkHeldPointer(): Boolean =
+        heldPointerManager.checkHeldPointer()
 
     /** Lift the pointer left down on the screen, if any, and wait for the system to have done it. */
-    suspend fun releaseHeldPointer(service: AccessibilityService?): Boolean =
-        heldPointerManager.releaseHeldPointer { release ->
+    suspend fun releaseHeldPointer(service: AccessibilityService?): Boolean {
+        userTouchWatcher.stop()
+
+        return heldPointerManager.releaseHeldPointer { release ->
             if (service == null) {
                 Log.w(TAG, "Can't release the held pointer, service is not available anymore")
                 false
@@ -132,6 +127,7 @@ internal class GestureExecutor @Inject constructor(
                 dispatchGesture(service, release)
             }
         }
+    }
 
     private suspend fun dispatchGesture(service: AccessibilityService, gesture: GestureDescription): Boolean =
         dispatchGestures(service, listOf(gesture))
@@ -232,6 +228,5 @@ private const val GESTURE_CALLBACK_TIMEOUT_MIN_MS = 100L
 private const val GESTURE_CALLBACK_TIMEOUT_MAX_MS = 65_000L
 private const val GESTURE_CALLBACK_TIMEOUT_DURATION_RATIO_MS = 2
 private const val UNBLOCK_GESTURE_DELAY_MS = 10000L
-private const val PROBE_GESTURE_DELAY_MS = 1000L
 
 private const val TAG = "GestureExecutor"

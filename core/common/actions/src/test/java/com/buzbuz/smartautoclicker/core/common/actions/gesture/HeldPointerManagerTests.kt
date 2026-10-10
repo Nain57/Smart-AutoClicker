@@ -23,6 +23,8 @@ import android.graphics.Path
 import android.graphics.Point
 import android.graphics.PointF
 import android.os.Build
+import android.view.InputDevice
+import android.view.MotionEvent
 
 import com.buzbuz.smartautoclicker.core.common.actions.model.HeldPointer
 
@@ -45,17 +47,19 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 
-/** Tests how [HeldPointerManager] keeps track of the pointer left down on the screen, probes it and lifts it. */
+/** Tests how [HeldPointerManager] keeps track of the pointer left down on the screen, checks it against the user touches and lifts it. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.Q])
 class HeldPointerManagerTests {
 
+    private lateinit var userTouchWatcher: UserTouchWatcher
     private lateinit var manager: HeldPointerManager
     private val dispatchedGestures = mutableListOf<GestureDescription>()
 
     @Before
     fun setUp() {
-        manager = HeldPointerManager()
+        userTouchWatcher = UserTouchWatcher()
+        manager = HeldPointerManager(userTouchWatcher)
         dispatchedGestures.clear()
     }
 
@@ -80,49 +84,61 @@ class HeldPointerManagerTests {
     }
 
     @Test
-    fun checkHeldPointer_nothingHeld_returnsTrueWithoutDispatching() = runTest {
-        assertTrue(manager.checkHeldPointer(dispatcher(result = true)))
-        assertTrue(dispatchedGestures.isEmpty())
+    fun checkHeldPointer_nothingHeld_returnsTrue() {
+        assertTrue(manager.checkHeldPointer())
     }
 
     @Test
-    fun checkHeldPointer_stillHeld_returnsTrue_andProbeBecomesHeldPointer() = runTest {
-        manager.onHeldPointerContinuationChanged(heldPointer())
+    fun checkHeldPointer_noUserTouch_returnsTrue_andKeepsHeldPointer() {
+        val pointer = heldPointer()
+        manager.onHeldPointerContinuationChanged(pointer, dispatchStartMs = 100L)
 
-        assertTrue(manager.checkHeldPointer(dispatcher(result = true)))
-
-        val probe = dispatchedGestures.single()
-        assertEquals(1, probe.strokeCount)
-        val probeStroke = probe.getStroke(0)
-        assertTrue("The probe must keep the pointer down", probeStroke.willContinue())
-        assertPathPoints(probeStroke, HELD_POSITION, PROBE_POSITION)
-
-        val pointer = manager.heldPointer
-        assertEquals(PROBE_POSITION, pointer?.position)
-        assertSame("The probe is the stroke to continue afterwards", probeStroke, pointer?.stroke)
-        assertEquals(OWNER, pointer?.owner)
+        assertTrue(manager.checkHeldPointer())
+        assertSame(pointer, manager.heldPointer)
     }
 
     @Test
-    fun checkHeldPointer_repeated_probeMovesBackAndForth() = runTest {
-        manager.onHeldPointerContinuationChanged(heldPointer())
+    fun checkHeldPointer_userTouchAfterHoldStart_returnsFalse_andDropsHeldPointer() {
+        manager.onHeldPointerContinuationChanged(heldPointer(), dispatchStartMs = 100L)
+        userTouchWatcher.onWatcherTouchEvent(touchEvent(MotionEvent.ACTION_OUTSIDE, USER_DEVICE_ID, eventTimeMs = 200L))
 
-        manager.checkHeldPointer(dispatcher(result = true))
-        manager.checkHeldPointer(dispatcher(result = true))
-        manager.checkHeldPointer(dispatcher(result = true))
-
-        // Moving one pixel back and forth keeps the pointer below any touch slop, however long it is held
-        assertPathPoints(dispatchedGestures[0].getStroke(0), HELD_POSITION, PROBE_POSITION)
-        assertPathPoints(dispatchedGestures[1].getStroke(0), PROBE_POSITION, HELD_POSITION)
-        assertPathPoints(dispatchedGestures[2].getStroke(0), HELD_POSITION, PROBE_POSITION)
-    }
-
-    @Test
-    fun checkHeldPointer_probeRefused_returnsFalse_andDropsHeldPointer() = runTest {
-        manager.onHeldPointerContinuationChanged(heldPointer())
-
-        assertFalse(manager.checkHeldPointer(dispatcher(result = false)))
+        assertFalse(manager.checkHeldPointer())
         assertNull(manager.heldPointer)
+    }
+
+    @Test
+    fun checkHeldPointer_userTouchBeforeHoldStart_returnsTrue_andKeepsHeldPointer() {
+        userTouchWatcher.onWatcherTouchEvent(touchEvent(MotionEvent.ACTION_OUTSIDE, USER_DEVICE_ID, eventTimeMs = 50L))
+        val pointer = heldPointer()
+        manager.onHeldPointerContinuationChanged(pointer, dispatchStartMs = 100L)
+
+        assertTrue(manager.checkHeldPointer())
+        assertSame(pointer, manager.heldPointer)
+    }
+
+    @Test
+    fun checkHeldPointer_userTouchDuringContinuationDispatch_returnsFalse_andDropsHeldPointer() {
+        manager.onHeldPointerContinuationChanged(heldPointer(), dispatchStartMs = 100L)
+        userTouchWatcher.onWatcherTouchEvent(touchEvent(MotionEvent.ACTION_OUTSIDE, USER_DEVICE_ID, eventTimeMs = 150L))
+
+        // The continuation was built before the touch and completes after it: the hold still started at 100
+        manager.onHeldPointerContinuationChanged(heldPointer(), dispatchStartMs = 200L)
+
+        assertFalse(manager.checkHeldPointer())
+        assertNull(manager.heldPointer)
+    }
+
+    @Test
+    fun checkHeldPointer_newHoldAfterLoss_startsAtItsDispatch() {
+        manager.onHeldPointerContinuationChanged(heldPointer(), dispatchStartMs = 100L)
+        userTouchWatcher.onWatcherTouchEvent(touchEvent(MotionEvent.ACTION_OUTSIDE, USER_DEVICE_ID, eventTimeMs = 200L))
+        assertFalse(manager.checkHeldPointer())
+        val pointer = heldPointer()
+
+        manager.onHeldPointerContinuationChanged(pointer, dispatchStartMs = 300L)
+
+        assertTrue(manager.checkHeldPointer())
+        assertSame(pointer, manager.heldPointer)
     }
 
     @Test
@@ -196,6 +212,27 @@ class HeldPointerManagerTests {
         assertEquals(expected.map { PointF(it.x.toFloat(), it.y.toFloat()) }, points)
     }
 
+    private fun touchEvent(action: Int, deviceId: Int, eventTimeMs: Long): MotionEvent =
+        MotionEvent.obtain(
+            /* downTime = */ eventTimeMs,
+            /* eventTime = */ eventTimeMs,
+            /* action = */ action,
+            /* pointerCount = */ 1,
+            /* pointerProperties = */ arrayOf(MotionEvent.PointerProperties().apply {
+                id = 0
+                toolType = MotionEvent.TOOL_TYPE_FINGER
+            }),
+            /* pointerCoords = */ arrayOf(MotionEvent.PointerCoords()),
+            /* metaState = */ 0,
+            /* buttonState = */ 0,
+            /* xPrecision = */ 1f,
+            /* yPrecision = */ 1f,
+            /* deviceId = */ deviceId,
+            /* edgeFlags = */ 0,
+            /* source = */ InputDevice.SOURCE_TOUCHSCREEN,
+            /* flags = */ 0,
+        )
+
     private fun heldPointer(): HeldPointer =
         HeldPointer(
             stroke = StrokeDescription(
@@ -213,6 +250,5 @@ class HeldPointerManagerTests {
 }
 
 private val HELD_POSITION = Point(10, 20)
-/** One pixel aside [HELD_POSITION]: its x is even, so the probe moves right. */
-private val PROBE_POSITION = Point(11, 20)
 private const val OWNER = "owner"
+private const val USER_DEVICE_ID = 4
