@@ -30,8 +30,8 @@ import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.display.recorder.DisplayRecorder
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.model.monitoring.MonitoredViewType
 import com.buzbuz.smartautoclicker.core.common.tutorial.domain.MonitoredViewsManager
+import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.color.extensions.toRgbaHexString
-import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job

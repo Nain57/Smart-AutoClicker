@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.getDebuggingNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.base.viewModels
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.OverlayDialog
@@ -58,7 +59,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showCl
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.dialogs.showDeleteEventWithAssociatedActionsDialog
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.brief.ScreenConditionsBriefMenu
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.trigger.TriggerConditionListDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryEventOverlayMenu
 
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -449,10 +449,10 @@ class EventDialog(
 
     private fun showTryElementMenu() {
         viewModel.getTryInfo()?.let { (scenario, imageEvent) ->
-            overlayManager.navigateTo(
+            context.getDebuggingNavigator().showTryEventOverlayMenu(
                 context = context,
-                newOverlay = TryEventOverlayMenu(scenario, imageEvent),
-                hideCurrent = true,
+                scenario = scenario,
+                triedElement = imageEvent,
             )
         }
     }

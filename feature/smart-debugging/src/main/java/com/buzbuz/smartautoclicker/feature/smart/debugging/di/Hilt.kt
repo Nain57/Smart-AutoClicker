@@ -16,7 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.di
 
+import com.buzbuz.smartautoclicker.core.common.navigation.DebuggingNavigator
+import com.buzbuz.smartautoclicker.core.common.navigation.TutorialNavigator
 import com.buzbuz.smartautoclicker.core.common.overlays.di.OverlayComponent
+import com.buzbuz.smartautoclicker.feature.smart.debugging.navigation.DebuggingNavigatorImpl
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.conditiontry.TryImageConditionViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.live.eventtry.TryElementViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportViewModel
@@ -28,9 +31,13 @@ import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.deta
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.event.DebugEventsStateContentViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.DebugReportTimelineFiltersViewModel
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.events.FilteredEventsSelectorViewModel
+import dagger.Binds
+import dagger.Module
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @EntryPoint
 @InstallIn(OverlayComponent::class)
@@ -46,4 +53,13 @@ interface DebuggingViewModelsEntryPoint {
     fun filteredEventsSelectorViewModel(): FilteredEventsSelectorViewModel
     fun tryElementViewModel(): TryElementViewModel
     fun tryImageConditionViewModel(): TryImageConditionViewModel
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal abstract class DebuggingNavigationModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindDebuggingNavigator(impl: DebuggingNavigatorImpl): DebuggingNavigator
 }

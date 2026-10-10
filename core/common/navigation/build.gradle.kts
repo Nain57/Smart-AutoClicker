@@ -30,4 +30,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     implementation(project(":core:common:tutorial"))
+    implementation(project(":core:smart:domain"))
 }

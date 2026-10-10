@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.common.navigation.getDebuggingNavigator
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
@@ -37,7 +38,6 @@ import com.buzbuz.smartautoclicker.feature.smart.config.R
 import com.buzbuz.smartautoclicker.feature.smart.config.databinding.ContentMoreBinding
 import com.buzbuz.smartautoclicker.feature.smart.config.di.ScenarioConfigViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.counter.config.CountersConfigDialog
-import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.DebugReportDialog
 
 import kotlinx.coroutines.launch
 
@@ -113,10 +113,7 @@ class MoreContent(appContext: Context) : NavBarDialogContent(appContext) {
     }
 
     private fun showDebugReport() {
-        dialogController.overlayManager.navigateTo(
-            context = context,
-            newOverlay = DebugReportDialog(),
-        )
+        context.getDebuggingNavigator().showDebugReportDialog(context)
     }
 
     private fun showCountersConfigDialog() {
