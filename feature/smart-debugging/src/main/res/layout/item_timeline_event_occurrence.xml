@@ -23,14 +23,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-    android:layout_marginVertical="@dimen/margin_horizontal_small">
+    android:layout_marginVertical="@dimen/margin_horizontal_small"
+    app:strokeColor="@color/debug_timeline_event_color"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
         android:layout_marginTop="@dimen/margin_vertical_default"
-        android:layout_marginBottom="@dimen/margin_vertical_small">
+        android:layout_marginBottom="@dimen/margin_vertical_default">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/event_name_text"
@@ -38,6 +40,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_horizontal_large"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/margin_horizontal_mini"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/time_text"
@@ -62,6 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginBottom="@dimen/margin_vertical_mini"
             android:layout_marginEnd="@dimen/margin_horizontal_default"
             app:layout_constraintTop_toBottomOf="@id/event_name_text"
             app:layout_constraintBottom_toTopOf="@id/conditions_text"
@@ -74,8 +79,8 @@
             style="@style/AppTheme.Field.SubText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_vertical_mini"
             android:layout_marginEnd="@dimen/margin_horizontal_default"
+            android:layout_marginBottom="@dimen/margin_vertical_mini"
             app:layout_constraintTop_toBottomOf="@id/occurrence_text"
             app:layout_constraintBottom_toTopOf="@id/actions"
             app:layout_constraintStart_toStartOf="parent"

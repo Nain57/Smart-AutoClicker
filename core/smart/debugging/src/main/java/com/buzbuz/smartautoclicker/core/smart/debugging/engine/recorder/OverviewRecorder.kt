@@ -20,6 +20,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.Event
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
+import com.buzbuz.smartautoclicker.core.processing.domain.EventType
 import javax.inject.Inject
 
 internal class DebugReportOverviewRecorder @Inject constructor() {
@@ -39,6 +40,9 @@ internal class DebugReportOverviewRecorder @Inject constructor() {
         private set
     var frameCount: Long = 0
         private set
+    var isProcessingFrame: Boolean = false
+        private set
+    private var lastProcessedEventType: EventType? = null
     var imageEventFulfilledCount: Int = 0
         private set
     var triggerEventFulfilledCount: Int = 0
@@ -50,8 +54,12 @@ internal class DebugReportOverviewRecorder @Inject constructor() {
         sessionDurationRecorder.start()
     }
 
-    fun onFrameProcessingStarted() {
-        frameCount += 1
+    /** @param eventType the type of the events list starting its processing on the current frame. */
+    fun onFrameProcessingStarted(eventType: EventType) {
+        // The screen events are processed on the same frame as the trigger events processed right before them
+        if (eventType == EventType.Trigger || lastProcessedEventType != EventType.Trigger) frameCount += 1
+        lastProcessedEventType = eventType
+        isProcessingFrame = true
         frameProcessingDurationRecorder.start()
     }
 
@@ -62,15 +70,21 @@ internal class DebugReportOverviewRecorder @Inject constructor() {
         }
     }
 
-    fun onFrameProcessingStopped() {
+    /** @param eventType the type of the events list that completed its processing, or null if it was cancelled. */
+    fun onFrameProcessingStopped(eventType: EventType?) {
         totalFrameProcessingDurationMs += frameProcessingDurationRecorder.durationMs()
         frameProcessingDurationRecorder.reset()
+        isProcessingFrame = false
+        // Only a completed trigger events list can be followed by screen events on the same frame
+        if (eventType != EventType.Trigger) lastProcessedEventType = null
     }
 
     fun reset() {
         sessionDurationRecorder.reset()
         scenarioId = 0
         frameCount = 0
+        isProcessingFrame = false
+        lastProcessedEventType = null
         totalFrameProcessingDurationMs = 0
         imageEventFulfilledCount = 0
         triggerEventFulfilledCount = 0

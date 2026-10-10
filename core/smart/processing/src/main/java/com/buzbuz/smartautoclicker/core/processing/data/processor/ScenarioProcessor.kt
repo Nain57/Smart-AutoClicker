@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.processing.data.processor.actions.Action
 import com.buzbuz.smartautoclicker.core.processing.data.processor.state.ProcessingState
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
 import com.buzbuz.smartautoclicker.core.processing.domain.EventType
+import com.buzbuz.smartautoclicker.core.processing.domain.HoldReleaseReason
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 
 import kotlinx.coroutines.yield
@@ -91,11 +92,11 @@ internal class ScenarioProcessor(
     }
 
     suspend fun onScreenRotation() {
-        releaseHeldEvent()
+        releaseHeldEvent(HoldReleaseReason.ScreenRotation)
     }
 
     suspend fun onScenarioEnd() {
-        releaseHeldEvent()
+        releaseHeldEvent(HoldReleaseReason.ScenarioStopped)
         processingState.onProcessingStopped()
     }
 
@@ -119,13 +120,13 @@ internal class ScenarioProcessor(
         if (heldEvent != null) {
             if (!processingState.isEventEnabled(heldEvent.id.databaseId)) {
                 Log.d(TAG, "Held event ${heldEvent.name} is disabled, releasing it")
-                releaseHeldEvent(cooldown = false)
+                releaseHeldEvent(HoldReleaseReason.EventDisabled, cooldown = false)
             } else if (!actionExecutor.checkHeldFinger()) {
                 Log.d(TAG, "Held event ${heldEvent.name} finger has been lifted by the user")
                 startHeldEventCooldown(heldEvent)
             }
         }
-        notifyHeldEventChangeIfNeeded(actionExecutor.getHeldEvent())
+        notifyHeldEventChangeIfNeeded(actionExecutor.getHeldEvent(), HoldReleaseReason.Interrupted)
 
         // Handle all trigger events enabled during previous processing
         if (!processingState.areAllTriggerEventsDisabled()) {
@@ -238,7 +239,7 @@ internal class ScenarioProcessor(
 
         // The system may have dropped the held pointer since the last notification: notify it before this event
         // holds again, or a new hold by the same event would be seen as the continuation of the lost one.
-        notifyHeldEventChangeIfNeeded(previousHeldEvent)
+        notifyHeldEventChangeIfNeeded(previousHeldEvent, HoldReleaseReason.Interrupted)
 
         actionExecutor.executeActions(event, results)
         progressListener?.onEventActionsExecuted(
@@ -256,7 +257,7 @@ internal class ScenarioProcessor(
         }
 
         // New held pointer, delay cooldown to release time (no cooldown on trigger)
-        notifyHeldEventChangeIfNeeded(heldEvent)
+        notifyHeldEventChangeIfNeeded(heldEvent, HoldReleaseReason.OtherEvent)
 
         if (event !is ScreenEvent || (heldEvent?.id != previousHeldEvent?.id && heldEvent?.id == event.id)) return
         startHeldEventCooldown(event)
@@ -280,16 +281,16 @@ internal class ScenarioProcessor(
 
         if (results.fulfilled != true) {
             Log.d(TAG, "Held event ${heldEvent.name} is unfulfilled, releasing it; results=$results")
-            releaseHeldEvent()
+            releaseHeldEvent(HoldReleaseReason.Unfulfilled)
         }
     }
 
-    private suspend fun releaseHeldEvent(cooldown: Boolean = true) {
+    private suspend fun releaseHeldEvent(reason: HoldReleaseReason, cooldown: Boolean = true) {
         val heldEvent = actionExecutor.getHeldEvent() ?: return
         actionExecutor.releaseHeldFinger()
 
         if (cooldown) startHeldEventCooldown(heldEvent)
-        notifyHeldEventChangeIfNeeded(null)
+        notifyHeldEventChangeIfNeeded(null, reason)
     }
 
     /** Cooldown of an event holding a finger starts once it is released. */
@@ -297,10 +298,16 @@ internal class ScenarioProcessor(
         if (heldEvent is ScreenEvent) processingState.startCooldownIfNeeded(heldEvent, startTimeMs)
     }
 
-    /** Notify the held event to the [progressListener] if it has changed since the last notification. */
-    private fun notifyHeldEventChangeIfNeeded(heldEvent: Event?) {
+    /**
+     * Notify the held event to the [progressListener] if it has changed since the last notification.
+     * @param releaseReason the reason of the release of the previously notified held event, if any.
+     */
+    private fun notifyHeldEventChangeIfNeeded(heldEvent: Event?, releaseReason: HoldReleaseReason) {
         if (heldEvent?.id == notifiedHeldEvent?.id) return
 
+        notifiedHeldEvent?.let { previousHeldEvent ->
+            progressListener?.onHeldEventReleased(previousHeldEvent, releaseReason)
+        }
         notifiedHeldEvent = heldEvent
         progressListener?.onHeldEventChanged(heldEvent)
     }

@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.smart.debugging.data.mapping
 
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportConditionResult
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportHoldReleaseReason
 import com.buzbuz.smartautoclicker.core.smart.debugging.heldEventCheckMessage
 
 import org.junit.Assert.assertEquals
@@ -45,7 +46,7 @@ class DebugReportHeldEventCheckMappingTests {
                     confidenceRate = 98.5,
                 ),
             ),
-            isHeld = true,
+            releaseReason = null,
             holdDurationMs = 1_250L,
             frameNumber = 42L,
         )
@@ -66,7 +67,7 @@ class DebugReportHeldEventCheckMappingTests {
                     confidenceRate = 12.0,
                 ),
             ),
-            isHeld = false,
+            releaseReason = DebugReportHoldReleaseReason.UNFULFILLED,
             holdDurationMs = 3_000L,
             frameNumber = 43L,
         )
@@ -82,7 +83,7 @@ class DebugReportHeldEventCheckMappingTests {
             conditionsResults = listOf(
                 DebugReportConditionResult.TriggerCondition(conditionId = 5L, isFulFilled = true),
             ),
-            isHeld = true,
+            releaseReason = null,
             holdDurationMs = 6_000L,
         )
 
@@ -97,11 +98,35 @@ class DebugReportHeldEventCheckMappingTests {
             conditionsResults = listOf(
                 DebugReportConditionResult.TriggerCondition(conditionId = 5L, isFulFilled = false),
             ),
-            isHeld = false,
+            releaseReason = DebugReportHoldReleaseReason.UNFULFILLED,
             holdDurationMs = 6_000L,
         )
 
         assertEquals(occurrence, occurrence.roundTrip())
+    }
+
+    @Test
+    fun allReleaseReasons_roundTrip() {
+        DebugReportHoldReleaseReason.entries.forEach { reason ->
+            val screenOccurrence = DebugReportEventOccurrence.HeldEventCheck.Screen(
+                eventId = 12L,
+                relativeTimestampMs = 4_500L,
+                conditionsResults = emptyList(),
+                releaseReason = reason,
+                holdDurationMs = 3_000L,
+                frameNumber = 43L,
+            )
+            val triggerOccurrence = DebugReportEventOccurrence.HeldEventCheck.Trigger(
+                eventId = 13L,
+                relativeTimestampMs = 9_000L,
+                conditionsResults = emptyList(),
+                releaseReason = reason,
+                holdDurationMs = 6_000L,
+            )
+
+            assertEquals(screenOccurrence, screenOccurrence.roundTrip())
+            assertEquals(triggerOccurrence, triggerOccurrence.roundTrip())
+        }
     }
 
     @Test
@@ -110,7 +135,7 @@ class DebugReportHeldEventCheckMappingTests {
             eventId = 13L,
             relativeTimestampMs = 0L,
             conditionsResults = emptyList(),
-            isHeld = true,
+            releaseReason = null,
             holdDurationMs = 0L,
         )
 

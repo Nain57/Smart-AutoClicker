@@ -26,11 +26,13 @@ import androidx.lifecycle.repeatOnLifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.NavBarDialogContent
 import com.buzbuz.smartautoclicker.core.common.overlays.dialog.implementation.navbar.viewModels
+import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 import com.buzbuz.smartautoclicker.feature.smart.debugging.R
 import com.buzbuz.smartautoclicker.feature.smart.debugging.databinding.ContentDebugReportTimelineBinding
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.adapter.DebugReportTimelineAdapter
 import com.buzbuz.smartautoclicker.feature.smart.debugging.di.DebuggingViewModelsEntryPoint
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.DebugReportEventOccurrenceDetailsDialog
+import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.details.DebugReportHeldEventReleaseDetailsDialog
 import com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline.filter.DebugReportTimelineFiltersDialog
 
 import kotlinx.coroutines.launch
@@ -47,6 +49,7 @@ class DebugReportTimelineContent(appContext: Context) : NavBarDialogContent(appC
 
     private val timelineAdapter: DebugReportTimelineAdapter = DebugReportTimelineAdapter(
         onItemClicked = ::onEventOccurrenceClicked,
+        onHeldEventCheckItemClicked = ::onHeldEventCheckClicked,
     )
 
     private lateinit var viewBinding: ContentDebugReportTimelineBinding
@@ -115,6 +118,19 @@ class DebugReportTimelineContent(appContext: Context) : NavBarDialogContent(appC
             newOverlay = DebugReportEventOccurrenceDetailsDialog(
                 scenarioId = occurrence.scenarioId,
                 eventOccurrence = occurrence.occurrence,
+            ),
+            hideCurrent = false,
+        )
+    }
+
+    private fun onHeldEventCheckClicked(occurrence: DebugReportTimelineEventOccurrenceItem) {
+        val heldEventCheck = occurrence.occurrence as? DebugReportEventOccurrence.HeldEventCheck ?: return
+
+        dialogController.overlayManager.navigateTo(
+            context = context,
+            newOverlay = DebugReportHeldEventReleaseDetailsDialog(
+                scenarioId = occurrence.scenarioId,
+                heldEventCheck = heldEventCheck,
             ),
             hideCurrent = false,
         )

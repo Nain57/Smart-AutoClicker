@@ -55,6 +55,14 @@ interface SmartProcessingListener {
      */
     fun onHeldEventChanged(heldEvent: Event?) = Unit
 
+    /**
+     * The pointer held by an event has been released.
+     * Always called before the [onHeldEventChanged] notifying the end of this hold.
+     *
+     * @param event the event that was holding the pointer.
+     * @param reason the reason of the release.
+     */
+    fun onHeldEventReleased(event: Event, reason: HoldReleaseReason) = Unit
 
 
     /** The processing of an [Event] on the current screen frame has begun. */
@@ -128,4 +136,20 @@ interface SmartProcessingListener {
 enum class EventType {
     Screen,
     Trigger
+}
+
+/** The reason of the release of a pointer held by an event. */
+enum class HoldReleaseReason {
+    /** The conditions of the held event are no longer fulfilled. */
+    Unfulfilled,
+    /** The pointer has been lifted outside of the scenario, most likely by a user interaction with the screen. */
+    Interrupted,
+    /** The held event has been disabled. */
+    EventDisabled,
+    /** The gesture of another event has taken over or ended the hold. */
+    OtherEvent,
+    /** The screen orientation has changed. */
+    ScreenRotation,
+    /** The scenario has been stopped. */
+    ScenarioStopped,
 }

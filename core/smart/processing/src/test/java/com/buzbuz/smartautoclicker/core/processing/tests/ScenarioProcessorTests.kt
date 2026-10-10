@@ -48,6 +48,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.domain.HoldReleaseReason
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 import com.buzbuz.smartautoclicker.core.processing.shadows.ShadowBitmapCreator
 import com.buzbuz.smartautoclicker.core.processing.tests.processor.gesture.FingerResolverTestData.newFinger
@@ -1570,6 +1571,7 @@ class ScenarioProcessorTests {
         inOrder(mockProgressListener) {
             verify(mockProgressListener).onHeldEventChanged(event)
             verify(mockProgressListener).onEventProcessingCompleted(eq(event), eq(false), anyNotNull(), eq(true))
+            verify(mockProgressListener).onHeldEventReleased(event, HoldReleaseReason.Unfulfilled)
             verify(mockProgressListener).onHeldEventChanged(null)
         }
     }
@@ -1609,6 +1611,7 @@ class ScenarioProcessorTests {
             verify(mockProgressListener).onHeldEventChanged(triggerEvent)
             verify(mockProgressListener).onEventProcessingCompleted(eq(triggerEvent), eq(true), anyNotNull(), eq(true))
             verify(mockProgressListener).onEventProcessingCompleted(eq(triggerEvent), eq(false), anyNotNull(), eq(true))
+            verify(mockProgressListener).onHeldEventReleased(triggerEvent, HoldReleaseReason.Unfulfilled)
             verify(mockProgressListener).onHeldEventChanged(null)
         }
     }
@@ -1626,7 +1629,10 @@ class ScenarioProcessorTests {
         isPointerLiftedByUser = true
         scenarioProcessor.process(mockScreenBitmap)
 
-        verify(mockProgressListener).onHeldEventChanged(null)
+        inOrder(mockProgressListener) {
+            verify(mockProgressListener).onHeldEventReleased(event, HoldReleaseReason.Interrupted)
+            verify(mockProgressListener).onHeldEventChanged(null)
+        }
         verify(mockProgressListener, never()).onEventProcessingCompleted(anyNotNull(), anyBoolean(), anyNotNull(), eq(true))
     }
 
@@ -1641,6 +1647,7 @@ class ScenarioProcessorTests {
         scenarioProcessor.processingState.disableEvent(event1.id.databaseId)
         scenarioProcessor.process(mockScreenBitmap)
 
+        verify(mockProgressListener).onHeldEventReleased(event1, HoldReleaseReason.EventDisabled)
         verify(mockProgressListener).onHeldEventChanged(null)
         verify(mockProgressListener, never()).onEventProcessingCompleted(anyNotNull(), anyBoolean(), anyNotNull(), eq(true))
     }
@@ -1658,6 +1665,7 @@ class ScenarioProcessorTests {
         heldPointer = null
         scenarioProcessor.process(mockScreenBitmap)
 
+        verify(mockProgressListener).onHeldEventReleased(event, HoldReleaseReason.Interrupted)
         verify(mockProgressListener).onHeldEventChanged(null)
     }
 
@@ -1713,6 +1721,7 @@ class ScenarioProcessorTests {
 
         inOrder(mockProgressListener) {
             verify(mockProgressListener).onHeldEventChanged(event1)
+            verify(mockProgressListener).onHeldEventReleased(event1, HoldReleaseReason.OtherEvent)
             verify(mockProgressListener).onHeldEventChanged(event2)
         }
         verify(mockProgressListener, never()).onHeldEventChanged(null)
@@ -1729,7 +1738,37 @@ class ScenarioProcessorTests {
         scenarioProcessor.process(mockScreenBitmap)
         scenarioProcessor.onScenarioEnd()
 
+        verify(mockProgressListener).onHeldEventReleased(event, HoldReleaseReason.ScenarioStopped)
         verify(mockProgressListener).onHeldEventChanged(null)
+    }
+
+    @Test
+    fun heldEvent_screenRotation_notifiesRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.onScreenRotation()
+
+        verify(mockProgressListener).onHeldEventReleased(event, HoldReleaseReason.ScreenRotation)
+        verify(mockProgressListener).onHeldEventChanged(null)
+    }
+
+    @Test
+    fun heldEvent_holdStarted_notifiesNoRelease() = runTest {
+        val event = newEvent(
+            conditions = listOf(createHeldTestCondition(isDetected = true)),
+            actions = listOf(newHoldGestureAction()),
+        )
+
+        scenarioProcessor = createNewScenarioProcessor(listOf(event), emptyList())
+        scenarioProcessor.process(mockScreenBitmap)
+        scenarioProcessor.process(mockScreenBitmap)
+
+        verify(mockProgressListener, never()).onHeldEventReleased(anyNotNull(), anyNotNull())
     }
 
     @Test

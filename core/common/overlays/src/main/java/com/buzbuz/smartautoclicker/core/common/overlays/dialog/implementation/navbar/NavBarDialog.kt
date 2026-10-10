@@ -29,6 +29,7 @@ import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 
 import com.buzbuz.smartautoclicker.core.common.overlays.databinding.DialogBaseNavBarBinding
@@ -65,6 +66,9 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
 
     open fun onContentViewChanged(navItemId: Int) = Unit
 
+    /** Dialogs with a single content can hide the navigation bar, as there is nothing to navigate to. */
+    open fun isNavigationBarVisible(): Boolean = true
+
     override fun onCreateView(): ViewGroup {
         baseViewBinding = DialogBaseNavBarBinding.inflate(LayoutInflater.from(context)).apply {
             layoutTopBar.apply {
@@ -96,6 +100,11 @@ abstract class NavBarDialog(@StyleRes theme: Int) : OverlayDialog(theme) {
                 updateContentView(item.itemId)
                 true
             }
+        }
+
+        if (!isNavigationBarVisible()) {
+            navBarView.visibility = View.GONE
+            baseViewBinding.dialogContent.updateLayoutParams<ViewGroup.MarginLayoutParams> { bottomMargin = 0 }
         }
 
         return baseViewBinding.root

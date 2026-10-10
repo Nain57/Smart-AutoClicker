@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.debugging.ui.dialog.report.timeline
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.model.report.DebugReportEventOccurrence
 
@@ -36,6 +37,10 @@ data class DebugReportTimelineEventOccurrenceItem(
     val id: Int,
     val scenarioId: Long,
     val eventName: String,
+    @field:DrawableRes val eventNameIconRes: Int,
+    @field:ColorRes val cardColorRes: Int,
+    /** True if this occurrence can be clicked to display its details. */
+    val hasDetails: Boolean,
     val timeText: String,
     val occurrenceText: String,
     val conditionsText: String,

@@ -50,14 +50,27 @@ sealed interface DebugReportTimelineFilter {
         /** Filter on ImageEvents. */
         data class Image(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events {
             override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
-                occurrence is DebugReportEventOccurrence.ScreenEvent && filterAll || filteredIds.contains(occurrence.eventId)
+                occurrence is DebugReportEventOccurrence.ScreenEvent &&
+                        (filterAll || filteredIds.contains(occurrence.eventId))
         }
 
         /** Filter on TriggerEvents. */
         data class Trigger(override val filterAll: Boolean = false, override val filteredIds: Set<Long> = emptySet()) : Events {
             override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
-                occurrence is DebugReportEventOccurrence.TriggerEvent && filterAll || filteredIds.contains(occurrence.eventId)
+                occurrence is DebugReportEventOccurrence.TriggerEvent &&
+                        (filterAll || filteredIds.contains(occurrence.eventId))
         }
+    }
+
+    /**
+     * Filter on the verifications of the events holding a gesture on the screen.
+     * @param showHoldChecks true to show the checks keeping the gesture held.
+     * @param showReleases true to show the releases of the held gesture.
+     */
+    data class Hold(val showHoldChecks: Boolean = true, val showReleases: Boolean = true) : DebugReportTimelineFilter {
+        override fun shouldFilter(occurrence: DebugReportEventOccurrence): Boolean =
+            occurrence is DebugReportEventOccurrence.HeldEventCheck &&
+                    (occurrence.isHeld && !showHoldChecks || !occurrence.isHeld && !showReleases)
     }
 }
 
