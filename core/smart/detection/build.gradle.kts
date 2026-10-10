@@ -165,4 +165,6 @@ android {
 dependencies {
     implementation(libs.androidx.annotation)
     implementation(project(":core:common:base"))
+
+    androidTestImplementation(project(":core:smart:detection-models"))
 }

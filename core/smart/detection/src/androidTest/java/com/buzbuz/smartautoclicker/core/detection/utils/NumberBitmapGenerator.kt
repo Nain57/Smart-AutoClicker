@@ -28,7 +28,7 @@ import java.io.File
 /**
  * One-shot utility; not a real test.
  * Run it once on the emulator to regenerate screen_text_conditions.png, then pull with:
- *   adb pull /data/local/tmp/number_test_images/screen_text_conditions.png
+ *   adb pull /sdcard/Android/data/com.buzbuz.smartautoclicker.core.detection.test/files/number_test_images/screen_text_conditions.png
  * and copy it into core/smart/detection/src/androidTest/res/raw/.
  *
  * Layout: numbers from [NUMBERS] stacked vertically, each row [ROW_HEIGHT]px tall,
@@ -38,12 +38,15 @@ class NumberBitmapGenerator {
 
     @Test
     fun generateNumberImages() {
-        val outputDir = File("/data/local/tmp/number_test_images").also { it.mkdirs() }
+        // /data/local/tmp is only writable by the shell user, not by the instrumented app.
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val outputDir = File(context.getExternalFilesDir(null), "number_test_images").also { it.mkdirs() }
+        val outputFile = File(outputDir, "screen_text_conditions.png")
         val bitmap = renderNumberScreen()
-        File(outputDir, "screen_text_conditions.png").outputStream().use { out ->
+        outputFile.outputStream().use { out ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
         }
-        android.util.Log.i("NumberBitmapGenerator", "Saved screen_text_conditions.png (${bitmap.width}x${bitmap.height})")
+        android.util.Log.i("NumberBitmapGenerator", "Saved ${outputFile.absolutePath} (${bitmap.width}x${bitmap.height})")
     }
 }
 
