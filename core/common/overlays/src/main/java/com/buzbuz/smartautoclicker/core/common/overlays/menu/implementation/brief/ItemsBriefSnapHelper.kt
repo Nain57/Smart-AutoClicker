@@ -37,7 +37,10 @@ internal class ItemsBriefSnapHelper : PagerSnapHelper() {
             }
 
             Log.d(TAG, "onItemRangeInserted: new item, snapping to last insertion index")
-            snapTo(positionStart + itemCount - 1, animateScroll = false)
+            val insertedIndex = positionStart + itemCount - 1
+            // No scroll will occur, but the focused item is now the inserted one.
+            if (insertedIndex == snapPosition) onSnapPositionUpdated(insertedIndex)
+            else snapTo(insertedIndex, animateScroll = false)
         }
 
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
