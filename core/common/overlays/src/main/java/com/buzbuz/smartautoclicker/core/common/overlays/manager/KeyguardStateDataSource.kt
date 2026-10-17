@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.PowerManager
+import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.SafeBroadcastReceiver
 import com.buzbuz.smartautoclicker.core.base.di.Dispatcher
@@ -81,13 +82,21 @@ internal class KeyguardStateDataSource @Inject constructor(
         callbackFlow {
             val receiver = object : SafeBroadcastReceiver(KEYGUARD_INTENT_FILTER) {
                 override fun onReceive(context: Context?, intent: Intent?) {
+                    Log.d(TAG, "Keyguard broadcast received: ${intent?.action}")
                     trySend(intent)
                 }
             }
 
-            receiver.register(this@keyguardBroadcastsFlow, exported = false)
+            // Weirdly, ACTION_USER_PRESENT requires the receiver to be exported on some devices. It's normally not the
+            // case with system intents.
+            Log.d(TAG, "Registering keyguard intent filters")
+            receiver.register(this@keyguardBroadcastsFlow, exported = true)
+
             trySend(null)
-            awaitClose { receiver.unregister() }
+            awaitClose {
+                Log.d(TAG, "Unregistering keyguard intent filters")
+                receiver.unregister()
+            }
         }
 }
 
@@ -96,3 +105,5 @@ private val KEYGUARD_INTENT_FILTER = IntentFilter().apply {
     addAction(Intent.ACTION_SCREEN_ON)      // Received when screen is on
     addAction(Intent.ACTION_USER_PRESENT)   // Received when keyguard is unlocked by user
 }
+
+private const val TAG = "KeyguardStateDataSource"
