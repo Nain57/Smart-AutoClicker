@@ -267,7 +267,7 @@
                 app:strokeColor="@color/event_test_color"
                 app:strokeWidth="2dp">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -275,24 +275,29 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/field_test_event"
                         style="@style/AppTheme.TextAppearance.CardTitle"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight = "1"
                         android:layout_marginVertical="@dimen/margin_vertical_default"
                         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
-                        tools:text="Test your event"/>
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/button_test_event"
+                        tools:text="Test your Screen Event but in a longer version"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_test_event"
                         style="@style/AppTheme.Widget.IconButtonFilled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight = "0"
                         android:layout_marginVertical="@dimen/margin_vertical_default"
                         android:layout_marginHorizontal="@dimen/margin_horizontal_default"
+                        app:layout_constraintTop_toTopOf="@id/field_test_event"
+                        app:layout_constraintBottom_toBottomOf="@id/field_test_event"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:icon="@drawable/ic_play_arrow"/>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
