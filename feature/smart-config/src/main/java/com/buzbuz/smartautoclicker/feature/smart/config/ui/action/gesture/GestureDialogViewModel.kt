@@ -32,6 +32,7 @@ import com.buzbuz.smartautoclicker.core.domain.model.action.position.Coordinates
 import com.buzbuz.smartautoclicker.core.domain.model.action.position.Position
 import com.buzbuz.smartautoclicker.core.domain.model.condition.Condition
 import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
+import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.model.EditedElementState
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.usecase.condition.GetImageConditionBitmapJobUseCase
@@ -435,6 +436,7 @@ class GestureDialogViewModel @Inject constructor(
     ): List<GestureDialogUiStateItem> {
 
         val finger = fingers.getOrNull(selectedFinger) ?: return emptyList()
+        val isScreenEvent = editionRepository.editionState.getEditedEvent() is ScreenEvent
 
         return buildList {
             add(
@@ -461,6 +463,7 @@ class GestureDialogViewModel @Inject constructor(
                             isCollapsed = isCollapsed,
                             position = motion.position.toPositionUiState(editionRepository),
                             offsetPosition = motion.offset.toPositionUiState(editionRepository),
+                            isConditionSelectionVisible = isScreenEvent,
                         )
                     )
 
@@ -472,6 +475,7 @@ class GestureDialogViewModel @Inject constructor(
                             moveableDown = finger.motions.getOrNull(index + 1) !is GestureFingerMotion.Release,
                             position = motion.position.toPositionUiState(editionRepository),
                             offsetPosition = motion.offset.toPositionUiState(editionRepository),
+                            isConditionSelectionVisible = isScreenEvent,
                             durationMs = motion.durationMs,
                         )
                     )

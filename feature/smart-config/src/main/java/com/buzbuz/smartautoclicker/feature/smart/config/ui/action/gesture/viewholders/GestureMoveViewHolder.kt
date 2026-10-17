@@ -194,6 +194,7 @@ class GestureMoveViewHolder(
                         fieldPosition.fieldY.setPositionValue(item.position.yValue)
                     }
                 }
+                fieldPosition.buttonSelectCondition.isVisible = item.isConditionSelectionVisible
 
                 buttonExpandCollapse.setIconResource(R.drawable.ic_chevron_up)
                 fieldOffset.setDescription(root.context.getOffsetDescription(item.offsetPosition))

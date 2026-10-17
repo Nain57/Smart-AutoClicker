@@ -63,7 +63,8 @@ sealed interface GestureDialogUiStateItem {
         override val id: Identifier,
         override val isCollapsed: Boolean,
         val position: UiGesturePosition,
-        val offsetPosition: UiGesturePosition
+        val offsetPosition: UiGesturePosition,
+        val isConditionSelectionVisible: Boolean,
     ) : Collapsable
 
     data class Move(
@@ -73,6 +74,7 @@ sealed interface GestureDialogUiStateItem {
         override val moveableDown: Boolean,
         val position: UiGesturePosition,
         val offsetPosition: UiGesturePosition,
+        val isConditionSelectionVisible: Boolean,
         val durationMs: Long,
     ) : Collapsable, Moveable
 
