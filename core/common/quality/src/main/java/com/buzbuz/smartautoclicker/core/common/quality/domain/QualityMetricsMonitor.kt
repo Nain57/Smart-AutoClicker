@@ -50,7 +50,7 @@ class QualityMetricsMonitor @Inject constructor(
 
     internal val startingQualityMetrics: Flow<QualityMetrics> = currentQualityMetrics
         .take(1)
-        .shareIn(coroutineScopeIo, SharingStarted.Eagerly)
+        .shareIn(coroutineScopeIo, SharingStarted.Eagerly, replay = 1)
 
     fun onServiceConnected() {
         coroutineScopeIo.launch {
