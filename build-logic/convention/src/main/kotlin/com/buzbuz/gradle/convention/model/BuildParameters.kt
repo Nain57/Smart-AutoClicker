@@ -33,6 +33,18 @@ abstract class BuildParameters {
         )
     }
 
+    /**
+     * Comma separated list of the ABIs to build the native libraries and the APK splits for.
+     * Empty to build for all supported ABIs. Ex: -PabiFilters=arm64-v8a
+     */
+    val abiFilters: BuildParameter<String> by lazy {
+        BuildParameter(
+            rootProject = rootProject.get(),
+            name = "abiFilters",
+            defaultValue = "",
+        )
+    }
+
     /** Release signing configuration store password. */
     val signingStorePassword: BuildParameter<String> by lazy {
         BuildParameter(

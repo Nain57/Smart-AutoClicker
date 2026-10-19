@@ -23,6 +23,7 @@ plugins {
     alias(libs.plugins.buzbuz.androidLibrary)
     alias(libs.plugins.buzbuz.androidLocalTest)
     alias(libs.plugins.buzbuz.flavour)
+    alias(libs.plugins.buzbuz.buildParameters)
     alias(libs.plugins.buzbuz.sourceDownload)
 }
 
@@ -56,6 +57,11 @@ android {
     }
 
     defaultConfig {
+        // Splits in the app module only filter the packaged APKs, native libs are still built for every ABI
+        buildParameters.abiFilters.typedValue.takeIf { it.isNotBlank() }?.let { abis ->
+            ndk { abiFilters += abis.split(',') }
+        }
+
         externalNativeBuild {
             cmake {
                 arguments.addAll(
