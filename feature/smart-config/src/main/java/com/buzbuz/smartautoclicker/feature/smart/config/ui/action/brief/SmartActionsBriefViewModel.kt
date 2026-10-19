@@ -380,7 +380,7 @@ class SmartActionsBriefViewModel @Inject constructor(
         )
 
         is Gesture -> {
-            val conditions = editionRepository.editionState.getEditedEventConditions<ScreenCondition>() ?: emptyList()
+            val conditions = editionRepository.editionState.getEditedEventScreenConditions() ?: emptyList()
             toGestureDescription(
                 conditionOperator = editionRepository.editionState.getEditedEvent()?.conditionOperator ?: AND,
                 conditions = conditions,
@@ -402,7 +402,7 @@ class SmartActionsBriefViewModel @Inject constructor(
     private suspend fun Click.findClickOnConditionBitmap(context: Context): Bitmap? {
         val conditionId = getClickOnConditionId() ?: return null
 
-        return editionRepository.editionState.getEditedEventConditions<ScreenCondition>()
+        return editionRepository.editionState.getEditedEventScreenConditions()
             ?.find { it.id == conditionId }
             ?.let { condition ->
                 when (condition) {

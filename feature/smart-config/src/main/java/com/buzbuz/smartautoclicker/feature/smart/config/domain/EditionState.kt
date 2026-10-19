@@ -207,6 +207,13 @@ internal class EditionState internal constructor(
     override fun <T : Condition> getEditedEventConditions(): List<T>? =
         editor.currentEventEditor.value?.conditionsEditor?.editedList?.value as List<T>?
 
+    override fun getEditedEventScreenConditions(): List<ScreenCondition>? =
+        when (val eventEditor = editor.currentEventEditor.value) {
+            null -> null
+            is ScreenEventsEditor -> eventEditor.conditionsEditor.editedList.value
+            else -> emptyList()
+        }
+
     @Suppress("UNCHECKED_CAST")
 
     override fun <T : Condition> getEditedCondition(): T? =

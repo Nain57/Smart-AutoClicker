@@ -46,7 +46,7 @@ internal fun Position.toPositionUiState(editionRepository: EditionRepository): U
 
         is Position.Condition -> {
             val screenConditions = editionRepository.editionState
-                .getEditedEventConditions<ScreenCondition>() ?: emptyList()
+                .getEditedEventScreenConditions() ?: emptyList()
             val isAnd = editionRepository.editionState.getEditedEvent()?.conditionOperator == AND
             val resolvedCondition =
                 if (isAnd) conditionId?.let { id -> screenConditions.find { it.id == id } }

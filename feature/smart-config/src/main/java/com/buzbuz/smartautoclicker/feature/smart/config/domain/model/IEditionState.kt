@@ -73,6 +73,7 @@ interface IEditionState {
     fun getEditedEvent(): Event?
     fun <T : Action> getEditedEventActions(): List<T>?
     fun <T : Condition> getEditedEventConditions(): List<T>?
+    fun getEditedEventScreenConditions(): List<ScreenCondition>?
     fun <T : Condition> getEditedCondition(): T?
     fun <T : Action> getEditedAction(): T?
     fun getEditedIntentExtra(): IntentExtra<out Any>?
