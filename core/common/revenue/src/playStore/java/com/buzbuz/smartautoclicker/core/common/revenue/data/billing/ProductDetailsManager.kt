@@ -30,9 +30,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.hours
@@ -50,9 +53,11 @@ internal class ProductDetailsManager @Inject constructor(
     val productDetails: StateFlow<InAppProduct?> = _productDetails
 
     /** When was the last successful ProductDetailsResponse */
-    private var productDetailsResponseTime = -PRODUCT_DETAILS_QUERY_RETRY_TIME_MS
+    private var productDetailsResponseTime: Long? = null
     /** Job monitoring the product details requested with [startMonitoring]. */
     private var monitoringJob: Job? = null
+    /** Serializes the refreshes, and guards [productDetailsResponseTime]. */
+    private val refreshMutex = Mutex()
 
     suspend fun startMonitoring(refreshQuery: suspend () -> Pair<Boolean, InAppProduct?>) {
         monitoringJob?.cancel()
@@ -61,15 +66,21 @@ internal class ProductDetailsManager @Inject constructor(
         monitoringJob = _productDetails.subscriptionCount
             .map { count -> count > 0 }
             .distinctUntilChanged()
-            .onEach { isActive ->
-                if (isActive && (SystemClock.elapsedRealtime() - productDetailsResponseTime > PRODUCT_DETAILS_QUERY_RETRY_TIME_MS)) {
-                    Log.d(TAG, "Product to old, refreshing...")
-                    refresh(refreshQuery)
-                }
-            }
+            .drop(1) // The current subscription state is covered by the refresh below
+            .onEach { isActive -> if (isActive) refreshIfStale(refreshQuery) }
             .launchIn(coroutineScopeIo)
 
-        refresh(refreshQuery)
+        refreshMutex.withLock { refresh(refreshQuery) }
+    }
+
+    private suspend fun refreshIfStale(refreshQuery: suspend () -> Pair<Boolean, InAppProduct?>) {
+        refreshMutex.withLock {
+            val lastResponseTime = productDetailsResponseTime
+            if (lastResponseTime != null && SystemClock.elapsedRealtime() - lastResponseTime <= PRODUCT_DETAILS_QUERY_RETRY_TIME_MS) return
+
+            Log.d(TAG, "Product to old, refreshing...")
+            refresh(refreshQuery)
+        }
     }
 
     private suspend fun refresh(refreshQuery: suspend () -> Pair<Boolean, InAppProduct?>) {
@@ -78,7 +89,7 @@ internal class ProductDetailsManager @Inject constructor(
             productDetailsResponseTime = SystemClock.elapsedRealtime()
             _productDetails.emit(product)
         } else {
-            productDetailsResponseTime = -PRODUCT_DETAILS_QUERY_RETRY_TIME_MS
+            productDetailsResponseTime = null
         }
     }
 }

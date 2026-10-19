@@ -28,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.Billin
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssueReporter
 import dagger.hilt.android.qualifiers.ApplicationContext
 
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 /**
@@ -40,6 +41,7 @@ internal class BillingServiceConnection @Inject constructor(
 ) {
 
     private var clientProxy: BillingClientProxy? = null
+    private val isClientAvailableNotified = AtomicBoolean(false)
 
     fun connect(
         productId: String,
@@ -58,7 +60,7 @@ internal class BillingServiceConnection @Inject constructor(
             })
         } catch (isex: IllegalStateException) {
             Log.e(TAG, "Can't start billing service connection", isex)
-            onClientAvailable(proxy)
+            notifyClientAvailable(proxy, onClientAvailable)
         }
     }
 
@@ -77,6 +79,16 @@ internal class BillingServiceConnection @Inject constructor(
         }
 
         // Even on failure, the client will try to reconnect on the next API call.
+        notifyClientAvailable(proxy, onClientAvailable)
+    }
+
+    /**
+     * With auto service reconnection, onBillingSetupFinished is called again after each reconnection, and each API
+     * call made while disconnected triggers one. Notifying more than once would let the callback's API calls feed
+     * that loop, flooding the main looper (ANR) and spawning coroutines without bound (OOM).
+     */
+    private fun notifyClientAvailable(proxy: BillingClientProxy, onClientAvailable: (BillingClientProxy) -> Unit) {
+        if (!isClientAvailableNotified.compareAndSet(false, true)) return
         onClientAvailable(proxy)
     }
 
