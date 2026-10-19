@@ -143,6 +143,14 @@
     <string name="item_title_debug_generate_report">Створити звіт</string>
     <string name="item_desc_debug_generate_report">Зафіксуйте поведінку сценарію під час виявлення, щоб створити звіт.</string>
 
+    <string name="field_debug_view_settings_title">Налаштування режиму налагодження</string>
+    <string name="field_debug_view_settings_desc">Виберіть інформацію, що відображається в режимі налагодження.</string>
+
+    <string name="dialog_title_debug_view_settings">Режим налагодження</string>
+    <string name="field_debug_view_show_event_stats_title">Показувати статистику подій</string>
+    <string name="field_debug_view_show_actions_title">Показувати дії події</string>
+    <string name="field_debug_view_show_held_finger_title">Показувати утримуваний палець</string>
+
     <string name="field_show_debug_report_title">Показати звіт</string>
     <string name="field_show_debug_report_desc_available">Звіт налагодження доступний</string>
     <string name="field_show_debug_report_desc_not_available">Звіт налагодження недоступний</string>

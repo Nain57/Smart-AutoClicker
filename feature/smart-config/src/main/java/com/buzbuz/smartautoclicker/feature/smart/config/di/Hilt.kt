@@ -68,6 +68,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.event.EventDialogView
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialogViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.config.ScenarioConfigViewModel
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more.debugview.DebugViewSettingsViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.imageevents.ImageEventListViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more.MoreViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.triggerevents.TriggerEventListViewModel
@@ -95,6 +96,7 @@ interface ScenarioConfigViewModelsEntryPoint {
     fun counterSelectionViewModel(): CounterSelectionViewModel
     fun countersViewModel(): CountersConfigViewModel
     fun counterReachedConditionViewModel(): CounterReachedConditionViewModel
+    fun debugViewSettingsViewModel(): DebugViewSettingsViewModel
     fun eventCopyModel(): EventCopyViewModel
     fun eventDialogViewModel(): EventDialogViewModel
     fun eventTogglesViewModel(): EventTogglesViewModel

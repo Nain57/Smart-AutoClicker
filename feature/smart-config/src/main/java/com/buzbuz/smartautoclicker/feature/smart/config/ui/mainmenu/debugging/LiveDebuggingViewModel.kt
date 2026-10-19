@@ -58,6 +58,19 @@ class LiveDebuggingViewModel @Inject constructor(
     val debugHeldEvent: Flow<String?> = debuggingRepository.heldEvent
         .combine(isDebugging) { heldEvent, isDebugging -> if (isDebugging) heldEvent else null }
         .map { heldEvent -> heldEvent?.toHeldEventText(context) }
+
+    /** The visibility of each part of the debug view, as set by the user. */
+    val displayConfig: Flow<LiveDebuggingDisplayConfig> = combine(
+        debuggingRepository.isDebugViewEventStatsShown,
+        debuggingRepository.isDebugViewActionsShown,
+        debuggingRepository.isDebugViewHeldFingerShown,
+    ) { showEventStats, showActions, showHeldFinger ->
+        LiveDebuggingDisplayConfig(
+            showEventStats = showEventStats,
+            showActions = showActions,
+            showHeldFinger = showHeldFinger,
+        )
+    }
 }
 
 private fun DebugLiveEventOccurrence.toLastPositiveDebugInfo(context: Context): LiveDebuggingUiState =

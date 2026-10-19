@@ -124,6 +124,14 @@
     <string name="field_show_debug_view_desc">Hiển thị các Sự kiện được kích hoạt trong khi phát hiện.</string>
     <string name="item_title_debug_generate_report">Tạo báo cáo</string>
     <string name="item_desc_debug_generate_report">Ghi lại hành vi kịch bản của bạn trong khi phát hiện để tạo báo cáo.</string>
+
+    <string name="field_debug_view_settings_title">Cài đặt chế độ xem gỡ lỗi</string>
+    <string name="field_debug_view_settings_desc">Chọn thông tin hiển thị trong chế độ xem gỡ lỗi.</string>
+
+    <string name="dialog_title_debug_view_settings">Chế độ xem gỡ lỗi</string>
+    <string name="field_debug_view_show_event_stats_title">Hiển thị thống kê Sự kiện</string>
+    <string name="field_debug_view_show_actions_title">Hiển thị hành động của Sự kiện</string>
+    <string name="field_debug_view_show_held_finger_title">Hiển thị ngón tay đang giữ</string>
     <string name="field_show_debug_report_title">Hiển thị báo cáo</string>
     <string name="field_show_debug_report_desc_available">Báo cáo gỡ lỗi có sẵn</string>
     <string name="field_show_debug_report_desc_not_available">Không có báo cáo gỡ lỗi</string>

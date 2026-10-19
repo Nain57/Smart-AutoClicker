@@ -103,6 +103,14 @@
     <string name="field_condition_selection_title_or_operator">Fare clic sulla prima condizione rilevata</string>
     <string name="item_title_debug_generate_report">Genera un rapporto</string>
     <string name="item_desc_debug_generate_report">Registra il comportamento dello scenario durante il rilevamento per creare un rapporto.</string>
+
+    <string name="field_debug_view_settings_title">Impostazioni visualizzazione debug</string>
+    <string name="field_debug_view_settings_desc">Scegli le informazioni mostrate nella visualizzazione debug.</string>
+
+    <string name="dialog_title_debug_view_settings">Visualizzazione debug</string>
+    <string name="field_debug_view_show_event_stats_title">Mostra statistiche degli eventi</string>
+    <string name="field_debug_view_show_actions_title">Mostra azioni dell\'evento</string>
+    <string name="field_debug_view_show_held_finger_title">Mostra dito tenuto premuto</string>
     <string name="field_show_debug_report_desc_available">Il rapporto di debug è disponibile</string>
     <string name="field_show_debug_report_desc_not_available">Nessun rapporto di debug disponibile</string>
     <string name="field_show_debug_view_title">Mostra visualizzazione debug</string>

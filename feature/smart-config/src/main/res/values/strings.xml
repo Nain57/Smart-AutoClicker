@@ -174,6 +174,14 @@
     <string name="item_title_debug_generate_report">Generate a report</string>
     <string name="item_desc_debug_generate_report">Capture your scenario behaviour while detecting to create a report.</string>
 
+    <string name="field_debug_view_settings_title">Debug view settings</string>
+    <string name="field_debug_view_settings_desc">Choose the information displayed in the debug view.</string>
+
+    <string name="dialog_title_debug_view_settings">Debug View</string>
+    <string name="field_debug_view_show_event_stats_title">Show event statistics</string>
+    <string name="field_debug_view_show_actions_title">Show event actions</string>
+    <string name="field_debug_view_show_held_finger_title">Show held finger</string>
+
     <string name="field_show_debug_report_title">Show report</string>
     <string name="field_show_debug_report_desc_available">Debug report is available</string>
     <string name="field_show_debug_report_desc_not_available">No debug report available</string>

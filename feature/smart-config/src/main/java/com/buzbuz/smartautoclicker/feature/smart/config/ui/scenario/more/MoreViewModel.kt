@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.more
 import android.content.ComponentName
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.base.data.AppComponentsProvider
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
@@ -29,7 +30,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -41,16 +45,16 @@ class MoreViewModel @Inject constructor(
 ) : ViewModel() {
 
     /** Tells if the debug view is enabled or not. */
-    private val _isDebugViewEnabled = MutableStateFlow(debuggingRepository.isDebugViewEnabled())
-    val isDebugViewEnabled: Flow<Boolean> = _isDebugViewEnabled
+    private val _isDebugViewEnabled = MutableStateFlow<Boolean?>(null)
+    val isDebugViewEnabled: Flow<Boolean> = _isDebugViewEnabled.filterNotNull()
 
     /** Tells if the debug report is enabled or not. */
-    private val _isDebugReportEnabled = MutableStateFlow(debuggingRepository.isDebugReportEnabled())
-    val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled
+    private val _isDebugReportEnabled = MutableStateFlow<Boolean?>(null)
+    val isDebugReportEnabled: Flow<Boolean> = _isDebugReportEnabled.filterNotNull()
 
     /** Tells if a debug report is available. */
     val showDebugReportEnabled: Flow<Boolean> = debuggingRepository.isDebugReportAvailable
-        .combine(_isDebugReportEnabled) { available, enabled ->
+        .combine(isDebugReportEnabled) { available, enabled ->
             available && enabled
         }
 
@@ -60,17 +64,27 @@ class MoreViewModel @Inject constructor(
             else context.getString(R.string.field_counters_desc, counters.size)
         }
 
+    init {
+        viewModelScope.launch {
+            _isDebugViewEnabled.value = debuggingRepository.isDebugViewEnabled()
+            _isDebugReportEnabled.value = debuggingRepository.isDebugReportEnabled()
+        }
+    }
+
 
     fun toggleIsDebugViewEnabled() {
-        _isDebugViewEnabled.value = !_isDebugViewEnabled.value
+        _isDebugViewEnabled.update { isEnabled -> isEnabled?.not() }
     }
 
     fun toggleIsDebugReportEnabled() {
-        _isDebugReportEnabled.value = !_isDebugReportEnabled.value
+        _isDebugReportEnabled.update { isEnabled -> isEnabled?.not() }
     }
 
     fun saveConfig() {
-        debuggingRepository.setDebuggingConfig(_isDebugViewEnabled.value, _isDebugReportEnabled.value)
+        val debugView = _isDebugViewEnabled.value ?: return
+        val debugReport = _isDebugReportEnabled.value ?: return
+
+        debuggingRepository.setDebuggingConfig(debugView, debugReport)
     }
 
     fun getTutorialActivityComponent(): ComponentName =

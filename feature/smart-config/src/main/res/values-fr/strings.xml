@@ -103,6 +103,15 @@
     <string name="field_condition_selection_title_or_operator">Cliquer sur la première condition détectée</string>
     <string name="item_title_debug_generate_report">Générer un rapport</string>
     <string name="item_desc_debug_generate_report">Enregistrez le comportement de votre scénario pendant la détection afin de générer un rapport.</string>
+
+    <string name="field_debug_view_settings_title">Paramètres de l\'overlay de débug</string>
+    <string name="field_debug_view_settings_desc">Choisissez les informations affichées dans l\'overlay de débug.</string>
+
+    <string name="dialog_title_debug_view_settings">Overlay de débug</string>
+    <string name="field_debug_view_show_event_stats_title">Afficher les statistiques des événements</string>
+    <string name="field_debug_view_show_actions_title">Afficher les actions de l\'événement</string>
+    <string name="field_debug_view_show_held_finger_title">Afficher le doigt maintenu</string>
+
     <string name="field_show_debug_report_desc_available">Un rapport est disponible</string>
     <string name="field_show_debug_report_desc_not_available">Aucun rapport de debug disponible</string>
     <string name="field_show_debug_view_title">Overlay de débug</string>

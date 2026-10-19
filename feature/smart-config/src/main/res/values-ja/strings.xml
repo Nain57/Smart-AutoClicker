@@ -264,6 +264,14 @@
     <string name="field_show_debug_view_desc">検出中にトリガーされたイベントを表示します。</string>
     <string name="item_desc_debug_generate_report">検出中にシナリオの動作を記録してレポートを作成します。</string>
 
+    <string name="field_debug_view_settings_title">デバッグビューの設定</string>
+    <string name="field_debug_view_settings_desc">デバッグビューに表示する情報を選択します。</string>
+
+    <string name="dialog_title_debug_view_settings">デバッグビュー</string>
+    <string name="field_debug_view_show_event_stats_title">イベント統計を表示</string>
+    <string name="field_debug_view_show_actions_title">イベントのアクションを表示</string>
+    <string name="field_debug_view_show_held_finger_title">押し続けている指を表示</string>
+
     <string name="generic_detection_area_title">検出エリア</string>
     <string name="generic_detection_area_desc_empty">検出エリアを定義する必要があります。ここをクリックして定義してください</string>
 

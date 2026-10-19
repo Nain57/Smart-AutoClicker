@@ -39,14 +39,29 @@ interface DebuggingRepository {
     /** Tells if a debug report is available. */
     val isDebugReportAvailable: StateFlow<Boolean>
 
+    /** Tells if the event statistics are shown in the debug view. */
+    val isDebugViewEventStatsShown: Flow<Boolean>
+
+    /** Tells if the event actions are shown in the debug view. */
+    val isDebugViewActionsShown: Flow<Boolean>
+
+    /** Tells if the held finger is shown in the debug view. */
+    val isDebugViewHeldFingerShown: Flow<Boolean>
+
     /** Tells if the debugging overlay should be enabled while detecting. */
-    fun isDebugViewEnabled(): Boolean
+    suspend fun isDebugViewEnabled(): Boolean
 
     /** Tells if a debug report should be created while detecting. */
-    fun isDebugReportEnabled(): Boolean
+    suspend fun isDebugReportEnabled(): Boolean
 
     /** Replace the existing debug configuration settings with the provided ones. */
     fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean)
+
+    fun setDebugViewEventStatsShown(isShown: Boolean)
+
+    fun setDebugViewActionsShown(isShown: Boolean)
+
+    fun setDebugViewHeldFingerShown(isShown: Boolean)
 
     /** Read the last detection session report overview, if any. */
     fun getLastReportOverview(): Flow<DebugReportOverview?>

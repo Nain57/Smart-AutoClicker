@@ -32,5 +32,7 @@ dependencies {
     implementation(project(":core:smart:domain"))
     implementation(project(":core:smart:processing"))
 
+    implementation(libs.androidx.datastore)
+
     testImplementation(libs.kotlinx.coroutines.test)
 }

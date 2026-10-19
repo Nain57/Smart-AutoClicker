@@ -46,6 +46,7 @@ import com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters.newRe
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.AlphabetActivity
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.condition.screen.text.alphabet.required.RequiredAlphabetFragment
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingActionsAdapter
+import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingDisplayConfig
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingUiState
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.mainmenu.debugging.LiveDebuggingViewModel
 import com.buzbuz.smartautoclicker.feature.smart.config.ui.scenario.ScenarioDialog
@@ -322,6 +323,25 @@ class MainMenu(private val onStopClicked: () -> Unit) : OverlayMenu() {
             launch {
                 debuggingViewModel.debugHeldEvent.collect(::updateHeldEvent)
             }
+            launch {
+                debuggingViewModel.displayConfig.collect(::updateLiveDebugDisplayConfig)
+            }
+        }
+    }
+
+    private fun updateLiveDebugDisplayConfig(config: LiveDebuggingDisplayConfig) {
+        // The event name is always shown, so each optional row owns the separator right above it.
+        viewBinding.apply {
+            separator1.isVisible = config.showEventStats
+            debugEventFulfilledCount.isVisible = config.showEventStats
+            separator3.isVisible = config.showEventStats
+            debugEventConditionComputeTime.isVisible = config.showEventStats
+
+            separator2.isVisible = config.showActions
+            actionList.isVisible = config.showActions
+
+            separator4.isVisible = config.showHeldFinger
+            heldEvent.isVisible = config.showHeldFinger
         }
     }
 

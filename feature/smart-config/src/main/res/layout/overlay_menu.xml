@@ -90,17 +90,18 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_debug"
                 android:layout_width="@dimen/overlay_debug_panel_width"
-                android:layout_height="@dimen/overlay_debug_panel_height"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/menu_items"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 tools:visibility="visible">
 
                 <View
                     android:id="@+id/separator_start"
                     android:layout_width="2dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:background="@android:drawable/divider_horizontal_bright"
                     android:backgroundTint="@color/overlayViewPrimary"
                     app:layout_constraintTop_toTopOf="parent"
@@ -120,7 +121,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/separator_1"
-                    app:layout_constraintVertical_chainStyle="spread"
+                    app:layout_constraintVertical_chainStyle="spread_inside"
                     app:drawableTint="@color/overlayMenuButtons"
                     android:drawablePadding="@dimen/margin_horizontal_small"
                     tools:text="@string/default_event_name"
@@ -189,7 +190,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@android:drawable/divider_horizontal_bright"
-                    android:backgroundTint="@color/overlayViewPrimary" />
+                    android:backgroundTint="@color/overlayViewPrimary"
+                    tools:visibility="gone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/action_list"
@@ -204,7 +206,8 @@
                     android:scrollbars="none"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_live_debugging_action"
-                    tools:itemCount="3"/>
+                    tools:itemCount="3"
+                    tools:visibility="gone"/>
 
                 <View
                     android:id="@+id/separator_4"

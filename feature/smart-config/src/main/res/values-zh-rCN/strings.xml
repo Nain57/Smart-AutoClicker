@@ -399,6 +399,14 @@
     <string name="field_show_debug_view_desc">显示检测过程中触发的事件。</string>
     <string name="item_desc_debug_generate_report">在检测时捕获场景行为以创建报告。</string>
 
+    <string name="field_debug_view_settings_title">调试窗口设置</string>
+    <string name="field_debug_view_settings_desc">选择调试窗口中显示的信息。</string>
+
+    <string name="dialog_title_debug_view_settings">调试窗口</string>
+    <string name="field_debug_view_show_event_stats_title">显示事件统计</string>
+    <string name="field_debug_view_show_actions_title">显示事件操作</string>
+    <string name="field_debug_view_show_held_finger_title">显示按住的手指</string>
+
     <string name="generic_detection_area_title">检测区域</string>
     <string name="generic_detection_area_desc_empty">您必须定义一个检测区域。点击此处进行定义</string>
 

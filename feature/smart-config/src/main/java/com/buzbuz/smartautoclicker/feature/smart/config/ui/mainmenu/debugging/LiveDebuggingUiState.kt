@@ -36,6 +36,19 @@ data class LiveDebuggingUiState(
     val actions: List<LiveDebuggingActionsItem>,
 )
 
+/**
+ * Visibility of each part of the live debugging view on the main menu.
+ *
+ * @param showEventStats true to show the event fulfilled count and processing duration.
+ * @param showActions true to show the actions of the event.
+ * @param showHeldFinger true to show the event currently holding a pointer on the screen.
+ */
+data class LiveDebuggingDisplayConfig(
+    val showEventStats: Boolean,
+    val showActions: Boolean,
+    val showHeldFinger: Boolean,
+)
+
 /** Icons for the actions of the event being executed.*/
 data class LiveDebuggingActionsItem(
     @field:DrawableRes val icon: Int,

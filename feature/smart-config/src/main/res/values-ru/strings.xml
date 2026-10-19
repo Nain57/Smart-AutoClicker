@@ -142,6 +142,14 @@
     <string name="item_title_debug_generate_report">Создать отчёт</string>
     <string name="item_desc_debug_generate_report">Запишите поведение вашего сценария во время обнаружения, чтобы создать отчет.</string>
 
+    <string name="field_debug_view_settings_title">Настройки отладочного вида</string>
+    <string name="field_debug_view_settings_desc">Выберите информацию, отображаемую в отладочном виде.</string>
+
+    <string name="dialog_title_debug_view_settings">Отладочный вид</string>
+    <string name="field_debug_view_show_event_stats_title">Показывать статистику событий</string>
+    <string name="field_debug_view_show_actions_title">Показывать действия события</string>
+    <string name="field_debug_view_show_held_finger_title">Показывать удерживаемый палец</string>
+
     <string name="field_show_debug_report_title">Показать отчёт</string>
     <string name="field_show_debug_report_desc_available">Отладочный отчёт доступен</string>
     <string name="field_show_debug_report_desc_not_available">Отладочный отчёт недоступен</string>

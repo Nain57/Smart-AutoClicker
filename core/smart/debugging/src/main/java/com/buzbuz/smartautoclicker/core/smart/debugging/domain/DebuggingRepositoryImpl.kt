@@ -32,9 +32,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,9 +52,10 @@ internal class DebuggingRepositoryImpl @Inject constructor(
 
     private val ioScope: CoroutineScope = CoroutineScope(ioDispatcher + SupervisorJob())
 
-    override val isLiveDebugging: Flow<Boolean> = debugEngine.isDebuggingSession.map { isDebuggingSession ->
-        isDebuggingSession && isDebugViewEnabled()
-    }
+    override val isLiveDebugging: Flow<Boolean> = debugEngine.isDebuggingSession
+        .combine(debugConfigurationDataSource.isDebugViewEnabled()) { isDebuggingSession, isDebugViewEnabled ->
+            isDebuggingSession && isDebugViewEnabled
+        }
 
     override val lastImageEventProcessed: Flow<DebugLiveEventOccurrence?> =
         debugEngine.lastEventProcessed
@@ -64,12 +66,20 @@ internal class DebuggingRepositoryImpl @Inject constructor(
     override val isDebugReportAvailable: StateFlow<Boolean> =
         debugReportDataSource.isReportAvailable
 
+    override val isDebugViewEventStatsShown: Flow<Boolean> =
+        debugConfigurationDataSource.isDebugViewEventStatsShown()
 
-    override fun isDebugViewEnabled(): Boolean =
-        debugConfigurationDataSource.isDebugViewEnabled()
+    override val isDebugViewActionsShown: Flow<Boolean> =
+        debugConfigurationDataSource.isDebugViewActionsShown()
 
-    override fun isDebugReportEnabled(): Boolean =
-        debugConfigurationDataSource.isDebugReportEnabled()
+    override val isDebugViewHeldFingerShown: Flow<Boolean> =
+        debugConfigurationDataSource.isDebugViewHeldFingerShown()
+
+    override suspend fun isDebugViewEnabled(): Boolean =
+        debugConfigurationDataSource.isDebugViewEnabled().first()
+
+    override suspend fun isDebugReportEnabled(): Boolean =
+        debugConfigurationDataSource.isDebugReportEnabled().first()
 
     override fun setDebuggingConfig(debugView: Boolean, debugReport: Boolean) {
         ioScope.launch {
@@ -81,6 +91,18 @@ internal class DebuggingRepositoryImpl @Inject constructor(
                 debugReport = debugReport,
             )
         }
+    }
+
+    override fun setDebugViewEventStatsShown(isShown: Boolean) {
+        ioScope.launch { debugConfigurationDataSource.setDebugViewEventStatsShown(isShown) }
+    }
+
+    override fun setDebugViewActionsShown(isShown: Boolean) {
+        ioScope.launch { debugConfigurationDataSource.setDebugViewActionsShown(isShown) }
+    }
+
+    override fun setDebugViewHeldFingerShown(isShown: Boolean) {
+        ioScope.launch { debugConfigurationDataSource.setDebugViewHeldFingerShown(isShown) }
     }
 
 
