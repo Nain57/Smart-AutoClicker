@@ -419,6 +419,45 @@ class GestureFingerMapperTests {
     }
 
     @Test
+    fun fingerWithMotions_cleanIds_toDomain() {
+        val fingerWithMotions = GestureFingerWithMotions(
+            finger = GestureFingerEntity(fingerId.databaseId, actionId, fingerIndex, startTimeMs),
+            motions = listOf(
+                GestureFingerMotionEntity(
+                    id = pressMotionId.databaseId, fingerId = fingerId.databaseId, index = 0,
+                    motionType = GestureFingerMotionType.PRESS,
+                    xCoordinateType = CoordinatesType.CONDITION, yCoordinateType = CoordinatesType.CONDITION,
+                    conditionId = conditionId.databaseId,
+                    xOffsetCoordinateType = CoordinatesType.LITERAL, yOffsetCoordinateType = CoordinatesType.LITERAL,
+                    xOffsetLiteral = 0, yOffsetLiteral = 0,
+                ),
+                GestureFingerMotionEntity(
+                    id = releaseMotionId.databaseId, fingerId = fingerId.databaseId, index = 1,
+                    motionType = GestureFingerMotionType.RELEASE,
+                ),
+            ),
+        )
+
+        assertEquals(
+            GestureFinger(
+                id = Identifier(id = fingerId.databaseId, asTemporary = true),
+                startTimeMs = startTimeMs,
+                motions = listOf(
+                    GestureFingerMotion.Press(
+                        id = Identifier(id = pressMotionId.databaseId, asTemporary = true),
+                        position = Position.Condition(
+                            conditionId = Identifier(id = conditionId.databaseId, asTemporary = true),
+                        ),
+                        offset = Position.Coordinates(Literal(0), Literal(0)),
+                    ),
+                    GestureFingerMotion.Release(id = Identifier(id = releaseMotionId.databaseId, asTemporary = true)),
+                ),
+            ),
+            fingerWithMotions.toDomainGestureFinger(cleanIds = true),
+        )
+    }
+
+    @Test
     fun fingerWithMotions_releaseHoldUntilUnfulfilled_toDomain() {
         assertReleaseToDomain(
             holdType = GestureReleaseHoldType.UNTIL_UNFULFILLED,

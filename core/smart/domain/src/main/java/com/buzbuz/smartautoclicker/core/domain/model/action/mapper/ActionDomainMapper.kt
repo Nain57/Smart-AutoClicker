@@ -88,7 +88,7 @@ private fun CompleteActionEntity.toDomainGesture(cleanIds: Boolean = false) = Ge
     priority = action.priority,
     fingers = gestureFingers
         .sortedBy { it.finger.index }
-        .map { it.toDomainGestureFinger() },
+        .map { it.toDomainGestureFinger(cleanIds) },
 )
 
 private fun CompleteActionEntity.toDomainPause(cleanIds: Boolean = false) = Pause(

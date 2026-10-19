@@ -122,19 +122,19 @@ internal fun GestureFingerWithMotions.toDomainGestureFinger(cleanIds: Boolean = 
         startTimeMs = finger.startTimeMs,
         motions = motions
             .sortedBy { it.index }
-            .map { it.toDomainGestureMotion() }
+            .map { it.toDomainGestureMotion(cleanIds) }
     )
 
 private fun GestureFingerMotionEntity.toDomainGestureMotion(cleanIds: Boolean = false): GestureFingerMotion =
     when (motionType) {
         GestureFingerMotionType.PRESS -> GestureFingerMotion.Press(
             id = Identifier(id, asTemporary = cleanIds),
-            position = toGesturePosition(),
+            position = toGesturePosition(cleanIds),
             offset = toGestureOffset(),
         )
         GestureFingerMotionType.MOVE -> GestureFingerMotion.Move(
             id = Identifier(id, asTemporary = cleanIds),
-            position = toGesturePosition(),
+            position = toGesturePosition(cleanIds),
             offset = toGestureOffset(),
             durationMs = durationMs ?: 0L,
         )
@@ -156,9 +156,9 @@ private fun GestureFingerMotionEntity.toDomainReleaseHold(): GestureFingerMotion
         GestureReleaseHoldType.FOR_DURATION -> GestureFingerMotion.Release.Hold.ForDuration(holdDurationMs ?: 0L)
     }
 
-private fun GestureFingerMotionEntity.toGesturePosition(): Position =
+private fun GestureFingerMotionEntity.toGesturePosition(cleanIds: Boolean): Position =
     if (xCoordinateType == yCoordinateType && xCoordinateType == CoordinatesType.CONDITION) {
-        Position.Condition(conditionId = conditionId?.let { Identifier(databaseId = it) })
+        Position.Condition(conditionId = conditionId?.let { Identifier(id = it, asTemporary = cleanIds) })
     } else {
         Position.Coordinates(
             x = xCoordinateType.toGestureCoordinatesValue(xLiteral, xCounter),
