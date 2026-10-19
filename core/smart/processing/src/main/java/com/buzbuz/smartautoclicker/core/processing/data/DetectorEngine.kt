@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.processing.data
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.media.Image
 import android.media.projection.MediaProjectionManager
 import android.util.Log
@@ -37,11 +38,13 @@ import com.buzbuz.smartautoclicker.core.detection.NativeDetector
 import com.buzbuz.smartautoclicker.core.display.config.DisplayConfigManager
 import com.buzbuz.smartautoclicker.core.domain.ext.getAllOCRAlphabets
 import com.buzbuz.smartautoclicker.core.domain.model.counter.Counter
+import com.buzbuz.smartautoclicker.core.domain.model.condition.ScreenCondition
 import com.buzbuz.smartautoclicker.core.domain.model.event.ScreenEvent
 import com.buzbuz.smartautoclicker.core.domain.model.event.TriggerEvent
 import com.buzbuz.smartautoclicker.core.domain.model.scenario.Scenario
 import com.buzbuz.smartautoclicker.core.processing.data.processor.ScenarioProcessor
 import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScalingManager
+import com.buzbuz.smartautoclicker.core.processing.data.scaling.ScreenConditionScalingInfo
 import com.buzbuz.smartautoclicker.core.settings.domain.SettingsRepository
 import com.buzbuz.smartautoclicker.core.processing.domain.SmartProcessingListener
 
@@ -225,11 +228,13 @@ class DetectorEngine @Inject constructor(
             bitmapRepository.clearCache()
 
             // Set the display projection to the scaled size
-            displayRecorder.resizeDisplay(
-                displaySize = scalingManager.startScaling(
-                    quality = scenario.detectionQuality.toDouble(),
-                    screenEvents = screenEvents,
-                )
+            val scaledScreenSize = scalingManager.startScaling(
+                quality = scenario.detectionQuality.toDouble(),
+                screenEvents = screenEvents,
+            )
+            displayRecorder.resizeDisplay(displaySize = scaledScreenSize)
+            bitmapRepository.resizeCacheForDetection(
+                requiredBytes = computeDetectionBitmapsBytes(scaledScreenSize, screenEvents),
             )
 
             // Compute minimal processing duration
@@ -335,6 +340,10 @@ class DetectorEngine @Inject constructor(
             scalingManager.stopScaling()
             displayRecorder.resizeDisplay(displayConfigManager.displayConfig.sizePx)
 
+            // Bitmaps are cached at their scaled detection size, they are useless for the UI.
+            bitmapRepository.clearCache()
+            bitmapRepository.resetCacheSize()
+
             _state.emit(DetectorState.RECORDING)
             processingShutdownJob = null
             minProcessingDurationNs  = DEFAULT_MIN_PROCESSING_DURATION_NS
@@ -423,7 +432,29 @@ class DetectorEngine @Inject constructor(
 
         return loadTextDetectionModels(ocrDetectModelPath, ocrRecoModels)
     }
+
+    /**
+     * Size of the bitmaps accessed on each detection loop: all image conditions at their scaled size, and the screen
+     * capture. The capture is counted twice, as a screen rotation creates a new one with swapped dimensions.
+     */
+    private fun computeDetectionBitmapsBytes(scaledScreenSize: Point, screenEvents: List<ScreenEvent>): Long {
+        val conditionsBytes = screenEvents
+            .flatMap { event -> event.conditions }
+            .filterIsInstance<ScreenCondition.Image>()
+            .mapNotNull { condition ->
+                val imageArea = (scalingManager.getScreenConditionScalingInfo(condition)
+                        as? ScreenConditionScalingInfo.Image)?.imageArea ?: return@mapNotNull null
+                Triple(condition.path, imageArea.width(), imageArea.height())
+            }
+            .distinct()
+            .sumOf { (_, width, height) -> width.toArgbBytes(height) }
+
+        return conditionsBytes + 2 * scaledScreenSize.x.toArgbBytes(scaledScreenSize.y)
+    }
 }
+
+private fun Int.toArgbBytes(height: Int): Long =
+    toLong() * height * ARGB_8888_BYTES_PER_PIXEL
 
 private fun OCRModel.getOCRModelPath(): String? =
     (state as? OCRModelState.Installed)?.path
@@ -472,6 +503,8 @@ private const val ONE_SECOND_IN_NANO = 1000000000L
 private const val ONE_MILLISECOND_IN_NANO = 1000000L
 /** The default minimal processing duration in nanoseconds. */
 private const val DEFAULT_MIN_PROCESSING_DURATION_NS = ONE_MILLISECOND_IN_NANO
+
+private const val ARGB_8888_BYTES_PER_PIXEL = 4
 
 /** Tag for logs. */
 private const val TAG = "DetectorEngine"

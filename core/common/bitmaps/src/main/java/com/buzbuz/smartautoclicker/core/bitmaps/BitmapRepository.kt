@@ -76,6 +76,17 @@ interface BitmapRepository : Dumpable {
 
     /** Clear the cache of bitmaps. */
     fun clearCache()
+
+    /**
+     * Resize the cache to hold the bitmaps used during a detection session.
+     * The final size is bounded to keep the memory footprint reasonable.
+     *
+     * @param requiredBytes the total size of the bitmaps accessed on each detection loop.
+     */
+    fun resizeCacheForDetection(requiredBytes: Long)
+
+    /** Restore the default cache size, used when no detection is running. */
+    fun resetCacheSize()
 }
 
 /** The prefix appended to all bitmap file names. */

@@ -21,13 +21,20 @@ import android.util.LruCache
 import javax.inject.Inject
 
 
-internal class BitmapLRUCache @Inject constructor() : LruCache<String, Bitmap>(
-    ((Runtime.getRuntime().maxMemory() / 1024).toInt() * CACHE_SIZE_RATIO).toInt()
-) {
+internal class BitmapLRUCache @Inject constructor() : LruCache<String, Bitmap>(DEFAULT_CACHE_SIZE_KB) {
 
     override fun sizeOf(key: String, bitmap: Bitmap): Int {
         // The cache size will be measured in kilobytes rather than number of items.
         return bitmap.byteCount / 1024
+    }
+
+    fun resizeForWorkingSet(requiredBytes: Long) {
+        val requiredKb = (requiredBytes * WORKING_SET_MARGIN / 1024).toLong()
+        resize(requiredKb.coerceIn(1L, MAX_CACHE_SIZE_KB.toLong()).toInt())
+    }
+
+    fun resetSize() {
+        resize(DEFAULT_CACHE_SIZE_KB)
     }
 
     fun putImageConditionBitmap(path: String, width: Int, height: Int, bitmap: Bitmap) {
@@ -52,5 +59,10 @@ internal class BitmapLRUCache @Inject constructor() : LruCache<String, Bitmap>(
         "key:IMAGE_CONDITION:$path:$width:$height"
 }
 
-/** The ratio of the total application size for the size of the bitmap cache in the memory. */
-private const val CACHE_SIZE_RATIO = 0.5
+private val maxMemoryKb: Long = Runtime.getRuntime().maxMemory() / 1024
+
+/** Cache size when no detection is running, used by the configuration UI. */
+private val DEFAULT_CACHE_SIZE_KB: Int = (maxMemoryKb / 8).toInt()
+/** Upper bound for the detection working set, to avoid being an easy target for the low memory killer. */
+private val MAX_CACHE_SIZE_KB: Int = (maxMemoryKb / 4).toInt()
+private const val WORKING_SET_MARGIN = 1.1

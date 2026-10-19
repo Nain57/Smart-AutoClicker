@@ -62,6 +62,15 @@ internal class BitmapRepositoryImpl @Inject constructor(
         bitmapLRUCache.evictAll()
     }
 
+    override fun resizeCacheForDetection(requiredBytes: Long) {
+        bitmapLRUCache.resizeForWorkingSet(requiredBytes)
+        Log.i(TAG, "Cache resized for detection: required=${requiredBytes / 1024}kB, max=${bitmapLRUCache.maxSize()}kB")
+    }
+
+    override fun resetCacheSize() {
+        bitmapLRUCache.resetSize()
+    }
+
     override fun dump(writer: PrintWriter, prefix: CharSequence) {
         val contentPrefix = prefix.addDumpTabulationLvl()
 
