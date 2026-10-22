@@ -94,7 +94,7 @@ internal class BillingDataSource @Inject constructor(
 
         coroutineScopeIo.launch {
             productDetailsManager.startMonitoring(client::fetchInAppProductDetails)
-            refreshPurchases()
+            purchaseManager.refreshPurchasesUntilSettled(client::fetchInAppPurchases, client::acknowledgePurchase)
         }
     }
 

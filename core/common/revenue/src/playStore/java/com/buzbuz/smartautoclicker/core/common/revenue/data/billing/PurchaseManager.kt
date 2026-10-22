@@ -19,6 +19,8 @@ package com.buzbuz.smartautoclicker.core.common.revenue.data.billing
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssue
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssueReporter
@@ -26,6 +28,7 @@ import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.Cached
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.PurchaseCache
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.sdk.PurchasesQueryResult
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -33,6 +36,7 @@ import kotlinx.coroutines.sync.withLock
 
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.seconds
 
 internal class NewPurchaseManager @Inject constructor(
     private val purchaseCache: PurchaseCache,
@@ -60,22 +64,48 @@ internal class NewPurchaseManager @Inject constructor(
         }
     }
 
-    suspend fun handlePurchasesQueryResult(result: PurchasesQueryResult, ackQuery: suspend (Purchase) -> Boolean) {
+    /**
+     * Play services are often not ready when the process starts, and the next refresh only happens when the user opens
+     * an activity. Retry until the purchase state is settled, so a purchase can be restored and acknowledged before
+     * Play refunds it.
+     */
+    suspend fun refreshPurchasesUntilSettled(
+        purchasesQuery: suspend () -> PurchasesQueryResult,
+        ackQuery: suspend (Purchase) -> BillingResult,
+    ) {
+        var retryDelay = PURCHASES_QUERY_INITIAL_RETRY_DELAY
+        for (attempt in 1..PURCHASES_QUERY_MAX_ATTEMPTS) {
+            if (handlePurchasesQueryResult(purchasesQuery(), ackQuery)) return
+            if (attempt == PURCHASES_QUERY_MAX_ATTEMPTS) return
+
+            delay(retryDelay)
+            retryDelay *= 2
+        }
+    }
+
+    /** Returns false if Google Play couldn't settle the purchase state and the query should be retried later. */
+    suspend fun handlePurchasesQueryResult(
+        result: PurchasesQueryResult,
+        ackQuery: suspend (Purchase) -> BillingResult,
+    ): Boolean =
         mutex.withLock {
             when (result) {
                 is PurchasesQueryResult.Failure -> {
                     Log.w(TAG, "Purchases query failed with code ${result.responseCode}, keeping state ${_state.value}")
                     issueReporter.report(BillingIssue.PURCHASES_QUERY_FAILED, result.responseCode, result.debugMessage)
+                    false
                 }
 
                 is PurchasesQueryResult.Success ->
                     if (result.purchase != null) handlePurchase(result.purchase, ackQuery)
-                    else handleMissingPurchase()
+                    else {
+                        handleMissingPurchase()
+                        true
+                    }
             }
         }
-    }
 
-    suspend fun handleUiFlowPurchase(purchase: Purchase?, ackQuery: suspend (Purchase) -> Boolean) {
+    suspend fun handleUiFlowPurchase(purchase: Purchase?, ackQuery: suspend (Purchase) -> BillingResult) {
         mutex.withLock {
             if (purchase == null) {
                 Log.i(TAG, "Product purchase not yet available")
@@ -86,30 +116,41 @@ internal class NewPurchaseManager @Inject constructor(
         }
     }
 
-    private suspend fun handlePurchase(purchase: Purchase, ackQuery: suspend (Purchase) -> Boolean) {
+    /** Returns false if the purchase couldn't be acknowledged. */
+    private suspend fun handlePurchase(purchase: Purchase, ackQuery: suspend (Purchase) -> BillingResult): Boolean {
         if (purchase.purchaseState != Purchase.PurchaseState.PURCHASED) {
             Log.i(TAG, "Product purchase state: ${purchase.purchaseState}")
             _state.emit(purchase.toPurchaseState())
-            return
+            return true
         }
 
         if (!signatureVerifier.isValid(purchase.originalJson, purchase.signature)) {
             Log.e(TAG, "Invalid signature. Check to make sure your public key is correct.")
             issueReporter.report(BillingIssue.INVALID_SIGNATURE)
             if (getValidCachedPurchase() == null) _state.emit(InAppPurchaseState.ERROR)
-            return
+            return true
         }
 
         if (!purchase.isAcknowledged) {
             Log.i(TAG, "Product purchase state: PURCHASED")
-            _state.emit(InAppPurchaseState.PURCHASED)
+            // A user with a confirmed purchase must not see the paywall while Play waits for the acknowledgement.
+            _state.emit(
+                if (getValidCachedPurchase() != null) InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED
+                else InAppPurchaseState.PURCHASED
+            )
 
-            if (!ackQuery(purchase)) return
+            val ackResult = ackQuery(purchase)
+            if (ackResult.responseCode != BillingClient.BillingResponseCode.OK) {
+                Log.w(TAG, "Purchase acknowledgement failed with code ${ackResult.responseCode}")
+                issueReporter.report(BillingIssue.ACKNOWLEDGE_FAILED, ackResult.responseCode, ackResult.debugMessage)
+                return false
+            }
             Log.i(TAG, "Product purchase state: PURCHASED_AND_ACKNOWLEDGED")
         }
 
         _state.emit(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED)
         cachePurchase(purchase)
+        return true
     }
 
     /**
@@ -184,4 +225,9 @@ internal enum class InAppPurchaseState {
 
 @VisibleForTesting
 internal val MISSING_PURCHASE_GRACE_MS = 3.days.inWholeMilliseconds
+/** With the doubling delay, the last attempt is made ~2.5 minutes after the first one. */
+@VisibleForTesting
+internal const val PURCHASES_QUERY_MAX_ATTEMPTS = 6
+@VisibleForTesting
+internal val PURCHASES_QUERY_INITIAL_RETRY_DELAY = 5.seconds
 private const val TAG = "PurchaseManager"

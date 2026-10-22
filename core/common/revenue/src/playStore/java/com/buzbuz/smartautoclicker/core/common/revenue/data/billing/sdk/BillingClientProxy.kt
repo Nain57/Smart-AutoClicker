@@ -158,23 +158,17 @@ internal class BillingClientProxy(
         return (false to product)
     }
 
-    suspend fun acknowledgePurchase(purchase: Purchase): Boolean {
-        if (purchase.isAcknowledged) {
-            Log.d(TAG, "Purchase is already acknowledged")
-            return true
-        }
-
+    suspend fun acknowledgePurchase(purchase: Purchase): BillingResult {
         Log.i(TAG, "Acknowledging purchase")
 
         val billingResult = client.acknowledgePurchase(acknowledgePurchaseQueryParams(purchase.purchaseToken))
         if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
             Log.e(TAG, "Error acknowledging purchase. ${billingResult.toLogString()}")
-            return false
+        } else {
+            Log.i(TAG, "Purchase acknowledged")
         }
 
-        Log.i(TAG, "Purchase acknowledged")
-
-        return true
+        return billingResult
     }
 
     private suspend fun fetchInAppProductDetailsCompat(): Pair<BillingResult, InAppProduct?>? =

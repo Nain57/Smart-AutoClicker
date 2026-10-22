@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.core.common.revenue.data.billing
 import android.os.Build
 
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssue
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue.BillingIssueReporter
@@ -26,9 +27,12 @@ import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.Cached
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.PurchaseCache
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.sdk.PurchasesQueryResult
 
+import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -106,7 +110,7 @@ class PurchaseManagerTests {
 
     @Test
     fun `new purchase is cached only once acknowledged`() = runTest {
-        purchaseManager.handleUiFlowPurchase(purchase(acknowledged = false)) { false }
+        purchaseManager.handleUiFlowPurchase(purchase(acknowledged = false), ::ackFailure)
 
         assertEquals(InAppPurchaseState.PURCHASED, purchaseManager.state.value)
         assertNull(purchaseCache.cached)
@@ -206,8 +210,124 @@ class PurchaseManagerTests {
     }
 
 
+    @Test
+    fun `query result is settled on success`() = runTest {
+        assertTrue(purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(purchase()), ::ackSuccess))
+        assertTrue(purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(null), ::ackSuccess))
+    }
+
+    @Test
+    fun `query result is not settled on query failure`() = runTest {
+        assertFalse(purchaseManager.handlePurchasesQueryResult(queryFailure(), ::ackSuccess))
+    }
+
+    @Test
+    fun `acknowledge failure is reported and not settled`() = runTest {
+        val isSettled = purchaseManager.handlePurchasesQueryResult(
+            PurchasesQueryResult.Success(purchase(acknowledged = false)),
+            ::ackFailure,
+        )
+
+        assertFalse(isSettled)
+        assertEquals(InAppPurchaseState.PURCHASED, purchaseManager.state.value)
+        verify(mockIssueReporter).report(
+            eq(BillingIssue.ACKNOWLEDGE_FAILED),
+            eq(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE),
+            anyOrNull(),
+        )
+    }
+
+    @Test
+    fun `unacknowledged purchase with cache keeps purchased state when acknowledge fails`() = runTest {
+        purchaseCache.cached = CachedPurchase(purchase().originalJson, SIGNATURE, null)
+
+        purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(purchase(acknowledged = false)), ::ackFailure)
+
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+        assertEquals(SIGNATURE, purchaseCache.cached?.signature)
+    }
+
+    @Test
+    fun `unacknowledged purchase with invalid cache is purchased when acknowledge fails`() = runTest {
+        purchaseCache.cached = CachedPurchase(CACHED_JSON, SIGNATURE, null)
+        Mockito.`when`(mockSignatureVerifier.isValid(eq(CACHED_JSON), anyOrNull())).thenReturn(false)
+
+        purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(purchase(acknowledged = false)), ::ackFailure)
+
+        assertEquals(InAppPurchaseState.PURCHASED, purchaseManager.state.value)
+        assertNull(purchaseCache.cached)
+    }
+
+
+    @Test
+    fun `refresh until settled queries once when settled`() = runTest {
+        val queryTimesMs = mutableListOf<Long>()
+
+        purchaseManager.refreshPurchasesUntilSettled(
+            purchasesQuery = { queryTimesMs.add(currentTime); PurchasesQueryResult.Success(purchase()) },
+            ackQuery = ::ackSuccess,
+        )
+
+        assertEquals(listOf(0L), queryTimesMs)
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+    }
+
+    @Test
+    fun `refresh until settled retries query failures with doubling delay`() = runTest {
+        val results = ArrayDeque(listOf(queryFailure(), queryFailure(), PurchasesQueryResult.Success(purchase())))
+        val queryTimesMs = mutableListOf<Long>()
+
+        purchaseManager.refreshPurchasesUntilSettled(
+            purchasesQuery = { queryTimesMs.add(currentTime); results.removeFirst() },
+            ackQuery = ::ackSuccess,
+        )
+
+        val initialDelayMs = PURCHASES_QUERY_INITIAL_RETRY_DELAY.inWholeMilliseconds
+        assertEquals(listOf(0L, initialDelayMs, initialDelayMs * 3), queryTimesMs)
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+    }
+
+    @Test
+    fun `refresh until settled retries acknowledge failures`() = runTest {
+        val ackResults = ArrayDeque(listOf(ackFailure(purchase()), ackSuccess(purchase())))
+        var queryCount = 0
+
+        purchaseManager.refreshPurchasesUntilSettled(
+            purchasesQuery = { queryCount++; PurchasesQueryResult.Success(purchase(acknowledged = false)) },
+            ackQuery = { ackResults.removeFirst() },
+        )
+
+        assertEquals(2, queryCount)
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+        assertEquals(SIGNATURE, purchaseCache.cached?.signature)
+    }
+
+    @Test
+    fun `refresh until settled gives up after max attempts`() = runTest {
+        val queryTimesMs = mutableListOf<Long>()
+
+        purchaseManager.refreshPurchasesUntilSettled(
+            purchasesQuery = { queryTimesMs.add(currentTime); queryFailure() },
+            ackQuery = ::ackSuccess,
+        )
+
+        val initialDelayMs = PURCHASES_QUERY_INITIAL_RETRY_DELAY.inWholeMilliseconds
+        assertEquals(PURCHASES_QUERY_MAX_ATTEMPTS, queryTimesMs.size)
+        assertEquals(initialDelayMs * ((1L shl (PURCHASES_QUERY_MAX_ATTEMPTS - 1)) - 1), currentTime)
+        assertEquals(InAppPurchaseState.NOT_PURCHASED, purchaseManager.state.value)
+    }
+
+
     @Suppress("UNUSED_PARAMETER")
-    private fun ackSuccess(purchase: Purchase): Boolean = true
+    private fun ackSuccess(purchase: Purchase): BillingResult =
+        BillingResult.newBuilder().setResponseCode(BillingClient.BillingResponseCode.OK).build()
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun ackFailure(purchase: Purchase): BillingResult =
+        BillingResult.newBuilder()
+            .setResponseCode(BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE)
+            .setDebugMessage("Service unavailable")
+            .build()
 
     private fun queryFailure() = PurchasesQueryResult.Failure(
         responseCode = BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE,
