@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +26,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
+import com.buzbuz.smartautoclicker.core.base.lifecycle.ActivityLifecycleTracker
 import com.buzbuz.smartautoclicker.core.common.overlays.manager.OverlayManager
 import com.buzbuz.smartautoclicker.core.display.recorder.MediaProjectionRequest
 import com.buzbuz.smartautoclicker.core.ui.errors.createNoMediaProjectionDialog
@@ -46,6 +48,7 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
     private val viewModel: RestartMediaProjectionViewModel by viewModels()
 
     @Inject lateinit var overlayManager: OverlayManager
+    @Inject lateinit var activityLifecycleTracker: ActivityLifecycleTracker
 
     /** The result launcher for the projection permission dialog. */
     private val mediaProjectionRequest: MediaProjectionRequest = MediaProjectionRequest()
@@ -56,14 +59,39 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transparent)
 
+        val forceEntireScreen = viewModel.isEntireScreenCaptureForced()
+        logEvent("projection requested forceEntireScreen=$forceEntireScreen")
+
         mediaProjectionRequest.registerForActivityResult(this)
         mediaProjectionRequest.showMediaProjectionWarning(
             context = this,
-            forceEntireScreen = viewModel.isEntireScreenCaptureForced(),
+            forceEntireScreen = forceEntireScreen,
             onSuccess = { resultCode, data -> restartScreenRecord(resultCode, data) },
             onFailure = { showProjectionDeniedToast() },
             onError = { showUnsupportedDeviceDialog() },
         )
+    }
+
+    // "Can't start activity that is not stopped" platform crashes happen while this activity waits for the projection
+    // result. Those events help to understand what moves the activity to the background in the meantime: a system
+    // projection screen on top of the task means the system hid it, this activity on top means the user left.
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        logEvent("new intent")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isFinishing) logEvent("stopped with task top=${getTaskTopActivityName()}")
+    }
+
+    private fun getTaskTopActivityName(): String? =
+        getSystemService(ActivityManager::class.java)?.appTasks
+            ?.firstOrNull { it.taskInfo?.taskId == taskId }
+            ?.taskInfo?.topActivity?.shortClassName
+
+    private fun logEvent(event: String) {
+        activityLifecycleTracker.onCustomEvent(this, event)
     }
 
     private fun finishActivity() {
@@ -76,17 +104,20 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
 
     private fun restartScreenRecord(resultCode: Int, data: Intent) {
         Log.i(TAG, "Media projection permission granted, restart recording")
+        logEvent("projection granted")
         viewModel.restartScreenRecord(resultCode, data)
         finishActivity()
     }
 
     private fun showProjectionDeniedToast() {
         Log.i(TAG, "Media projection permission rejected")
+        logEvent("projection denied")
         Toast.makeText(this, R.string.toast_denied_screen_sharing_permission, Toast.LENGTH_SHORT).show()
         finishActivity()
     }
 
     private fun showUnsupportedDeviceDialog() {
+        logEvent("projection unsupported")
         createNoMediaProjectionDialog { finishActivity() }.show()
     }
 }

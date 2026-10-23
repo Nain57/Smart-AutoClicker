@@ -46,6 +46,9 @@ class ActivityLifecycleTracker @Inject constructor() : Application.ActivityLifec
     fun hasActiveActivity(): Boolean =
         aliveActivities.any { !it.isFinishing }
 
+    /** Records an activity specific event, not covered by the lifecycle callbacks, in the crash breadcrumbs. */
+    fun onCustomEvent(activity: Activity, event: String): Unit = onEvent(activity, event)
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         aliveActivities.add(activity)
         onEvent(activity, "created")
