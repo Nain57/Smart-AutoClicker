@@ -31,6 +31,7 @@ import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.sdk.InAppPro
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,6 +55,8 @@ internal class BillingDataSource @Inject constructor(
         CoroutineScope(SupervisorJob() + ioDispatcher)
 
     private var billingClient: BillingClientProxy? = null
+    /** Refreshes the purchases after the billing flow reported the product as already owned. */
+    private var alreadyOwnedRefreshJob: Job? = null
 
     private val debugProduct: MutableStateFlow<InAppProduct?> =
         MutableStateFlow(null)
@@ -75,7 +78,8 @@ internal class BillingDataSource @Inject constructor(
         billingServiceConnection.connect(
             productId = PRODUCT_ID,
             onClientAvailable = ::onBillingClientAvailable,
-            onNewPurchasesListener = ::onPurchaseUpdatedFromBillingUiFlow
+            onNewPurchasesListener = ::onPurchaseUpdatedFromBillingUiFlow,
+            onAlreadyOwnedListener = ::onAlreadyOwnedFromBillingUiFlow,
         )
 
         if (BuildConfig.DEBUG) {
@@ -106,12 +110,30 @@ internal class BillingDataSource @Inject constructor(
         }
     }
 
-    fun refreshPurchases() {
+    private fun onAlreadyOwnedFromBillingUiFlow() {
         val client = billingClient ?: return
 
-        coroutineScopeIo.launch {
+        alreadyOwnedRefreshJob?.cancel()
+        alreadyOwnedRefreshJob = coroutineScopeIo.launch {
+            purchaseManager.refreshPurchasesUntilFound(client::fetchInAppPurchases, client::acknowledgePurchase)
+        }
+    }
+
+    fun refreshPurchases(): Job? {
+        val client = billingClient ?: return null
+
+        return coroutineScopeIo.launch {
             purchaseManager.handlePurchasesQueryResult(client.fetchInAppPurchases(), client::acknowledgePurchase)
         }
+    }
+
+    /**
+     * Refreshes the purchases if Google Play never answered the purchases query in this process, and waits for the
+     * result. Cancelling the wait doesn't cancel the refresh.
+     */
+    suspend fun refreshUnsettledPurchases() {
+        if (purchaseManager.isStateSettled.value) return
+        refreshPurchases()?.join()
     }
 
     fun launchBillingFlow(activity: Activity): StateFlow<BillingUiFlowState>? {

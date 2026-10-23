@@ -27,7 +27,10 @@ import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.Cached
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.cache.PurchaseCache
 import com.buzbuz.smartautoclicker.core.common.revenue.data.billing.sdk.PurchasesQueryResult
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.currentTime
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -42,9 +45,12 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+
+import kotlin.time.Duration.Companion.minutes
 
 /** Tests for the [NewPurchaseManager]. */
 @RunWith(RobolectricTestRunner::class)
@@ -222,6 +228,23 @@ class PurchaseManagerTests {
     }
 
     @Test
+    fun `state is settled once play answered the query`() = runTest {
+        purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(null), ::ackSuccess)
+
+        assertTrue(purchaseManager.isStateSettled.value)
+    }
+
+    @Test
+    fun `state is not settled by a cached purchase or a query failure`() = runTest {
+        purchaseCache.cached = CachedPurchase(purchase().originalJson, SIGNATURE, null)
+
+        purchaseManager.restoreCachedPurchase()
+        purchaseManager.handlePurchasesQueryResult(queryFailure(), ::ackSuccess)
+
+        assertFalse(purchaseManager.isStateSettled.value)
+    }
+
+    @Test
     fun `acknowledge failure is reported and not settled`() = runTest {
         val isSettled = purchaseManager.handlePurchasesQueryResult(
             PurchasesQueryResult.Success(purchase(acknowledged = false)),
@@ -303,17 +326,105 @@ class PurchaseManagerTests {
     }
 
     @Test
-    fun `refresh until settled gives up after max attempts`() = runTest {
+    fun `refresh until settled retries without limit with a capped delay`() = runTest {
+        val failureCount = PURCHASES_QUERY_MAX_ATTEMPTS * 2
+        val results = ArrayDeque(List(failureCount) { queryFailure() } + PurchasesQueryResult.Success(purchase()))
         val queryTimesMs = mutableListOf<Long>()
 
         purchaseManager.refreshPurchasesUntilSettled(
-            purchasesQuery = { queryTimesMs.add(currentTime); queryFailure() },
+            purchasesQuery = { queryTimesMs.add(currentTime); results.removeFirst() },
+            ackQuery = ::ackSuccess,
+        )
+
+        val retryDelaysMs = queryTimesMs.zipWithNext { previous, next -> next - previous }
+        val maxRetryDelayMs = PURCHASES_QUERY_MAX_RETRY_DELAY.inWholeMilliseconds
+        assertEquals(failureCount + 1, queryTimesMs.size)
+        assertEquals(maxRetryDelayMs, retryDelaysMs.max())
+        assertEquals(maxRetryDelayMs, retryDelaysMs.last())
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+    }
+
+    @Test
+    fun `refresh until settled stops once another query settled the state`() = runTest {
+        var queryCount = 0
+        val refreshJob = launch {
+            purchaseManager.refreshPurchasesUntilSettled(
+                purchasesQuery = { queryCount++; queryFailure() },
+                ackQuery = ::ackSuccess,
+            )
+        }
+        runCurrent()
+
+        purchaseManager.handlePurchasesQueryResult(PurchasesQueryResult.Success(purchase()), ::ackSuccess)
+        advanceUntilIdle()
+
+        assertEquals(1, queryCount)
+        assertTrue(refreshJob.isCompleted)
+    }
+
+    @Test
+    fun `refresh until settled restores uncached purchase when play is unreachable for minutes`() = runTest {
+        val playUnreachableDurationMs = 10.minutes.inWholeMilliseconds
+
+        purchaseManager.refreshPurchasesUntilSettled(
+            purchasesQuery = {
+                if (currentTime < playUnreachableDurationMs) queryFailure()
+                else PurchasesQueryResult.Success(purchase())
+            },
+            ackQuery = ::ackSuccess,
+        )
+
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+        assertEquals(SIGNATURE, purchaseCache.cached?.signature)
+    }
+
+
+    @Test
+    fun `refresh until found retries until the purchase is found with doubling delay`() = runTest {
+        val results = ArrayDeque(listOf(
+            PurchasesQueryResult.Success(null),
+            queryFailure(),
+            PurchasesQueryResult.Success(purchase()),
+        ))
+        val queryTimesMs = mutableListOf<Long>()
+
+        purchaseManager.refreshPurchasesUntilFound(
+            purchasesQuery = { queryTimesMs.add(currentTime); results.removeFirst() },
             ackQuery = ::ackSuccess,
         )
 
         val initialDelayMs = PURCHASES_QUERY_INITIAL_RETRY_DELAY.inWholeMilliseconds
-        assertEquals(PURCHASES_QUERY_MAX_ATTEMPTS, queryTimesMs.size)
-        assertEquals(initialDelayMs * ((1L shl (PURCHASES_QUERY_MAX_ATTEMPTS - 1)) - 1), currentTime)
+        assertEquals(listOf(0L, initialDelayMs, initialDelayMs * 3), queryTimesMs)
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+        assertEquals(SIGNATURE, purchaseCache.cached?.signature)
+    }
+
+    @Test
+    fun `refresh until found does not handle not found purchase as missing`() = runTest {
+        val cachedPurchase = CachedPurchase(purchase().originalJson, SIGNATURE, null)
+        purchaseCache.cached = cachedPurchase
+        purchaseManager.restoreCachedPurchase()
+
+        purchaseManager.refreshPurchasesUntilFound(
+            purchasesQuery = { PurchasesQueryResult.Success(null) },
+            ackQuery = ::ackSuccess,
+        )
+
+        assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
+        assertEquals(cachedPurchase, purchaseCache.cached)
+        verify(mockIssueReporter, never()).report(eq(BillingIssue.CACHED_PURCHASE_MISSING), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `refresh until found gives up after max attempts`() = runTest {
+        var queryCount = 0
+
+        purchaseManager.refreshPurchasesUntilFound(
+            purchasesQuery = { queryCount++; PurchasesQueryResult.Success(null) },
+            ackQuery = ::ackSuccess,
+        )
+
+        assertEquals(PURCHASES_QUERY_MAX_ATTEMPTS, queryCount)
         assertEquals(InAppPurchaseState.NOT_PURCHASED, purchaseManager.state.value)
     }
 

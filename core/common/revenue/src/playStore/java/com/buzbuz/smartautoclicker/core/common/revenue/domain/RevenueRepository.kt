@@ -53,17 +53,20 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 import java.io.PrintWriter
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 @Singleton
@@ -181,6 +184,17 @@ internal class RevenueRepository @Inject constructor(
         }
     }
 
+    override suspend fun refreshUnsettledPurchases() {
+        withTimeoutOrNull(UNSETTLED_PURCHASES_REFRESH_TIMEOUT) {
+            billingDataSource.refreshUnsettledPurchases()
+
+            // The user billing state is computed asynchronously, wait for it to grant the purchase.
+            if (billingDataSource.purchaseState.first() == InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED) {
+                userBillingState.first { it == UserBillingState.PURCHASED }
+            }
+        }
+    }
+
     override fun consumeTrial(): Duration? {
         if (!trialRequest.value) return null
 
@@ -278,6 +292,8 @@ private fun toUserBillingState(adState: AdState, purchaseState: PurchaseState, t
 
 val TRIAL_SESSION_DURATION_DURATION = 30.minutes
 @VisibleForTesting internal val AD_WATCHED_STATE_DURATION = 30.minutes
+/** Keeps the user waiting before the paywall only for a short time when Google Play is slow or unreachable. */
+@VisibleForTesting internal val UNSETTLED_PURCHASES_REFRESH_TIMEOUT = 5.seconds
 
 private const val MAX_TRIAL_COUNT = 3
 private const val TAG = "RevenueRepository"

@@ -47,10 +47,11 @@ internal class BillingServiceConnection @Inject constructor(
         productId: String,
         onClientAvailable: (BillingClientProxy) -> Unit,
         onNewPurchasesListener: (Purchase?) -> Unit,
+        onAlreadyOwnedListener: () -> Unit,
     ) {
         if (clientProxy != null) return
 
-        val proxy = BillingClientProxy(context, productId, onNewPurchasesListener)
+        val proxy = BillingClientProxy(context, productId, onNewPurchasesListener, onAlreadyOwnedListener)
         clientProxy = proxy
 
         try {

@@ -48,6 +48,7 @@ internal class RevenueRepository @Inject constructor() : IRevenueRepository {
     override fun startPlayStoreBillingUiFlow(activity: Activity) = Unit
     override fun notifyPaywallFinished() = Unit
     override fun refreshPurchases() = Unit
+    override suspend fun refreshUnsettledPurchases() = Unit
     override fun loadAdIfNeeded(context: Context) = Unit
     override fun showAd(activity: Activity) = Unit
     override fun requestTrial() = Unit

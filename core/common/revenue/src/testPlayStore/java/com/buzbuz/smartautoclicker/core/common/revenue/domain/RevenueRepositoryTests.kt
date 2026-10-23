@@ -34,9 +34,11 @@ import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseStat
 
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -48,9 +50,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyBlocking
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -262,6 +267,33 @@ class RevenueRepositoryTests {
             purchase = PurchaseState.CANNOT_PURCHASE,
             billing = UserBillingState.AD_REQUESTED,
         )
+    }
+
+    @Test
+    fun `refresh unsettled purchases waits for the purchase to be granted`() = runTest(testDispatcher) {
+        purchaseState.value = InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED
+
+        testedBillingRepository.refreshUnsettledPurchases()
+
+        verifyBlocking(mockBillingDataSource) { refreshUnsettledPurchases() }
+        assertEquals(UserBillingState.PURCHASED, testedBillingRepository.userBillingState.value)
+    }
+
+    @Test
+    fun `refresh unsettled purchases does not wait when not purchased`() = runTest(testDispatcher) {
+        testedBillingRepository.refreshUnsettledPurchases()
+
+        assertEquals(0L, currentTime)
+    }
+
+    @Test
+    fun `refresh unsettled purchases gives up when google play does not answer`() = runTest(testDispatcher) {
+        whenever { mockBillingDataSource.refreshUnsettledPurchases() } doSuspendableAnswer { awaitCancellation() }
+
+        testedBillingRepository.refreshUnsettledPurchases()
+
+        assertEquals(UNSETTLED_PURCHASES_REFRESH_TIMEOUT.inWholeMilliseconds, currentTime)
+        assertEquals(UserBillingState.AD_REQUESTED, testedBillingRepository.userBillingState.value)
     }
 
     private fun RevenueRepository.assertStates(ad: AdState, purchase: PurchaseState, billing: UserBillingState) {

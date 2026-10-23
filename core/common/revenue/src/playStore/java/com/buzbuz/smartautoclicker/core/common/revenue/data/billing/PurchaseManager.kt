@@ -36,6 +36,7 @@ import kotlinx.coroutines.sync.withLock
 
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 internal class NewPurchaseManager @Inject constructor(
@@ -53,6 +54,10 @@ internal class NewPurchaseManager @Inject constructor(
     private val _state = MutableStateFlow(InAppPurchaseState.NOT_PURCHASED)
     val state: StateFlow<InAppPurchaseState> = _state
 
+    /** True once Google Play answered the purchases query in this process. Until then, [state] can be wrong. */
+    private val _isStateSettled = MutableStateFlow(false)
+    val isStateSettled: StateFlow<Boolean> = _isStateSettled
+
     /** Grant the last confirmed purchase until Google Play can be reached. */
     suspend fun restoreCachedPurchase() {
         mutex.withLock {
@@ -65,21 +70,35 @@ internal class NewPurchaseManager @Inject constructor(
     }
 
     /**
-     * Play services are often not ready when the process starts, and the next refresh only happens when the user opens
-     * an activity. Retry until the purchase state is settled, so a purchase can be restored and acknowledged before
-     * Play refunds it.
+     * Play services are often not ready when the process starts, and can stay unreachable for a long time when the
+     * process is started in background after a boot or an app update. The next refresh only happens when the user
+     * opens an activity, so retry without limit until the purchase state is settled, so a purchase can be restored and
+     * acknowledged before Play refunds it.
      */
     suspend fun refreshPurchasesUntilSettled(
         purchasesQuery: suspend () -> PurchasesQueryResult,
         ackQuery: suspend (Purchase) -> BillingResult,
     ) {
-        var retryDelay = PURCHASES_QUERY_INITIAL_RETRY_DELAY
-        for (attempt in 1..PURCHASES_QUERY_MAX_ATTEMPTS) {
-            if (handlePurchasesQueryResult(purchasesQuery(), ackQuery)) return
-            if (attempt == PURCHASES_QUERY_MAX_ATTEMPTS) return
+        retryWithBackoff { _isStateSettled.value || handlePurchasesQueryResult(purchasesQuery(), ackQuery) }
+    }
 
-            delay(retryDelay)
-            retryDelay *= 2
+    /**
+     * Google Play checks the ownership on its servers for the billing flow, but answers the purchases query from a
+     * local cache that can miss the purchase. Once the billing flow reported the product as already owned, retry until
+     * the purchase is found, without handling it as missing in the meantime.
+     */
+    suspend fun refreshPurchasesUntilFound(
+        purchasesQuery: suspend () -> PurchasesQueryResult,
+        ackQuery: suspend (Purchase) -> BillingResult,
+    ) {
+        retryWithBackoff(maxAttempts = PURCHASES_QUERY_MAX_ATTEMPTS) {
+            val result = purchasesQuery()
+            if (result is PurchasesQueryResult.Success && result.purchase == null) {
+                Log.i(TAG, "Product is already owned but its purchase is not available yet")
+                false
+            } else {
+                handlePurchasesQueryResult(result, ackQuery)
+            }
         }
     }
 
@@ -89,7 +108,7 @@ internal class NewPurchaseManager @Inject constructor(
         ackQuery: suspend (Purchase) -> BillingResult,
     ): Boolean =
         mutex.withLock {
-            when (result) {
+            val isSettled = when (result) {
                 is PurchasesQueryResult.Failure -> {
                     Log.w(TAG, "Purchases query failed with code ${result.responseCode}, keeping state ${_state.value}")
                     issueReporter.report(BillingIssue.PURCHASES_QUERY_FAILED, result.responseCode, result.debugMessage)
@@ -103,6 +122,9 @@ internal class NewPurchaseManager @Inject constructor(
                         true
                     }
             }
+
+            if (isSettled) _isStateSettled.value = true
+            isSettled
         }
 
     suspend fun handleUiFlowPurchase(purchase: Purchase?, ackQuery: suspend (Purchase) -> BillingResult) {
@@ -113,6 +135,22 @@ internal class NewPurchaseManager @Inject constructor(
             }
 
             handlePurchase(purchase, ackQuery)
+        }
+    }
+
+    /**
+     * Calls [isSettled] until it returns true, or until it was called [maxAttempts] times if set. The delay between
+     * each attempt doubles, up to [PURCHASES_QUERY_MAX_RETRY_DELAY].
+     */
+    private suspend fun retryWithBackoff(maxAttempts: Int? = null, isSettled: suspend () -> Boolean) {
+        var retryDelay = PURCHASES_QUERY_INITIAL_RETRY_DELAY
+        var attempt = 1
+        while (!isSettled()) {
+            if (attempt == maxAttempts) return
+
+            delay(retryDelay)
+            retryDelay = minOf(retryDelay * 2, PURCHASES_QUERY_MAX_RETRY_DELAY)
+            attempt++
         }
     }
 
@@ -224,10 +262,15 @@ internal enum class InAppPurchaseState {
 }
 
 @VisibleForTesting
-internal val MISSING_PURCHASE_GRACE_MS = 3.days.inWholeMilliseconds
-/** With the doubling delay, the last attempt is made ~2.5 minutes after the first one. */
+internal val MISSING_PURCHASE_GRACE_MS = 30.days.inWholeMilliseconds
+/**
+ * Attempts to find a purchase reported as already owned by the billing flow. With the doubling delay, the last attempt
+ * is made ~2.5 minutes after the first one.
+ */
 @VisibleForTesting
 internal const val PURCHASES_QUERY_MAX_ATTEMPTS = 6
 @VisibleForTesting
 internal val PURCHASES_QUERY_INITIAL_RETRY_DELAY = 5.seconds
+@VisibleForTesting
+internal val PURCHASES_QUERY_MAX_RETRY_DELAY = 15.minutes
 private const val TAG = "PurchaseManager"

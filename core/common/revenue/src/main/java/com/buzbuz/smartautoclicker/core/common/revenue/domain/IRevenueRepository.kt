@@ -54,6 +54,11 @@ interface IRevenueRepository : Dumpable {
     fun notifyPaywallFinished()
 
     fun refreshPurchases()
+    /**
+     * Google Play can be unreachable for a while after the process start, leaving a pro user with a non purchased
+     * state. Call this before showing the paywall to ask Play again, waiting for a short time for its answer.
+     */
+    suspend fun refreshUnsettledPurchases()
 
     fun loadAdIfNeeded(context: Context)
     fun showAd(activity: Activity)

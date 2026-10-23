@@ -41,6 +41,7 @@ internal class BillingClientProxy(
     context: Context,
     private val productId: String,
     private val onPurchaseStateFromUiFlow: (Purchase?) -> Unit,
+    private val onAlreadyOwnedFromUiFlow: () -> Unit,
 ) {
 
     internal val client = BillingClient.newBuilder(context)
@@ -76,6 +77,7 @@ internal class BillingClientProxy(
                 BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                     Log.i(TAG, "onPurchasesUpdated: The user already owns this item. ${result.toLogString()}")
                     billingUiFlowState.value = BillingUiFlowState.NOT_VISIBLE_ALREADY_OWNED
+                    onAlreadyOwnedFromUiFlow()
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                     Log.e(TAG, "onPurchasesUpdated: Google Play \"does not recognize the configuration. ${result.toLogString()}")
