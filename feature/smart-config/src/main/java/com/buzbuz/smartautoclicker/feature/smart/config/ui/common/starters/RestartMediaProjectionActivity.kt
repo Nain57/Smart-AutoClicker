@@ -19,6 +19,7 @@ package com.buzbuz.smartautoclicker.feature.smart.config.ui.common.starters
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -85,10 +86,16 @@ class RestartMediaProjectionActivity : AppCompatActivity() {
         if (!isFinishing) logEvent("stopped with task top=${getTaskTopActivityName()}")
     }
 
-    private fun getTaskTopActivityName(): String? =
-        getSystemService(ActivityManager::class.java)?.appTasks
-            ?.firstOrNull { it.taskInfo?.taskId == taskId }
-            ?.taskInfo?.topActivity?.shortClassName
+    // TaskInfo.taskId is API 29+, and getTaskInfo throws if the task is removed while iterating.
+    private fun getTaskTopActivityName(): String? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
+
+        return runCatching {
+            getSystemService(ActivityManager::class.java)?.appTasks
+                ?.firstNotNullOfOrNull { appTask -> appTask.taskInfo?.takeIf { it.taskId == taskId } }
+                ?.topActivity?.shortClassName
+        }.getOrNull()
+    }
 
     private fun logEvent(event: String) {
         activityLifecycleTracker.onCustomEvent(this, event)
