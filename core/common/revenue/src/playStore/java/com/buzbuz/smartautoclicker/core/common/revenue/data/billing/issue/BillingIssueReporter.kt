@@ -16,7 +16,9 @@
  */
 package com.buzbuz.smartautoclicker.core.common.revenue.data.billing.issue
 
+import com.buzbuz.smartautoclicker.core.base.extensions.logCrashBreadcrumb
 import com.buzbuz.smartautoclicker.core.base.extensions.recordNonFatal
+import com.buzbuz.smartautoclicker.core.base.extensions.setCrashKey
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,15 +29,32 @@ internal class BillingIssueReporter @Inject constructor() {
 
     private val reportedIssues: MutableSet<String> = mutableSetOf()
 
-    /** Report a billing issue as a non fatal. Each issue/code pair is reported once per process. */
+    /**
+     * Keep a billing issue as context for the next Crashlytics report, and send it as a non fatal if it is worth one.
+     * Each issue/code pair is sent once per process.
+     */
     fun report(issue: BillingIssue, responseCode: Int? = null, debugMessage: String? = null) {
         val issueKey = "$issue/$responseCode"
+        logCrashBreadcrumb("Billing issue $issueKey: $debugMessage")
+        setCrashKey(KEY_LAST_BILLING_ISSUE, issueKey)
+
+        if (!issue.isNonFatal(responseCode)) return
         synchronized(reportedIssues) {
             if (!reportedIssues.add(issueKey)) return
         }
 
-        BillingIssueException("$issue: code=$responseCode; message=$debugMessage").recordNonFatal()
+        BillingIssueException(issue, "code=$responseCode; message=$debugMessage").recordNonFatal()
     }
 }
 
-private class BillingIssueException(message: String) : Exception(message)
+/**
+ * Crashlytics groups issues by stack trace, and every exception is created here. The synthetic top frame gives each
+ * [BillingIssue] its own Crashlytics issue, while the response codes stay variants of it.
+ */
+private class BillingIssueException(issue: BillingIssue, message: String) : Exception("$issue: $message") {
+    init {
+        stackTrace = arrayOf(StackTraceElement(BillingIssue::class.java.name, issue.name, null, -1)) + stackTrace
+    }
+}
+
+private const val KEY_LAST_BILLING_ISSUE = "billing_last_issue"

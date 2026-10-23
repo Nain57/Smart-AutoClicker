@@ -91,14 +91,22 @@ internal class NewPurchaseManager @Inject constructor(
         purchasesQuery: suspend () -> PurchasesQueryResult,
         ackQuery: suspend (Purchase) -> BillingResult,
     ) {
-        retryWithBackoff(maxAttempts = PURCHASES_QUERY_MAX_ATTEMPTS) {
+        var isPurchaseMissing = false
+        val isSettled = retryWithBackoff(maxAttempts = PURCHASES_QUERY_MAX_ATTEMPTS) {
             val result = purchasesQuery()
-            if (result is PurchasesQueryResult.Success && result.purchase == null) {
+            isPurchaseMissing = result is PurchasesQueryResult.Success && result.purchase == null
+            if (isPurchaseMissing) {
                 Log.i(TAG, "Product is already owned but its purchase is not available yet")
                 false
             } else {
                 handlePurchasesQueryResult(result, ackQuery)
             }
+        }
+
+        // Query and acknowledge failures are reported on their own.
+        if (!isSettled && isPurchaseMissing) {
+            Log.w(TAG, "Product is already owned but its purchase was never found")
+            issueReporter.report(BillingIssue.OWNED_PURCHASE_NOT_FOUND)
         }
     }
 
@@ -140,18 +148,20 @@ internal class NewPurchaseManager @Inject constructor(
 
     /**
      * Calls [isSettled] until it returns true, or until it was called [maxAttempts] times if set. The delay between
-     * each attempt doubles, up to [PURCHASES_QUERY_MAX_RETRY_DELAY].
+     * each attempt doubles, up to [PURCHASES_QUERY_MAX_RETRY_DELAY]. Returns false if all attempts were made without
+     * settling.
      */
-    private suspend fun retryWithBackoff(maxAttempts: Int? = null, isSettled: suspend () -> Boolean) {
+    private suspend fun retryWithBackoff(maxAttempts: Int? = null, isSettled: suspend () -> Boolean): Boolean {
         var retryDelay = PURCHASES_QUERY_INITIAL_RETRY_DELAY
         var attempt = 1
         while (!isSettled()) {
-            if (attempt == maxAttempts) return
+            if (attempt == maxAttempts) return false
 
             delay(retryDelay)
             retryDelay = minOf(retryDelay * 2, PURCHASES_QUERY_MAX_RETRY_DELAY)
             attempt++
         }
+        return true
     }
 
     /** Returns false if the purchase couldn't be acknowledged. */
@@ -205,11 +215,13 @@ internal class NewPurchaseManager @Inject constructor(
 
         val now = currentTimeMs()
         val missingSince = cachedPurchase.missingSinceMs
-            ?: now.also { purchaseCache.setMissingSince(it) }
+            ?: now.also {
+                purchaseCache.setMissingSince(it)
+                issueReporter.report(BillingIssue.CACHED_PURCHASE_MISSING)
+            }
 
         if (now - missingSince < MISSING_PURCHASE_GRACE_MS) {
             Log.w(TAG, "Product purchase not found but cached, keeping it until grace period ends")
-            issueReporter.report(BillingIssue.CACHED_PURCHASE_MISSING)
             _state.emit(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED)
             return
         }
@@ -248,6 +260,7 @@ internal class NewPurchaseManager @Inject constructor(
 
             else -> {
                 Log.e(TAG, "Purchase in unknown state: $purchaseState")
+                issueReporter.report(BillingIssue.UNKNOWN_PURCHASE_STATE, purchaseState)
                 InAppPurchaseState.ERROR
             }
         }

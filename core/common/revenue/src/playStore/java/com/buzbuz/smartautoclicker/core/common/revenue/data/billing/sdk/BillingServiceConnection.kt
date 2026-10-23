@@ -61,6 +61,7 @@ internal class BillingServiceConnection @Inject constructor(
             })
         } catch (isex: IllegalStateException) {
             Log.e(TAG, "Can't start billing service connection", isex)
+            issueReporter.report(BillingIssue.CONNECTION_START_FAILED, debugMessage = isex.message)
             notifyClientAvailable(proxy, onClientAvailable)
         }
     }

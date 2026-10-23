@@ -46,6 +46,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -168,6 +169,7 @@ class PurchaseManagerTests {
 
         assertEquals(InAppPurchaseState.PURCHASED_AND_ACKNOWLEDGED, purchaseManager.state.value)
         assertEquals(1_000L, purchaseCache.cached?.missingSinceMs)
+        verify(mockIssueReporter, times(1)).report(eq(BillingIssue.CACHED_PURCHASE_MISSING), anyOrNull(), anyOrNull())
     }
 
     @Test
@@ -426,6 +428,27 @@ class PurchaseManagerTests {
 
         assertEquals(PURCHASES_QUERY_MAX_ATTEMPTS, queryCount)
         assertEquals(InAppPurchaseState.NOT_PURCHASED, purchaseManager.state.value)
+        verify(mockIssueReporter).report(eq(BillingIssue.OWNED_PURCHASE_NOT_FOUND), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `refresh until found does not report not found purchase when the last query failed`() = runTest {
+        purchaseManager.refreshPurchasesUntilFound(
+            purchasesQuery = { queryFailure() },
+            ackQuery = ::ackSuccess,
+        )
+
+        verify(mockIssueReporter, never()).report(eq(BillingIssue.OWNED_PURCHASE_NOT_FOUND), anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `refresh until found does not report found purchase`() = runTest {
+        purchaseManager.refreshPurchasesUntilFound(
+            purchasesQuery = { PurchasesQueryResult.Success(purchase()) },
+            ackQuery = ::ackSuccess,
+        )
+
+        verify(mockIssueReporter, never()).report(eq(BillingIssue.OWNED_PURCHASE_NOT_FOUND), anyOrNull(), anyOrNull())
     }
 
 
