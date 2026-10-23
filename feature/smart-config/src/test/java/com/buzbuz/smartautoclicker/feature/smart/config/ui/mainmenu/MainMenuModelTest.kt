@@ -29,7 +29,6 @@ import com.buzbuz.smartautoclicker.core.processing.domain.model.DetectionState
 import com.buzbuz.smartautoclicker.core.smart.debugging.domain.DebuggingRepository
 import com.buzbuz.smartautoclicker.feature.smart.config.domain.EditionRepository
 
-import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -37,7 +36,6 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
 
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -64,12 +62,13 @@ class MainMenuModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val userBillingState = MutableStateFlow(UserBillingState.AD_REQUESTED)
+    private val paywallFinished = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
     private val mockContext: Context = mockk()
     private val mockRevenueNavigator: RevenueNavigator = mockk(relaxed = true)
     private val mockRevenueRepository: IRevenueRepository = mockk(relaxed = true) {
         every { userBillingState } returns this@MainMenuModelTest.userBillingState
-        every { paywallFinished } returns MutableSharedFlow()
+        every { paywallFinished } returns this@MainMenuModelTest.paywallFinished
     }
     private val mockSmartProcessingRepository: SmartProcessingRepository = mockk(relaxed = true) {
         every { scenarioId } returns MutableStateFlow(null)
@@ -113,47 +112,39 @@ class MainMenuModelTest {
     }
 
     @Test
-    fun toggleDetection_startsDetection_whenRefreshGrantsThePurchase() {
-        coEvery { mockRevenueRepository.refreshUnsettledPurchases() } answers {
-            userBillingState.value = UserBillingState.PURCHASED
-        }
-
+    fun toggleDetection_showsPaywallWithoutWaitingForGooglePlay_whenAdRequested() {
         viewModel.toggleDetection(mockContext)
 
-        coVerify(exactly = 1) { mockSmartProcessingRepository.startDetection(mockContext, false, false, null) }
-        verify(exactly = 0) { mockRevenueNavigator.startPaywallActivity(any()) }
-    }
-
-    @Test
-    fun toggleDetection_showsPaywall_whenStillNotPurchasedAfterRefresh() {
-        viewModel.toggleDetection(mockContext)
-
-        coVerify(exactly = 1) { mockRevenueRepository.refreshUnsettledPurchases() }
+        coVerify(exactly = 0) { mockRevenueRepository.refreshUnsettledPurchases() }
         verify(exactly = 1) { mockRevenueNavigator.startPaywallActivity(mockContext) }
         coVerify(exactly = 0) { mockSmartProcessingRepository.startDetection(mockContext, false, false, null) }
     }
 
     @Test
-    fun toggleDetection_doesNotRefreshPurchases_whenAlreadyPurchased() {
-        userBillingState.value = UserBillingState.PURCHASED
-
+    fun toggleDetection_startsDetection_whenPaywallFinishesPurchased() {
         viewModel.toggleDetection(mockContext)
+        userBillingState.value = UserBillingState.PURCHASED
+        paywallFinished.tryEmit(Unit)
 
-        coVerify(exactly = 0) { mockRevenueRepository.refreshUnsettledPurchases() }
         coVerify(exactly = 1) { mockSmartProcessingRepository.startDetection(mockContext, false, false, null) }
     }
 
     @Test
-    fun toggleDetection_ignoresToggles_whileWaitingForGooglePlay() {
-        val refreshResult = CompletableDeferred<Unit>()
-        coEvery { mockRevenueRepository.refreshUnsettledPurchases() } coAnswers { refreshResult.await() }
+    fun toggleDetection_doesNotStartDetection_whenPaywallFinishesStillAdRequested() {
+        viewModel.toggleDetection(mockContext)
+        paywallFinished.tryEmit(Unit)
+
+        coVerify(exactly = 0) { mockSmartProcessingRepository.startDetection(mockContext, false, false, null) }
+    }
+
+    @Test
+    fun toggleDetection_startsDetectionWithoutPaywall_whenAlreadyPurchased() {
+        userBillingState.value = UserBillingState.PURCHASED
 
         viewModel.toggleDetection(mockContext)
-        viewModel.toggleDetection(mockContext)
-        refreshResult.complete(Unit)
 
-        coVerify(exactly = 1) { mockRevenueRepository.refreshUnsettledPurchases() }
-        verify(exactly = 1) { mockRevenueNavigator.startPaywallActivity(mockContext) }
+        verify(exactly = 0) { mockRevenueNavigator.startPaywallActivity(any()) }
+        coVerify(exactly = 1) { mockSmartProcessingRepository.startDetection(mockContext, false, false, null) }
     }
 
     /** MockK can't stub [IRevenueRepository.consumeTrial] because it returns a value class. */

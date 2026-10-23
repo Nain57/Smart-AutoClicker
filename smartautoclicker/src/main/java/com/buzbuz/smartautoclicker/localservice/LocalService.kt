@@ -74,8 +74,6 @@ class LocalService(
     private var startJob: Job? = null
     /** Coroutine job for the paywall result upon start from notification. */
     private var paywallResultJob: Job? = null
-    /** Coroutine job for the start from notification, which can wait for Google Play before the paywall. */
-    private var playJob: Job? = null
 
     /** Controls the notifications for the foreground service. */
     private val notificationController: ServiceNotificationController by lazy {
@@ -210,12 +208,8 @@ class LocalService(
     }
 
     private fun play() {
-        if (playJob?.isActive == true) return
-
-        playJob = serviceScope.launch {
+        serviceScope.launch {
             if (state.isSmartLoaded && !smartProcessingRepository.isRunning()) {
-                if (shouldStartPaywall()) revenueRepository.refreshUnsettledPurchases()
-
                 if (shouldStartPaywall()) startPaywall()
                 else startSmartScenario()
             } else if (!state.isSmartLoaded && !dumbEngine.isRunning.value) {

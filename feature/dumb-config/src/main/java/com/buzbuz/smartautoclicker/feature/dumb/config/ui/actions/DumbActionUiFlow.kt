@@ -105,11 +105,6 @@ private fun OverlayManager.startDumbClickEditionUiFlow(
     dumbClick: DumbAction.DumbClick,
     listener: DumbActionUiFlowListener,
 ) {
-    if (!dumbClick.isValid()) {
-        Log.e(TAG, "Can't start dumb click edition ui flow, click is invalid: $dumbClick")
-        listener.onDumbActionCreationCancelled()
-        return
-    }
     Log.d(TAG, "Starting dumb click edition ui flow: $dumbClick")
 
     navigateTo(

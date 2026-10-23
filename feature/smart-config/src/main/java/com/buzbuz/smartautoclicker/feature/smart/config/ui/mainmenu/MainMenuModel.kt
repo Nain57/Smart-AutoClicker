@@ -78,8 +78,6 @@ class MainMenuModel @Inject constructor(
         )
 
     private var paywallResultJob: Job? = null
-    /** Choosing between the paywall and the detection, which can wait for Google Play. */
-    private var detectionStartJob: Job? = null
 
     /** Tells if the paywall is currently displayed. */
     private val _paywallIsVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -148,17 +146,10 @@ class MainMenuModel @Inject constructor(
 
     /** Start/Stop the detection. */
     fun toggleDetection(context: Context) {
-        if (isDetecting.value) {
-            stopDetection()
-            return
-        }
-        if (detectionStartJob?.isActive == true) return
-
-        detectionStartJob = viewModelScope.launch {
-            if (shouldStartPaywall()) revenueRepository.refreshUnsettledPurchases()
-
-            if (shouldStartPaywall()) startPaywall(context)
-            else startDetection(context)
+        when {
+            isDetecting.value -> stopDetection()
+            shouldStartPaywall() -> startPaywall(context)
+            else -> startDetection(context)
         }
     }
 

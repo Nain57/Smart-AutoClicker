@@ -40,7 +40,10 @@ class DumbScenarioViewModel @Inject constructor(
      */
     val navItemsValidity: Flow<Map<Int, Boolean>> = userModifications.map { dumbScenario ->
         buildMap {
-            put(R.id.page_actions, dumbScenario?.dumbActions?.isNotEmpty() ?: false)
+            put(
+                R.id.page_actions,
+                dumbScenario?.dumbActions?.let { actions -> actions.isNotEmpty() && actions.all { it.isValid() } } ?: false,
+            )
             put(R.id.page_config, dumbScenario?.name?.isNotEmpty() ?: false)
         }
     }

@@ -107,10 +107,25 @@ internal class PaywallFragment : DialogFragment() {
 
     private fun updateDialogState(state: DialogState) {
         when (state) {
+            DialogState.WaitingForPlay -> toWaitingForPlayState()
+            DialogState.NotRequired -> dismiss()
             is DialogState.NotPurchased -> toNotPurchasedState(state)
             DialogState.Purchased -> toPurchasedState()
             DialogState.AdShowing -> toAdShowingState()
             DialogState.AdWatched -> toAdWatchedState()
+        }
+    }
+
+    private fun toWaitingForPlayState() {
+        viewBinding.apply {
+            purchaseText.visibility = View.INVISIBLE
+            purchasedText.visibility = View.INVISIBLE
+            textAdWatched.visibility = View.INVISIBLE
+            progressAdWatched.show()
+
+            buttonTrial.visibility = View.INVISIBLE
+            buttonWatchAd.visibility = View.INVISIBLE
+            buttonBuy.visibility = View.INVISIBLE
         }
     }
 

@@ -19,12 +19,14 @@ package com.buzbuz.smartautoclicker.feature.revenue.ui.paywall
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.IRevenueRepository
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.TRIAL_SESSION_DURATION_DURATION
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.AdState
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.ProModeInfo
 import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.PurchaseState
+import com.buzbuz.smartautoclicker.core.common.revenue.domain.model.UserBillingState
 import com.buzbuz.smartautoclicker.core.ui.bindings.buttons.LoadableButtonState
 import com.buzbuz.smartautoclicker.feature.revenue.R
 
@@ -32,8 +34,13 @@ import com.buzbuz.smartautoclicker.feature.revenue.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +49,10 @@ internal class AdsLoadingViewModel @Inject constructor(
     private val revenueRepository: IRevenueRepository,
 ) : ViewModel() {
 
-    val dialogState: Flow<DialogState> = combine(
+    /** Google Play may not have answered the purchases query yet, the user might be pro already. */
+    private val isPurchaseStateSettled: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    private val paywallState: Flow<DialogState> = combine(
         revenueRepository.purchaseState,
         revenueRepository.adsState,
         revenueRepository.proModeInfo,
@@ -61,6 +71,22 @@ internal class AdsLoadingViewModel @Inject constructor(
                 adButtonState = adsState.toAdButtonState(appContext),
                 purchaseButtonState = getPurchaseButtonState(appContext, purchaseState, info),
             )
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val dialogState: Flow<DialogState> = isPurchaseStateSettled.flatMapLatest { isSettled ->
+        when {
+            !isSettled -> flowOf(DialogState.WaitingForPlay)
+            revenueRepository.userBillingState.value != UserBillingState.AD_REQUESTED -> flowOf(DialogState.NotRequired)
+            else -> paywallState
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            revenueRepository.refreshUnsettledPurchases()
+            isPurchaseStateSettled.value = true
         }
     }
 
@@ -89,6 +115,8 @@ internal sealed class DialogState {
         val purchaseButtonState: LoadableButtonState,
     ): DialogState()
 
+    internal data object WaitingForPlay : DialogState()
+    internal data object NotRequired : DialogState()
     internal data object Purchased : DialogState()
     internal data object AdShowing : DialogState()
     internal data object AdWatched : DialogState()
