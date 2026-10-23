@@ -147,8 +147,6 @@ internal class SmartProcessingRepositoryImpl @Inject constructor(
         projectionErrorHandler = handler
     }
 
-    override fun getScenarioId(): Identifier? = _scenarioId.value
-
     override fun isRunning(): Boolean =
         detectorEngine.state.value == DetectorState.DETECTING
 

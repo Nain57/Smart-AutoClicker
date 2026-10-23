@@ -45,9 +45,6 @@ interface SmartProcessingRepository : Dumpable {
     val detectionState: Flow<DetectionState>
 
 
-    /** @return the unique identifier of the scenario that will be/is processed. */
-    fun getScenarioId(): Identifier?
-
     /** @return true if the processing is currently running ([DetectionState.DETECTING]), false if not. */
     fun isRunning(): Boolean
 
