@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.views.gesture.record
 
+import android.accessibilityservice.GestureDescription
 import android.graphics.PointF
 import android.os.Handler
 import android.os.Looper
@@ -33,20 +34,24 @@ internal class GestureRecorder(
     /** Fingers currently pressed, by pointer id. Android recycles ids, so a re-press must not replace a recorded finger. */
     private val activeFingers = HashMap<Int, GestureFingerState>()
 
-    /** Maximum allowed gesture duration in ms. Recording stops automatically when reached. */
-    var maxDurationMs: Long = Long.MAX_VALUE
+    /**
+     * Maximum allowed gesture duration in ms. Recording stops automatically when reached. Defaults to 1ms below the
+     * Android limit, as a gesture lasting exactly that limit is rejected.
+     */
+    var maxDurationMs: Long = GestureDescription.getMaxGestureDuration() - 1
 
     private var firstFingerEventTime: Long = 0L
     private val handler = Handler(Looper.getMainLooper())
 
-    private val timeoutRunnable = Runnable {
-        val releaseEventTime = firstFingerEventTime + maxDurationMs
-        for (finger in activeFingers.values) finger.addRelease(releaseEventTime)
-        notifyListener(isFinished = true)
-        resetFingers()
-    }
+    private val timeoutRunnable = Runnable { finishOnMaxDuration() }
 
     fun processEvent(event: MotionEvent): Boolean {
+        // The timeout runnable can run late, an event past the max duration must not extend the gesture.
+        if (recordedFingers.isNotEmpty() && event.eventTime - firstFingerEventTime > maxDurationMs) {
+            finishOnMaxDuration()
+            return true
+        }
+
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN ->
                 handleFingerDown(event = event, pointerIndex = 0)
@@ -69,6 +74,15 @@ internal class GestureRecorder(
     fun clearCapture() {
         Log.d(TAG, "Clear capture")
         handler.removeCallbacks(timeoutRunnable)
+        resetFingers()
+    }
+
+    private fun finishOnMaxDuration() {
+        handler.removeCallbacks(timeoutRunnable)
+
+        val releaseEventTime = firstFingerEventTime + maxDurationMs
+        for (finger in activeFingers.values) finger.addRelease(releaseEventTime)
+        notifyListener(isFinished = true)
         resetFingers()
     }
 

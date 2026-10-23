@@ -16,6 +16,7 @@
  */
 package com.buzbuz.smartautoclicker.core.ui.views.gesture.record
 
+import android.accessibilityservice.GestureDescription
 import android.graphics.PointF
 import android.os.Build
 import android.os.Looper
@@ -503,13 +504,15 @@ class GestureRecorderTests {
     // --- Max duration ---
 
     @Test
-    fun maxDuration_notSet_neverFinishesOnItsOwn() {
+    fun maxDuration_notSet_finishesJustBeforeAndroidMaxGestureDuration() {
+        val maxDurationMs = GestureDescription.getMaxGestureDuration()
         down(id = 0, x = 10f, y = 10f, timeMs = 0L)
 
-        idleMainLooper(TimeUnit.HOURS.toMillis(1))
-
+        idleMainLooper(maxDurationMs - 2)
         assertEquals(1, notifications.size)
-        assertFalse(notifications.last().isFinished)
+
+        idleMainLooper(1L)
+        assertEquals(Notification(click(10f, 10f, durationMs = maxDurationMs - 1), isFinished = true), notifications.last())
     }
 
     @Test
@@ -548,6 +551,38 @@ class GestureRecorderTests {
             ),
             notifications.last(),
         )
+    }
+
+    @Test
+    fun maxDuration_eventPastMaxBeforeTimeout_finishesWithReleaseAtMaxDuration() {
+        recorder.maxDurationMs = 500L
+        down(id = 0, x = 10f, y = 10f, timeMs = 1000L)
+        move(id = 0, x = 100f, y = 10f, timeMs = 1200L)
+
+        move(id = 0, x = 200f, y = 10f, timeMs = 1600L)
+
+        assertEquals(3, notifications.size)
+        assertEquals(
+            Notification(
+                gesture(finger(1000L, press(10f, 10f), moveTo(100f, 10f, durationMs = 200L), wait(300L), release())),
+                isFinished = true,
+            ),
+            notifications.last(),
+        )
+
+        idleMainLooper(1000L)
+        assertEquals("Timeout must be cancelled", 3, notifications.size)
+    }
+
+    @Test
+    fun maxDuration_eventAtMax_isStillRecorded() {
+        recorder.maxDurationMs = 500L
+        down(id = 0, x = 10f, y = 10f, timeMs = 1000L)
+
+        move(id = 0, x = 100f, y = 10f, timeMs = 1500L)
+
+        assertEquals(gesture(finger(1000L, press(10f, 10f), moveTo(100f, 10f, durationMs = 500L))), lastGesture())
+        assertFalse(notifications.last().isFinished)
     }
 
     @Test

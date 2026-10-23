@@ -56,10 +56,6 @@ class GestureRecordView @JvmOverloads constructor(
 
     var gestureCaptureListener: ((gesture: RecordedGesture?, isFinished: Boolean) -> Unit)? = null
 
-    var maxDurationMs: Long
-        get() = gestureRecorder.maxDurationMs
-        set(value) { gestureRecorder.maxDurationMs = value }
-
     override val viewComponents: List<ViewComponent> = listOf(
         DisplayBorderComponent(
             viewStyle = DisplayBorderComponentStyle(
