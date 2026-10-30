@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_create_backup">ایجاد نسخه پشتیبان</string>
+    <string name="dialog_title_delete_scenario">حذف سناریو</string>
+    <string name="dialog_title_import_backup">وارد کردن نسخه پشتیبان</string>
+
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_title_backup_create_select_file">انتخاب فایل خروجی</string>
+    <string name="item_title_backup_import_select_file">انتخاب فایل پشتیبان</string>
+
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_backup_create_progress">ایجاد نسخه پشتیبان: %1$d/%2$d</string>
+    <string name="message_backup_create_completed">پشتیبان‌گیری تکمیل شد</string>
+    <string name="message_backup_create_error">خطایی رخ داد و خروجی گرفتن پشتیبان لغو شد</string>
+    <string name="message_backup_import_progress">وارد کردن پشتیبان: %1$d</string>
+    <string name="message_backup_import_verification">بررسی صحت داده‌ها</string>
+    <string name="message_backup_import_completed">وارد کردن تکمیل شد\n%1$d سناریو وارد شد</string>
+    <string name="message_backup_import_completed_with_error">وارد کردن تکمیل شد\n%1$d سناریو وارد شد\n%2$d خطا</string>
+    <string name="message_backup_import_error">خطایی رخ داد و وارد کردن پشتیبان لغو شد</string>
+    <string name="message_backup_import_compatibility">برخی از سناریوهای واردشده در دستگاهی با صفحه نمایش متفاوت ایجاد شده‌اند و این ممکن است باعث بروز مشکلاتی در مختصات تشخیص و اقدام شود.\n\nبرای رفع آن، باید برای شرط‌های خود اسکرین‌شات‌های جدید بگیرید و موقعیت‌های کلیک/ژست حرکتی خود را به‌روزرسانی کنید.</string>
+    <string name="message_backup_error_no_zip_app">هیچ برنامه‌ای در دستگاه برای ذخیره/بارگیری فایل zip پیدا نشد.</string>
+
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_backup_state">وضعیت پشتیبان‌گیری</string>
+
+</resources>

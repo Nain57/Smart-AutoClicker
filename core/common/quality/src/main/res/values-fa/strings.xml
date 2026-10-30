@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="dialog_title_permission_issue">عیب‌یابی</string>
+    <string name="message_accessibility_issues">به نظر می‌رسد مجوز سرویس دسترس‌پذیری چندین بار لغو شده است. اگر خودتان آن را تغییر نداده‌اید، این یعنی دستگاه شما آن را لغو کرده است.\n\nبرخی از سازندگان دستگاه‌های Android رفتار استاندارد مربوط به برنامه‌های پس‌زمینه را رعایت نمی‌کنند، و بسته به برند دستگاه خود، ممکن است لازم باشد پیکربندی‌های بیشتری انجام دهید.\n\nلطفاً برای کسب اطلاعات بیشتر درباره این مشکل و نحوه بهبود پایداری مجوز، به وب‌سایت زیر مراجعه کنید.</string>
+
+</resources>

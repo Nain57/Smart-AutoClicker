@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_permission_accessibility">سرویس دسترس‌پذیری</string>
+    <string name="dialog_title_permission_notification">اعلان</string>
+    <string name="dialog_title_permission_mandatory_denied">مجوز رد شد</string>
+    <string name="dialog_title_permission_overlay">پوشش (اورلی)</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_permission_desc_overlay">مجوز پوشش (اورلی) برای نمایش رابط کاربری Klick\'r روی برنامه‌هایی که می‌خواهید خودکارسازی کنید لازم است، تا بتوانید بدون توقف برنامه دیگر سناریوی خود را پیکربندی کنید.</string>
+    <string name="message_permission_desc_accessibility">مجوز سرویس دسترس‌پذیری به Klick\'r اجازه می‌دهد ژست‌های حرکتی را روی صفحه دستگاه شما اجرا کند. این مجوز برای اجرای کلیک‌ها و ژست‌های حرکتی که در سناریوهای خودکارسازی خود ایجاد می‌کنید الزامی است.\n\nهیچ داده‌ای توسط Klick\'r جمع‌آوری نمی‌شود\n\nبرای اعطای مجوز سرویس دسترس‌پذیری، روی دکمه زیر کلیک کنید.</string>
+    <string name="message_permission_desc_notification">اختیاری: نمایش اعلان در هنگام اجرای برنامه تا بتوانید به‌راحتی به صفحه انتخاب سناریو بازگردید.</string>
+    <string name="message_permission_mandatory_denied">این مجوز برای Klick\'r الزامی است. برنامه بدون آن نمی‌تواند به‌درستی کار کند.</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_request_permission">درخواست مجوز</string>
+    <string name="button_deny">رد کردن</string>
+
+</resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2026 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Debug Report root dialog ================================================================================== -->
+
+    <string name="dialog_overlay_title_debug_report">گزارش عیب‌یابی</string>
+    <string name="menu_item_debug_report_overview">نمای کلی</string>
+    <string name="menu_item_debug_report_timeline">خط زمانی</string>
+
+    <!-- Debug Report Overview Tab-->
+    <string name="item_title_report_total_duration">مدت کل</string>
+    <string name="item_title_report_frame_processed">فریم‌های پردازش‌شده</string>
+    <string name="item_title_report_avg_image_processing_duration">میانگین مدت پردازش</string>
+    <string name="item_title_report_image_event_fulfilled">رویدادهای صفحه محقق‌شده</string>
+    <string name="item_title_report_trigger_event_fulfilled">رویدادهای راه‌انداز محقق‌شده</string>
+
+    <!-- Debug Report Timeline Tab -->
+    <string name="title_event_occurrence_empty">رویدادی وجود ندارد</string>
+    <string name="desc_event_occurrence_empty">در طول آخرین جلسه سناریو هیچ رویدادی اجرا نشد.</string>
+    <string name="item_event_occurrence_frame_number">فریم شماره %1$d</string>
+    <string name="item_event_occurrence_trigger">راه‌انداز</string>
+    <string name="item_event_occurrence_one_condition_fulfilled">محقق‌شده: %1$s</string>
+    <string name="item_event_occurrence_one_condition_unfulfilled">محقق‌نشده: %1$s</string>
+    <string name="item_event_occurrence_several_condition_processed">%1$d شرط پردازش شد</string>
+    <string name="item_event_occurrence_held_check">%1$s - %2$s</string>
+    <string name="item_event_occurrence_hold_duration">مدت نگه‌داشتن %1$.1fs</string>
+    <string name="item_event_occurrence_released">رهاشده: %1$s</string>
+    <string name="item_event_occurrence_release_reason_unfulfilled">محقق‌نشده</string>
+    <string name="item_event_occurrence_release_reason_actions_completed">اقدامات تکمیل شدند</string>
+    <string name="item_event_occurrence_release_reason_duration_elapsed">مدت زمان به پایان رسید</string>
+    <string name="item_event_occurrence_release_reason_interrupted">متوقف شد</string>
+    <string name="item_event_occurrence_release_reason_event_disabled">رویداد غیرفعال شد</string>
+    <string name="item_event_occurrence_release_reason_other_event">رویدادی دیگر</string>
+    <string name="item_event_occurrence_release_reason_screen_rotation">چرخش صفحه</string>
+    <string name="item_event_occurrence_release_reason_scenario_stopped">سناریو متوقف شد</string>
+
+
+    <!-- Debug Report Timeline filters dialog ====================================================================== -->
+
+    <string name="dialog_overlay_title_timeline_filters">فیلترهای خط زمانی</string>
+
+    <string name="field_debug_filter_image_events_title">رویدادهای تصویر</string>
+    <string name="field_debug_filter_image_events_show_desc_on">نمایش رخدادهای رویدادهای تصویر در خط زمانی</string>
+    <string name="field_debug_filter_image_events_show_desc_off">پنهان کردن همه رخدادهای رویدادهای تصویر در خط زمانی</string>
+
+    <string name="field_debug_filter_trigger_events_title">رویدادهای راه‌انداز</string>
+    <string name="field_debug_filter_trigger_events_show_desc_on">نمایش رخدادهای رویدادهای راه‌انداز در خط زمانی</string>
+    <string name="field_debug_filter_trigger_events_show_desc_off">پنهان کردن همه رخدادهای رویدادهای راه‌انداز در خط زمانی</string>
+
+    <string name="field_debug_filter_hold_checks_title">نمایش بررسی نگه‌داشتن ژست حرکتی</string>
+    <string name="field_debug_filter_hold_checks_show_desc_on">نمایش بررسی‌هایی که ژست حرکتی را در خط زمانی نگه می‌دارند</string>
+    <string name="field_debug_filter_hold_checks_show_desc_off">پنهان کردن بررسی‌هایی که ژست حرکتی را در خط زمانی نگه می‌دارند</string>
+    <string name="field_debug_filter_releases_title">نمایش رها کردن ژست حرکتی</string>
+    <string name="field_debug_filter_releases_show_desc_on">نمایش رها شدن ژست‌های حرکتی نگه‌داشته‌شده در خط زمانی</string>
+    <string name="field_debug_filter_releases_show_desc_off">پنهان کردن رها شدن ژست‌های حرکتی نگه‌داشته‌شده در خط زمانی</string>
+
+    <string name="field_debug_filter_events_show_title">فیلترها</string>
+    <string name="field_debug_filter_events_show_select_desc">%1$d رویداد</string>
+    <string name="field_debug_filter_events_show_select_desc_none">بدون رویداد</string>
+
+
+    <!-- Debug Report Event Occurrence dialog ====================================================================== -->
+
+    <string name="menu_item_debug_event_occurrence_conditions">شرط‌ها</string>
+    <string name="menu_item_debug_event_occurrence_counters">شمارنده‌ها</string>
+    <string name="menu_item_debug_event_occurrence_events_state">وضعیت‌ها</string>
+
+    <!-- Debug Report Event Occurrence conditions Tab -->
+    <string name="item_event_occurrence_details_header_title">عملگر شرط</string>
+    <string name="item_event_occurrence_details_image_confidence">میزان اطمینان: %1$.2f/%2$.2f</string>
+    <string name="item_event_occurrence_details_image_should_be_detected">باید تشخیص داده شود؟</string>
+    <string name="item_event_occurrence_details_image_fulfilled">محقق شده است؟</string>
+    <string name="item_event_occurrence_details_trigger_desc_broadcast">دریافت Broadcast: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_timer">رسیدن به زمان‌سنج: %1$s</string>
+    <string name="item_event_occurrence_details_trigger_desc_counter">رسیدن به شمارنده: %1$s %2$s %3$s</string>
+
+    <!-- Debug Report Event Occurrence counters Tab -->
+    <string name="title_event_occurrence_counters_empty">شمارنده‌ای وجود ندارد</string>
+    <string name="desc_event_occurrence_counters_empty">هیچ شمارنده‌ای برای این سناریو تعریف نشده است.</string>
+
+    <!-- Debug Report Event Occurrence events state Tab -->
+    <string name="item_event_state_header_image">رویدادهای تصویر</string>
+    <string name="item_event_state_header_trigger">رویدادهای راه‌انداز</string>
+
+
+    <!-- Overlay texts ============================================================================================ -->
+
+    <string name="overlay_title_results">نتایج</string>
+    <string name="overlay_title_threshold">آستانه</string>
+
+    <!-- Not translatable =========================================================================================
+      - The following strings should be kept the same in all languages. No need to copy them in other language files.
+      - DO NOT TRANSLATE.
+      -->
+
+
+</resources>
