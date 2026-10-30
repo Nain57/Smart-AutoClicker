@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+* Copyright (C) 2023 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+
+    <string name="activity_scenario_title">سناریوها</string>
+    <string name="accessibility_service_description">این برنامه برای اعمال کلیک‌های ایجادشده توسط شما در برنامه‌های دیگر پس از تشخیص شرط‌ها، به این سرویس نیاز دارد.\n\nهیچ داده‌ای از این برنامه جمع‌آوری نخواهد شد. خوشحال می‌شویم از GitHub ما دیدن کنید، کد متن‌باز است!</string>
+
+    <!--
+      - Titles for the dialogs displayed from the activity.
+      - Regular Android dialog title characters size.
+      -->
+    <string name="dialog_title_add_scenario">سناریوی جدید</string>
+
+    <!--
+      - Text for menu items.
+      - Should be short and concise.
+      -->
+    <string name="menu_item_title_export">خروجی گرفتن</string>
+    <string name="menu_item_title_import">وارد کردن</string>
+    <string name="menu_item_title_select_all">انتخاب همه</string>
+    <string name="menu_item_title_cancel">لغو</string>
+    <string name="menu_item_title_search">جستجو</string>
+    <string name="menu_item_title_settings">تنظیمات</string>
+
+    <string name="item_scenario_filter_by_name">نام</string>
+    <string name="item_scenario_filter_by_recent">اخیر</string>
+    <string name="item_scenario_filter_by_most_used">دفعات استفاده</string>
+
+    <string name="item_scenario_last_used_never">هرگز استفاده نشده</string>
+    <plurals name="item_scenario_last_used_minutes">
+        <item quantity="one">%1$d دقیقه قبل</item>
+        <item quantity="other">%1$d دقیقه قبل</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_hours">
+        <item quantity="one">%1$d ساعت قبل</item>
+        <item quantity="other">%1$d ساعت قبل</item>
+    </plurals>
+    <plurals name="item_scenario_last_used_days">
+        <item quantity="one">%1$d روز قبل</item>
+        <item quantity="other">%1$d روز قبل</item>
+    </plurals>
+
+    <!--
+      - Text for items in a list or vertical layout.
+      -  * Title should be short and concise.
+      -  * Desc can have more space to describe the title
+      -  * Error have the same space as desc
+      -->
+    <string name="item_desc_dumb_scenario">تجربه معمولی کلیک‌کننده خودکار.\nبه‌سادگی کلیک‌ها و حرکات لمسی را روی صفحه قرار دهید.</string>
+    <string name="item_desc_dumb_scenario_max_duration">توقف پس از %1$s</string>
+    <string name="item_desc_dumb_scenario_max_duration_infinite">بدون حداکثر مدت‌زمان</string>
+    <string name="item_desc_dumb_scenario_repeat_count">تکرار %1$d بار</string>
+    <string name="item_desc_dumb_scenario_repeat_infinite">تکرار نامحدود</string>
+    <string name="item_desc_smart_scenario">استفاده از تشخیص تصویر برای ایجاد موارد کاربرد پیچیده.</string>
+    <string name="item_desc_smart_scenario_pro_mode">نیازمند تماشای تبلیغ یا خرید حالت حرفه‌ای</string>
+    <string name="item_title_dumb_scenario">ساده</string>
+    <string name="item_title_smart_scenario">هوشمند</string>
+
+    <!--
+      - Empty list messages.
+      - Views handles any length here, but try to be concise.
+      -->
+    <string name="message_empty_scenario_list">اولین سناریوی خود را ایجاد کنید و خودکارسازی کارها را در تلفن خود آغاز نمایید</string>
+
+    <!--
+      - Messages.
+      - Views handles any length here, so no limitations.
+      -->
+    <string name="message_delete_scenario">این عمل %1$s را حذف خواهد کرد. آیا مطمئن هستید؟</string>
+
+    <!--
+      - Toast messages.
+      - Can be pretty long (2 lines).
+      -->
+    <string name="toast_denied_foreground_permission">کاربر مجوز سرویس پیش‌زمینه را رد کرد</string>
+
+    <!--
+      - TextButton content.
+      - Should be short and concise.
+      -->
+    <string name="button_text_create_scenario">ایجاد سناریو</string>
+
+    <!--
+      - Content description texts.
+      - They are use as accessibility texts for visually impaired people. They will not be displayed but spoken.
+      -->
+    <string name="content_desc_add_scenario">ایجاد سناریوی جدید</string>
+
+
+    <!-- Default name when creating a new scenario -->
+    <string name="default_scenario_name">نام پیش‌فرض</string>
+    <string name="message_empty_image_events_scenario_list">هیچ رویداد تصویری وجود ندارد</string>
+
+
+    <!-- Settings Activity  ======================================================================================== -->
+
+    <string name="activity_settings_title">تنظیمات</string>
+
+    <string name="field_show_scenario_filters_ui_title">نمایش فیلترهای سناریوها</string>
+    <string name="field_show_scenario_filters_ui_desc">نمایش یا پنهان‌سازی فیلترها در صفحه فهرست سناریوها.</string>
+
+    <string name="field_legacy_action_ui_title">رابط کاربری قدیمی اقدام‌ها</string>
+    <string name="field_legacy_action_ui_desc">تغییر نمایش اقدام به صورت فهرست. برای سناریوهای پیچیده کاربرد دارد.</string>
+
+    <string name="field_legacy_notification_ui_title">رابط کاربری قدیمی اعلان‌ها</string>
+    <string name="field_legacy_notification_ui_desc">استفاده از دکمه‌های سیستمی به‌جای دکمه‌های نمادین در اعلان.</string>
+
+    <string name="field_force_entire_screen_title">اجبار به تمام صفحه</string>
+    <string name="field_force_entire_screen_desc">اجبار انتخابگر ضبط صفحه به «تمام صفحه». ممکن است بسته به دستگاه شما کار نکند</string>
+
+    <string name="field_show_on_lock_screen_title">نمایش در صفحه قفل</string>
+    <string name="field_show_on_lock_screen_desc">نمایان نگه داشتن منوی شناور هنگام قفل بودن دستگاه.</string>
+
+    <string name="field_input_block_workaround_title">رفع مسدودسازی صفحه لمسی</string>
+    <string name="field_input_block_workaround_desc">در دستگاه‌های Pixel با Android 15، استفاده از کلیک‌کننده خودکار می‌تواند صفحه لمسی را مسدود کند.\nبرای رفع مسدودسازی، باید هم‌زمان صفحه را با چند انگشت لمس کنید. این تنظیم تلاش می‌کند هر ۱۰ ثانیه این کار را شبیه‌سازی کند.</string>
+
+    <string name="field_privacy">تنظیمات حریم خصوصی</string>
+    <string name="field_remove_ads">حذف تبلیغات</string>
+    <string name="field_troubleshooting">عیب‌یابی</string>
+
+
+    <!-- Legacy condition migration dialog  ======================================================================== -->
+    <string name="dialog_condition_migration_title">مهاجرت</string>
+
+    <string name="message_condition_migration_desc">فرمت تصاویر Klick\'r تغییر کرده است و سناریوی شما باید به‌روزرسانی شود. این کار ممکن است بسته به تعداد شرط‌های موردنیاز برای مهاجرت، چند دقیقه طول بکشد.</string>
+    <string name="message_condition_migration_count">%1$d شرط تصویری برای مهاجرت.</string>
+    <string name="message_condition_migration_success">همه شرط‌های تصویری مهاجرت داده شدند.</string>
+    <string name="message_condition_migration_error">برخی از شرط‌ها مهاجرت داده نشدند. لطفاً سناریوهای خود را بررسی کنید.</string>
+
+    <string name="button_condition_migration_start">مهاجرت</string>
+    <string name="button_condition_migration_running">در حال مهاجرت</string>
+    <string name="button_condition_migration_finished">تأیید</string>
+
+
+    <string name="dialog_title_backup">پشتیبان‌گیری</string>
+    <string name="message_backup">ایجاد یا وارد کردن فایل فشرده zip از سناریوها</string>
+    <string name="button_import">وارد کردن</string>
+    <string name="button_export">خروجی گرفتن</string>
+
+</resources>

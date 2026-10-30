@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+* Copyright (C) 2024 Kevin Buzeau
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <!-- Generic =================================================================================================== -->
+    <!-- Those values are shared between several dialogs due to their generic meaning, such as name or formatting -->
+
+    <string name="generic_name">نام</string>
+    <string name="generic_select_the_position">انتخاب موقعیت</string>
+    <string name="generic_config">پیکربندی</string>
+    <string name="generic_counters">شمارنده‌ها</string>
+    <string name="generic_modify">ویرایش</string>
+
+    <string name="generic_detection_area_title">ناحیه تشخیص</string>
+    <string name="generic_detection_area_desc_empty">باید یک ناحیه تشخیص تعیین کنید. برای تعیین آن اینجا کلیک کنید</string>
+    <string name="generic_condition_threshold_title">اختلاف مجاز</string>
+
+
+
+    <!-- Scenario Items ============================================================================================ -->
+
+    <string name="item_event_desc_enabled_children">فعال</string>
+    <string name="item_event_desc_disabled_children">غیرفعال</string>
+
+    <string name="item_image_condition_desc_threshold">%1$d%%</string>
+    <string name="item_image_condition_desc_complete_threshold">اختلاف: %1$d%%</string>
+
+    <string name="item_image_condition_visible">نمایان</string>
+    <string name="item_image_condition_not_visible">غیرنمایان</string>
+
+    <string name="item_counter_reached_title">هنگام رسیدن شمارنده</string>
+    <string name="item_counter_reached_desc">بررسی مقدار شمارنده‌ای که توسط یک اقدام تغییر یافته است</string>
+    <string name="item_counter_reached_details">%1$s %2$s %3$s</string>
+
+    <string name="item_timer_reached_title">هنگام رسیدن زمان‌سنج</string>
+    <string name="item_timer_reached_desc">برآورده شدن پس از مدت‌زمان مشخص از فعال‌سازی این محرک</string>
+    <string name="item_timer_reached_details">%1$s پس از فعال شدن رویداد</string>
+
+    <string name="item_broadcast_received_title">هنگام دریافت Broadcast</string>
+    <string name="item_broadcast_received_desc">برآورده شدن هنگام دریافت یک Broadcast</string>
+    <string name="item_broadcast_received_details">%1$s دریافت شد</string>
+
+    <string name="item_color_condition_title">هنگام تشخیص رنگ</string>
+    <string name="item_color_condition_desc">برآورده شدن هنگامی که رنگی در جایی از صفحه نمایان باشد</string>
+
+    <string name="item_image_condition_title">هنگام تشخیص تصویر</string>
+    <string name="item_image_condition_desc">برآورده شدن هنگامی که تصویری در جایی از صفحه نمایان باشد</string>
+
+    <string name="item_text_condition_title">هنگام تشخیص متن</string>
+    <string name="item_text_condition_desc">برآورده شدن هنگامی که متنی در جایی از صفحه نمایان باشد</string>
+
+    <string name="item_number_condition_title">هنگام تشخیص عدد</string>
+    <string name="item_number_condition_desc">برآورده شدن هنگامی که عددی در جایی از صفحه نمایان باشد</string>
+
+    <string name="item_copy_title">کپی</string>
+    <string name="item_copy_desc">کپی یک اقدام موجود از هر سناریویی</string>
+
+    <string name="item_click_title">کلیک</string>
+    <string name="item_click_desc">کلیک در نقطه‌ای از صفحه</string>
+    <string name="item_click_details_on_condition">به‌مدت %1$s روی %2$s</string>
+    <string name="item_click_details_on_condition_unknown">به‌مدت %1$s روی شرط تشخیص‌داده‌شده</string>
+    <string name="item_click_details_at_position">به‌مدت %1$s</string>
+
+    <string name="item_gesture_title">ژست حرکتی</string>
+    <string name="item_gesture_desc">اجرای یک ژست حرکتی پیچیده روی صفحه</string>
+    <plurals name="item_gesture_details">
+        <item quantity="one">با %1$d انگشت به‌مدت %2$s</item>
+        <item quantity="other">با %1$d انگشت به‌مدت %2$s</item>
+    </plurals>
+
+    <string name="item_pause_title">مکث</string>
+    <string name="item_pause_desc">مکث در اجرای تشخیص</string>
+    <string name="item_pause_details">به‌مدت %1$s</string>
+
+    <string name="item_change_counter_title">تغییر شمارنده</string>
+    <string name="item_change_counter_desc">تغییر یک مقدار برای بررسی بعدی آن</string>
+    <string name="item_change_counter_details_error">شمارنده نامعتبر است</string>
+
+    <string name="item_toggle_event_title">تغییر وضعیت رویداد</string>
+    <string name="item_toggle_event_desc">تغییر وضعیت فعال‌بودن یک رویداد</string>
+    <string name="item_toggle_event_details_enable_all">فعال کردن همه</string>
+    <string name="item_toggle_event_details_disable_all">غیرفعال کردن همه</string>
+    <string name="item_toggle_event_details_invert_all">معکوس کردن همه</string>
+    <string name="item_toggle_event_details_manual">تغییر %1$d رویداد</string>
+    <string name="item_toggle_event_details_error">رویداد هدف پیدا نشد</string>
+
+    <string name="item_intent_title">ارسال Intent</string>
+    <string name="item_intent_desc">تعامل با برنامه‌ای دیگر</string>
+    <string name="item_intent_details">ارسال %1$s</string>
+    <string name="item_intent_details_component_name">ارسال %1$s به %2$s</string>
+    <string name="item_intent_details_start_activity">شروع %1$s</string>
+
+    <string name="item_notification_title">اعلان</string>
+    <string name="item_notification_desc">ارسال یک اعلان به دستگاه شما</string>
+    <string name="item_notification_details_text">ارسال «%1$s»</string>
+
+    <string name="item_system_action_title">اقدام سیستمی</string>
+    <string name="item_system_action_desc">استفاده از یک اقدام سیستمی Android (بازگشت، خانه یا برنامه‌های اخیر)</string>
+    <string name="item_system_action_details_text">%1$s</string>
+
+    <string name="item_set_text_title">نوشتن متن</string>
+    <string name="item_set_text_desc">نوشتن متن در نمای دارای فوکوس فعلی</string>
+    <string name="item_set_text_details_text">%1$s</string>
+    <string name="item_set_text_details_text_empty">پاک کردن متن</string>
+
+    <!-- Dialog Copy =============================================================================================== -->
+
+    <string name="search_view_hint_event_copy">جستجو بر اساس نام رویداد</string>
+    <string name="search_view_hint_action_copy">جستجو بر اساس نام اقدام</string>
+    <string name="search_view_hint_condition_copy">جستجو بر اساس نام شرط</string>
+
+    <string name="list_header_copy_conditions_this">شرط‌های این رویداد</string>
+    <string name="list_header_copy_conditions_this_scenario">شرط‌های این سناریو</string>
+    <string name="list_header_copy_conditions_all">شرط‌های همه سناریوها</string>
+
+    <string name="list_header_copy_action_this">اقدام‌های این رویداد</string>
+    <string name="list_header_copy_action_this_scenario">اقدام‌های این سناریو</string>
+    <string name="list_header_copy_action_all">اقدام‌های همه سناریوها</string>
+
+    <string name="list_header_copy_event_this">رویدادهای این سناریو</string>
+    <string name="list_header_copy_event_all">رویدادهای همه سناریوها</string>
+
+
+    <!-- Dialog Scenario =========================================================================================== -->
+
+    <string name="dialog_title_scenario_config">سناریو</string>
+
+    <string name="message_empty_screen_event_title">هیچ رویداد صفحه‌ای وجود ندارد!</string>
+    <string name="message_empty_screen_event_desc">یک رویداد صفحه شامل مجموعه‌ای از اقدام‌ها است که هنگام تشخیص یک شرط خاص روی صفحه اجرا می‌شوند.\nبرای اجرای سناریو، به حداقل یک رویداد صفحه یا رویداد محرک در سناریوی خود نیاز دارید.</string>
+    <string name="message_empty_trigger_event_list_title">هیچ رویداد محرکی وجود ندارد!</string>
+    <string name="message_empty_trigger_event_list_desc">یک رویداد محرک شامل مجموعه‌ای از اقدام‌ها است که هنگام برآورده شدن مجموعه‌ای از شرط‌های سفارشی اجرا می‌شوند.\nبرای اجرای سناریو، به حداقل یک رویداد صفحه یا رویداد محرک در سناریوی خود نیاز دارید.</string>
+
+    <string name="menu_item_title_image_events">صفحه</string>
+    <string name="menu_item_title_trigger_events">محرک‌ها</string>
+    <string name="menu_item_title_more">بیشتر</string>
+
+    <string name="field_scenario_keep_screen_on_title">روشن نگه داشتن صفحه</string>
+    <string name="field_scenario_keep_screen_on_enabled">روشن نگه داشتن صفحه دستگاه هنگام تشخیص.</string>
+    <string name="field_scenario_keep_screen_on_disabled">استفاده از رفتار عادی صفحه دستگاه.</string>
+
+    <string name="field_scenario_fps_limit_title">محدودکننده اجرا</string>
+    <string name="field_scenario_fps_limit_desc">محدود کردن بسامد پردازش سناریو برای صرفه‌جویی در باتری. تشخیص کندتر خواهد شد.</string>
+    <string name="field_scenario_fps_rate_label">تعداد اجرا</string>
+    <string name="field_scenario_fps_rate_unit_label">در هر</string>
+    <string name="field_scenario_fps_dropdown_item_second">ثانیه</string>
+    <string name="field_scenario_fps_dropdown_item_minute">دقیقه</string>
+
+    <string name="field_scenario_quality_title">وضوح تشخیص</string>
+    <string name="field_scenario_quality_description">برای دستیابی به تشخیص سریع‌تر، Klick\'r پیش از تشخیص، ابعاد تصاویر را کاهش می‌دهد.\n\nاگر وضوح را افزایش دهید، تشخیص کندتر اما دقیق‌تر خواهد بود. اگر وضوح را کاهش دهید، تشخیص سریع‌تر اما با دقت کمتر خواهد بود. نسبت مناسبی بین وضوح تشخیص و آستانه‌های شرط‌ها بیابید تا بهترین نتیجه را از سناریوهای خود بگیرید!</string>
+
+    <string name="field_counters_title">شمارنده‌ها</string>
+    <string name="field_counters_desc_empty">هیچ شمارنده‌ای تعریف نشده است</string>
+    <string name="field_counters_desc">%1$d شمارنده تعریف شده است</string>
+
+    <string name="field_show_debug_view_title">نمایش نمای اشکال‌زدایی</string>
+    <string name="field_show_debug_view_desc">نمایش رویدادهای فعال‌شده در حین تشخیص.</string>
+    <string name="item_title_debug_generate_report">ایجاد گزارش</string>
+    <string name="item_desc_debug_generate_report">ثبت رفتار سناریوی شما در حین تشخیص برای ایجاد یک گزارش.</string>
+
+    <string name="field_debug_view_settings_title">تنظیمات نمای اشکال‌زدایی</string>
+    <string name="field_debug_view_settings_desc">انتخاب اطلاعات نمایش‌داده‌شده در نمای اشکال‌زدایی.</string>
+
+    <string name="dialog_title_debug_view_settings">نمای اشکال‌زدایی</string>
+    <string name="field_debug_view_show_event_stats_title">نمایش آمار رویدادها</string>
+    <string name="field_debug_view_show_actions_title">نمایش اقدام‌های رویداد</string>
+    <string name="field_debug_view_show_held_finger_title">نمایش انگشت نگه‌داشته‌شده</string>
+
+    <string name="field_show_debug_report_title">نمایش گزارش</string>
+    <string name="field_show_debug_report_desc_available">گزارش اشکال‌زدایی موجود است</string>
+    <string name="field_show_debug_report_desc_not_available">هیچ گزارش اشکال‌زدایی موجود نیست</string>
+
+
+    <!-- Dialog Event ============================================================================================== -->
+
+    <string name="dialog_title_image_event">رویداد صفحه</string>
+    <string name="dialog_title_trigger_event">راه‌انداز</string>
+    <string name="dialog_title_action_type">نوع اقدام</string>
+    <string name="dialog_title_screen_condition_type">نوع شرط</string>
+    <string name="dialog_title_trigger_condition_type">نوع راه‌انداز</string>
+
+    <string name="field_condition_selector_desc">%1$d شرط</string>
+    <string name="message_empty_screen_condition_list_title">هیچ شرط صفحه‌ای وجود ندارد!</string>
+    <string name="message_empty_screen_condition_list_desc">شرط صفحه بخشی از یک اسکرین‌شات است که در تمام فریم‌های نمایش‌داده‌شده روی صفحهٔ گوشی شما جستجو می‌شود.</string>
+    <string name="message_empty_trigger_condition_list_title">هیچ شرطی وجود ندارد!</string>
+    <string name="message_empty_trigger_condition_list_desc">شرط یک معیار سفارشی برای شروع یک اقدام است.</string>
+    <string name="message_empty_action_list_title">هیچ اقدامی وجود ندارد!</string>
+    <string name="message_empty_action_list_desc">اقدام یک تعامل (کلیک، ژست حرکتی…) با گوشی شما است که با برآورده شدن شرایط ایجادشده فعال می‌شود.</string>
+
+    <string name="menu_item_title_conditions">شرط‌ها</string>
+    <string name="menu_item_title_actions">اقدام‌ها</string>
+    <string name="menu_item_title_state">وضعیت</string>
+
+    <string name="field_event_state_title">وضعیت اولیه</string>
+    <string name="field_event_state_desc_enabled">این رویداد هنگام اجرای سناریو به‌طور عادی تفسیر خواهد شد</string>
+    <string name="field_event_state_desc_disabled">این رویداد برای تفسیر شدن هنگام اجرای سناریو باید توسط یک اقدام فعال شود</string>
+
+    <string name="field_event_keep_detecting_title">ادامهٔ اجرا</string>
+    <string name="field_event_keep_detecting_desc_enabled">هنگامی که این رویداد فعال شد، اجرا از رویداد بعدی در فهرست ادامه می‌یابد</string>
+    <string name="field_event_keep_detecting_desc_disabled">هنگامی که این رویداد فعال شد، اجرا از اولین رویداد در فهرست دوباره آغاز می‌شود</string>
+
+    <string name="field_event_cooldown_title">بارگذاری مجدد</string>
+    <string name="field_event_cooldown_desc">نادیده گرفتن این رویداد برای مدت زمانی مشخص پس از برآورده شدن.</string>
+    <string name="field_event_cooldown_edit_label">مدت زمان</string>
+
+    <string name="field_operator_title">عملگر</string>
+    <string name="field_operator_desc_or">تنها یک شرط باید برای فعال شدن اقدام‌ها برآورده شود</string>
+    <string name="field_operator_desc_and">تمام شرط‌ها باید برای فعال شدن اقدام‌ها برآورده شوند</string>
+
+
+    <!-- Brief overlays ============================================================================================ -->
+
+    <string name="brief_empty_actions">بدون اقدام. برای ایجاد یک رویداد معتبر به حداقل یک اقدام نیاز دارید</string>
+    <string name="brief_empty_image_conditions">بدون شرط صفحه. برای ایجاد یک رویداد معتبر به حداقل یک شرط نیاز دارید</string>
+    <string name="brief_overlay_number_condition_format">%1$s %2$s</string><!-- Ex: "= Hello!"; "< 18" -->
+
+    <!-- Dialog Condition Color ==================================================================================== -->
+
+    <string name="overlay_pixel_selector_title">یک پیکسل را انتخاب کنید</string>
+    <string name="dialog_title_condition_color_config">شرط</string>
+
+
+    <!-- Dialog Condition Image ==================================================================================== -->
+
+    <string name="dialog_title_condition_config">شرط</string>
+
+    <string name="field_condition_visibility_title">نمایانی</string>
+    <string name="field_condition_visibility_desc_present">شرط باید تشخیص داده شود</string>
+    <string name="field_condition_visibility_desc_absent">شرط نباید تشخیص داده شود</string>
+
+    <string name="field_detection_type_title">نوع تشخیص</string>
+    <string name="field_detection_type_desc_exact">تشخیص در موقعیت ثبت‌شده</string>
+    <string name="field_detection_type_desc_screen">تشخیص در کل صفحه</string>
+    <string name="field_detection_type_desc_area">تشخیص در ناحیهٔ انتخاب‌شده</string>
+
+    <string name="field_select_detection_area_title">ناحیهٔ تشخیص</string>
+    <string name="field_select_detection_area_desc">در [%1$d، %2$d، %3$d، %4$d]</string>
+
+    <string name="toast_capture_failed">عکس گرفتن از صفحه ناموفق بود، هیچ فریمی تولید نشد.</string>
+
+
+    <!-- Dialog Condition Text ==================================================================================== -->
+
+    <string name="field_text_to_detect_label">متن مورد نظر برای تشخیص</string>
+    <string name="field_text_detection_alphabet_title">الفبا</string>
+
+
+    <!-- Dialog Condition Number ==================================================================================== -->
+
+    <string name="field_number_condition_number_format_label">قالب عددی تشخیص</string>
+    <string name="dropdown_item_number_format_auto">تشخیص خودکار</string>
+    <string name="dropdown_item_number_format_auto_helper">جداکننده‌ها را بر اساس ساختار عدد استنتاج می‌کند</string>
+    <string name="dropdown_item_number_format_dot_decimal">ممیز نقطه‌ای</string>
+    <string name="dropdown_item_number_format_dot_decimal_helper">نقطه جداکنندهٔ اعشار است (مانند 1,234.56)</string>
+    <string name="dropdown_item_number_format_comma_decimal">ممیز ویرگولی</string>
+    <string name="dropdown_item_number_format_comma_decimal_helper">ویرگول جداکنندهٔ اعشار است (مانند 1.234,56)</string>
+
+    <string name="field_number_condition_effect_title">اثر شرط</string>
+    <!--Ex: The detected number must be greater than 10 -->
+    <string name="message_number_condition_static_value_desc">عدد تشخیص‌داده‌شده باید %1$s %2$s باشد</string>
+    <!--Ex: The detected number must be greater than counter "My counter" value -->
+    <string name="message_number_condition_counter_value_desc">عدد تشخیص‌داده‌شده باید %1$s مقدار شمارندهٔ «%2$s» باشد</string>
+
+    <string name="comparison_operator_greater_or_equals_full">بزرگ‌تر یا مساوی با</string>
+    <string name="comparison_operator_greater_full">بزرگ‌تر از</string>
+    <string name="comparison_operator_equals_full">برابر با</string>
+    <string name="comparison_operator_lower_or_equals_full">کوچک‌تر یا مساوی با</string>
+    <string name="comparison_operator_lower_full">کوچک‌تر از</string>
+
+
+    <!-- Dialog Alphabet selection ================================================================================= -->
+
+    <string name="item_alphabet_selection_header">برای استفاده از تشخیص متن در سناریوی خود، باید مدل الفبای مربوطه را بارگیری کنید.\n\nهر مدل می‌تواند تا 5MB فضا بگیرد.</string>
+    <string name="item_alphabet_required_header">برای اجرای این سناریو، باید مدل‌های الفبای زیر را بارگیری کنید.\n\nهر مدل می‌تواند تا 5MB فضا بگیرد.</string>
+
+    <string name="item_alphabet_name_arabic">عربی</string>
+    <string name="item_alphabet_name_chinese_simplified">چینی ساده‌شده</string>
+    <string name="item_alphabet_name_chinese_traditional">چینی سنتی</string>
+    <string name="item_alphabet_name_cyrillic">سیریلیک</string>
+    <string name="item_alphabet_name_devanagari">دواناگری</string>
+    <string name="item_alphabet_name_japanese">ژاپنی</string>
+    <string name="item_alphabet_name_kannada">کانادا</string>
+    <string name="item_alphabet_name_korean">کره‌ای</string>
+    <string name="item_alphabet_name_latin">لاتین</string>
+    <string name="item_alphabet_name_tamil">تامیلی</string>
+    <string name="item_alphabet_name_telugu">تلوگو</string>
+
+
+
+    <!-- Dialog Condition Counter Reached ========================================================================== -->
+
+    <string name="dialog_title_counter_reached">رسیدن به مقدار شمارنده</string>
+
+    <string name="field_counter_name_label">نام شمارنده</string>
+    <string name="field_counter_comparison_value_label">مقدار</string>
+    <string name="dropdown_comparison_operator_label">عملگر</string>
+
+    <string name="field_change_counter_check_effect_title">اثر شرط</string>
+    <string name="field_change_counter_check_effect_desc">%1$s %2$s %3$s</string> <!-- Toto = Tata; Toto <= Tata... -->
+
+    <!-- Dialog Condition Timer Reached ============================================================================ -->
+
+    <string name="dialog_title_timer_reached">رسیدن به زمان‌سنج</string>
+
+    <string name="input_field_label_timer_duration_no_unit">پس از</string>
+
+    <string name="field_timer_restart_title">راه‌اندازی مجدد پس از رسیدن</string>
+    <string name="field_timer_restart_desc_on">پس از رسیدن، زمان‌سنج دوباره راه‌اندازی می‌شود و اجازه می‌دهد این شرط مجدداً برآورده شود</string>
+    <string name="field_timer_restart_desc_off">پس از رسیدن، زمان‌سنج دوباره راه‌اندازی نخواهد شد؛ به این معنی که این شرط فقط یک بار می‌تواند برآورده شود</string>
+
+
+    <!-- Dialog Condition broadcast received ======================================================================= -->
+
+    <string name="dialog_title_broadcast_received">دریافت Broadcast</string>
+
+
+    <!-- Dialog Action Click ======================================================================================= -->
+
+    <string name="dialog_title_click">کلیک</string>
+    <string name="dialog_title_condition_selection">انتخاب یک شرط</string>
+
+    <string name="field_click_type_title">کلیک روی</string>
+    <string name="field_click_type_desc_on_condition">کلیک روی شرط تشخیص‌داده‌شده</string>
+    <string name="field_click_type_desc_on_position">کلیک روی موقعیت انتخاب‌شده</string>
+
+    <string name="field_condition_selection_title_and_operator">کلیک روی یک شرط</string>
+    <string name="field_condition_selection_desc_and_operator">%1$s</string>
+    <string name="field_condition_selection_desc_and_operator_not_found">هیچ شرطی انتخاب نشده است</string>
+
+    <string name="field_condition_selection_title_or_operator">کلیک روی اولین شرط تشخیص‌داده‌شده</string>
+    <string name="field_condition_selection_desc_or_operator">عملگر شرط رویداد روی «OR» تنظیم شده است؛ کلیک روی اولین شرط تشخیص‌داده‌شده انجام خواهد شد</string>
+
+    <string name="field_click_position_desc">کلیک روی %1$d، %2$d</string>
+
+    <string name="field_click_offset_title">جابه‌جایی</string>
+    <string name="field_click_offset_desc_none">هیچ</string>
+
+
+    <!-- Dialog Action Gesture ======================================================================================= -->
+    <!-- Smart specific keys for gesture. Base keys are shared with dumb, in core:ui module -->
+
+    <string name="item_desc_gesture_press_condition">فشردن روی [%1$s]</string>
+    <string name="item_desc_gesture_press_condition_or">فشردن روی اولین شرط تشخیص‌داده‌شده</string>
+    <string name="item_desc_gesture_press_condition_error">هیچ شرطی برای فشردن روی آن وجود ندارد</string>
+
+    <string name="item_desc_gesture_move_condition">حرکت روی [%1$s]</string>
+    <string name="item_desc_gesture_move_condition_or">حرکت روی اولین شرط تشخیص‌داده‌شده</string>
+    <string name="item_desc_gesture_move_condition_error">هیچ شرطی برای حرکت روی آن وجود ندارد</string>
+
+    <string name="message_title_gesture_on_condition_and">کلیک روی یک شرط</string>
+    <string name="message_desc_gesture_on_condition_and">%1$s</string>
+    <string name="message_title_gesture_on_condition_or">عملگر شرط OR</string>
+    <string name="message_desc_gesture_on_condition_or">موقعیت اولین شرط تشخیص‌داده‌شده</string>
+    <string name="message_title_gesture_on_condition_error">هیچ شرطی انتخاب نشده است</string>
+    <string name="message_desc_gesture_on_condition_error">برای اجرای ژست حرکتی به یک شرط نیاز دارید</string>
+
+    <string name="button_title_condition_pick">انتخاب شرط</string>
+    <string name="button_title_condition_remove">حذف شرط</string>
+
+    <string name="field_gesture_release_when_title">زمان رهاسازی</string>
+    <string name="field_gesture_release_when_item_now">اکنون</string>
+    <string name="field_gesture_release_when_item_until_actions_end">پایان اقدام‌ها</string>
+    <string name="field_gesture_release_when_item_once_unfulfilled">برآورده نشدن رویداد</string>
+    <string name="field_gesture_release_when_item_for_duration">پس از یک مدت زمان</string>
+    <string name="field_gesture_release_hold_duration_title">مدت نگه داشتن (ms)</string>
+    <string name="field_gesture_release_desc_now">انگشت را بلافاصله رها کنید.</string>
+    <string name="field_gesture_release_desc_until_actions_end">انگشت را پس از اجرای تمام اقدام‌های این رویداد رها کنید. در صورتی که این اقدام آخرین مورد در فهرست باشد، مشابه «اکنون» خواهد بود.</string>
+    <string name="field_gesture_release_desc_once_unfulfilled">انگشت را زمانی که این رویداد دیگر برآورده نشود رها کنید.</string>
+    <string name="field_gesture_release_desc_for_duration">انگشت را پس از %1$d ms رها کنید.</string>
+    <string name="item_desc_gesture_release_now">رهاسازی فوری</string>
+    <string name="item_desc_gesture_release_until_actions_end">رهاسازی پس از پایان اقدام‌ها</string>
+    <string name="item_desc_gesture_release_once_unfulfilled">رهاسازی پس از برآورده نشدن رویداد</string>
+    <string name="item_desc_gesture_release_for_duration">رهاسازی پس از %1$d ms</string>
+    <string name="field_gesture_release_hold_behaviour">• تنها یک نگه داشتن در یک زمان پشتیبانی می‌شود؛ شروع یک نگه داشتن دیگر این مورد را رها می‌کند.\n• تا زمانی که انگشت نگه داشته شده است، رویداد مربوطه تا زمان رها شدن انگشت دیگر فعال نخواهد شد.\n• اگر صفحه را به‌صورت دستی لمس کنید، نگه داشتن متوقف می‌شود.\n• حداکثر مدت نگه داشتن به سیستم شما و برنامهٔ فعلی در حال خودکارسازی بستگی دارد. برخی سیستم‌ها مدت نامحدود را مجاز می‌دانند و برخی مجاز نمی‌دانند.</string>
+
+
+    <!-- Dialog Action Pause ======================================================================================= -->
+
+    <string name="dialog_title_pause">مکث</string>
+
+
+    <!-- Dialog Action Intent ====================================================================================== -->
+
+    <string name="dialog_title_application_selection">انتخاب یک برنامه</string>
+
+    <string name="menu_item_title_advanced">پیشرفته</string>
+    <string name="menu_item_title_simple">ساده</string>
+
+    <string name="field_application_selection_title">انتخاب یک برنامه</string>
+    <string name="field_application_selection_desc">راه‌اندازی یک برنامه هنگام اجرای این اقدام</string>
+
+    <string name="dropdown_intent_sending_type_label">نوع</string>
+
+
+
+
+    <!-- Dialogs Intent Extras ===================================================================================== -->
+
+
+    <string name="field_intent_extra_key_label">کلید</string>
+    <string name="field_intent_extra_value_title">مقدار</string>
+
+    <string name="dropdown_intent_extra_type_title">نوع مقدار</string>
+
+
+
+    <!-- Dialog Action Change Counter ============================================================================== -->
+
+    <string name="dialog_title_change_counter">تغییر شمارنده</string>
+
+    <string name="field_counter_operation_value_label">مقدار</string>
+
+    <string name="dropdown_counter_operation_label">عملیات</string>
+
+    <string name="field_change_counter_effect_title">اثر اقدام</string>
+    <string name="field_change_counter_effect_desc_set">%1$s = %2$s</string> <!-- Toto = Tata -->
+    <string name="field_change_counter_effect_desc_operation">%1$s = %1$s %2$s %3$s</string> <!-- Toto = Toto + Tata -->
+
+     <!-- MyCondition (Left) -->
+    <string name="field_counter_operation_condition_selection_title_empty">هیچ شرطی انتخاب نشده است</string>
+    <string name="field_counter_operation_condition_selection_desc_empty">برای انتخاب یک شرط اینجا کلیک کنید</string>
+    <string name="field_counter_operation_condition_selection_desc">در صورت تشخیص، موقعیت آن روی صفحه به‌عنوان مقدار استفاده خواهد شد</string>
+    <string name="field_counter_operation_condition_selection_title_none">هیچ شرطی در دسترس نیست</string>
+    <string name="field_counter_operation_condition_selection_desc_none">یک شرط صفحه ایجاد کنید که باید در این رویداد تشخیص داده شود تا از موقعیت آن استفاده شود</string>
+
+    <string name="dropdown_condition_position_type_label">موقعیت</string>
+    <string name="dropdown_condition_position_type_item_left">چپ</string>
+    <string name="dropdown_condition_position_type_item_left_desc">مختصات X لبهٔ چپ</string>
+    <string name="dropdown_condition_position_type_item_center_x">مرکز X</string>
+    <string name="dropdown_condition_position_type_item_center_x_desc">مختصات X مرکز</string>
+    <string name="dropdown_condition_position_type_item_right">راست</string>
+    <string name="dropdown_condition_position_type_item_right_desc">مختصات X لبهٔ راست</string>
+    <string name="dropdown_condition_position_type_item_top">بالا</string>
+    <string name="dropdown_condition_position_type_item_top_desc">مختصات Y لبهٔ بالا</string>
+    <string name="dropdown_condition_position_type_item_center_y">مرکز Y</string>
+    <string name="dropdown_condition_position_type_item_center_y_desc">مختصات Y مرکز</string>
+    <string name="dropdown_condition_position_type_item_bottom">پایین</string>
+    <string name="dropdown_condition_position_type_item_bottom_desc">مختصات Y لبهٔ پایین</string>
+
+
+    <!-- Dialogs Action ToggleEvent ================================================================================ -->
+
+    <string name="dialog_title_toggle_event">وضعیت رویداد</string>
+    <string name="dialog_title_events_toggle">تغییر وضعیت رویدادها</string>
+
+    <string name="list_header_image_events">رویدادهای صفحه</string>
+    <string name="list_header_trigger_events">رویدادهای راه‌انداز</string>
+
+    <string name="field_change_all_title">تغییر همه</string>
+    <string name="field_change_all_desc_manual">مشخص کردن رویدادها برای تغییر دستی</string>
+    <string name="field_change_all_desc_enable_all">فعال کردن تمام رویدادها در این سناریو</string>
+    <string name="field_change_all_desc_invert_all">معکوس کردن وضعیت تمام رویدادها در این سناریو</string>
+    <string name="field_change_all_desc_disable_all">غیرفعال کردن تمام رویدادها در این سناریو. هنگامی که همهٔ رویدادها غیرفعال شوند، سناریو به‌طور خودکار متوقف می‌شود.</string>
+
+    <string name="field_select_toggle_events_title">%1$d تغییر</string>
+    <string name="field_select_toggle_events_title_empty">بدون تغییر</string>
+    <string name="field_select_toggle_events_desc_empty">حداقل یک رویداد را برای تغییر وضعیت آن انتخاب کنید</string>
+
+
+    <!-- Dialogs Notification ===================================================================================== -->
+
+    <string name="dialog_title_notification">اعلان</string>
+
+    <string name="field_notification_title_label">عنوان</string>
+
+    <string name="field_notification_message_title">پیام</string>
+    <string name="field_dropdown_notification_message_type_title">نوع</string>
+    <string name="field_dropdown_item_notification_message_type_text">متن</string>
+    <string name="field_dropdown_item_notification_message_type_counter">مقدار شمارنده</string>
+    <string name="field_notification_message_text_label">محتوا</string>
+    <string name="field_notification_message_counter_label">نام شمارنده</string>
+
+    <string name="field_dropdown_notification_importance_title">اهمیت</string>
+    <string name="field_dropdown_item_notification_importance_type_low">کم</string>
+    <string name="field_dropdown_item_notification_importance_type_low_desc">بدون صدا.</string>
+    <string name="field_dropdown_item_notification_importance_type_default">عادی</string>
+    <string name="field_dropdown_item_notification_importance_type_default_desc">صدا پخش می‌کند.</string>
+    <string name="field_dropdown_item_notification_importance_type_high">زیاد</string>
+    <string name="field_dropdown_item_notification_importance_type_high_desc">صدا پخش می‌کند و به‌صورت اعلان شناور نمایش داده می‌شود.</string>
+
+    <string name="button_notification_config">باز کردن تنظیمات</string>
+    <string name="message_notification_config">رفتار اعلان‌ها به سیستم‌عامل دستگاه شما بستگی دارد. می‌توانید نحوهٔ مدیریت اعلان‌ها را در تنظیمات دستگاه خود پیکربندی کنید.</string>
+
+
+    <!-- Dialogs Action System ===================================================================================== -->
+
+    <string name="dialog_title_system_action">اقدام سیستم</string>
+
+    <string name="field_dropdown_system_action_type_title">نوع</string>
+    <string name="field_dropdown_system_action_type_back">بازگشت</string>
+    <string name="field_dropdown_system_action_type_home">خانه</string>
+    <string name="field_dropdown_system_action_type_recent_apps">برنامه‌های اخیر</string>
+
+
+    <!-- Dialogs Action WriteText ================================================================================== -->
+
+    <string name="dialog_title_set_text_action">نوشتن متن</string>
+
+    <string name="field_input_set_text_text_to_write_title">متن</string>
+    <string name="field_set_text_validate_title">تأیید متن</string>
+    <string name="field_set_text_validate_desc_enabled">فشردن «Enter» پس از نوشتن متن</string>
+    <string name="field_set_text_validate_desc_disabled">فقط نوشتن متن</string>
+    <string name="message_set_text_focus">برای نوشتن متن در محل مورد نظر، ابتدا باید با کلیک روی کادر متنی روی آن تمرکز کنید.\n\nلطفاً توجه داشته باشید که بسته به برنامه، ممکن است لازم باشد پس از کلیک کمی صبر کنید، در غیر این صورت متن خیلی زود نوشته خواهد شد.\n\nهمچنین این ویژگی ممکن است در برنامه‌هایی که از نوشتن استاندارد متن پشتیبانی نمی‌کنند کار نکند، بنابراین همیشه ابتدا اقدام خود را آزمایش کنید!</string>
+
+
+    <!-- Dialogs Counters ========================================================================================== -->
+
+    <string name="dialog_title_counters_config">شمارنده‌ها</string>
+
+    <string name="message_empty_counter_name_list_title">هیچ شمارنده‌ای تعریف نشده است</string>
+    <string name="message_empty_counter_name_list_desc">شمارنده یک مقدار عددی را ذخیره می‌کند که می‌تواند تغییر کند، بررسی شود یا در اقدام‌ها یا شرط‌های شما استفاده شود</string>
+
+    <string name="item_counter_desc_collapsed_no_reference">این شمارنده استفاده نشده است. (%1$s)</string>
+    <string name="item_counter_desc_collapsed_referenced">این شمارنده %1$d بار ارجاع داده شده است. (%2$s)</string>
+    <string name="item_counter_desc_expanded_no_reference">این شمارنده استفاده نشده است.</string>
+    <string name="item_counter_desc_expanded_referenced">این شمارنده %1$d بار ارجاع داده شده است.</string>
+
+    <string name="field_label_counter_starting_value">مقدار اولیه</string>
+
+    <string name="button_text_counter_actions_references">%1$d نوشتن</string>
+    <string name="button_text_counter_actions_no_reference">هرگز تغییر نکرده است</string>
+    <string name="button_text_counter_conditions_references">%1$d خواندن</string>
+    <string name="button_text_counter_conditions_no_reference">هرگز خوانده نشده است</string>
+
+    <string name="button_text_counter_delete">حذف شمارنده</string>
+    <string name="button_text_counter_delete_and_replace">جایگزینی و حذف</string>
+    <string name="message_replace_by">جایگزینی با…</string>
+
+    <string name="dialog_title_new_counter">شمارنده جدید</string>
+    <string name="field_new_counter_starting_value">مقدار اولیه</string>
+    <string name="field_counter_name_already_declared">این نام شمارنده از قبل وجود دارد</string>
+
+    <string name="field_counter_selection_title_empty">هیچ شمارنده‌ای انتخاب نشده است</string>
+    <string name="field_counter_selection_desc">مقدار اولیه: %1$s</string>
+    <string name="field_counter_selection_desc_empty">برای انتخاب شمارنده اینجا کلیک کنید</string>
+
+
+    <!-- Dialogs copy fix ===================================================================================== -->
+
+    <string name="dialog_title_copy_fix">حل مشکلات</string>
+
+    <string name="item_header_event_copy_fix">یک یا چند مورد در این نسخه به یک مورد غیرقابل‌دسترس ارجاع می‌دهند.\nبرای حل این مشکلات روی مورد دارای مشکل کلیک کنید.</string>
+
+    <string name="item_copy_fix_description_ok">مورد معتبر است</string>
+    <string name="item_copy_fix_description_missing">مورد(های) ارجاع‌شده یافت نشد</string>
+
+
+    <!-- Dialogs warning/error ===================================================================================== -->
+
+    <string name="warning_dialog_message_toggle_action_from_another_scenario">این رویداد یک یا چند اقدام تغییر وضعیت رویداد دارد که به رویدادی از سناریوی دیگری ارجاع می‌دهند.\nپیش از ذخیره سناریو، باید رویدادهای مقصد آن‌ها را به‌روزرسانی کنید.</string>
+    <string name="warning_dialog_message_event_delete_associated_action">یک یا چند اقدام به این رویداد ارجاع دارند. حذف این رویداد اقدامات مرتبط با آن را نیز حذف خواهد کرد.\nآیا مطمئن هستید؟</string>
+    <string name="warning_dialog_message_condition_delete_associated_action">یک یا چند اقدام به این شرط ارجاع دارند. حذف این شرط اقدامات مرتبط با آن را نیز حذف خواهد کرد.\nآیا مطمئن هستید؟</string>
+    <string name="warning_dialog_message_close_without_saving">تغییرات ذخیره‌نشده دارید، آیا می‌خواهید آن‌ها را نادیده بگیرید؟</string>
+    <string name="warning_dialog_message_delete">در حال حذف این مورد هستید، آیا مطمئن هستید؟</string>
+
+    <string name="error_dialog_message_scenario_saving">سناریوی شما به دلیل یک خطای داخلی قابل ذخیره نیست.\nآیا می‌خواهید آن را ویرایش کنید یا تمام تغییرات خود را لغو کنید؟</string>
+    <string name="error_dialog_message_error_native_lib">برنامه Klick\'r به‌درستی نصب نشده است و نمی‌تواند تشخیص را آغاز کند.\n\nاگر آن را از یک فروشگاه معتبر برنامه نصب کرده‌اید، لطفاً در GitHub با ما تماس بگیرید، زیرا این کار به حل این مشکل کمک خواهد کرد.</string>
+    <string name="error_dialog_message_screen_capture_unsupported">صفحه دستگاه شما به دلیل محدودیت درایور توسط Klick\'r قابل خواندن نیست.\n\nمتأسفانه این یک محدودیت سخت‌افزاری است که راهکاری ندارد. لطفاً مدل دستگاه خود را در GitHub با ما در میان بگذارید تا بتوانیم دستگاه‌های تحت‌تأثیر را ردیابی کنیم.</string>
+
+
+    <!-- Content description ======================================================================================= -->
+    <!--They are use as accessibility texts for visually impaired people. They will not be displayed but spoken. -->
+
+    <string name="content_desc_event_state">وضعیت رویداد</string>
+    <string name="content_desc_conditions_count">تعداد شرط‌ها در این رویداد</string>
+    <string name="content_desc_actions_count">تعداد اقدام‌ها در این رویداد</string>
+    <string name="content_desc_image_condition">تصویر مورد نظر برای تشخیص</string>
+    <string name="content_desc_open_event_list">باز کردن فهرست رویدادها</string>
+    <string name="content_desc_application_icon">نماد برنامه‌ای که باید اجرا شود.</string>
+
+</resources>
